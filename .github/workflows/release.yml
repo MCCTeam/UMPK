@@ -38,8 +38,8 @@ jobs:
             exit 1
           fi
           release_commit=$(git rev-list -n 1 "$GITHUB_REF_NAME")
-          if ! git merge-base --is-ancestor "$release_commit" origin/main; then
-            echo "Release tag must point to a commit on main" >&2
+          if ! git merge-base --is-ancestor "$release_commit" origin/master; then
+            echo "Release tag must point to a commit on master" >&2
             exit 1
           fi
           version="${GITHUB_REF_NAME#v}"

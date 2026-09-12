@@ -46,16 +46,16 @@ The other half of the approach is evidence. Wire formats and physics constants a
 
 ## Where to go next
 
-- [Installation](/getting-started/installation) if you want to add UMPK to a project.
-- [Offline samples](/getting-started/offline-samples) for five small programs that need no server: chat, NBT, physics, versions, and offline identity.
-- [Your first status ping](/getting-started/status-ping) for a working program in about thirty lines.
-- [A minimal bot](/getting-started/minimal-bot) to connect, listen to chat, and say something.
-- [A connected bot](/getting-started/connected-bot) to ping, log in, join, and trade chat lines.
-- [Inventory and resource packs](/guides/inventory-and-resource-packs) to inspect containers, click safely, and choose a resource-pack policy.
-- [Packages](/packages/overview) if you would rather see the module map first.
-- [Supported versions](/reference/supported-versions) for the full protocol table.
-- [Using AI](/contributing/using-ai) for rules that keep generated changes reviewable and safe.
-- [Releasing NuGet packages](/contributing/releasing) for maintainer setup, validation, publishing, and recovery.
+- [Installation](getting-started/installation.md) if you want to add UMPK to a project.
+- [Offline samples](getting-started/offline-samples.md) for five small programs that need no server: chat, NBT, physics, versions, and offline identity.
+- [Your first status ping](getting-started/status-ping.md) for a working program in about thirty lines.
+- [A minimal bot](getting-started/minimal-bot.md) to connect, listen to chat, and say something.
+- [A connected bot](getting-started/connected-bot.md) to ping, log in, join, and trade chat lines.
+- [Inventory and resource packs](guides/inventory-and-resource-packs.md) to inspect containers, click safely, and choose a resource-pack policy.
+- [Packages](packages/overview.md) if you would rather see the module map first.
+- [Supported versions](reference/supported-versions.md) for the full protocol table.
+- [Using AI](contributing/using-ai.md) for rules that keep generated changes reviewable and safe.
+- [Releasing NuGet packages](contributing/releasing.md) for maintainer setup, validation, publishing, and recovery.
 
 ## What is not here
 
@@ -65,4 +65,4 @@ Being direct about the gaps, since the package names imply more than exists:
 - Bedrock Edition is not supported and not started. It shares no meaningful transport or protocol with Java Edition, so it would be a new package rather than an extension of this one.
 - No package has a frozen public API yet. Every declaration still sits in `PublicAPI.Unshipped.txt`, so names can change between versions.
 
-[Limitations](/reference/limitations) covers the smaller known gaps.
+[Limitations](reference/limitations.md) covers the smaller known gaps.

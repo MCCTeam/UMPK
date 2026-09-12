@@ -220,6 +220,7 @@ Treat a stable packet identifier as insufficient evidence: packet IDs, layouts, 
 
 - Follow `.editorconfig`: UTF-8, LF, final newline, four-space C# indentation, and file-scoped namespaces.
 - Never hard-wrap prose in source comments, documentation, or Markdown files.
+- Before writing a pull request body or commit message, read and apply the `humanizer` skill. Keep both concise.
 - Write each paragraph, list item, and source comment on one physical line. Let the editor or renderer wrap it for the reader.
 - Keep newlines only where syntax or structure requires them, such as headings, blank lines, lists, tables, block quotes, and code blocks. Long prose lines are expected and preferred.
 - Do not apply an 80, 100, or 120-column limit to prose. Optimize text files for wide screens.

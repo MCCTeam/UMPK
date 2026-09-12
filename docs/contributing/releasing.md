@@ -7,6 +7,8 @@ sidebar:
 
 UMPK publishes fourteen packages together from a `v<version>` Git tag. A release workflow rebuilds and verifies the repository, creates primary and symbol packages, checks their metadata and contents, publishes them to NuGet.org with a short-lived OpenID Connect credential, and then creates a GitHub Release containing the packages and SHA-256 checksums. `Umpk.Server` and `Umpk.Proxy` are reserved projects and are never packed.
 
+Merging a pull request into `master` does not publish a release. Only an annotated version tag starts the release workflow, so documentation and other non-.NET changes cannot trigger it on their own. GitHub does not evaluate path filters for tag pushes; the tag is the maintainer's explicit release approval.
+
 ## One-time account setup
 
 Complete these steps before pushing the first release tag.

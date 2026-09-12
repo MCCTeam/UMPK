@@ -139,6 +139,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ needs.build-and-pack.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.build-and-pack.outputs.version }}
         shell: bash
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
@@ -151,5 +152,9 @@ jobs:
               fi
             done
           else
-            gh release create "$RELEASE_TAG" artifacts/packages/* --verify-tag --generate-notes --title "UMPK ${{ needs.build-and-pack.outputs.version }}"
+            release_flags=()
+            if [[ "$RELEASE_VERSION" == *-* ]]; then
+              release_flags+=(--prerelease)
+            fi
+            gh release create "$RELEASE_TAG" artifacts/packages/* --verify-tag --generate-notes --title "UMPK $RELEASE_VERSION" "${release_flags[@]}"
           fi

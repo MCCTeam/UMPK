@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- UMPK's version. 0.9.0-beta.1 states both "pre-1.0" and "prerelease" honestly while Umpk.Commands still depends on prerelease Brigadier.NET. It flows into AssemblyInformationalVersionAttribute, which Umpk.Client.UmpkVersion reads back and which the consuming host reads through the same attribute, so this property is the ONE place the number is stated. A build that also sets SourceRevisionId (SourceLink does) gets "0.9.0-beta.1+<sha>"; UmpkVersion parses either shape. -->
+    <Version>0.9.0-beta.1</Version>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+  </PropertyGroup>
+</Project>

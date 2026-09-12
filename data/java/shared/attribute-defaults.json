@@ -1,0 +1,480 @@
+{
+  "_provenance": {
+    "kind": "curated",
+    "description": "Vanilla RangedAttribute default/min/max for every attribute name that appears in any protocol's minecraft:attribute registry. KEYED BY RAW DATASET NAME, not by the prefix-stripped canonical name, because minecraft:horse.jump_strength (735-765) and minecraft:generic.jump_strength (766-767) canonicalise to the same string and carry DIFFERENT defaults AND ranges (0.7 in [0,2] versus 0.42 in [0,32]). AttributeInstance consumes both numbers - it seeds BaseValue from the default and clamps into [min,max] - so one shared row would be silently wrong for one era. Canonicalisation happens only at LOOKUP time, in Umpk.Game.Entities.AttributeIds.",
+    "sources": [
+      "MinecraftOfficial/1.17-decompiled/net/minecraft/world/entity/ai/attributes/Attributes.java (horse.jump_strength, the 735-765 era)",
+      "MinecraftOfficial/1.20.6-decompiled/net/minecraft/world/entity/ai/attributes/Attributes.java (the 766 set; values identical to 1.21.1 for every shared name)",
+      "MinecraftOfficial/1.21.1-decompiled/net/minecraft/world/entity/ai/attributes/Attributes.java (31 of the 40 canonical names)",
+      "MinecraftOfficial/1.21.11-decompiled/net/minecraft/world/entity/ai/attributes/Attributes.java (camera_distance, tempt_range, waypoint_transmit_range, waypoint_receive_range)",
+      "MinecraftOfficial/26.2-decompiled/net/minecraft/world/entity/ai/attributes/Attributes.java (air_drag_modifier, below_name_distance, bounciness, friction_modifier, name_tag_distance)"
+    ],
+    "vanilla_cite_format": "<decompile tree>:<line in that tree's Attributes.java>",
+    "float_literal_note": "Three vanilla defaults are FLOAT literals widened to double by RangedAttribute's double constructor: movement_speed 0.7F (1.17:14, 1.20.6:61; a plain 0.7 double from 1.21.1:75, 1.21.11:68, 26.2:78), flying_speed 0.4F (1.17:17, 1.20.6:37; a plain 0.4 from 1.21.1:45, 1.21.11:42, 26.2:49), and jump_strength 0.42F on every era that has it (1.20.6:46, 1.21.1:54, 1.21.11:49, 26.2:59). This table stores the decimal, which is exact for the modern literals and differs from the widened float by under 1.2e-8 for the legacy ones. No single raw row could be exact for both anyway: minecraft:generic.movement_speed spans 735-767, across which vanilla itself changed the literal. The difference is unobservable: a registry default is only an AttributeInstance's PRE-FIRST-PACKET base, every update_attributes carries base and overwrites it, and the local player's own seeds come from Player.createAttributes (movement_speed 0.1), never from the registry default.",
+    "protocols_covered": [
+      735,
+      736,
+      751,
+      753,
+      754,
+      755,
+      756,
+      757,
+      758,
+      759,
+      760,
+      761,
+      762,
+      763,
+      764,
+      765,
+      766,
+      767,
+      768,
+      769,
+      770,
+      771,
+      772,
+      773,
+      774,
+      775,
+      776
+    ],
+    "raw_name_count": 72,
+    "canonical_name_count": 40
+  },
+  "attributes": {
+    "minecraft:air_drag_modifier": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "26.2:11"
+    },
+    "minecraft:armor": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 30.0,
+      "vanilla": "1.21.1:10"
+    },
+    "minecraft:armor_toughness": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 20.0,
+      "vanilla": "1.21.1:13"
+    },
+    "minecraft:attack_damage": {
+      "default": 2.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:16"
+    },
+    "minecraft:attack_knockback": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 5.0,
+      "vanilla": "1.21.1:19"
+    },
+    "minecraft:attack_speed": {
+      "default": 4.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:22"
+    },
+    "minecraft:below_name_distance": {
+      "default": 10.0,
+      "min": 0.0,
+      "max": 512.0,
+      "vanilla": "26.2:23"
+    },
+    "minecraft:block_break_speed": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:25"
+    },
+    "minecraft:block_interaction_range": {
+      "default": 4.5,
+      "min": 0.0,
+      "max": 64.0,
+      "vanilla": "1.21.1:28"
+    },
+    "minecraft:bounciness": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "26.2:31"
+    },
+    "minecraft:burning_time": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:32"
+    },
+    "minecraft:camera_distance": {
+      "default": 4.0,
+      "min": 0.0,
+      "max": 32.0,
+      "vanilla": "1.21.11:29"
+    },
+    "minecraft:entity_interaction_range": {
+      "default": 3.0,
+      "min": 0.0,
+      "max": 64.0,
+      "vanilla": "1.21.1:38"
+    },
+    "minecraft:explosion_knockback_resistance": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:35"
+    },
+    "minecraft:fall_damage_multiplier": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 100.0,
+      "vanilla": "1.21.1:42"
+    },
+    "minecraft:flying_speed": {
+      "default": 0.4,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:45"
+    },
+    "minecraft:follow_range": {
+      "default": 32.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:48"
+    },
+    "minecraft:friction_modifier": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "26.2:53"
+    },
+    "minecraft:generic.armor": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 30.0,
+      "vanilla": "1.21.1:10"
+    },
+    "minecraft:generic.armor_toughness": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 20.0,
+      "vanilla": "1.21.1:13"
+    },
+    "minecraft:generic.attack_damage": {
+      "default": 2.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:16"
+    },
+    "minecraft:generic.attack_knockback": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 5.0,
+      "vanilla": "1.21.1:19"
+    },
+    "minecraft:generic.attack_speed": {
+      "default": 4.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:22"
+    },
+    "minecraft:generic.burning_time": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:32"
+    },
+    "minecraft:generic.explosion_knockback_resistance": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:35"
+    },
+    "minecraft:generic.fall_damage_multiplier": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 100.0,
+      "vanilla": "1.21.1:42"
+    },
+    "minecraft:generic.flying_speed": {
+      "default": 0.4,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:45"
+    },
+    "minecraft:generic.follow_range": {
+      "default": 32.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:48"
+    },
+    "minecraft:generic.gravity": {
+      "default": 0.08,
+      "min": -1.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:51"
+    },
+    "minecraft:generic.jump_strength": {
+      "default": 0.42,
+      "min": 0.0,
+      "max": 32.0,
+      "vanilla": "1.21.1:54"
+    },
+    "minecraft:generic.knockback_resistance": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:57"
+    },
+    "minecraft:generic.luck": {
+      "default": 0.0,
+      "min": -1024.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:60"
+    },
+    "minecraft:generic.max_absorption": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:63"
+    },
+    "minecraft:generic.max_health": {
+      "default": 20.0,
+      "min": 1.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:66"
+    },
+    "minecraft:generic.movement_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:72"
+    },
+    "minecraft:generic.movement_speed": {
+      "default": 0.7,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:75"
+    },
+    "minecraft:generic.oxygen_bonus": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:78"
+    },
+    "minecraft:generic.safe_fall_distance": {
+      "default": 3.0,
+      "min": -1024.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:81"
+    },
+    "minecraft:generic.scale": {
+      "default": 1.0,
+      "min": 0.0625,
+      "max": 16.0,
+      "vanilla": "1.21.1:84"
+    },
+    "minecraft:generic.step_height": {
+      "default": 0.6,
+      "min": 0.0,
+      "max": 10.0,
+      "vanilla": "1.21.1:93"
+    },
+    "minecraft:generic.water_movement_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:102"
+    },
+    "minecraft:gravity": {
+      "default": 0.08,
+      "min": -1.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:51"
+    },
+    "minecraft:horse.jump_strength": {
+      "default": 0.7,
+      "min": 0.0,
+      "max": 2.0,
+      "vanilla": "1.17:37"
+    },
+    "minecraft:jump_strength": {
+      "default": 0.42,
+      "min": 0.0,
+      "max": 32.0,
+      "vanilla": "1.21.1:54"
+    },
+    "minecraft:knockback_resistance": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:57"
+    },
+    "minecraft:luck": {
+      "default": 0.0,
+      "min": -1024.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:60"
+    },
+    "minecraft:max_absorption": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.1:63"
+    },
+    "minecraft:max_health": {
+      "default": 20.0,
+      "min": 1.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:66"
+    },
+    "minecraft:mining_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:69"
+    },
+    "minecraft:movement_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:72"
+    },
+    "minecraft:movement_speed": {
+      "default": 0.7,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:75"
+    },
+    "minecraft:name_tag_distance": {
+      "default": 64.0,
+      "min": 0.0,
+      "max": 512.0,
+      "vanilla": "26.2:81"
+    },
+    "minecraft:oxygen_bonus": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:78"
+    },
+    "minecraft:player.block_break_speed": {
+      "default": 1.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:25"
+    },
+    "minecraft:player.block_interaction_range": {
+      "default": 4.5,
+      "min": 0.0,
+      "max": 64.0,
+      "vanilla": "1.21.1:28"
+    },
+    "minecraft:player.entity_interaction_range": {
+      "default": 3.0,
+      "min": 0.0,
+      "max": 64.0,
+      "vanilla": "1.21.1:38"
+    },
+    "minecraft:player.mining_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:69"
+    },
+    "minecraft:player.sneaking_speed": {
+      "default": 0.3,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:87"
+    },
+    "minecraft:player.submerged_mining_speed": {
+      "default": 0.2,
+      "min": 0.0,
+      "max": 20.0,
+      "vanilla": "1.21.1:96"
+    },
+    "minecraft:player.sweeping_damage_ratio": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:99"
+    },
+    "minecraft:safe_fall_distance": {
+      "default": 3.0,
+      "min": -1024.0,
+      "max": 1024.0,
+      "vanilla": "1.21.1:81"
+    },
+    "minecraft:scale": {
+      "default": 1.0,
+      "min": 0.0625,
+      "max": 16.0,
+      "vanilla": "1.21.1:84"
+    },
+    "minecraft:sneaking_speed": {
+      "default": 0.3,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:87"
+    },
+    "minecraft:spawn_reinforcements": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:90"
+    },
+    "minecraft:step_height": {
+      "default": 0.6,
+      "min": 0.0,
+      "max": 10.0,
+      "vanilla": "1.21.1:93"
+    },
+    "minecraft:submerged_mining_speed": {
+      "default": 0.2,
+      "min": 0.0,
+      "max": 20.0,
+      "vanilla": "1.21.1:96"
+    },
+    "minecraft:sweeping_damage_ratio": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:99"
+    },
+    "minecraft:tempt_range": {
+      "default": 10.0,
+      "min": 0.0,
+      "max": 2048.0,
+      "vanilla": "1.21.11:94"
+    },
+    "minecraft:water_movement_efficiency": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:102"
+    },
+    "minecraft:waypoint_receive_range": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 60000000.0,
+      "vanilla": "1.21.11:102"
+    },
+    "minecraft:waypoint_transmit_range": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 60000000.0,
+      "vanilla": "1.21.11:99"
+    },
+    "minecraft:zombie.spawn_reinforcements": {
+      "default": 0.0,
+      "min": 0.0,
+      "max": 1.0,
+      "vanilla": "1.21.1:90"
+    }
+  }
+}

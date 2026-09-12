@@ -1,0 +1,168 @@
+# protocol 754
+# The witness pin: what each implemented binding of this protocol DECODED from a payload chosen
+# so the neighbouring eras cannot decode it the same way.
+#
+# The first five fields are the codec-identity pin's. Then:
+#   src:     corpus (real bytes from a committed capture inside this band), synth (an authored
+#            value minted through this band's own encoder), or none (no witness authored yet).
+#   w:       bytes the bound decoder consumed, on a payload that discriminates rather than on
+#            the codec-identity pin's all-zero probe.
+#   ok <..>  a digest of the decoded VALUES, clipped, keyed to the whole by h=<hash> when it is.
+#   reject:  the nearest differently-bound band on each side, named by its first protocol, and
+#            what it did instead: a fault, a different consumed count, or the first field it
+#            disagreed about.
+#   same:    that band read this payload identically, and the pair is separated by THAT band's
+#            own witness instead. Separation belongs to the pair; only one side can carry it
+#            where one era accepts everything the other can encode.
+#   twin:    neither side's payload separates the pair, and it is declared in IntentionalTwins.
+#
+# A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
+# are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
+# witnessed 17 of 129 implemented bindings (corpus 7, synth 10)
+witnesses:
+Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
+Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
+Status Clientbound 0x01 minecraft:pong_response StatusCodecs.Pong src:none
+Status Serverbound 0x00 minecraft:status_request StatusCodecs.Request src:none
+Status Serverbound 0x01 minecraft:ping_request StatusCodecs.Ping src:none
+Login Clientbound 0x00 minecraft:login_disconnect LoginCodecs.DisconnectV1_8 src:none
+Login Clientbound 0x01 minecraft:hello LoginCodecs.ServerHelloV1_8 src:none
+Login Clientbound 0x02 minecraft:login_finished LoginCodecs.FinishedV1_16 src:corpus@735 w:29 ok LoginFinished{Properties=[0:],SessionId=null,StrictErrorHandling=false,Username='UmpkRecorder',U h=735E89DE
+    reject:P47(ProtocolViolationException) reject:P759(ProtocolViolationException)
+Login Clientbound 0x03 minecraft:login_compression LoginCodecs.Compression src:none
+Login Clientbound 0x04 minecraft:custom_query LoginChannelCodecs.CustomQuery src:none
+Login Serverbound 0x00 minecraft:hello LoginCodecs.ClientHelloV1_8 src:synth w:8 ok Hello{ProfileId=null,ProfileKey=null,Username='Witness'}
+    reject:P759(ProtocolViolationException)
+Login Serverbound 0x01 minecraft:key LoginCodecs.Key src:none
+Login Serverbound 0x02 minecraft:custom_query_answer LoginChannelCodecs.CustomQueryAnswer src:none
+Play Clientbound 0x00 minecraft:add_entity EntitySpawnCodecs.AddEntityV1_9 src:none
+Play Clientbound 0x01 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_9 src:none
+Play Clientbound 0x02 minecraft:add_mob EntitySpawnCodecs.AddMobV1_15 src:corpus@573 w:51 ok AddMob{EntityId=6,HeadPitch=270,Metadata=EntityMetadataList{Entries=[0:],RawTail=b[0:E3B0C442]}, h=605708BA
+    reject:P477(ProtocolViolationException)
+Play Clientbound 0x03 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_14 src:none
+Play Clientbound 0x04 minecraft:add_player EntitySpawnCodecs.AddPlayerV1_15 src:synth w:44 ok AddPlayer{CurrentItem=0,EntityId=4660,Metadata=EntityMetadataList{Entries=[0:],RawTail=b[0:E3B0C h=060E9E92
+    reject:P477(ProtocolViolationException)
+Play Clientbound 0x05 minecraft:animate EntityStateCodecs.Animate src:none
+Play Clientbound 0x08 minecraft:block_destruction WorldBlockCodecs.BlockDestructionV1_14 src:none
+Play Clientbound 0x09 minecraft:block_entity_data WorldBlockCodecs.BlockEntityDataV1_14 src:none
+Play Clientbound 0x0A minecraft:block_event WorldBlockCodecs.BlockEventV1_14 src:none
+Play Clientbound 0x0B minecraft:block_update WorldBlockCodecs.BlockUpdateV1_14 src:none
+Play Clientbound 0x0C minecraft:boss_event BossBarCodecs.BossEventV1_9 src:none
+Play Clientbound 0x0D minecraft:change_difficulty WorldStateCodecs.ChangeDifficultyV1_14 src:none
+Play Clientbound 0x0E minecraft:chat ChatCodecs.ClientLegacyV1_16 src:none
+Play Clientbound 0x0F minecraft:command_suggestions CommandSuggestionCodecs.CommandSuggestionsV1_13 src:none
+Play Clientbound 0x10 minecraft:commands CommandTreeCodecs.V1_13 src:corpus@393 w:280 ok Commands{Tree=CommandTreeData{Nodes=[17:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0, h=5054B334
+    reject:P759(ProtocolViolationException)
+Play Clientbound 0x11 minecraft:transaction ContainerCodecs.TransactionClientV1_8 src:none
+Play Clientbound 0x12 minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
+Play Clientbound 0x13 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_14 src:synth w:13 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=0,CustomName=null,Dama h=32C00A6E
+    reject:P404(Id=CF0AE5E7) reject:P756(ProtocolViolationException)
+Play Clientbound 0x14 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
+Play Clientbound 0x15 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_14 src:synth w:8 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=38F36440
+    reject:P404(Path='sign') reject:P756(Path='diorite')
+Play Clientbound 0x16 minecraft:cooldown UiMiscCodecs.CooldownV1_9 src:none
+Play Clientbound 0x18 minecraft:custom_sound WorldEffectCodecs.CustomSoundV1_10 src:none
+Play Clientbound 0x19 minecraft:disconnect PlayCommonCodecs.DisconnectV1_8 src:none
+Play Clientbound 0x1A minecraft:entity_event EntityStateCodecs.EntityEvent src:none
+Play Clientbound 0x1B minecraft:explode WorldEffectCodecs.ExplodeV1_8 src:none
+Play Clientbound 0x1C minecraft:forget_level_chunk WorldStateCodecs.ForgetLevelChunkV1_14 src:none
+Play Clientbound 0x1D minecraft:game_event WorldStateCodecs.GameEventV1_14 src:none
+Play Clientbound 0x1F minecraft:keep_alive PlayKeepAliveCodecs.ClientV1_12_2 src:none
+Play Clientbound 0x20 minecraft:level_chunk_with_light ChunkCodecs.V1_16_2 src:corpus@751 w:3735 ok LevelChunk{BlockEntities=[0:],ChunkX=4,ChunkZ=-14,Column=chunk[[4, -14],y=0..256,sections=16,fil h=F56E04F6
+    reject:P735(y=0..16) reject:P755(NbtFormatException)
+Play Clientbound 0x21 minecraft:level_event WorldEffectCodecs.LevelEventV1_14 src:none
+Play Clientbound 0x22 minecraft:level_particles WorldEffectCodecs.LevelParticlesV1_15 src:none
+Play Clientbound 0x23 minecraft:light_update WorldStateCodecs.LightUpdateV1_16 src:none
+Play Clientbound 0x24 minecraft:login JoinGameCodecs.V1_16_2 src:none
+Play Clientbound 0x25 minecraft:map_item_data WorldMapCodecs.MapItemDataV1_14 src:none
+Play Clientbound 0x26 minecraft:merchant_offers MerchantCodecs.MerchantOffersV1_14_4 src:synth w:46 ok MerchantOffers{ContainerId=3,Offers=MerchantOffers{CanRestock=true,Experience=40,IsRegularVillag h=7C52A3AF
+    reject:P490(read:42) reject:P759(NbtFormatException)
+Play Clientbound 0x27 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV1_9 src:none
+Play Clientbound 0x28 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV1_9 src:none
+Play Clientbound 0x29 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRot src:none
+Play Clientbound 0x2C minecraft:open_book UiMiscCodecs.OpenBookV1_14 src:none
+Play Clientbound 0x2D minecraft:open_screen ContainerCodecs.OpenScreenV1_14 src:none
+Play Clientbound 0x2E minecraft:open_sign_editor UiMiscCodecs.OpenSignEditorV1_14 src:none
+Play Clientbound 0x2F minecraft:place_ghost_recipe RecipeCodecs.PlaceGhostRecipeModern src:none
+Play Clientbound 0x30 minecraft:player_abilities UiMiscCodecs.PlayerAbilitiesV1_8 src:none
+Play Clientbound 0x32 minecraft:player_info PlayerListCodecs.LegacyPlayerListItemV1_8 src:none
+Play Clientbound 0x34 minecraft:player_position EntityMoveCodecs.PlayerPositionV1_9 src:corpus@107 w:34 ok PlayerPosition{ModernValues=null,Pitch=0,RelativeFlags=0,TeleportId=1,X=-290.5,Y=4,Yaw=0,Z=1264. h=6D117A7C
+    reject:P47(read:33) reject:P755(ProtocolViolationException)
+Play Clientbound 0x35 minecraft:recipe RecipeCodecs.RecipeV1_16_2 src:none
+Play Clientbound 0x36 minecraft:remove_entities EntitySpawnCodecs.RemoveEntities src:none
+Play Clientbound 0x37 minecraft:remove_mob_effect EntityEffectCodecs.RemoveMobEffectV1_8 src:none
+Play Clientbound 0x38 minecraft:resource_pack_push ResourcePackCodecs.ResourcePackPushV1_14 src:none
+Play Clientbound 0x39 minecraft:respawn WorldStateCodecs.RespawnV1_16_2 src:synth w:34 ok Respawn{DataToKeep=1,DimensionTypeNbt=NbtEnd{Type=End},Legacy=null,SpawnInfo=CommonPlayerSpawnIn h=3A20648B
+    reject:P735(DimensionTypeNbt=null) reject:P759(ProtocolViolationException)
+Play Clientbound 0x3A minecraft:rotate_head EntityMoveCodecs.RotateHead src:none
+Play Clientbound 0x3B minecraft:section_blocks_update WorldBlockCodecs.SectionBlocksUpdateV1_16_2 src:none
+Play Clientbound 0x3C minecraft:select_advancements_tab AdvancementCodecs.SelectAdvancementsTabV1_12 src:none
+Play Clientbound 0x3E minecraft:set_camera EntityStateCodecs.SetCamera src:none
+Play Clientbound 0x3F minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 src:none
+Play Clientbound 0x40 minecraft:set_chunk_cache_center WorldStateCodecs.SetChunkCacheCenterV1_14 src:none
+Play Clientbound 0x41 minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunkCacheRadiusV1_14 src:none
+Play Clientbound 0x42 minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_14 src:corpus@735 w:8 ok SetDefaultSpawnPosition{Angle=0,Dimension=null,Pitch=0,Position=BlockPos{BottomCenter='(-79.5000 h=3ECEE8D1
+    reject:P107(0.0000) reject:P755(ProtocolViolationException)
+Play Clientbound 0x43 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 src:none
+Play Clientbound 0x44 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_14 src:synth w:183 ok SetEntityData{EntityId=17185,Metadata=EntityMetadataList{Entries=[6:EntityDataEntry{Index=0,Valu h=366BDF61
+    reject:P404(Slot:28DB3735) reject:P759(Slot:E3606320)
+Play Clientbound 0x45 minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_9 src:none
+Play Clientbound 0x46 minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotion src:none
+Play Clientbound 0x47 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_16 src:corpus@768 w:7 ok SetEquipment{EntityId=90,LegacyItem=null,LegacySlot=MainHand,ModernRaw=b[6:E20473DE]}
+    reject:P404(LegacyItem=EntityItemSlot{Count=0)
+Play Clientbound 0x48 minecraft:set_experience EntityStateCodecs.SetExperience src:none
+Play Clientbound 0x49 minecraft:set_health EntityStateCodecs.SetHealth src:none
+Play Clientbound 0x4A minecraft:set_objective ScoreboardCodecs.SetObjectiveV1_13 src:none
+Play Clientbound 0x4B minecraft:set_passengers EntityStateCodecs.SetPassengers src:none
+Play Clientbound 0x4C minecraft:set_player_team ScoreboardCodecs.SetPlayerTeamV1_14 src:synth w:228 ok SetPlayerTeam{Method=Add,Name='witnesses',Parameters=TeamParameters{CollisionRule=PushOwnTeam,Co h=0D356D0B
+    twin:P393 reject:P765(NbtFormatException)
+Play Clientbound 0x4D minecraft:set_score ScoreboardCodecs.LegacySetScoreV1_8 src:none
+Play Clientbound 0x4E minecraft:set_time WorldStateCodecs.SetTimeV1_8 src:none
+Play Clientbound 0x50 minecraft:sound_entity WorldEffectCodecs.SoundEntityV1_14 src:none
+Play Clientbound 0x52 minecraft:stop_sound WorldEffectCodecs.StopSoundV1_13 src:none
+Play Clientbound 0x53 minecraft:tab_list PlayerListCodecs.TabListV1_9 src:none
+Play Clientbound 0x55 minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
+Play Clientbound 0x56 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
+Play Clientbound 0x57 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_13_2 src:synth w:368 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=8851FFCC
+    reject:P393(NbtFormatException) reject:P763(ProtocolViolationException)
+Play Clientbound 0x58 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_16IntCount src:none
+Play Clientbound 0x59 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_8 src:none
+Play Clientbound 0x5A minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
+Play Serverbound 0x03 minecraft:chat ChatCodecs.ServerLegacyV1_8 src:none
+Play Serverbound 0x04 minecraft:client_command PlayCommonCodecs.ClientCommand src:none
+Play Serverbound 0x05 minecraft:client_information PlayClientInformationCodecs.V1_9 src:none
+Play Serverbound 0x06 minecraft:command_suggestion CommandSuggestionCodecs.ServerCommandSuggestionV1_13 src:none
+Play Serverbound 0x07 minecraft:transaction ContainerCodecs.TransactionServerV1_8 src:none
+Play Serverbound 0x08 minecraft:container_button_click ContainerCodecs.ContainerButtonClickV1_8 src:none
+Play Serverbound 0x09 minecraft:container_click ContainerCodecs.ContainerClickV1_14 src:none
+Play Serverbound 0x0A minecraft:container_close ContainerCodecs.ContainerCloseServerV1_8 src:none
+Play Serverbound 0x0C minecraft:edit_book UiMiscCodecs.EditBookV1_13_2 src:none
+Play Serverbound 0x0E minecraft:interact EntityServerboundCodecs.InteractV1_16 src:none
+Play Serverbound 0x10 minecraft:keep_alive PlayKeepAliveCodecs.ServerV1_12_2 src:none
+Play Serverbound 0x12 minecraft:move_player_pos EntityServerboundCodecs.MovePlayerPosV1_14 src:none
+Play Serverbound 0x13 minecraft:move_player_pos_rot EntityServerboundCodecs.MovePlayerPosRotV1_14 src:none
+Play Serverbound 0x14 minecraft:move_player_rot EntityServerboundCodecs.MovePlayerRotV1_14 src:none
+Play Serverbound 0x15 minecraft:move_player EntityServerboundCodecs.MovePlayerStatusV1_8 src:none
+Play Serverbound 0x16 minecraft:move_vehicle EntityServerboundCodecs.MoveVehicleV1_9 src:none
+Play Serverbound 0x17 minecraft:paddle_boat EntityServerboundCodecs.PaddleBoat src:none
+Play Serverbound 0x19 minecraft:place_recipe RecipeCodecs.PlaceRecipeByNameV1_13 src:none
+Play Serverbound 0x1A minecraft:player_abilities UiMiscCodecs.ServerPlayerAbilitiesV1_14 src:none
+Play Serverbound 0x1B minecraft:player_action EntityServerboundCodecs.PlayerActionV1_14 src:none
+Play Serverbound 0x1C minecraft:player_command EntityServerboundCodecs.PlayerCommand src:none
+Play Serverbound 0x1D minecraft:steer_vehicle EntityServerboundCodecs.SteerVehicleV1_8 src:none
+Play Serverbound 0x1E minecraft:recipe_book_change_settings RecipeCodecs.RecipeBookChangeSettingsModern src:none
+Play Serverbound 0x1F minecraft:recipe_book_seen_recipe RecipeCodecs.RecipeBookSeenRecipeByNameV1_16_2 src:none
+Play Serverbound 0x20 minecraft:rename_item ContainerCodecs.RenameItemV1_13 src:none
+Play Serverbound 0x21 minecraft:resource_pack ResourcePackCodecs.ServerResourcePackV1_14 src:none
+Play Serverbound 0x22 minecraft:seen_advancements AdvancementCodecs.SeenAdvancementsV1_12 src:none
+Play Serverbound 0x23 minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
+Play Serverbound 0x25 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
+Play Serverbound 0x26 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
+Play Serverbound 0x28 minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_14 src:synth w:7 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=CFE2195D
+    reject:P404(Path='sign') reject:P764(Path='light_gray_concrete')
+Play Serverbound 0x2B minecraft:sign_update UiMiscCodecs.SignUpdateV1_14 src:none
+Play Serverbound 0x2C minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none
+Play Serverbound 0x2D minecraft:teleport_to_entity EntityServerboundCodecs.TeleportToEntity src:none
+Play Serverbound 0x2E minecraft:use_item_on UseItemCodecs.UseItemOnV1_14 src:none
+Play Serverbound 0x2F minecraft:use_item UseItemCodecs.UseItemV1_9 src:none

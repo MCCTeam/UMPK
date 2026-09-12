@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A supervised Minecraft Java client runtime with sessions, state, events, actions, transfers, and reconnects.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Game/Umpk.Game.csproj" />
+    <ProjectReference Include="../Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <ProjectReference Include="../Umpk.Commands/Umpk.Commands.csproj" />
+    <ProjectReference Include="../Umpk.Text/Umpk.Text.csproj" />
+    <ProjectReference Include="../Umpk.Physics/Umpk.Physics.csproj" />
+    <ProjectReference Include="../Umpk.Pathfinding/Umpk.Pathfinding.csproj" />
+    <!-- The built-in per-version block-shape tables. Without this the session's default shape source
+         is a unit cube for every solid block, so slabs, stairs, fences and carpets collide wrong. -->
+    <ProjectReference Include="../Umpk.Data.Java/Umpk.Data.Java.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+</Project>

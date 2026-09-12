@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Component, Style, TextColor, ComponentJson, LegacyText -->
+    <ProjectReference Include="../../src/Umpk.Text/Umpk.Text.csproj" />
+    <!-- VanillaTranslations, the per-protocol en_us tables -->
+    <ProjectReference Include="../../src/Umpk.Data.Lang/Umpk.Data.Lang.csproj" />
+  </ItemGroup>
+</Project>

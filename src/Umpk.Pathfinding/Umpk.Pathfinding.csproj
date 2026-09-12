@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A* route planning and movement execution for UMPK Minecraft Java clients.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Game/Umpk.Game.csproj" />
+    <ProjectReference Include="../Umpk.Physics/Umpk.Physics.csproj" />
+  </ItemGroup>
+</Project>

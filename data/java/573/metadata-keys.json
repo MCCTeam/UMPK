@@ -1,0 +1,25 @@
+{
+  "_provenance": {
+    "version": "1.15",
+    "protocol": 573,
+    "mapping_source": "mojang-proguard",
+    "kind": "curated",
+    "note": "tier-2 semantic metadata key indices; 1.14.4-decompiled net/minecraft/world/entity/Entity.java:157-165 (pose at 6) and LivingEntity.java:108-113"
+  },
+  "entity_keys": {
+    "shared_flags": 0,
+    "air_supply": 1,
+    "custom_name": 2,
+    "custom_name_visible": 3,
+    "silent": 4,
+    "no_gravity": 5,
+    "pose": 6,
+    "health": 8,
+    "effect_particles": 9,
+    "effect_ambience": 10,
+    "arrow_count": 11
+  },
+  "item_entity_keys": {
+    "carried_item": 7
+  }
+}

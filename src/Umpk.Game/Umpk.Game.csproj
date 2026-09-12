@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Protocol-neutral Minecraft game models for blocks, entities, items, registries, inventories, and worlds.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Nbt/Umpk.Nbt.csproj" />
+    <ProjectReference Include="../Umpk.Text/Umpk.Text.csproj" />
+  </ItemGroup>
+</Project>

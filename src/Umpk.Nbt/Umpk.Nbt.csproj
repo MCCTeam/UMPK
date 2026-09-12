@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Read, write, and model Minecraft Named Binary Tag (NBT) and stringified NBT data.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+  </ItemGroup>
+</Project>

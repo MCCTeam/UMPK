@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.9.2",
+  "protocol": 109,
+  "scenario": "chunk-join",
+  "frameCount": 54,
+  "clientboundCount": 54,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-15T19:05:45.7482520\u002B00:00",
+  "durationMs": 12156,
+  "contentHash": "91b9141aa635c05766df49c0d99fb36cb452fbc801bb8805e659384a74123605",
+  "notes": null
+}

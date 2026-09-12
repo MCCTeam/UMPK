@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Minecraft Java protocol framing, codecs, packet registration, login, encryption, status, and chat signing.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Nbt/Umpk.Nbt.csproj" />
+    <ProjectReference Include="../Umpk.Text/Umpk.Text.csproj" />
+    <ProjectReference Include="../Umpk.Game/Umpk.Game.csproj" />
+  </ItemGroup>
+</Project>

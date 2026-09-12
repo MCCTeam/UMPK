@@ -1,0 +1,87 @@
+#nullable enable
+Umpk.Data.Java.JavaEntityMetadataKeys
+Umpk.Data.Java.JavaEntityMetadataKeys.TryResolveIndex(Umpk.Game.Registries.RegistryEntry<Umpk.Game.Registries.EntityTypeDefinition!> entityType, Umpk.Game.Entities.MetadataKey! key, out int index) -> bool
+Umpk.Data.Java.JavaGameData
+Umpk.Data.Java.JavaVersions
+const Umpk.Data.Java.JavaGameData.LegacyItemBridgeEra = "V1_8" -> string!
+static Umpk.Data.Java.JavaGameData.BlockPushData(int protocol) -> Umpk.Game.Registries.IBlockPushSource!
+static Umpk.Data.Java.JavaGameData.BlockShapes(int protocol) -> Umpk.Game.Registries.IBlockShapeSource!
+static Umpk.Data.Java.JavaGameData.EntityMetadataKeys(int protocol) -> Umpk.Game.Entities.IMetadataKeySource!
+static Umpk.Data.Java.JavaGameData.LegacyItemBridgeSource.get -> Umpk.Game.Items.ILegacyItemBridgeSource!
+static Umpk.Data.Java.JavaGameData.Registries(int protocol) -> Umpk.Game.Registries.RegistryAccess!
+static Umpk.Data.Java.JavaGameData.SoundName(int protocol, int soundId) -> string?
+static Umpk.Data.Java.JavaVersions.All.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.JavaVersion!>!
+static Umpk.Data.Java.JavaVersions.TryGetByName(string! name, out Umpk.Protocol.Java.JavaVersion! version) -> bool
+static Umpk.Data.Java.JavaVersions.TryGetByProtocol(int protocol, out Umpk.Protocol.Java.JavaVersion! version) -> bool
+static Umpk.Data.Java.JavaVersions.V1_10.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_10_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_10_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_11.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_11_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_11_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_12.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_12_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_12_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_13.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_13_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_13_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_14.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_14_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_14_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_14_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_14_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_15.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_15_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_15_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_16_5.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_17.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_17_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_18.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_18_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_18_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_19.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_19_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_19_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_19_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_19_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_5.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_20_6.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_10.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_11.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_5.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_6.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_7.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_8.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_21_9.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_5.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_6.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_7.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_8.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_8_9.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_9.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_9_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_9_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_9_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V1_9_4.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V26_1.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V26_2.get -> Umpk.Protocol.Java.JavaVersion!

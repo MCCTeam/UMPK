@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.20.4",
+  "protocol": 765,
+  "scenario": "play-idle",
+  "frameCount": 72,
+  "clientboundCount": 72,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-11T00:20:45.4727730\u002B00:00",
+  "durationMs": 25094,
+  "contentHash": "341eb8198619f310b70ce3b135e7458a4afd6e4eceb53393895cac7bcf59b3b0",
+  "notes": "Join plus idle play: chunks, entities, time, keep-alive (answered). Headless client, clientbound frames only."
+}

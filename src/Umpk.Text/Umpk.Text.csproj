@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Model, serialize, and render Minecraft Java chat components, styles, and translations.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Nbt/Umpk.Nbt.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,4 @@
+T:System.Console;Library code never touches the console; report through ILogger events
+T:System.Activator;No runtime activation; the design has a generated-table or explicit-registration answer
+M:System.Reflection.Assembly.GetTypes;No assembly scanning in src/
+M:System.Reflection.Assembly.GetExportedTypes;No assembly scanning in src/

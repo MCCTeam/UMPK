@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Umpk.Physics/Umpk.Physics.csproj" />
+    <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Parity/Traces/*.umpktrace" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

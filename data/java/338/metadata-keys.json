@@ -1,0 +1,27 @@
+{
+  "_provenance": {
+    "version": "1.12.1",
+    "protocol": 338,
+    "mapping_source": "minecraft-data",
+    "sources": [
+      "tier-2 semantic metadata keys; curated bootstrap deferred"
+    ],
+    "kind": "curated",
+    "note": "tier-2 semantic metadata key indices; 1.12.1-decompiled vg.java:73-78 (Entity gains no-gravity at 5) and vp.java:18-22"
+  },
+  "entity_keys": {
+    "shared_flags": 0,
+    "air_supply": 1,
+    "custom_name": 2,
+    "custom_name_visible": 3,
+    "silent": 4,
+    "no_gravity": 5,
+    "health": 7,
+    "effect_particles": 8,
+    "effect_ambience": 9,
+    "arrow_count": 10
+  },
+  "item_entity_keys": {
+    "carried_item": 6
+  }
+}

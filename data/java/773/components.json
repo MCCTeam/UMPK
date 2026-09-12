@@ -1,0 +1,493 @@
+{
+  "_provenance": {
+    "version": "1.21.9",
+    "protocol": 773,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "reports/registries.json#minecraft:data_component_type"
+    ],
+    "kind": "extracted"
+  },
+  "entries": [
+    {
+      "id": "minecraft:custom_data",
+      "id_num": 0,
+      "codec": null
+    },
+    {
+      "id": "minecraft:max_stack_size",
+      "id_num": 1,
+      "codec": null
+    },
+    {
+      "id": "minecraft:max_damage",
+      "id_num": 2,
+      "codec": null
+    },
+    {
+      "id": "minecraft:damage",
+      "id_num": 3,
+      "codec": null
+    },
+    {
+      "id": "minecraft:unbreakable",
+      "id_num": 4,
+      "codec": null
+    },
+    {
+      "id": "minecraft:custom_name",
+      "id_num": 5,
+      "codec": null
+    },
+    {
+      "id": "minecraft:item_name",
+      "id_num": 6,
+      "codec": null
+    },
+    {
+      "id": "minecraft:item_model",
+      "id_num": 7,
+      "codec": null
+    },
+    {
+      "id": "minecraft:lore",
+      "id_num": 8,
+      "codec": null
+    },
+    {
+      "id": "minecraft:rarity",
+      "id_num": 9,
+      "codec": null
+    },
+    {
+      "id": "minecraft:enchantments",
+      "id_num": 10,
+      "codec": null
+    },
+    {
+      "id": "minecraft:can_place_on",
+      "id_num": 11,
+      "codec": null
+    },
+    {
+      "id": "minecraft:can_break",
+      "id_num": 12,
+      "codec": null
+    },
+    {
+      "id": "minecraft:attribute_modifiers",
+      "id_num": 13,
+      "codec": null
+    },
+    {
+      "id": "minecraft:custom_model_data",
+      "id_num": 14,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tooltip_display",
+      "id_num": 15,
+      "codec": null
+    },
+    {
+      "id": "minecraft:repair_cost",
+      "id_num": 16,
+      "codec": null
+    },
+    {
+      "id": "minecraft:creative_slot_lock",
+      "id_num": 17,
+      "codec": null
+    },
+    {
+      "id": "minecraft:enchantment_glint_override",
+      "id_num": 18,
+      "codec": null
+    },
+    {
+      "id": "minecraft:intangible_projectile",
+      "id_num": 19,
+      "codec": null
+    },
+    {
+      "id": "minecraft:food",
+      "id_num": 20,
+      "codec": null
+    },
+    {
+      "id": "minecraft:consumable",
+      "id_num": 21,
+      "codec": null
+    },
+    {
+      "id": "minecraft:use_remainder",
+      "id_num": 22,
+      "codec": null
+    },
+    {
+      "id": "minecraft:use_cooldown",
+      "id_num": 23,
+      "codec": null
+    },
+    {
+      "id": "minecraft:damage_resistant",
+      "id_num": 24,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tool",
+      "id_num": 25,
+      "codec": null
+    },
+    {
+      "id": "minecraft:weapon",
+      "id_num": 26,
+      "codec": null
+    },
+    {
+      "id": "minecraft:enchantable",
+      "id_num": 27,
+      "codec": null
+    },
+    {
+      "id": "minecraft:equippable",
+      "id_num": 28,
+      "codec": null
+    },
+    {
+      "id": "minecraft:repairable",
+      "id_num": 29,
+      "codec": null
+    },
+    {
+      "id": "minecraft:glider",
+      "id_num": 30,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tooltip_style",
+      "id_num": 31,
+      "codec": null
+    },
+    {
+      "id": "minecraft:death_protection",
+      "id_num": 32,
+      "codec": null
+    },
+    {
+      "id": "minecraft:blocks_attacks",
+      "id_num": 33,
+      "codec": null
+    },
+    {
+      "id": "minecraft:stored_enchantments",
+      "id_num": 34,
+      "codec": null
+    },
+    {
+      "id": "minecraft:dyed_color",
+      "id_num": 35,
+      "codec": null
+    },
+    {
+      "id": "minecraft:map_color",
+      "id_num": 36,
+      "codec": null
+    },
+    {
+      "id": "minecraft:map_id",
+      "id_num": 37,
+      "codec": null
+    },
+    {
+      "id": "minecraft:map_decorations",
+      "id_num": 38,
+      "codec": null
+    },
+    {
+      "id": "minecraft:map_post_processing",
+      "id_num": 39,
+      "codec": null
+    },
+    {
+      "id": "minecraft:charged_projectiles",
+      "id_num": 40,
+      "codec": null
+    },
+    {
+      "id": "minecraft:bundle_contents",
+      "id_num": 41,
+      "codec": null
+    },
+    {
+      "id": "minecraft:potion_contents",
+      "id_num": 42,
+      "codec": null
+    },
+    {
+      "id": "minecraft:potion_duration_scale",
+      "id_num": 43,
+      "codec": null
+    },
+    {
+      "id": "minecraft:suspicious_stew_effects",
+      "id_num": 44,
+      "codec": null
+    },
+    {
+      "id": "minecraft:writable_book_content",
+      "id_num": 45,
+      "codec": null
+    },
+    {
+      "id": "minecraft:written_book_content",
+      "id_num": 46,
+      "codec": null
+    },
+    {
+      "id": "minecraft:trim",
+      "id_num": 47,
+      "codec": null
+    },
+    {
+      "id": "minecraft:debug_stick_state",
+      "id_num": 48,
+      "codec": null
+    },
+    {
+      "id": "minecraft:entity_data",
+      "id_num": 49,
+      "codec": null
+    },
+    {
+      "id": "minecraft:bucket_entity_data",
+      "id_num": 50,
+      "codec": null
+    },
+    {
+      "id": "minecraft:block_entity_data",
+      "id_num": 51,
+      "codec": null
+    },
+    {
+      "id": "minecraft:instrument",
+      "id_num": 52,
+      "codec": null
+    },
+    {
+      "id": "minecraft:provides_trim_material",
+      "id_num": 53,
+      "codec": null
+    },
+    {
+      "id": "minecraft:ominous_bottle_amplifier",
+      "id_num": 54,
+      "codec": null
+    },
+    {
+      "id": "minecraft:jukebox_playable",
+      "id_num": 55,
+      "codec": null
+    },
+    {
+      "id": "minecraft:provides_banner_patterns",
+      "id_num": 56,
+      "codec": null
+    },
+    {
+      "id": "minecraft:recipes",
+      "id_num": 57,
+      "codec": null
+    },
+    {
+      "id": "minecraft:lodestone_tracker",
+      "id_num": 58,
+      "codec": null
+    },
+    {
+      "id": "minecraft:firework_explosion",
+      "id_num": 59,
+      "codec": null
+    },
+    {
+      "id": "minecraft:fireworks",
+      "id_num": 60,
+      "codec": null
+    },
+    {
+      "id": "minecraft:profile",
+      "id_num": 61,
+      "codec": null
+    },
+    {
+      "id": "minecraft:note_block_sound",
+      "id_num": 62,
+      "codec": null
+    },
+    {
+      "id": "minecraft:banner_patterns",
+      "id_num": 63,
+      "codec": null
+    },
+    {
+      "id": "minecraft:base_color",
+      "id_num": 64,
+      "codec": null
+    },
+    {
+      "id": "minecraft:pot_decorations",
+      "id_num": 65,
+      "codec": null
+    },
+    {
+      "id": "minecraft:container",
+      "id_num": 66,
+      "codec": null
+    },
+    {
+      "id": "minecraft:block_state",
+      "id_num": 67,
+      "codec": null
+    },
+    {
+      "id": "minecraft:bees",
+      "id_num": 68,
+      "codec": null
+    },
+    {
+      "id": "minecraft:lock",
+      "id_num": 69,
+      "codec": null
+    },
+    {
+      "id": "minecraft:container_loot",
+      "id_num": 70,
+      "codec": null
+    },
+    {
+      "id": "minecraft:break_sound",
+      "id_num": 71,
+      "codec": null
+    },
+    {
+      "id": "minecraft:villager/variant",
+      "id_num": 72,
+      "codec": null
+    },
+    {
+      "id": "minecraft:wolf/variant",
+      "id_num": 73,
+      "codec": null
+    },
+    {
+      "id": "minecraft:wolf/sound_variant",
+      "id_num": 74,
+      "codec": null
+    },
+    {
+      "id": "minecraft:wolf/collar",
+      "id_num": 75,
+      "codec": null
+    },
+    {
+      "id": "minecraft:fox/variant",
+      "id_num": 76,
+      "codec": null
+    },
+    {
+      "id": "minecraft:salmon/size",
+      "id_num": 77,
+      "codec": null
+    },
+    {
+      "id": "minecraft:parrot/variant",
+      "id_num": 78,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tropical_fish/pattern",
+      "id_num": 79,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tropical_fish/base_color",
+      "id_num": 80,
+      "codec": null
+    },
+    {
+      "id": "minecraft:tropical_fish/pattern_color",
+      "id_num": 81,
+      "codec": null
+    },
+    {
+      "id": "minecraft:mooshroom/variant",
+      "id_num": 82,
+      "codec": null
+    },
+    {
+      "id": "minecraft:rabbit/variant",
+      "id_num": 83,
+      "codec": null
+    },
+    {
+      "id": "minecraft:pig/variant",
+      "id_num": 84,
+      "codec": null
+    },
+    {
+      "id": "minecraft:cow/variant",
+      "id_num": 85,
+      "codec": null
+    },
+    {
+      "id": "minecraft:chicken/variant",
+      "id_num": 86,
+      "codec": null
+    },
+    {
+      "id": "minecraft:frog/variant",
+      "id_num": 87,
+      "codec": null
+    },
+    {
+      "id": "minecraft:horse/variant",
+      "id_num": 88,
+      "codec": null
+    },
+    {
+      "id": "minecraft:painting/variant",
+      "id_num": 89,
+      "codec": null
+    },
+    {
+      "id": "minecraft:llama/variant",
+      "id_num": 90,
+      "codec": null
+    },
+    {
+      "id": "minecraft:axolotl/variant",
+      "id_num": 91,
+      "codec": null
+    },
+    {
+      "id": "minecraft:cat/variant",
+      "id_num": 92,
+      "codec": null
+    },
+    {
+      "id": "minecraft:cat/collar",
+      "id_num": 93,
+      "codec": null
+    },
+    {
+      "id": "minecraft:sheep/color",
+      "id_num": 94,
+      "codec": null
+    },
+    {
+      "id": "minecraft:shulker/color",
+      "id_num": 95,
+      "codec": null
+    }
+  ]
+}

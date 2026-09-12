@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- ServerEndpoint, GameProfile -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- UmpkClient, events, actions -->
+    <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
+    <!-- JavaStatus, TCP factory, SRV resolver, chat signing seam -->
+    <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <!-- JavaVersions, JavaGameData -->
+    <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
+    <!-- VanillaTranslations for readable chat -->
+    <ProjectReference Include="../../src/Umpk.Data.Lang/Umpk.Data.Lang.csproj" />
+    <!-- Component rendering -->
+    <ProjectReference Include="../../src/Umpk.Text/Umpk.Text.csproj" />
+    <!-- OfflineIdentity, MinecraftAuthFlow, token store -->
+    <ProjectReference Include="../../src/Umpk.Auth/Umpk.Auth.csproj" />
+  </ItemGroup>
+</Project>

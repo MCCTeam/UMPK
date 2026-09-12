@@ -1,0 +1,134 @@
+{
+  "_provenance": {
+    "version": "1.19.3",
+    "protocol": 761,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "net/minecraft/network/syncher/EntityDataSerializers.java"
+    ],
+    "kind": "extracted"
+  },
+  "terminator": "0xff",
+  "serializers": [
+    {
+      "id": 0,
+      "field": "BYTE",
+      "codec": "Byte"
+    },
+    {
+      "id": 1,
+      "field": "INT",
+      "codec": "VarInt"
+    },
+    {
+      "id": 2,
+      "field": "LONG",
+      "codec": "VarLong"
+    },
+    {
+      "id": 3,
+      "field": "FLOAT",
+      "codec": "Float"
+    },
+    {
+      "id": 4,
+      "field": "STRING",
+      "codec": "String"
+    },
+    {
+      "id": 5,
+      "field": "COMPONENT",
+      "codec": "Component"
+    },
+    {
+      "id": 6,
+      "field": "OPTIONAL_COMPONENT",
+      "codec": "OptionalComponent"
+    },
+    {
+      "id": 7,
+      "field": "ITEM_STACK",
+      "codec": "ItemStack"
+    },
+    {
+      "id": 8,
+      "field": "BOOLEAN",
+      "codec": "Boolean"
+    },
+    {
+      "id": 9,
+      "field": "ROTATIONS",
+      "codec": "Rotations"
+    },
+    {
+      "id": 10,
+      "field": "BLOCK_POS",
+      "codec": "BlockPos"
+    },
+    {
+      "id": 11,
+      "field": "OPTIONAL_BLOCK_POS",
+      "codec": "OptionalBlockPos"
+    },
+    {
+      "id": 12,
+      "field": "DIRECTION",
+      "codec": "Direction"
+    },
+    {
+      "id": 13,
+      "field": "OPTIONAL_UUID",
+      "codec": "OptionalUuid"
+    },
+    {
+      "id": 14,
+      "field": "BLOCK_STATE",
+      "codec": "BlockState"
+    },
+    {
+      "id": 15,
+      "field": "COMPOUND_TAG",
+      "codec": "CompoundTag"
+    },
+    {
+      "id": 16,
+      "field": "PARTICLE",
+      "codec": "Particle"
+    },
+    {
+      "id": 17,
+      "field": "VILLAGER_DATA",
+      "codec": "VillagerData"
+    },
+    {
+      "id": 18,
+      "field": "OPTIONAL_UNSIGNED_INT",
+      "codec": "OptionalUnsignedInt"
+    },
+    {
+      "id": 19,
+      "field": "POSE",
+      "codec": "Pose"
+    },
+    {
+      "id": 20,
+      "field": "CAT_VARIANT",
+      "codec": "CatVariant"
+    },
+    {
+      "id": 21,
+      "field": "FROG_VARIANT",
+      "codec": "FrogVariant"
+    },
+    {
+      "id": 22,
+      "field": "OPTIONAL_GLOBAL_POS",
+      "codec": "OptionalGlobalPos"
+    },
+    {
+      "id": 23,
+      "field": "PAINTING_VARIANT",
+      "codec": "PaintingVariant"
+    }
+  ]
+}

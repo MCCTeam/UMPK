@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- NbtCompound, NbtList, NbtReader, NbtWriter, Snbt -->
+    <ProjectReference Include="../../src/Umpk.Nbt/Umpk.Nbt.csproj" />
+  </ItemGroup>
+</Project>

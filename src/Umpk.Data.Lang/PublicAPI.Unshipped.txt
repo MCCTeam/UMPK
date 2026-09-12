@@ -1,0 +1,6 @@
+#nullable enable
+Umpk.Data.Lang.VanillaTranslations
+static Umpk.Data.Lang.VanillaTranslations.CountFor(int protocol) -> int
+static Umpk.Data.Lang.VanillaTranslations.ForProtocol(int protocol) -> Umpk.Text.ITranslationSource!
+static Umpk.Data.Lang.VanillaTranslations.Latest.get -> Umpk.Text.ITranslationSource!
+static Umpk.Data.Lang.VanillaTranslations.Protocols.get -> System.ReadOnlySpan<int>

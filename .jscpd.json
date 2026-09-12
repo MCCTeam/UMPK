@@ -1,0 +1,14 @@
+{
+  "reporters": ["ai"],
+  "format": ["csharp"],
+  "minLines": 6,
+  "minTokens": 50,
+  "mode": "mild",
+  "ignore": [
+    "**/bin/**",
+    "**/obj/**",
+    "**/Migrations/**",
+    "**/Generated/**",
+    "**/*.g.cs"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "26.2",
+  "protocol": 776,
+  "scenario": "play-idle",
+  "frameCount": 2511,
+  "clientboundCount": 2511,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-08T00:30:18.2286276\u002B00:00",
+  "durationMs": 16100,
+  "contentHash": "70e05756da52ea332cfe9758af339d48f1eda04a5c41d399f28adb6c9888e801",
+  "notes": "steady-state play: time, keepalive, entity ticks"
+}

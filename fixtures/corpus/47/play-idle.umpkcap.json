@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.8",
+  "protocol": 47,
+  "scenario": "play-idle",
+  "frameCount": 32,
+  "clientboundCount": 32,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-08T00:33:50.8090249\u002B00:00",
+  "durationMs": 8055,
+  "contentHash": "21a7d3ff60f03f51e72ab64065afe5bb9a5ebe0e6e45585604414254f1848524",
+  "notes": "1.8 steady play: keepalive, time, entity spawn/move"
+}

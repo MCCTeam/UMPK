@@ -1,0 +1,95 @@
+{
+ "_provenance": {
+  "version": "1.13.1",
+  "protocol": 401,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "data/java/477 metadata.json truncated at PARTICLE (1.13 has no VILLAGER_DATA/OPTIONAL_UNSIGNED_INT/POSE)"
+  ],
+  "kind": "curated",
+  "note": "entity metadata serializer order ends at PARTICLE = id 15"
+ },
+ "terminator": "0xff",
+ "serializers": [
+  {
+   "id": 0,
+   "field": "BYTE",
+   "codec": "Byte"
+  },
+  {
+   "id": 1,
+   "field": "INT",
+   "codec": "VarInt"
+  },
+  {
+   "id": 2,
+   "field": "FLOAT",
+   "codec": "Float"
+  },
+  {
+   "id": 3,
+   "field": "STRING",
+   "codec": "String"
+  },
+  {
+   "id": 4,
+   "field": "COMPONENT",
+   "codec": "Component"
+  },
+  {
+   "id": 5,
+   "field": "OPTIONAL_COMPONENT",
+   "codec": "OptionalComponent"
+  },
+  {
+   "id": 6,
+   "field": "ITEM_STACK",
+   "codec": "ItemStack"
+  },
+  {
+   "id": 7,
+   "field": "BOOLEAN",
+   "codec": "Boolean"
+  },
+  {
+   "id": 8,
+   "field": "ROTATIONS",
+   "codec": "Rotations"
+  },
+  {
+   "id": 9,
+   "field": "BLOCK_POS",
+   "codec": "BlockPos"
+  },
+  {
+   "id": 10,
+   "field": "OPTIONAL_BLOCK_POS",
+   "codec": "OptionalBlockPos"
+  },
+  {
+   "id": 11,
+   "field": "DIRECTION",
+   "codec": "Direction"
+  },
+  {
+   "id": 12,
+   "field": "OPTIONAL_UUID",
+   "codec": "OptionalUuid"
+  },
+  {
+   "id": 13,
+   "field": "BLOCK_STATE",
+   "codec": "BlockState"
+  },
+  {
+   "id": 14,
+   "field": "COMPOUND_TAG",
+   "codec": "CompoundTag"
+  },
+  {
+   "id": 15,
+   "field": "PARTICLE",
+   "codec": "Particle"
+  }
+ ]
+}

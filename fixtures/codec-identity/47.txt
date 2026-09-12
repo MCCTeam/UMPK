@@ -1,0 +1,113 @@
+# protocol 47
+codecs:
+Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention read:5 shape:varint,string,ushort,varint
+Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response read:1 shape:string
+Status Clientbound 0x01 minecraft:pong_response StatusCodecs.Pong read:8 shape:long
+Status Serverbound 0x00 minecraft:status_request StatusCodecs.Request read:0 shape:empty
+Status Serverbound 0x01 minecraft:ping_request StatusCodecs.Ping read:8 shape:long
+Login Clientbound 0x00 minecraft:login_disconnect LoginCodecs.DisconnectV1_8 fault:ComponentFormatException shape:login_disconnect(rawuuid=0,helloprofile=0,finishedprops=0,finishedsession=0,helloauth=0,legacyreason=1,literalreason=0)
+Login Clientbound 0x01 minecraft:hello LoginCodecs.ServerHelloV1_8 read:3 shape:server_hello(rawuuid=0,helloprofile=0,finishedprops=0,finishedsession=0,helloauth=0,legacyreason=1,literalreason=0)
+Login Clientbound 0x02 minecraft:login_finished LoginCodecs.FinishedV1_8 fault:FormatException shape:login_finished(rawuuid=0,helloprofile=0,finishedprops=0,finishedsession=0,helloauth=0,legacyreason=1,literalreason=0)
+Login Clientbound 0x03 minecraft:login_compression LoginCodecs.Compression read:1 shape:varint
+Login Serverbound 0x00 minecraft:hello LoginCodecs.ClientHelloV1_8 read:1 shape:client_hello(rawuuid=0,helloprofile=0,finishedprops=0,finishedsession=0,helloauth=0,legacyreason=1,literalreason=0)
+Login Serverbound 0x01 minecraft:key LoginCodecs.Key read:2 shape:bytes,bytes
+Play Clientbound 0x00 minecraft:keep_alive PlayKeepAliveCodecs.ClientV1_8 read:1 shape:varint
+Play Clientbound 0x01 minecraft:login JoinGameCodecs.V1_8 read:10 shape:join_game(legacy=1,onlinemode=0)
+Play Clientbound 0x02 minecraft:chat ChatCodecs.ClientLegacyV1_8 fault:ComponentFormatException shape:opaque
+Play Clientbound 0x03 minecraft:set_time WorldStateCodecs.SetTimeV1_8 read:16 via:minecraft:update_time shape:opaque
+Play Clientbound 0x04 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_8 read:9 via:minecraft:entity_equipment shape:opaque
+Play Clientbound 0x05 minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_8 read:8 via:minecraft:spawn_position shape:opaque
+Play Clientbound 0x06 minecraft:set_health EntityStateCodecs.SetHealth read:9 via:minecraft:update_health shape:opaque
+Play Clientbound 0x07 minecraft:respawn WorldStateCodecs.RespawnV1_8 read:7 shape:opaque
+Play Clientbound 0x08 minecraft:player_position EntityMoveCodecs.PlayerPositionV1_8 read:33 shape:opaque
+Play Clientbound 0x09 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 read:1 via:minecraft:held_item_slot shape:opaque
+Play Clientbound 0x0A minecraft:use_bed EntityStateCodecs.UseBedV1_8 read:9 shape:opaque
+Play Clientbound 0x0B minecraft:animate EntityStateCodecs.Animate read:2 shape:opaque
+Play Clientbound 0x0C minecraft:add_player EntitySpawnCodecs.AddPlayerV1_8 fault:ProtocolViolationException shape:opaque
+Play Clientbound 0x0D minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_8 read:2 via:minecraft:collect_item shape:opaque
+Play Clientbound 0x0E minecraft:add_entity EntitySpawnCodecs.AddEntityV1_8 read:20 shape:opaque
+Play Clientbound 0x0F minecraft:add_mob EntitySpawnCodecs.AddMobV1_8 fault:ProtocolViolationException shape:opaque
+Play Clientbound 0x10 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_8 read:11 shape:opaque
+Play Clientbound 0x11 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_8 read:15 shape:opaque
+Play Clientbound 0x12 minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotion read:7 shape:opaque
+Play Clientbound 0x13 minecraft:remove_entities EntitySpawnCodecs.RemoveEntities read:1 via:minecraft:entity_destroy shape:opaque
+Play Clientbound 0x14 minecraft:entity EntityMoveCodecs.EntityV1_8 read:1 shape:opaque
+Play Clientbound 0x15 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV1_8 read:5 via:minecraft:move_entity_position shape:opaque
+Play Clientbound 0x16 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRot read:4 via:minecraft:move_entity_rotation shape:opaque
+Play Clientbound 0x17 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV1_8 read:7 via:minecraft:move_entity_position_rotation shape:opaque
+Play Clientbound 0x18 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_8 read:16 via:minecraft:entity_teleport shape:opaque
+Play Clientbound 0x19 minecraft:rotate_head EntityMoveCodecs.RotateHead read:2 shape:opaque
+Play Clientbound 0x1A minecraft:entity_event EntityStateCodecs.EntityEvent read:5 via:minecraft:entity_status shape:opaque
+Play Clientbound 0x1B minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_8 read:9 via:minecraft:attach_entity shape:opaque
+Play Clientbound 0x1C minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_8 fault:ProtocolViolationException shape:opaque
+Play Clientbound 0x1D minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_8 read:5 via:minecraft:entity_effect shape:opaque
+Play Clientbound 0x1E minecraft:remove_mob_effect EntityEffectCodecs.RemoveMobEffectV1_8 read:2 via:minecraft:remove_entity_effect shape:opaque
+Play Clientbound 0x1F minecraft:set_experience EntityStateCodecs.SetExperience read:6 shape:opaque
+Play Clientbound 0x20 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_8 read:5 shape:opaque
+Play Clientbound 0x21 minecraft:level_chunk_with_light ChunkCodecs.V1_8 read:256 via:minecraft:level_chunk shape:opaque
+Play Clientbound 0x22 minecraft:section_blocks_update WorldBlockCodecs.SectionBlocksUpdateV1_8 read:9 via:minecraft:block_change_multi shape:opaque
+Play Clientbound 0x23 minecraft:block_update WorldBlockCodecs.BlockUpdateV1_8 read:9 via:minecraft:block_change shape:block_pos,varint|PrePacked114
+Play Clientbound 0x24 minecraft:block_event WorldBlockCodecs.BlockEventV1_8 read:11 shape:opaque
+Play Clientbound 0x25 minecraft:block_destruction WorldBlockCodecs.BlockDestructionV1_8 read:10 via:minecraft:block_break_animation shape:opaque
+Play Clientbound 0x26 minecraft:map_chunk_bulk ChunkCodecs.MapChunkBulkV1_8 read:256 shape:opaque
+Play Clientbound 0x27 minecraft:explode WorldEffectCodecs.ExplodeV1_8 read:32 shape:opaque
+Play Clientbound 0x28 minecraft:level_event WorldEffectCodecs.LevelEventV1_8 read:17 shape:opaque
+Play Clientbound 0x29 minecraft:sound_effect WorldEffectCodecs.NamedSoundV1_8 read:18 shape:opaque
+Play Clientbound 0x2A minecraft:level_particles WorldEffectCodecs.LevelParticlesV1_8 read:37 shape:opaque
+Play Clientbound 0x2B minecraft:game_event WorldStateCodecs.GameEventV1_8 read:5 via:minecraft:game_state_change shape:opaque
+Play Clientbound 0x2C minecraft:spawn_weather_entity EntitySpawnCodecs.AddGlobalEntityV1_8 read:14 shape:opaque
+Play Clientbound 0x2D minecraft:open_screen ContainerCodecs.OpenScreenV1_8 fault:ComponentFormatException shape:opaque
+Play Clientbound 0x2E minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 read:1 via:minecraft:close_screen shape:opaque
+Play Clientbound 0x2F minecraft:set_slot ContainerCodecs.SetSlotV1_8 read:9 shape:opaque
+Play Clientbound 0x30 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_8 read:3 shape:opaque
+Play Clientbound 0x31 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 read:5 via:minecraft:craft_progress_bar shape:opaque
+Play Clientbound 0x32 minecraft:transaction ContainerCodecs.TransactionClientV1_8 read:4 shape:opaque
+Play Clientbound 0x33 minecraft:update_sign marker n/a shape:opaque
+Play Clientbound 0x34 minecraft:map_item_data WorldMapCodecs.MapItemDataV1_8 read:4 via:minecraft:map shape:opaque
+Play Clientbound 0x35 minecraft:block_entity_data WorldBlockCodecs.BlockEntityDataV1_8 read:10 shape:block_entity_data(PrePacked114,bytetype=1,JavaNamedRoot)
+Play Clientbound 0x36 minecraft:open_sign_editor UiMiscCodecs.OpenSignEditorV1_8 read:8 shape:opaque
+Play Clientbound 0x37 minecraft:statistics marker n/a shape:opaque
+Play Clientbound 0x38 minecraft:player_info PlayerListCodecs.LegacyPlayerListItemV1_8 read:2 shape:opaque
+Play Clientbound 0x39 minecraft:abilities UiMiscCodecs.PlayerAbilitiesV1_8 read:9 shape:opaque
+Play Clientbound 0x3A minecraft:tab_complete CommandSuggestionCodecs.LegacyTabCompleteV1_8 read:1 shape:opaque
+Play Clientbound 0x3B minecraft:scoreboard_objective ScoreboardCodecs.LegacyObjectiveV1_8 read:4 shape:opaque
+Play Clientbound 0x3C minecraft:set_score ScoreboardCodecs.LegacySetScoreV1_8 read:4 shape:opaque
+Play Clientbound 0x3D minecraft:display_scoreboard ScoreboardCodecs.LegacyDisplayObjectiveV1_8 read:2 shape:opaque
+Play Clientbound 0x3E minecraft:set_player_team ScoreboardCodecs.SetPlayerTeamV1_8 read:9 shape:opaque
+Play Clientbound 0x3F minecraft:custom_payload marker n/a shape:opaque
+Play Clientbound 0x40 minecraft:disconnect PlayCommonCodecs.DisconnectV1_8 fault:ComponentFormatException shape:component|json
+Play Clientbound 0x41 minecraft:change_difficulty WorldStateCodecs.ChangeDifficultyV1_8 read:1 via:minecraft:server_difficulty shape:opaque
+Play Clientbound 0x42 minecraft:combat_event marker n/a shape:opaque
+Play Clientbound 0x43 minecraft:set_camera EntityStateCodecs.SetCamera read:1 via:minecraft:camera shape:opaque
+Play Clientbound 0x44 minecraft:world_border WorldBorderCodecs.WorldBorderV1_8 read:9 shape:opaque
+Play Clientbound 0x45 minecraft:title TitleCodecs.LegacyTitleV1_8 fault:ComponentFormatException shape:opaque
+Play Clientbound 0x46 minecraft:set_compression marker n/a shape:opaque
+Play Clientbound 0x47 minecraft:player_list_header_footer PlayerListCodecs.TabListV1_8 fault:ComponentFormatException shape:opaque
+Play Clientbound 0x48 minecraft:resource_pack ResourcePackCodecs.LegacyResourcePackV1_8 read:2 shape:opaque
+Play Clientbound 0x49 minecraft:update_entity_nbt marker n/a shape:opaque
+Play Serverbound 0x00 minecraft:keep_alive PlayKeepAliveCodecs.ServerV1_8 read:1 shape:varint
+Play Serverbound 0x01 minecraft:chat ChatCodecs.ServerLegacyV1_8 read:1 shape:opaque
+Play Serverbound 0x02 minecraft:interact EntityServerboundCodecs.InteractV1_8 read:2 shape:opaque
+Play Serverbound 0x03 minecraft:move_player EntityServerboundCodecs.MovePlayerStatusV1_8 read:1 shape:opaque
+Play Serverbound 0x04 minecraft:move_player_pos EntityServerboundCodecs.MovePlayerPosV1_8 read:25 shape:opaque
+Play Serverbound 0x05 minecraft:move_player_rot EntityServerboundCodecs.MovePlayerRotV1_8 read:9 shape:opaque
+Play Serverbound 0x06 minecraft:move_player_pos_rot EntityServerboundCodecs.MovePlayerPosRotV1_8 read:33 shape:opaque
+Play Serverbound 0x07 minecraft:player_action EntityServerboundCodecs.PlayerActionV1_8 read:10 shape:opaque
+Play Serverbound 0x08 minecraft:block_place UseItemCodecs.BlockPlaceV1_8 read:18 shape:opaque
+Play Serverbound 0x09 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem read:2 shape:opaque
+Play Serverbound 0x0A minecraft:swing EntityServerboundCodecs.SwingV1_8 read:0 shape:opaque
+Play Serverbound 0x0B minecraft:player_command EntityServerboundCodecs.PlayerCommand read:3 shape:opaque
+Play Serverbound 0x0C minecraft:steer_vehicle EntityServerboundCodecs.SteerVehicleV1_8 read:9 shape:opaque
+Play Serverbound 0x0D minecraft:container_close ContainerCodecs.ContainerCloseServerV1_8 read:1 shape:opaque
+Play Serverbound 0x0E minecraft:container_click ContainerCodecs.ContainerClickV1_8 read:13 shape:opaque
+Play Serverbound 0x0F minecraft:transaction ContainerCodecs.TransactionServerV1_8 read:4 shape:opaque
+Play Serverbound 0x10 minecraft:creative_inventory_action ContainerCodecs.CreativeSlotV1_8 read:8 shape:opaque
+Play Serverbound 0x11 minecraft:container_button_click ContainerCodecs.ContainerButtonClickV1_8 read:2 shape:opaque
+Play Serverbound 0x12 minecraft:sign_update marker n/a shape:opaque
+Play Serverbound 0x13 minecraft:abilities UiMiscCodecs.ServerLegacyAbilitiesV1_8 read:9 shape:opaque
+Play Serverbound 0x14 minecraft:tab_complete CommandSuggestionCodecs.ServerLegacyTabCompleteV1_8 read:2 shape:opaque
+Play Serverbound 0x15 minecraft:client_information PlayClientInformationCodecs.V1_8 read:5 shape:opaque
+Play Serverbound 0x16 minecraft:client_command PlayCommonCodecs.ClientCommand read:1 shape:varint
+Play Serverbound 0x17 minecraft:custom_payload marker n/a shape:opaque
+Play Serverbound 0x18 minecraft:teleport_to_entity EntityServerboundCodecs.TeleportToEntity read:16 via:minecraft:spectate shape:opaque
+Play Serverbound 0x19 minecraft:resource_pack_response ResourcePackCodecs.ServerLegacyResourcePackV1_8 read:2 shape:opaque

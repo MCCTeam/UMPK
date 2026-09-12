@@ -1,0 +1,45 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- XML doc completeness is a pre-1.0 hardening gate; until then missing-doc noise is suppressed -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsPackable>true</IsPackable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MCCTeam/UMPK</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MCCTeam/UMPK.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Authors>UMPK contributors</Authors>
+    <Description>Universal Minecraft Protocol Kit</Description>
+    <PackageTags>minecraft minecraft-java protocol networking aot</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>https://github.com/MCCTeam/UMPK/releases/tag/v$(Version)</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(RepoRoot)docs/nuget/README.md" Pack="true" PackagePath="/" Link="README.md" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" PrivateAssets="all" />
+    <AdditionalFiles Include="$(RepoRoot)engineering/BannedSymbols.txt" />
+    <AdditionalFiles Include="PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI.Unshipped.txt" />
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <!-- The Conformance suite pins behaviour that is deliberately not public surface (the codec-shape
+         probe, for one), so it needs the same internals access the unit suite has. -->
+    <InternalsVisibleTo Include="$(AssemblyName).Conformance" />
+    <InternalsVisibleTo Include="Umpk.TestKit" />
+    <!-- The benchmarks drive the same internal seams the suites do (the per-frame dispatch
+         sequence, the empty-registry context, the generated descriptor builders), so a
+         measurement is taken on production code rather than a copy of it. -->
+    <InternalsVisibleTo Include="Umpk.Benchmarks" />
+  </ItemGroup>
+</Project>

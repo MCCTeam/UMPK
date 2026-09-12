@@ -1,0 +1,13 @@
+{
+ "_provenance": {
+  "version": "1.13.1",
+  "protocol": 401,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "1.13 predates the server registries report; the wire uses int registry ids resolved elsewhere"
+  ],
+  "kind": "curated",
+  "note": "no registries report exists for 1.13; item/block palettes ride items.json/blocks.json"
+ },
+ "registries": {}
+}

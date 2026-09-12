@@ -1,0 +1,10 @@
+{
+  "_provenance": {
+    "version": "1.8",
+    "protocol": 47,
+    "mapping_source": "mcp-community",
+    "kind": "curated-legacy",
+    "note": "1.8 has no data components; item nbt only"
+  },
+  "entries": []
+}

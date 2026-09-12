@@ -1,0 +1,74 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  # Hermetic conformance over the committed .umpkcap corpora (protocol 47/770/776).
+  # This also runs in PR CI via the normal test pass; nightly re-runs it as the corpus gate so a
+  # corpus/codec regression is caught even if a PR skipped the project.
+  conformance:
+    name: packet corpus conformance (hermetic)
+    runs-on: ubuntu-latest
+    steps:
+      # NOTE (R8-S2): the .umpkcap corpora are committed as plain binary today, so a default checkout
+      # fetches them intact. When they move to Git LFS (planned Q3), this checkout MUST add `lfs: true`
+      # (below) or it fetches LFS pointer files and CorpusLoader.Parse throws bad-magic, silently
+      # breaking the corpus gate. Uncomment `with: lfs: true` at that conversion.
+      - uses: actions/checkout@v4
+        # with:
+        #   lfs: true   # required once fixtures/corpus/**/*.umpkcap are LFS-tracked (Q3)
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test tests/Umpk.Protocol.Java.Conformance/Umpk.Protocol.Java.Conformance.csproj -c Release
+
+  # Live-server matrix: boots a per-version isolated vanilla server (port 25599 only, one at a time),
+  # logs in with the real JavaConnection, and asserts reach-play / keep-alive survival / chunk decode.
+  # Gated by UMPK_NIGHTLY; the NightlyFact legs self-skip when it is unset. Modern versions run on the
+  # default JDK; 1.8 needs a Java 8 runtime (documented in the harness). Server jars are provisioned by
+  # the runner into UMPK_SERVER_ROOT/<version>/ (not committed to the repo). The provisioning step below
+  # is a stub until Q3, so no jar is actually placed yet; each [NightlyFact("<version>")] leg checks its
+  # server directory and SKIPS (not fails) when it is absent (R8-4), so this matrix is honestly green-
+  # with-skips until real provisioning lands, rather than red on a DirectoryNotFoundException.
+  live-matrix:
+    name: live-server ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: "1.21.5"
+            java: "21"
+          - version: "26.2"
+            java: "21"
+          - version: "1.8"
+            java: "8"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Set up server JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - name: Provision ${{ matrix.version }} server jar
+        run: |
+          # STUB until Q3: this must fetch the vanilla server.jar + eula for this version and place:
+          #   $UMPK_SERVER_ROOT/${{ matrix.version }}/server.jar
+          # accepting the EULA. It provisions nothing today, so the matching NightlyFact leg SKIPS
+          # (the harness checks Directory.Exists on the server dir). That is intentional and honest:
+          # the legs are green-with-skips, never failed, until this hook is made real. Do not wire the
+          # schedule to gate on the live legs until then.
+          echo "STUB: no server jar provisioned for ${{ matrix.version }}; the live leg will SKIP"
+        env:
+          UMPK_SERVER_ROOT: ${{ github.workspace }}/servers
+      - name: Run live integration legs
+        run: dotnet test tests/Umpk.IntegrationTests/Umpk.IntegrationTests.csproj -c Release
+        env:
+          UMPK_NIGHTLY: "1"
+          UMPK_SERVER_ROOT: ${{ github.workspace }}/servers

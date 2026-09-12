@@ -1,0 +1,1019 @@
+#nullable enable
+Umpk.Pathfinding.Core.AStarPathFinder
+Umpk.Pathfinding.Core.AStarPathFinder.AStarPathFinder(Umpk.Pathfinding.Moves.IMove![]? moves = null, int maxChunkBorderFetch = 64) -> void
+Umpk.Pathfinding.Core.AStarPathFinder.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int startX, int startY, int startZ, Umpk.Pathfinding.Goals.IGoal! goal, System.Threading.CancellationToken ct, long nodeBudget, System.TimeSpan timeout, System.TimeProvider! timeProvider) -> Umpk.Pathfinding.Core.PathResult!
+Umpk.Pathfinding.Core.ActionCosts
+Umpk.Pathfinding.Core.BinaryHeapOpenSet
+Umpk.Pathfinding.Core.BinaryHeapOpenSet.BinaryHeapOpenSet(int initialCapacity = 1024) -> void
+Umpk.Pathfinding.Core.BinaryHeapOpenSet.Count.get -> int
+Umpk.Pathfinding.Core.BinaryHeapOpenSet.Insert(Umpk.Pathfinding.Core.PathNode! node) -> void
+Umpk.Pathfinding.Core.BinaryHeapOpenSet.RemoveMin() -> Umpk.Pathfinding.Core.PathNode!
+Umpk.Pathfinding.Core.BinaryHeapOpenSet.Update(Umpk.Pathfinding.Core.PathNode! node) -> void
+Umpk.Pathfinding.Core.BreathEscape
+Umpk.Pathfinding.Core.BreathEscape.BreathEscape() -> void
+Umpk.Pathfinding.Core.BreathEscape.Equals(Umpk.Pathfinding.Core.BreathEscape other) -> bool
+Umpk.Pathfinding.Core.BreathEscape.IsKnown.get -> bool
+Umpk.Pathfinding.Core.BreathEscape.Ticks.get -> double
+Umpk.Pathfinding.Core.BreathModel
+Umpk.Pathfinding.Core.BreathValidation
+Umpk.Pathfinding.Core.BreathValidation.BreathValidation() -> void
+Umpk.Pathfinding.Core.BreathValidation.BreathingStops.get -> int
+Umpk.Pathfinding.Core.BreathValidation.BreathingStops.init -> void
+Umpk.Pathfinding.Core.BreathValidation.BudgetTicks.get -> double
+Umpk.Pathfinding.Core.BreathValidation.BudgetTicks.init -> void
+Umpk.Pathfinding.Core.BreathValidation.Equals(Umpk.Pathfinding.Core.BreathValidation other) -> bool
+Umpk.Pathfinding.Core.BreathValidation.FirstViolationSegment.get -> int
+Umpk.Pathfinding.Core.BreathValidation.FirstViolationSegment.init -> void
+Umpk.Pathfinding.Core.BreathValidation.IsSurvivable.get -> bool
+Umpk.Pathfinding.Core.BreathValidation.IsSurvivable.init -> void
+Umpk.Pathfinding.Core.BreathValidation.PeakDeficitTicks.get -> double
+Umpk.Pathfinding.Core.BreathValidation.PeakDeficitTicks.init -> void
+Umpk.Pathfinding.Core.BreathValidator
+Umpk.Pathfinding.Core.CalculationContext
+Umpk.Pathfinding.Core.CalculationContext.AllowClimb.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowDiagonalDescend.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowDoorInteraction.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowLadderGrabDuringFall.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowParkour.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowParkourAscend.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.AllowSwim.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.CalculationContext(Umpk.Pathfinding.PlanningWorldView! world, Umpk.Pathfinding.PathfinderOptions! options, Umpk.Pathfinding.Core.PathfinderCapabilities? capabilities = null, bool fireHazardsCleared = false) -> void
+Umpk.Pathfinding.Core.CalculationContext.CanSprint.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.CanTraverseWater(int x, int y, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.CanLandOn(int x, int y, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.CanWalkOn(int x, int y, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.CanWalkThrough(int x, int y, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.Capabilities.get -> Umpk.Pathfinding.Core.PathfinderCapabilities!
+Umpk.Pathfinding.Core.CalculationContext.CurrentEntryPreparation.get -> Umpk.Pathfinding.Core.EntryPreparationState
+Umpk.Pathfinding.Core.CalculationContext.FallDamageBudget.get -> double
+Umpk.Pathfinding.Core.CalculationContext.FireHazardsCleared.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.GetBlock(int x, int y, int z) -> Umpk.Game.Blocks.BlockState
+Umpk.Pathfinding.Core.CalculationContext.IsChunkLoaded(int x, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.IsFullyPassable(int x, int y, int z) -> bool
+Umpk.Pathfinding.Core.CalculationContext.JumpPenalty.get -> double
+Umpk.Pathfinding.Core.CalculationContext.LandingIsAffordable(Umpk.Game.Blocks.BlockState onto, int fallHeight) -> bool
+Umpk.Pathfinding.Core.CalculationContext.LandingSinksThroughPowderSnow(Umpk.Game.Blocks.BlockState onto, int dropBlocks) -> bool
+Umpk.Pathfinding.Core.CalculationContext.MaxFallHeight.get -> int
+Umpk.Pathfinding.Core.CalculationContext.MaxFallHeightWater.get -> int
+Umpk.Pathfinding.Core.CalculationContext.Options.get -> Umpk.Pathfinding.PathfinderOptions!
+Umpk.Pathfinding.Core.CalculationContext.PowderSnowWalkable.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.PreviousMoveType.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.CalculationContext.SneakCost.get -> double
+Umpk.Pathfinding.Core.CalculationContext.SprintCost.get -> double
+Umpk.Pathfinding.Core.CalculationContext.SwimCost.get -> double
+Umpk.Pathfinding.Core.CalculationContext.SwimCostThrough(int x, int y, int z, int stepX, int stepY, int stepZ) -> double
+Umpk.Pathfinding.Core.CalculationContext.WalkCost.get -> double
+Umpk.Pathfinding.Core.CalculationContext.World.get -> Umpk.Pathfinding.PlanningWorldView!
+Umpk.Pathfinding.Core.CapabilityEffect
+Umpk.Pathfinding.Core.CapabilityEffect.Amplifier.get -> int
+Umpk.Pathfinding.Core.CapabilityEffect.Amplifier.init -> void
+Umpk.Pathfinding.Core.CapabilityEffect.CapabilityEffect() -> void
+Umpk.Pathfinding.Core.CapabilityEffect.CapabilityEffect(Umpk.Identifier Id, int NetworkId, int Amplifier, int RemainingTicks, bool IsInfinite, bool DurationIsEstimated) -> void
+Umpk.Pathfinding.Core.CapabilityEffect.Deconstruct(out Umpk.Identifier Id, out int NetworkId, out int Amplifier, out int RemainingTicks, out bool IsInfinite, out bool DurationIsEstimated) -> void
+Umpk.Pathfinding.Core.CapabilityEffect.DurationIsEstimated.get -> bool
+Umpk.Pathfinding.Core.CapabilityEffect.DurationIsEstimated.init -> void
+Umpk.Pathfinding.Core.CapabilityEffect.Equals(Umpk.Pathfinding.Core.CapabilityEffect other) -> bool
+Umpk.Pathfinding.Core.CapabilityEffect.Id.get -> Umpk.Identifier
+Umpk.Pathfinding.Core.CapabilityEffect.Id.init -> void
+Umpk.Pathfinding.Core.CapabilityEffect.IsInfinite.get -> bool
+Umpk.Pathfinding.Core.CapabilityEffect.IsInfinite.init -> void
+Umpk.Pathfinding.Core.CapabilityEffect.NetworkId.get -> int
+Umpk.Pathfinding.Core.CapabilityEffect.NetworkId.init -> void
+Umpk.Pathfinding.Core.CapabilityEffect.RemainingTicks.get -> int
+Umpk.Pathfinding.Core.CapabilityEffect.RemainingTicks.init -> void
+Umpk.Pathfinding.Core.CapabilityItem
+Umpk.Pathfinding.Core.CapabilityItem.CapabilityItem() -> void
+Umpk.Pathfinding.Core.CapabilityItem.CapabilityItem(Umpk.Identifier ItemId, int Count, int MenuSlot, Umpk.Pathfinding.Core.EnchantmentReadout Enchantments) -> void
+Umpk.Pathfinding.Core.CapabilityItem.Count.get -> int
+Umpk.Pathfinding.Core.CapabilityItem.Count.init -> void
+Umpk.Pathfinding.Core.CapabilityItem.Deconstruct(out Umpk.Identifier ItemId, out int Count, out int MenuSlot, out Umpk.Pathfinding.Core.EnchantmentReadout Enchantments) -> void
+Umpk.Pathfinding.Core.CapabilityItem.Enchantments.get -> Umpk.Pathfinding.Core.EnchantmentReadout
+Umpk.Pathfinding.Core.CapabilityItem.Enchantments.init -> void
+Umpk.Pathfinding.Core.CapabilityItem.Equals(Umpk.Pathfinding.Core.CapabilityItem other) -> bool
+Umpk.Pathfinding.Core.CapabilityItem.ItemId.get -> Umpk.Identifier
+Umpk.Pathfinding.Core.CapabilityItem.ItemId.init -> void
+Umpk.Pathfinding.Core.CapabilityItem.MenuSlot.get -> int
+Umpk.Pathfinding.Core.CapabilityItem.MenuSlot.init -> void
+Umpk.Pathfinding.Core.EffectCoverage
+Umpk.Pathfinding.Core.EnchantmentReadout
+Umpk.Pathfinding.Core.EnchantmentReadout.All.get -> System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.EnchantmentInstance>!
+Umpk.Pathfinding.Core.EnchantmentReadout.CanEnumerate.get -> bool
+Umpk.Pathfinding.Core.EnchantmentReadout.EnchantmentReadout() -> void
+Umpk.Pathfinding.Core.EnchantmentReadout.EnchantmentReadout(Umpk.Game.Items.ItemStack! stack, string! legacyEra, Umpk.Game.Items.ILegacyItemBridgeSource! legacyIds, bool sessionCanNameEnchantments) -> void
+Umpk.Pathfinding.Core.EnchantmentReadout.Equals(Umpk.Pathfinding.Core.EnchantmentReadout other) -> bool
+Umpk.Pathfinding.Core.EnchantmentReadout.TryGetLevel(Umpk.Identifier enchantment, out int level) -> bool
+Umpk.Pathfinding.Core.EntryPreparationKind
+Umpk.Pathfinding.Core.EntryPreparationKind.None = 0 -> Umpk.Pathfinding.Core.EntryPreparationKind
+Umpk.Pathfinding.Core.EntryPreparationKind.SidewallRunup = 1 -> Umpk.Pathfinding.Core.EntryPreparationKind
+Umpk.Pathfinding.Core.EntryPreparationState
+Umpk.Pathfinding.Core.EntryPreparationState.AdvanceBackward() -> Umpk.Pathfinding.Core.EntryPreparationState
+Umpk.Pathfinding.Core.EntryPreparationState.AdvanceReturn() -> Umpk.Pathfinding.Core.EntryPreparationState
+Umpk.Pathfinding.Core.EntryPreparationState.BackwardSteps.get -> byte
+Umpk.Pathfinding.Core.EntryPreparationState.BackwardSteps.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.Deconstruct(out Umpk.Pathfinding.Core.EntryPreparationKind Kind, out int OriginX, out int OriginY, out int OriginZ, out int ForwardX, out int ForwardZ, out byte RequiredSteps, out byte BackwardSteps, out byte ReturnSteps) -> void
+Umpk.Pathfinding.Core.EntryPreparationState.EntryPreparationState() -> void
+Umpk.Pathfinding.Core.EntryPreparationState.EntryPreparationState(Umpk.Pathfinding.Core.EntryPreparationKind Kind, int OriginX, int OriginY, int OriginZ, int ForwardX, int ForwardZ, byte RequiredSteps, byte BackwardSteps, byte ReturnSteps) -> void
+Umpk.Pathfinding.Core.EntryPreparationState.Equals(Umpk.Pathfinding.Core.EntryPreparationState other) -> bool
+Umpk.Pathfinding.Core.EntryPreparationState.ForwardX.get -> int
+Umpk.Pathfinding.Core.EntryPreparationState.ForwardX.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.ForwardZ.get -> int
+Umpk.Pathfinding.Core.EntryPreparationState.ForwardZ.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.IsNone.get -> bool
+Umpk.Pathfinding.Core.EntryPreparationState.IsPrepared.get -> bool
+Umpk.Pathfinding.Core.EntryPreparationState.Kind.get -> Umpk.Pathfinding.Core.EntryPreparationKind
+Umpk.Pathfinding.Core.EntryPreparationState.Kind.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.OriginX.get -> int
+Umpk.Pathfinding.Core.EntryPreparationState.OriginX.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.OriginY.get -> int
+Umpk.Pathfinding.Core.EntryPreparationState.OriginY.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.OriginZ.get -> int
+Umpk.Pathfinding.Core.EntryPreparationState.OriginZ.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.RequiredSteps.get -> byte
+Umpk.Pathfinding.Core.EntryPreparationState.RequiredSteps.init -> void
+Umpk.Pathfinding.Core.EntryPreparationState.ReturnSteps.get -> byte
+Umpk.Pathfinding.Core.EntryPreparationState.ReturnSteps.init -> void
+Umpk.Pathfinding.Core.FallDamageModel
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.Deconstruct(out double DistanceBonus, out double Multiplier) -> void
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.DistanceBonus.get -> double
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.DistanceBonus.init -> void
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.Equals(Umpk.Pathfinding.Core.FallDamageModel.LandingImpact other) -> bool
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.LandingImpact() -> void
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.LandingImpact(double DistanceBonus, double Multiplier) -> void
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.Multiplier.get -> double
+Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.Multiplier.init -> void
+Umpk.Pathfinding.Core.MoveResult
+Umpk.Pathfinding.Core.MoveResult.Cost -> double
+Umpk.Pathfinding.Core.MoveResult.DestX -> int
+Umpk.Pathfinding.Core.MoveResult.DestY -> int
+Umpk.Pathfinding.Core.MoveResult.DestZ -> int
+Umpk.Pathfinding.Core.MoveResult.IsImpossible.get -> bool
+Umpk.Pathfinding.Core.MoveResult.MoveResult() -> void
+Umpk.Pathfinding.Core.MoveResult.ParkourProfile -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.MoveResult.Set(int x, int y, int z, double cost, Umpk.Pathfinding.Core.ParkourProfile parkourProfile = Umpk.Pathfinding.Core.ParkourProfile.None) -> void
+Umpk.Pathfinding.Core.MoveResult.SetImpossible() -> void
+Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Ascend = 2 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Climb = 5 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Descend = 3 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Diagonal = 1 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Fall = 4 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Parkour = 6 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Swim = 7 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.MoveType.Traverse = 0 -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.ParkourProfile.Default = 1 -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.ParkourProfile.None = 0 -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.ParkourProfile.Sidewall = 2 -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.PathDiagnostics
+Umpk.Pathfinding.Core.PathDiagnostics.ElapsedMilliseconds.get -> long
+Umpk.Pathfinding.Core.PathDiagnostics.ElapsedMilliseconds.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.Equals(Umpk.Pathfinding.Core.PathDiagnostics other) -> bool
+Umpk.Pathfinding.Core.PathDiagnostics.HangingTakeoffsRefused.get -> int
+Umpk.Pathfinding.Core.PathDiagnostics.HangingTakeoffsRefused.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.NodeBudgetExhausted.get -> bool
+Umpk.Pathfinding.Core.PathDiagnostics.NodeBudgetExhausted.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.NodesExplored.get -> int
+Umpk.Pathfinding.Core.PathDiagnostics.NodesExplored.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.PathDiagnostics() -> void
+Umpk.Pathfinding.Core.PathDiagnostics.SlowJumpFloorTakeoffsRefused.get -> int
+Umpk.Pathfinding.Core.PathDiagnostics.SlowJumpFloorTakeoffsRefused.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.TimedOut.get -> bool
+Umpk.Pathfinding.Core.PathDiagnostics.TimedOut.init -> void
+Umpk.Pathfinding.Core.PathDiagnostics.UnloadedChunkHits.get -> int
+Umpk.Pathfinding.Core.PathDiagnostics.UnloadedChunkHits.init -> void
+Umpk.Pathfinding.Core.PathNode
+Umpk.Pathfinding.Core.PathNode.AirDeficit -> double
+Umpk.Pathfinding.Core.PathNode.BreathHoldTicks -> double
+Umpk.Pathfinding.Core.PathNode.EntryPreparation -> Umpk.Pathfinding.Core.EntryPreparationState
+Umpk.Pathfinding.Core.PathNode.FCost.get -> double
+Umpk.Pathfinding.Core.PathNode.GCost -> double
+Umpk.Pathfinding.Core.PathNode.HCost -> double
+Umpk.Pathfinding.Core.PathNode.HeapIndex -> int
+Umpk.Pathfinding.Core.PathNode.IsClosed -> bool
+Umpk.Pathfinding.Core.PathNode.IsOpen -> bool
+Umpk.Pathfinding.Core.PathNode.MoveUsed -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Core.PathNode.PackedPosition.get -> long
+Umpk.Pathfinding.Core.PathNode.Parent -> Umpk.Pathfinding.Core.PathNode?
+Umpk.Pathfinding.Core.PathNode.ParkourProfile -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Core.PathNode.PathNode(int x, int y, int z) -> void
+Umpk.Pathfinding.Core.PathResult
+Umpk.Pathfinding.Core.PathResult.Cost.get -> double
+Umpk.Pathfinding.Core.PathResult.Diagnostics.get -> Umpk.Pathfinding.Core.PathDiagnostics
+Umpk.Pathfinding.Core.PathResult.ElapsedMs.get -> long
+Umpk.Pathfinding.Core.PathResult.Moves.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.MoveType>!
+Umpk.Pathfinding.Core.PathResult.NodesExplored.get -> int
+Umpk.Pathfinding.Core.PathResult.Path.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.PathNode!>!
+Umpk.Pathfinding.Core.PathResult.PathResult(Umpk.Pathfinding.Core.PathStatus status, System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.PathNode!>! path, double cost, Umpk.Pathfinding.Core.PathDiagnostics diagnostics) -> void
+Umpk.Pathfinding.Core.PathResult.Status.get -> Umpk.Pathfinding.Core.PathStatus
+Umpk.Pathfinding.Core.PathStatus
+Umpk.Pathfinding.Core.PathStatus.Failed = 2 -> Umpk.Pathfinding.Core.PathStatus
+Umpk.Pathfinding.Core.PathStatus.Partial = 1 -> Umpk.Pathfinding.Core.PathStatus
+Umpk.Pathfinding.Core.PathStatus.Success = 0 -> Umpk.Pathfinding.Core.PathStatus
+Umpk.Pathfinding.Core.PathfinderCapabilities
+Umpk.Pathfinding.Core.PathfinderCapabilities.<Clone>$() -> Umpk.Pathfinding.Core.PathfinderCapabilities!
+Umpk.Pathfinding.Core.PathfinderCapabilities.CountOf(Umpk.Identifier itemId) -> int
+Umpk.Pathfinding.Core.PathfinderCapabilities.Effects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.CapabilityEffect>!
+Umpk.Pathfinding.Core.PathfinderCapabilities.Effects.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.EffectsKnown.get -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.EffectsKnown.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.Equals(Umpk.Pathfinding.Core.PathfinderCapabilities? other) -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.Equipment(Umpk.Game.Entities.EquipmentSlot slot) -> Umpk.Pathfinding.Core.CapabilityItem?
+Umpk.Pathfinding.Core.PathfinderCapabilities.Food.get -> int
+Umpk.Pathfinding.Core.PathfinderCapabilities.Food.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.Health.get -> float
+Umpk.Pathfinding.Core.PathfinderCapabilities.Health.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.HeldSlot.get -> int
+Umpk.Pathfinding.Core.PathfinderCapabilities.HeldSlot.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.InventoryKnown.get -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.InventoryKnown.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.Items.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.CapabilityItem>!
+Umpk.Pathfinding.Core.PathfinderCapabilities.Items.init -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.PathfinderCapabilities() -> void
+Umpk.Pathfinding.Core.PathfinderCapabilities.PowderSnowWalkable.get -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.SoulSpeedLevel.get -> int
+Umpk.Pathfinding.Core.PathfinderCapabilities.TryGetEffect(Umpk.Identifier id, out Umpk.Pathfinding.Core.CapabilityEffect effect) -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.VitalsKnown.get -> bool
+Umpk.Pathfinding.Core.PathfinderCapabilities.VitalsKnown.init -> void
+Umpk.Pathfinding.EffectAwarePlan
+Umpk.Pathfinding.EffectAwarePlan.<Clone>$() -> Umpk.Pathfinding.EffectAwarePlan!
+Umpk.Pathfinding.EffectAwarePlan.BreathSuspended.get -> bool
+Umpk.Pathfinding.EffectAwarePlan.BreathSuspended.init -> void
+Umpk.Pathfinding.EffectAwarePlan.DependsOnEffects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Identifier>!
+Umpk.Pathfinding.EffectAwarePlan.DependsOnEffects.init -> void
+Umpk.Pathfinding.EffectAwarePlan.EffectAwarePlan() -> void
+Umpk.Pathfinding.EffectAwarePlan.Equals(Umpk.Pathfinding.EffectAwarePlan? other) -> bool
+Umpk.Pathfinding.EffectAwarePlan.FireHazardsCleared.get -> bool
+Umpk.Pathfinding.EffectAwarePlan.FireHazardsCleared.init -> void
+Umpk.Pathfinding.EffectAwarePlan.Result.get -> Umpk.Pathfinding.Core.PathResult!
+Umpk.Pathfinding.EffectAwarePlan.Result.init -> void
+Umpk.Pathfinding.EffectAwarePlan.Searches.get -> int
+Umpk.Pathfinding.EffectAwarePlan.Searches.init -> void
+Umpk.Pathfinding.EffectAwarePlan.Segments.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>!
+Umpk.Pathfinding.EffectAwarePlan.Segments.init -> void
+Umpk.Pathfinding.EffectAwarePlanner
+Umpk.Pathfinding.Execution.ActionTemplateFactory
+Umpk.Pathfinding.Execution.BarrierCrossing
+Umpk.Pathfinding.Execution.BarrierCrossing.BarrierCrossing() -> void
+Umpk.Pathfinding.Execution.BarrierCrossing.BarrierCrossing(int PanelX, int PanelZ) -> void
+Umpk.Pathfinding.Execution.BarrierCrossing.Deconstruct(out int PanelX, out int PanelZ) -> void
+Umpk.Pathfinding.Execution.BarrierCrossing.Equals(Umpk.Pathfinding.Execution.BarrierCrossing other) -> bool
+Umpk.Pathfinding.Execution.BarrierCrossing.FreeX.get -> int
+Umpk.Pathfinding.Execution.BarrierCrossing.FreeZ.get -> int
+Umpk.Pathfinding.Execution.BarrierCrossing.PanelX.get -> int
+Umpk.Pathfinding.Execution.BarrierCrossing.PanelX.init -> void
+Umpk.Pathfinding.Execution.BarrierCrossing.PanelZ.get -> int
+Umpk.Pathfinding.Execution.BarrierCrossing.PanelZ.init -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement
+Umpk.Pathfinding.Execution.BreathHoldRequirement.BreathHoldRequirement() -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement.BreathHoldRequirement(Umpk.Geometry.Vec3d Cell, double PlannedTicks, int TicksHeld) -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement.Cell.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.BreathHoldRequirement.Cell.init -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement.Deconstruct(out Umpk.Geometry.Vec3d Cell, out double PlannedTicks, out int TicksHeld) -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement.Equals(Umpk.Pathfinding.Execution.BreathHoldRequirement other) -> bool
+Umpk.Pathfinding.Execution.BreathHoldRequirement.PlannedTicks.get -> double
+Umpk.Pathfinding.Execution.BreathHoldRequirement.PlannedTicks.init -> void
+Umpk.Pathfinding.Execution.BreathHoldRequirement.TicksHeld.get -> int
+Umpk.Pathfinding.Execution.BreathHoldRequirement.TicksHeld.init -> void
+Umpk.Pathfinding.Execution.IActionTemplate
+Umpk.Pathfinding.Execution.IActionTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.IActionTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.IActionTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionKind.CloseByHand = 3 -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionKind.None = 0 -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionKind.OpenByHand = 1 -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionKind.PressActivator = 2 -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionKind.StandOnPlate = 4 -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionRequirement
+Umpk.Pathfinding.Execution.InteractionRequirement.Deconstruct(out Umpk.Geometry.BlockPos Target, out Umpk.Pathfinding.Execution.InteractionKind Kind, out Umpk.Geometry.BlockPos From, out Umpk.Geometry.BlockPos Witness, out int WindowTicks) -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.Equals(Umpk.Pathfinding.Execution.InteractionRequirement other) -> bool
+Umpk.Pathfinding.Execution.InteractionRequirement.ExpectedOpen.get -> bool
+Umpk.Pathfinding.Execution.InteractionRequirement.From.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Execution.InteractionRequirement.From.init -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.InteractionRequirement() -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.InteractionRequirement(Umpk.Geometry.BlockPos Target, Umpk.Pathfinding.Execution.InteractionKind Kind, Umpk.Geometry.BlockPos From, Umpk.Geometry.BlockPos Witness, int WindowTicks = 0) -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.Kind.get -> Umpk.Pathfinding.Execution.InteractionKind
+Umpk.Pathfinding.Execution.InteractionRequirement.Kind.init -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.SendsAUse.get -> bool
+Umpk.Pathfinding.Execution.InteractionRequirement.Target.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Execution.InteractionRequirement.Target.init -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.WindowTicks.get -> int
+Umpk.Pathfinding.Execution.InteractionRequirement.WindowTicks.init -> void
+Umpk.Pathfinding.Execution.InteractionRequirement.Witness.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Execution.InteractionRequirement.Witness.init -> void
+Umpk.Pathfinding.Execution.PathExecutionContext
+Umpk.Pathfinding.Execution.PathExecutionContext.AllowSprint.get -> bool
+Umpk.Pathfinding.Execution.PathExecutionContext.BreathSuspended.get -> bool
+Umpk.Pathfinding.Execution.PathExecutionContext.Budget.get -> Umpk.Pathfinding.Execution.SegmentBudgetPolicy!
+Umpk.Pathfinding.Execution.PathExecutionContext.Capabilities.get -> Umpk.Pathfinding.Core.PathfinderCapabilities!
+Umpk.Pathfinding.Execution.PathExecutionContext.Conditions.get -> Umpk.Physics.PhysicsConditions
+Umpk.Pathfinding.Execution.PathExecutionContext.DependsOnEffects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Identifier>!
+Umpk.Pathfinding.Execution.PathExecutionContext.DependsOnPowderSnowBoots.get -> bool
+Umpk.Pathfinding.Execution.PathExecutionContext.PathExecutionContext(Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile) -> void
+Umpk.Pathfinding.Execution.PathExecutionContext.PathExecutionContext(Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile, Umpk.Physics.PhysicsConditions conditions, bool allowSprint = true, Umpk.Pathfinding.Core.PathfinderCapabilities? capabilities = null, bool breathSuspended = false, System.Collections.Generic.IReadOnlyList<Umpk.Identifier>? dependsOnEffects = null, bool dependsOnPowderSnowBoots = false) -> void
+Umpk.Pathfinding.Execution.PathExecutionContext.Profile.get -> Umpk.Physics.PhysicsProfile!
+Umpk.Pathfinding.Execution.PathExecutionContext.World.get -> Umpk.Physics.IPhysicsWorldView!
+Umpk.Pathfinding.Execution.PathExecutor
+Umpk.Pathfinding.Execution.PathExecutor.AllowSprint.get -> bool
+Umpk.Pathfinding.Execution.PathExecutor.BreathHoldTicksPerformed.get -> int
+Umpk.Pathfinding.Execution.PathExecutor.Context.get -> Umpk.Pathfinding.Execution.PathExecutionContext!
+Umpk.Pathfinding.Execution.PathExecutor.CurrentIndex.get -> int
+Umpk.Pathfinding.Execution.PathExecutor.CurrentSegment.get -> Umpk.Pathfinding.Execution.PathSegment?
+Umpk.Pathfinding.Execution.PathExecutor.CurrentSegmentTicks.get -> int
+Umpk.Pathfinding.Execution.PathExecutor.HasCommittedToCrossing.get -> bool
+Umpk.Pathfinding.Execution.PathExecutor.IsAwaitingBreath.get -> bool
+Umpk.Pathfinding.Execution.PathExecutor.IsComplete.get -> bool
+Umpk.Pathfinding.Execution.PathExecutor.NotifyBreathSatisfied() -> void
+Umpk.Pathfinding.Execution.PathExecutor.NotifyInteractionSatisfied(Umpk.Pathfinding.Execution.BarrierCrossing? observedCrossing = null) -> void
+Umpk.Pathfinding.Execution.PathExecutor.PathExecutor(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments, Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver? observer = null, double deviationThreshold = 1.5) -> void
+Umpk.Pathfinding.Execution.PathExecutor.Segments.get -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>!
+Umpk.Pathfinding.Execution.PathExecutor.Tick(in Umpk.Physics.PhysicsState physics) -> Umpk.Pathfinding.Execution.PathExecutorTick
+Umpk.Pathfinding.Execution.PathExecutor.TotalSegments.get -> int
+Umpk.Pathfinding.Execution.PathExecutor.TotalTicks.get -> int
+Umpk.Pathfinding.Execution.PathExecutorState
+Umpk.Pathfinding.Execution.PathExecutorState.Complete = 1 -> Umpk.Pathfinding.Execution.PathExecutorState
+Umpk.Pathfinding.Execution.PathExecutorState.Failed = 2 -> Umpk.Pathfinding.Execution.PathExecutorState
+Umpk.Pathfinding.Execution.PathExecutorState.InProgress = 0 -> Umpk.Pathfinding.Execution.PathExecutorState
+Umpk.Pathfinding.Execution.PathExecutorTick
+Umpk.Pathfinding.Execution.PathExecutorTick.DeviationExceeded.get -> bool
+Umpk.Pathfinding.Execution.PathExecutorTick.DeviationExceeded.init -> void
+Umpk.Pathfinding.Execution.PathExecutorTick.Equals(Umpk.Pathfinding.Execution.PathExecutorTick other) -> bool
+Umpk.Pathfinding.Execution.PathExecutorTick.Output.get -> Umpk.Pathfinding.Execution.TemplateOutput
+Umpk.Pathfinding.Execution.PathExecutorTick.Output.init -> void
+Umpk.Pathfinding.Execution.PathExecutorTick.PathExecutorTick() -> void
+Umpk.Pathfinding.Execution.PathExecutorTick.PendingBreathHold.get -> Umpk.Pathfinding.Execution.BreathHoldRequirement?
+Umpk.Pathfinding.Execution.PathExecutorTick.PendingBreathHold.init -> void
+Umpk.Pathfinding.Execution.PathExecutorTick.PendingInteraction.get -> Umpk.Pathfinding.Execution.InteractionRequirement?
+Umpk.Pathfinding.Execution.PathExecutorTick.PendingInteraction.init -> void
+Umpk.Pathfinding.Execution.PathExecutorTick.State.get -> Umpk.Pathfinding.Execution.PathExecutorState
+Umpk.Pathfinding.Execution.PathExecutorTick.State.init -> void
+Umpk.Pathfinding.Execution.PathSegment
+Umpk.Pathfinding.Execution.PathSegment.<Clone>$() -> Umpk.Pathfinding.Execution.PathSegment!
+Umpk.Pathfinding.Execution.PathSegment.BreathHoldTicks.get -> double
+Umpk.Pathfinding.Execution.PathSegment.BreathHoldTicks.init -> void
+Umpk.Pathfinding.Execution.PathSegment.Crossing.get -> Umpk.Pathfinding.Execution.BarrierCrossing?
+Umpk.Pathfinding.Execution.PathSegment.Crossing.init -> void
+Umpk.Pathfinding.Execution.PathSegment.End.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.PathSegment.End.init -> void
+Umpk.Pathfinding.Execution.PathSegment.EndElevationSlack.get -> double
+Umpk.Pathfinding.Execution.PathSegment.EndElevationSlack.init -> void
+Umpk.Pathfinding.Execution.PathSegment.EndFeetY.get -> int
+Umpk.Pathfinding.Execution.PathSegment.EndFeetY.init -> void
+Umpk.Pathfinding.Execution.PathSegment.Equals(Umpk.Pathfinding.Execution.PathSegment? other) -> bool
+Umpk.Pathfinding.Execution.PathSegment.ExitHints.get -> Umpk.Pathfinding.Execution.PathTransitionHints!
+Umpk.Pathfinding.Execution.PathSegment.ExitHints.init -> void
+Umpk.Pathfinding.Execution.PathSegment.ExitTransition.get -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathSegment.ExitTransition.init -> void
+Umpk.Pathfinding.Execution.PathSegment.HeadingX.get -> int
+Umpk.Pathfinding.Execution.PathSegment.HeadingZ.get -> int
+Umpk.Pathfinding.Execution.PathSegment.Interaction.get -> Umpk.Pathfinding.Execution.InteractionRequirement?
+Umpk.Pathfinding.Execution.PathSegment.Interaction.init -> void
+Umpk.Pathfinding.Execution.PathSegment.IsWaterSegment.get -> bool
+Umpk.Pathfinding.Execution.PathSegment.MoveType.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Execution.PathSegment.MoveType.init -> void
+Umpk.Pathfinding.Execution.PathSegment.ParkourProfile.get -> Umpk.Pathfinding.Core.ParkourProfile
+Umpk.Pathfinding.Execution.PathSegment.ParkourProfile.init -> void
+Umpk.Pathfinding.Execution.PathSegment.PathSegment() -> void
+Umpk.Pathfinding.Execution.PathSegment.PlannedBlocks.get -> double
+Umpk.Pathfinding.Execution.PathSegment.PlannedTickCost.get -> double
+Umpk.Pathfinding.Execution.PathSegment.PlannedTickCost.init -> void
+Umpk.Pathfinding.Execution.PathSegment.PreserveSprint.get -> bool
+Umpk.Pathfinding.Execution.PathSegment.PreserveSprint.init -> void
+Umpk.Pathfinding.Execution.PathSegment.Start.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.PathSegment.Start.init -> void
+Umpk.Pathfinding.Execution.PathSegment.StartFeetY.get -> int
+Umpk.Pathfinding.Execution.PathSegment.StartFeetY.init -> void
+Umpk.Pathfinding.Execution.PathSegmentBuilder
+Umpk.Pathfinding.Execution.PathTransitionHints
+Umpk.Pathfinding.Execution.PathTransitionHints.<Clone>$() -> Umpk.Pathfinding.Execution.PathTransitionHints!
+Umpk.Pathfinding.Execution.PathTransitionHints.AllowAirBrake.get -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.AllowAirBrake.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.AllowUngrounded.get -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.AllowUngrounded.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.Deconstruct(out int DesiredHeadingX, out int DesiredHeadingZ, out double MinExitSpeed, out double MaxExitSpeed, out bool RequireStableFooting, out bool RequireGrounded, out bool RequireJumpReady, out bool AllowAirBrake, out int HorizonTicks, out bool AllowUngrounded) -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.DesiredHeadingX.get -> int
+Umpk.Pathfinding.Execution.PathTransitionHints.DesiredHeadingX.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.DesiredHeadingZ.get -> int
+Umpk.Pathfinding.Execution.PathTransitionHints.DesiredHeadingZ.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.Equals(Umpk.Pathfinding.Execution.PathTransitionHints? other) -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.HorizonTicks.get -> int
+Umpk.Pathfinding.Execution.PathTransitionHints.HorizonTicks.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.MaxExitSpeed.get -> double
+Umpk.Pathfinding.Execution.PathTransitionHints.MaxExitSpeed.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.MinExitSpeed.get -> double
+Umpk.Pathfinding.Execution.PathTransitionHints.MinExitSpeed.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.PathTransitionHints(int DesiredHeadingX, int DesiredHeadingZ, double MinExitSpeed, double MaxExitSpeed, bool RequireStableFooting, bool RequireGrounded, bool RequireJumpReady, bool AllowAirBrake, int HorizonTicks, bool AllowUngrounded = false) -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireGrounded.get -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireGrounded.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireJumpReady.get -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireJumpReady.init -> void
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireStableFooting.get -> bool
+Umpk.Pathfinding.Execution.PathTransitionHints.RequireStableFooting.init -> void
+Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathTransitionType.ContinueStraight = 1 -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathTransitionType.FinalStop = 0 -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathTransitionType.LandingRecovery = 4 -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathTransitionType.PrepareJump = 3 -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.PathTransitionType.Turn = 2 -> Umpk.Pathfinding.Execution.PathTransitionType
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy.BudgetFor(Umpk.Pathfinding.Execution.PathSegment! segment) -> int
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy.StuckMovedSquared(bool inWater) -> double
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy.StuckSpeed(bool inWater) -> double
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy.StuckTicksFor(int budget) -> int
+Umpk.Pathfinding.Execution.SegmentBudgetPolicy.WaterTravel.get -> Umpk.Physics.WaterTravelEra
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.DelegatePathExecutionObserver(System.Action<string!>! sink) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnDeviationDetected(int segmentIndex, Umpk.Geometry.Vec3d expected, Umpk.Geometry.Vec3d actual, double distance) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnNavigationCompleted(int totalTicks) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnNavigationStarted(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnSegmentCompleted(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment, int elapsedTicks, Umpk.Geometry.Vec3d position) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnSegmentFailed(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment, int elapsedTicks, Umpk.Geometry.Vec3d position) -> void
+Umpk.Pathfinding.Execution.Telemetry.DelegatePathExecutionObserver.OnSegmentStarted(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnDeviationDetected(int segmentIndex, Umpk.Geometry.Vec3d expected, Umpk.Geometry.Vec3d actual, double distance) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnNavigationCompleted(int totalTicks) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnNavigationStarted(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnSegmentCompleted(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment, int elapsedTicks, Umpk.Geometry.Vec3d position) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnSegmentFailed(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment, int elapsedTicks, Umpk.Geometry.Vec3d position) -> void
+Umpk.Pathfinding.Execution.Telemetry.IPathExecutionObserver.OnSegmentStarted(int segmentIndex, int totalSegments, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.TemplateOutput
+Umpk.Pathfinding.Execution.TemplateOutput.Equals(Umpk.Pathfinding.Execution.TemplateOutput other) -> bool
+Umpk.Pathfinding.Execution.TemplateOutput.ExpectedState.get -> Umpk.Physics.PhysicsState?
+Umpk.Pathfinding.Execution.TemplateOutput.ExpectedState.init -> void
+Umpk.Pathfinding.Execution.TemplateOutput.Input.get -> Umpk.Physics.MovementInput
+Umpk.Pathfinding.Execution.TemplateOutput.Input.init -> void
+Umpk.Pathfinding.Execution.TemplateOutput.TargetPitch.get -> float
+Umpk.Pathfinding.Execution.TemplateOutput.TargetPitch.init -> void
+Umpk.Pathfinding.Execution.TemplateOutput.TargetYaw.get -> float
+Umpk.Pathfinding.Execution.TemplateOutput.TargetYaw.init -> void
+Umpk.Pathfinding.Execution.TemplateOutput.TemplateOutput() -> void
+Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.TemplateState.Complete = 1 -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.TemplateState.Failed = 2 -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.TemplateState.InProgress = 0 -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.AscendTemplate
+Umpk.Pathfinding.Execution.Templates.AscendTemplate.AscendTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.AscendTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.AscendTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.AscendTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.ClimbTemplate
+Umpk.Pathfinding.Execution.Templates.ClimbTemplate.ClimbTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.ClimbTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.ClimbTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.ClimbTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.DescendTemplate
+Umpk.Pathfinding.Execution.Templates.DescendTemplate.DescendTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.DescendTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.DescendTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.DescendTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.FallTemplate
+Umpk.Pathfinding.Execution.Templates.FallTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.FallTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.FallTemplate.FallTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.FallTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.SprintJumpTemplate
+Umpk.Pathfinding.Execution.Templates.SprintJumpTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.SprintJumpTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.SprintJumpTemplate.SprintJumpTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.SprintJumpTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.SwimTemplate
+Umpk.Pathfinding.Execution.Templates.SwimTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.SwimTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.SwimTemplate.SwimTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Execution.Templates.SwimTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.WalkTemplate
+Umpk.Pathfinding.Execution.Templates.WalkTemplate.ExpectedEnd.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.WalkTemplate.ExpectedStart.get -> Umpk.Geometry.Vec3d
+Umpk.Pathfinding.Execution.Templates.WalkTemplate.Tick(in Umpk.Physics.PhysicsState physics, out Umpk.Pathfinding.Execution.TemplateOutput output) -> Umpk.Pathfinding.Execution.TemplateState
+Umpk.Pathfinding.Execution.Templates.WalkTemplate.WalkTemplate(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> void
+Umpk.Pathfinding.Goals.EntityGoal
+Umpk.Pathfinding.Goals.EntityGoal.AcceptanceRadius.get -> int
+Umpk.Pathfinding.Goals.EntityGoal.DriftThreshold.get -> double
+Umpk.Pathfinding.Goals.EntityGoal.EntityGoal(Umpk.Geometry.BlockPos target, int acceptanceRadius = 2, double driftThreshold = 3) -> void
+Umpk.Pathfinding.Goals.EntityGoal.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.EntityGoal.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.EntityGoal.ShouldReplan(Umpk.Geometry.BlockPos currentTarget) -> bool
+Umpk.Pathfinding.Goals.EntityGoal.Target.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Goals.EntityGoal.TryGetTargetHint(out Umpk.Geometry.BlockPos hint) -> bool
+Umpk.Pathfinding.Goals.GoalBlock
+Umpk.Pathfinding.Goals.GoalBlock.GoalBlock(Umpk.Geometry.BlockPos pos) -> void
+Umpk.Pathfinding.Goals.GoalBlock.GoalBlock(int x, int y, int z) -> void
+Umpk.Pathfinding.Goals.GoalBlock.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.GoalBlock.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.GoalBlock.TryGetTargetHint(out Umpk.Geometry.BlockPos hint) -> bool
+Umpk.Pathfinding.Goals.GoalBlock.X.get -> int
+Umpk.Pathfinding.Goals.GoalBlock.Y.get -> int
+Umpk.Pathfinding.Goals.GoalBlock.Z.get -> int
+Umpk.Pathfinding.Goals.GoalComposite
+Umpk.Pathfinding.Goals.GoalComposite.GoalComposite(System.Collections.Generic.IEnumerable<Umpk.Pathfinding.Goals.IGoal!>! goals) -> void
+Umpk.Pathfinding.Goals.GoalComposite.GoalComposite(params Umpk.Pathfinding.Goals.IGoal![]! goals) -> void
+Umpk.Pathfinding.Goals.GoalComposite.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.GoalComposite.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.GoalComposite.TryGetTargetHint(out Umpk.Geometry.BlockPos hint) -> bool
+Umpk.Pathfinding.Goals.GoalNear
+Umpk.Pathfinding.Goals.GoalNear.GoalNear(int x, int y, int z, int range) -> void
+Umpk.Pathfinding.Goals.GoalNear.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.GoalNear.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.GoalNear.Range.get -> int
+Umpk.Pathfinding.Goals.GoalNear.TryGetTargetHint(out Umpk.Geometry.BlockPos hint) -> bool
+Umpk.Pathfinding.Goals.GoalNear.X.get -> int
+Umpk.Pathfinding.Goals.GoalNear.Y.get -> int
+Umpk.Pathfinding.Goals.GoalNear.Z.get -> int
+Umpk.Pathfinding.Goals.GoalXZ
+Umpk.Pathfinding.Goals.GoalXZ.GoalXZ(int x, int z) -> void
+Umpk.Pathfinding.Goals.GoalXZ.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.GoalXZ.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.GoalXZ.X.get -> int
+Umpk.Pathfinding.Goals.GoalXZ.Z.get -> int
+Umpk.Pathfinding.Goals.IGoal
+Umpk.Pathfinding.Goals.IGoal.Heuristic(Umpk.Geometry.BlockPos pos) -> double
+Umpk.Pathfinding.Goals.IGoal.IsInGoal(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.Goals.IGoal.TryGetTargetHint(out Umpk.Geometry.BlockPos hint) -> bool
+Umpk.Pathfinding.Moves.ActivatorKind
+Umpk.Pathfinding.Moves.ActivatorKind.Button = 0 -> Umpk.Pathfinding.Moves.ActivatorKind
+Umpk.Pathfinding.Moves.ActivatorKind.Lever = 1 -> Umpk.Pathfinding.Moves.ActivatorKind
+Umpk.Pathfinding.Moves.ActivatorKind.PressurePlate = 2 -> Umpk.Pathfinding.Moves.ActivatorKind
+Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.BarrierKind.NeedsActivator = 3 -> Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.BarrierKind.NeedsInteraction = 2 -> Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.BarrierKind.None = 0 -> Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.BarrierKind.PassableNow = 1 -> Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.BarrierKind.Wall = 4 -> Umpk.Pathfinding.Moves.BarrierKind
+Umpk.Pathfinding.Moves.DoorActivation
+Umpk.Pathfinding.Moves.DoorActivation.Activator.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Moves.DoorActivation.Activator.init -> void
+Umpk.Pathfinding.Moves.DoorActivation.Deconstruct(out Umpk.Geometry.BlockPos Activator, out Umpk.Geometry.BlockPos StandCell, out Umpk.Pathfinding.Moves.ActivatorKind Kind, out int WindowTicks) -> void
+Umpk.Pathfinding.Moves.DoorActivation.DoorActivation() -> void
+Umpk.Pathfinding.Moves.DoorActivation.DoorActivation(Umpk.Geometry.BlockPos Activator, Umpk.Geometry.BlockPos StandCell, Umpk.Pathfinding.Moves.ActivatorKind Kind, int WindowTicks) -> void
+Umpk.Pathfinding.Moves.DoorActivation.Equals(Umpk.Pathfinding.Moves.DoorActivation other) -> bool
+Umpk.Pathfinding.Moves.DoorActivation.Kind.get -> Umpk.Pathfinding.Moves.ActivatorKind
+Umpk.Pathfinding.Moves.DoorActivation.Kind.init -> void
+Umpk.Pathfinding.Moves.DoorActivation.StandCell.get -> Umpk.Geometry.BlockPos
+Umpk.Pathfinding.Moves.DoorActivation.StandCell.init -> void
+Umpk.Pathfinding.Moves.DoorActivation.WindowTicks.get -> int
+Umpk.Pathfinding.Moves.DoorActivation.WindowTicks.init -> void
+Umpk.Pathfinding.Moves.IMove
+Umpk.Pathfinding.Moves.IMove.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.IMove.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.IMove.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.IMove.XOffset.get -> int
+Umpk.Pathfinding.Moves.IMove.ZOffset.get -> int
+Umpk.Pathfinding.Moves.IMoveExpander
+Umpk.Pathfinding.Moves.IMoveExpander.Expand(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, System.Span<Umpk.Pathfinding.Moves.MoveNeighbor> buffer) -> int
+Umpk.Pathfinding.Moves.IMoveExpander.MaxNeighbors.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveClimb
+Umpk.Pathfinding.Moves.Impl.MoveClimb.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveClimb.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveClimb.MoveClimb(bool up) -> void
+Umpk.Pathfinding.Moves.Impl.MoveClimb.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveClimb.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveClimb.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveDescend
+Umpk.Pathfinding.Moves.Impl.MoveDescend.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveDescend.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveDescend.MoveDescend(int xOffset, int zOffset) -> void
+Umpk.Pathfinding.Moves.Impl.MoveDescend.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveDescend.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveDescend.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveFall
+Umpk.Pathfinding.Moves.Impl.MoveFall.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveFall.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveFall.MoveFall(int maxScanDepth = 256) -> void
+Umpk.Pathfinding.Moves.Impl.MoveFall.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveFall.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveFall.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveJump
+Umpk.Pathfinding.Moves.Impl.MoveJump.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveJump.Descriptor.get -> Umpk.Pathfinding.Moves.JumpDescriptor
+Umpk.Pathfinding.Moves.Impl.MoveJump.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveJump.Flavor.get -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.Impl.MoveJump.MoveJump(Umpk.Pathfinding.Moves.JumpDescriptor descriptor) -> void
+Umpk.Pathfinding.Moves.Impl.MoveJump.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveJump.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveJump.YDelta.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveJump.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.MoveSprintDescend(int xOffset, int zOffset) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSprintDescend.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwim
+Umpk.Pathfinding.Moves.Impl.MoveSwim.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwim.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveSwim.MoveSwim(int xOffset, int zOffset) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwim.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveSwim.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwim.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.MoveSwimExit(int xOffset, int zOffset) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwimExit.ZOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.Calculate(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, ref Umpk.Pathfinding.Core.MoveResult result) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.DynamicY.get -> bool
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.MoveSwimVertical(bool up) -> void
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.Type.get -> Umpk.Pathfinding.Core.MoveType
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.XOffset.get -> int
+Umpk.Pathfinding.Moves.Impl.MoveSwimVertical.ZOffset.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor
+Umpk.Pathfinding.Moves.JumpDescriptor.Deconstruct(out int XOffset, out int ZOffset, out int YDelta, out Umpk.Pathfinding.Moves.JumpFlavor Flavor) -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.Equals(Umpk.Pathfinding.Moves.JumpDescriptor other) -> bool
+Umpk.Pathfinding.Moves.JumpDescriptor.Flavor.get -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.JumpDescriptor.Flavor.init -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.HorizontalMajor.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor.HorizontalMinor.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor.IsCardinal.get -> bool
+Umpk.Pathfinding.Moves.JumpDescriptor.IsDiagonal.get -> bool
+Umpk.Pathfinding.Moves.JumpDescriptor.JumpDescriptor() -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.JumpDescriptor(int XOffset, int ZOffset, int YDelta, Umpk.Pathfinding.Moves.JumpFlavor Flavor) -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.XOffset.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor.XOffset.init -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.YDelta.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor.YDelta.init -> void
+Umpk.Pathfinding.Moves.JumpDescriptor.ZOffset.get -> int
+Umpk.Pathfinding.Moves.JumpDescriptor.ZOffset.init -> void
+Umpk.Pathfinding.Moves.JumpExpander
+Umpk.Pathfinding.Moves.JumpExpander.Expand(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, System.Span<Umpk.Pathfinding.Moves.MoveNeighbor> buffer) -> int
+Umpk.Pathfinding.Moves.JumpExpander.JumpExpander() -> void
+Umpk.Pathfinding.Moves.JumpExpander.MaxNeighbors.get -> int
+Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.JumpFlavor.Sidewall = 3 -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.JumpFlavor.SprintJump = 2 -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.JumpFlavor.Step = 1 -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.JumpFlavor.Walk = 0 -> Umpk.Pathfinding.Moves.JumpFlavor
+Umpk.Pathfinding.Moves.LegacyMoveExpander
+Umpk.Pathfinding.Moves.LegacyMoveExpander.Expand(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, System.Span<Umpk.Pathfinding.Moves.MoveNeighbor> buffer) -> int
+Umpk.Pathfinding.Moves.LegacyMoveExpander.LegacyMoveExpander(Umpk.Pathfinding.Moves.IMove![]! moves) -> void
+Umpk.Pathfinding.Moves.LegacyMoveExpander.MaxNeighbors.get -> int
+Umpk.Pathfinding.Moves.MoveHelper
+Umpk.Pathfinding.Moves.MoveNeighbor
+Umpk.Pathfinding.Moves.MoveNeighbor.MoveNeighbor() -> void
+Umpk.Pathfinding.Moves.MoveNeighbor.MoveNeighbor(in Umpk.Pathfinding.Core.MoveResult result, Umpk.Pathfinding.Core.MoveType moveType) -> void
+Umpk.Pathfinding.PathPlanner
+Umpk.Pathfinding.PathfinderOptions
+Umpk.Pathfinding.PathfinderOptions.<Clone>$() -> Umpk.Pathfinding.PathfinderOptions!
+Umpk.Pathfinding.PathfinderOptions.AllowClimb.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowClimb.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowDiagonalDescend.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowDiagonalDescend.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowDoorInteraction.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowDoorInteraction.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowLadderGrabDuringFall.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowLadderGrabDuringFall.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowParkour.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowParkour.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowParkourAscend.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowParkourAscend.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowPartialHeightSupport.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowPartialHeightSupport.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowSprint.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowSprint.init -> void
+Umpk.Pathfinding.PathfinderOptions.AllowSwim.get -> bool
+Umpk.Pathfinding.PathfinderOptions.AllowSwim.init -> void
+Umpk.Pathfinding.PathfinderOptions.BlocksToAvoid.get -> System.Collections.Generic.IReadOnlySet<Umpk.Identifier>!
+Umpk.Pathfinding.PathfinderOptions.BlocksToAvoid.init -> void
+Umpk.Pathfinding.PathfinderOptions.BreathAware.get -> bool
+Umpk.Pathfinding.PathfinderOptions.BreathAware.init -> void
+Umpk.Pathfinding.PathfinderOptions.Equals(Umpk.Pathfinding.PathfinderOptions? other) -> bool
+Umpk.Pathfinding.PathfinderOptions.JumpPenalty.get -> double
+Umpk.Pathfinding.PathfinderOptions.JumpPenalty.init -> void
+Umpk.Pathfinding.PathfinderOptions.MaxFallHeight.get -> int
+Umpk.Pathfinding.PathfinderOptions.MaxFallHeight.init -> void
+Umpk.Pathfinding.PathfinderOptions.MaxFallHeightIntoWater.get -> int
+Umpk.Pathfinding.PathfinderOptions.MaxFallHeightIntoWater.init -> void
+Umpk.Pathfinding.PathfinderOptions.MaxNodes.get -> int
+Umpk.Pathfinding.PathfinderOptions.MaxNodes.init -> void
+Umpk.Pathfinding.PathfinderOptions.MaxReplans.get -> int
+Umpk.Pathfinding.PathfinderOptions.MaxReplans.init -> void
+Umpk.Pathfinding.PathfinderOptions.PathfinderOptions() -> void
+Umpk.Pathfinding.PathfinderOptions.Timeout.get -> System.TimeSpan
+Umpk.Pathfinding.PathfinderOptions.Timeout.init -> void
+Umpk.Pathfinding.PlanningWorldView
+Umpk.Pathfinding.PlanningWorldView.GetBlock(Umpk.Geometry.BlockPos pos) -> Umpk.Game.Blocks.BlockState
+Umpk.Pathfinding.PlanningWorldView.GetCollisionShapes(Umpk.Game.Blocks.BlockState state) -> System.ReadOnlySpan<Umpk.Geometry.Aabb>
+Umpk.Pathfinding.PlanningWorldView.IsChunkLoaded(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Pathfinding.PlanningWorldView.MayContainBarrier.get -> bool
+Umpk.Pathfinding.PlanningWorldView.MayContainWater.get -> bool
+Umpk.Pathfinding.PlanningWorldView.PlanningWorldView(Umpk.Game.World.RegionSnapshot! snapshot, Umpk.Game.Registries.IBlockShapeSource! shapes) -> void
+Umpk.Pathfinding.PlanningWorldView.Region.get -> Umpk.Game.World.RegionSnapshot!
+Umpk.Pathfinding.PlanningWorldView.Shapes.get -> Umpk.Game.Registries.IBlockShapeSource!
+const Umpk.Pathfinding.Core.ActionCosts.BubbleColumnUpOneBlock = 2.28571 -> double
+const Umpk.Pathfinding.Core.ActionCosts.CostInf = 1000000 -> double
+const Umpk.Pathfinding.Core.ActionCosts.CurrentToThrustRatio = 0.7142857142857143 -> double
+const Umpk.Pathfinding.Core.ActionCosts.DiagonalMultiplier = 1.4142135623730951 -> double
+const Umpk.Pathfinding.Core.ActionCosts.InteractLatency = 10 -> double
+const Umpk.Pathfinding.Core.ActionCosts.JumpPenalty = 2 -> double
+const Umpk.Pathfinding.Core.ActionCosts.LadderDownOne = 6.666666666666667 -> double
+const Umpk.Pathfinding.Core.ActionCosts.LadderUpOne = 8.51063829787234 -> double
+const Umpk.Pathfinding.Core.ActionCosts.MaxCurrentCostMultiplier = 3.5 -> double
+const Umpk.Pathfinding.Core.ActionCosts.MeasuredSlowFloorCostMultiplier = 1.691 -> double
+const Umpk.Pathfinding.Core.ActionCosts.MeasuredSlowFloorSpeedFactor = 0.4 -> double
+const Umpk.Pathfinding.Core.ActionCosts.MeasuredWebCostMultiplier = 8.81057 -> double
+const Umpk.Pathfinding.Core.ActionCosts.MinCurrentCostMultiplier = 0.5833333333333334 -> double
+const Umpk.Pathfinding.Core.ActionCosts.SneakOneBlock = 15.384615384615383 -> double
+const Umpk.Pathfinding.Core.ActionCosts.SprintMultiplier = 0.7692444761225944 -> double
+const Umpk.Pathfinding.Core.ActionCosts.SprintOneBlock = 3.563791874554526 -> double
+const Umpk.Pathfinding.Core.ActionCosts.SwimOneBlock = 9.09090909090909 -> double
+const Umpk.Pathfinding.Core.ActionCosts.VerticalCurrentToThrustRatio = 0.113 -> double
+const Umpk.Pathfinding.Core.ActionCosts.WalkOffBlock = 3.7062775075283763 -> double
+const Umpk.Pathfinding.Core.ActionCosts.WalkOneBlock = 4.63284688441047 -> double
+const Umpk.Pathfinding.Core.ActionCosts.WaterSinkOneBlock = 40 -> double
+const Umpk.Pathfinding.Core.BreathModel.AscendFixedTicks = 6 -> double
+const Umpk.Pathfinding.Core.BreathModel.AscendTicksPerBlockLegacy = 10 -> double
+const Umpk.Pathfinding.Core.BreathModel.AscendTicksPerBlockSprintAware = 2.62 -> double
+const Umpk.Pathfinding.Core.BreathModel.BandTicks = 40 -> double
+const Umpk.Pathfinding.Core.BreathModel.EscapeScanCells = 48 -> int
+const Umpk.Pathfinding.Core.BreathModel.FullLungTicks = 300 -> double
+const Umpk.Pathfinding.Core.BreathModel.ReactionTicks = 10 -> int
+const Umpk.Pathfinding.Core.BreathModel.SafetyFactor = 1.5 -> double
+const Umpk.Pathfinding.Core.BreathValidator.RefillPerTick = 4 -> double
+const Umpk.Pathfinding.Core.BreathValidator.SprintSwimBlocksPerTick = 0.19586 -> double
+const Umpk.Pathfinding.Core.BreathValidator.SprintWadeBlocksPerTick = 0.137 -> double
+const Umpk.Pathfinding.Core.BreathValidator.SubmergedBlocksPerTick = 0.098 -> double
+const Umpk.Pathfinding.Core.BreathValidator.WadeBlocksPerTick = 0.0895 -> double
+const Umpk.Pathfinding.Core.CapabilityEffect.InfiniteRemaining = -1 -> int
+const Umpk.Pathfinding.Core.CapabilityEffect.UnknownRemaining = -2147483648 -> int
+const Umpk.Pathfinding.Core.EffectCoverage.EstimateReserveTicks = 10 -> int
+const Umpk.Pathfinding.Core.EffectCoverage.SafetyFactor = 1.5 -> double
+const Umpk.Pathfinding.Core.FallDamageModel.HayMultiplier = 0.2 -> double
+const Umpk.Pathfinding.Core.FallDamageModel.HealthReserve = 6 -> double
+const Umpk.Pathfinding.Core.FallDamageModel.SafeFallDistance = 3 -> double
+const Umpk.Pathfinding.Core.FallDamageModel.StalagmiteDistanceBonus = 2.5 -> double
+const Umpk.Pathfinding.Core.FallDamageModel.StalagmiteMultiplier = 2 -> double
+const Umpk.Pathfinding.Execution.BarrierCrossing.CommitOffset = 0.4875 -> double
+const Umpk.Pathfinding.Execution.BarrierCrossing.FreeSideBias = 0.1 -> double
+const Umpk.Pathfinding.Execution.BarrierCrossing.LaneLookaheadBlocks = 0.5 -> double
+const Umpk.Pathfinding.Execution.BarrierCrossing.PanelSideClearance = 0.0125 -> double
+const Umpk.Pathfinding.Execution.PathExecutor.AlignToleranceBlocks = 0.05 -> double
+const Umpk.Pathfinding.Execution.PathExecutor.MaxAlignTicks = 40 -> int
+const Umpk.Pathfinding.Execution.PathExecutor.RegressionMarginBlocks = 0.5 -> double
+const Umpk.Pathfinding.Execution.PathExecutor.RegressionTicks = 20 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.ClimbFixedOverheadTicks = 12 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.ClimbSlack = 1.5 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.FallIntoWaterSlack = 1.25 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.FixedOverheadTicks = 20 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.LandSlack = 1.691 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.MaxBudgetTicks = 400 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.MinBudgetTicks = 40 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.MinStuckTicks = 40 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.StuckSpeedFraction = 0.25 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.SubmergedWalkSlack = 10 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.SwimFixedOverheadTicks = 8 -> int
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.WaterSlack = 1.25 -> double
+const Umpk.Pathfinding.Execution.SegmentBudgetPolicy.WaterSlackWithoutTheSwimPose = 4.5 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.ClearInterceptTicks = 7 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.ClearTicksPerBlock = 5 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.InteractReach = 4.5 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.LidInterceptTicks = 5 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.LidTicksPerBlock = 4 -> double
+const Umpk.Pathfinding.Moves.DoorActivation.NoWindow = 0 -> int
+const Umpk.Pathfinding.Moves.DoorActivation.PlatePressedTicks = 20 -> int
+const Umpk.Pathfinding.Moves.DoorActivation.StoneButtonWindowTicks = 20 -> int
+const Umpk.Pathfinding.Moves.DoorActivation.WeightedPlatePressedTicks = 10 -> int
+const Umpk.Pathfinding.Moves.DoorActivation.WoodenButtonWindowTicks = 30 -> int
+const Umpk.Pathfinding.PathfinderOptions.WorldHeightSpan = 384 -> int
+override Umpk.Pathfinding.Core.BreathEscape.GetHashCode() -> int
+override Umpk.Pathfinding.Core.BreathValidation.GetHashCode() -> int
+override Umpk.Pathfinding.Core.CapabilityEffect.GetHashCode() -> int
+override Umpk.Pathfinding.Core.CapabilityItem.GetHashCode() -> int
+override Umpk.Pathfinding.Core.EnchantmentReadout.GetHashCode() -> int
+override Umpk.Pathfinding.Core.EntryPreparationState.GetHashCode() -> int
+override Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.GetHashCode() -> int
+override Umpk.Pathfinding.Core.PathDiagnostics.GetHashCode() -> int
+override Umpk.Pathfinding.Core.PathfinderCapabilities.Equals(object? obj) -> bool
+override Umpk.Pathfinding.Core.PathfinderCapabilities.GetHashCode() -> int
+override Umpk.Pathfinding.Core.PathfinderCapabilities.ToString() -> string!
+override Umpk.Pathfinding.EffectAwarePlan.Equals(object? obj) -> bool
+override Umpk.Pathfinding.EffectAwarePlan.GetHashCode() -> int
+override Umpk.Pathfinding.EffectAwarePlan.ToString() -> string!
+override Umpk.Pathfinding.Execution.BarrierCrossing.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.BreathHoldRequirement.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.InteractionRequirement.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.PathExecutorTick.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.PathSegment.Equals(object? obj) -> bool
+override Umpk.Pathfinding.Execution.PathSegment.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.PathSegment.ToString() -> string!
+override Umpk.Pathfinding.Execution.PathTransitionHints.Equals(object? obj) -> bool
+override Umpk.Pathfinding.Execution.PathTransitionHints.GetHashCode() -> int
+override Umpk.Pathfinding.Execution.PathTransitionHints.ToString() -> string!
+override Umpk.Pathfinding.Execution.TemplateOutput.GetHashCode() -> int
+override Umpk.Pathfinding.Goals.EntityGoal.ToString() -> string!
+override Umpk.Pathfinding.Goals.GoalBlock.ToString() -> string!
+override Umpk.Pathfinding.Goals.GoalComposite.ToString() -> string!
+override Umpk.Pathfinding.Goals.GoalNear.ToString() -> string!
+override Umpk.Pathfinding.Goals.GoalXZ.ToString() -> string!
+override Umpk.Pathfinding.Moves.DoorActivation.GetHashCode() -> int
+override Umpk.Pathfinding.Moves.JumpDescriptor.GetHashCode() -> int
+override Umpk.Pathfinding.PathfinderOptions.Equals(object? obj) -> bool
+override Umpk.Pathfinding.PathfinderOptions.GetHashCode() -> int
+override Umpk.Pathfinding.PathfinderOptions.ToString() -> string!
+readonly Umpk.Pathfinding.Core.PathNode.X -> int
+readonly Umpk.Pathfinding.Core.PathNode.Y -> int
+readonly Umpk.Pathfinding.Core.PathNode.Z -> int
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.Cost -> double
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.DestX -> int
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.DestY -> int
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.DestZ -> int
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.MoveType -> Umpk.Pathfinding.Core.MoveType
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.ParkourProfile -> Umpk.Pathfinding.Core.ParkourProfile
+static Umpk.Pathfinding.Core.AStarPathFinder.BuildDefaultExpanders() -> Umpk.Pathfinding.Moves.IMoveExpander![]!
+static Umpk.Pathfinding.Core.ActionCosts.CurrentCostMultiplier(Umpk.Geometry.Vec3d flow, Umpk.Geometry.Vec3d moveDirection) -> double
+static Umpk.Pathfinding.Core.ActionCosts.CurrentCostMultiplier(double alongFlow, double crossFlow) -> double
+static Umpk.Pathfinding.Core.ActionCosts.FallCost(int blocks) -> double
+static Umpk.Pathfinding.Core.ActionCosts.SpeedFactorCostMultiplier(double speedFactor) -> double
+static Umpk.Pathfinding.Core.ActionCosts.SpeedFactorCostMultiplier(double speedFactor, bool bypassed) -> double
+static Umpk.Pathfinding.Core.BreathEscape.Known(double ticks) -> Umpk.Pathfinding.Core.BreathEscape
+static Umpk.Pathfinding.Core.BreathEscape.Unknown.get -> Umpk.Pathfinding.Core.BreathEscape
+static Umpk.Pathfinding.Core.BreathEscape.operator !=(Umpk.Pathfinding.Core.BreathEscape left, Umpk.Pathfinding.Core.BreathEscape right) -> bool
+static Umpk.Pathfinding.Core.BreathEscape.operator ==(Umpk.Pathfinding.Core.BreathEscape left, Umpk.Pathfinding.Core.BreathEscape right) -> bool
+static Umpk.Pathfinding.Core.BreathModel.AscendTicks(int depthBlocks, Umpk.Physics.PhysicsProfile! profile) -> double
+static Umpk.Pathfinding.Core.BreathModel.Band(double deficitTicks) -> int
+static Umpk.Pathfinding.Core.BreathModel.EscapeTicks(Umpk.Physics.IPhysicsWorldView! view, int x, int y, int z, Umpk.Physics.PhysicsProfile! profile) -> Umpk.Pathfinding.Core.BreathEscape
+static Umpk.Pathfinding.Core.BreathModel.IsSubmerged(Umpk.Physics.IPhysicsWorldView! view, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Core.BreathModel.MaxDeficit(Umpk.Physics.PhysicsProfile! profile) -> double
+static Umpk.Pathfinding.Core.BreathModel.RouteBudget(Umpk.Physics.PhysicsProfile! profile, int airTicks) -> double
+static Umpk.Pathfinding.Core.BreathModel.RouteThreshold(double ticksToNextBreath) -> double
+static Umpk.Pathfinding.Core.BreathModel.ShouldSurface(Umpk.Pathfinding.Core.BreathEscape escape, int airSupply) -> bool
+static Umpk.Pathfinding.Core.BreathModel.Threshold(double escapeTicks) -> double
+static Umpk.Pathfinding.Core.BreathValidation.operator !=(Umpk.Pathfinding.Core.BreathValidation left, Umpk.Pathfinding.Core.BreathValidation right) -> bool
+static Umpk.Pathfinding.Core.BreathValidation.operator ==(Umpk.Pathfinding.Core.BreathValidation left, Umpk.Pathfinding.Core.BreathValidation right) -> bool
+static Umpk.Pathfinding.Core.BreathValidator.PeakDeficit(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments, int firstSegment, Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile, bool allowSprint) -> double
+static Umpk.Pathfinding.Core.BreathValidator.RealTicks(Umpk.Pathfinding.Execution.PathSegment! segment, bool submerged, Umpk.Physics.PhysicsProfile! profile, bool allowSprint) -> double
+static Umpk.Pathfinding.Core.BreathValidator.RouteRealTicks(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments, Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile, bool allowSprint) -> double
+static Umpk.Pathfinding.Core.BreathValidator.Validate(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>! segments, Umpk.Pathfinding.PlanningWorldView! world, Umpk.Physics.PhysicsProfile! profile, bool allowSprint, int airTicks) -> Umpk.Pathfinding.Core.BreathValidation
+static Umpk.Pathfinding.Core.BreathValidator.WadeTicks(double blocks, Umpk.Physics.PhysicsProfile! profile, bool allowSprint) -> double
+static Umpk.Pathfinding.Core.CapabilityEffect.operator !=(Umpk.Pathfinding.Core.CapabilityEffect left, Umpk.Pathfinding.Core.CapabilityEffect right) -> bool
+static Umpk.Pathfinding.Core.CapabilityEffect.operator ==(Umpk.Pathfinding.Core.CapabilityEffect left, Umpk.Pathfinding.Core.CapabilityEffect right) -> bool
+static Umpk.Pathfinding.Core.CapabilityItem.operator !=(Umpk.Pathfinding.Core.CapabilityItem left, Umpk.Pathfinding.Core.CapabilityItem right) -> bool
+static Umpk.Pathfinding.Core.CapabilityItem.operator ==(Umpk.Pathfinding.Core.CapabilityItem left, Umpk.Pathfinding.Core.CapabilityItem right) -> bool
+static Umpk.Pathfinding.Core.EffectCoverage.Covers(Umpk.Pathfinding.Core.PathfinderCapabilities! capabilities, Umpk.Identifier effectId, double routeRealTicks) -> bool
+static Umpk.Pathfinding.Core.EffectCoverage.Covers(in Umpk.Pathfinding.Core.CapabilityEffect effect, double routeRealTicks) -> bool
+static Umpk.Pathfinding.Core.EffectCoverage.RequiredTicks(double routeRealTicks, bool durationIsEstimated) -> double
+static Umpk.Pathfinding.Core.EnchantmentReadout.None.get -> Umpk.Pathfinding.Core.EnchantmentReadout
+static Umpk.Pathfinding.Core.EnchantmentReadout.operator !=(Umpk.Pathfinding.Core.EnchantmentReadout left, Umpk.Pathfinding.Core.EnchantmentReadout right) -> bool
+static Umpk.Pathfinding.Core.EnchantmentReadout.operator ==(Umpk.Pathfinding.Core.EnchantmentReadout left, Umpk.Pathfinding.Core.EnchantmentReadout right) -> bool
+static Umpk.Pathfinding.Core.EntryPreparationState.None.get -> Umpk.Pathfinding.Core.EntryPreparationState
+static Umpk.Pathfinding.Core.EntryPreparationState.operator !=(Umpk.Pathfinding.Core.EntryPreparationState left, Umpk.Pathfinding.Core.EntryPreparationState right) -> bool
+static Umpk.Pathfinding.Core.EntryPreparationState.operator ==(Umpk.Pathfinding.Core.EntryPreparationState left, Umpk.Pathfinding.Core.EntryPreparationState right) -> bool
+static Umpk.Pathfinding.Core.FallDamageModel.Budget(Umpk.Pathfinding.Core.PathfinderCapabilities! capabilities) -> double
+static Umpk.Pathfinding.Core.FallDamageModel.Damage(double blocks, double bonus, double multiplier) -> int
+static Umpk.Pathfinding.Core.FallDamageModel.Damage(double blocks, double multiplier) -> int
+static Umpk.Pathfinding.Core.FallDamageModel.ImpactFor(Umpk.Game.Blocks.BlockState landing) -> Umpk.Pathfinding.Core.FallDamageModel.LandingImpact
+static Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.operator !=(Umpk.Pathfinding.Core.FallDamageModel.LandingImpact left, Umpk.Pathfinding.Core.FallDamageModel.LandingImpact right) -> bool
+static Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.operator ==(Umpk.Pathfinding.Core.FallDamageModel.LandingImpact left, Umpk.Pathfinding.Core.FallDamageModel.LandingImpact right) -> bool
+static Umpk.Pathfinding.Core.FallDamageModel.MultiplierFor(Umpk.Game.Blocks.BlockState landing) -> double
+static Umpk.Pathfinding.Core.PathDiagnostics.operator !=(Umpk.Pathfinding.Core.PathDiagnostics left, Umpk.Pathfinding.Core.PathDiagnostics right) -> bool
+static Umpk.Pathfinding.Core.PathDiagnostics.operator ==(Umpk.Pathfinding.Core.PathDiagnostics left, Umpk.Pathfinding.Core.PathDiagnostics right) -> bool
+static Umpk.Pathfinding.Core.PathNode.Pack(int x, int y, int z) -> long
+static Umpk.Pathfinding.Core.PathResult.Fail(Umpk.Pathfinding.Core.PathDiagnostics diagnostics) -> Umpk.Pathfinding.Core.PathResult!
+static Umpk.Pathfinding.Core.PathfinderCapabilities.None.get -> Umpk.Pathfinding.Core.PathfinderCapabilities!
+static Umpk.Pathfinding.Core.PathfinderCapabilities.operator !=(Umpk.Pathfinding.Core.PathfinderCapabilities? left, Umpk.Pathfinding.Core.PathfinderCapabilities? right) -> bool
+static Umpk.Pathfinding.Core.PathfinderCapabilities.operator ==(Umpk.Pathfinding.Core.PathfinderCapabilities? left, Umpk.Pathfinding.Core.PathfinderCapabilities? right) -> bool
+static Umpk.Pathfinding.EffectAwarePlan.operator !=(Umpk.Pathfinding.EffectAwarePlan? left, Umpk.Pathfinding.EffectAwarePlan? right) -> bool
+static Umpk.Pathfinding.EffectAwarePlan.operator ==(Umpk.Pathfinding.EffectAwarePlan? left, Umpk.Pathfinding.EffectAwarePlan? right) -> bool
+static Umpk.Pathfinding.EffectAwarePlanner.ConduitPower.get -> Umpk.Identifier
+static Umpk.Pathfinding.EffectAwarePlanner.FireResistance.get -> Umpk.Identifier
+static Umpk.Pathfinding.EffectAwarePlanner.Plan(Umpk.Pathfinding.PlanningWorldView! world, Umpk.Pathfinding.PathfinderOptions! options, Umpk.Geometry.BlockPos start, Umpk.Pathfinding.Goals.IGoal! goal, Umpk.Pathfinding.Core.PathfinderCapabilities? capabilities, Umpk.Physics.PhysicsProfile! profile, System.TimeProvider? timeProvider = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> Umpk.Pathfinding.EffectAwarePlan!
+static Umpk.Pathfinding.EffectAwarePlanner.WaterBreathing.get -> Umpk.Identifier
+static Umpk.Pathfinding.Execution.ActionTemplateFactory.Create(Umpk.Pathfinding.Execution.PathExecutionContext! ctx, Umpk.Pathfinding.Execution.PathSegment! segment) -> Umpk.Pathfinding.Execution.IActionTemplate!
+static Umpk.Pathfinding.Execution.BarrierCrossing.TryPredictAfterOpening(Umpk.Physics.IPhysicsWorldView! world, Umpk.Geometry.BlockPos at, out Umpk.Pathfinding.Execution.BarrierCrossing crossing) -> bool
+static Umpk.Pathfinding.Execution.BarrierCrossing.TryResolve(Umpk.Physics.IPhysicsWorldView! world, int x, int y, int z, out Umpk.Pathfinding.Execution.BarrierCrossing crossing) -> bool
+static Umpk.Pathfinding.Execution.BarrierCrossing.operator !=(Umpk.Pathfinding.Execution.BarrierCrossing left, Umpk.Pathfinding.Execution.BarrierCrossing right) -> bool
+static Umpk.Pathfinding.Execution.BarrierCrossing.operator ==(Umpk.Pathfinding.Execution.BarrierCrossing left, Umpk.Pathfinding.Execution.BarrierCrossing right) -> bool
+static Umpk.Pathfinding.Execution.BreathHoldRequirement.operator !=(Umpk.Pathfinding.Execution.BreathHoldRequirement left, Umpk.Pathfinding.Execution.BreathHoldRequirement right) -> bool
+static Umpk.Pathfinding.Execution.BreathHoldRequirement.operator ==(Umpk.Pathfinding.Execution.BreathHoldRequirement left, Umpk.Pathfinding.Execution.BreathHoldRequirement right) -> bool
+static Umpk.Pathfinding.Execution.InteractionRequirement.CloseByHandAt(Umpk.Geometry.BlockPos target, Umpk.Geometry.BlockPos from) -> Umpk.Pathfinding.Execution.InteractionRequirement
+static Umpk.Pathfinding.Execution.InteractionRequirement.OpenByHandAt(Umpk.Geometry.BlockPos target, Umpk.Geometry.BlockPos from) -> Umpk.Pathfinding.Execution.InteractionRequirement
+static Umpk.Pathfinding.Execution.InteractionRequirement.PressAt(Umpk.Geometry.BlockPos activator, Umpk.Geometry.BlockPos barrier, Umpk.Geometry.BlockPos from, int windowTicks) -> Umpk.Pathfinding.Execution.InteractionRequirement
+static Umpk.Pathfinding.Execution.InteractionRequirement.StandOnAt(Umpk.Geometry.BlockPos plate, Umpk.Geometry.BlockPos barrier, int windowTicks) -> Umpk.Pathfinding.Execution.InteractionRequirement
+static Umpk.Pathfinding.Execution.InteractionRequirement.operator !=(Umpk.Pathfinding.Execution.InteractionRequirement left, Umpk.Pathfinding.Execution.InteractionRequirement right) -> bool
+static Umpk.Pathfinding.Execution.InteractionRequirement.operator ==(Umpk.Pathfinding.Execution.InteractionRequirement left, Umpk.Pathfinding.Execution.InteractionRequirement right) -> bool
+static Umpk.Pathfinding.Execution.PathExecutorTick.operator !=(Umpk.Pathfinding.Execution.PathExecutorTick left, Umpk.Pathfinding.Execution.PathExecutorTick right) -> bool
+static Umpk.Pathfinding.Execution.PathExecutorTick.operator ==(Umpk.Pathfinding.Execution.PathExecutorTick left, Umpk.Pathfinding.Execution.PathExecutorTick right) -> bool
+static Umpk.Pathfinding.Execution.PathSegment.operator !=(Umpk.Pathfinding.Execution.PathSegment? left, Umpk.Pathfinding.Execution.PathSegment? right) -> bool
+static Umpk.Pathfinding.Execution.PathSegment.operator ==(Umpk.Pathfinding.Execution.PathSegment? left, Umpk.Pathfinding.Execution.PathSegment? right) -> bool
+static Umpk.Pathfinding.Execution.PathSegmentBuilder.FromPath(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.PathNode!>! nodes) -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>!
+static Umpk.Pathfinding.Execution.PathSegmentBuilder.FromPath(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.PathNode!>! nodes, Umpk.Pathfinding.PlanningWorldView! world, Umpk.Pathfinding.PathfinderOptions! options) -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>!
+static Umpk.Pathfinding.Execution.PathSegmentBuilder.FromPath(System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Core.PathNode!>! nodes, Umpk.Physics.IPhysicsWorldView! world) -> System.Collections.Generic.IReadOnlyList<Umpk.Pathfinding.Execution.PathSegment!>!
+static Umpk.Pathfinding.Execution.PathTransitionHints.Default.get -> Umpk.Pathfinding.Execution.PathTransitionHints!
+static Umpk.Pathfinding.Execution.PathTransitionHints.operator !=(Umpk.Pathfinding.Execution.PathTransitionHints? left, Umpk.Pathfinding.Execution.PathTransitionHints? right) -> bool
+static Umpk.Pathfinding.Execution.PathTransitionHints.operator ==(Umpk.Pathfinding.Execution.PathTransitionHints? left, Umpk.Pathfinding.Execution.PathTransitionHints? right) -> bool
+static Umpk.Pathfinding.Execution.TemplateOutput.operator !=(Umpk.Pathfinding.Execution.TemplateOutput left, Umpk.Pathfinding.Execution.TemplateOutput right) -> bool
+static Umpk.Pathfinding.Execution.TemplateOutput.operator ==(Umpk.Pathfinding.Execution.TemplateOutput left, Umpk.Pathfinding.Execution.TemplateOutput right) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.CanReachFrom(Umpk.Geometry.BlockPos feet, Umpk.Geometry.BlockPos target) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.FitsWindow(int blocks, int windowTicks) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.FitsWindow(int blocks, int windowTicks, bool lid) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.FitsWindow(int blocks, int windowTicks, bool lid, bool chargeLatency) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.LidTicksToClear(int blocks) -> double
+static Umpk.Pathfinding.Moves.DoorActivation.RealTicksToClear(int blocks) -> double
+static Umpk.Pathfinding.Moves.DoorActivation.TryResolve(Umpk.Pathfinding.Core.CalculationContext! ctx, Umpk.Geometry.BlockPos door, out Umpk.Pathfinding.Moves.DoorActivation activation) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.operator !=(Umpk.Pathfinding.Moves.DoorActivation left, Umpk.Pathfinding.Moves.DoorActivation right) -> bool
+static Umpk.Pathfinding.Moves.DoorActivation.operator ==(Umpk.Pathfinding.Moves.DoorActivation left, Umpk.Pathfinding.Moves.DoorActivation right) -> bool
+static Umpk.Pathfinding.Moves.Impl.MoveJump.Ascend(int dx, int dz) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.Diagonal(int dx, int dz) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.DiagonalAscend(int dx, int dz) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.DiagonalDescend(int dx, int dz) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.Parkour(int dx, int dz, int yDelta = 0) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.Sidewall(int dx, int dz, int yDelta = 0) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.Impl.MoveJump.Traverse(int dx, int dz) -> Umpk.Pathfinding.Moves.Impl.MoveJump!
+static Umpk.Pathfinding.Moves.JumpDescriptor.operator !=(Umpk.Pathfinding.Moves.JumpDescriptor left, Umpk.Pathfinding.Moves.JumpDescriptor right) -> bool
+static Umpk.Pathfinding.Moves.JumpDescriptor.operator ==(Umpk.Pathfinding.Moves.JumpDescriptor left, Umpk.Pathfinding.Moves.JumpDescriptor right) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.AbsorbsFallDamage(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanOpenByHand(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanStandAt(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanTraverseWater(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanLandOn(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanWalkOn(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.CanWalkThrough(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.ClassifyBarrier(Umpk.Game.Blocks.BlockState state) -> Umpk.Pathfinding.Moves.BarrierKind
+static Umpk.Pathfinding.Moves.MoveHelper.ClassifyBarrier(Umpk.Pathfinding.Core.CalculationContext! ctx, Umpk.Game.Blocks.BlockState state, int x, int y, int z) -> Umpk.Pathfinding.Moves.BarrierKind
+static Umpk.Pathfinding.Moves.MoveHelper.ClosesIntoAFloor(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.HasBarrierPanel(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsBarrierCrossingLegal(Umpk.Pathfinding.Core.CalculationContext! ctx, int fromX, int fromY, int fromZ, int toX, int toY, int toZ, Umpk.Pathfinding.Core.MoveType moveType) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsBarrierFamily(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsBouncyLanding(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsBubbleColumn(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsClimbable(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsCobweb(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsFullyPassable(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsHazard(Umpk.Pathfinding.Core.CalculationContext! ctx, Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsHazardAt(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsOpenGap(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsPanelBarrier(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsUpwardBubbleColumn(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.IsWater(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.TryGetInteraction(Umpk.Pathfinding.Core.CalculationContext! ctx, int fromX, int fromY, int fromZ, int toX, int toY, int toZ, out Umpk.Pathfinding.Execution.InteractionRequirement requirement) -> bool
+static Umpk.Pathfinding.Moves.MoveHelper.TryGetPanelSide(Umpk.Physics.IPhysicsWorldView! world, int x, int y, int z, out int panelX, out int panelZ) -> bool
+static Umpk.Pathfinding.PathPlanner.FindPath(Umpk.Pathfinding.PlanningWorldView! world, Umpk.Pathfinding.PathfinderOptions! options, Umpk.Geometry.BlockPos start, Umpk.Pathfinding.Goals.IGoal! goal, System.TimeProvider? timeProvider = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken), Umpk.Pathfinding.Core.PathfinderCapabilities? capabilities = null, bool fireHazardsCleared = false) -> Umpk.Pathfinding.Core.PathResult!
+static Umpk.Pathfinding.PathPlanner.FindPathAsync(Umpk.Pathfinding.PlanningWorldView! world, Umpk.Pathfinding.PathfinderOptions! options, Umpk.Geometry.BlockPos start, Umpk.Pathfinding.Goals.IGoal! goal, System.TimeProvider? timeProvider = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Pathfinding.Core.PathResult!>!
+static Umpk.Pathfinding.PathfinderOptions.Default.get -> Umpk.Pathfinding.PathfinderOptions!
+static Umpk.Pathfinding.PathfinderOptions.UnsafeFalls.get -> Umpk.Pathfinding.PathfinderOptions!
+static Umpk.Pathfinding.PathfinderOptions.operator !=(Umpk.Pathfinding.PathfinderOptions? left, Umpk.Pathfinding.PathfinderOptions? right) -> bool
+static Umpk.Pathfinding.PathfinderOptions.operator ==(Umpk.Pathfinding.PathfinderOptions? left, Umpk.Pathfinding.PathfinderOptions? right) -> bool
+static Umpk.Pathfinding.PlanningWorldView.Capture(Umpk.Game.World.World! world, Umpk.Game.Registries.IBlockShapeSource! shapes, Umpk.Geometry.BlockPos a, Umpk.Geometry.BlockPos b, int margin = 16) -> Umpk.Pathfinding.PlanningWorldView!
+static Umpk.Pathfinding.PlanningWorldView.CaptureOnDemand(Umpk.Game.World.World! world, Umpk.Game.Registries.IBlockShapeSource! shapes, Umpk.Geometry.BlockPos a, Umpk.Geometry.BlockPos b, int margin = 16) -> Umpk.Pathfinding.PlanningWorldView!
+~override Umpk.Pathfinding.Core.BreathEscape.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.BreathEscape.ToString() -> string
+~override Umpk.Pathfinding.Core.BreathValidation.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.BreathValidation.ToString() -> string
+~override Umpk.Pathfinding.Core.CapabilityEffect.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.CapabilityEffect.ToString() -> string
+~override Umpk.Pathfinding.Core.CapabilityItem.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.CapabilityItem.ToString() -> string
+~override Umpk.Pathfinding.Core.EnchantmentReadout.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.EnchantmentReadout.ToString() -> string
+~override Umpk.Pathfinding.Core.EntryPreparationState.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.EntryPreparationState.ToString() -> string
+~override Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.FallDamageModel.LandingImpact.ToString() -> string
+~override Umpk.Pathfinding.Core.PathDiagnostics.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Core.PathDiagnostics.ToString() -> string
+~override Umpk.Pathfinding.Execution.BarrierCrossing.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Execution.BarrierCrossing.ToString() -> string
+~override Umpk.Pathfinding.Execution.BreathHoldRequirement.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Execution.BreathHoldRequirement.ToString() -> string
+~override Umpk.Pathfinding.Execution.InteractionRequirement.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Execution.InteractionRequirement.ToString() -> string
+~override Umpk.Pathfinding.Execution.PathExecutorTick.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Execution.PathExecutorTick.ToString() -> string
+~override Umpk.Pathfinding.Execution.TemplateOutput.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Execution.TemplateOutput.ToString() -> string
+~override Umpk.Pathfinding.Moves.DoorActivation.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Moves.DoorActivation.ToString() -> string
+~override Umpk.Pathfinding.Moves.JumpDescriptor.Equals(object obj) -> bool
+~override Umpk.Pathfinding.Moves.JumpDescriptor.ToString() -> string
+const Umpk.Pathfinding.Core.ActionCosts.SqueezeMultiplier = 3 -> double
+const Umpk.Pathfinding.Core.ActionCosts.SqueezeOneBlock = 13.89854065323141 -> double
+Umpk.Pathfinding.Core.CalculationContext.CurrentLateralX.get -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Core.CalculationContext.CurrentLateralZ.get -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Core.MoveResult.LateralX -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Core.MoveResult.LateralZ -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Core.MoveResult.Squeezed -> bool
+Umpk.Pathfinding.Core.PathNode.LateralX -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Core.PathNode.LateralZ -> Umpk.Pathfinding.Moves.LateralQuantum
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.LateralX -> Umpk.Pathfinding.Moves.LateralQuantum
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.LateralZ -> Umpk.Pathfinding.Moves.LateralQuantum
+readonly Umpk.Pathfinding.Moves.MoveNeighbor.Squeezed -> bool
+Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Moves.LateralQuantum.NearFace = -1 -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Moves.LateralQuantum.Centre = 0 -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Moves.LateralQuantum.FarFace = 1 -> Umpk.Pathfinding.Moves.LateralQuantum
+Umpk.Pathfinding.Moves.SqueezeLane
+const Umpk.Pathfinding.Moves.SqueezeLane.LateralOffset = 0.2 -> double
+static Umpk.Pathfinding.Moves.SqueezeLane.IsClear(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, int dx, int dz, Umpk.Pathfinding.Moves.LateralQuantum source, Umpk.Pathfinding.Moves.LateralQuantum destination) -> bool
+static Umpk.Pathfinding.Moves.SqueezeLane.Offset(Umpk.Pathfinding.Moves.LateralQuantum quantum) -> double
+Umpk.Pathfinding.PlanningWorldView.MayContainShapeOffset.get -> bool
+Umpk.Pathfinding.Core.CalculationContext.WadeCostThrough(int x, int y, int z, int stepX, int stepY, int stepZ) -> double
+const Umpk.Pathfinding.Core.ActionCosts.WadeCurrentToThrustRatio = 0.7324 -> double
+const Umpk.Pathfinding.Core.ActionCosts.WadeMaxCurrentCostMultiplier = 3.7371 -> double
+static Umpk.Pathfinding.Core.ActionCosts.WadeCurrentCostMultiplier(Umpk.Geometry.Vec3d flow, Umpk.Geometry.Vec3d moveDirection) -> double
+Umpk.Pathfinding.Core.PathfinderCapabilities.DepthStriderLevel.get -> int
+static Umpk.Pathfinding.Core.ActionCosts.WadeCurrentCostMultiplier(Umpk.Geometry.Vec3d flow, Umpk.Geometry.Vec3d moveDirection, int depthStriderLevel) -> double
+Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.get -> int
+Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.init -> void

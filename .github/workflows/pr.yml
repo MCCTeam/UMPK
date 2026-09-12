@@ -1,0 +1,197 @@
+name: PR
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: build+test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+      - name: Test
+        if: matrix.os != 'ubuntu-latest'
+        run: dotnet test --no-build -c Release
+      - name: Test with count gate
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet test UMPK.sln --no-build -c Release 2>&1 | tee /tmp/umpk-test.log
+          python3 engineering/testcounts/check_test_counts.py /tmp/umpk-test.log --baseline engineering/testcounts/expected_counts.json
+
+  format:
+    name: format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet format --verify-no-changes
+
+  datagen-verify:
+    name: dataset verify + generated-code freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet run --project tools/Umpk.DataGen -- verify --data data/java
+      - run: dotnet run --project tools/Umpk.DataGen -- generate --data data/java --out src/Umpk.Data.Java --out-lang src/Umpk.Data.Lang --protocol-out src/Umpk.Protocol.Java
+      - run: git diff --exit-code data/java src/Umpk.Data.Java src/Umpk.Data.Lang src/Umpk.Protocol.Java
+
+  package:
+    name: NuGet package validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore UMPK.sln
+      - run: dotnet build UMPK.sln --no-restore -c Release
+      - name: Read package version
+        id: version
+        run: echo "version=$(dotnet msbuild src/Umpk/Umpk.csproj -nologo -getProperty:Version)" >> "$GITHUB_OUTPUT"
+      - run: dotnet pack UMPK.sln --no-build -c Release -o artifacts/packages
+      - run: python3 engineering/release/verify_packages.py --packages artifacts/packages --version ${{ steps.version.outputs.version }}
+      - name: Restore a consumer from the local package set
+        shell: bash
+        run: |
+          consumer="$RUNNER_TEMP/umpk-package-smoke"
+          dotnet new console --framework net10.0 --output "$consumer" --no-restore
+          dotnet add "$consumer/umpk-package-smoke.csproj" package Umpk --version "${{ steps.version.outputs.version }}" --no-restore
+          dotnet restore "$consumer/umpk-package-smoke.csproj" --source "${{ github.workspace }}/artifacts/packages" --source https://api.nuget.org/v3/index.json
+          dotnet build "$consumer/umpk-package-smoke.csproj" --no-restore -c Release
+
+  aot-smoke:
+    name: AOT publish smoke + size budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      # samples/MinimalBot, not samples/StatusPing: the status exchange is version-blind, so StatusPing
+      # never builds a descriptor and the trimmer drops the whole codec graph before this job starts.
+      # MinimalBot references Umpk.Data.Java and Umpk.Client, so the graph has to survive for it to run.
+      - name: Publish MinimalBot with PublishAot
+        run: dotnet publish samples/MinimalBot/MinimalBot.csproj -c Release -r linux-x64 -o publish/minimalbot
+      # The budget catches the trimmer being switched off or a whole package being rooted by accident,
+      # not small drift: the binary measured 12.4 MB when this job was written.
+      - name: Size budget
+        run: |
+          size=$(stat -c%s publish/minimalbot/MinimalBot)
+          echo "MinimalBot: $size bytes"
+          test "$size" -lt 25165824
+      # The assertion is not "it started": the published binary decodes a committed corpus frame under
+      # the oldest and the newest supported protocol, then logs in and chats against the in-memory
+      # FakeJavaServer over a loopback socket. A trimmed-away registration table fails here.
+      - name: Decode two eras and join the fake server
+        shell: bash
+        run: |
+          trx_dir=$(mktemp -d "$RUNNER_TEMP/umpk-aot-smoke.XXXXXX")
+          trx_path="$trx_dir/aot-smoke.trx"
+          set +e
+          dotnet test tests/Umpk.IntegrationTests/Umpk.IntegrationTests.csproj -c Release --filter "FullyQualifiedName~AotPublishSmoke" --logger "trx;LogFileName=$trx_path"
+          test_status=$?
+          set -e
+          TRX_PATH="$trx_path" TEST_STATUS="$test_status" python3 - <<'PY'
+          import os
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          path = Path(os.environ["TRX_PATH"])
+          errors = []
+          results = []
+          root = None
+
+          if not path.is_file() or path.stat().st_size == 0:
+              errors.append(f"TRX is missing or empty: {path}")
+          else:
+              try:
+                  root = ET.parse(path).getroot()
+                  results = [
+                      element
+                      for element in root.iter()
+                      if element.tag.rsplit("}", 1)[-1] == "UnitTestResult"
+                  ]
+              except (ET.ParseError, OSError) as exc:
+                  errors.append(f"could not parse TRX {path}: {exc}")
+
+          if len(results) != 1:
+              errors.append(f"expected exactly one test result, found {len(results)}")
+          elif results[0].attrib.get("outcome", "").lower() != "passed":
+              errors.append(
+                  "expected the single test result to be Passed, "
+                  f"found {results[0].attrib.get('outcome', '<missing>')}"
+              )
+
+          counters = None
+          if root is not None:
+              counters = next(
+                  (
+                      element
+                      for element in root.iter()
+                      if element.tag.rsplit("}", 1)[-1] == "Counters"
+                  ),
+                  None,
+              )
+          if counters is None:
+              errors.append("TRX has no ResultSummary/Counters element")
+          else:
+              for name, expected in (("total", 1), ("executed", 1), ("passed", 1)):
+                  value = counters.attrib.get(name)
+                  if value != str(expected):
+                      errors.append(f"TRX counter {name}={value!r}, expected {expected}")
+              for name in (
+                  "failed",
+                  "error",
+                  "timeout",
+                  "aborted",
+                  "inconclusive",
+                  "notExecuted",
+                  "notRunnable",
+                  "disconnected",
+                  "pending",
+              ):
+                  value = counters.attrib.get(name)
+                  if value not in (None, "0"):
+                      errors.append(f"TRX counter {name}={value!r}, expected 0")
+
+          if errors:
+              for error in errors:
+                  print(f"::error::{error}")
+              sys.exit(1)
+          if os.environ["TEST_STATUS"] != "0":
+              print(f"::error::dotnet test exited with status {os.environ['TEST_STATUS']}")
+              sys.exit(1)
+          print("AOT smoke TRX: exactly one passed test, with matching summary counts")
+          PY
+        env:
+          UMPK_AOT_BINARY: ${{ github.workspace }}/publish/minimalbot/MinimalBot
+      # The live-server leg stays out: nightly.yml's jar provisioning is a stub until Q3, so there is
+      # nothing for a published binary to dial. It joins this job when that hook is made real.

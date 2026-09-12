@@ -1,0 +1,12 @@
+{
+  "_provenance": {
+    "version": "1.14",
+    "protocol": 477,
+    "mapping_source": "mcp-community",
+    "sources": [
+      "reports/registries.json#minecraft:data_component_type"
+    ],
+    "kind": "extracted"
+  },
+  "entries": []
+}

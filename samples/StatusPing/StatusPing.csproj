@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- ServerEndpoint -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- JavaStatus, JavaLegacyPing, ServerStatus, the TCP factory and the SRV resolver -->
+    <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+  </ItemGroup>
+</Project>

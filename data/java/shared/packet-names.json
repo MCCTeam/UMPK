@@ -1,0 +1,14 @@
+{
+  "_provenance": {
+    "kind": "curated",
+    "note": "stable Identifier per packet, per-version aliases"
+  },
+  "aliases": {
+    "minecraft:level_chunk": {
+      "47": "minecraft:map_chunk"
+    },
+    "minecraft:add_entity": {
+      "47": "minecraft:add_entity"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A Brigadier-backed Minecraft command tree with scoped registration and completions.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Text/Umpk.Text.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Brigadier.NET" />
+  </ItemGroup>
+</Project>

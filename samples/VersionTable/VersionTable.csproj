@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- GameVersion -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- JavaVersion -->
+    <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <!-- JavaVersions, JavaGameData -->
+    <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
+  </ItemGroup>
+</Project>

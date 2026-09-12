@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>The complete UMPK client stack for building bots, protocol tools, and automated Minecraft Java players.</Description>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- NuGet's standard placeholder declares that this dependency-only meta package supports net10.0 without shipping a DLL. -->
+    <None Include="_._" Pack="true" PackagePath="lib/net10.0/" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Client/Umpk.Client.csproj" />
+    <ProjectReference Include="../Umpk.Data.Java/Umpk.Data.Java.csproj" />
+    <ProjectReference Include="../Umpk.Data.Lang/Umpk.Data.Lang.csproj" />
+    <ProjectReference Include="../Umpk.Auth/Umpk.Auth.csproj" />
+    <ProjectReference Include="../Umpk.Physics/Umpk.Physics.csproj" />
+    <ProjectReference Include="../Umpk.Pathfinding/Umpk.Pathfinding.csproj" />
+  </ItemGroup>
+</Project>

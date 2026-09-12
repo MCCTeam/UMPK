@@ -1,0 +1,105 @@
+{
+  "_provenance": {
+    "version": "1.8",
+    "protocol": 47,
+    "mapping_source": "mcp-community",
+    "kind": "curated-legacy",
+    "note": "1.8 numeric mob-effect ids (1-based)"
+  },
+  "registries": {
+    "minecraft:mob_effect": [
+      {
+        "name": "minecraft:speed",
+        "id": 1
+      },
+      {
+        "name": "minecraft:slowness",
+        "id": 2
+      },
+      {
+        "name": "minecraft:haste",
+        "id": 3
+      },
+      {
+        "name": "minecraft:mining_fatigue",
+        "id": 4
+      },
+      {
+        "name": "minecraft:strength",
+        "id": 5
+      },
+      {
+        "name": "minecraft:instant_health",
+        "id": 6
+      },
+      {
+        "name": "minecraft:instant_damage",
+        "id": 7
+      },
+      {
+        "name": "minecraft:jump_boost",
+        "id": 8
+      },
+      {
+        "name": "minecraft:nausea",
+        "id": 9
+      },
+      {
+        "name": "minecraft:regeneration",
+        "id": 10
+      },
+      {
+        "name": "minecraft:resistance",
+        "id": 11
+      },
+      {
+        "name": "minecraft:fire_resistance",
+        "id": 12
+      },
+      {
+        "name": "minecraft:water_breathing",
+        "id": 13
+      },
+      {
+        "name": "minecraft:invisibility",
+        "id": 14
+      },
+      {
+        "name": "minecraft:blindness",
+        "id": 15
+      },
+      {
+        "name": "minecraft:night_vision",
+        "id": 16
+      },
+      {
+        "name": "minecraft:hunger",
+        "id": 17
+      },
+      {
+        "name": "minecraft:weakness",
+        "id": 18
+      },
+      {
+        "name": "minecraft:poison",
+        "id": 19
+      },
+      {
+        "name": "minecraft:wither",
+        "id": 20
+      },
+      {
+        "name": "minecraft:health_boost",
+        "id": 21
+      },
+      {
+        "name": "minecraft:absorption",
+        "id": 22
+      },
+      {
+        "name": "minecraft:saturation",
+        "id": 23
+      }
+    ]
+  }
+}

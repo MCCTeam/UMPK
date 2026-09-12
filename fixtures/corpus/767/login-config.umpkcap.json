@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.21.1",
+  "protocol": 767,
+  "scenario": "login-config",
+  "frameCount": 117,
+  "clientboundCount": 117,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-11T08:37:13.6413950\u002B00:00",
+  "durationMs": 3156,
+  "contentHash": "e5cf70fcfd97f70cab5fb33a68c38737a7001df71c9a8019a699e0c6d9020177",
+  "notes": "login\u002Bconfiguration handshake, registry_data, tags, JoinGame; short hold. Headless client, clientbound frames only."
+}

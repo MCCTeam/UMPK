@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+
+    <!--
+      Referenced only by PlaceholderAssemblyTests, which asserts these two assemblies are still the
+      empty placeholders they are today. Their dedicated test projects were removed in U30 (a suite for
+      an assembly with no production code cannot fail, and both had been counted toward a "16 suites
+      green" gate for the whole mission); this guard is what makes the day they gain code a build
+      failure rather than a silent coverage hole.
+    -->
+    <ProjectReference Include="../../src/Umpk.Server/Umpk.Server.csproj" />
+    <ProjectReference Include="../../src/Umpk.Proxy/Umpk.Proxy.csproj" />
+    <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
+  </ItemGroup>
+</Project>

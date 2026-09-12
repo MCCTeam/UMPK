@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!--
+      This sample is what the AOT job publishes, so it opts back in to the analyzers the samples
+      directory turns off. Everything the job proves depends on the whole descriptor and codec graph
+      surviving trimming, and IsAotCompatible is what makes the build say so instead of the runtime.
+    -->
+    <IsAotCompatible>true</IsAotCompatible>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- ServerEndpoint -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- The session itself: builder, events, chat actions -->
+    <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
+    <!-- The status ping used to pick the protocol version, plus the TCP factory and SRV resolver -->
+    <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <!-- The version catalog and the per-protocol registries -->
+    <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
+    <!-- OfflineIdentity: the UUID a vanilla offline server assigns -->
+    <ProjectReference Include="../../src/Umpk.Auth/Umpk.Auth.csproj" />
+  </ItemGroup>
+</Project>

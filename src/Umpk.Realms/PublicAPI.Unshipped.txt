@@ -1,0 +1,137 @@
+#nullable enable
+Umpk.Realms.IRealmsClient
+Umpk.Realms.IRealmsClient.AgreeToTermsAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+Umpk.Realms.IRealmsClient.CheckClientCompatibleAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Realms.RealmsCompatibility>!
+Umpk.Realms.IRealmsClient.JoinWorldAsync(long worldId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Realms.RealmServerAddress!>!
+Umpk.Realms.IRealmsClient.ListWorldsAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Umpk.Realms.RealmWorld!>!>!
+Umpk.Realms.RealmServerAddress
+Umpk.Realms.RealmServerAddress.<Clone>$() -> Umpk.Realms.RealmServerAddress!
+Umpk.Realms.RealmServerAddress.Deconstruct(out string! Host, out int Port, out string? ResourcePackUrl, out string? ResourcePackHash) -> void
+Umpk.Realms.RealmServerAddress.Equals(Umpk.Realms.RealmServerAddress? other) -> bool
+Umpk.Realms.RealmServerAddress.Host.get -> string!
+Umpk.Realms.RealmServerAddress.Host.init -> void
+Umpk.Realms.RealmServerAddress.Port.get -> int
+Umpk.Realms.RealmServerAddress.Port.init -> void
+Umpk.Realms.RealmServerAddress.RealmServerAddress(string! Host, int Port, string? ResourcePackUrl = null, string? ResourcePackHash = null) -> void
+Umpk.Realms.RealmServerAddress.ResourcePackHash.get -> string?
+Umpk.Realms.RealmServerAddress.ResourcePackHash.init -> void
+Umpk.Realms.RealmServerAddress.ResourcePackUrl.get -> string?
+Umpk.Realms.RealmServerAddress.ResourcePackUrl.init -> void
+Umpk.Realms.RealmState
+Umpk.Realms.RealmState.Closed = 2 -> Umpk.Realms.RealmState
+Umpk.Realms.RealmState.Open = 1 -> Umpk.Realms.RealmState
+Umpk.Realms.RealmState.Uninitialized = 3 -> Umpk.Realms.RealmState
+Umpk.Realms.RealmState.Unknown = 0 -> Umpk.Realms.RealmState
+Umpk.Realms.RealmWorld
+Umpk.Realms.RealmWorld.<Clone>$() -> Umpk.Realms.RealmWorld!
+Umpk.Realms.RealmWorld.ActiveSlot.get -> int?
+Umpk.Realms.RealmWorld.ActiveSlot.init -> void
+Umpk.Realms.RealmWorld.DaysLeft.get -> int
+Umpk.Realms.RealmWorld.DaysLeft.init -> void
+Umpk.Realms.RealmWorld.Deconstruct(out long Id, out string! Name, out string! Motd, out string! Owner, out System.Guid? OwnerUuid, out Umpk.Realms.RealmState State, out string! WorldType, out bool Expired, out bool ExpiredTrial, out int DaysLeft, out int MaxPlayers, out int? ActiveSlot, out bool Member) -> void
+Umpk.Realms.RealmWorld.Equals(Umpk.Realms.RealmWorld? other) -> bool
+Umpk.Realms.RealmWorld.Expired.get -> bool
+Umpk.Realms.RealmWorld.Expired.init -> void
+Umpk.Realms.RealmWorld.ExpiredTrial.get -> bool
+Umpk.Realms.RealmWorld.ExpiredTrial.init -> void
+Umpk.Realms.RealmWorld.Id.get -> long
+Umpk.Realms.RealmWorld.Id.init -> void
+Umpk.Realms.RealmWorld.MaxPlayers.get -> int
+Umpk.Realms.RealmWorld.MaxPlayers.init -> void
+Umpk.Realms.RealmWorld.Member.get -> bool
+Umpk.Realms.RealmWorld.Member.init -> void
+Umpk.Realms.RealmWorld.Motd.get -> string!
+Umpk.Realms.RealmWorld.Motd.init -> void
+Umpk.Realms.RealmWorld.Name.get -> string!
+Umpk.Realms.RealmWorld.Name.init -> void
+Umpk.Realms.RealmWorld.Owner.get -> string!
+Umpk.Realms.RealmWorld.Owner.init -> void
+Umpk.Realms.RealmWorld.OwnerUuid.get -> System.Guid?
+Umpk.Realms.RealmWorld.OwnerUuid.init -> void
+Umpk.Realms.RealmWorld.RealmWorld(long Id, string! Name, string! Motd, string! Owner, System.Guid? OwnerUuid, Umpk.Realms.RealmState State, string! WorldType, bool Expired, bool ExpiredTrial, int DaysLeft, int MaxPlayers, int? ActiveSlot, bool Member) -> void
+Umpk.Realms.RealmWorld.State.get -> Umpk.Realms.RealmState
+Umpk.Realms.RealmWorld.State.init -> void
+Umpk.Realms.RealmWorld.WorldType.get -> string!
+Umpk.Realms.RealmWorld.WorldType.init -> void
+Umpk.Realms.RealmsClient
+Umpk.Realms.RealmsClient.AgreeToTermsAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+Umpk.Realms.RealmsClient.CheckClientCompatibleAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Realms.RealmsCompatibility>!
+Umpk.Realms.RealmsClient.Dispose() -> void
+Umpk.Realms.RealmsClient.JoinWorldAsync(long worldId, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Realms.RealmServerAddress!>!
+Umpk.Realms.RealmsClient.ListWorldsAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Umpk.Realms.RealmWorld!>!>!
+Umpk.Realms.RealmsClient.RealmsClient(Umpk.Realms.RealmsClientOptions! options) -> void
+Umpk.Realms.RealmsClientExtensions
+Umpk.Realms.RealmsClientOptions
+Umpk.Realms.RealmsClientOptions.BaseUri.get -> System.Uri!
+Umpk.Realms.RealmsClientOptions.BaseUri.init -> void
+Umpk.Realms.RealmsClientOptions.Credential.get -> Umpk.Realms.RealmsSessionCredential!
+Umpk.Realms.RealmsClientOptions.Credential.init -> void
+Umpk.Realms.RealmsClientOptions.HttpHandlerFactory.get -> Umpk.Auth.IHttpMessageHandlerFactory!
+Umpk.Realms.RealmsClientOptions.HttpHandlerFactory.init -> void
+Umpk.Realms.RealmsClientOptions.Logger.get -> Microsoft.Extensions.Logging.ILogger!
+Umpk.Realms.RealmsClientOptions.Logger.init -> void
+Umpk.Realms.RealmsClientOptions.RealmsClientOptions() -> void
+Umpk.Realms.RealmsCompatibility
+Umpk.Realms.RealmsCompatibility.Compatible = 1 -> Umpk.Realms.RealmsCompatibility
+Umpk.Realms.RealmsCompatibility.Other = 3 -> Umpk.Realms.RealmsCompatibility
+Umpk.Realms.RealmsCompatibility.Outdated = 2 -> Umpk.Realms.RealmsCompatibility
+Umpk.Realms.RealmsCompatibility.Unknown = 0 -> Umpk.Realms.RealmsCompatibility
+Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.ClientOutdated = 4 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.InvalidResponse = 9 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.RequiresMicrosoftAccount = 1 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.ServiceBusy = 8 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.ServiceError = 0 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.TermsNotAgreed = 3 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.Unauthorized = 2 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.WorldLocked = 5 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.WorldNotFound = 7 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsErrorKind.WorldOutOfDate = 6 -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsException
+Umpk.Realms.RealmsException.Kind.get -> Umpk.Realms.RealmsErrorKind
+Umpk.Realms.RealmsException.RealmsException(Umpk.Realms.RealmsErrorKind kind, string! message) -> void
+Umpk.Realms.RealmsException.RealmsException(Umpk.Realms.RealmsErrorKind kind, string! message, System.Exception! innerException) -> void
+Umpk.Realms.RealmsException.RealmsException(string! message) -> void
+Umpk.Realms.RealmsException.RealmsException(string! message, System.Exception! innerException) -> void
+Umpk.Realms.RealmsServiceException
+Umpk.Realms.RealmsServiceException.ErrorCode.get -> int?
+Umpk.Realms.RealmsServiceException.ErrorCode.init -> void
+Umpk.Realms.RealmsServiceException.Operation.get -> string!
+Umpk.Realms.RealmsServiceException.RealmsServiceException(string! operation, int statusCode, Umpk.Realms.RealmsErrorKind kind, string! message) -> void
+Umpk.Realms.RealmsServiceException.RealmsServiceException(string! operation, int statusCode, Umpk.Realms.RealmsErrorKind kind, string! message, System.Exception! innerException) -> void
+Umpk.Realms.RealmsServiceException.Reason.get -> string?
+Umpk.Realms.RealmsServiceException.Reason.init -> void
+Umpk.Realms.RealmsServiceException.StatusCode.get -> int
+Umpk.Realms.RealmsSessionCredential
+Umpk.Realms.RealmsSessionCredential.<Clone>$() -> Umpk.Realms.RealmsSessionCredential!
+Umpk.Realms.RealmsSessionCredential.AccessToken.get -> string!
+Umpk.Realms.RealmsSessionCredential.AccessToken.init -> void
+Umpk.Realms.RealmsSessionCredential.ClientVersion.get -> string!
+Umpk.Realms.RealmsSessionCredential.ClientVersion.init -> void
+Umpk.Realms.RealmsSessionCredential.Deconstruct(out string! AccessToken, out System.Guid ProfileId, out string! Username, out string! ClientVersion) -> void
+Umpk.Realms.RealmsSessionCredential.Equals(Umpk.Realms.RealmsSessionCredential? other) -> bool
+Umpk.Realms.RealmsSessionCredential.ProfileId.get -> System.Guid
+Umpk.Realms.RealmsSessionCredential.ProfileId.init -> void
+Umpk.Realms.RealmsSessionCredential.RealmsSessionCredential(string! AccessToken, System.Guid ProfileId, string! Username, string! ClientVersion) -> void
+Umpk.Realms.RealmsSessionCredential.Username.get -> string!
+Umpk.Realms.RealmsSessionCredential.Username.init -> void
+const Umpk.Realms.RealmServerAddress.DefaultPort = 25565 -> int
+override Umpk.Realms.RealmServerAddress.Equals(object? obj) -> bool
+override Umpk.Realms.RealmServerAddress.GetHashCode() -> int
+override Umpk.Realms.RealmServerAddress.ToString() -> string!
+override Umpk.Realms.RealmWorld.Equals(object? obj) -> bool
+override Umpk.Realms.RealmWorld.GetHashCode() -> int
+override Umpk.Realms.RealmWorld.ToString() -> string!
+override Umpk.Realms.RealmsSessionCredential.Equals(object? obj) -> bool
+override Umpk.Realms.RealmsSessionCredential.GetHashCode() -> int
+override Umpk.Realms.RealmsSessionCredential.ToString() -> string!
+static Umpk.Realms.RealmServerAddress.Parse(string! address, string? resourcePackUrl = null, string? resourcePackHash = null) -> Umpk.Realms.RealmServerAddress!
+static Umpk.Realms.RealmServerAddress.operator !=(Umpk.Realms.RealmServerAddress? left, Umpk.Realms.RealmServerAddress? right) -> bool
+static Umpk.Realms.RealmServerAddress.operator ==(Umpk.Realms.RealmServerAddress? left, Umpk.Realms.RealmServerAddress? right) -> bool
+static Umpk.Realms.RealmWorld.Match(System.Collections.Generic.IReadOnlyList<Umpk.Realms.RealmWorld!>! worlds, string! selector) -> Umpk.Realms.RealmWorld?
+static Umpk.Realms.RealmWorld.operator !=(Umpk.Realms.RealmWorld? left, Umpk.Realms.RealmWorld? right) -> bool
+static Umpk.Realms.RealmWorld.operator ==(Umpk.Realms.RealmWorld? left, Umpk.Realms.RealmWorld? right) -> bool
+static Umpk.Realms.RealmsClientExtensions.ResolveWorldAsync(this Umpk.Realms.IRealmsClient! client, string! worldSelector, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Realms.RealmServerAddress!>!
+static Umpk.Realms.RealmsSessionCredential.FromSession(Umpk.Auth.JavaSession! session, string! clientVersion) -> Umpk.Realms.RealmsSessionCredential!
+static Umpk.Realms.RealmsSessionCredential.operator !=(Umpk.Realms.RealmsSessionCredential? left, Umpk.Realms.RealmsSessionCredential? right) -> bool
+static Umpk.Realms.RealmsSessionCredential.operator ==(Umpk.Realms.RealmsSessionCredential? left, Umpk.Realms.RealmsSessionCredential? right) -> bool

@@ -1,0 +1,75 @@
+{
+  "_provenance": {
+    "kind": "curated-legacy",
+    "note": "per-(id,meta) supplement for protocol 47; completes the MCP-derived meta-0 block table with 1.13-flattened identifiers per meta variant. Hand-authored sample of the well-known meta-carrying blocks; DataGen legacy mode validates id-space coverage, not meta completeness."
+  },
+  "meta_variants": {
+    "5": {
+      "0": "oak_planks",
+      "1": "spruce_planks",
+      "2": "birch_planks",
+      "3": "jungle_planks",
+      "4": "acacia_planks",
+      "5": "dark_oak_planks"
+    },
+    "17": {
+      "0": "oak_log",
+      "1": "spruce_log",
+      "2": "birch_log",
+      "3": "jungle_log"
+    },
+    "31": {
+      "0": "dead_bush",
+      "1": "grass",
+      "2": "fern"
+    },
+    "35": {
+      "0": "white_wool",
+      "1": "orange_wool",
+      "2": "magenta_wool",
+      "3": "light_blue_wool",
+      "4": "yellow_wool",
+      "5": "lime_wool",
+      "6": "pink_wool",
+      "7": "gray_wool",
+      "8": "light_gray_wool",
+      "9": "cyan_wool",
+      "10": "purple_wool",
+      "11": "blue_wool",
+      "12": "brown_wool",
+      "13": "green_wool",
+      "14": "red_wool",
+      "15": "black_wool"
+    },
+    "159": {
+      "0": "white_terracotta",
+      "1": "orange_terracotta",
+      "2": "magenta_terracotta",
+      "3": "light_blue_terracotta",
+      "4": "yellow_terracotta",
+      "5": "lime_terracotta",
+      "6": "pink_terracotta",
+      "7": "gray_terracotta",
+      "8": "light_gray_terracotta",
+      "9": "cyan_terracotta",
+      "10": "purple_terracotta",
+      "11": "blue_terracotta",
+      "12": "brown_terracotta",
+      "13": "green_terracotta",
+      "14": "red_terracotta",
+      "15": "black_terracotta"
+    },
+    "162": {
+      "0": "acacia_log",
+      "1": "dark_oak_log"
+    },
+    "175": {
+      "0": "sunflower",
+      "1": "lilac",
+      "2": "tall_grass",
+      "3": "large_fern",
+      "4": "rose_bush",
+      "5": "peony"
+    }
+  }
+}

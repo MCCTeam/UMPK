@@ -1,0 +1,39 @@
+name: Question
+description: Ask about setup, APIs, supported behavior, or contribution work.
+title: "[Question]: "
+labels:
+  - question
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Setup and installation
+        - Client API
+        - Protocol and versions
+        - Authentication
+        - Movement and pathfinding
+        - Contributing
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Include enough context to explain what you are trying to build.
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What did you try?
+      description: Link the documentation or sample that you used. Include a short redacted example.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Submission check
+      options:
+        - label: I removed credentials, tokens, private server addresses, and personal data.
+          required: true

@@ -1,0 +1,38 @@
+{
+ "_provenance": {
+  "version": "1.13.1",
+  "protocol": 401,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "flattening-era feature toggles cross-checked vs data/java/477"
+  ],
+  "kind": "curated",
+  "note": "flattening era; pre-signing, pre-configuration, pre-components; light rides the chunk packet"
+ },
+ "flags": {
+  "configurationPhase": false,
+  "bundles": false,
+  "chatSigning": "none",
+  "nbtWireFormat": "javaNamedRoot",
+  "blockPosLayout": "legacy",
+  "itemStackFormat": "legacyShortId",
+  "hashedSlots": false,
+  "lightInChunkPacket": true,
+  "dimensionEncoding": "int",
+  "metadataTerminator": "0xff",
+  "fluidMovement": "swimmingUpdate",
+  "waterTravel": "sprintAware",
+  "waterClimbBump": false,
+  "elytra": true,
+  "swimPose": true,
+  "crawlPose": false,
+  "perSectionFluidCounts": false,
+  "argumentTypeEra": "v1_13",
+  "componentInteractionEra": "legacy"
+ },
+ "physics": {
+  "poseBoundingBoxEra": "modern",
+  "defaultFriction": 0.6,
+  "waterFriction": 0.8
+ }
+}

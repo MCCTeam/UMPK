@@ -1,0 +1,41 @@
+name: Suggestion
+description: Suggest a feature or compatibility improvement.
+title: "[Suggestion]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Explain the use case before you describe an API.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested behavior
+      description: Describe what UMPK should do and what the host application should do.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Minecraft versions or protocols
+      description: List the affected versions, or write "not version-specific".
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Describe any workaround or API that you considered.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and the roadmap.
+          required: true
+        - label: This request does not depend on private account or server data.
+          required: true

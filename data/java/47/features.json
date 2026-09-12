@@ -1,0 +1,32 @@
+{
+  "_provenance": {
+    "version": "1.8",
+    "protocol": 47,
+    "mapping_source": "mcp-community",
+    "kind": "curated-legacy",
+    "note": "1.8 protocol + physics feature toggles"
+  },
+  "flags": {
+    "configurationPhase": false,
+    "bundles": false,
+    "chatSigning": "none",
+    "nbtWireFormat": "javaNamedRoot",
+    "blockPosLayout": "legacy",
+    "itemStackFormat": "legacyShortId",
+    "hashedSlots": false,
+    "lightInChunkPacket": true,
+    "dimensionEncoding": "int",
+    "metadataTerminator": "0x7f",
+    "fluidMovement": "swimmingUpdate",
+    "waterTravel": "legacy",
+    "waterClimbBump": false,
+    "elytra": false,
+    "swimPose": false,
+    "crawlPose": false
+  },
+  "physics": {
+    "poseBoundingBoxEra": "pre1.9",
+    "defaultFriction": 0.6,
+    "waterFriction": 0.8
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "_provenance": {
+    "version": "1.8",
+    "protocol": 47,
+    "mapping_source": "mcp-community",
+    "kind": "curated-legacy",
+    "note": "1.8 packed key/type metadata; 8 fixed value types (wiki.vg)"
+  },
+  "format": "packed",
+  "terminator": "0x7f",
+  "serializers": [
+    {
+      "id": 0,
+      "field": "BYTE",
+      "codec": "Byte"
+    },
+    {
+      "id": 1,
+      "field": "SHORT",
+      "codec": "Short"
+    },
+    {
+      "id": 2,
+      "field": "INT",
+      "codec": "Int"
+    },
+    {
+      "id": 3,
+      "field": "FLOAT",
+      "codec": "Float"
+    },
+    {
+      "id": 4,
+      "field": "STRING",
+      "codec": "String"
+    },
+    {
+      "id": 5,
+      "field": "ITEMSTACK",
+      "codec": "ItemStack"
+    },
+    {
+      "id": 6,
+      "field": "BLOCKPOS",
+      "codec": "BlockPos"
+    },
+    {
+      "id": 7,
+      "field": "ROTATIONS",
+      "codec": "Rotations"
+    }
+  ]
+}

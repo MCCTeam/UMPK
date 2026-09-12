@@ -1,0 +1,129 @@
+{
+  "_provenance": {
+    "version": "1.14.3",
+    "protocol": 490,
+    "mapping_source": "mcp-community",
+    "sources": [
+      "reports/registries.json#minecraft:menu"
+    ],
+    "kind": "extracted"
+  },
+  "note": "slot layouts/roles are curated; wire ids are extracted",
+  "entries": [
+    {
+      "id": "minecraft:generic_9x1",
+      "id_num": 0,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_9x2",
+      "id_num": 1,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_9x3",
+      "id_num": 2,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_9x4",
+      "id_num": 3,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_9x5",
+      "id_num": 4,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_9x6",
+      "id_num": 5,
+      "slots": null
+    },
+    {
+      "id": "minecraft:generic_3x3",
+      "id_num": 6,
+      "slots": null
+    },
+    {
+      "id": "minecraft:anvil",
+      "id_num": 7,
+      "slots": null
+    },
+    {
+      "id": "minecraft:beacon",
+      "id_num": 8,
+      "slots": null
+    },
+    {
+      "id": "minecraft:blast_furnace",
+      "id_num": 9,
+      "slots": null
+    },
+    {
+      "id": "minecraft:brewing_stand",
+      "id_num": 10,
+      "slots": null
+    },
+    {
+      "id": "minecraft:crafting",
+      "id_num": 11,
+      "slots": null
+    },
+    {
+      "id": "minecraft:enchantment",
+      "id_num": 12,
+      "slots": null
+    },
+    {
+      "id": "minecraft:furnace",
+      "id_num": 13,
+      "slots": null
+    },
+    {
+      "id": "minecraft:grindstone",
+      "id_num": 14,
+      "slots": null
+    },
+    {
+      "id": "minecraft:hopper",
+      "id_num": 15,
+      "slots": null
+    },
+    {
+      "id": "minecraft:lectern",
+      "id_num": 16,
+      "slots": null
+    },
+    {
+      "id": "minecraft:loom",
+      "id_num": 17,
+      "slots": null
+    },
+    {
+      "id": "minecraft:merchant",
+      "id_num": 18,
+      "slots": null
+    },
+    {
+      "id": "minecraft:shulker_box",
+      "id_num": 19,
+      "slots": null
+    },
+    {
+      "id": "minecraft:smoker",
+      "id_num": 20,
+      "slots": null
+    },
+    {
+      "id": "minecraft:cartography",
+      "id_num": 21,
+      "slots": null
+    },
+    {
+      "id": "minecraft:stonecutter",
+      "id_num": 22,
+      "slots": null
+    }
+  ]
+}

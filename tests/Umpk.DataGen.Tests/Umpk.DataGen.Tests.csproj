@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../tools/Umpk.DataGen/Umpk.DataGen.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Golden fixtures are .g.cs text, not compilable source. Exclude from build. -->
+    <Compile Remove="Fixtures/**/*.cs" />
+    <None Include="Fixtures/**/*" CopyToOutputDirectory="PreserveNewest" LinkBase="Fixtures" />
+  </ItemGroup>
+</Project>

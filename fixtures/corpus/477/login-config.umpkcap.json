@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.14",
+  "protocol": 477,
+  "scenario": "login-config",
+  "frameCount": 1060,
+  "clientboundCount": 1060,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-15T14:15:46.5132150\u002B00:00",
+  "durationMs": 3074,
+  "contentHash": "e954519ee227b6d8d9afc7dbc75fe579d0d4be1606bc1efc5f970c5bbd3f047a",
+  "notes": null
+}

@@ -1,0 +1,50 @@
+{
+  "_provenance": {
+    "kind": "curated",
+    "note": "semantics with no machine source; kept small. The top-level lists use 1.13+ flattened identifiers. The pre_flattening block mirrors them under the identifiers the 1.8-1.12.2 registries actually use, and REPLACES them on those bands, because three of these names denote a different block in each era: pre-1.13 minecraft:grass is the grass BLOCK (not the short plant, which is minecraft:tallgrass) and minecraft:snow is the snow BLOCK (not the layer, which is minecraft:snow_layer). Marking those two replaceable, which is what the unscoped list did on protocols 107-340, tells a caller a solid block can be built over. Materials verified in MCP 1.8.9 Material.java: Material.vine and Material.snow call setReplaceable(); BlockTallGrass/BlockDeadBush/BlockDoublePlant/BlockVine are Material.vine, BlockSnow (id 78) is Material.snow, BlockSnowBlock (id 80) is Material.craftedSnow and BlockGrass (id 2) is Material.grass, neither of which is replaceable. The membership is a one-to-one mirror of the flat list, not an extension of it.",
+    "climbable_note": "The flat climbable list is vanilla's #minecraft:climbable tag, verbatim. That tag is a DATA file in the shipped server jar, so it is read rather than inferred: data/minecraft/tags/blocks/climbable.json in 1.16.1 and 1.16.5 lists ladder, vine, scaffolding, weeping_vines, weeping_vines_plant, twisting_vines, twisting_vines_plant; the same file in 1.17.1 adds cave_vines and cave_vines_plant, which is the whole of the tag through 26.2 (1.21.11-decompiled net/minecraft/data/tags/VanillaBlockTagsProvider.java:289-300, identical to 1.17.1-decompiled net/minecraft/data/tags/BlockTagsProvider.java:565-576). LivingEntity.onClimbable reads exactly that tag (1.21.11-decompiled LivingEntity.java:1707; 1.17.1-decompiled LivingEntity.java:1428). No era switch is needed here because the list is intersected with each version's own block table: nether vines resolve only on 1.16+ (protocol 735+), cave vines only on 1.17+ (755+), and both were climbable from the tick they existed. Defect #82.",
+    "sources": [
+      "MinecraftOfficial/1.8.9/src/minecraft/net/minecraft/block/material/Material.java",
+      "MinecraftOfficial/1.8.9/src/minecraft/net/minecraft/block/Block.java#registerBlocks",
+      "MinecraftOfficial/downloads/1.16.1/server.jar#data/minecraft/tags/blocks/climbable.json",
+      "MinecraftOfficial/downloads/1.16.5/server.jar#data/minecraft/tags/blocks/climbable.json",
+      "MinecraftOfficial/downloads/1.17.1/server.jar#data/minecraft/tags/blocks/climbable.json",
+      "MinecraftOfficial/1.21.11-decompiled/net/minecraft/data/tags/VanillaBlockTagsProvider.java#L289-L300"
+    ]
+  },
+  "climbable": [
+    "minecraft:ladder",
+    "minecraft:vine",
+    "minecraft:scaffolding",
+    "minecraft:weeping_vines",
+    "minecraft:weeping_vines_plant",
+    "minecraft:twisting_vines",
+    "minecraft:twisting_vines_plant",
+    "minecraft:cave_vines",
+    "minecraft:cave_vines_plant"
+  ],
+  "replaceable_by_placement": [
+    "minecraft:air",
+    "minecraft:water",
+    "minecraft:lava",
+    "minecraft:grass",
+    "minecraft:tall_grass",
+    "minecraft:snow"
+  ],
+  "pre_flattening": {
+    "climbable": [
+      "minecraft:ladder",
+      "minecraft:vine"
+    ],
+    "replaceable_by_placement": [
+      "minecraft:air",
+      "minecraft:water",
+      "minecraft:flowing_water",
+      "minecraft:lava",
+      "minecraft:flowing_lava",
+      "minecraft:tallgrass",
+      "minecraft:double_plant",
+      "minecraft:snow_layer"
+    ]
+  }
+}

@@ -1,0 +1,325 @@
+#nullable enable
+Umpk.Physics.FluidMovementEra
+Umpk.Physics.FluidMovementEra.Legacy = 0 -> Umpk.Physics.FluidMovementEra
+Umpk.Physics.FluidMovementEra.SwimmingUpdate = 1 -> Umpk.Physics.FluidMovementEra
+Umpk.Physics.IPhysicsWorldView
+Umpk.Physics.IPhysicsWorldView.CollectEntityColliders(in Umpk.Geometry.Aabb region, System.Collections.Generic.ICollection<Umpk.Geometry.Aabb>! into) -> void
+Umpk.Physics.IPhysicsWorldView.GetBlock(Umpk.Geometry.BlockPos pos) -> Umpk.Game.Blocks.BlockState
+Umpk.Physics.IPhysicsWorldView.GetCollisionShapes(Umpk.Game.Blocks.BlockState state) -> System.ReadOnlySpan<Umpk.Geometry.Aabb>
+Umpk.Physics.IPhysicsWorldView.IsChunkLoaded(Umpk.Geometry.BlockPos pos) -> bool
+Umpk.Physics.IPistonPushTarget
+Umpk.Physics.IPistonPushTarget.BoundingBox.get -> Umpk.Geometry.Aabb
+Umpk.Physics.IPistonPushTarget.MoveByPiston(Umpk.Geometry.Vec3d motion) -> void
+Umpk.Physics.LandingPrediction
+Umpk.Physics.LandingPrediction.Equals(Umpk.Physics.LandingPrediction other) -> bool
+Umpk.Physics.LandingPrediction.FinalState.get -> Umpk.Physics.PhysicsState
+Umpk.Physics.LandingPrediction.FinalState.init -> void
+Umpk.Physics.LandingPrediction.Landed.get -> bool
+Umpk.Physics.LandingPrediction.Landed.init -> void
+Umpk.Physics.LandingPrediction.LandingPosition.get -> Umpk.Geometry.Vec3d
+Umpk.Physics.LandingPrediction.LandingPosition.init -> void
+Umpk.Physics.LandingPrediction.LandingPrediction() -> void
+Umpk.Physics.LandingPrediction.TicksSimulated.get -> int
+Umpk.Physics.LandingPrediction.TicksSimulated.init -> void
+Umpk.Physics.MovementInput
+Umpk.Physics.MovementInput.AutoJump.get -> bool
+Umpk.Physics.MovementInput.AutoJump.init -> void
+Umpk.Physics.MovementInput.Back.get -> bool
+Umpk.Physics.MovementInput.Back.init -> void
+Umpk.Physics.MovementInput.Equals(Umpk.Physics.MovementInput other) -> bool
+Umpk.Physics.MovementInput.Forward.get -> bool
+Umpk.Physics.MovementInput.Forward.init -> void
+Umpk.Physics.MovementInput.GetMoveVector() -> (float Xxa, float Zza)
+Umpk.Physics.MovementInput.Jump.get -> bool
+Umpk.Physics.MovementInput.Jump.init -> void
+Umpk.Physics.MovementInput.Left.get -> bool
+Umpk.Physics.MovementInput.Left.init -> void
+Umpk.Physics.MovementInput.MovementInput() -> void
+Umpk.Physics.MovementInput.Right.get -> bool
+Umpk.Physics.MovementInput.Right.init -> void
+Umpk.Physics.MovementInput.Sneak.get -> bool
+Umpk.Physics.MovementInput.Sneak.init -> void
+Umpk.Physics.MovementInput.Sprint.get -> bool
+Umpk.Physics.MovementInput.Sprint.init -> void
+Umpk.Physics.MovingPiston
+Umpk.Physics.MovingPiston.MovementDirection.get -> Umpk.Geometry.Direction
+Umpk.Physics.MovingPiston.MovingPiston(Umpk.Geometry.BlockPos position, Umpk.Geometry.Direction direction, bool extending, bool isSourcePiston, System.Collections.Generic.IReadOnlyList<Umpk.Geometry.Aabb>! shape, System.Collections.Generic.IReadOnlyList<Umpk.Geometry.Aabb>? shortShape = null) -> void
+Umpk.Physics.MovingPiston.Position.get -> Umpk.Geometry.BlockPos
+Umpk.Physics.MovingPiston.Progress.get -> float
+Umpk.Physics.MovingPiston.Removed.get -> bool
+Umpk.Physics.MovingPiston.Tick(Umpk.Physics.IPistonPushTarget? target) -> void
+Umpk.Physics.PhysicsConditions
+Umpk.Physics.PhysicsConditions.BaseMovementSpeedAttribute.get -> float
+Umpk.Physics.PhysicsConditions.BaseMovementSpeedAttribute.init -> void
+Umpk.Physics.PhysicsConditions.CreativeFlying.get -> bool
+Umpk.Physics.PhysicsConditions.CreativeFlying.init -> void
+Umpk.Physics.PhysicsConditions.ElytraEquipped.get -> bool
+Umpk.Physics.PhysicsConditions.ElytraEquipped.init -> void
+Umpk.Physics.PhysicsConditions.ElytraFlying.get -> bool
+Umpk.Physics.PhysicsConditions.ElytraFlying.init -> void
+Umpk.Physics.PhysicsConditions.Equals(Umpk.Physics.PhysicsConditions other) -> bool
+Umpk.Physics.PhysicsConditions.FlyingSpeed.get -> float
+Umpk.Physics.PhysicsConditions.FlyingSpeed.init -> void
+Umpk.Physics.PhysicsConditions.GameMode.get -> Umpk.Game.Players.GameMode
+Umpk.Physics.PhysicsConditions.GameMode.init -> void
+Umpk.Physics.PhysicsConditions.HasDolphinsGrace.get -> bool
+Umpk.Physics.PhysicsConditions.HasDolphinsGrace.init -> void
+Umpk.Physics.PhysicsConditions.HasJumpBoost.get -> bool
+Umpk.Physics.PhysicsConditions.HasJumpBoost.init -> void
+Umpk.Physics.PhysicsConditions.HasLevitation.get -> bool
+Umpk.Physics.PhysicsConditions.HasLevitation.init -> void
+Umpk.Physics.PhysicsConditions.HasSlowFalling.get -> bool
+Umpk.Physics.PhysicsConditions.HasSlowFalling.init -> void
+Umpk.Physics.PhysicsConditions.JumpBoostAmplifier.get -> int
+Umpk.Physics.PhysicsConditions.JumpBoostAmplifier.init -> void
+Umpk.Physics.PhysicsConditions.LevitationAmplifier.get -> int
+Umpk.Physics.PhysicsConditions.LevitationAmplifier.init -> void
+Umpk.Physics.PhysicsConditions.MayFly.get -> bool
+Umpk.Physics.PhysicsConditions.MayFly.init -> void
+Umpk.Physics.PhysicsConditions.MovementEfficiency.get -> float
+Umpk.Physics.PhysicsConditions.MovementEfficiency.init -> void
+Umpk.Physics.PhysicsConditions.PhysicsConditions() -> void
+Umpk.Physics.PhysicsConditions.SneakingSpeedFactor.get -> float
+Umpk.Physics.PhysicsConditions.SneakingSpeedFactor.init -> void
+Umpk.Physics.PhysicsConditions.PowderSnowWalkable.get -> bool
+Umpk.Physics.PhysicsConditions.PowderSnowWalkable.init -> void
+Umpk.Physics.PhysicsConditions.SoulSpeedLevel.get -> int
+Umpk.Physics.PhysicsConditions.SoulSpeedLevel.init -> void
+Umpk.Physics.PhysicsConditions.UltraWarmDimension.get -> bool
+Umpk.Physics.PhysicsConditions.UltraWarmDimension.init -> void
+Umpk.Physics.PhysicsConditions.WaterMovementEfficiency.get -> float
+Umpk.Physics.PhysicsConditions.WaterMovementEfficiency.init -> void
+Umpk.Physics.PhysicsConstants
+Umpk.Physics.PhysicsProfile
+Umpk.Physics.PhysicsProfile.<Clone>$() -> Umpk.Physics.PhysicsProfile!
+Umpk.Physics.PhysicsProfile.CrawlPoseAvailable.get -> bool
+Umpk.Physics.PhysicsProfile.CrawlPoseAvailable.init -> void
+Umpk.Physics.PhysicsProfile.CrouchHeight.get -> double
+Umpk.Physics.PhysicsProfile.ElytraAvailable.get -> bool
+Umpk.Physics.PhysicsProfile.ElytraAvailable.init -> void
+Umpk.Physics.PhysicsProfile.Equals(Umpk.Physics.PhysicsProfile? other) -> bool
+Umpk.Physics.PhysicsProfile.FluidMovement.get -> Umpk.Physics.FluidMovementEra
+Umpk.Physics.PhysicsProfile.FluidMovement.init -> void
+Umpk.Physics.PhysicsProfile.PhysicsProfile() -> void
+Umpk.Physics.PhysicsProfile.PoseDimensions.get -> Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PhysicsProfile.PoseDimensions.init -> void
+Umpk.Physics.PhysicsProfile.PositionSend.get -> Umpk.Physics.PositionSendCadence
+Umpk.Physics.PhysicsProfile.PositionSend.init -> void
+Umpk.Physics.PhysicsProfile.StandingHeight.get -> double
+Umpk.Physics.PhysicsProfile.SwimHeight.get -> double
+Umpk.Physics.PhysicsProfile.SwimPoseAvailable.get -> bool
+Umpk.Physics.PhysicsProfile.SwimPoseAvailable.init -> void
+Umpk.Physics.PhysicsProfile.WaterClimbBumpAvailable.get -> bool
+Umpk.Physics.PhysicsProfile.WaterClimbBumpAvailable.init -> void
+Umpk.Physics.PhysicsProfile.WaterTravel.get -> Umpk.Physics.WaterTravelEra
+Umpk.Physics.PhysicsProfile.WaterTravel.init -> void
+Umpk.Physics.PhysicsProfile.Width.get -> double
+Umpk.Physics.PhysicsSimulator
+Umpk.Physics.PhysicsState
+Umpk.Physics.PhysicsState.BoundingBox.get -> Umpk.Geometry.Aabb
+Umpk.Physics.PhysicsState.BoundingBox.init -> void
+Umpk.Physics.PhysicsState.Equals(Umpk.Physics.PhysicsState other) -> bool
+Umpk.Physics.PhysicsState.EyeHeight.get -> double
+Umpk.Physics.PhysicsState.EyePosition.get -> Umpk.Geometry.Vec3d
+Umpk.Physics.PhysicsState.FallDistance.get -> double
+Umpk.Physics.PhysicsState.FallDistance.init -> void
+Umpk.Physics.PhysicsState.HorizontalCollision.get -> bool
+Umpk.Physics.PhysicsState.HorizontalCollision.init -> void
+Umpk.Physics.PhysicsState.InLava.get -> bool
+Umpk.Physics.PhysicsState.InLava.init -> void
+Umpk.Physics.PhysicsState.InWater.get -> bool
+Umpk.Physics.PhysicsState.InWater.init -> void
+Umpk.Physics.PhysicsState.IsGliding.get -> bool
+Umpk.Physics.PhysicsState.IsGliding.init -> void
+Umpk.Physics.PhysicsState.IsSprinting.get -> bool
+Umpk.Physics.PhysicsState.IsSprinting.init -> void
+Umpk.Physics.PhysicsState.IsSwimming.get -> bool
+Umpk.Physics.PhysicsState.IsSwimming.init -> void
+Umpk.Physics.PhysicsState.IsUnderWater.get -> bool
+Umpk.Physics.PhysicsState.IsUnderWater.init -> void
+Umpk.Physics.PhysicsState.OnClimbable.get -> bool
+Umpk.Physics.PhysicsState.OnClimbable.init -> void
+Umpk.Physics.PhysicsState.OnGround.get -> bool
+Umpk.Physics.PhysicsState.OnGround.init -> void
+Umpk.Physics.PhysicsState.PhysicsState() -> void
+Umpk.Physics.PhysicsState.Pitch.get -> float
+Umpk.Physics.PhysicsState.Pitch.init -> void
+Umpk.Physics.PhysicsState.Pose.get -> Umpk.Game.Entities.EntityPose
+Umpk.Physics.PhysicsState.Pose.init -> void
+Umpk.Physics.PhysicsState.Position.get -> Umpk.Geometry.Vec3d
+Umpk.Physics.PhysicsState.Position.init -> void
+Umpk.Physics.PhysicsState.Velocity.get -> Umpk.Geometry.Vec3d
+Umpk.Physics.PhysicsState.Velocity.init -> void
+Umpk.Physics.PhysicsState.VerticalCollision.get -> bool
+Umpk.Physics.PhysicsState.VerticalCollision.init -> void
+Umpk.Physics.PhysicsState.Yaw.get -> float
+Umpk.Physics.PhysicsState.Yaw.init -> void
+Umpk.Physics.PlayerPhysics
+Umpk.Physics.PlayerPhysics.BeginPistonTick() -> void
+Umpk.Physics.PlayerPhysics.Conditions.get -> Umpk.Physics.PhysicsConditions
+Umpk.Physics.PlayerPhysics.PlayerPhysics(Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile) -> void
+Umpk.Physics.PlayerPhysics.Profile.get -> Umpk.Physics.PhysicsProfile!
+Umpk.Physics.PlayerPhysics.Profile.set -> void
+Umpk.Physics.PlayerPhysics.Reset(Umpk.Geometry.Vec3d position, float yaw, float pitch) -> void
+Umpk.Physics.PlayerPhysics.SetConditions(in Umpk.Physics.PhysicsConditions conditions) -> void
+Umpk.Physics.PlayerPhysics.SetRotation(float yaw, float pitch) -> void
+Umpk.Physics.PlayerPhysics.SetVelocity(Umpk.Geometry.Vec3d velocity) -> void
+Umpk.Physics.PlayerPhysics.State.get -> Umpk.Physics.PhysicsState
+Umpk.Physics.PlayerPhysics.Step(in Umpk.Physics.MovementInput input) -> Umpk.Physics.StepResult
+Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PoseDimensionsEra.ModernCrawl = 1 -> Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PoseDimensionsEra.PreCrawl = 0 -> Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PositionSendCadence
+Umpk.Physics.PositionSendCadence.DirtyChecked = 1 -> Umpk.Physics.PositionSendCadence
+Umpk.Physics.PositionSendCadence.Legacy = 0 -> Umpk.Physics.PositionSendCadence
+Umpk.Physics.StepEvents
+Umpk.Physics.StepEvents.Bounced.get -> bool
+Umpk.Physics.StepEvents.Bounced.init -> void
+Umpk.Physics.StepEvents.Equals(Umpk.Physics.StepEvents other) -> bool
+Umpk.Physics.StepEvents.Landed.get -> bool
+Umpk.Physics.StepEvents.Landed.init -> void
+Umpk.Physics.StepEvents.LandingFallDistance.get -> double
+Umpk.Physics.StepEvents.LandingFallDistance.init -> void
+Umpk.Physics.StepEvents.PoseChanged.get -> bool
+Umpk.Physics.StepEvents.PoseChanged.init -> void
+Umpk.Physics.StepEvents.PreviousPose.get -> Umpk.Game.Entities.EntityPose
+Umpk.Physics.StepEvents.PreviousPose.init -> void
+Umpk.Physics.StepEvents.StartedGliding.get -> bool
+Umpk.Physics.StepEvents.StartedGliding.init -> void
+Umpk.Physics.StepEvents.StepEvents() -> void
+Umpk.Physics.StepEvents.StoppedGliding.get -> bool
+Umpk.Physics.StepEvents.StoppedGliding.init -> void
+Umpk.Physics.StepResult
+Umpk.Physics.StepResult.Deconstruct(out Umpk.Physics.PhysicsState State, out Umpk.Physics.StepEvents Events) -> void
+Umpk.Physics.StepResult.Equals(Umpk.Physics.StepResult other) -> bool
+Umpk.Physics.StepResult.Events.get -> Umpk.Physics.StepEvents
+Umpk.Physics.StepResult.Events.init -> void
+Umpk.Physics.StepResult.State.get -> Umpk.Physics.PhysicsState
+Umpk.Physics.StepResult.State.init -> void
+Umpk.Physics.StepResult.StepResult() -> void
+Umpk.Physics.StepResult.StepResult(Umpk.Physics.PhysicsState State, Umpk.Physics.StepEvents Events) -> void
+Umpk.Physics.WaterTravelEra
+Umpk.Physics.WaterTravelEra.Legacy = 0 -> Umpk.Physics.WaterTravelEra
+Umpk.Physics.WaterTravelEra.SprintAware = 1 -> Umpk.Physics.WaterTravelEra
+const Umpk.Physics.MovingPiston.PushOffset = 0.01 -> double
+const Umpk.Physics.MovingPiston.TickMovement = 0.51 -> double
+const Umpk.Physics.PhysicsConstants.AirSpeed = 0.02 -> float
+const Umpk.Physics.PhysicsConstants.AxisVelocityThreshold = 0.003 -> double
+const Umpk.Physics.PhysicsConstants.BaseJumpPower = 0.42 -> float
+const Umpk.Physics.PhysicsConstants.BelowFeetOffset = 0.500001 -> double
+const Umpk.Physics.PhysicsConstants.BlockedAxisEpsilon = 1E-05 -> double
+const Umpk.Physics.PhysicsConstants.BubbleColumnAboveMaxUp = 1.8 -> double
+const Umpk.Physics.PhysicsConstants.BubbleColumnAboveUp = 0.1 -> double
+const Umpk.Physics.PhysicsConstants.BubbleColumnInsideMaxUp = 0.7 -> double
+const Umpk.Physics.PhysicsConstants.BubbleColumnInsideUp = 0.06 -> double
+const Umpk.Physics.PhysicsConstants.ClimbMaxSpeed = 0.15 -> float
+const Umpk.Physics.PhysicsConstants.ClimbWallBump = 0.2 -> double
+const Umpk.Physics.PhysicsConstants.CollisionEpsilon = 1E-07 -> double
+const Umpk.Physics.PhysicsConstants.DefaultFlySpeed = 0.05 -> float
+const Umpk.Physics.PhysicsConstants.DefaultGravity = 0.08 -> double
+const Umpk.Physics.PhysicsConstants.DefaultSneakingSpeedFactor = 0.3 -> float
+const Umpk.Physics.PhysicsConstants.DolphinsGraceSlowDown = 0.96 -> float
+const Umpk.Physics.PhysicsConstants.DragY = 0.98 -> float
+const Umpk.Physics.PhysicsConstants.EdgeBackoffStep = 0.05 -> double
+const Umpk.Physics.PhysicsConstants.ElytraHorizontalDrag = 0.99 -> double
+const Umpk.Physics.PhysicsConstants.ElytraVerticalDrag = 0.98 -> double
+const Umpk.Physics.PhysicsConstants.FluidBelowNeighbourOffset = 0.8888889 -> float
+const Umpk.Physics.PhysicsConstants.FluidFallingFlowDownward = -6 -> double
+const Umpk.Physics.PhysicsConstants.FluidFallingLevel = 8 -> int
+const Umpk.Physics.PhysicsConstants.FluidHeightPerAmount = 0.1111111111111111 -> double
+const Umpk.Physics.PhysicsConstants.FluidInteractionBoxDeflate = 0.001 -> double
+const Umpk.Physics.PhysicsConstants.FluidJumpImpulse = 0.04 -> double
+const Umpk.Physics.PhysicsConstants.FluidJumpThreshold = 0.4 -> double
+const Umpk.Physics.PhysicsConstants.FluidJumpThresholdMinEyeHeight = 0.4 -> double
+const Umpk.Physics.PhysicsConstants.FluidLedgeHop = 0.30000001192092896 -> double
+const Umpk.Physics.PhysicsConstants.FluidLedgeProbeUp = 0.6000000238418579 -> double
+const Umpk.Physics.PhysicsConstants.FluidPushDepthScaleThreshold = 0.4 -> double
+const Umpk.Physics.PhysicsConstants.FluidPushMinimum = 0.0045000000000000005 -> double
+const Umpk.Physics.PhysicsConstants.FlyVerticalDamping = 0.6 -> double
+const Umpk.Physics.PhysicsConstants.FrictionMultiplier = 0.91 -> float
+const Umpk.Physics.PhysicsConstants.FrictionSpeedThreshold = 0.6 -> float
+const Umpk.Physics.PhysicsConstants.GroundAccelerationFactor = 0.21600002 -> float
+const Umpk.Physics.PhysicsConstants.InputFriction = 0.98 -> float
+const Umpk.Physics.PhysicsConstants.JumpBoostPerLevel = 0.1 -> float
+const Umpk.Physics.PhysicsConstants.JumpDelayTicks = 10 -> int
+const Umpk.Physics.PhysicsConstants.LavaDeepScale = 0.5 -> double
+const Umpk.Physics.PhysicsConstants.LavaPushScale = 0.0023333333333333335 -> double
+const Umpk.Physics.PhysicsConstants.LavaPushScaleUltraWarm = 0.007 -> double
+const Umpk.Physics.PhysicsConstants.LavaShallowDamping = 0.5 -> double
+const Umpk.Physics.PhysicsConstants.LavaShallowVerticalDamping = 0.8 -> double
+const Umpk.Physics.PhysicsConstants.LavaSpeed = 0.02 -> float
+const Umpk.Physics.PhysicsConstants.LegacyWaterSink = 0.02 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchEyeHeight = 1.27 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchHeightLegacy = 1.65 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchHeightModern = 1.5 -> double
+const Umpk.Physics.PhysicsConstants.PlayerHorizontalVelocityThresholdSqr = 9E-06 -> double
+const Umpk.Physics.PhysicsConstants.PlayerStandingEyeHeight = 1.62 -> double
+const Umpk.Physics.PhysicsConstants.PlayerStandingHeight = 1.8 -> double
+const Umpk.Physics.PhysicsConstants.PlayerSwimEyeHeight = 0.4 -> double
+const Umpk.Physics.PhysicsConstants.PlayerSwimHeight = 0.6 -> double
+const Umpk.Physics.PhysicsConstants.PlayerWidth = 0.6 -> double
+const Umpk.Physics.PhysicsConstants.SlowFallingCap = 0.01 -> double
+const Umpk.Physics.PhysicsConstants.SprintJumpHorizontalBoost = 0.2 -> double
+const Umpk.Physics.PhysicsConstants.SprintSpeedModifier = 0.30000001192092896 -> double
+const Umpk.Physics.PhysicsConstants.SprintingAirSpeed = 0.025999999 -> float
+const Umpk.Physics.PhysicsConstants.StepHeight = 0.6 -> float
+const Umpk.Physics.PhysicsConstants.SwimSteerMultiplier = 0.06 -> double
+const Umpk.Physics.PhysicsConstants.SwimSteerMultiplierSteep = 0.085 -> double
+const Umpk.Physics.PhysicsConstants.SwimSteerSteepThreshold = -0.2 -> double
+const Umpk.Physics.PhysicsConstants.WaterBaseSpeed = 0.02 -> float
+const Umpk.Physics.PhysicsConstants.WaterDescendImpulse = 0.04 -> double
+const Umpk.Physics.PhysicsConstants.WaterPushScale = 0.014 -> double
+const Umpk.Physics.PhysicsConstants.WaterSlowDown = 0.8 -> float
+const Umpk.Physics.PhysicsConstants.WaterSprintSlowDown = 0.9 -> float
+const Umpk.Physics.PhysicsConstants.WaterWalkerSlowDownTarget = 0.54600006 -> float
+const Umpk.Physics.PhysicsConstants.WaterYDamping = 0.8 -> float
+override Umpk.Physics.LandingPrediction.GetHashCode() -> int
+override Umpk.Physics.MovementInput.GetHashCode() -> int
+override Umpk.Physics.PhysicsConditions.GetHashCode() -> int
+override Umpk.Physics.PhysicsProfile.Equals(object? obj) -> bool
+override Umpk.Physics.PhysicsProfile.GetHashCode() -> int
+override Umpk.Physics.PhysicsProfile.ToString() -> string!
+override Umpk.Physics.PhysicsState.GetHashCode() -> int
+override Umpk.Physics.StepEvents.GetHashCode() -> int
+override Umpk.Physics.StepResult.GetHashCode() -> int
+static Umpk.Physics.LandingPrediction.operator !=(Umpk.Physics.LandingPrediction left, Umpk.Physics.LandingPrediction right) -> bool
+static Umpk.Physics.LandingPrediction.operator ==(Umpk.Physics.LandingPrediction left, Umpk.Physics.LandingPrediction right) -> bool
+static Umpk.Physics.MovementInput.None.get -> Umpk.Physics.MovementInput
+static Umpk.Physics.MovementInput.operator !=(Umpk.Physics.MovementInput left, Umpk.Physics.MovementInput right) -> bool
+static Umpk.Physics.MovementInput.operator ==(Umpk.Physics.MovementInput left, Umpk.Physics.MovementInput right) -> bool
+static Umpk.Physics.PhysicsConditions.Default.get -> Umpk.Physics.PhysicsConditions
+static Umpk.Physics.PhysicsConditions.operator !=(Umpk.Physics.PhysicsConditions left, Umpk.Physics.PhysicsConditions right) -> bool
+static Umpk.Physics.PhysicsConditions.operator ==(Umpk.Physics.PhysicsConditions left, Umpk.Physics.PhysicsConditions right) -> bool
+static Umpk.Physics.PhysicsProfile.ForProtocol(int protocolVersion) -> Umpk.Physics.PhysicsProfile!
+static Umpk.Physics.PhysicsProfile.FromFeatures(bool swimmingUpdate, bool sprintAwareWaterTravel, bool waterClimbBump, bool elytraAvailable, bool swimPoseAvailable, bool crawlPoseAvailable, bool modernCrouchHeight, bool dirtyCheckedPositionCadence) -> Umpk.Physics.PhysicsProfile!
+static Umpk.Physics.PhysicsProfile.Modern.get -> Umpk.Physics.PhysicsProfile!
+static Umpk.Physics.PhysicsProfile.PositionSendCadenceForProtocol(int protocol) -> Umpk.Physics.PositionSendCadence
+static Umpk.Physics.PhysicsProfile.operator !=(Umpk.Physics.PhysicsProfile? left, Umpk.Physics.PhysicsProfile? right) -> bool
+static Umpk.Physics.PhysicsProfile.operator ==(Umpk.Physics.PhysicsProfile? left, Umpk.Physics.PhysicsProfile? right) -> bool
+static Umpk.Physics.PhysicsSimulator.PredictLanding(in Umpk.Physics.PhysicsState start, in Umpk.Physics.PhysicsConditions conditions, Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile, Umpk.Physics.MovementInput heldInput, int maxTicks) -> Umpk.Physics.LandingPrediction
+static Umpk.Physics.PhysicsSimulator.Run(in Umpk.Physics.PhysicsState start, in Umpk.Physics.PhysicsConditions conditions, Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile, System.ReadOnlySpan<Umpk.Physics.MovementInput> inputs) -> Umpk.Physics.PhysicsState
+static Umpk.Physics.PhysicsState.operator !=(Umpk.Physics.PhysicsState left, Umpk.Physics.PhysicsState right) -> bool
+static Umpk.Physics.PhysicsState.operator ==(Umpk.Physics.PhysicsState left, Umpk.Physics.PhysicsState right) -> bool
+static Umpk.Physics.PlayerPhysics.GetWaterFlow(Umpk.Physics.IPhysicsWorldView! world, Umpk.Geometry.BlockPos pos) -> Umpk.Geometry.Vec3d
+static Umpk.Physics.StepEvents.None.get -> Umpk.Physics.StepEvents
+static Umpk.Physics.StepEvents.operator !=(Umpk.Physics.StepEvents left, Umpk.Physics.StepEvents right) -> bool
+static Umpk.Physics.StepEvents.operator ==(Umpk.Physics.StepEvents left, Umpk.Physics.StepEvents right) -> bool
+static Umpk.Physics.StepResult.operator !=(Umpk.Physics.StepResult left, Umpk.Physics.StepResult right) -> bool
+static Umpk.Physics.StepResult.operator ==(Umpk.Physics.StepResult left, Umpk.Physics.StepResult right) -> bool
+static readonly Umpk.Physics.PhysicsConstants.WebStuckSpeedMultiplier -> Umpk.Geometry.Vec3d
+~override Umpk.Physics.LandingPrediction.Equals(object obj) -> bool
+~override Umpk.Physics.LandingPrediction.ToString() -> string
+~override Umpk.Physics.MovementInput.Equals(object obj) -> bool
+~override Umpk.Physics.MovementInput.ToString() -> string
+~override Umpk.Physics.PhysicsConditions.Equals(object obj) -> bool
+~override Umpk.Physics.PhysicsConditions.ToString() -> string
+~override Umpk.Physics.PhysicsState.Equals(object obj) -> bool
+~override Umpk.Physics.PhysicsState.ToString() -> string
+~override Umpk.Physics.StepEvents.Equals(object obj) -> bool
+~override Umpk.Physics.StepEvents.ToString() -> string
+~override Umpk.Physics.StepResult.Equals(object obj) -> bool
+~override Umpk.Physics.StepResult.ToString() -> string
+Umpk.Physics.BlockShapeOffset
+static Umpk.Physics.BlockShapeOffset.For(Umpk.Game.Blocks.BlockState state, Umpk.Geometry.BlockPos pos) -> Umpk.Geometry.Vec3d
+static Umpk.Physics.BlockShapeOffset.HasOffset(Umpk.Game.Blocks.BlockState state) -> bool
+static Umpk.Physics.PlayerPhysics.WaterHeightForStance(Umpk.Physics.IPhysicsWorldView! world, int x, double feetPlaneY, int z) -> double

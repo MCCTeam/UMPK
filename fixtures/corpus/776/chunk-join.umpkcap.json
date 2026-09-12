@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "26.2",
+  "protocol": 776,
+  "scenario": "chunk-join",
+  "frameCount": 2326,
+  "clientboundCount": 2326,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-08T00:30:04.0519602\u002B00:00",
+  "durationMs": 14129,
+  "contentHash": "2eb93fbadd59350fefbd43d7d5db838d1fe1ff1d8761e743317978601a0a6152",
+  "notes": "join \u002B initial chunk streaming around spawn"
+}

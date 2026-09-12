@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Generated vanilla English translation tables for every Minecraft Java protocol supported by UMPK.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Text/Umpk.Text.csproj" />
+  </ItemGroup>
+</Project>

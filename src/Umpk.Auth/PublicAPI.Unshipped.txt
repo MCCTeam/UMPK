@@ -1,0 +1,267 @@
+#nullable enable
+Umpk.Auth.AesGcmTokenProtector
+Umpk.Auth.AesGcmTokenProtector.AesGcmTokenProtector(string! keyFilePath) -> void
+Umpk.Auth.AesGcmTokenProtector.Dispose() -> void
+Umpk.Auth.AesGcmTokenProtector.ProtectAsync(byte[]! plaintext, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.AesGcmTokenProtector.UnprotectAsync(byte[]! protectedData, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.AuthException
+Umpk.Auth.AuthException.AuthException(string! message) -> void
+Umpk.Auth.AuthException.AuthException(string! message, System.Exception! innerException) -> void
+Umpk.Auth.AuthFlowCertificateProvider
+Umpk.Auth.AuthFlowCertificateProvider.AuthFlowCertificateProvider(Umpk.Auth.IMinecraftAuthFlow! flow, Umpk.Auth.JavaSession! session) -> void
+Umpk.Auth.AuthFlowCertificateProvider.GetCertificatesAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Umpk.Protocol.Java.Signing.PlayerCertificates?>
+Umpk.Auth.AuthFlowKind
+Umpk.Auth.AuthFlowKind.MicrosoftBrowser = 1 -> Umpk.Auth.AuthFlowKind
+Umpk.Auth.AuthFlowKind.MicrosoftDeviceCode = 0 -> Umpk.Auth.AuthFlowKind
+Umpk.Auth.AuthFlowKind.Offline = 3 -> Umpk.Auth.AuthFlowKind
+Umpk.Auth.AuthFlowKind.Yggdrasil = 2 -> Umpk.Auth.AuthFlowKind
+Umpk.Auth.AuthKind
+Umpk.Auth.AuthKind.Microsoft = 1 -> Umpk.Auth.AuthKind
+Umpk.Auth.AuthKind.Offline = 0 -> Umpk.Auth.AuthKind
+Umpk.Auth.AuthKind.Yggdrasil = 2 -> Umpk.Auth.AuthKind
+Umpk.Auth.AuthServiceException
+Umpk.Auth.AuthServiceException.AuthServiceException(string! stage, int statusCode, string! message) -> void
+Umpk.Auth.AuthServiceException.Stage.get -> string!
+Umpk.Auth.AuthServiceException.StatusCode.get -> int
+Umpk.Auth.BrowserRedirectMode
+Umpk.Auth.BrowserRedirectMode.HostedPastePage = 0 -> Umpk.Auth.BrowserRedirectMode
+Umpk.Auth.BrowserRedirectMode.LoopbackListener = 1 -> Umpk.Auth.BrowserRedirectMode
+Umpk.Auth.BrowserRedirectStrategy
+Umpk.Auth.DefaultHttpMessageHandlerFactory
+Umpk.Auth.DefaultHttpMessageHandlerFactory.CreateHandler() -> System.Net.Http.HttpMessageHandler!
+Umpk.Auth.DefaultHttpMessageHandlerFactory.DefaultHttpMessageHandlerFactory() -> void
+Umpk.Auth.DeviceCodeAuthorizationException
+Umpk.Auth.DeviceCodeAuthorizationException.DeviceCodeAuthorizationException(Umpk.Auth.DeviceCodeFailure failure, string! message) -> void
+Umpk.Auth.DeviceCodeAuthorizationException.Failure.get -> Umpk.Auth.DeviceCodeFailure
+Umpk.Auth.DeviceCodeFailure
+Umpk.Auth.DeviceCodeFailure.Declined = 0 -> Umpk.Auth.DeviceCodeFailure
+Umpk.Auth.DeviceCodeFailure.Expired = 1 -> Umpk.Auth.DeviceCodeFailure
+Umpk.Auth.DeviceCodeFailure.TimedOut = 2 -> Umpk.Auth.DeviceCodeFailure
+Umpk.Auth.DeviceCodePrompt
+Umpk.Auth.DeviceCodePrompt.<Clone>$() -> Umpk.Auth.DeviceCodePrompt!
+Umpk.Auth.DeviceCodePrompt.Deconstruct(out string! UserCode, out System.Uri! VerificationUri, out string! Message, out System.DateTimeOffset ExpiresAt) -> void
+Umpk.Auth.DeviceCodePrompt.DeviceCodePrompt(string! UserCode, System.Uri! VerificationUri, string! Message, System.DateTimeOffset ExpiresAt) -> void
+Umpk.Auth.DeviceCodePrompt.Equals(Umpk.Auth.DeviceCodePrompt? other) -> bool
+Umpk.Auth.DeviceCodePrompt.ExpiresAt.get -> System.DateTimeOffset
+Umpk.Auth.DeviceCodePrompt.ExpiresAt.init -> void
+Umpk.Auth.DeviceCodePrompt.Message.get -> string!
+Umpk.Auth.DeviceCodePrompt.Message.init -> void
+Umpk.Auth.DeviceCodePrompt.UserCode.get -> string!
+Umpk.Auth.DeviceCodePrompt.UserCode.init -> void
+Umpk.Auth.DeviceCodePrompt.VerificationUri.get -> System.Uri!
+Umpk.Auth.DeviceCodePrompt.VerificationUri.init -> void
+Umpk.Auth.DpapiTokenProtector
+Umpk.Auth.DpapiTokenProtector.DpapiTokenProtector() -> void
+Umpk.Auth.DpapiTokenProtector.ProtectAsync(byte[]! plaintext, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.DpapiTokenProtector.UnprotectAsync(byte[]! protectedData, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.FileTokenStore
+Umpk.Auth.FileTokenStore.FileTokenStore(string! directory, Umpk.Auth.ITokenProtector! protector, Microsoft.Extensions.Logging.ILogger? logger = null) -> void
+Umpk.Auth.FileTokenStore.GetAsync<T>(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<T?>
+Umpk.Auth.FileTokenStore.RemoveAsync(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.FileTokenStore.SetAsync<T>(string! key, T value, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.HttpListenerLoopbackReceiver
+Umpk.Auth.HttpListenerLoopbackReceiver.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Umpk.Auth.HttpListenerLoopbackReceiver.HttpListenerLoopbackReceiver() -> void
+Umpk.Auth.HttpListenerLoopbackReceiver.Start(System.Uri! requestedRedirectUri, string! expectedState) -> System.Uri!
+Umpk.Auth.HttpListenerLoopbackReceiver.WaitForCodeAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<string!>!
+Umpk.Auth.HttpListenerLoopbackReceiverFactory
+Umpk.Auth.HttpListenerLoopbackReceiverFactory.Create() -> Umpk.Auth.ILoopbackCodeReceiver!
+Umpk.Auth.HttpListenerLoopbackReceiverFactory.HttpListenerLoopbackReceiverFactory() -> void
+Umpk.Auth.IAuthInteraction
+Umpk.Auth.IAuthInteraction.GetBrowserAuthCodeAsync(System.Uri! signInUrl, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<string!>!
+Umpk.Auth.IAuthInteraction.GetYggdrasilCredentialsAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Auth.YggdrasilCredentials!>!
+Umpk.Auth.IAuthInteraction.ShowDeviceCodeAsync(Umpk.Auth.DeviceCodePrompt! prompt, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+Umpk.Auth.IHttpMessageHandlerFactory
+Umpk.Auth.IHttpMessageHandlerFactory.CreateHandler() -> System.Net.Http.HttpMessageHandler!
+Umpk.Auth.ILoopbackCodeReceiver
+Umpk.Auth.ILoopbackCodeReceiver.Start(System.Uri! requestedRedirectUri, string! expectedState) -> System.Uri!
+Umpk.Auth.ILoopbackCodeReceiver.WaitForCodeAsync(System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<string!>!
+Umpk.Auth.ILoopbackCodeReceiverFactory
+Umpk.Auth.ILoopbackCodeReceiverFactory.Create() -> Umpk.Auth.ILoopbackCodeReceiver!
+Umpk.Auth.IMinecraftAuthFlow
+Umpk.Auth.IMinecraftAuthFlow.GetCertificatesAsync(Umpk.Auth.JavaSession! session, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Protocol.Java.Signing.PlayerCertificates!>!
+Umpk.Auth.IMinecraftAuthFlow.InvalidateAsync(string! loginHint, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+Umpk.Auth.IMinecraftAuthFlow.LoginAsync(Umpk.Auth.IAuthInteraction! interaction, System.Threading.CancellationToken ct, string? loginHint = null) -> System.Threading.Tasks.Task<Umpk.Auth.JavaSession!>!
+Umpk.Auth.IMinecraftAuthFlow.TryResumeAsync(string! loginHint, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Auth.JavaSession?>!
+Umpk.Auth.ITokenProtector
+Umpk.Auth.ITokenProtector.ProtectAsync(byte[]! plaintext, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.ITokenProtector.UnprotectAsync(byte[]! protectedData, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.ITokenStore
+Umpk.Auth.ITokenStore.GetAsync<T>(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<T?>
+Umpk.Auth.ITokenStore.RemoveAsync(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.ITokenStore.SetAsync<T>(string! key, T value, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.InMemoryTokenStore
+Umpk.Auth.InMemoryTokenStore.GetAsync<T>(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<T?>
+Umpk.Auth.InMemoryTokenStore.InMemoryTokenStore() -> void
+Umpk.Auth.InMemoryTokenStore.RemoveAsync(string! key, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.InMemoryTokenStore.SetAsync<T>(string! key, T value, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.JavaSession
+Umpk.Auth.JavaSession.<Clone>$() -> Umpk.Auth.JavaSession!
+Umpk.Auth.JavaSession.AccessToken.get -> string!
+Umpk.Auth.JavaSession.AccessToken.init -> void
+Umpk.Auth.JavaSession.Deconstruct(out Umpk.GameProfile! Profile, out string! AccessToken, out System.DateTimeOffset ExpiresAt, out string? RefreshToken, out Umpk.Auth.AuthKind Kind) -> void
+Umpk.Auth.JavaSession.Equals(Umpk.Auth.JavaSession? other) -> bool
+Umpk.Auth.JavaSession.ExpiresAt.get -> System.DateTimeOffset
+Umpk.Auth.JavaSession.ExpiresAt.init -> void
+Umpk.Auth.JavaSession.IsExpired(System.DateTimeOffset now) -> bool
+Umpk.Auth.JavaSession.JavaSession(Umpk.GameProfile! Profile, string! AccessToken, System.DateTimeOffset ExpiresAt, string? RefreshToken, Umpk.Auth.AuthKind Kind) -> void
+Umpk.Auth.JavaSession.Kind.get -> Umpk.Auth.AuthKind
+Umpk.Auth.JavaSession.Kind.init -> void
+Umpk.Auth.JavaSession.Profile.get -> Umpk.GameProfile!
+Umpk.Auth.JavaSession.Profile.init -> void
+Umpk.Auth.JavaSession.RefreshToken.get -> string?
+Umpk.Auth.JavaSession.RefreshToken.init -> void
+Umpk.Auth.MinecraftAuthFlow
+Umpk.Auth.MinecraftAuthFlow.Dispose() -> void
+Umpk.Auth.MinecraftAuthFlow.GetCertificatesAsync(Umpk.Auth.JavaSession! session, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Protocol.Java.Signing.PlayerCertificates!>!
+Umpk.Auth.MinecraftAuthFlow.InvalidateAsync(string! loginHint, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+Umpk.Auth.MinecraftAuthFlow.LoginAsync(Umpk.Auth.IAuthInteraction! interaction, System.Threading.CancellationToken ct, string? loginHint = null) -> System.Threading.Tasks.Task<Umpk.Auth.JavaSession!>!
+Umpk.Auth.MinecraftAuthFlow.MinecraftAuthFlow(Umpk.Auth.MinecraftAuthOptions! options) -> void
+Umpk.Auth.MinecraftAuthFlow.TryResumeAsync(string! loginHint, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Auth.JavaSession?>!
+Umpk.Auth.MinecraftAuthOptions
+Umpk.Auth.MinecraftAuthOptions.BrowserRedirectUri.get -> System.Uri!
+Umpk.Auth.MinecraftAuthOptions.BrowserRedirectUri.init -> void
+Umpk.Auth.MinecraftAuthOptions.ClientId.get -> string!
+Umpk.Auth.MinecraftAuthOptions.ClientId.init -> void
+Umpk.Auth.MinecraftAuthOptions.FlowKind.get -> Umpk.Auth.AuthFlowKind
+Umpk.Auth.MinecraftAuthOptions.FlowKind.init -> void
+Umpk.Auth.MinecraftAuthOptions.HttpHandlerFactory.get -> Umpk.Auth.IHttpMessageHandlerFactory!
+Umpk.Auth.MinecraftAuthOptions.HttpHandlerFactory.init -> void
+Umpk.Auth.MinecraftAuthOptions.Logger.get -> Microsoft.Extensions.Logging.ILogger!
+Umpk.Auth.MinecraftAuthOptions.Logger.init -> void
+Umpk.Auth.MinecraftAuthOptions.LoopbackReceiverFactory.get -> Umpk.Auth.ILoopbackCodeReceiverFactory!
+Umpk.Auth.MinecraftAuthOptions.LoopbackReceiverFactory.init -> void
+Umpk.Auth.MinecraftAuthOptions.MinecraftAuthOptions() -> void
+Umpk.Auth.MinecraftAuthOptions.OfflineUsername.get -> string?
+Umpk.Auth.MinecraftAuthOptions.OfflineUsername.init -> void
+Umpk.Auth.MinecraftAuthOptions.TimeProvider.get -> System.TimeProvider!
+Umpk.Auth.MinecraftAuthOptions.TimeProvider.init -> void
+Umpk.Auth.MinecraftAuthOptions.TokenStore.get -> Umpk.Auth.ITokenStore!
+Umpk.Auth.MinecraftAuthOptions.TokenStore.init -> void
+Umpk.Auth.MinecraftAuthOptions.YggdrasilBaseUrl.get -> System.Uri?
+Umpk.Auth.MinecraftAuthOptions.YggdrasilBaseUrl.init -> void
+Umpk.Auth.NoMinecraftEntitlementException
+Umpk.Auth.NoMinecraftEntitlementException.NoMinecraftEntitlementException(string! message) -> void
+Umpk.Auth.NoOpTokenProtector
+Umpk.Auth.NoOpTokenProtector.NoOpTokenProtector(Microsoft.Extensions.Logging.ILogger? logger = null) -> void
+Umpk.Auth.NoOpTokenProtector.ProtectAsync(byte[]! plaintext, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.NoOpTokenProtector.UnprotectAsync(byte[]! protectedData, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<byte[]!>
+Umpk.Auth.OfflineIdentity
+Umpk.Auth.Persistence.PersistedCertificates
+Umpk.Auth.Persistence.PersistedCertificates.<Clone>$() -> Umpk.Auth.Persistence.PersistedCertificates!
+Umpk.Auth.Persistence.PersistedCertificates.Deconstruct(out string! PublicKeyPem, out string! PrivateKeyPem, out string! PublicKeySignature, out string! PublicKeySignatureV2, out System.DateTimeOffset ExpiresAt, out System.DateTimeOffset RefreshedAfter) -> void
+Umpk.Auth.Persistence.PersistedCertificates.Equals(Umpk.Auth.Persistence.PersistedCertificates? other) -> bool
+Umpk.Auth.Persistence.PersistedCertificates.ExpiresAt.get -> System.DateTimeOffset
+Umpk.Auth.Persistence.PersistedCertificates.ExpiresAt.init -> void
+Umpk.Auth.Persistence.PersistedCertificates.PersistedCertificates(string! PublicKeyPem, string! PrivateKeyPem, string! PublicKeySignature, string! PublicKeySignatureV2, System.DateTimeOffset ExpiresAt, System.DateTimeOffset RefreshedAfter) -> void
+Umpk.Auth.Persistence.PersistedCertificates.PrivateKeyPem.get -> string!
+Umpk.Auth.Persistence.PersistedCertificates.PrivateKeyPem.init -> void
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeyPem.get -> string!
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeyPem.init -> void
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeySignature.get -> string!
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeySignature.init -> void
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeySignatureV2.get -> string!
+Umpk.Auth.Persistence.PersistedCertificates.PublicKeySignatureV2.init -> void
+Umpk.Auth.Persistence.PersistedCertificates.RefreshedAfter.get -> System.DateTimeOffset
+Umpk.Auth.Persistence.PersistedCertificates.RefreshedAfter.init -> void
+Umpk.Auth.Persistence.PersistedRefreshToken
+Umpk.Auth.Persistence.PersistedRefreshToken.<Clone>$() -> Umpk.Auth.Persistence.PersistedRefreshToken!
+Umpk.Auth.Persistence.PersistedRefreshToken.Deconstruct(out string! RefreshToken, out string? LoginHint) -> void
+Umpk.Auth.Persistence.PersistedRefreshToken.Equals(Umpk.Auth.Persistence.PersistedRefreshToken? other) -> bool
+Umpk.Auth.Persistence.PersistedRefreshToken.LoginHint.get -> string?
+Umpk.Auth.Persistence.PersistedRefreshToken.LoginHint.init -> void
+Umpk.Auth.Persistence.PersistedRefreshToken.PersistedRefreshToken(string! RefreshToken, string? LoginHint) -> void
+Umpk.Auth.Persistence.PersistedRefreshToken.RefreshToken.get -> string!
+Umpk.Auth.Persistence.PersistedRefreshToken.RefreshToken.init -> void
+Umpk.Auth.Persistence.PersistedSession
+Umpk.Auth.Persistence.PersistedSession.<Clone>$() -> Umpk.Auth.Persistence.PersistedSession!
+Umpk.Auth.Persistence.PersistedSession.AccessToken.get -> string!
+Umpk.Auth.Persistence.PersistedSession.AccessToken.init -> void
+Umpk.Auth.Persistence.PersistedSession.Deconstruct(out System.Guid ProfileId, out string! ProfileName, out string! AccessToken, out System.DateTimeOffset ExpiresAt, out string? RefreshToken, out Umpk.Auth.AuthKind Kind) -> void
+Umpk.Auth.Persistence.PersistedSession.Equals(Umpk.Auth.Persistence.PersistedSession? other) -> bool
+Umpk.Auth.Persistence.PersistedSession.ExpiresAt.get -> System.DateTimeOffset
+Umpk.Auth.Persistence.PersistedSession.ExpiresAt.init -> void
+Umpk.Auth.Persistence.PersistedSession.Kind.get -> Umpk.Auth.AuthKind
+Umpk.Auth.Persistence.PersistedSession.Kind.init -> void
+Umpk.Auth.Persistence.PersistedSession.PersistedSession(System.Guid ProfileId, string! ProfileName, string! AccessToken, System.DateTimeOffset ExpiresAt, string? RefreshToken, Umpk.Auth.AuthKind Kind) -> void
+Umpk.Auth.Persistence.PersistedSession.ProfileId.get -> System.Guid
+Umpk.Auth.Persistence.PersistedSession.ProfileId.init -> void
+Umpk.Auth.Persistence.PersistedSession.ProfileName.get -> string!
+Umpk.Auth.Persistence.PersistedSession.ProfileName.init -> void
+Umpk.Auth.Persistence.PersistedSession.RefreshToken.get -> string?
+Umpk.Auth.Persistence.PersistedSession.RefreshToken.init -> void
+Umpk.Auth.Session.SessionServiceOptions
+Umpk.Auth.Session.SessionServiceOptions.BaseUrl.get -> System.Uri?
+Umpk.Auth.Session.SessionServiceOptions.BaseUrl.init -> void
+Umpk.Auth.Session.SessionServiceOptions.HttpHandlerFactory.get -> Umpk.Auth.IHttpMessageHandlerFactory!
+Umpk.Auth.Session.SessionServiceOptions.HttpHandlerFactory.init -> void
+Umpk.Auth.Session.SessionServiceOptions.SessionServiceOptions() -> void
+Umpk.Auth.Session.YggdrasilSessionService
+Umpk.Auth.Session.YggdrasilSessionService.Dispose() -> void
+Umpk.Auth.Session.YggdrasilSessionService.JoinServerAsync(string! serverIdHash, Umpk.ProfileCredentials! creds, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask
+Umpk.Auth.Session.YggdrasilSessionService.VerifyJoinAsync(string! username, string! serverIdHash, System.Net.IPAddress? clientIp, System.Threading.CancellationToken ct) -> System.Threading.Tasks.ValueTask<Umpk.GameProfile?>
+Umpk.Auth.Session.YggdrasilSessionService.YggdrasilSessionService(Umpk.Auth.Session.SessionServiceOptions! options) -> void
+Umpk.Auth.TokenProtectors
+Umpk.Auth.XstsAuthorizationException
+Umpk.Auth.XstsAuthorizationException.Reason.get -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsAuthorizationException.XErr.get -> long
+Umpk.Auth.XstsAuthorizationException.XstsAuthorizationException(long xErr, Umpk.Auth.XstsErrorReason reason, string! message) -> void
+Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.AccountBanned = 5 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.AdultVerificationRequired = 3 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.ChildAccount = 4 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.NoXboxAccount = 1 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.RegionUnavailable = 2 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.XstsErrorReason.Unknown = 0 -> Umpk.Auth.XstsErrorReason
+Umpk.Auth.YggdrasilCredentials
+Umpk.Auth.YggdrasilCredentials.<Clone>$() -> Umpk.Auth.YggdrasilCredentials!
+Umpk.Auth.YggdrasilCredentials.Deconstruct(out string! Username, out string! Password) -> void
+Umpk.Auth.YggdrasilCredentials.Equals(Umpk.Auth.YggdrasilCredentials? other) -> bool
+Umpk.Auth.YggdrasilCredentials.Password.get -> string!
+Umpk.Auth.YggdrasilCredentials.Password.init -> void
+Umpk.Auth.YggdrasilCredentials.Username.get -> string!
+Umpk.Auth.YggdrasilCredentials.Username.init -> void
+Umpk.Auth.YggdrasilCredentials.YggdrasilCredentials(string! Username, string! Password) -> void
+Umpk.Auth.YggdrasilEndpoints
+override Umpk.Auth.DeviceCodePrompt.Equals(object? obj) -> bool
+override Umpk.Auth.DeviceCodePrompt.GetHashCode() -> int
+override Umpk.Auth.DeviceCodePrompt.ToString() -> string!
+override Umpk.Auth.JavaSession.Equals(object? obj) -> bool
+override Umpk.Auth.JavaSession.GetHashCode() -> int
+override Umpk.Auth.JavaSession.ToString() -> string!
+override Umpk.Auth.Persistence.PersistedCertificates.Equals(object? obj) -> bool
+override Umpk.Auth.Persistence.PersistedCertificates.GetHashCode() -> int
+override Umpk.Auth.Persistence.PersistedCertificates.ToString() -> string!
+override Umpk.Auth.Persistence.PersistedRefreshToken.Equals(object? obj) -> bool
+override Umpk.Auth.Persistence.PersistedRefreshToken.GetHashCode() -> int
+override Umpk.Auth.Persistence.PersistedRefreshToken.ToString() -> string!
+override Umpk.Auth.Persistence.PersistedSession.Equals(object? obj) -> bool
+override Umpk.Auth.Persistence.PersistedSession.GetHashCode() -> int
+override Umpk.Auth.Persistence.PersistedSession.ToString() -> string!
+override Umpk.Auth.YggdrasilCredentials.Equals(object? obj) -> bool
+override Umpk.Auth.YggdrasilCredentials.GetHashCode() -> int
+override Umpk.Auth.YggdrasilCredentials.ToString() -> string!
+static Umpk.Auth.AesGcmTokenProtector.DefaultKeyFilePath() -> string!
+static Umpk.Auth.AesGcmTokenProtector.IsSupported.get -> bool
+static Umpk.Auth.BrowserRedirectStrategy.Resolve(System.Uri! redirectUri) -> Umpk.Auth.BrowserRedirectMode
+static Umpk.Auth.DefaultHttpMessageHandlerFactory.Instance.get -> Umpk.Auth.DefaultHttpMessageHandlerFactory!
+static Umpk.Auth.DeviceCodePrompt.operator !=(Umpk.Auth.DeviceCodePrompt? left, Umpk.Auth.DeviceCodePrompt? right) -> bool
+static Umpk.Auth.DeviceCodePrompt.operator ==(Umpk.Auth.DeviceCodePrompt? left, Umpk.Auth.DeviceCodePrompt? right) -> bool
+static Umpk.Auth.HttpListenerLoopbackReceiverFactory.Instance.get -> Umpk.Auth.HttpListenerLoopbackReceiverFactory!
+static Umpk.Auth.JavaSession.operator !=(Umpk.Auth.JavaSession? left, Umpk.Auth.JavaSession? right) -> bool
+static Umpk.Auth.JavaSession.operator ==(Umpk.Auth.JavaSession? left, Umpk.Auth.JavaSession? right) -> bool
+static Umpk.Auth.MinecraftAuthOptions.DefaultBrowserRedirectUri.get -> System.Uri!
+static Umpk.Auth.OfflineIdentity.ComputeProfile(string! username) -> Umpk.GameProfile!
+static Umpk.Auth.OfflineIdentity.ComputeUuid(string! username) -> System.Guid
+static Umpk.Auth.Persistence.PersistedCertificates.operator !=(Umpk.Auth.Persistence.PersistedCertificates? left, Umpk.Auth.Persistence.PersistedCertificates? right) -> bool
+static Umpk.Auth.Persistence.PersistedCertificates.operator ==(Umpk.Auth.Persistence.PersistedCertificates? left, Umpk.Auth.Persistence.PersistedCertificates? right) -> bool
+static Umpk.Auth.Persistence.PersistedRefreshToken.operator !=(Umpk.Auth.Persistence.PersistedRefreshToken? left, Umpk.Auth.Persistence.PersistedRefreshToken? right) -> bool
+static Umpk.Auth.Persistence.PersistedRefreshToken.operator ==(Umpk.Auth.Persistence.PersistedRefreshToken? left, Umpk.Auth.Persistence.PersistedRefreshToken? right) -> bool
+static Umpk.Auth.Persistence.PersistedSession.operator !=(Umpk.Auth.Persistence.PersistedSession? left, Umpk.Auth.Persistence.PersistedSession? right) -> bool
+static Umpk.Auth.Persistence.PersistedSession.operator ==(Umpk.Auth.Persistence.PersistedSession? left, Umpk.Auth.Persistence.PersistedSession? right) -> bool
+static Umpk.Auth.TokenProtectors.CreateDefault(Microsoft.Extensions.Logging.ILogger? logger = null, string? keyFilePath = null) -> Umpk.Auth.ITokenProtector!
+static Umpk.Auth.YggdrasilCredentials.operator !=(Umpk.Auth.YggdrasilCredentials? left, Umpk.Auth.YggdrasilCredentials? right) -> bool
+static Umpk.Auth.YggdrasilCredentials.operator ==(Umpk.Auth.YggdrasilCredentials? left, Umpk.Auth.YggdrasilCredentials? right) -> bool
+static Umpk.Auth.YggdrasilEndpoints.EnsureTrailingSlash(System.Uri! url) -> System.Uri!
+static Umpk.Auth.YggdrasilEndpoints.SessionServer(System.Uri! providerRoot) -> System.Uri!
+static readonly Umpk.Auth.BrowserRedirectStrategy.PortAgnosticLoopbackHost -> string!

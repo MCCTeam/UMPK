@@ -1,0 +1,173 @@
+{
+  "_provenance": {
+    "version": "1.14.4",
+    "protocol": 498,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "reports/commands.json (parser names; string-keyed era)"
+    ],
+    "kind": "extracted"
+  },
+  "entries": [
+    {
+      "name": "brigadier:bool",
+      "id": 0
+    },
+    {
+      "name": "brigadier:double",
+      "id": 1
+    },
+    {
+      "name": "brigadier:float",
+      "id": 2
+    },
+    {
+      "name": "brigadier:integer",
+      "id": 3
+    },
+    {
+      "name": "brigadier:string",
+      "id": 4
+    },
+    {
+      "name": "minecraft:block_pos",
+      "id": 5
+    },
+    {
+      "name": "minecraft:block_predicate",
+      "id": 6
+    },
+    {
+      "name": "minecraft:block_state",
+      "id": 7
+    },
+    {
+      "name": "minecraft:color",
+      "id": 8
+    },
+    {
+      "name": "minecraft:column_pos",
+      "id": 9
+    },
+    {
+      "name": "minecraft:component",
+      "id": 10
+    },
+    {
+      "name": "minecraft:dimension",
+      "id": 11
+    },
+    {
+      "name": "minecraft:entity",
+      "id": 12
+    },
+    {
+      "name": "minecraft:entity_anchor",
+      "id": 13
+    },
+    {
+      "name": "minecraft:entity_summon",
+      "id": 14
+    },
+    {
+      "name": "minecraft:function",
+      "id": 15
+    },
+    {
+      "name": "minecraft:game_profile",
+      "id": 16
+    },
+    {
+      "name": "minecraft:int_range",
+      "id": 17
+    },
+    {
+      "name": "minecraft:item_enchantment",
+      "id": 18
+    },
+    {
+      "name": "minecraft:item_predicate",
+      "id": 19
+    },
+    {
+      "name": "minecraft:item_slot",
+      "id": 20
+    },
+    {
+      "name": "minecraft:item_stack",
+      "id": 21
+    },
+    {
+      "name": "minecraft:message",
+      "id": 22
+    },
+    {
+      "name": "minecraft:mob_effect",
+      "id": 23
+    },
+    {
+      "name": "minecraft:nbt_compound_tag",
+      "id": 24
+    },
+    {
+      "name": "minecraft:nbt_path",
+      "id": 25
+    },
+    {
+      "name": "minecraft:nbt_tag",
+      "id": 26
+    },
+    {
+      "name": "minecraft:objective",
+      "id": 27
+    },
+    {
+      "name": "minecraft:objective_criteria",
+      "id": 28
+    },
+    {
+      "name": "minecraft:operation",
+      "id": 29
+    },
+    {
+      "name": "minecraft:particle",
+      "id": 30
+    },
+    {
+      "name": "minecraft:resource_location",
+      "id": 31
+    },
+    {
+      "name": "minecraft:rotation",
+      "id": 32
+    },
+    {
+      "name": "minecraft:score_holder",
+      "id": 33
+    },
+    {
+      "name": "minecraft:scoreboard_slot",
+      "id": 34
+    },
+    {
+      "name": "minecraft:swizzle",
+      "id": 35
+    },
+    {
+      "name": "minecraft:team",
+      "id": 36
+    },
+    {
+      "name": "minecraft:time",
+      "id": 37
+    },
+    {
+      "name": "minecraft:vec2",
+      "id": 38
+    },
+    {
+      "name": "minecraft:vec3",
+      "id": 39
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+# Timeline bands over the supported protocols, one line per (phase, flow, identifier).
+#
+# A band is a maximal run of consecutive SUPPORTED protocols resolving the same codec identity
+# and the same resolving identifier. A run reaching the highest supported protocol is written
+# open ("775-"), so adding a protocol that changes no wire is a zero-line diff. A protocol the
+# packet is not registered on breaks the run, so a gap between two ranges is an absence.
+#
+# "marker" is a packet registered with no codec. "via:<id>" is the identifier the version dataset
+# spelled the packet with, printed only where a curated alias resolved the binding.
+#
+# Generated from the built descriptors, and a transpose of fixtures/codec-identity. Regenerate
+# with UMPK_UPDATE_TIMELINE_BAND_PINS=1; never edit by hand.
+
+Handshake     Serverbound minecraft:intention                              47- HandshakeCodecs.Intention
+Status        Clientbound minecraft:pong_response                          47- StatusCodecs.Pong
+Status        Clientbound minecraft:status_response                        47- StatusCodecs.Response
+Status        Serverbound minecraft:ping_request                           47- StatusCodecs.Ping
+Status        Serverbound minecraft:status_request                         47- StatusCodecs.Request
+Login         Clientbound minecraft:cookie_request                         766- LoginChannelCodecs.LoginCookieRequest
+Login         Clientbound minecraft:custom_query                           393- LoginChannelCodecs.CustomQuery
+Login         Clientbound minecraft:hello                                  47-765 LoginCodecs.ServerHelloV1_8 | 766- LoginCodecs.ServerHelloV1_20_5
+Login         Clientbound minecraft:login_compression                      47- LoginCodecs.Compression
+Login         Clientbound minecraft:login_disconnect                       47-764 LoginCodecs.DisconnectV1_8 | 765-769 LoginCodecs.DisconnectV1_20_3 | 770- LoginCodecs.DisconnectV1_21_5
+Login         Clientbound minecraft:login_finished                         47-578 LoginCodecs.FinishedV1_8 | 735-758 LoginCodecs.FinishedV1_16 | 759-765 LoginCodecs.FinishedV1_19 | 766-767 LoginCodecs.FinishedV1_20_5 | 768-775 LoginCodecs.FinishedV1_19 | 776- LoginCodecs.FinishedV26_2
+Login         Serverbound minecraft:bundle_delimiter                       762-763 marker
+Login         Serverbound minecraft:cookie_response                        766- LoginChannelCodecs.LoginCookieResponse
+Login         Serverbound minecraft:custom_query_answer                    393-763 LoginChannelCodecs.CustomQueryAnswer via:minecraft:custom_query | 764- LoginChannelCodecs.CustomQueryAnswer
+Login         Serverbound minecraft:hello                                  47-758 LoginCodecs.ClientHelloV1_8 | 759 LoginCodecs.ClientHelloV1_19 | 760 LoginCodecs.ClientHelloV1_19_1 | 761-763 LoginCodecs.ClientHelloV1_19_3 | 764- LoginCodecs.ClientHelloV1_20_2
+Login         Serverbound minecraft:key                                    47-758 LoginCodecs.Key | 759-760 LoginCodecs.KeyV1_19 | 761- LoginCodecs.Key
+Login         Serverbound minecraft:login_acknowledged                     764- LoginCodecs.LoginAcknowledged
+Configuration Clientbound minecraft:clear_dialog                           771- ConfigurationCodecs.ClearDialog
+Configuration Clientbound minecraft:code_of_conduct                        773- marker
+Configuration Clientbound minecraft:cookie_request                         766- ConfigurationCodecs.ConfigCookieRequest
+Configuration Clientbound minecraft:custom_payload                         764- ConfigurationCodecs.ConfigCustomPayloadClient
+Configuration Clientbound minecraft:custom_report_details                  767- ConfigurationCodecs.CustomReportDetails
+Configuration Clientbound minecraft:disconnect                             764 ConfigurationCodecs.DisconnectV1_20_2 | 765-769 ConfigurationCodecs.DisconnectV1_20_3 | 770- ConfigurationCodecs.DisconnectV1_21_5
+Configuration Clientbound minecraft:finish_configuration                   764- ConfigurationCodecs.FinishClient
+Configuration Clientbound minecraft:keep_alive                             764- ConfigurationCodecs.KeepAliveClient
+Configuration Clientbound minecraft:ping                                   764- ConfigurationCodecs.Ping
+Configuration Clientbound minecraft:registry_data                          764-765 ConfigurationCodecs.RegistryBlob | 766- ConfigurationCodecs.RegistryData
+Configuration Clientbound minecraft:reset_chat                             766- ConfigurationCodecs.ResetChat
+Configuration Clientbound minecraft:resource_pack_pop                      765- ConfigurationCodecs.ResourcePackPop
+Configuration Clientbound minecraft:resource_pack_push                     764 ConfigurationCodecs.ResourcePackPushV1_20_2 via:minecraft:resource_pack | 765-769 ConfigurationCodecs.ResourcePackPushV1_20_3 | 770- ConfigurationCodecs.ResourcePackPushV1_21_5
+Configuration Clientbound minecraft:select_known_packs                     766- ConfigurationCodecs.SelectPacksClient
+Configuration Clientbound minecraft:server_links                           767-769 ConfigurationCodecs.ServerLinksV1_21 | 770- ConfigurationCodecs.ServerLinksV1_21_5
+Configuration Clientbound minecraft:show_dialog                            771- ConfigurationCodecs.ShowDialog
+Configuration Clientbound minecraft:store_cookie                           766- ConfigurationCodecs.StoreCookie
+Configuration Clientbound minecraft:transfer                               766- ConfigurationCodecs.Transfer
+Configuration Clientbound minecraft:update_enabled_features                764- ConfigurationCodecs.UpdateEnabledFeatures
+Configuration Clientbound minecraft:update_tags                            764- ConfigurationCodecs.UpdateTags
+Configuration Serverbound minecraft:accept_code_of_conduct                 773- marker
+Configuration Serverbound minecraft:bundle_delimiter                       765 marker
+Configuration Serverbound minecraft:client_information                     764-767 ConfigurationCodecs.ClientInformationV1_20_2 | 768- ConfigurationCodecs.ClientInformation
+Configuration Serverbound minecraft:cookie_response                        766- ConfigurationCodecs.ConfigCookieResponse
+Configuration Serverbound minecraft:custom_click_action                    771- ConfigurationCodecs.CustomClickAction
+Configuration Serverbound minecraft:custom_payload                         764- ConfigurationCodecs.ConfigCustomPayloadServer
+Configuration Serverbound minecraft:finish_configuration                   764- ConfigurationCodecs.FinishServer
+Configuration Serverbound minecraft:keep_alive                             764- ConfigurationCodecs.KeepAliveServer
+Configuration Serverbound minecraft:pong                                   764- ConfigurationCodecs.Pong
+Configuration Serverbound minecraft:resource_pack                          764 ConfigurationCodecs.ResourcePackResponseV1_20_2 | 765- ConfigurationCodecs.ResourcePackResponseV1_20_3
+Configuration Serverbound minecraft:select_known_packs                     766- ConfigurationCodecs.SelectPacksServer
+Play          Clientbound minecraft:abilities                              47 UiMiscCodecs.PlayerAbilitiesV1_8
+Play          Clientbound minecraft:add_entity                             47 EntitySpawnCodecs.AddEntityV1_8 | 107-758 EntitySpawnCodecs.AddEntityV1_9 | 759-772 EntitySpawnCodecs.AddEntityV1_19 | 773- EntitySpawnCodecs.AddEntityV1_21_9
+Play          Clientbound minecraft:add_experience_orb                     47 EntitySpawnCodecs.AddExperienceOrbV1_8 | 107-769 EntitySpawnCodecs.AddExperienceOrbV1_9
+Play          Clientbound minecraft:add_global_entity                      107-578 marker
+Play          Clientbound minecraft:add_mob                                47 EntitySpawnCodecs.AddMobV1_8 | 107-316 EntitySpawnCodecs.AddMobV1_9 | 335-340 EntitySpawnCodecs.AddMobV1_12 | 393-404 EntitySpawnCodecs.AddMobV1_13 | 477-498 EntitySpawnCodecs.AddMobV1_14 | 573-758 EntitySpawnCodecs.AddMobV1_15
+Play          Clientbound minecraft:add_painting                           47 EntitySpawnCodecs.AddPaintingV1_8 | 107-340 EntitySpawnCodecs.AddPaintingV1_9 | 393-404 EntitySpawnCodecs.AddPaintingV1_13 | 477-758 EntitySpawnCodecs.AddPaintingV1_14
+Play          Clientbound minecraft:add_player                             47 EntitySpawnCodecs.AddPlayerV1_8 | 107-316 EntitySpawnCodecs.AddPlayerV1_9 | 335-340 EntitySpawnCodecs.AddPlayerV1_12 | 393-404 EntitySpawnCodecs.AddPlayerV1_13 | 477-498 EntitySpawnCodecs.AddPlayerV1_14 | 573-763 EntitySpawnCodecs.AddPlayerV1_15
+Play          Clientbound minecraft:add_vibration_signal                   755-758 marker
+Play          Clientbound minecraft:animate                                47- EntityStateCodecs.Animate
+Play          Clientbound minecraft:award_stats                            107- marker
+Play          Clientbound minecraft:block_break_ack                        477-758 marker
+Play          Clientbound minecraft:block_changed_ack                      759- WorldBlockCodecs.BlockChangedAckV1_19
+Play          Clientbound minecraft:block_destruction                      47 WorldBlockCodecs.BlockDestructionV1_8 via:minecraft:block_break_animation | 107-404 WorldBlockCodecs.BlockDestructionV1_8 | 477- WorldBlockCodecs.BlockDestructionV1_14
+Play          Clientbound minecraft:block_entity_data                      47-404 WorldBlockCodecs.BlockEntityDataV1_8 | 477-756 WorldBlockCodecs.BlockEntityDataV1_14 | 757-763 WorldBlockCodecs.BlockEntityDataV1_18 | 764- WorldBlockCodecs.BlockEntityDataV1_20_2
+Play          Clientbound minecraft:block_event                            47-404 WorldBlockCodecs.BlockEventV1_8 | 477- WorldBlockCodecs.BlockEventV1_14
+Play          Clientbound minecraft:block_update                           47 WorldBlockCodecs.BlockUpdateV1_8 via:minecraft:block_change | 107-404 WorldBlockCodecs.BlockUpdateV1_8 | 477- WorldBlockCodecs.BlockUpdateV1_14
+Play          Clientbound minecraft:boss_event                             107-764 BossBarCodecs.BossEventV1_9 | 765-769 BossBarCodecs.BossEventV1_20_3 | 770- BossBarCodecs.BossEventV1_21_5
+Play          Clientbound minecraft:bundle_delimiter                       762- PlayCommonCodecs.BundleDelimiter
+Play          Clientbound minecraft:change_difficulty                      47 WorldStateCodecs.ChangeDifficultyV1_8 via:minecraft:server_difficulty | 107-404 WorldStateCodecs.ChangeDifficultyV1_8 | 477-775 WorldStateCodecs.ChangeDifficultyV1_14 | 776- WorldStateCodecs.ChangeDifficultyV26_2
+Play          Clientbound minecraft:chat                                   47-578 ChatCodecs.ClientLegacyV1_8 | 735-758 ChatCodecs.ClientLegacyV1_16
+Play          Clientbound minecraft:chat_preview                           759-760 marker
+Play          Clientbound minecraft:chunk_batch_finished                   764- WorldStateCodecs.ChunkBatchFinishedV1_20_2
+Play          Clientbound minecraft:chunk_batch_start                      764- WorldStateCodecs.ChunkBatchStartV1_20_2
+Play          Clientbound minecraft:chunks_biomes                          762- WorldStateCodecs.ChunksBiomesV1_19_4
+Play          Clientbound minecraft:clear_dialog                           771- UiMiscCodecs.ClearDialogV1_21_6
+Play          Clientbound minecraft:clear_titles                           755- TitleCodecs.ClearTitlesV1_17
+Play          Clientbound minecraft:combat_event                           47 marker
+Play          Clientbound minecraft:command_suggestions                    393-764 CommandSuggestionCodecs.CommandSuggestionsV1_13 | 765- CommandSuggestionCodecs.CommandSuggestionsV1_20_3
+Play          Clientbound minecraft:commands                               393-758 CommandTreeCodecs.V1_13 | 759-760 CommandTreeCodecs.V1_19 | 761 CommandTreeCodecs.V1_19_3 | 762-764 CommandTreeCodecs.V1_19_4 | 765 CommandTreeCodecs.V1_20_3 | 766-769 CommandTreeCodecs.V1_20_5 | 770 CommandTreeCodecs.V1_21_5 | 771-775 CommandTreeCodecs.V1_21_6 | 776- CommandTreeCodecs.V26_2
+Play          Clientbound minecraft:container_close                        47 ContainerCodecs.ContainerCloseClientV1_8 via:minecraft:close_screen | 107-767 ContainerCodecs.ContainerCloseClientV1_8 | 768- ContainerCodecs.ContainerCloseClientModern
+Play          Clientbound minecraft:container_set_content                  47-340 ContainerCodecs.ContainerSetContentV1_8 | 393-401 ContainerCodecs.ContainerSetContentV1_13 | 404 ContainerCodecs.ContainerSetContentV1_13_2 | 477-755 ContainerCodecs.ContainerSetContentV1_14 | 756-763 ContainerCodecs.ContainerSetContentV1_17_1 | 764-765 ContainerCodecs.ContainerSetContentV1_20_2 | 766 ContainerCodecs.ContainerSetContentV1_20_5 | 767 ContainerCodecs.ContainerSetContentV1_21 | 768 MakeContainerSetContent(Table768) | 769 MakeContainerSetContent(Table769) | 770 MakeContainerSetContent(Table770) | 771-772 MakeContainerSetContent(Table771) | 773 MakeContainerSetContent(Table773) | 774 MakeContainerSetContent(Table774) | 775 MakeContainerSetContent(Table775) | 776- MakeContainerSetContent(Table776)
+Play          Clientbound minecraft:container_set_data                     47 ContainerCodecs.ContainerSetDataV1_8 via:minecraft:craft_progress_bar | 107-767 ContainerCodecs.ContainerSetDataV1_8 | 768- ContainerCodecs.ContainerSetDataModern
+Play          Clientbound minecraft:container_set_slot                     107-340 ContainerCodecs.ContainerSetSlotV1_9 | 393-401 ContainerCodecs.ContainerSetSlotV1_13 | 404 ContainerCodecs.ContainerSetSlotV1_13_2 | 477-755 ContainerCodecs.ContainerSetSlotV1_14 | 756-763 ContainerCodecs.ContainerSetSlotV1_17_1 | 764-765 ContainerCodecs.ContainerSetSlotV1_20_2 | 766 ContainerCodecs.ContainerSetSlotV1_20_5 | 767 ContainerCodecs.ContainerSetSlotV1_21 | 768 MakeContainerSetSlot(Table768) | 769 MakeContainerSetSlot(Table769) | 770 MakeContainerSetSlot(Table770) | 771-772 MakeContainerSetSlot(Table771) | 773 MakeContainerSetSlot(Table773) | 774 MakeContainerSetSlot(Table774) | 775 MakeContainerSetSlot(Table775) | 776- MakeContainerSetSlot(Table776)
+Play          Clientbound minecraft:cookie_request                         766- PlayCommonCodecs.CookieRequest
+Play          Clientbound minecraft:cooldown                               107-767 UiMiscCodecs.CooldownV1_9 | 768- UiMiscCodecs.CooldownV1_21_2
+Play          Clientbound minecraft:custom_chat_completions                760- ChatDisplayCodecs.CustomChatCompletionsV1_19_1
+Play          Clientbound minecraft:custom_payload                         47- marker
+Play          Clientbound minecraft:custom_report_details                  767- ChatDisplayCodecs.CustomReportDetailsV1_21
+Play          Clientbound minecraft:custom_sound                           107-110 WorldEffectCodecs.CustomSoundV1_9 | 210-758 WorldEffectCodecs.CustomSoundV1_10 | 759-760 WorldEffectCodecs.CustomSoundV1_19
+Play          Clientbound minecraft:damage_event                           762- EntityStateCodecs.DamageEvent
+Play          Clientbound minecraft:debug/block_value                      773- marker
+Play          Clientbound minecraft:debug/chunk_value                      773- marker
+Play          Clientbound minecraft:debug/entity_value                     773- marker
+Play          Clientbound minecraft:debug/event                            773- marker
+Play          Clientbound minecraft:debug_sample                           766- marker
+Play          Clientbound minecraft:delete_chat                            760- ChatDisplayCodecs.DeleteChatV1_19_1
+Play          Clientbound minecraft:disconnect                             47-764 PlayCommonCodecs.DisconnectV1_8 | 765-769 PlayCommonCodecs.DisconnectV1_20_3 | 770- PlayCommonCodecs.DisconnectV1_21_5
+Play          Clientbound minecraft:disguised_chat                         761-764 ChatDisplayCodecs.DisguisedChatV1_19_3 | 765-769 ChatDisplayCodecs.DisguisedChatV1_20_3 | 770- ChatDisplayCodecs.DisguisedChatV1_21_5
+Play          Clientbound minecraft:display_scoreboard                     47 ScoreboardCodecs.LegacyDisplayObjectiveV1_8
+Play          Clientbound minecraft:entity                                 47 EntityMoveCodecs.EntityV1_8
+Play          Clientbound minecraft:entity_event                           47 EntityStateCodecs.EntityEvent via:minecraft:entity_status | 107- EntityStateCodecs.EntityEvent
+Play          Clientbound minecraft:entity_position_sync                   768- EntityMoveCodecs.EntityPositionSync
+Play          Clientbound minecraft:explode                                47-754 WorldEffectCodecs.ExplodeV1_8 | 755-760 WorldEffectCodecs.ExplodeV1_17 | 761-764 WorldEffectCodecs.ExplodeV1_19_3 | 765-767 WorldEffectCodecs.ExplodeV1_20_3 | 768 WorldEffectCodecs.ExplodeV1_21_2 | 769 WorldEffectCodecs.ExplodeV1_21_4 | 770 WorldEffectCodecs.ExplodeV1_21_5 | 771-772 WorldEffectCodecs.ExplodeV1_21_6 | 773 WorldEffectCodecs.ExplodeV1_21_9 | 774 WorldEffectCodecs.ExplodeV1_21_11 | 775 WorldEffectCodecs.ExplodeV26_1 | 776- WorldEffectCodecs.ExplodeV26_2
+Play          Clientbound minecraft:forget_level_chunk                     107-404 WorldStateCodecs.ForgetLevelChunkV1_9 | 477- WorldStateCodecs.ForgetLevelChunkV1_14
+Play          Clientbound minecraft:game_event                             47 WorldStateCodecs.GameEventV1_8 via:minecraft:game_state_change | 107-404 WorldStateCodecs.GameEventV1_8 | 477- WorldStateCodecs.GameEventV1_14
+Play          Clientbound minecraft:game_rule_values                       775- marker
+Play          Clientbound minecraft:game_test_highlight_pos                773- marker
+Play          Clientbound minecraft:horse_screen_open                      477-773 marker
+Play          Clientbound minecraft:hurt_animation                         762- EntityStateCodecs.HurtAnimation
+Play          Clientbound minecraft:initialize_border                      755- WorldBorderCodecs.InitializeBorderV1_17
+Play          Clientbound minecraft:keep_alive                             47-338 PlayKeepAliveCodecs.ClientV1_8 | 340- PlayKeepAliveCodecs.ClientV1_12_2
+Play          Clientbound minecraft:level_chunk_with_light                 47 ChunkCodecs.V1_8 via:minecraft:level_chunk | 107-340 ChunkCodecs.V1_9 via:minecraft:level_chunk | 393-404 ChunkCodecs.V1_13 via:minecraft:level_chunk | 477-498 ChunkCodecs.V1_14 via:minecraft:level_chunk | 573-578 ChunkCodecs.V1_15 via:minecraft:level_chunk | 735-736 ChunkCodecs.V1_16 via:minecraft:level_chunk | 751-754 ChunkCodecs.V1_16_2 via:minecraft:level_chunk | 755-756 ChunkCodecs.V1_17 via:minecraft:level_chunk | 757-763 ChunkCodecs.V1_18 | 764-767 ChunkCodecs.V1_20_2 | 768-769 ChunkCodecs.V1_21_2 | 770-774 ChunkCodecs.V1_21_5 | 775- ChunkCodecs.V26_1
+Play          Clientbound minecraft:level_event                            47-404 WorldEffectCodecs.LevelEventV1_8 | 477- WorldEffectCodecs.LevelEventV1_14
+Play          Clientbound minecraft:level_particles                        47-340 WorldEffectCodecs.LevelParticlesV1_8 | 393-404 WorldEffectCodecs.LevelParticlesV1_13 | 477-498 WorldEffectCodecs.LevelParticlesV1_14 | 573-758 WorldEffectCodecs.LevelParticlesV1_15 | 759-765 WorldEffectCodecs.LevelParticlesV1_19 | 766 WorldEffectCodecs.LevelParticlesV1_20_5 | 767 WorldEffectCodecs.LevelParticlesV1_21 | 768 WorldEffectCodecs.LevelParticlesV1_21_2 | 769 WorldEffectCodecs.LevelParticlesV1_21_4 | 770 WorldEffectCodecs.LevelParticlesV1_21_5 | 771-772 WorldEffectCodecs.LevelParticlesV1_21_6 | 773 WorldEffectCodecs.LevelParticlesV1_21_9 | 774 WorldEffectCodecs.LevelParticlesV1_21_11 | 775 WorldEffectCodecs.LevelParticlesV26_1 | 776- WorldEffectCodecs.LevelParticlesV26_2
+Play          Clientbound minecraft:light_update                           477-578 WorldStateCodecs.LightUpdateV1_14 | 735-754 WorldStateCodecs.LightUpdateV1_16 | 755-762 WorldStateCodecs.LightUpdateV1_17 | 763- WorldStateCodecs.LightUpdateV1_20
+Play          Clientbound minecraft:login                                  47-107 JoinGameCodecs.V1_8 | 108-404 JoinGameCodecs.V1_9_1 | 477-498 JoinGameCodecs.V1_14 | 573-578 JoinGameCodecs.V1_15 | 735-736 JoinGameCodecs.V1_16 | 751-756 JoinGameCodecs.V1_16_2 | 757-758 JoinGameCodecs.V1_18 | 759-762 JoinGameCodecs.V1_19 | 763 JoinGameCodecs.V1_20 | 764-765 JoinGameCodecs.V1_20_2 | 766-767 JoinGameCodecs.V1_20_5 | 768-774 JoinGameCodecs.V1_21_2 | 775 JoinGameCodecs.V26_1 | 776- JoinGameCodecs.V26_2
+Play          Clientbound minecraft:low_disk_space_warning                 775- marker
+Play          Clientbound minecraft:map_chunk_bulk                         47 ChunkCodecs.MapChunkBulkV1_8
+Play          Clientbound minecraft:map_item_data                          47 WorldMapCodecs.MapItemDataV1_8 via:minecraft:map | 107-340 WorldMapCodecs.MapItemDataV1_9 | 393-404 WorldMapCodecs.MapItemDataV1_13 | 477-754 WorldMapCodecs.MapItemDataV1_14 | 755-764 WorldMapCodecs.MapItemDataV1_17 | 765-769 WorldMapCodecs.MapItemDataV1_20_3 | 770- WorldMapCodecs.MapItemDataV1_21_5
+Play          Clientbound minecraft:merchant_offers                        477-485 MerchantCodecs.MerchantOffersV1_14 | 490 MerchantCodecs.MerchantOffersV1_14_3 | 498-758 MerchantCodecs.MerchantOffersV1_14_4 | 759-763 MerchantCodecs.MerchantOffersV1_19 | 764-765 MerchantCodecs.MerchantOffersV1_20_2 | 766 MerchantCodecs.MerchantOffersV1_20_5 | 767 MerchantCodecs.MerchantOffersV1_21 | 768 MakeMerchantOffers(Table768) | 769 MakeMerchantOffers(Table769) | 770 MakeMerchantOffers(Table770) | 771-772 MakeMerchantOffers(Table771) | 773 MakeMerchantOffers(Table773) | 774 MakeMerchantOffers(Table774) | 775 MakeMerchantOffers(Table775) | 776- MakeMerchantOffers(Table776)
+Play          Clientbound minecraft:mount_screen_open                      774- marker
+Play          Clientbound minecraft:move_entity                            107-754 marker
+Play          Clientbound minecraft:move_entity_pos                        47 EntityMoveCodecs.MoveEntityPosV1_8 via:minecraft:move_entity_position | 107- EntityMoveCodecs.MoveEntityPosV1_9
+Play          Clientbound minecraft:move_entity_pos_rot                    47 EntityMoveCodecs.MoveEntityPosRotV1_8 via:minecraft:move_entity_position_rotation | 107- EntityMoveCodecs.MoveEntityPosRotV1_9
+Play          Clientbound minecraft:move_entity_rot                        47 EntityMoveCodecs.MoveEntityRot via:minecraft:move_entity_rotation | 107- EntityMoveCodecs.MoveEntityRot
+Play          Clientbound minecraft:move_minecart_along_track              768- marker
+Play          Clientbound minecraft:move_vehicle                           107- marker
+Play          Clientbound minecraft:open_book                              477- UiMiscCodecs.OpenBookV1_14
+Play          Clientbound minecraft:open_screen                            47-404 ContainerCodecs.OpenScreenV1_8 | 477-764 ContainerCodecs.OpenScreenV1_14 | 765-767 ContainerCodecs.OpenScreenV1_20_3 | 768-769 ContainerCodecs.OpenScreenV1_21_2 | 770- ContainerCodecs.OpenScreenModern
+Play          Clientbound minecraft:open_sign_editor                       47-404 UiMiscCodecs.OpenSignEditorV1_8 | 477- UiMiscCodecs.OpenSignEditorV1_14
+Play          Clientbound minecraft:ping                                   755- UiMiscCodecs.PingV1_17
+Play          Clientbound minecraft:place_ghost_recipe                     338- RecipeCodecs.PlaceGhostRecipeModern
+Play          Clientbound minecraft:player_abilities                       107- UiMiscCodecs.PlayerAbilitiesV1_8
+Play          Clientbound minecraft:player_chat                            759 ChatCodecs.V1_19 | 760 ChatCodecs.V1_19_1 | 761-764 ChatCodecs.V1_19_3 | 765-769 ChatCodecs.V1_20_3 | 770- ChatCodecs.V1_21_5
+Play          Clientbound minecraft:player_chat_header                     760 marker
+Play          Clientbound minecraft:player_combat                          107-754 marker
+Play          Clientbound minecraft:player_combat_end                      755- marker
+Play          Clientbound minecraft:player_combat_enter                    755- marker
+Play          Clientbound minecraft:player_combat_kill                     755- marker
+Play          Clientbound minecraft:player_info                            47-758 PlayerListCodecs.LegacyPlayerListItemV1_8 | 759-760 PlayerListCodecs.LegacyPlayerListItemV1_19
+Play          Clientbound minecraft:player_info_remove                     761- PlayerListCodecs.PlayerInfoRemoveV1_19_3
+Play          Clientbound minecraft:player_info_update                     761-764 PlayerListCodecs.PlayerInfoUpdateV1_19_3 | 765-767 PlayerListCodecs.PlayerInfoUpdateV1_20_3 | 768 PlayerListCodecs.PlayerInfoUpdateV1_21_2 | 769 PlayerListCodecs.PlayerInfoUpdateV1_20_3 | 770- PlayerListCodecs.PlayerInfoUpdateV1_21_5
+Play          Clientbound minecraft:player_list_header_footer              47 PlayerListCodecs.TabListV1_8
+Play          Clientbound minecraft:player_look_at                         393- marker
+Play          Clientbound minecraft:player_position                        47 EntityMoveCodecs.PlayerPositionV1_8 | 107-754 EntityMoveCodecs.PlayerPositionV1_9 | 755-761 EntityMoveCodecs.PlayerPositionV1_17 | 762-767 EntityMoveCodecs.PlayerPositionV1_9 | 768- EntityMoveCodecs.PlayerPositionV1_21_2
+Play          Clientbound minecraft:player_rotation                        768- marker
+Play          Clientbound minecraft:pong_response                          764- UiMiscCodecs.PongResponseV1_20_2
+Play          Clientbound minecraft:projectile_power                       766- marker
+Play          Clientbound minecraft:recipe                                 335-340 RecipeCodecs.RecipeV1_12 | 393-736 RecipeCodecs.RecipeV1_13 | 751-767 RecipeCodecs.RecipeV1_16_2
+Play          Clientbound minecraft:recipe_book_add                        768 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_2(Table768)) | 769 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_2(Table769)) | 770 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table770)) | 771-772 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table771)) | 773 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table773)) | 774 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table774)) | 775 RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_1(Table775)) | 776- RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_1(Table776))
+Play          Clientbound minecraft:recipe_book_remove                     768- RecipeCodecs.RecipeBookRemoveModern
+Play          Clientbound minecraft:recipe_book_settings                   768- RecipeCodecs.RecipeBookSettingsModern
+Play          Clientbound minecraft:remove_entities                        47 EntitySpawnCodecs.RemoveEntities via:minecraft:entity_destroy | 107-754 EntitySpawnCodecs.RemoveEntities | 755 EntitySpawnCodecs.RemoveEntityV1_17 via:minecraft:remove_entity | 756- EntitySpawnCodecs.RemoveEntities
+Play          Clientbound minecraft:remove_mob_effect                      47 EntityEffectCodecs.RemoveMobEffectV1_8 via:minecraft:remove_entity_effect | 107-756 EntityEffectCodecs.RemoveMobEffectV1_8 | 757- EntityEffectCodecs.RemoveMobEffectV1_18
+Play          Clientbound minecraft:reset_score                            765- ScoreboardCodecs.ResetScoreV1_20_3
+Play          Clientbound minecraft:resource_pack                          47-404 ResourcePackCodecs.LegacyResourcePackV1_8
+Play          Clientbound minecraft:resource_pack_pop                      765- ResourcePackCodecs.ResourcePackPopV1_20_3
+Play          Clientbound minecraft:resource_pack_push                     477-754 ResourcePackCodecs.ResourcePackPushV1_14 via:minecraft:resource_pack | 755-764 ResourcePackCodecs.ResourcePackPushV1_17 via:minecraft:resource_pack | 765-769 ResourcePackCodecs.ResourcePackPushV1_20_3 | 770- ResourcePackCodecs.ResourcePackPushV1_21_5
+Play          Clientbound minecraft:respawn                                47-404 WorldStateCodecs.RespawnV1_8 | 477-498 WorldStateCodecs.RespawnV1_14 | 573-578 WorldStateCodecs.RespawnV1_15 | 735-736 WorldStateCodecs.RespawnV1_16 | 751-758 WorldStateCodecs.RespawnV1_16_2 | 759-762 WorldStateCodecs.RespawnV1_19 | 763 WorldStateCodecs.RespawnV1_20 | 764-765 WorldStateCodecs.RespawnV1_20_2 | 766-767 WorldStateCodecs.RespawnV1_20_5 | 768- WorldStateCodecs.RespawnV1_21_2
+Play          Clientbound minecraft:rotate_head                            47- EntityMoveCodecs.RotateHead
+Play          Clientbound minecraft:scoreboard_objective                   47 ScoreboardCodecs.LegacyObjectiveV1_8
+Play          Clientbound minecraft:section_blocks_update                  47 WorldBlockCodecs.SectionBlocksUpdateV1_8 via:minecraft:block_change_multi | 107-736 WorldBlockCodecs.SectionBlocksUpdateV1_8 via:minecraft:chunk_blocks_update | 751-762 WorldBlockCodecs.SectionBlocksUpdateV1_16_2 | 763- WorldBlockCodecs.SectionBlocksUpdateV1_20
+Play          Clientbound minecraft:select_advancements_tab                335- AdvancementCodecs.SelectAdvancementsTabV1_12
+Play          Clientbound minecraft:server_data                            759 ChatDisplayCodecs.ServerDataV1_19 | 760 ChatDisplayCodecs.ServerDataV1_19_1 | 761 ChatDisplayCodecs.ServerDataV1_19_3 | 762-764 ChatDisplayCodecs.ServerDataV1_19_4 | 765 ChatDisplayCodecs.ServerDataV1_20_3 | 766-769 ChatDisplayCodecs.ServerDataV1_20_5 | 770- ChatDisplayCodecs.ServerDataV1_21_5
+Play          Clientbound minecraft:server_links                           767-769 UiMiscCodecs.ServerLinksV1_21 | 770- UiMiscCodecs.ServerLinksV1_21_5
+Play          Clientbound minecraft:set_action_bar_text                    755-764 TitleCodecs.SetActionBarTextV1_17 | 765-769 TitleCodecs.SetActionBarTextV1_20_3 | 770- TitleCodecs.SetActionBarTextV1_21_5
+Play          Clientbound minecraft:set_border                             107-754 marker
+Play          Clientbound minecraft:set_border_center                      755- WorldBorderCodecs.SetBorderCenterV1_17
+Play          Clientbound minecraft:set_border_lerp_size                   755- WorldBorderCodecs.SetBorderLerpSizeV1_17
+Play          Clientbound minecraft:set_border_size                        755- WorldBorderCodecs.SetBorderSizeV1_17
+Play          Clientbound minecraft:set_border_warning_delay               755- WorldBorderCodecs.SetBorderWarningDelayV1_17
+Play          Clientbound minecraft:set_border_warning_distance            755- WorldBorderCodecs.SetBorderWarningDistanceV1_17
+Play          Clientbound minecraft:set_camera                             47 EntityStateCodecs.SetCamera via:minecraft:camera | 107- EntityStateCodecs.SetCamera
+Play          Clientbound minecraft:set_chunk_cache_center                 477- WorldStateCodecs.SetChunkCacheCenterV1_14
+Play          Clientbound minecraft:set_chunk_cache_radius                 477- WorldStateCodecs.SetChunkCacheRadiusV1_14
+Play          Clientbound minecraft:set_compression                        47 marker
+Play          Clientbound minecraft:set_cursor_item                        768 MakeSetCursorItem(Table768) | 769 MakeSetCursorItem(Table769) | 770 MakeSetCursorItem(Table770) | 771-772 MakeSetCursorItem(Table771) | 773 MakeSetCursorItem(Table773) | 774 MakeSetCursorItem(Table774) | 775 MakeSetCursorItem(Table775) | 776- MakeSetCursorItem(Table776)
+Play          Clientbound minecraft:set_default_spawn_position             47 WorldStateCodecs.SetDefaultSpawnV1_8 via:minecraft:spawn_position | 107-404 WorldStateCodecs.SetDefaultSpawnV1_8 via:minecraft:set_spawn_position | 477-578 WorldStateCodecs.SetDefaultSpawnV1_14 via:minecraft:set_spawn_position | 735-754 WorldStateCodecs.SetDefaultSpawnV1_14 | 755-772 WorldStateCodecs.SetDefaultSpawnV1_17 | 773- WorldStateCodecs.SetDefaultSpawnV1_21_9
+Play          Clientbound minecraft:set_display_chat_preview               759-760 ChatDisplayCodecs.SetDisplayChatPreviewV1_19
+Play          Clientbound minecraft:set_display_objective                  107-756 ScoreboardCodecs.SetDisplayObjectiveV1_9 | 757-763 ScoreboardCodecs.SetDisplayObjectiveV1_18 | 764- ScoreboardCodecs.SetDisplayObjectiveV1_20_2
+Play          Clientbound minecraft:set_entity_data                        47 EntityDataCodecs.SetEntityDataV1_8 | 107-316 EntityDataCodecs.SetEntityDataV1_9 | 335-340 EntityDataCodecs.SetEntityDataV1_12 | 393-401 EntityDataCodecs.SetEntityDataV1_13 | 404 EntityDataCodecs.SetEntityDataV1_13_2 | 477-758 EntityDataCodecs.SetEntityDataV1_14 | 759-760 EntityDataCodecs.SetEntityDataV1_19 | 761 EntityDataCodecs.SetEntityDataV1_19_3 | 762-763 EntityDataCodecs.SetEntityDataV1_19_4 | 764 EntityDataCodecs.SetEntityDataV1_20_2 | 765 EntityDataCodecs.SetEntityDataV1_20_3 | 766-767 EntityDataCodecs.SetEntityDataV1_20_5 | 768 EntityDataCodecs.SetEntityDataV1_21_2 | 769 EntityDataCodecs.SetEntityDataV1_21_4 | 770 EntityDataCodecs.SetEntityDataV1_21_5 | 771-772 EntityDataCodecs.SetEntityDataV1_21_6 | 773 EntityDataCodecs.SetEntityDataV1_21_9 | 774 EntityDataCodecs.SetEntityDataV1_21_11 | 775 EntityDataCodecs.SetEntityDataV26_1 | 776- EntityDataCodecs.SetEntityDataV26_2
+Play          Clientbound minecraft:set_entity_link                        47 EntityStateCodecs.SetEntityLinkV1_8 via:minecraft:attach_entity | 107- EntityStateCodecs.SetEntityLinkV1_9
+Play          Clientbound minecraft:set_entity_motion                      47-772 EntityMoveCodecs.SetEntityMotion | 773- EntityMoveCodecs.SetEntityMotionV1_21_9
+Play          Clientbound minecraft:set_equipment                          47 EntityEquipmentCodecs.SetEquipmentV1_8 via:minecraft:entity_equipment | 107-340 EntityEquipmentCodecs.SetEquipmentV1_9 via:minecraft:set_equipped_item | 393-401 EntityEquipmentCodecs.SetEquipmentV1_13 via:minecraft:set_equipped_item | 404-578 EntityEquipmentCodecs.SetEquipmentV1_13_2 via:minecraft:set_equipped_item | 735- EntityEquipmentCodecs.SetEquipmentV1_16
+Play          Clientbound minecraft:set_experience                         47- EntityStateCodecs.SetExperience
+Play          Clientbound minecraft:set_health                             47 EntityStateCodecs.SetHealth via:minecraft:update_health | 107- EntityStateCodecs.SetHealth
+Play          Clientbound minecraft:set_held_slot                          47 EntityStateCodecs.SetHeldSlotV1_8 via:minecraft:held_item_slot | 107-767 EntityStateCodecs.SetHeldSlotV1_8 via:minecraft:set_carried_item | 768 EntityStateCodecs.SetHeldSlotV1_8 | 769- EntityStateCodecs.SetHeldSlotV1_21_4
+Play          Clientbound minecraft:set_objective                          107-340 ScoreboardCodecs.SetObjectiveV1_9 | 393-756 ScoreboardCodecs.SetObjectiveV1_13 | 757-764 ScoreboardCodecs.SetObjectiveV1_18 | 765-769 ScoreboardCodecs.SetObjectiveV1_20_3 | 770- ScoreboardCodecs.SetObjectiveV1_21_5
+Play          Clientbound minecraft:set_passengers                         107- EntityStateCodecs.SetPassengers
+Play          Clientbound minecraft:set_player_inventory                   768 MakeSetPlayerInventory(Table768) | 769 MakeSetPlayerInventory(Table769) | 770 MakeSetPlayerInventory(Table770) | 771-772 MakeSetPlayerInventory(Table771) | 773 MakeSetPlayerInventory(Table773) | 774 MakeSetPlayerInventory(Table774) | 775 MakeSetPlayerInventory(Table775) | 776- MakeSetPlayerInventory(Table776)
+Play          Clientbound minecraft:set_player_team                        47 ScoreboardCodecs.SetPlayerTeamV1_8 | 107-340 ScoreboardCodecs.SetPlayerTeamV1_9 | 393-404 ScoreboardCodecs.SetPlayerTeamV1_13 | 477-764 ScoreboardCodecs.SetPlayerTeamV1_14 | 765-769 ScoreboardCodecs.SetPlayerTeamV1_20_3 | 770-775 ScoreboardCodecs.SetPlayerTeamV1_21_5 | 776- ScoreboardCodecs.SetPlayerTeamV26_2
+Play          Clientbound minecraft:set_score                              47-764 ScoreboardCodecs.LegacySetScoreV1_8 | 765-769 ScoreboardCodecs.SetScoreV1_20_3 | 770- ScoreboardCodecs.SetScoreV1_21_5
+Play          Clientbound minecraft:set_simulation_distance                757- WorldStateCodecs.SetSimulationDistanceV1_18
+Play          Clientbound minecraft:set_slot                               47 ContainerCodecs.SetSlotV1_8
+Play          Clientbound minecraft:set_subtitle_text                      755-764 TitleCodecs.SetSubtitleTextV1_17 | 765-769 TitleCodecs.SetSubtitleTextV1_20_3 | 770- TitleCodecs.SetSubtitleTextV1_21_5
+Play          Clientbound minecraft:set_time                               47 WorldStateCodecs.SetTimeV1_8 via:minecraft:update_time | 107-767 WorldStateCodecs.SetTimeV1_8 | 768-774 WorldStateCodecs.SetTimeV1_21_2 | 775- WorldStateCodecs.SetTimeV26_1
+Play          Clientbound minecraft:set_title_text                         755-764 TitleCodecs.SetTitleTextV1_17 | 765-769 TitleCodecs.SetTitleTextV1_20_3 | 770- TitleCodecs.SetTitleTextV1_21_5
+Play          Clientbound minecraft:set_titles                             107-754 marker
+Play          Clientbound minecraft:set_titles_animation                   755- TitleCodecs.SetTitlesAnimationV1_17
+Play          Clientbound minecraft:show_dialog                            771- UiMiscCodecs.ShowDialogV1_21_6
+Play          Clientbound minecraft:sound                                  107-110 WorldEffectCodecs.SoundV1_9 | 210-578 WorldEffectCodecs.SoundV1_10 | 735-758 marker | 759- WorldEffectCodecs.SoundV1_19
+Play          Clientbound minecraft:sound_effect                           47 WorldEffectCodecs.NamedSoundV1_8
+Play          Clientbound minecraft:sound_entity                           477- WorldEffectCodecs.SoundEntityV1_14
+Play          Clientbound minecraft:spawn_weather_entity                   47 EntitySpawnCodecs.AddGlobalEntityV1_8
+Play          Clientbound minecraft:start_configuration                    764- ConfigurationCodecs.StartConfiguration
+Play          Clientbound minecraft:statistics                             47 marker
+Play          Clientbound minecraft:stop_sound                             393- WorldEffectCodecs.StopSoundV1_13
+Play          Clientbound minecraft:store_cookie                           766- PlayCommonCodecs.StoreCookie
+Play          Clientbound minecraft:system_chat                            759-764 ChatDisplayCodecs.SystemChatV1_19 | 765-769 ChatDisplayCodecs.SystemChatV1_20_3 | 770- ChatDisplayCodecs.SystemChatV1_21_5
+Play          Clientbound minecraft:tab_complete                           47 CommandSuggestionCodecs.LegacyTabCompleteV1_8 | 107-340 CommandSuggestionCodecs.LegacyTabCompleteV1_8 via:minecraft:command_suggestions
+Play          Clientbound minecraft:tab_list                               107-764 PlayerListCodecs.TabListV1_9 | 765-769 PlayerListCodecs.TabListV1_20_3 | 770- PlayerListCodecs.TabListV1_21_5
+Play          Clientbound minecraft:tag_query                              393- marker
+Play          Clientbound minecraft:take_item_entity                       47 EntityStateCodecs.TakeItemEntityV1_8 via:minecraft:collect_item | 107-210 EntityStateCodecs.TakeItemEntityV1_8 | 315- EntityStateCodecs.TakeItemEntityV1_11
+Play          Clientbound minecraft:teleport_entity                        47 EntityMoveCodecs.TeleportEntityV1_8 via:minecraft:entity_teleport | 107-767 EntityMoveCodecs.TeleportEntityV1_9 | 768- EntityMoveCodecs.TeleportEntityV1_21_2
+Play          Clientbound minecraft:test_instance_block_status             770- marker
+Play          Clientbound minecraft:ticking_state                          765- marker
+Play          Clientbound minecraft:ticking_step                           765- marker
+Play          Clientbound minecraft:title                                  47 TitleCodecs.LegacyTitleV1_8
+Play          Clientbound minecraft:transaction                            47 ContainerCodecs.TransactionClientV1_8 | 107-754 ContainerCodecs.TransactionClientV1_8 via:minecraft:container_ack
+Play          Clientbound minecraft:transfer                               766- PlayCommonCodecs.Transfer
+Play          Clientbound minecraft:update_advancements                    335-340 AdvancementCodecs.UpdateAdvancementsV1_12 | 393-401 AdvancementCodecs.UpdateAdvancementsV1_13 | 404-762 AdvancementCodecs.UpdateAdvancementsV1_13_2 | 763 AdvancementCodecs.UpdateAdvancementsV1_20 | 764 AdvancementCodecs.UpdateAdvancementsV1_20_2 | 765 AdvancementCodecs.UpdateAdvancementsV1_20_3 | 766 AdvancementCodecs.UpdateAdvancementsV1_20_5 | 767 AdvancementCodecs.UpdateAdvancementsV1_21 | 768 AdvancementCodecs.UpdateAdvancementsV1_21_2 | 769 AdvancementCodecs.UpdateAdvancementsV1_21_4 | 770 AdvancementCodecs.UpdateAdvancementsV1_21_5 | 771-772 AdvancementCodecs.UpdateAdvancementsV1_21_6 | 773 AdvancementCodecs.UpdateAdvancementsV1_21_9 | 774 AdvancementCodecs.UpdateAdvancementsV1_21_11 | 775 AdvancementCodecs.UpdateAdvancementsV26_1 | 776- AdvancementCodecs.UpdateAdvancementsV26_2
+Play          Clientbound minecraft:update_attributes                      47-578 EntityEquipmentCodecs.UpdateAttributesV1_8 | 735-754 EntityEquipmentCodecs.UpdateAttributesV1_16IntCount | 755-765 EntityEquipmentCodecs.UpdateAttributesV1_17 | 766 EntityEquipmentCodecs.UpdateAttributesV1_20_5 | 767- EntityEquipmentCodecs.UpdateAttributesV1_21
+Play          Clientbound minecraft:update_enabled_features                761-763 marker
+Play          Clientbound minecraft:update_entity_nbt                      47 marker
+Play          Clientbound minecraft:update_mob_effect                      47 EntityEffectCodecs.UpdateMobEffectV1_8 via:minecraft:entity_effect | 107-756 EntityEffectCodecs.UpdateMobEffectV1_8 | 757-758 EntityEffectCodecs.UpdateMobEffectV1_18 | 759-765 EntityEffectCodecs.UpdateMobEffectV1_19 | 766- EntityEffectCodecs.UpdateMobEffectV1_20_5
+Play          Clientbound minecraft:update_recipes                         393- RecipeCodecs.UpdateRecipesModern
+Play          Clientbound minecraft:update_sign                            47-109 marker
+Play          Clientbound minecraft:update_tags                            393- marker
+Play          Clientbound minecraft:use_bed                                47-404 EntityStateCodecs.UseBedV1_8
+Play          Clientbound minecraft:waypoint                               771- UiMiscCodecs.WaypointV1_21_6
+Play          Clientbound minecraft:world_border                           47 WorldBorderCodecs.WorldBorderV1_8
+Play          Serverbound minecraft:abilities                              47 UiMiscCodecs.ServerLegacyAbilitiesV1_8 | 107-404 UiMiscCodecs.ServerLegacyAbilitiesV1_8 via:minecraft:player_abilities
+Play          Serverbound minecraft:accept_teleportation                   107- EntityServerboundCodecs.AcceptTeleportation
+Play          Serverbound minecraft:attack                                 775- EntityServerboundCodecs.Attack
+Play          Serverbound minecraft:block_entity_tag_query                 393- marker
+Play          Serverbound minecraft:block_place                            47 UseItemCodecs.BlockPlaceV1_8
+Play          Serverbound minecraft:bundle_item_selected                   768- marker
+Play          Serverbound minecraft:change_difficulty                      477- marker
+Play          Serverbound minecraft:change_game_mode                       771- marker
+Play          Serverbound minecraft:chat                                   47-758 ChatCodecs.ServerLegacyV1_8 | 759 ChatCodecs.SignedV1_19 | 760 ChatCodecs.SignedV1_19_1 | 761-769 ChatCodecs.SignedV1_19_3 | 770-774 ChatCodecs.SignedV1_21_5 | 775- ChatCodecs.SignedV26_1
+Play          Serverbound minecraft:chat_ack                               760 marker | 761- ChatCodecs.ChatAckV1_19_3
+Play          Serverbound minecraft:chat_command                           759 ChatCommandCodecs.SignedV1_19 | 760 ChatCommandCodecs.SignedV1_19_1 | 761-765 ChatCommandCodecs.SignedV1_19_3 | 766- ChatCommandCodecs.UnsignedV1_20_5
+Play          Serverbound minecraft:chat_command_signed                    766-769 ChatCommandCodecs.SignedStandaloneV1_20_5 | 770- ChatCommandCodecs.SignedStandaloneV1_21_5
+Play          Serverbound minecraft:chat_preview                           759-760 marker
+Play          Serverbound minecraft:chat_session_update                    761- ChatCodecs.ChatSessionUpdateV1_19_3
+Play          Serverbound minecraft:chunk_batch_received                   764- WorldStateCodecs.ChunkBatchReceivedV1_20_2
+Play          Serverbound minecraft:client_command                         47- PlayCommonCodecs.ClientCommand
+Play          Serverbound minecraft:client_information                     47 PlayClientInformationCodecs.V1_8 | 107-754 PlayClientInformationCodecs.V1_9 | 755-756 PlayClientInformationCodecs.V1_17 | 757-767 PlayClientInformationCodecs.V1_18 | 768- PlayClientInformationCodecs.V1_21_2
+Play          Serverbound minecraft:client_tick_end                        768- PlayCommonCodecs.ClientTickEnd
+Play          Serverbound minecraft:command_suggestion                     393- CommandSuggestionCodecs.ServerCommandSuggestionV1_13
+Play          Serverbound minecraft:configuration_acknowledged             764- ConfigurationCodecs.ConfigurationAcknowledged
+Play          Serverbound minecraft:container_button_click                 47-765 ContainerCodecs.ContainerButtonClickV1_8 | 766- ContainerCodecs.ContainerButtonClickModern
+Play          Serverbound minecraft:container_click                        47-340 ContainerCodecs.ContainerClickV1_8 | 393-401 ContainerCodecs.ContainerClickV1_13 | 404 ContainerCodecs.ContainerClickV1_13_2 | 477-754 ContainerCodecs.ContainerClickV1_14 | 755 ContainerCodecs.ContainerClickV1_17 | 756-763 ContainerCodecs.ContainerClickV1_17_1 | 764-765 ContainerCodecs.ContainerClickV1_20_2 | 766 ContainerCodecs.ContainerClickV1_20_5 | 767 ContainerCodecs.ContainerClickV1_21 | 768 ContainerCodecs.ContainerClickV1_21_2 | 769 ContainerCodecs.ContainerClickV1_21_4 | 770 MakeContainerClick(Table770) | 771-772 MakeContainerClick(Table771) | 773 MakeContainerClick(Table773) | 774 MakeContainerClick(Table774) | 775 MakeContainerClick(Table775) | 776- MakeContainerClick(Table776)
+Play          Serverbound minecraft:container_close                        47-767 ContainerCodecs.ContainerCloseServerV1_8 | 768- ContainerCodecs.ContainerCloseServerModern
+Play          Serverbound minecraft:container_slot_state_changed           765- ContainerCodecs.ContainerSlotStateChangedModern
+Play          Serverbound minecraft:cookie_response                        766- PlayCommonCodecs.CookieResponse
+Play          Serverbound minecraft:creative_inventory_action              47 ContainerCodecs.CreativeSlotV1_8
+Play          Serverbound minecraft:custom_click_action                    771- UiMiscCodecs.CustomClickActionV1_21_6
+Play          Serverbound minecraft:custom_payload                         47- marker
+Play          Serverbound minecraft:debug_sample_subscription              766-772 marker
+Play          Serverbound minecraft:debug_subscription_request             773- marker
+Play          Serverbound minecraft:edit_book                              393 UiMiscCodecs.EditBookV1_13 | 401 UiMiscCodecs.EditBookV1_13_1 | 404-754 UiMiscCodecs.EditBookV1_13_2 | 755- UiMiscCodecs.EditBookV1_17
+Play          Serverbound minecraft:entity_tag_query                       393- marker
+Play          Serverbound minecraft:interact                               47 EntityServerboundCodecs.InteractV1_8 | 107-578 EntityServerboundCodecs.InteractV1_9 | 735- EntityServerboundCodecs.InteractV1_16
+Play          Serverbound minecraft:jigsaw_generate                        735- marker
+Play          Serverbound minecraft:keep_alive                             47-338 PlayKeepAliveCodecs.ServerV1_8 | 340- PlayKeepAliveCodecs.ServerV1_12_2
+Play          Serverbound minecraft:lock_difficulty                        477- marker
+Play          Serverbound minecraft:move_player                            47-754 EntityServerboundCodecs.MovePlayerStatusV1_8
+Play          Serverbound minecraft:move_player_pos                        47-404 EntityServerboundCodecs.MovePlayerPosV1_8 | 477- EntityServerboundCodecs.MovePlayerPosV1_14
+Play          Serverbound minecraft:move_player_pos_rot                    47-404 EntityServerboundCodecs.MovePlayerPosRotV1_8 | 477- EntityServerboundCodecs.MovePlayerPosRotV1_14
+Play          Serverbound minecraft:move_player_rot                        47-404 EntityServerboundCodecs.MovePlayerRotV1_8 | 477- EntityServerboundCodecs.MovePlayerRotV1_14
+Play          Serverbound minecraft:move_player_status_only                755- EntityServerboundCodecs.MovePlayerStatusOnly
+Play          Serverbound minecraft:move_vehicle                           107-768 EntityServerboundCodecs.MoveVehicleV1_9 | 769- EntityServerboundCodecs.MoveVehicle
+Play          Serverbound minecraft:paddle_boat                            107- EntityServerboundCodecs.PaddleBoat
+Play          Serverbound minecraft:pick_item                              393-768 marker
+Play          Serverbound minecraft:pick_item_from_block                   769- UseItemCodecs.PickItemFromBlockModern
+Play          Serverbound minecraft:pick_item_from_entity                  769- UseItemCodecs.PickItemFromEntityModern
+Play          Serverbound minecraft:ping_request                           764- UiMiscCodecs.ServerPingRequestV1_20_2
+Play          Serverbound minecraft:place_recipe                           338-340 marker | 393-767 RecipeCodecs.PlaceRecipeByNameV1_13 | 768- RecipeCodecs.PlaceRecipeModern
+Play          Serverbound minecraft:player_abilities                       477- UiMiscCodecs.ServerPlayerAbilitiesV1_14
+Play          Serverbound minecraft:player_action                          47 EntityServerboundCodecs.PlayerActionV1_8 | 107-404 EntityServerboundCodecs.PlayerActionV1_9 | 477-758 EntityServerboundCodecs.PlayerActionV1_14 | 759- EntityServerboundCodecs.PlayerActionV1_19
+Play          Serverbound minecraft:player_command                         47- EntityServerboundCodecs.PlayerCommand
+Play          Serverbound minecraft:player_input                           768- EntityServerboundCodecs.PlayerInput
+Play          Serverbound minecraft:player_loaded                          769- PlayCommonCodecs.PlayerLoaded
+Play          Serverbound minecraft:pong                                   755- UiMiscCodecs.ServerPongV1_17
+Play          Serverbound minecraft:prepare_crafting_grid                  335 marker
+Play          Serverbound minecraft:recipe_book_change_settings            751- RecipeCodecs.RecipeBookChangeSettingsModern
+Play          Serverbound minecraft:recipe_book_seen_recipe                751-767 RecipeCodecs.RecipeBookSeenRecipeByNameV1_16_2 | 768- RecipeCodecs.RecipeBookSeenRecipeModern
+Play          Serverbound minecraft:recipe_book_update                     335-736 marker
+Play          Serverbound minecraft:rename_item                            393- ContainerCodecs.RenameItemV1_13
+Play          Serverbound minecraft:resource_pack                          477-764 ResourcePackCodecs.ServerResourcePackV1_14 | 765- ResourcePackCodecs.ServerResourcePackV1_20_3
+Play          Serverbound minecraft:resource_pack_response                 47 ResourcePackCodecs.ServerLegacyResourcePackV1_8 | 107-110 ResourcePackCodecs.ServerLegacyResourcePackV1_8 via:minecraft:resource_pack | 210-404 ResourcePackCodecs.ServerLegacyResourcePackV1_10 via:minecraft:resource_pack
+Play          Serverbound minecraft:seen_advancements                      335- AdvancementCodecs.SeenAdvancementsV1_12
+Play          Serverbound minecraft:select_trade                           393- MerchantCodecs.SelectTradeModern
+Play          Serverbound minecraft:set_beacon                             393- marker
+Play          Serverbound minecraft:set_carried_item                       47- EntityServerboundCodecs.SetCarriedItem
+Play          Serverbound minecraft:set_command_block                      393-404 WorldBlockCodecs.SetCommandBlockV1_13 | 477- WorldBlockCodecs.SetCommandBlockV1_14
+Play          Serverbound minecraft:set_command_minecart                   393- marker
+Play          Serverbound minecraft:set_creative_mode_slot                 107-340 ContainerCodecs.CreativeSlotV1_9 | 393-401 ContainerCodecs.CreativeSlotV1_13 | 404 ContainerCodecs.CreativeSlotV1_13_2 | 477-763 ContainerCodecs.CreativeSlotV1_14 | 764-765 ContainerCodecs.CreativeSlotV1_20_2 | 766 ContainerCodecs.CreativeSlotV1_20_5 | 767 ContainerCodecs.CreativeSlotV1_21 | 768 MakeCreativeSlot(Table768) | 769 MakeCreativeSlot(Table769) | 770 MakeCreativeSlot(Table770) | 771-772 MakeCreativeSlot(Table771) | 773 MakeCreativeSlot(Table773) | 774 MakeCreativeSlot(Table774) | 775 MakeCreativeSlot(Table775) | 776- MakeCreativeSlot(Table776)
+Play          Serverbound minecraft:set_game_rule                          775- marker
+Play          Serverbound minecraft:set_jigsaw_block                       477- marker
+Play          Serverbound minecraft:set_structure_block                    393- marker
+Play          Serverbound minecraft:set_test_block                         770- marker
+Play          Serverbound minecraft:sign_update                            47 marker | 107-404 UiMiscCodecs.SignUpdateV1_9 | 477-762 UiMiscCodecs.SignUpdateV1_14 | 763- UiMiscCodecs.SignUpdateV1_20
+Play          Serverbound minecraft:spectate_entity                        775 marker
+Play          Serverbound minecraft:spectator_action                       776- marker
+Play          Serverbound minecraft:steer_vehicle                          47 EntityServerboundCodecs.SteerVehicleV1_8 | 107-767 EntityServerboundCodecs.SteerVehicleV1_8 via:minecraft:player_input
+Play          Serverbound minecraft:swing                                  47 EntityServerboundCodecs.SwingV1_8 | 107- EntityServerboundCodecs.SwingV1_9
+Play          Serverbound minecraft:tab_complete                           47 CommandSuggestionCodecs.ServerLegacyTabCompleteV1_8 | 107-340 CommandSuggestionCodecs.ServerLegacyTabCompleteV1_9 via:minecraft:command_suggestion
+Play          Serverbound minecraft:teleport_to_entity                     47 EntityServerboundCodecs.TeleportToEntity via:minecraft:spectate | 107- EntityServerboundCodecs.TeleportToEntity
+Play          Serverbound minecraft:test_instance_block_action             770- marker
+Play          Serverbound minecraft:transaction                            47 ContainerCodecs.TransactionServerV1_8 | 107-754 ContainerCodecs.TransactionServerV1_8 via:minecraft:container_ack
+Play          Serverbound minecraft:use_item                               107-758 UseItemCodecs.UseItemV1_9 | 759-766 UseItemCodecs.UseItemV1_19 | 767- UseItemCodecs.UseItemModern
+Play          Serverbound minecraft:use_item_on                            107-210 UseItemCodecs.UseItemOnV1_9 | 315-404 UseItemCodecs.UseItemOnV1_11 | 477-758 UseItemCodecs.UseItemOnV1_14 | 759-767 UseItemCodecs.UseItemOnV1_19 | 768- UseItemCodecs.UseItemOnModern

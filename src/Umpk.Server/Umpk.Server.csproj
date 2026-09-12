@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <ProjectReference Include="../Umpk.Commands/Umpk.Commands.csproj" />
+  </ItemGroup>
+</Project>

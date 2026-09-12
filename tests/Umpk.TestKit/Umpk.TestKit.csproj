@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <ProjectReference Include="../../src/Umpk.Game/Umpk.Game.csproj" />
+    <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
+  </ItemGroup>
+</Project>

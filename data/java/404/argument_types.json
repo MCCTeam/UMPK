@@ -1,0 +1,171 @@
+{
+ "_provenance": {
+  "version": "1.13.2",
+  "protocol": 404,
+  "mapping_source": "server-jar",
+  "sources": [
+   "1.13.2 server.jar brigadier ArgumentTypes registration order (class-file scan; no Java runtime required)",
+   "cross-checked vs 1.13.2 reports/commands.json (data generator)"
+  ],
+  "kind": "extracted",
+  "note": "the version's OWN brigadier argument-type registry, in registration order, read out of the server jar. Before 1.19 a command-tree argument node names its parser with a resource-location STRING, so these names ARE the wire and the 'id' here is a table index only, not a wire id (numeric parser ids arrive at 1.19). This table used to be built by walking minecraft-data's commands.json and alphabetising the parser strings it found, which was wrong three times over. The upstream tree carries 1.19-era names (nbt_compound_tag and nbt_tag instead of 1.13's single nbt, plus time, uuid and angle, which are 1.14, 1.16 and 1.16.2 additions). A tree walk can only ever see the parsers vanilla COMMANDS USE, never the ones merely REGISTERED, which is how minecraft:float_range went missing on every band. And it produced one identical table for all three bands, which cannot be right: 1.13.1 added minecraft:column_pos and minecraft:dimension, so 393 has 37 entries where 401 and 404 have 39. Cross-checked against each version's own data-generator reports/commands.json: every parser vanilla's command tree uses appears here, and the only registered-but-unused entry on all three bands is minecraft:float_range."
+ },
+ "entries": [
+  {
+   "name": "brigadier:bool",
+   "id": 0
+  },
+  {
+   "name": "brigadier:float",
+   "id": 1
+  },
+  {
+   "name": "brigadier:double",
+   "id": 2
+  },
+  {
+   "name": "brigadier:integer",
+   "id": 3
+  },
+  {
+   "name": "brigadier:string",
+   "id": 4
+  },
+  {
+   "name": "minecraft:entity",
+   "id": 5
+  },
+  {
+   "name": "minecraft:game_profile",
+   "id": 6
+  },
+  {
+   "name": "minecraft:block_pos",
+   "id": 7
+  },
+  {
+   "name": "minecraft:column_pos",
+   "id": 8
+  },
+  {
+   "name": "minecraft:vec3",
+   "id": 9
+  },
+  {
+   "name": "minecraft:vec2",
+   "id": 10
+  },
+  {
+   "name": "minecraft:block_state",
+   "id": 11
+  },
+  {
+   "name": "minecraft:block_predicate",
+   "id": 12
+  },
+  {
+   "name": "minecraft:item_stack",
+   "id": 13
+  },
+  {
+   "name": "minecraft:item_predicate",
+   "id": 14
+  },
+  {
+   "name": "minecraft:color",
+   "id": 15
+  },
+  {
+   "name": "minecraft:component",
+   "id": 16
+  },
+  {
+   "name": "minecraft:message",
+   "id": 17
+  },
+  {
+   "name": "minecraft:nbt",
+   "id": 18
+  },
+  {
+   "name": "minecraft:nbt_path",
+   "id": 19
+  },
+  {
+   "name": "minecraft:objective",
+   "id": 20
+  },
+  {
+   "name": "minecraft:objective_criteria",
+   "id": 21
+  },
+  {
+   "name": "minecraft:operation",
+   "id": 22
+  },
+  {
+   "name": "minecraft:particle",
+   "id": 23
+  },
+  {
+   "name": "minecraft:rotation",
+   "id": 24
+  },
+  {
+   "name": "minecraft:scoreboard_slot",
+   "id": 25
+  },
+  {
+   "name": "minecraft:score_holder",
+   "id": 26
+  },
+  {
+   "name": "minecraft:swizzle",
+   "id": 27
+  },
+  {
+   "name": "minecraft:team",
+   "id": 28
+  },
+  {
+   "name": "minecraft:item_slot",
+   "id": 29
+  },
+  {
+   "name": "minecraft:resource_location",
+   "id": 30
+  },
+  {
+   "name": "minecraft:mob_effect",
+   "id": 31
+  },
+  {
+   "name": "minecraft:function",
+   "id": 32
+  },
+  {
+   "name": "minecraft:entity_anchor",
+   "id": 33
+  },
+  {
+   "name": "minecraft:int_range",
+   "id": 34
+  },
+  {
+   "name": "minecraft:float_range",
+   "id": 35
+  },
+  {
+   "name": "minecraft:item_enchantment",
+   "id": 36
+  },
+  {
+   "name": "minecraft:entity_summon",
+   "id": 37
+  },
+  {
+   "name": "minecraft:dimension",
+   "id": 38
+  }
+ ]
+}

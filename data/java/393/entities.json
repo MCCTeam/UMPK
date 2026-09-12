@@ -1,0 +1,510 @@
+{
+ "_provenance": {
+  "version": "1.13",
+  "protocol": 393,
+  "mapping_source": "server-jar",
+  "sources": [
+   "1.13 server.jar flat minecraft:entity_type registration order",
+   "1.13 server.jar EntityTrackerEntry spawn-object chain (SpawnObject id space)"
+  ],
+  "kind": "extracted",
+  "note": "1.13 is a HYBRID: add_mob writes the flat entity_type registry id while add_entity still writes the legacy object id, so BOTH spaces are emitted"
+ },
+ "flat_id_space": true,
+ "entries": [
+  {
+   "id_num": 0,
+   "id": "minecraft:area_effect_cloud"
+  },
+  {
+   "id_num": 1,
+   "id": "minecraft:armor_stand"
+  },
+  {
+   "id_num": 2,
+   "id": "minecraft:arrow"
+  },
+  {
+   "id_num": 3,
+   "id": "minecraft:bat"
+  },
+  {
+   "id_num": 4,
+   "id": "minecraft:blaze"
+  },
+  {
+   "id_num": 5,
+   "id": "minecraft:boat"
+  },
+  {
+   "id_num": 6,
+   "id": "minecraft:cave_spider"
+  },
+  {
+   "id_num": 7,
+   "id": "minecraft:chicken"
+  },
+  {
+   "id_num": 8,
+   "id": "minecraft:cod"
+  },
+  {
+   "id_num": 9,
+   "id": "minecraft:cow"
+  },
+  {
+   "id_num": 10,
+   "id": "minecraft:creeper"
+  },
+  {
+   "id_num": 11,
+   "id": "minecraft:donkey"
+  },
+  {
+   "id_num": 12,
+   "id": "minecraft:dolphin"
+  },
+  {
+   "id_num": 13,
+   "id": "minecraft:dragon_fireball"
+  },
+  {
+   "id_num": 14,
+   "id": "minecraft:drowned"
+  },
+  {
+   "id_num": 15,
+   "id": "minecraft:elder_guardian"
+  },
+  {
+   "id_num": 16,
+   "id": "minecraft:end_crystal"
+  },
+  {
+   "id_num": 17,
+   "id": "minecraft:ender_dragon"
+  },
+  {
+   "id_num": 18,
+   "id": "minecraft:enderman"
+  },
+  {
+   "id_num": 19,
+   "id": "minecraft:endermite"
+  },
+  {
+   "id_num": 20,
+   "id": "minecraft:evoker_fangs"
+  },
+  {
+   "id_num": 21,
+   "id": "minecraft:evoker"
+  },
+  {
+   "id_num": 22,
+   "id": "minecraft:experience_orb"
+  },
+  {
+   "id_num": 23,
+   "id": "minecraft:eye_of_ender"
+  },
+  {
+   "id_num": 24,
+   "id": "minecraft:falling_block"
+  },
+  {
+   "id_num": 25,
+   "id": "minecraft:firework_rocket"
+  },
+  {
+   "id_num": 26,
+   "id": "minecraft:ghast"
+  },
+  {
+   "id_num": 27,
+   "id": "minecraft:giant"
+  },
+  {
+   "id_num": 28,
+   "id": "minecraft:guardian"
+  },
+  {
+   "id_num": 29,
+   "id": "minecraft:horse"
+  },
+  {
+   "id_num": 30,
+   "id": "minecraft:husk"
+  },
+  {
+   "id_num": 31,
+   "id": "minecraft:illusioner"
+  },
+  {
+   "id_num": 32,
+   "id": "minecraft:item"
+  },
+  {
+   "id_num": 33,
+   "id": "minecraft:item_frame"
+  },
+  {
+   "id_num": 34,
+   "id": "minecraft:fireball"
+  },
+  {
+   "id_num": 35,
+   "id": "minecraft:leash_knot"
+  },
+  {
+   "id_num": 36,
+   "id": "minecraft:llama"
+  },
+  {
+   "id_num": 37,
+   "id": "minecraft:llama_spit"
+  },
+  {
+   "id_num": 38,
+   "id": "minecraft:magma_cube"
+  },
+  {
+   "id_num": 39,
+   "id": "minecraft:minecart"
+  },
+  {
+   "id_num": 40,
+   "id": "minecraft:chest_minecart"
+  },
+  {
+   "id_num": 41,
+   "id": "minecraft:command_block_minecart"
+  },
+  {
+   "id_num": 42,
+   "id": "minecraft:furnace_minecart"
+  },
+  {
+   "id_num": 43,
+   "id": "minecraft:hopper_minecart"
+  },
+  {
+   "id_num": 44,
+   "id": "minecraft:spawner_minecart"
+  },
+  {
+   "id_num": 45,
+   "id": "minecraft:tnt_minecart"
+  },
+  {
+   "id_num": 46,
+   "id": "minecraft:mule"
+  },
+  {
+   "id_num": 47,
+   "id": "minecraft:mooshroom"
+  },
+  {
+   "id_num": 48,
+   "id": "minecraft:ocelot"
+  },
+  {
+   "id_num": 49,
+   "id": "minecraft:painting"
+  },
+  {
+   "id_num": 50,
+   "id": "minecraft:parrot"
+  },
+  {
+   "id_num": 51,
+   "id": "minecraft:pig"
+  },
+  {
+   "id_num": 52,
+   "id": "minecraft:pufferfish"
+  },
+  {
+   "id_num": 53,
+   "id": "minecraft:zombie_pigman"
+  },
+  {
+   "id_num": 54,
+   "id": "minecraft:polar_bear"
+  },
+  {
+   "id_num": 55,
+   "id": "minecraft:tnt"
+  },
+  {
+   "id_num": 56,
+   "id": "minecraft:rabbit"
+  },
+  {
+   "id_num": 57,
+   "id": "minecraft:salmon"
+  },
+  {
+   "id_num": 58,
+   "id": "minecraft:sheep"
+  },
+  {
+   "id_num": 59,
+   "id": "minecraft:shulker"
+  },
+  {
+   "id_num": 60,
+   "id": "minecraft:shulker_bullet"
+  },
+  {
+   "id_num": 61,
+   "id": "minecraft:silverfish"
+  },
+  {
+   "id_num": 62,
+   "id": "minecraft:skeleton"
+  },
+  {
+   "id_num": 63,
+   "id": "minecraft:skeleton_horse"
+  },
+  {
+   "id_num": 64,
+   "id": "minecraft:slime"
+  },
+  {
+   "id_num": 65,
+   "id": "minecraft:small_fireball"
+  },
+  {
+   "id_num": 66,
+   "id": "minecraft:snow_golem"
+  },
+  {
+   "id_num": 67,
+   "id": "minecraft:snowball"
+  },
+  {
+   "id_num": 68,
+   "id": "minecraft:spectral_arrow"
+  },
+  {
+   "id_num": 69,
+   "id": "minecraft:spider"
+  },
+  {
+   "id_num": 70,
+   "id": "minecraft:squid"
+  },
+  {
+   "id_num": 71,
+   "id": "minecraft:stray"
+  },
+  {
+   "id_num": 72,
+   "id": "minecraft:tropical_fish"
+  },
+  {
+   "id_num": 73,
+   "id": "minecraft:turtle"
+  },
+  {
+   "id_num": 74,
+   "id": "minecraft:egg"
+  },
+  {
+   "id_num": 75,
+   "id": "minecraft:ender_pearl"
+  },
+  {
+   "id_num": 76,
+   "id": "minecraft:experience_bottle"
+  },
+  {
+   "id_num": 77,
+   "id": "minecraft:potion"
+  },
+  {
+   "id_num": 78,
+   "id": "minecraft:vex"
+  },
+  {
+   "id_num": 79,
+   "id": "minecraft:villager"
+  },
+  {
+   "id_num": 80,
+   "id": "minecraft:iron_golem"
+  },
+  {
+   "id_num": 81,
+   "id": "minecraft:vindicator"
+  },
+  {
+   "id_num": 82,
+   "id": "minecraft:witch"
+  },
+  {
+   "id_num": 83,
+   "id": "minecraft:wither"
+  },
+  {
+   "id_num": 84,
+   "id": "minecraft:wither_skeleton"
+  },
+  {
+   "id_num": 85,
+   "id": "minecraft:wither_skull"
+  },
+  {
+   "id_num": 86,
+   "id": "minecraft:wolf"
+  },
+  {
+   "id_num": 87,
+   "id": "minecraft:zombie"
+  },
+  {
+   "id_num": 88,
+   "id": "minecraft:zombie_horse"
+  },
+  {
+   "id_num": 89,
+   "id": "minecraft:zombie_villager"
+  },
+  {
+   "id_num": 90,
+   "id": "minecraft:phantom"
+  },
+  {
+   "id_num": 91,
+   "id": "minecraft:lightning_bolt"
+  },
+  {
+   "id_num": 92,
+   "id": "minecraft:player"
+  },
+  {
+   "id_num": 93,
+   "id": "minecraft:fishing_bobber"
+  },
+  {
+   "id_num": 94,
+   "id": "minecraft:trident"
+  }
+ ],
+ "object_entries": [
+  {
+   "id_num": 1,
+   "id": "minecraft:boat"
+  },
+  {
+   "id_num": 2,
+   "id": "minecraft:item"
+  },
+  {
+   "id_num": 3,
+   "id": "minecraft:area_effect_cloud"
+  },
+  {
+   "id_num": 10,
+   "id": "minecraft:minecart"
+  },
+  {
+   "id_num": 50,
+   "id": "minecraft:tnt"
+  },
+  {
+   "id_num": 51,
+   "id": "minecraft:end_crystal"
+  },
+  {
+   "id_num": 60,
+   "id": "minecraft:arrow"
+  },
+  {
+   "id_num": 61,
+   "id": "minecraft:snowball"
+  },
+  {
+   "id_num": 62,
+   "id": "minecraft:egg"
+  },
+  {
+   "id_num": 63,
+   "id": "minecraft:fireball"
+  },
+  {
+   "id_num": 64,
+   "id": "minecraft:small_fireball"
+  },
+  {
+   "id_num": 65,
+   "id": "minecraft:ender_pearl"
+  },
+  {
+   "id_num": 66,
+   "id": "minecraft:wither_skull"
+  },
+  {
+   "id_num": 67,
+   "id": "minecraft:shulker_bullet"
+  },
+  {
+   "id_num": 68,
+   "id": "minecraft:llama_spit"
+  },
+  {
+   "id_num": 70,
+   "id": "minecraft:falling_block"
+  },
+  {
+   "id_num": 71,
+   "id": "minecraft:item_frame"
+  },
+  {
+   "id_num": 72,
+   "id": "minecraft:eye_of_ender"
+  },
+  {
+   "id_num": 73,
+   "id": "minecraft:potion"
+  },
+  {
+   "id_num": 75,
+   "id": "minecraft:experience_bottle"
+  },
+  {
+   "id_num": 76,
+   "id": "minecraft:firework_rocket"
+  },
+  {
+   "id_num": 77,
+   "id": "minecraft:leash_knot"
+  },
+  {
+   "id_num": 78,
+   "id": "minecraft:armor_stand"
+  },
+  {
+   "id_num": 79,
+   "id": "minecraft:evoker_fangs"
+  },
+  {
+   "id_num": 90,
+   "id": "minecraft:fishing_bobber"
+  },
+  {
+   "id_num": 91,
+   "id": "minecraft:spectral_arrow"
+  },
+  {
+   "id_num": 93,
+   "id": "minecraft:dragon_fireball"
+  },
+  {
+   "id_num": 94,
+   "id": "minecraft:trident"
+  }
+ ]
+}

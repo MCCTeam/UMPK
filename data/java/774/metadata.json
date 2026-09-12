@@ -1,0 +1,209 @@
+{
+  "_provenance": {
+    "version": "1.21.11",
+    "protocol": 774,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "net/minecraft/network/syncher/EntityDataSerializers.java"
+    ],
+    "kind": "extracted"
+  },
+  "terminator": "0xff",
+  "serializers": [
+    {
+      "id": 0,
+      "field": "BYTE",
+      "codec": "Byte"
+    },
+    {
+      "id": 1,
+      "field": "INT",
+      "codec": "VarInt"
+    },
+    {
+      "id": 2,
+      "field": "LONG",
+      "codec": "VarLong"
+    },
+    {
+      "id": 3,
+      "field": "FLOAT",
+      "codec": "Float"
+    },
+    {
+      "id": 4,
+      "field": "STRING",
+      "codec": "String"
+    },
+    {
+      "id": 5,
+      "field": "COMPONENT",
+      "codec": "Component"
+    },
+    {
+      "id": 6,
+      "field": "OPTIONAL_COMPONENT",
+      "codec": "OptionalComponent"
+    },
+    {
+      "id": 7,
+      "field": "ITEM_STACK",
+      "codec": "ItemStack"
+    },
+    {
+      "id": 8,
+      "field": "BOOLEAN",
+      "codec": "Boolean"
+    },
+    {
+      "id": 9,
+      "field": "ROTATIONS",
+      "codec": "Rotations"
+    },
+    {
+      "id": 10,
+      "field": "BLOCK_POS",
+      "codec": "BlockPos"
+    },
+    {
+      "id": 11,
+      "field": "OPTIONAL_BLOCK_POS",
+      "codec": "OptionalBlockPos"
+    },
+    {
+      "id": 12,
+      "field": "DIRECTION",
+      "codec": "Direction"
+    },
+    {
+      "id": 13,
+      "field": "OPTIONAL_LIVING_ENTITY_REFERENCE",
+      "codec": "OptionalLivingEntityReference"
+    },
+    {
+      "id": 14,
+      "field": "BLOCK_STATE",
+      "codec": "BlockState"
+    },
+    {
+      "id": 15,
+      "field": "OPTIONAL_BLOCK_STATE",
+      "codec": "OptionalBlockState"
+    },
+    {
+      "id": 16,
+      "field": "PARTICLE",
+      "codec": "Particle"
+    },
+    {
+      "id": 17,
+      "field": "PARTICLES",
+      "codec": "Particles"
+    },
+    {
+      "id": 18,
+      "field": "VILLAGER_DATA",
+      "codec": "VillagerData"
+    },
+    {
+      "id": 19,
+      "field": "OPTIONAL_UNSIGNED_INT",
+      "codec": "OptionalUnsignedInt"
+    },
+    {
+      "id": 20,
+      "field": "POSE",
+      "codec": "Pose"
+    },
+    {
+      "id": 21,
+      "field": "CAT_VARIANT",
+      "codec": "CatVariant"
+    },
+    {
+      "id": 22,
+      "field": "COW_VARIANT",
+      "codec": "CowVariant"
+    },
+    {
+      "id": 23,
+      "field": "WOLF_VARIANT",
+      "codec": "WolfVariant"
+    },
+    {
+      "id": 24,
+      "field": "WOLF_SOUND_VARIANT",
+      "codec": "WolfSoundVariant"
+    },
+    {
+      "id": 25,
+      "field": "FROG_VARIANT",
+      "codec": "FrogVariant"
+    },
+    {
+      "id": 26,
+      "field": "PIG_VARIANT",
+      "codec": "PigVariant"
+    },
+    {
+      "id": 27,
+      "field": "CHICKEN_VARIANT",
+      "codec": "ChickenVariant"
+    },
+    {
+      "id": 28,
+      "field": "ZOMBIE_NAUTILUS_VARIANT",
+      "codec": "ZombieNautilusVariant"
+    },
+    {
+      "id": 29,
+      "field": "OPTIONAL_GLOBAL_POS",
+      "codec": "OptionalGlobalPos"
+    },
+    {
+      "id": 30,
+      "field": "PAINTING_VARIANT",
+      "codec": "PaintingVariant"
+    },
+    {
+      "id": 31,
+      "field": "SNIFFER_STATE",
+      "codec": "SnifferState"
+    },
+    {
+      "id": 32,
+      "field": "ARMADILLO_STATE",
+      "codec": "ArmadilloState"
+    },
+    {
+      "id": 33,
+      "field": "COPPER_GOLEM_STATE",
+      "codec": "CopperGolemState"
+    },
+    {
+      "id": 34,
+      "field": "WEATHERING_COPPER_STATE",
+      "codec": "WeatheringCopperState"
+    },
+    {
+      "id": 35,
+      "field": "VECTOR3",
+      "codec": "Vector3"
+    },
+    {
+      "id": 36,
+      "field": "QUATERNION",
+      "codec": "Quaternion"
+    },
+    {
+      "id": 37,
+      "field": "RESOLVABLE_PROFILE",
+      "codec": "ResolvableProfile"
+    },
+    {
+      "id": 38,
+      "field": "HUMANOID_ARM",
+      "codec": "HumanoidArm"
+    }
+  ]
+}

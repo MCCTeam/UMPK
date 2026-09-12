@@ -1,0 +1,241 @@
+{
+  "_provenance": {
+    "version": "1.21.9",
+    "protocol": 773,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "reports/registries.json#minecraft:command_argument_type"
+    ],
+    "kind": "extracted"
+  },
+  "entries": [
+    {
+      "name": "brigadier:bool",
+      "id": 0
+    },
+    {
+      "name": "brigadier:float",
+      "id": 1
+    },
+    {
+      "name": "brigadier:double",
+      "id": 2
+    },
+    {
+      "name": "brigadier:integer",
+      "id": 3
+    },
+    {
+      "name": "brigadier:long",
+      "id": 4
+    },
+    {
+      "name": "brigadier:string",
+      "id": 5
+    },
+    {
+      "name": "minecraft:entity",
+      "id": 6
+    },
+    {
+      "name": "minecraft:game_profile",
+      "id": 7
+    },
+    {
+      "name": "minecraft:block_pos",
+      "id": 8
+    },
+    {
+      "name": "minecraft:column_pos",
+      "id": 9
+    },
+    {
+      "name": "minecraft:vec3",
+      "id": 10
+    },
+    {
+      "name": "minecraft:vec2",
+      "id": 11
+    },
+    {
+      "name": "minecraft:block_state",
+      "id": 12
+    },
+    {
+      "name": "minecraft:block_predicate",
+      "id": 13
+    },
+    {
+      "name": "minecraft:item_stack",
+      "id": 14
+    },
+    {
+      "name": "minecraft:item_predicate",
+      "id": 15
+    },
+    {
+      "name": "minecraft:color",
+      "id": 16
+    },
+    {
+      "name": "minecraft:hex_color",
+      "id": 17
+    },
+    {
+      "name": "minecraft:component",
+      "id": 18
+    },
+    {
+      "name": "minecraft:style",
+      "id": 19
+    },
+    {
+      "name": "minecraft:message",
+      "id": 20
+    },
+    {
+      "name": "minecraft:nbt_compound_tag",
+      "id": 21
+    },
+    {
+      "name": "minecraft:nbt_tag",
+      "id": 22
+    },
+    {
+      "name": "minecraft:nbt_path",
+      "id": 23
+    },
+    {
+      "name": "minecraft:objective",
+      "id": 24
+    },
+    {
+      "name": "minecraft:objective_criteria",
+      "id": 25
+    },
+    {
+      "name": "minecraft:operation",
+      "id": 26
+    },
+    {
+      "name": "minecraft:particle",
+      "id": 27
+    },
+    {
+      "name": "minecraft:angle",
+      "id": 28
+    },
+    {
+      "name": "minecraft:rotation",
+      "id": 29
+    },
+    {
+      "name": "minecraft:scoreboard_slot",
+      "id": 30
+    },
+    {
+      "name": "minecraft:score_holder",
+      "id": 31
+    },
+    {
+      "name": "minecraft:swizzle",
+      "id": 32
+    },
+    {
+      "name": "minecraft:team",
+      "id": 33
+    },
+    {
+      "name": "minecraft:item_slot",
+      "id": 34
+    },
+    {
+      "name": "minecraft:item_slots",
+      "id": 35
+    },
+    {
+      "name": "minecraft:resource_location",
+      "id": 36
+    },
+    {
+      "name": "minecraft:function",
+      "id": 37
+    },
+    {
+      "name": "minecraft:entity_anchor",
+      "id": 38
+    },
+    {
+      "name": "minecraft:int_range",
+      "id": 39
+    },
+    {
+      "name": "minecraft:float_range",
+      "id": 40
+    },
+    {
+      "name": "minecraft:dimension",
+      "id": 41
+    },
+    {
+      "name": "minecraft:gamemode",
+      "id": 42
+    },
+    {
+      "name": "minecraft:time",
+      "id": 43
+    },
+    {
+      "name": "minecraft:resource_or_tag",
+      "id": 44
+    },
+    {
+      "name": "minecraft:resource_or_tag_key",
+      "id": 45
+    },
+    {
+      "name": "minecraft:resource",
+      "id": 46
+    },
+    {
+      "name": "minecraft:resource_key",
+      "id": 47
+    },
+    {
+      "name": "minecraft:resource_selector",
+      "id": 48
+    },
+    {
+      "name": "minecraft:template_mirror",
+      "id": 49
+    },
+    {
+      "name": "minecraft:template_rotation",
+      "id": 50
+    },
+    {
+      "name": "minecraft:heightmap",
+      "id": 51
+    },
+    {
+      "name": "minecraft:loot_table",
+      "id": 52
+    },
+    {
+      "name": "minecraft:loot_predicate",
+      "id": 53
+    },
+    {
+      "name": "minecraft:loot_modifier",
+      "id": 54
+    },
+    {
+      "name": "minecraft:dialog",
+      "id": 55
+    },
+    {
+      "name": "minecraft:uuid",
+      "id": 56
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_provenance": {
+    "version": "1.16",
+    "protocol": 735,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "fixed brigadier registry (no minecraft:command_argument_type report before 1.19)"
+    ],
+    "kind": "extracted"
+  },
+  "entries": []
+}

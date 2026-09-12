@@ -1,0 +1,25 @@
+{
+  "_provenance": {
+    "version": "1.20.4",
+    "protocol": 765,
+    "kind": "curated",
+    "note": "tier-2 semantic metadata key indices; 1.17.1-decompiled net/minecraft/world/entity/Entity.java:186-202 (ticks-frozen at 7)"
+  },
+  "entity_keys": {
+    "shared_flags": 0,
+    "air_supply": 1,
+    "custom_name": 2,
+    "custom_name_visible": 3,
+    "silent": 4,
+    "no_gravity": 5,
+    "pose": 6,
+    "ticks_frozen": 7,
+    "health": 9,
+    "effect_particles": 10,
+    "effect_ambience": 11,
+    "arrow_count": 12
+  },
+  "item_entity_keys": {
+    "carried_item": 8
+  }
+}

@@ -1,0 +1,234 @@
+#nullable enable
+abstract Umpk.Nbt.NbtNumeric.AsDouble.get -> double
+abstract Umpk.Nbt.NbtNumeric.AsFloat.get -> float
+abstract Umpk.Nbt.NbtNumeric.AsInt.get -> int
+abstract Umpk.Nbt.NbtNumeric.AsLong.get -> long
+abstract Umpk.Nbt.NbtNumeric.AsSByte.get -> sbyte
+abstract Umpk.Nbt.NbtNumeric.AsShort.get -> short
+abstract Umpk.Nbt.NbtTag.Copy() -> Umpk.Nbt.NbtTag!
+abstract Umpk.Nbt.NbtTag.Type.get -> Umpk.Nbt.NbtTagType
+const Umpk.Nbt.NbtAccounter.DefaultMaxDepth = 512 -> int
+const Umpk.Nbt.NbtAccounter.DefaultNetworkQuota = 2097152 -> long
+override Umpk.Nbt.NbtByteArray.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtByteArray.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtByteArray.GetHashCode() -> int
+override Umpk.Nbt.NbtByteArray.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtByte.AsDouble.get -> double
+override Umpk.Nbt.NbtByte.AsFloat.get -> float
+override Umpk.Nbt.NbtByte.AsInt.get -> int
+override Umpk.Nbt.NbtByte.AsLong.get -> long
+override Umpk.Nbt.NbtByte.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtByte.AsShort.get -> short
+override Umpk.Nbt.NbtByte.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtByte.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtByte.GetHashCode() -> int
+override Umpk.Nbt.NbtByte.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtCompound.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtCompound.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtCompound.GetHashCode() -> int
+override Umpk.Nbt.NbtCompound.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtDouble.AsDouble.get -> double
+override Umpk.Nbt.NbtDouble.AsFloat.get -> float
+override Umpk.Nbt.NbtDouble.AsInt.get -> int
+override Umpk.Nbt.NbtDouble.AsLong.get -> long
+override Umpk.Nbt.NbtDouble.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtDouble.AsShort.get -> short
+override Umpk.Nbt.NbtDouble.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtDouble.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtDouble.GetHashCode() -> int
+override Umpk.Nbt.NbtDouble.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtEnd.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtEnd.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtFloat.AsDouble.get -> double
+override Umpk.Nbt.NbtFloat.AsFloat.get -> float
+override Umpk.Nbt.NbtFloat.AsInt.get -> int
+override Umpk.Nbt.NbtFloat.AsLong.get -> long
+override Umpk.Nbt.NbtFloat.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtFloat.AsShort.get -> short
+override Umpk.Nbt.NbtFloat.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtFloat.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtFloat.GetHashCode() -> int
+override Umpk.Nbt.NbtFloat.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtIntArray.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtIntArray.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtIntArray.GetHashCode() -> int
+override Umpk.Nbt.NbtIntArray.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtInt.AsDouble.get -> double
+override Umpk.Nbt.NbtInt.AsFloat.get -> float
+override Umpk.Nbt.NbtInt.AsInt.get -> int
+override Umpk.Nbt.NbtInt.AsLong.get -> long
+override Umpk.Nbt.NbtInt.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtInt.AsShort.get -> short
+override Umpk.Nbt.NbtInt.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtInt.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtInt.GetHashCode() -> int
+override Umpk.Nbt.NbtInt.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtList.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtList.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtList.GetHashCode() -> int
+override Umpk.Nbt.NbtList.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtLongArray.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtLongArray.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtLongArray.GetHashCode() -> int
+override Umpk.Nbt.NbtLongArray.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtLong.AsDouble.get -> double
+override Umpk.Nbt.NbtLong.AsFloat.get -> float
+override Umpk.Nbt.NbtLong.AsInt.get -> int
+override Umpk.Nbt.NbtLong.AsLong.get -> long
+override Umpk.Nbt.NbtLong.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtLong.AsShort.get -> short
+override Umpk.Nbt.NbtLong.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtLong.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtLong.GetHashCode() -> int
+override Umpk.Nbt.NbtLong.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtShort.AsDouble.get -> double
+override Umpk.Nbt.NbtShort.AsFloat.get -> float
+override Umpk.Nbt.NbtShort.AsInt.get -> int
+override Umpk.Nbt.NbtShort.AsLong.get -> long
+override Umpk.Nbt.NbtShort.AsSByte.get -> sbyte
+override Umpk.Nbt.NbtShort.AsShort.get -> short
+override Umpk.Nbt.NbtShort.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtShort.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtShort.GetHashCode() -> int
+override Umpk.Nbt.NbtShort.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtString.Copy() -> Umpk.Nbt.NbtTag!
+override Umpk.Nbt.NbtString.Equals(object? obj) -> bool
+override Umpk.Nbt.NbtString.GetHashCode() -> int
+override Umpk.Nbt.NbtString.Type.get -> Umpk.Nbt.NbtTagType
+override Umpk.Nbt.NbtTag.ToString() -> string!
+static readonly Umpk.Nbt.NbtEnd.Instance -> Umpk.Nbt.NbtEnd!
+static readonly Umpk.Nbt.NbtString.Empty -> Umpk.Nbt.NbtString!
+static Umpk.Nbt.NbtAccounter.CreateDefault() -> Umpk.Nbt.NbtAccounter!
+static Umpk.Nbt.NbtAccounter.Create(long quota) -> Umpk.Nbt.NbtAccounter!
+static Umpk.Nbt.NbtAccounter.Unlimited() -> Umpk.Nbt.NbtAccounter!
+static Umpk.Nbt.NbtReader.Read(byte[]! source, Umpk.Nbt.NbtWireFormat format) -> Umpk.Nbt.NbtTag!
+static Umpk.Nbt.NbtReader.Read(System.ReadOnlySpan<byte> source, Umpk.Nbt.NbtWireFormat format, Umpk.Nbt.NbtAccounter! accounter, out int bytesRead) -> Umpk.Nbt.NbtTag!
+static Umpk.Nbt.NbtReader.Read(System.ReadOnlySpan<byte> source, Umpk.Nbt.NbtWireFormat format, Umpk.Nbt.NbtAccounter! accounter) -> Umpk.Nbt.NbtTag!
+static Umpk.Nbt.NbtReader.Read(System.ReadOnlySpan<byte> source, Umpk.Nbt.NbtWireFormat format) -> Umpk.Nbt.NbtTag!
+static Umpk.Nbt.NbtWriter.ToArray(Umpk.Nbt.NbtTag! tag, Umpk.Nbt.NbtWireFormat format) -> byte[]!
+static Umpk.Nbt.NbtWriter.Write(System.Buffers.IBufferWriter<byte>! output, Umpk.Nbt.NbtTag! tag, Umpk.Nbt.NbtWireFormat format) -> void
+static Umpk.Nbt.Snbt.SnbtParser.ParseCompound(string! text) -> Umpk.Nbt.NbtCompound!
+static Umpk.Nbt.Snbt.SnbtParser.ParseValue(string! text) -> Umpk.Nbt.NbtTag!
+static Umpk.Nbt.Snbt.SnbtPrinter.Print(Umpk.Nbt.NbtTag! tag) -> string!
+Umpk.Nbt.NbtAccounter
+Umpk.Nbt.NbtAccounter.AccountBytes(long bytesPerElement, long count) -> void
+Umpk.Nbt.NbtAccounter.AccountBytes(long bytes) -> void
+Umpk.Nbt.NbtAccounter.Depth.get -> int
+Umpk.Nbt.NbtAccounter.NbtAccounter(long quota, int maxDepth) -> void
+Umpk.Nbt.NbtAccounter.PopDepth() -> void
+Umpk.Nbt.NbtAccounter.PushDepth() -> void
+Umpk.Nbt.NbtAccounter.Usage.get -> long
+Umpk.Nbt.NbtByte
+Umpk.Nbt.NbtByteArray
+Umpk.Nbt.NbtByteArray.NbtByteArray(sbyte[]! value) -> void
+Umpk.Nbt.NbtByteArray.Value.get -> sbyte[]!
+Umpk.Nbt.NbtByte.AsBool.get -> bool
+Umpk.Nbt.NbtByte.NbtByte(bool value) -> void
+Umpk.Nbt.NbtByte.NbtByte(sbyte value) -> void
+Umpk.Nbt.NbtByte.Value.get -> sbyte
+Umpk.Nbt.NbtCompound
+Umpk.Nbt.NbtCompound.Clear() -> void
+Umpk.Nbt.NbtCompound.ContainsKey(string! key) -> bool
+Umpk.Nbt.NbtCompound.Count.get -> int
+Umpk.Nbt.NbtCompound.GetBool(string! key) -> bool
+Umpk.Nbt.NbtCompound.GetByte(string! key) -> sbyte
+Umpk.Nbt.NbtCompound.GetCompound(string! key) -> Umpk.Nbt.NbtCompound?
+Umpk.Nbt.NbtCompound.GetDouble(string! key) -> double
+Umpk.Nbt.NbtCompound.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string!, Umpk.Nbt.NbtTag!>>!
+Umpk.Nbt.NbtCompound.GetFloat(string! key) -> float
+Umpk.Nbt.NbtCompound.GetInt(string! key) -> int
+Umpk.Nbt.NbtCompound.GetList(string! key) -> Umpk.Nbt.NbtList?
+Umpk.Nbt.NbtCompound.GetLong(string! key) -> long
+Umpk.Nbt.NbtCompound.GetShort(string! key) -> short
+Umpk.Nbt.NbtCompound.GetString(string! key) -> string!
+Umpk.Nbt.NbtCompound.GetTagType(string! key) -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtCompound.IsEmpty.get -> bool
+Umpk.Nbt.NbtCompound.Keys.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Umpk.Nbt.NbtCompound.NbtCompound() -> void
+Umpk.Nbt.NbtCompound.PutBool(string! key, bool value) -> void
+Umpk.Nbt.NbtCompound.PutByte(string! key, sbyte value) -> void
+Umpk.Nbt.NbtCompound.PutDouble(string! key, double value) -> void
+Umpk.Nbt.NbtCompound.PutFloat(string! key, float value) -> void
+Umpk.Nbt.NbtCompound.PutInt(string! key, int value) -> void
+Umpk.Nbt.NbtCompound.PutLong(string! key, long value) -> void
+Umpk.Nbt.NbtCompound.PutShort(string! key, short value) -> void
+Umpk.Nbt.NbtCompound.Put(string! key, Umpk.Nbt.NbtTag! value) -> void
+Umpk.Nbt.NbtCompound.PutString(string! key, string! value) -> void
+Umpk.Nbt.NbtCompound.Remove(string! key) -> bool
+Umpk.Nbt.NbtCompound.this[string! key].get -> Umpk.Nbt.NbtTag!
+Umpk.Nbt.NbtCompound.this[string! key].set -> void
+Umpk.Nbt.NbtCompound.TryGet(string! key, out Umpk.Nbt.NbtTag? value) -> bool
+Umpk.Nbt.NbtCompound.TryGet<T>(string! key, out T? value) -> bool
+Umpk.Nbt.NbtDepthLimitException
+Umpk.Nbt.NbtDepthLimitException.NbtDepthLimitException(string! message) -> void
+Umpk.Nbt.NbtDouble
+Umpk.Nbt.NbtDouble.NbtDouble(double value) -> void
+Umpk.Nbt.NbtDouble.Value.get -> double
+Umpk.Nbt.NbtEnd
+Umpk.Nbt.NbtFloat
+Umpk.Nbt.NbtFloat.NbtFloat(float value) -> void
+Umpk.Nbt.NbtFloat.Value.get -> float
+Umpk.Nbt.NbtFormatException
+Umpk.Nbt.NbtFormatException.NbtFormatException(string! message, System.Exception! innerException) -> void
+Umpk.Nbt.NbtFormatException.NbtFormatException(string! message) -> void
+Umpk.Nbt.NbtInt
+Umpk.Nbt.NbtIntArray
+Umpk.Nbt.NbtIntArray.NbtIntArray(int[]! value) -> void
+Umpk.Nbt.NbtIntArray.Value.get -> int[]!
+Umpk.Nbt.NbtInt.NbtInt(int value) -> void
+Umpk.Nbt.NbtInt.Value.get -> int
+Umpk.Nbt.NbtList
+Umpk.Nbt.NbtList.Add(Umpk.Nbt.NbtTag! item) -> void
+Umpk.Nbt.NbtList.Clear() -> void
+Umpk.Nbt.NbtList.Contains(Umpk.Nbt.NbtTag! item) -> bool
+Umpk.Nbt.NbtList.CopyTo(Umpk.Nbt.NbtTag![]! array, int arrayIndex) -> void
+Umpk.Nbt.NbtList.Count.get -> int
+Umpk.Nbt.NbtList.ElementType.get -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtList.GetEnumerator() -> System.Collections.Generic.IEnumerator<Umpk.Nbt.NbtTag!>!
+Umpk.Nbt.NbtList.IndexOf(Umpk.Nbt.NbtTag! item) -> int
+Umpk.Nbt.NbtList.Insert(int index, Umpk.Nbt.NbtTag! item) -> void
+Umpk.Nbt.NbtList.IsReadOnly.get -> bool
+Umpk.Nbt.NbtList.NbtList(Umpk.Nbt.NbtTagType elementType) -> void
+Umpk.Nbt.NbtList.NbtList() -> void
+Umpk.Nbt.NbtList.RemoveAt(int index) -> void
+Umpk.Nbt.NbtList.Remove(Umpk.Nbt.NbtTag! item) -> bool
+Umpk.Nbt.NbtList.this[int index].get -> Umpk.Nbt.NbtTag!
+Umpk.Nbt.NbtList.this[int index].set -> void
+Umpk.Nbt.NbtLong
+Umpk.Nbt.NbtLongArray
+Umpk.Nbt.NbtLongArray.NbtLongArray(long[]! value) -> void
+Umpk.Nbt.NbtLongArray.Value.get -> long[]!
+Umpk.Nbt.NbtLong.NbtLong(long value) -> void
+Umpk.Nbt.NbtLong.Value.get -> long
+Umpk.Nbt.NbtNumeric
+Umpk.Nbt.NbtReader
+Umpk.Nbt.NbtShort
+Umpk.Nbt.NbtShort.NbtShort(short value) -> void
+Umpk.Nbt.NbtShort.Value.get -> short
+Umpk.Nbt.NbtSizeLimitException
+Umpk.Nbt.NbtSizeLimitException.NbtSizeLimitException(string! message) -> void
+Umpk.Nbt.NbtString
+Umpk.Nbt.NbtString.NbtString(string! value) -> void
+Umpk.Nbt.NbtString.Value.get -> string!
+Umpk.Nbt.NbtTag
+Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Byte = 1 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.ByteArray = 7 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Compound = 10 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Double = 6 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.End = 0 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Float = 5 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Int = 3 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.IntArray = 11 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.List = 9 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Long = 4 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.LongArray = 12 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.Short = 2 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtTagType.String = 8 -> Umpk.Nbt.NbtTagType
+Umpk.Nbt.NbtWireFormat
+Umpk.Nbt.NbtWireFormat.JavaNamedRoot = 0 -> Umpk.Nbt.NbtWireFormat
+Umpk.Nbt.NbtWireFormat.JavaRootTagOrString = 2 -> Umpk.Nbt.NbtWireFormat
+Umpk.Nbt.NbtWireFormat.JavaUnnamedRoot = 1 -> Umpk.Nbt.NbtWireFormat
+Umpk.Nbt.NbtWriter
+Umpk.Nbt.Snbt.SnbtParser
+Umpk.Nbt.Snbt.SnbtPrinter

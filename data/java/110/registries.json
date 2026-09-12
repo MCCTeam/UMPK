@@ -1,0 +1,13 @@
+{
+ "_provenance": {
+  "version": "1.9.4",
+  "protocol": 110,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "pre-flattening predates the server registries report; wire uses numeric ids"
+  ],
+  "kind": "curated",
+  "note": "no registries report exists; item/block palettes ride items.json/blocks.json"
+ },
+ "registries": {}
+}

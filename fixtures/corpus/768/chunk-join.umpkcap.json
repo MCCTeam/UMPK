@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.21.3",
+  "protocol": 768,
+  "scenario": "chunk-join",
+  "frameCount": 4713,
+  "clientboundCount": 4713,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-10T11:32:24.7997940\u002B00:00",
+  "durationMs": 12050,
+  "contentHash": "a15201f8480a449dd170db0e41f31f9b2e98ca4a8cd0ceb46dcad4a5d6e692a1",
+  "notes": "Join plus chunk stream around spawn. Headless client, clientbound frames only."
+}

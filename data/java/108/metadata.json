@@ -1,0 +1,80 @@
+{
+ "_provenance": {
+  "version": "1.9.1",
+  "protocol": 108,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "minecraft-data protocol.json entityMetadataItem switch; cross-checked vs wiki.vg"
+  ],
+  "kind": "extracted",
+  "note": "1.9 typed metadata format, 13 serializers (0-12); index byte + VarInt serializer id + value, terminator 0xff"
+ },
+ "terminator": "0xff",
+ "serializers": [
+  {
+   "id": 0,
+   "field": "BYTE",
+   "codec": "Byte"
+  },
+  {
+   "id": 1,
+   "field": "VARINT",
+   "codec": "VarInt"
+  },
+  {
+   "id": 2,
+   "field": "FLOAT",
+   "codec": "Float"
+  },
+  {
+   "id": 3,
+   "field": "STRING",
+   "codec": "String"
+  },
+  {
+   "id": 4,
+   "field": "COMPONENT",
+   "codec": "Component"
+  },
+  {
+   "id": 5,
+   "field": "ITEM_STACK",
+   "codec": "ItemStack"
+  },
+  {
+   "id": 6,
+   "field": "BOOLEAN",
+   "codec": "Boolean"
+  },
+  {
+   "id": 7,
+   "field": "ROTATIONS",
+   "codec": "Rotations"
+  },
+  {
+   "id": 8,
+   "field": "BLOCK_POS",
+   "codec": "BlockPos"
+  },
+  {
+   "id": 9,
+   "field": "OPTIONAL_BLOCK_POS",
+   "codec": "OptionalBlockPos"
+  },
+  {
+   "id": 10,
+   "field": "DIRECTION",
+   "codec": "Direction"
+  },
+  {
+   "id": 11,
+   "field": "OPTIONAL_UUID",
+   "codec": "OptionalUuid"
+  },
+  {
+   "id": 12,
+   "field": "BLOCK_STATE",
+   "codec": "BlockState"
+  }
+ ]
+}

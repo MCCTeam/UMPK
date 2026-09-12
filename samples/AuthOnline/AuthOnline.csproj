@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- GameProfile -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- MinecraftAuthFlow, device code interaction, token store -->
+    <ProjectReference Include="../../src/Umpk.Auth/Umpk.Auth.csproj" />
+  </ItemGroup>
+</Project>

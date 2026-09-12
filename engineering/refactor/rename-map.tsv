@@ -1,0 +1,14 @@
+# Codec identity renames, applied to the codec-identity pins by verify_pin_projection.py.
+#
+# One entry per line, tab separated:
+#
+#     old identity expression <TAB> new identity expression [<TAB> free-text note]
+#
+# The map is EMITTED by the tool that performs a rename, never typed here, so a rename the tool made
+# and the map does not know about survives the projection as a diff instead of passing review. An
+# entry whose old side is a whole bind-site expression is applied to whole identities; anything else
+# is applied on identifier boundaries inside an identity, which is what a member rename inside a
+# factory call needs.
+#
+# Empty while no rename is in flight. A sweep adds its entries, the projection is run against the
+# pre-sweep fixtures, and the entries are removed once the sweep has landed.

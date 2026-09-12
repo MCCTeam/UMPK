@@ -1,0 +1,7473 @@
+{
+  "_provenance": {
+    "version": "1.14",
+    "protocol": 477,
+    "mapping_source": "mcp-community",
+    "sources": [
+      "reports/blocks.json",
+      "reports/registries.json#minecraft:block"
+    ],
+    "kind": "extracted"
+  },
+  "identity": "flat",
+  "blocks": [
+    {
+      "name": "minecraft:air",
+      "block_id": 0,
+      "default_state": 0,
+      "min_state": 0,
+      "max_state": 0,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:stone",
+      "block_id": 1,
+      "default_state": 1,
+      "min_state": 1,
+      "max_state": 1,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:granite",
+      "block_id": 2,
+      "default_state": 2,
+      "min_state": 2,
+      "max_state": 2,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:polished_granite",
+      "block_id": 3,
+      "default_state": 3,
+      "min_state": 3,
+      "max_state": 3,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:diorite",
+      "block_id": 4,
+      "default_state": 4,
+      "min_state": 4,
+      "max_state": 4,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:polished_diorite",
+      "block_id": 5,
+      "default_state": 5,
+      "min_state": 5,
+      "max_state": 5,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:andesite",
+      "block_id": 6,
+      "default_state": 6,
+      "min_state": 6,
+      "max_state": 6,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:polished_andesite",
+      "block_id": 7,
+      "default_state": 7,
+      "min_state": 7,
+      "max_state": 7,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:grass_block",
+      "block_id": 8,
+      "default_state": 9,
+      "min_state": 8,
+      "max_state": 9,
+      "num_states": 2,
+      "properties": [
+        "snowy"
+      ]
+    },
+    {
+      "name": "minecraft:dirt",
+      "block_id": 9,
+      "default_state": 10,
+      "min_state": 10,
+      "max_state": 10,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:coarse_dirt",
+      "block_id": 10,
+      "default_state": 11,
+      "min_state": 11,
+      "max_state": 11,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:podzol",
+      "block_id": 11,
+      "default_state": 13,
+      "min_state": 12,
+      "max_state": 13,
+      "num_states": 2,
+      "properties": [
+        "snowy"
+      ]
+    },
+    {
+      "name": "minecraft:cobblestone",
+      "block_id": 12,
+      "default_state": 14,
+      "min_state": 14,
+      "max_state": 14,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oak_planks",
+      "block_id": 13,
+      "default_state": 15,
+      "min_state": 15,
+      "max_state": 15,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:spruce_planks",
+      "block_id": 14,
+      "default_state": 16,
+      "min_state": 16,
+      "max_state": 16,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:birch_planks",
+      "block_id": 15,
+      "default_state": 17,
+      "min_state": 17,
+      "max_state": 17,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:jungle_planks",
+      "block_id": 16,
+      "default_state": 18,
+      "min_state": 18,
+      "max_state": 18,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:acacia_planks",
+      "block_id": 17,
+      "default_state": 19,
+      "min_state": 19,
+      "max_state": 19,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dark_oak_planks",
+      "block_id": 18,
+      "default_state": 20,
+      "min_state": 20,
+      "max_state": 20,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oak_sapling",
+      "block_id": 19,
+      "default_state": 21,
+      "min_state": 21,
+      "max_state": 22,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_sapling",
+      "block_id": 20,
+      "default_state": 23,
+      "min_state": 23,
+      "max_state": 24,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:birch_sapling",
+      "block_id": 21,
+      "default_state": 25,
+      "min_state": 25,
+      "max_state": 26,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_sapling",
+      "block_id": 22,
+      "default_state": 27,
+      "min_state": 27,
+      "max_state": 28,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_sapling",
+      "block_id": 23,
+      "default_state": 29,
+      "min_state": 29,
+      "max_state": 30,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_sapling",
+      "block_id": 24,
+      "default_state": 31,
+      "min_state": 31,
+      "max_state": 32,
+      "num_states": 2,
+      "properties": [
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:bedrock",
+      "block_id": 25,
+      "default_state": 33,
+      "min_state": 33,
+      "max_state": 33,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:water",
+      "block_id": 26,
+      "default_state": 34,
+      "min_state": 34,
+      "max_state": 49,
+      "num_states": 16,
+      "properties": [
+        "level"
+      ]
+    },
+    {
+      "name": "minecraft:lava",
+      "block_id": 27,
+      "default_state": 50,
+      "min_state": 50,
+      "max_state": 65,
+      "num_states": 16,
+      "properties": [
+        "level"
+      ]
+    },
+    {
+      "name": "minecraft:sand",
+      "block_id": 28,
+      "default_state": 66,
+      "min_state": 66,
+      "max_state": 66,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_sand",
+      "block_id": 29,
+      "default_state": 67,
+      "min_state": 67,
+      "max_state": 67,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gravel",
+      "block_id": 30,
+      "default_state": 68,
+      "min_state": 68,
+      "max_state": 68,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gold_ore",
+      "block_id": 31,
+      "default_state": 69,
+      "min_state": 69,
+      "max_state": 69,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:iron_ore",
+      "block_id": 32,
+      "default_state": 70,
+      "min_state": 70,
+      "max_state": 70,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:coal_ore",
+      "block_id": 33,
+      "default_state": 71,
+      "min_state": 71,
+      "max_state": 71,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oak_log",
+      "block_id": 34,
+      "default_state": 73,
+      "min_state": 72,
+      "max_state": 74,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_log",
+      "block_id": 35,
+      "default_state": 76,
+      "min_state": 75,
+      "max_state": 77,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:birch_log",
+      "block_id": 36,
+      "default_state": 79,
+      "min_state": 78,
+      "max_state": 80,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_log",
+      "block_id": 37,
+      "default_state": 82,
+      "min_state": 81,
+      "max_state": 83,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_log",
+      "block_id": 38,
+      "default_state": 85,
+      "min_state": 84,
+      "max_state": 86,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_log",
+      "block_id": 39,
+      "default_state": 88,
+      "min_state": 87,
+      "max_state": 89,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_spruce_log",
+      "block_id": 40,
+      "default_state": 91,
+      "min_state": 90,
+      "max_state": 92,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_birch_log",
+      "block_id": 41,
+      "default_state": 94,
+      "min_state": 93,
+      "max_state": 95,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_jungle_log",
+      "block_id": 42,
+      "default_state": 97,
+      "min_state": 96,
+      "max_state": 98,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_acacia_log",
+      "block_id": 43,
+      "default_state": 100,
+      "min_state": 99,
+      "max_state": 101,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_dark_oak_log",
+      "block_id": 44,
+      "default_state": 103,
+      "min_state": 102,
+      "max_state": 104,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_oak_log",
+      "block_id": 45,
+      "default_state": 106,
+      "min_state": 105,
+      "max_state": 107,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:oak_wood",
+      "block_id": 46,
+      "default_state": 109,
+      "min_state": 108,
+      "max_state": 110,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_wood",
+      "block_id": 47,
+      "default_state": 112,
+      "min_state": 111,
+      "max_state": 113,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:birch_wood",
+      "block_id": 48,
+      "default_state": 115,
+      "min_state": 114,
+      "max_state": 116,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_wood",
+      "block_id": 49,
+      "default_state": 118,
+      "min_state": 117,
+      "max_state": 119,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_wood",
+      "block_id": 50,
+      "default_state": 121,
+      "min_state": 120,
+      "max_state": 122,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_wood",
+      "block_id": 51,
+      "default_state": 124,
+      "min_state": 123,
+      "max_state": 125,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_oak_wood",
+      "block_id": 52,
+      "default_state": 127,
+      "min_state": 126,
+      "max_state": 128,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_spruce_wood",
+      "block_id": 53,
+      "default_state": 130,
+      "min_state": 129,
+      "max_state": 131,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_birch_wood",
+      "block_id": 54,
+      "default_state": 133,
+      "min_state": 132,
+      "max_state": 134,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_jungle_wood",
+      "block_id": 55,
+      "default_state": 136,
+      "min_state": 135,
+      "max_state": 137,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_acacia_wood",
+      "block_id": 56,
+      "default_state": 139,
+      "min_state": 138,
+      "max_state": 140,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:stripped_dark_oak_wood",
+      "block_id": 57,
+      "default_state": 142,
+      "min_state": 141,
+      "max_state": 143,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:oak_leaves",
+      "block_id": 58,
+      "default_state": 157,
+      "min_state": 144,
+      "max_state": 157,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_leaves",
+      "block_id": 59,
+      "default_state": 171,
+      "min_state": 158,
+      "max_state": 171,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:birch_leaves",
+      "block_id": 60,
+      "default_state": 185,
+      "min_state": 172,
+      "max_state": 185,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_leaves",
+      "block_id": 61,
+      "default_state": 199,
+      "min_state": 186,
+      "max_state": 199,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_leaves",
+      "block_id": 62,
+      "default_state": 213,
+      "min_state": 200,
+      "max_state": 213,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_leaves",
+      "block_id": 63,
+      "default_state": 227,
+      "min_state": 214,
+      "max_state": 227,
+      "num_states": 14,
+      "properties": [
+        "distance",
+        "persistent"
+      ]
+    },
+    {
+      "name": "minecraft:sponge",
+      "block_id": 64,
+      "default_state": 228,
+      "min_state": 228,
+      "max_state": 228,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:wet_sponge",
+      "block_id": 65,
+      "default_state": 229,
+      "min_state": 229,
+      "max_state": 229,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:glass",
+      "block_id": 66,
+      "default_state": 230,
+      "min_state": 230,
+      "max_state": 230,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lapis_ore",
+      "block_id": 67,
+      "default_state": 231,
+      "min_state": 231,
+      "max_state": 231,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lapis_block",
+      "block_id": 68,
+      "default_state": 232,
+      "min_state": 232,
+      "max_state": 232,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dispenser",
+      "block_id": 69,
+      "default_state": 234,
+      "min_state": 233,
+      "max_state": 244,
+      "num_states": 12,
+      "properties": [
+        "facing",
+        "triggered"
+      ]
+    },
+    {
+      "name": "minecraft:sandstone",
+      "block_id": 70,
+      "default_state": 245,
+      "min_state": 245,
+      "max_state": 245,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:chiseled_sandstone",
+      "block_id": 71,
+      "default_state": 246,
+      "min_state": 246,
+      "max_state": 246,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cut_sandstone",
+      "block_id": 72,
+      "default_state": 247,
+      "min_state": 247,
+      "max_state": 247,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:note_block",
+      "block_id": 73,
+      "default_state": 249,
+      "min_state": 248,
+      "max_state": 1047,
+      "num_states": 800,
+      "properties": [
+        "instrument",
+        "note",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:white_bed",
+      "block_id": 74,
+      "default_state": 1051,
+      "min_state": 1048,
+      "max_state": 1063,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:orange_bed",
+      "block_id": 75,
+      "default_state": 1067,
+      "min_state": 1064,
+      "max_state": 1079,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_bed",
+      "block_id": 76,
+      "default_state": 1083,
+      "min_state": 1080,
+      "max_state": 1095,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_bed",
+      "block_id": 77,
+      "default_state": 1099,
+      "min_state": 1096,
+      "max_state": 1111,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_bed",
+      "block_id": 78,
+      "default_state": 1115,
+      "min_state": 1112,
+      "max_state": 1127,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:lime_bed",
+      "block_id": 79,
+      "default_state": 1131,
+      "min_state": 1128,
+      "max_state": 1143,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:pink_bed",
+      "block_id": 80,
+      "default_state": 1147,
+      "min_state": 1144,
+      "max_state": 1159,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:gray_bed",
+      "block_id": 81,
+      "default_state": 1163,
+      "min_state": 1160,
+      "max_state": 1175,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_bed",
+      "block_id": 82,
+      "default_state": 1179,
+      "min_state": 1176,
+      "max_state": 1191,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_bed",
+      "block_id": 83,
+      "default_state": 1195,
+      "min_state": 1192,
+      "max_state": 1207,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:purple_bed",
+      "block_id": 84,
+      "default_state": 1211,
+      "min_state": 1208,
+      "max_state": 1223,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:blue_bed",
+      "block_id": 85,
+      "default_state": 1227,
+      "min_state": 1224,
+      "max_state": 1239,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:brown_bed",
+      "block_id": 86,
+      "default_state": 1243,
+      "min_state": 1240,
+      "max_state": 1255,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:green_bed",
+      "block_id": 87,
+      "default_state": 1259,
+      "min_state": 1256,
+      "max_state": 1271,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:red_bed",
+      "block_id": 88,
+      "default_state": 1275,
+      "min_state": 1272,
+      "max_state": 1287,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:black_bed",
+      "block_id": 89,
+      "default_state": 1291,
+      "min_state": 1288,
+      "max_state": 1303,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "occupied",
+        "part"
+      ]
+    },
+    {
+      "name": "minecraft:powered_rail",
+      "block_id": 90,
+      "default_state": 1310,
+      "min_state": 1304,
+      "max_state": 1315,
+      "num_states": 12,
+      "properties": [
+        "powered",
+        "shape"
+      ]
+    },
+    {
+      "name": "minecraft:detector_rail",
+      "block_id": 91,
+      "default_state": 1322,
+      "min_state": 1316,
+      "max_state": 1327,
+      "num_states": 12,
+      "properties": [
+        "powered",
+        "shape"
+      ]
+    },
+    {
+      "name": "minecraft:sticky_piston",
+      "block_id": 92,
+      "default_state": 1334,
+      "min_state": 1328,
+      "max_state": 1339,
+      "num_states": 12,
+      "properties": [
+        "extended",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:cobweb",
+      "block_id": 93,
+      "default_state": 1340,
+      "min_state": 1340,
+      "max_state": 1340,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:grass",
+      "block_id": 94,
+      "default_state": 1341,
+      "min_state": 1341,
+      "max_state": 1341,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:fern",
+      "block_id": 95,
+      "default_state": 1342,
+      "min_state": 1342,
+      "max_state": 1342,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_bush",
+      "block_id": 96,
+      "default_state": 1343,
+      "min_state": 1343,
+      "max_state": 1343,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:seagrass",
+      "block_id": 97,
+      "default_state": 1344,
+      "min_state": 1344,
+      "max_state": 1344,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:tall_seagrass",
+      "block_id": 98,
+      "default_state": 1346,
+      "min_state": 1345,
+      "max_state": 1346,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:piston",
+      "block_id": 99,
+      "default_state": 1353,
+      "min_state": 1347,
+      "max_state": 1358,
+      "num_states": 12,
+      "properties": [
+        "extended",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:piston_head",
+      "block_id": 100,
+      "default_state": 1361,
+      "min_state": 1359,
+      "max_state": 1382,
+      "num_states": 24,
+      "properties": [
+        "facing",
+        "short",
+        "type"
+      ]
+    },
+    {
+      "name": "minecraft:white_wool",
+      "block_id": 101,
+      "default_state": 1383,
+      "min_state": 1383,
+      "max_state": 1383,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_wool",
+      "block_id": 102,
+      "default_state": 1384,
+      "min_state": 1384,
+      "max_state": 1384,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_wool",
+      "block_id": 103,
+      "default_state": 1385,
+      "min_state": 1385,
+      "max_state": 1385,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_wool",
+      "block_id": 104,
+      "default_state": 1386,
+      "min_state": 1386,
+      "max_state": 1386,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_wool",
+      "block_id": 105,
+      "default_state": 1387,
+      "min_state": 1387,
+      "max_state": 1387,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_wool",
+      "block_id": 106,
+      "default_state": 1388,
+      "min_state": 1388,
+      "max_state": 1388,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_wool",
+      "block_id": 107,
+      "default_state": 1389,
+      "min_state": 1389,
+      "max_state": 1389,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_wool",
+      "block_id": 108,
+      "default_state": 1390,
+      "min_state": 1390,
+      "max_state": 1390,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_wool",
+      "block_id": 109,
+      "default_state": 1391,
+      "min_state": 1391,
+      "max_state": 1391,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_wool",
+      "block_id": 110,
+      "default_state": 1392,
+      "min_state": 1392,
+      "max_state": 1392,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_wool",
+      "block_id": 111,
+      "default_state": 1393,
+      "min_state": 1393,
+      "max_state": 1393,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_wool",
+      "block_id": 112,
+      "default_state": 1394,
+      "min_state": 1394,
+      "max_state": 1394,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_wool",
+      "block_id": 113,
+      "default_state": 1395,
+      "min_state": 1395,
+      "max_state": 1395,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_wool",
+      "block_id": 114,
+      "default_state": 1396,
+      "min_state": 1396,
+      "max_state": 1396,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_wool",
+      "block_id": 115,
+      "default_state": 1397,
+      "min_state": 1397,
+      "max_state": 1397,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_wool",
+      "block_id": 116,
+      "default_state": 1398,
+      "min_state": 1398,
+      "max_state": 1398,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:moving_piston",
+      "block_id": 117,
+      "default_state": 1399,
+      "min_state": 1399,
+      "max_state": 1410,
+      "num_states": 12,
+      "properties": [
+        "facing",
+        "type"
+      ]
+    },
+    {
+      "name": "minecraft:dandelion",
+      "block_id": 118,
+      "default_state": 1411,
+      "min_state": 1411,
+      "max_state": 1411,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:poppy",
+      "block_id": 119,
+      "default_state": 1412,
+      "min_state": 1412,
+      "max_state": 1412,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_orchid",
+      "block_id": 120,
+      "default_state": 1413,
+      "min_state": 1413,
+      "max_state": 1413,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:allium",
+      "block_id": 121,
+      "default_state": 1414,
+      "min_state": 1414,
+      "max_state": 1414,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:azure_bluet",
+      "block_id": 122,
+      "default_state": 1415,
+      "min_state": 1415,
+      "max_state": 1415,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_tulip",
+      "block_id": 123,
+      "default_state": 1416,
+      "min_state": 1416,
+      "max_state": 1416,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_tulip",
+      "block_id": 124,
+      "default_state": 1417,
+      "min_state": 1417,
+      "max_state": 1417,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:white_tulip",
+      "block_id": 125,
+      "default_state": 1418,
+      "min_state": 1418,
+      "max_state": 1418,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_tulip",
+      "block_id": 126,
+      "default_state": 1419,
+      "min_state": 1419,
+      "max_state": 1419,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oxeye_daisy",
+      "block_id": 127,
+      "default_state": 1420,
+      "min_state": 1420,
+      "max_state": 1420,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cornflower",
+      "block_id": 128,
+      "default_state": 1421,
+      "min_state": 1421,
+      "max_state": 1421,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:wither_rose",
+      "block_id": 129,
+      "default_state": 1422,
+      "min_state": 1422,
+      "max_state": 1422,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lily_of_the_valley",
+      "block_id": 130,
+      "default_state": 1423,
+      "min_state": 1423,
+      "max_state": 1423,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_mushroom",
+      "block_id": 131,
+      "default_state": 1424,
+      "min_state": 1424,
+      "max_state": 1424,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_mushroom",
+      "block_id": 132,
+      "default_state": 1425,
+      "min_state": 1425,
+      "max_state": 1425,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gold_block",
+      "block_id": 133,
+      "default_state": 1426,
+      "min_state": 1426,
+      "max_state": 1426,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:iron_block",
+      "block_id": 134,
+      "default_state": 1427,
+      "min_state": 1427,
+      "max_state": 1427,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:bricks",
+      "block_id": 135,
+      "default_state": 1428,
+      "min_state": 1428,
+      "max_state": 1428,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:tnt",
+      "block_id": 136,
+      "default_state": 1430,
+      "min_state": 1429,
+      "max_state": 1430,
+      "num_states": 2,
+      "properties": [
+        "unstable"
+      ]
+    },
+    {
+      "name": "minecraft:bookshelf",
+      "block_id": 137,
+      "default_state": 1431,
+      "min_state": 1431,
+      "max_state": 1431,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:mossy_cobblestone",
+      "block_id": 138,
+      "default_state": 1432,
+      "min_state": 1432,
+      "max_state": 1432,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:obsidian",
+      "block_id": 139,
+      "default_state": 1433,
+      "min_state": 1433,
+      "max_state": 1433,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:torch",
+      "block_id": 140,
+      "default_state": 1434,
+      "min_state": 1434,
+      "max_state": 1434,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:wall_torch",
+      "block_id": 141,
+      "default_state": 1435,
+      "min_state": 1435,
+      "max_state": 1438,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:fire",
+      "block_id": 142,
+      "default_state": 1470,
+      "min_state": 1439,
+      "max_state": 1950,
+      "num_states": 512,
+      "properties": [
+        "age",
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:spawner",
+      "block_id": 143,
+      "default_state": 1951,
+      "min_state": 1951,
+      "max_state": 1951,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oak_stairs",
+      "block_id": 144,
+      "default_state": 1963,
+      "min_state": 1952,
+      "max_state": 2031,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:chest",
+      "block_id": 145,
+      "default_state": 2033,
+      "min_state": 2032,
+      "max_state": 2055,
+      "num_states": 24,
+      "properties": [
+        "facing",
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:redstone_wire",
+      "block_id": 146,
+      "default_state": 3216,
+      "min_state": 2056,
+      "max_state": 3351,
+      "num_states": 1296,
+      "properties": [
+        "east",
+        "north",
+        "power",
+        "south",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:diamond_ore",
+      "block_id": 147,
+      "default_state": 3352,
+      "min_state": 3352,
+      "max_state": 3352,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:diamond_block",
+      "block_id": 148,
+      "default_state": 3353,
+      "min_state": 3353,
+      "max_state": 3353,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:crafting_table",
+      "block_id": 149,
+      "default_state": 3354,
+      "min_state": 3354,
+      "max_state": 3354,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:wheat",
+      "block_id": 150,
+      "default_state": 3355,
+      "min_state": 3355,
+      "max_state": 3362,
+      "num_states": 8,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:farmland",
+      "block_id": 151,
+      "default_state": 3363,
+      "min_state": 3363,
+      "max_state": 3370,
+      "num_states": 8,
+      "properties": [
+        "moisture"
+      ]
+    },
+    {
+      "name": "minecraft:furnace",
+      "block_id": 152,
+      "default_state": 3372,
+      "min_state": 3371,
+      "max_state": 3378,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:oak_sign",
+      "block_id": 153,
+      "default_state": 3380,
+      "min_state": 3379,
+      "max_state": 3410,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_sign",
+      "block_id": 154,
+      "default_state": 3412,
+      "min_state": 3411,
+      "max_state": 3442,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:birch_sign",
+      "block_id": 155,
+      "default_state": 3444,
+      "min_state": 3443,
+      "max_state": 3474,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_sign",
+      "block_id": 156,
+      "default_state": 3476,
+      "min_state": 3475,
+      "max_state": 3506,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_sign",
+      "block_id": 157,
+      "default_state": 3508,
+      "min_state": 3507,
+      "max_state": 3538,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_sign",
+      "block_id": 158,
+      "default_state": 3540,
+      "min_state": 3539,
+      "max_state": 3570,
+      "num_states": 32,
+      "properties": [
+        "rotation",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:oak_door",
+      "block_id": 159,
+      "default_state": 3582,
+      "min_state": 3571,
+      "max_state": 3634,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:ladder",
+      "block_id": 160,
+      "default_state": 3636,
+      "min_state": 3635,
+      "max_state": 3642,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:rail",
+      "block_id": 161,
+      "default_state": 3643,
+      "min_state": 3643,
+      "max_state": 3652,
+      "num_states": 10,
+      "properties": [
+        "shape"
+      ]
+    },
+    {
+      "name": "minecraft:cobblestone_stairs",
+      "block_id": 162,
+      "default_state": 3664,
+      "min_state": 3653,
+      "max_state": 3732,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:oak_wall_sign",
+      "block_id": 163,
+      "default_state": 3734,
+      "min_state": 3733,
+      "max_state": 3740,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_wall_sign",
+      "block_id": 164,
+      "default_state": 3742,
+      "min_state": 3741,
+      "max_state": 3748,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:birch_wall_sign",
+      "block_id": 165,
+      "default_state": 3750,
+      "min_state": 3749,
+      "max_state": 3756,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_wall_sign",
+      "block_id": 166,
+      "default_state": 3758,
+      "min_state": 3757,
+      "max_state": 3764,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_wall_sign",
+      "block_id": 167,
+      "default_state": 3766,
+      "min_state": 3765,
+      "max_state": 3772,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_wall_sign",
+      "block_id": 168,
+      "default_state": 3774,
+      "min_state": 3773,
+      "max_state": 3780,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:lever",
+      "block_id": 169,
+      "default_state": 3790,
+      "min_state": 3781,
+      "max_state": 3804,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:stone_pressure_plate",
+      "block_id": 170,
+      "default_state": 3806,
+      "min_state": 3805,
+      "max_state": 3806,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:iron_door",
+      "block_id": 171,
+      "default_state": 3818,
+      "min_state": 3807,
+      "max_state": 3870,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:oak_pressure_plate",
+      "block_id": 172,
+      "default_state": 3872,
+      "min_state": 3871,
+      "max_state": 3872,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_pressure_plate",
+      "block_id": 173,
+      "default_state": 3874,
+      "min_state": 3873,
+      "max_state": 3874,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:birch_pressure_plate",
+      "block_id": 174,
+      "default_state": 3876,
+      "min_state": 3875,
+      "max_state": 3876,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_pressure_plate",
+      "block_id": 175,
+      "default_state": 3878,
+      "min_state": 3877,
+      "max_state": 3878,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_pressure_plate",
+      "block_id": 176,
+      "default_state": 3880,
+      "min_state": 3879,
+      "max_state": 3880,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_pressure_plate",
+      "block_id": 177,
+      "default_state": 3882,
+      "min_state": 3881,
+      "max_state": 3882,
+      "num_states": 2,
+      "properties": [
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:redstone_ore",
+      "block_id": 178,
+      "default_state": 3884,
+      "min_state": 3883,
+      "max_state": 3884,
+      "num_states": 2,
+      "properties": [
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:redstone_torch",
+      "block_id": 179,
+      "default_state": 3885,
+      "min_state": 3885,
+      "max_state": 3886,
+      "num_states": 2,
+      "properties": [
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:redstone_wall_torch",
+      "block_id": 180,
+      "default_state": 3887,
+      "min_state": 3887,
+      "max_state": 3894,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:stone_button",
+      "block_id": 181,
+      "default_state": 3904,
+      "min_state": 3895,
+      "max_state": 3918,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:snow",
+      "block_id": 182,
+      "default_state": 3919,
+      "min_state": 3919,
+      "max_state": 3926,
+      "num_states": 8,
+      "properties": [
+        "layers"
+      ]
+    },
+    {
+      "name": "minecraft:ice",
+      "block_id": 183,
+      "default_state": 3927,
+      "min_state": 3927,
+      "max_state": 3927,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:snow_block",
+      "block_id": 184,
+      "default_state": 3928,
+      "min_state": 3928,
+      "max_state": 3928,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cactus",
+      "block_id": 185,
+      "default_state": 3929,
+      "min_state": 3929,
+      "max_state": 3944,
+      "num_states": 16,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:clay",
+      "block_id": 186,
+      "default_state": 3945,
+      "min_state": 3945,
+      "max_state": 3945,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:sugar_cane",
+      "block_id": 187,
+      "default_state": 3946,
+      "min_state": 3946,
+      "max_state": 3961,
+      "num_states": 16,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:jukebox",
+      "block_id": 188,
+      "default_state": 3963,
+      "min_state": 3962,
+      "max_state": 3963,
+      "num_states": 2,
+      "properties": [
+        "has_record"
+      ]
+    },
+    {
+      "name": "minecraft:oak_fence",
+      "block_id": 189,
+      "default_state": 3995,
+      "min_state": 3964,
+      "max_state": 3995,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:pumpkin",
+      "block_id": 190,
+      "default_state": 3996,
+      "min_state": 3996,
+      "max_state": 3996,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:netherrack",
+      "block_id": 191,
+      "default_state": 3997,
+      "min_state": 3997,
+      "max_state": 3997,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:soul_sand",
+      "block_id": 192,
+      "default_state": 3998,
+      "min_state": 3998,
+      "max_state": 3998,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:glowstone",
+      "block_id": 193,
+      "default_state": 3999,
+      "min_state": 3999,
+      "max_state": 3999,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:nether_portal",
+      "block_id": 194,
+      "default_state": 4000,
+      "min_state": 4000,
+      "max_state": 4001,
+      "num_states": 2,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:carved_pumpkin",
+      "block_id": 195,
+      "default_state": 4002,
+      "min_state": 4002,
+      "max_state": 4005,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:jack_o_lantern",
+      "block_id": 196,
+      "default_state": 4006,
+      "min_state": 4006,
+      "max_state": 4009,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:cake",
+      "block_id": 197,
+      "default_state": 4010,
+      "min_state": 4010,
+      "max_state": 4016,
+      "num_states": 7,
+      "properties": [
+        "bites"
+      ]
+    },
+    {
+      "name": "minecraft:repeater",
+      "block_id": 198,
+      "default_state": 4020,
+      "min_state": 4017,
+      "max_state": 4080,
+      "num_states": 64,
+      "properties": [
+        "delay",
+        "facing",
+        "locked",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:white_stained_glass",
+      "block_id": 199,
+      "default_state": 4081,
+      "min_state": 4081,
+      "max_state": 4081,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_stained_glass",
+      "block_id": 200,
+      "default_state": 4082,
+      "min_state": 4082,
+      "max_state": 4082,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_stained_glass",
+      "block_id": 201,
+      "default_state": 4083,
+      "min_state": 4083,
+      "max_state": 4083,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_stained_glass",
+      "block_id": 202,
+      "default_state": 4084,
+      "min_state": 4084,
+      "max_state": 4084,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_stained_glass",
+      "block_id": 203,
+      "default_state": 4085,
+      "min_state": 4085,
+      "max_state": 4085,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_stained_glass",
+      "block_id": 204,
+      "default_state": 4086,
+      "min_state": 4086,
+      "max_state": 4086,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_stained_glass",
+      "block_id": 205,
+      "default_state": 4087,
+      "min_state": 4087,
+      "max_state": 4087,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_stained_glass",
+      "block_id": 206,
+      "default_state": 4088,
+      "min_state": 4088,
+      "max_state": 4088,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_stained_glass",
+      "block_id": 207,
+      "default_state": 4089,
+      "min_state": 4089,
+      "max_state": 4089,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_stained_glass",
+      "block_id": 208,
+      "default_state": 4090,
+      "min_state": 4090,
+      "max_state": 4090,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_stained_glass",
+      "block_id": 209,
+      "default_state": 4091,
+      "min_state": 4091,
+      "max_state": 4091,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_stained_glass",
+      "block_id": 210,
+      "default_state": 4092,
+      "min_state": 4092,
+      "max_state": 4092,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_stained_glass",
+      "block_id": 211,
+      "default_state": 4093,
+      "min_state": 4093,
+      "max_state": 4093,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_stained_glass",
+      "block_id": 212,
+      "default_state": 4094,
+      "min_state": 4094,
+      "max_state": 4094,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_stained_glass",
+      "block_id": 213,
+      "default_state": 4095,
+      "min_state": 4095,
+      "max_state": 4095,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_stained_glass",
+      "block_id": 214,
+      "default_state": 4096,
+      "min_state": 4096,
+      "max_state": 4096,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:oak_trapdoor",
+      "block_id": 215,
+      "default_state": 4112,
+      "min_state": 4097,
+      "max_state": 4160,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_trapdoor",
+      "block_id": 216,
+      "default_state": 4176,
+      "min_state": 4161,
+      "max_state": 4224,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:birch_trapdoor",
+      "block_id": 217,
+      "default_state": 4240,
+      "min_state": 4225,
+      "max_state": 4288,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_trapdoor",
+      "block_id": 218,
+      "default_state": 4304,
+      "min_state": 4289,
+      "max_state": 4352,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_trapdoor",
+      "block_id": 219,
+      "default_state": 4368,
+      "min_state": 4353,
+      "max_state": 4416,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_trapdoor",
+      "block_id": 220,
+      "default_state": 4432,
+      "min_state": 4417,
+      "max_state": 4480,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:stone_bricks",
+      "block_id": 221,
+      "default_state": 4481,
+      "min_state": 4481,
+      "max_state": 4481,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:mossy_stone_bricks",
+      "block_id": 222,
+      "default_state": 4482,
+      "min_state": 4482,
+      "max_state": 4482,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cracked_stone_bricks",
+      "block_id": 223,
+      "default_state": 4483,
+      "min_state": 4483,
+      "max_state": 4483,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:chiseled_stone_bricks",
+      "block_id": 224,
+      "default_state": 4484,
+      "min_state": 4484,
+      "max_state": 4484,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_stone",
+      "block_id": 225,
+      "default_state": 4485,
+      "min_state": 4485,
+      "max_state": 4485,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_cobblestone",
+      "block_id": 226,
+      "default_state": 4486,
+      "min_state": 4486,
+      "max_state": 4486,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_stone_bricks",
+      "block_id": 227,
+      "default_state": 4487,
+      "min_state": 4487,
+      "max_state": 4487,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_mossy_stone_bricks",
+      "block_id": 228,
+      "default_state": 4488,
+      "min_state": 4488,
+      "max_state": 4488,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_cracked_stone_bricks",
+      "block_id": 229,
+      "default_state": 4489,
+      "min_state": 4489,
+      "max_state": 4489,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:infested_chiseled_stone_bricks",
+      "block_id": 230,
+      "default_state": 4490,
+      "min_state": 4490,
+      "max_state": 4490,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_mushroom_block",
+      "block_id": 231,
+      "default_state": 4491,
+      "min_state": 4491,
+      "max_state": 4554,
+      "num_states": 64,
+      "properties": [
+        "down",
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:red_mushroom_block",
+      "block_id": 232,
+      "default_state": 4555,
+      "min_state": 4555,
+      "max_state": 4618,
+      "num_states": 64,
+      "properties": [
+        "down",
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:mushroom_stem",
+      "block_id": 233,
+      "default_state": 4619,
+      "min_state": 4619,
+      "max_state": 4682,
+      "num_states": 64,
+      "properties": [
+        "down",
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:iron_bars",
+      "block_id": 234,
+      "default_state": 4714,
+      "min_state": 4683,
+      "max_state": 4714,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:glass_pane",
+      "block_id": 235,
+      "default_state": 4746,
+      "min_state": 4715,
+      "max_state": 4746,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:melon",
+      "block_id": 236,
+      "default_state": 4747,
+      "min_state": 4747,
+      "max_state": 4747,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:attached_pumpkin_stem",
+      "block_id": 237,
+      "default_state": 4748,
+      "min_state": 4748,
+      "max_state": 4751,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:attached_melon_stem",
+      "block_id": 238,
+      "default_state": 4752,
+      "min_state": 4752,
+      "max_state": 4755,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:pumpkin_stem",
+      "block_id": 239,
+      "default_state": 4756,
+      "min_state": 4756,
+      "max_state": 4763,
+      "num_states": 8,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:melon_stem",
+      "block_id": 240,
+      "default_state": 4764,
+      "min_state": 4764,
+      "max_state": 4771,
+      "num_states": 8,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:vine",
+      "block_id": 241,
+      "default_state": 4803,
+      "min_state": 4772,
+      "max_state": 4803,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:oak_fence_gate",
+      "block_id": 242,
+      "default_state": 4811,
+      "min_state": 4804,
+      "max_state": 4835,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:brick_stairs",
+      "block_id": 243,
+      "default_state": 4847,
+      "min_state": 4836,
+      "max_state": 4915,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:stone_brick_stairs",
+      "block_id": 244,
+      "default_state": 4927,
+      "min_state": 4916,
+      "max_state": 4995,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:mycelium",
+      "block_id": 245,
+      "default_state": 4997,
+      "min_state": 4996,
+      "max_state": 4997,
+      "num_states": 2,
+      "properties": [
+        "snowy"
+      ]
+    },
+    {
+      "name": "minecraft:lily_pad",
+      "block_id": 246,
+      "default_state": 4998,
+      "min_state": 4998,
+      "max_state": 4998,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:nether_bricks",
+      "block_id": 247,
+      "default_state": 4999,
+      "min_state": 4999,
+      "max_state": 4999,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:nether_brick_fence",
+      "block_id": 248,
+      "default_state": 5031,
+      "min_state": 5000,
+      "max_state": 5031,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:nether_brick_stairs",
+      "block_id": 249,
+      "default_state": 5043,
+      "min_state": 5032,
+      "max_state": 5111,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:nether_wart",
+      "block_id": 250,
+      "default_state": 5112,
+      "min_state": 5112,
+      "max_state": 5115,
+      "num_states": 4,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:enchanting_table",
+      "block_id": 251,
+      "default_state": 5116,
+      "min_state": 5116,
+      "max_state": 5116,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brewing_stand",
+      "block_id": 252,
+      "default_state": 5124,
+      "min_state": 5117,
+      "max_state": 5124,
+      "num_states": 8,
+      "properties": [
+        "has_bottle_0",
+        "has_bottle_1",
+        "has_bottle_2"
+      ]
+    },
+    {
+      "name": "minecraft:cauldron",
+      "block_id": 253,
+      "default_state": 5125,
+      "min_state": 5125,
+      "max_state": 5128,
+      "num_states": 4,
+      "properties": [
+        "level"
+      ]
+    },
+    {
+      "name": "minecraft:end_portal",
+      "block_id": 254,
+      "default_state": 5129,
+      "min_state": 5129,
+      "max_state": 5129,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:end_portal_frame",
+      "block_id": 255,
+      "default_state": 5134,
+      "min_state": 5130,
+      "max_state": 5137,
+      "num_states": 8,
+      "properties": [
+        "eye",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:end_stone",
+      "block_id": 256,
+      "default_state": 5138,
+      "min_state": 5138,
+      "max_state": 5138,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dragon_egg",
+      "block_id": 257,
+      "default_state": 5139,
+      "min_state": 5139,
+      "max_state": 5139,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:redstone_lamp",
+      "block_id": 258,
+      "default_state": 5141,
+      "min_state": 5140,
+      "max_state": 5141,
+      "num_states": 2,
+      "properties": [
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:cocoa",
+      "block_id": 259,
+      "default_state": 5142,
+      "min_state": 5142,
+      "max_state": 5153,
+      "num_states": 12,
+      "properties": [
+        "age",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:sandstone_stairs",
+      "block_id": 260,
+      "default_state": 5165,
+      "min_state": 5154,
+      "max_state": 5233,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:emerald_ore",
+      "block_id": 261,
+      "default_state": 5234,
+      "min_state": 5234,
+      "max_state": 5234,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:ender_chest",
+      "block_id": 262,
+      "default_state": 5236,
+      "min_state": 5235,
+      "max_state": 5242,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:tripwire_hook",
+      "block_id": 263,
+      "default_state": 5252,
+      "min_state": 5243,
+      "max_state": 5258,
+      "num_states": 16,
+      "properties": [
+        "attached",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:tripwire",
+      "block_id": 264,
+      "default_state": 5386,
+      "min_state": 5259,
+      "max_state": 5386,
+      "num_states": 128,
+      "properties": [
+        "attached",
+        "disarmed",
+        "east",
+        "north",
+        "powered",
+        "south",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:emerald_block",
+      "block_id": 265,
+      "default_state": 5387,
+      "min_state": 5387,
+      "max_state": 5387,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:spruce_stairs",
+      "block_id": 266,
+      "default_state": 5399,
+      "min_state": 5388,
+      "max_state": 5467,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:birch_stairs",
+      "block_id": 267,
+      "default_state": 5479,
+      "min_state": 5468,
+      "max_state": 5547,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_stairs",
+      "block_id": 268,
+      "default_state": 5559,
+      "min_state": 5548,
+      "max_state": 5627,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:command_block",
+      "block_id": 269,
+      "default_state": 5634,
+      "min_state": 5628,
+      "max_state": 5639,
+      "num_states": 12,
+      "properties": [
+        "conditional",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:beacon",
+      "block_id": 270,
+      "default_state": 5640,
+      "min_state": 5640,
+      "max_state": 5640,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cobblestone_wall",
+      "block_id": 271,
+      "default_state": 5700,
+      "min_state": 5641,
+      "max_state": 5704,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_cobblestone_wall",
+      "block_id": 272,
+      "default_state": 5764,
+      "min_state": 5705,
+      "max_state": 5768,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:flower_pot",
+      "block_id": 273,
+      "default_state": 5769,
+      "min_state": 5769,
+      "max_state": 5769,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_oak_sapling",
+      "block_id": 274,
+      "default_state": 5770,
+      "min_state": 5770,
+      "max_state": 5770,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_spruce_sapling",
+      "block_id": 275,
+      "default_state": 5771,
+      "min_state": 5771,
+      "max_state": 5771,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_birch_sapling",
+      "block_id": 276,
+      "default_state": 5772,
+      "min_state": 5772,
+      "max_state": 5772,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_jungle_sapling",
+      "block_id": 277,
+      "default_state": 5773,
+      "min_state": 5773,
+      "max_state": 5773,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_acacia_sapling",
+      "block_id": 278,
+      "default_state": 5774,
+      "min_state": 5774,
+      "max_state": 5774,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_dark_oak_sapling",
+      "block_id": 279,
+      "default_state": 5775,
+      "min_state": 5775,
+      "max_state": 5775,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_fern",
+      "block_id": 280,
+      "default_state": 5776,
+      "min_state": 5776,
+      "max_state": 5776,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_dandelion",
+      "block_id": 281,
+      "default_state": 5777,
+      "min_state": 5777,
+      "max_state": 5777,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_poppy",
+      "block_id": 282,
+      "default_state": 5778,
+      "min_state": 5778,
+      "max_state": 5778,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_blue_orchid",
+      "block_id": 283,
+      "default_state": 5779,
+      "min_state": 5779,
+      "max_state": 5779,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_allium",
+      "block_id": 284,
+      "default_state": 5780,
+      "min_state": 5780,
+      "max_state": 5780,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_azure_bluet",
+      "block_id": 285,
+      "default_state": 5781,
+      "min_state": 5781,
+      "max_state": 5781,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_red_tulip",
+      "block_id": 286,
+      "default_state": 5782,
+      "min_state": 5782,
+      "max_state": 5782,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_orange_tulip",
+      "block_id": 287,
+      "default_state": 5783,
+      "min_state": 5783,
+      "max_state": 5783,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_white_tulip",
+      "block_id": 288,
+      "default_state": 5784,
+      "min_state": 5784,
+      "max_state": 5784,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_pink_tulip",
+      "block_id": 289,
+      "default_state": 5785,
+      "min_state": 5785,
+      "max_state": 5785,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_oxeye_daisy",
+      "block_id": 290,
+      "default_state": 5786,
+      "min_state": 5786,
+      "max_state": 5786,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_cornflower",
+      "block_id": 291,
+      "default_state": 5787,
+      "min_state": 5787,
+      "max_state": 5787,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_lily_of_the_valley",
+      "block_id": 292,
+      "default_state": 5788,
+      "min_state": 5788,
+      "max_state": 5788,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_wither_rose",
+      "block_id": 293,
+      "default_state": 5789,
+      "min_state": 5789,
+      "max_state": 5789,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_red_mushroom",
+      "block_id": 294,
+      "default_state": 5790,
+      "min_state": 5790,
+      "max_state": 5790,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_brown_mushroom",
+      "block_id": 295,
+      "default_state": 5791,
+      "min_state": 5791,
+      "max_state": 5791,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_dead_bush",
+      "block_id": 296,
+      "default_state": 5792,
+      "min_state": 5792,
+      "max_state": 5792,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:potted_cactus",
+      "block_id": 297,
+      "default_state": 5793,
+      "min_state": 5793,
+      "max_state": 5793,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:carrots",
+      "block_id": 298,
+      "default_state": 5794,
+      "min_state": 5794,
+      "max_state": 5801,
+      "num_states": 8,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:potatoes",
+      "block_id": 299,
+      "default_state": 5802,
+      "min_state": 5802,
+      "max_state": 5809,
+      "num_states": 8,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:oak_button",
+      "block_id": 300,
+      "default_state": 5819,
+      "min_state": 5810,
+      "max_state": 5833,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_button",
+      "block_id": 301,
+      "default_state": 5843,
+      "min_state": 5834,
+      "max_state": 5857,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:birch_button",
+      "block_id": 302,
+      "default_state": 5867,
+      "min_state": 5858,
+      "max_state": 5881,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_button",
+      "block_id": 303,
+      "default_state": 5891,
+      "min_state": 5882,
+      "max_state": 5905,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_button",
+      "block_id": 304,
+      "default_state": 5915,
+      "min_state": 5906,
+      "max_state": 5929,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_button",
+      "block_id": 305,
+      "default_state": 5939,
+      "min_state": 5930,
+      "max_state": 5953,
+      "num_states": 24,
+      "properties": [
+        "face",
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:skeleton_skull",
+      "block_id": 306,
+      "default_state": 5954,
+      "min_state": 5954,
+      "max_state": 5969,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:skeleton_wall_skull",
+      "block_id": 307,
+      "default_state": 5970,
+      "min_state": 5970,
+      "max_state": 5973,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:wither_skeleton_skull",
+      "block_id": 308,
+      "default_state": 5974,
+      "min_state": 5974,
+      "max_state": 5989,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:wither_skeleton_wall_skull",
+      "block_id": 309,
+      "default_state": 5990,
+      "min_state": 5990,
+      "max_state": 5993,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:zombie_head",
+      "block_id": 310,
+      "default_state": 5994,
+      "min_state": 5994,
+      "max_state": 6009,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:zombie_wall_head",
+      "block_id": 311,
+      "default_state": 6010,
+      "min_state": 6010,
+      "max_state": 6013,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:player_head",
+      "block_id": 312,
+      "default_state": 6014,
+      "min_state": 6014,
+      "max_state": 6029,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:player_wall_head",
+      "block_id": 313,
+      "default_state": 6030,
+      "min_state": 6030,
+      "max_state": 6033,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:creeper_head",
+      "block_id": 314,
+      "default_state": 6034,
+      "min_state": 6034,
+      "max_state": 6049,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:creeper_wall_head",
+      "block_id": 315,
+      "default_state": 6050,
+      "min_state": 6050,
+      "max_state": 6053,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:dragon_head",
+      "block_id": 316,
+      "default_state": 6054,
+      "min_state": 6054,
+      "max_state": 6069,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:dragon_wall_head",
+      "block_id": 317,
+      "default_state": 6070,
+      "min_state": 6070,
+      "max_state": 6073,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:anvil",
+      "block_id": 318,
+      "default_state": 6074,
+      "min_state": 6074,
+      "max_state": 6077,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:chipped_anvil",
+      "block_id": 319,
+      "default_state": 6078,
+      "min_state": 6078,
+      "max_state": 6081,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:damaged_anvil",
+      "block_id": 320,
+      "default_state": 6082,
+      "min_state": 6082,
+      "max_state": 6085,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:trapped_chest",
+      "block_id": 321,
+      "default_state": 6087,
+      "min_state": 6086,
+      "max_state": 6109,
+      "num_states": 24,
+      "properties": [
+        "facing",
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:light_weighted_pressure_plate",
+      "block_id": 322,
+      "default_state": 6110,
+      "min_state": 6110,
+      "max_state": 6125,
+      "num_states": 16,
+      "properties": [
+        "power"
+      ]
+    },
+    {
+      "name": "minecraft:heavy_weighted_pressure_plate",
+      "block_id": 323,
+      "default_state": 6126,
+      "min_state": 6126,
+      "max_state": 6141,
+      "num_states": 16,
+      "properties": [
+        "power"
+      ]
+    },
+    {
+      "name": "minecraft:comparator",
+      "block_id": 324,
+      "default_state": 6143,
+      "min_state": 6142,
+      "max_state": 6157,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "mode",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:daylight_detector",
+      "block_id": 325,
+      "default_state": 6174,
+      "min_state": 6158,
+      "max_state": 6189,
+      "num_states": 32,
+      "properties": [
+        "inverted",
+        "power"
+      ]
+    },
+    {
+      "name": "minecraft:redstone_block",
+      "block_id": 326,
+      "default_state": 6190,
+      "min_state": 6190,
+      "max_state": 6190,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:nether_quartz_ore",
+      "block_id": 327,
+      "default_state": 6191,
+      "min_state": 6191,
+      "max_state": 6191,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:hopper",
+      "block_id": 328,
+      "default_state": 6192,
+      "min_state": 6192,
+      "max_state": 6201,
+      "num_states": 10,
+      "properties": [
+        "enabled",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:quartz_block",
+      "block_id": 329,
+      "default_state": 6202,
+      "min_state": 6202,
+      "max_state": 6202,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:chiseled_quartz_block",
+      "block_id": 330,
+      "default_state": 6203,
+      "min_state": 6203,
+      "max_state": 6203,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:quartz_pillar",
+      "block_id": 331,
+      "default_state": 6205,
+      "min_state": 6204,
+      "max_state": 6206,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:quartz_stairs",
+      "block_id": 332,
+      "default_state": 6218,
+      "min_state": 6207,
+      "max_state": 6286,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:activator_rail",
+      "block_id": 333,
+      "default_state": 6293,
+      "min_state": 6287,
+      "max_state": 6298,
+      "num_states": 12,
+      "properties": [
+        "powered",
+        "shape"
+      ]
+    },
+    {
+      "name": "minecraft:dropper",
+      "block_id": 334,
+      "default_state": 6300,
+      "min_state": 6299,
+      "max_state": 6310,
+      "num_states": 12,
+      "properties": [
+        "facing",
+        "triggered"
+      ]
+    },
+    {
+      "name": "minecraft:white_terracotta",
+      "block_id": 335,
+      "default_state": 6311,
+      "min_state": 6311,
+      "max_state": 6311,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_terracotta",
+      "block_id": 336,
+      "default_state": 6312,
+      "min_state": 6312,
+      "max_state": 6312,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_terracotta",
+      "block_id": 337,
+      "default_state": 6313,
+      "min_state": 6313,
+      "max_state": 6313,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_terracotta",
+      "block_id": 338,
+      "default_state": 6314,
+      "min_state": 6314,
+      "max_state": 6314,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_terracotta",
+      "block_id": 339,
+      "default_state": 6315,
+      "min_state": 6315,
+      "max_state": 6315,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_terracotta",
+      "block_id": 340,
+      "default_state": 6316,
+      "min_state": 6316,
+      "max_state": 6316,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_terracotta",
+      "block_id": 341,
+      "default_state": 6317,
+      "min_state": 6317,
+      "max_state": 6317,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_terracotta",
+      "block_id": 342,
+      "default_state": 6318,
+      "min_state": 6318,
+      "max_state": 6318,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_terracotta",
+      "block_id": 343,
+      "default_state": 6319,
+      "min_state": 6319,
+      "max_state": 6319,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_terracotta",
+      "block_id": 344,
+      "default_state": 6320,
+      "min_state": 6320,
+      "max_state": 6320,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_terracotta",
+      "block_id": 345,
+      "default_state": 6321,
+      "min_state": 6321,
+      "max_state": 6321,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_terracotta",
+      "block_id": 346,
+      "default_state": 6322,
+      "min_state": 6322,
+      "max_state": 6322,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_terracotta",
+      "block_id": 347,
+      "default_state": 6323,
+      "min_state": 6323,
+      "max_state": 6323,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_terracotta",
+      "block_id": 348,
+      "default_state": 6324,
+      "min_state": 6324,
+      "max_state": 6324,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_terracotta",
+      "block_id": 349,
+      "default_state": 6325,
+      "min_state": 6325,
+      "max_state": 6325,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_terracotta",
+      "block_id": 350,
+      "default_state": 6326,
+      "min_state": 6326,
+      "max_state": 6326,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:white_stained_glass_pane",
+      "block_id": 351,
+      "default_state": 6358,
+      "min_state": 6327,
+      "max_state": 6358,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:orange_stained_glass_pane",
+      "block_id": 352,
+      "default_state": 6390,
+      "min_state": 6359,
+      "max_state": 6390,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_stained_glass_pane",
+      "block_id": 353,
+      "default_state": 6422,
+      "min_state": 6391,
+      "max_state": 6422,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_stained_glass_pane",
+      "block_id": 354,
+      "default_state": 6454,
+      "min_state": 6423,
+      "max_state": 6454,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_stained_glass_pane",
+      "block_id": 355,
+      "default_state": 6486,
+      "min_state": 6455,
+      "max_state": 6486,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:lime_stained_glass_pane",
+      "block_id": 356,
+      "default_state": 6518,
+      "min_state": 6487,
+      "max_state": 6518,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:pink_stained_glass_pane",
+      "block_id": 357,
+      "default_state": 6550,
+      "min_state": 6519,
+      "max_state": 6550,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:gray_stained_glass_pane",
+      "block_id": 358,
+      "default_state": 6582,
+      "min_state": 6551,
+      "max_state": 6582,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_stained_glass_pane",
+      "block_id": 359,
+      "default_state": 6614,
+      "min_state": 6583,
+      "max_state": 6614,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_stained_glass_pane",
+      "block_id": 360,
+      "default_state": 6646,
+      "min_state": 6615,
+      "max_state": 6646,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:purple_stained_glass_pane",
+      "block_id": 361,
+      "default_state": 6678,
+      "min_state": 6647,
+      "max_state": 6678,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:blue_stained_glass_pane",
+      "block_id": 362,
+      "default_state": 6710,
+      "min_state": 6679,
+      "max_state": 6710,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:brown_stained_glass_pane",
+      "block_id": 363,
+      "default_state": 6742,
+      "min_state": 6711,
+      "max_state": 6742,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:green_stained_glass_pane",
+      "block_id": 364,
+      "default_state": 6774,
+      "min_state": 6743,
+      "max_state": 6774,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:red_stained_glass_pane",
+      "block_id": 365,
+      "default_state": 6806,
+      "min_state": 6775,
+      "max_state": 6806,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:black_stained_glass_pane",
+      "block_id": 366,
+      "default_state": 6838,
+      "min_state": 6807,
+      "max_state": 6838,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_stairs",
+      "block_id": 367,
+      "default_state": 6850,
+      "min_state": 6839,
+      "max_state": 6918,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_stairs",
+      "block_id": 368,
+      "default_state": 6930,
+      "min_state": 6919,
+      "max_state": 6998,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:slime_block",
+      "block_id": 369,
+      "default_state": 6999,
+      "min_state": 6999,
+      "max_state": 6999,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:barrier",
+      "block_id": 370,
+      "default_state": 7000,
+      "min_state": 7000,
+      "max_state": 7000,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:iron_trapdoor",
+      "block_id": 371,
+      "default_state": 7016,
+      "min_state": 7001,
+      "max_state": 7064,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "open",
+        "powered",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:prismarine",
+      "block_id": 372,
+      "default_state": 7065,
+      "min_state": 7065,
+      "max_state": 7065,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:prismarine_bricks",
+      "block_id": 373,
+      "default_state": 7066,
+      "min_state": 7066,
+      "max_state": 7066,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dark_prismarine",
+      "block_id": 374,
+      "default_state": 7067,
+      "min_state": 7067,
+      "max_state": 7067,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:prismarine_stairs",
+      "block_id": 375,
+      "default_state": 7079,
+      "min_state": 7068,
+      "max_state": 7147,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:prismarine_brick_stairs",
+      "block_id": 376,
+      "default_state": 7159,
+      "min_state": 7148,
+      "max_state": 7227,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_prismarine_stairs",
+      "block_id": 377,
+      "default_state": 7239,
+      "min_state": 7228,
+      "max_state": 7307,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:prismarine_slab",
+      "block_id": 378,
+      "default_state": 7311,
+      "min_state": 7308,
+      "max_state": 7313,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:prismarine_brick_slab",
+      "block_id": 379,
+      "default_state": 7317,
+      "min_state": 7314,
+      "max_state": 7319,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_prismarine_slab",
+      "block_id": 380,
+      "default_state": 7323,
+      "min_state": 7320,
+      "max_state": 7325,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:sea_lantern",
+      "block_id": 381,
+      "default_state": 7326,
+      "min_state": 7326,
+      "max_state": 7326,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:hay_block",
+      "block_id": 382,
+      "default_state": 7328,
+      "min_state": 7327,
+      "max_state": 7329,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:white_carpet",
+      "block_id": 383,
+      "default_state": 7330,
+      "min_state": 7330,
+      "max_state": 7330,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_carpet",
+      "block_id": 384,
+      "default_state": 7331,
+      "min_state": 7331,
+      "max_state": 7331,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_carpet",
+      "block_id": 385,
+      "default_state": 7332,
+      "min_state": 7332,
+      "max_state": 7332,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_carpet",
+      "block_id": 386,
+      "default_state": 7333,
+      "min_state": 7333,
+      "max_state": 7333,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_carpet",
+      "block_id": 387,
+      "default_state": 7334,
+      "min_state": 7334,
+      "max_state": 7334,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_carpet",
+      "block_id": 388,
+      "default_state": 7335,
+      "min_state": 7335,
+      "max_state": 7335,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_carpet",
+      "block_id": 389,
+      "default_state": 7336,
+      "min_state": 7336,
+      "max_state": 7336,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_carpet",
+      "block_id": 390,
+      "default_state": 7337,
+      "min_state": 7337,
+      "max_state": 7337,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_carpet",
+      "block_id": 391,
+      "default_state": 7338,
+      "min_state": 7338,
+      "max_state": 7338,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_carpet",
+      "block_id": 392,
+      "default_state": 7339,
+      "min_state": 7339,
+      "max_state": 7339,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_carpet",
+      "block_id": 393,
+      "default_state": 7340,
+      "min_state": 7340,
+      "max_state": 7340,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_carpet",
+      "block_id": 394,
+      "default_state": 7341,
+      "min_state": 7341,
+      "max_state": 7341,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_carpet",
+      "block_id": 395,
+      "default_state": 7342,
+      "min_state": 7342,
+      "max_state": 7342,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_carpet",
+      "block_id": 396,
+      "default_state": 7343,
+      "min_state": 7343,
+      "max_state": 7343,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_carpet",
+      "block_id": 397,
+      "default_state": 7344,
+      "min_state": 7344,
+      "max_state": 7344,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_carpet",
+      "block_id": 398,
+      "default_state": 7345,
+      "min_state": 7345,
+      "max_state": 7345,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:terracotta",
+      "block_id": 399,
+      "default_state": 7346,
+      "min_state": 7346,
+      "max_state": 7346,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:coal_block",
+      "block_id": 400,
+      "default_state": 7347,
+      "min_state": 7347,
+      "max_state": 7347,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:packed_ice",
+      "block_id": 401,
+      "default_state": 7348,
+      "min_state": 7348,
+      "max_state": 7348,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:sunflower",
+      "block_id": 402,
+      "default_state": 7350,
+      "min_state": 7349,
+      "max_state": 7350,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:lilac",
+      "block_id": 403,
+      "default_state": 7352,
+      "min_state": 7351,
+      "max_state": 7352,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:rose_bush",
+      "block_id": 404,
+      "default_state": 7354,
+      "min_state": 7353,
+      "max_state": 7354,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:peony",
+      "block_id": 405,
+      "default_state": 7356,
+      "min_state": 7355,
+      "max_state": 7356,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:tall_grass",
+      "block_id": 406,
+      "default_state": 7358,
+      "min_state": 7357,
+      "max_state": 7358,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:large_fern",
+      "block_id": 407,
+      "default_state": 7360,
+      "min_state": 7359,
+      "max_state": 7360,
+      "num_states": 2,
+      "properties": [
+        "half"
+      ]
+    },
+    {
+      "name": "minecraft:white_banner",
+      "block_id": 408,
+      "default_state": 7361,
+      "min_state": 7361,
+      "max_state": 7376,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:orange_banner",
+      "block_id": 409,
+      "default_state": 7377,
+      "min_state": 7377,
+      "max_state": 7392,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_banner",
+      "block_id": 410,
+      "default_state": 7393,
+      "min_state": 7393,
+      "max_state": 7408,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_banner",
+      "block_id": 411,
+      "default_state": 7409,
+      "min_state": 7409,
+      "max_state": 7424,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_banner",
+      "block_id": 412,
+      "default_state": 7425,
+      "min_state": 7425,
+      "max_state": 7440,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:lime_banner",
+      "block_id": 413,
+      "default_state": 7441,
+      "min_state": 7441,
+      "max_state": 7456,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:pink_banner",
+      "block_id": 414,
+      "default_state": 7457,
+      "min_state": 7457,
+      "max_state": 7472,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:gray_banner",
+      "block_id": 415,
+      "default_state": 7473,
+      "min_state": 7473,
+      "max_state": 7488,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_banner",
+      "block_id": 416,
+      "default_state": 7489,
+      "min_state": 7489,
+      "max_state": 7504,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_banner",
+      "block_id": 417,
+      "default_state": 7505,
+      "min_state": 7505,
+      "max_state": 7520,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:purple_banner",
+      "block_id": 418,
+      "default_state": 7521,
+      "min_state": 7521,
+      "max_state": 7536,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:blue_banner",
+      "block_id": 419,
+      "default_state": 7537,
+      "min_state": 7537,
+      "max_state": 7552,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:brown_banner",
+      "block_id": 420,
+      "default_state": 7553,
+      "min_state": 7553,
+      "max_state": 7568,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:green_banner",
+      "block_id": 421,
+      "default_state": 7569,
+      "min_state": 7569,
+      "max_state": 7584,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:red_banner",
+      "block_id": 422,
+      "default_state": 7585,
+      "min_state": 7585,
+      "max_state": 7600,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:black_banner",
+      "block_id": 423,
+      "default_state": 7601,
+      "min_state": 7601,
+      "max_state": 7616,
+      "num_states": 16,
+      "properties": [
+        "rotation"
+      ]
+    },
+    {
+      "name": "minecraft:white_wall_banner",
+      "block_id": 424,
+      "default_state": 7617,
+      "min_state": 7617,
+      "max_state": 7620,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:orange_wall_banner",
+      "block_id": 425,
+      "default_state": 7621,
+      "min_state": 7621,
+      "max_state": 7624,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_wall_banner",
+      "block_id": 426,
+      "default_state": 7625,
+      "min_state": 7625,
+      "max_state": 7628,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_wall_banner",
+      "block_id": 427,
+      "default_state": 7629,
+      "min_state": 7629,
+      "max_state": 7632,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_wall_banner",
+      "block_id": 428,
+      "default_state": 7633,
+      "min_state": 7633,
+      "max_state": 7636,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:lime_wall_banner",
+      "block_id": 429,
+      "default_state": 7637,
+      "min_state": 7637,
+      "max_state": 7640,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:pink_wall_banner",
+      "block_id": 430,
+      "default_state": 7641,
+      "min_state": 7641,
+      "max_state": 7644,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:gray_wall_banner",
+      "block_id": 431,
+      "default_state": 7645,
+      "min_state": 7645,
+      "max_state": 7648,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_wall_banner",
+      "block_id": 432,
+      "default_state": 7649,
+      "min_state": 7649,
+      "max_state": 7652,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_wall_banner",
+      "block_id": 433,
+      "default_state": 7653,
+      "min_state": 7653,
+      "max_state": 7656,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:purple_wall_banner",
+      "block_id": 434,
+      "default_state": 7657,
+      "min_state": 7657,
+      "max_state": 7660,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:blue_wall_banner",
+      "block_id": 435,
+      "default_state": 7661,
+      "min_state": 7661,
+      "max_state": 7664,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:brown_wall_banner",
+      "block_id": 436,
+      "default_state": 7665,
+      "min_state": 7665,
+      "max_state": 7668,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:green_wall_banner",
+      "block_id": 437,
+      "default_state": 7669,
+      "min_state": 7669,
+      "max_state": 7672,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:red_wall_banner",
+      "block_id": 438,
+      "default_state": 7673,
+      "min_state": 7673,
+      "max_state": 7676,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:black_wall_banner",
+      "block_id": 439,
+      "default_state": 7677,
+      "min_state": 7677,
+      "max_state": 7680,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:red_sandstone",
+      "block_id": 440,
+      "default_state": 7681,
+      "min_state": 7681,
+      "max_state": 7681,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:chiseled_red_sandstone",
+      "block_id": 441,
+      "default_state": 7682,
+      "min_state": 7682,
+      "max_state": 7682,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cut_red_sandstone",
+      "block_id": 442,
+      "default_state": 7683,
+      "min_state": 7683,
+      "max_state": 7683,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_sandstone_stairs",
+      "block_id": 443,
+      "default_state": 7695,
+      "min_state": 7684,
+      "max_state": 7763,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:oak_slab",
+      "block_id": 444,
+      "default_state": 7767,
+      "min_state": 7764,
+      "max_state": 7769,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_slab",
+      "block_id": 445,
+      "default_state": 7773,
+      "min_state": 7770,
+      "max_state": 7775,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:birch_slab",
+      "block_id": 446,
+      "default_state": 7779,
+      "min_state": 7776,
+      "max_state": 7781,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_slab",
+      "block_id": 447,
+      "default_state": 7785,
+      "min_state": 7782,
+      "max_state": 7787,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_slab",
+      "block_id": 448,
+      "default_state": 7791,
+      "min_state": 7788,
+      "max_state": 7793,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_slab",
+      "block_id": 449,
+      "default_state": 7797,
+      "min_state": 7794,
+      "max_state": 7799,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:stone_slab",
+      "block_id": 450,
+      "default_state": 7803,
+      "min_state": 7800,
+      "max_state": 7805,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_stone_slab",
+      "block_id": 451,
+      "default_state": 7809,
+      "min_state": 7806,
+      "max_state": 7811,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:sandstone_slab",
+      "block_id": 452,
+      "default_state": 7815,
+      "min_state": 7812,
+      "max_state": 7817,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:cut_sandstone_slab",
+      "block_id": 453,
+      "default_state": 7821,
+      "min_state": 7818,
+      "max_state": 7823,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:petrified_oak_slab",
+      "block_id": 454,
+      "default_state": 7827,
+      "min_state": 7824,
+      "max_state": 7829,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:cobblestone_slab",
+      "block_id": 455,
+      "default_state": 7833,
+      "min_state": 7830,
+      "max_state": 7835,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:brick_slab",
+      "block_id": 456,
+      "default_state": 7839,
+      "min_state": 7836,
+      "max_state": 7841,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:stone_brick_slab",
+      "block_id": 457,
+      "default_state": 7845,
+      "min_state": 7842,
+      "max_state": 7847,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:nether_brick_slab",
+      "block_id": 458,
+      "default_state": 7851,
+      "min_state": 7848,
+      "max_state": 7853,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:quartz_slab",
+      "block_id": 459,
+      "default_state": 7857,
+      "min_state": 7854,
+      "max_state": 7859,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:red_sandstone_slab",
+      "block_id": 460,
+      "default_state": 7863,
+      "min_state": 7860,
+      "max_state": 7865,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:cut_red_sandstone_slab",
+      "block_id": 461,
+      "default_state": 7869,
+      "min_state": 7866,
+      "max_state": 7871,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:purpur_slab",
+      "block_id": 462,
+      "default_state": 7875,
+      "min_state": 7872,
+      "max_state": 7877,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_stone",
+      "block_id": 463,
+      "default_state": 7878,
+      "min_state": 7878,
+      "max_state": 7878,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:smooth_sandstone",
+      "block_id": 464,
+      "default_state": 7879,
+      "min_state": 7879,
+      "max_state": 7879,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:smooth_quartz",
+      "block_id": 465,
+      "default_state": 7880,
+      "min_state": 7880,
+      "max_state": 7880,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:smooth_red_sandstone",
+      "block_id": 466,
+      "default_state": 7881,
+      "min_state": 7881,
+      "max_state": 7881,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:spruce_fence_gate",
+      "block_id": 467,
+      "default_state": 7889,
+      "min_state": 7882,
+      "max_state": 7913,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:birch_fence_gate",
+      "block_id": 468,
+      "default_state": 7921,
+      "min_state": 7914,
+      "max_state": 7945,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_fence_gate",
+      "block_id": 469,
+      "default_state": 7953,
+      "min_state": 7946,
+      "max_state": 7977,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_fence_gate",
+      "block_id": 470,
+      "default_state": 7985,
+      "min_state": 7978,
+      "max_state": 8009,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_fence_gate",
+      "block_id": 471,
+      "default_state": 8017,
+      "min_state": 8010,
+      "max_state": 8041,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "in_wall",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_fence",
+      "block_id": 472,
+      "default_state": 8073,
+      "min_state": 8042,
+      "max_state": 8073,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:birch_fence",
+      "block_id": 473,
+      "default_state": 8105,
+      "min_state": 8074,
+      "max_state": 8105,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_fence",
+      "block_id": 474,
+      "default_state": 8137,
+      "min_state": 8106,
+      "max_state": 8137,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_fence",
+      "block_id": 475,
+      "default_state": 8169,
+      "min_state": 8138,
+      "max_state": 8169,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_fence",
+      "block_id": 476,
+      "default_state": 8201,
+      "min_state": 8170,
+      "max_state": 8201,
+      "num_states": 32,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:spruce_door",
+      "block_id": 477,
+      "default_state": 8213,
+      "min_state": 8202,
+      "max_state": 8265,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:birch_door",
+      "block_id": 478,
+      "default_state": 8277,
+      "min_state": 8266,
+      "max_state": 8329,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:jungle_door",
+      "block_id": 479,
+      "default_state": 8341,
+      "min_state": 8330,
+      "max_state": 8393,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:acacia_door",
+      "block_id": 480,
+      "default_state": 8405,
+      "min_state": 8394,
+      "max_state": 8457,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:dark_oak_door",
+      "block_id": 481,
+      "default_state": 8469,
+      "min_state": 8458,
+      "max_state": 8521,
+      "num_states": 64,
+      "properties": [
+        "facing",
+        "half",
+        "hinge",
+        "open",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:end_rod",
+      "block_id": 482,
+      "default_state": 8526,
+      "min_state": 8522,
+      "max_state": 8527,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:chorus_plant",
+      "block_id": 483,
+      "default_state": 8591,
+      "min_state": 8528,
+      "max_state": 8591,
+      "num_states": 64,
+      "properties": [
+        "down",
+        "east",
+        "north",
+        "south",
+        "up",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:chorus_flower",
+      "block_id": 484,
+      "default_state": 8592,
+      "min_state": 8592,
+      "max_state": 8597,
+      "num_states": 6,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:purpur_block",
+      "block_id": 485,
+      "default_state": 8598,
+      "min_state": 8598,
+      "max_state": 8598,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purpur_pillar",
+      "block_id": 486,
+      "default_state": 8600,
+      "min_state": 8599,
+      "max_state": 8601,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:purpur_stairs",
+      "block_id": 487,
+      "default_state": 8613,
+      "min_state": 8602,
+      "max_state": 8681,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:end_stone_bricks",
+      "block_id": 488,
+      "default_state": 8682,
+      "min_state": 8682,
+      "max_state": 8682,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:beetroots",
+      "block_id": 489,
+      "default_state": 8683,
+      "min_state": 8683,
+      "max_state": 8686,
+      "num_states": 4,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:grass_path",
+      "block_id": 490,
+      "default_state": 8687,
+      "min_state": 8687,
+      "max_state": 8687,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:end_gateway",
+      "block_id": 491,
+      "default_state": 8688,
+      "min_state": 8688,
+      "max_state": 8688,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:repeating_command_block",
+      "block_id": 492,
+      "default_state": 8695,
+      "min_state": 8689,
+      "max_state": 8700,
+      "num_states": 12,
+      "properties": [
+        "conditional",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:chain_command_block",
+      "block_id": 493,
+      "default_state": 8707,
+      "min_state": 8701,
+      "max_state": 8712,
+      "num_states": 12,
+      "properties": [
+        "conditional",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:frosted_ice",
+      "block_id": 494,
+      "default_state": 8713,
+      "min_state": 8713,
+      "max_state": 8716,
+      "num_states": 4,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:magma_block",
+      "block_id": 495,
+      "default_state": 8717,
+      "min_state": 8717,
+      "max_state": 8717,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:nether_wart_block",
+      "block_id": 496,
+      "default_state": 8718,
+      "min_state": 8718,
+      "max_state": 8718,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_nether_bricks",
+      "block_id": 497,
+      "default_state": 8719,
+      "min_state": 8719,
+      "max_state": 8719,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:bone_block",
+      "block_id": 498,
+      "default_state": 8721,
+      "min_state": 8720,
+      "max_state": 8722,
+      "num_states": 3,
+      "properties": [
+        "axis"
+      ]
+    },
+    {
+      "name": "minecraft:structure_void",
+      "block_id": 499,
+      "default_state": 8723,
+      "min_state": 8723,
+      "max_state": 8723,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:observer",
+      "block_id": 500,
+      "default_state": 8729,
+      "min_state": 8724,
+      "max_state": 8735,
+      "num_states": 12,
+      "properties": [
+        "facing",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:shulker_box",
+      "block_id": 501,
+      "default_state": 8740,
+      "min_state": 8736,
+      "max_state": 8741,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:white_shulker_box",
+      "block_id": 502,
+      "default_state": 8746,
+      "min_state": 8742,
+      "max_state": 8747,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:orange_shulker_box",
+      "block_id": 503,
+      "default_state": 8752,
+      "min_state": 8748,
+      "max_state": 8753,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_shulker_box",
+      "block_id": 504,
+      "default_state": 8758,
+      "min_state": 8754,
+      "max_state": 8759,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_shulker_box",
+      "block_id": 505,
+      "default_state": 8764,
+      "min_state": 8760,
+      "max_state": 8765,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_shulker_box",
+      "block_id": 506,
+      "default_state": 8770,
+      "min_state": 8766,
+      "max_state": 8771,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:lime_shulker_box",
+      "block_id": 507,
+      "default_state": 8776,
+      "min_state": 8772,
+      "max_state": 8777,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:pink_shulker_box",
+      "block_id": 508,
+      "default_state": 8782,
+      "min_state": 8778,
+      "max_state": 8783,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:gray_shulker_box",
+      "block_id": 509,
+      "default_state": 8788,
+      "min_state": 8784,
+      "max_state": 8789,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_shulker_box",
+      "block_id": 510,
+      "default_state": 8794,
+      "min_state": 8790,
+      "max_state": 8795,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_shulker_box",
+      "block_id": 511,
+      "default_state": 8800,
+      "min_state": 8796,
+      "max_state": 8801,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:purple_shulker_box",
+      "block_id": 512,
+      "default_state": 8806,
+      "min_state": 8802,
+      "max_state": 8807,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:blue_shulker_box",
+      "block_id": 513,
+      "default_state": 8812,
+      "min_state": 8808,
+      "max_state": 8813,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:brown_shulker_box",
+      "block_id": 514,
+      "default_state": 8818,
+      "min_state": 8814,
+      "max_state": 8819,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:green_shulker_box",
+      "block_id": 515,
+      "default_state": 8824,
+      "min_state": 8820,
+      "max_state": 8825,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:red_shulker_box",
+      "block_id": 516,
+      "default_state": 8830,
+      "min_state": 8826,
+      "max_state": 8831,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:black_shulker_box",
+      "block_id": 517,
+      "default_state": 8836,
+      "min_state": 8832,
+      "max_state": 8837,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:white_glazed_terracotta",
+      "block_id": 518,
+      "default_state": 8838,
+      "min_state": 8838,
+      "max_state": 8841,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:orange_glazed_terracotta",
+      "block_id": 519,
+      "default_state": 8842,
+      "min_state": 8842,
+      "max_state": 8845,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:magenta_glazed_terracotta",
+      "block_id": 520,
+      "default_state": 8846,
+      "min_state": 8846,
+      "max_state": 8849,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_blue_glazed_terracotta",
+      "block_id": 521,
+      "default_state": 8850,
+      "min_state": 8850,
+      "max_state": 8853,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:yellow_glazed_terracotta",
+      "block_id": 522,
+      "default_state": 8854,
+      "min_state": 8854,
+      "max_state": 8857,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:lime_glazed_terracotta",
+      "block_id": 523,
+      "default_state": 8858,
+      "min_state": 8858,
+      "max_state": 8861,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:pink_glazed_terracotta",
+      "block_id": 524,
+      "default_state": 8862,
+      "min_state": 8862,
+      "max_state": 8865,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:gray_glazed_terracotta",
+      "block_id": 525,
+      "default_state": 8866,
+      "min_state": 8866,
+      "max_state": 8869,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:light_gray_glazed_terracotta",
+      "block_id": 526,
+      "default_state": 8870,
+      "min_state": 8870,
+      "max_state": 8873,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:cyan_glazed_terracotta",
+      "block_id": 527,
+      "default_state": 8874,
+      "min_state": 8874,
+      "max_state": 8877,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:purple_glazed_terracotta",
+      "block_id": 528,
+      "default_state": 8878,
+      "min_state": 8878,
+      "max_state": 8881,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:blue_glazed_terracotta",
+      "block_id": 529,
+      "default_state": 8882,
+      "min_state": 8882,
+      "max_state": 8885,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:brown_glazed_terracotta",
+      "block_id": 530,
+      "default_state": 8886,
+      "min_state": 8886,
+      "max_state": 8889,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:green_glazed_terracotta",
+      "block_id": 531,
+      "default_state": 8890,
+      "min_state": 8890,
+      "max_state": 8893,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:red_glazed_terracotta",
+      "block_id": 532,
+      "default_state": 8894,
+      "min_state": 8894,
+      "max_state": 8897,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:black_glazed_terracotta",
+      "block_id": 533,
+      "default_state": 8898,
+      "min_state": 8898,
+      "max_state": 8901,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:white_concrete",
+      "block_id": 534,
+      "default_state": 8902,
+      "min_state": 8902,
+      "max_state": 8902,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_concrete",
+      "block_id": 535,
+      "default_state": 8903,
+      "min_state": 8903,
+      "max_state": 8903,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_concrete",
+      "block_id": 536,
+      "default_state": 8904,
+      "min_state": 8904,
+      "max_state": 8904,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_concrete",
+      "block_id": 537,
+      "default_state": 8905,
+      "min_state": 8905,
+      "max_state": 8905,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_concrete",
+      "block_id": 538,
+      "default_state": 8906,
+      "min_state": 8906,
+      "max_state": 8906,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_concrete",
+      "block_id": 539,
+      "default_state": 8907,
+      "min_state": 8907,
+      "max_state": 8907,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_concrete",
+      "block_id": 540,
+      "default_state": 8908,
+      "min_state": 8908,
+      "max_state": 8908,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_concrete",
+      "block_id": 541,
+      "default_state": 8909,
+      "min_state": 8909,
+      "max_state": 8909,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_concrete",
+      "block_id": 542,
+      "default_state": 8910,
+      "min_state": 8910,
+      "max_state": 8910,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_concrete",
+      "block_id": 543,
+      "default_state": 8911,
+      "min_state": 8911,
+      "max_state": 8911,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_concrete",
+      "block_id": 544,
+      "default_state": 8912,
+      "min_state": 8912,
+      "max_state": 8912,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_concrete",
+      "block_id": 545,
+      "default_state": 8913,
+      "min_state": 8913,
+      "max_state": 8913,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_concrete",
+      "block_id": 546,
+      "default_state": 8914,
+      "min_state": 8914,
+      "max_state": 8914,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_concrete",
+      "block_id": 547,
+      "default_state": 8915,
+      "min_state": 8915,
+      "max_state": 8915,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_concrete",
+      "block_id": 548,
+      "default_state": 8916,
+      "min_state": 8916,
+      "max_state": 8916,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_concrete",
+      "block_id": 549,
+      "default_state": 8917,
+      "min_state": 8917,
+      "max_state": 8917,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:white_concrete_powder",
+      "block_id": 550,
+      "default_state": 8918,
+      "min_state": 8918,
+      "max_state": 8918,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:orange_concrete_powder",
+      "block_id": 551,
+      "default_state": 8919,
+      "min_state": 8919,
+      "max_state": 8919,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:magenta_concrete_powder",
+      "block_id": 552,
+      "default_state": 8920,
+      "min_state": 8920,
+      "max_state": 8920,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_blue_concrete_powder",
+      "block_id": 553,
+      "default_state": 8921,
+      "min_state": 8921,
+      "max_state": 8921,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:yellow_concrete_powder",
+      "block_id": 554,
+      "default_state": 8922,
+      "min_state": 8922,
+      "max_state": 8922,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:lime_concrete_powder",
+      "block_id": 555,
+      "default_state": 8923,
+      "min_state": 8923,
+      "max_state": 8923,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:pink_concrete_powder",
+      "block_id": 556,
+      "default_state": 8924,
+      "min_state": 8924,
+      "max_state": 8924,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:gray_concrete_powder",
+      "block_id": 557,
+      "default_state": 8925,
+      "min_state": 8925,
+      "max_state": 8925,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:light_gray_concrete_powder",
+      "block_id": 558,
+      "default_state": 8926,
+      "min_state": 8926,
+      "max_state": 8926,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cyan_concrete_powder",
+      "block_id": 559,
+      "default_state": 8927,
+      "min_state": 8927,
+      "max_state": 8927,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:purple_concrete_powder",
+      "block_id": 560,
+      "default_state": 8928,
+      "min_state": 8928,
+      "max_state": 8928,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:blue_concrete_powder",
+      "block_id": 561,
+      "default_state": 8929,
+      "min_state": 8929,
+      "max_state": 8929,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brown_concrete_powder",
+      "block_id": 562,
+      "default_state": 8930,
+      "min_state": 8930,
+      "max_state": 8930,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:green_concrete_powder",
+      "block_id": 563,
+      "default_state": 8931,
+      "min_state": 8931,
+      "max_state": 8931,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:red_concrete_powder",
+      "block_id": 564,
+      "default_state": 8932,
+      "min_state": 8932,
+      "max_state": 8932,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:black_concrete_powder",
+      "block_id": 565,
+      "default_state": 8933,
+      "min_state": 8933,
+      "max_state": 8933,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:kelp",
+      "block_id": 566,
+      "default_state": 8934,
+      "min_state": 8934,
+      "max_state": 8959,
+      "num_states": 26,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:kelp_plant",
+      "block_id": 567,
+      "default_state": 8960,
+      "min_state": 8960,
+      "max_state": 8960,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dried_kelp_block",
+      "block_id": 568,
+      "default_state": 8961,
+      "min_state": 8961,
+      "max_state": 8961,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:turtle_egg",
+      "block_id": 569,
+      "default_state": 8962,
+      "min_state": 8962,
+      "max_state": 8973,
+      "num_states": 12,
+      "properties": [
+        "eggs",
+        "hatch"
+      ]
+    },
+    {
+      "name": "minecraft:dead_tube_coral_block",
+      "block_id": 570,
+      "default_state": 8974,
+      "min_state": 8974,
+      "max_state": 8974,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_brain_coral_block",
+      "block_id": 571,
+      "default_state": 8975,
+      "min_state": 8975,
+      "max_state": 8975,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_bubble_coral_block",
+      "block_id": 572,
+      "default_state": 8976,
+      "min_state": 8976,
+      "max_state": 8976,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_fire_coral_block",
+      "block_id": 573,
+      "default_state": 8977,
+      "min_state": 8977,
+      "max_state": 8977,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_horn_coral_block",
+      "block_id": 574,
+      "default_state": 8978,
+      "min_state": 8978,
+      "max_state": 8978,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:tube_coral_block",
+      "block_id": 575,
+      "default_state": 8979,
+      "min_state": 8979,
+      "max_state": 8979,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:brain_coral_block",
+      "block_id": 576,
+      "default_state": 8980,
+      "min_state": 8980,
+      "max_state": 8980,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:bubble_coral_block",
+      "block_id": 577,
+      "default_state": 8981,
+      "min_state": 8981,
+      "max_state": 8981,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:fire_coral_block",
+      "block_id": 578,
+      "default_state": 8982,
+      "min_state": 8982,
+      "max_state": 8982,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:horn_coral_block",
+      "block_id": 579,
+      "default_state": 8983,
+      "min_state": 8983,
+      "max_state": 8983,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:dead_tube_coral",
+      "block_id": 580,
+      "default_state": 8984,
+      "min_state": 8984,
+      "max_state": 8985,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_brain_coral",
+      "block_id": 581,
+      "default_state": 8986,
+      "min_state": 8986,
+      "max_state": 8987,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_bubble_coral",
+      "block_id": 582,
+      "default_state": 8988,
+      "min_state": 8988,
+      "max_state": 8989,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_fire_coral",
+      "block_id": 583,
+      "default_state": 8990,
+      "min_state": 8990,
+      "max_state": 8991,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_horn_coral",
+      "block_id": 584,
+      "default_state": 8992,
+      "min_state": 8992,
+      "max_state": 8993,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:tube_coral",
+      "block_id": 585,
+      "default_state": 8994,
+      "min_state": 8994,
+      "max_state": 8995,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:brain_coral",
+      "block_id": 586,
+      "default_state": 8996,
+      "min_state": 8996,
+      "max_state": 8997,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:bubble_coral",
+      "block_id": 587,
+      "default_state": 8998,
+      "min_state": 8998,
+      "max_state": 8999,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:fire_coral",
+      "block_id": 588,
+      "default_state": 9000,
+      "min_state": 9000,
+      "max_state": 9001,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:horn_coral",
+      "block_id": 589,
+      "default_state": 9002,
+      "min_state": 9002,
+      "max_state": 9003,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_tube_coral_fan",
+      "block_id": 590,
+      "default_state": 9004,
+      "min_state": 9004,
+      "max_state": 9005,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_brain_coral_fan",
+      "block_id": 591,
+      "default_state": 9006,
+      "min_state": 9006,
+      "max_state": 9007,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_bubble_coral_fan",
+      "block_id": 592,
+      "default_state": 9008,
+      "min_state": 9008,
+      "max_state": 9009,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_fire_coral_fan",
+      "block_id": 593,
+      "default_state": 9010,
+      "min_state": 9010,
+      "max_state": 9011,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_horn_coral_fan",
+      "block_id": 594,
+      "default_state": 9012,
+      "min_state": 9012,
+      "max_state": 9013,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:tube_coral_fan",
+      "block_id": 595,
+      "default_state": 9014,
+      "min_state": 9014,
+      "max_state": 9015,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:brain_coral_fan",
+      "block_id": 596,
+      "default_state": 9016,
+      "min_state": 9016,
+      "max_state": 9017,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:bubble_coral_fan",
+      "block_id": 597,
+      "default_state": 9018,
+      "min_state": 9018,
+      "max_state": 9019,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:fire_coral_fan",
+      "block_id": 598,
+      "default_state": 9020,
+      "min_state": 9020,
+      "max_state": 9021,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:horn_coral_fan",
+      "block_id": 599,
+      "default_state": 9022,
+      "min_state": 9022,
+      "max_state": 9023,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_tube_coral_wall_fan",
+      "block_id": 600,
+      "default_state": 9024,
+      "min_state": 9024,
+      "max_state": 9031,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_brain_coral_wall_fan",
+      "block_id": 601,
+      "default_state": 9032,
+      "min_state": 9032,
+      "max_state": 9039,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_bubble_coral_wall_fan",
+      "block_id": 602,
+      "default_state": 9040,
+      "min_state": 9040,
+      "max_state": 9047,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_fire_coral_wall_fan",
+      "block_id": 603,
+      "default_state": 9048,
+      "min_state": 9048,
+      "max_state": 9055,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:dead_horn_coral_wall_fan",
+      "block_id": 604,
+      "default_state": 9056,
+      "min_state": 9056,
+      "max_state": 9063,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:tube_coral_wall_fan",
+      "block_id": 605,
+      "default_state": 9064,
+      "min_state": 9064,
+      "max_state": 9071,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:brain_coral_wall_fan",
+      "block_id": 606,
+      "default_state": 9072,
+      "min_state": 9072,
+      "max_state": 9079,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:bubble_coral_wall_fan",
+      "block_id": 607,
+      "default_state": 9080,
+      "min_state": 9080,
+      "max_state": 9087,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:fire_coral_wall_fan",
+      "block_id": 608,
+      "default_state": 9088,
+      "min_state": 9088,
+      "max_state": 9095,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:horn_coral_wall_fan",
+      "block_id": 609,
+      "default_state": 9096,
+      "min_state": 9096,
+      "max_state": 9103,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:sea_pickle",
+      "block_id": 610,
+      "default_state": 9104,
+      "min_state": 9104,
+      "max_state": 9111,
+      "num_states": 8,
+      "properties": [
+        "pickles",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:blue_ice",
+      "block_id": 611,
+      "default_state": 9112,
+      "min_state": 9112,
+      "max_state": 9112,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:conduit",
+      "block_id": 612,
+      "default_state": 9113,
+      "min_state": 9113,
+      "max_state": 9114,
+      "num_states": 2,
+      "properties": [
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:bamboo_sapling",
+      "block_id": 613,
+      "default_state": 9115,
+      "min_state": 9115,
+      "max_state": 9115,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:bamboo",
+      "block_id": 614,
+      "default_state": 9116,
+      "min_state": 9116,
+      "max_state": 9127,
+      "num_states": 12,
+      "properties": [
+        "age",
+        "leaves",
+        "stage"
+      ]
+    },
+    {
+      "name": "minecraft:potted_bamboo",
+      "block_id": 615,
+      "default_state": 9128,
+      "min_state": 9128,
+      "max_state": 9128,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:void_air",
+      "block_id": 616,
+      "default_state": 9129,
+      "min_state": 9129,
+      "max_state": 9129,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:cave_air",
+      "block_id": 617,
+      "default_state": 9130,
+      "min_state": 9130,
+      "max_state": 9130,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:bubble_column",
+      "block_id": 618,
+      "default_state": 9131,
+      "min_state": 9131,
+      "max_state": 9132,
+      "num_states": 2,
+      "properties": [
+        "drag"
+      ]
+    },
+    {
+      "name": "minecraft:polished_granite_stairs",
+      "block_id": 619,
+      "default_state": 9144,
+      "min_state": 9133,
+      "max_state": 9212,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_red_sandstone_stairs",
+      "block_id": 620,
+      "default_state": 9224,
+      "min_state": 9213,
+      "max_state": 9292,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_stone_brick_stairs",
+      "block_id": 621,
+      "default_state": 9304,
+      "min_state": 9293,
+      "max_state": 9372,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:polished_diorite_stairs",
+      "block_id": 622,
+      "default_state": 9384,
+      "min_state": 9373,
+      "max_state": 9452,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_cobblestone_stairs",
+      "block_id": 623,
+      "default_state": 9464,
+      "min_state": 9453,
+      "max_state": 9532,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:end_stone_brick_stairs",
+      "block_id": 624,
+      "default_state": 9544,
+      "min_state": 9533,
+      "max_state": 9612,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:stone_stairs",
+      "block_id": 625,
+      "default_state": 9624,
+      "min_state": 9613,
+      "max_state": 9692,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_sandstone_stairs",
+      "block_id": 626,
+      "default_state": 9704,
+      "min_state": 9693,
+      "max_state": 9772,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_quartz_stairs",
+      "block_id": 627,
+      "default_state": 9784,
+      "min_state": 9773,
+      "max_state": 9852,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:granite_stairs",
+      "block_id": 628,
+      "default_state": 9864,
+      "min_state": 9853,
+      "max_state": 9932,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:andesite_stairs",
+      "block_id": 629,
+      "default_state": 9944,
+      "min_state": 9933,
+      "max_state": 10012,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:red_nether_brick_stairs",
+      "block_id": 630,
+      "default_state": 10024,
+      "min_state": 10013,
+      "max_state": 10092,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:polished_andesite_stairs",
+      "block_id": 631,
+      "default_state": 10104,
+      "min_state": 10093,
+      "max_state": 10172,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:diorite_stairs",
+      "block_id": 632,
+      "default_state": 10184,
+      "min_state": 10173,
+      "max_state": 10252,
+      "num_states": 80,
+      "properties": [
+        "facing",
+        "half",
+        "shape",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:polished_granite_slab",
+      "block_id": 633,
+      "default_state": 10256,
+      "min_state": 10253,
+      "max_state": 10258,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_red_sandstone_slab",
+      "block_id": 634,
+      "default_state": 10262,
+      "min_state": 10259,
+      "max_state": 10264,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_stone_brick_slab",
+      "block_id": 635,
+      "default_state": 10268,
+      "min_state": 10265,
+      "max_state": 10270,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:polished_diorite_slab",
+      "block_id": 636,
+      "default_state": 10274,
+      "min_state": 10271,
+      "max_state": 10276,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_cobblestone_slab",
+      "block_id": 637,
+      "default_state": 10280,
+      "min_state": 10277,
+      "max_state": 10282,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:end_stone_brick_slab",
+      "block_id": 638,
+      "default_state": 10286,
+      "min_state": 10283,
+      "max_state": 10288,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_sandstone_slab",
+      "block_id": 639,
+      "default_state": 10292,
+      "min_state": 10289,
+      "max_state": 10294,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:smooth_quartz_slab",
+      "block_id": 640,
+      "default_state": 10298,
+      "min_state": 10295,
+      "max_state": 10300,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:granite_slab",
+      "block_id": 641,
+      "default_state": 10304,
+      "min_state": 10301,
+      "max_state": 10306,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:andesite_slab",
+      "block_id": 642,
+      "default_state": 10310,
+      "min_state": 10307,
+      "max_state": 10312,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:red_nether_brick_slab",
+      "block_id": 643,
+      "default_state": 10316,
+      "min_state": 10313,
+      "max_state": 10318,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:polished_andesite_slab",
+      "block_id": 644,
+      "default_state": 10322,
+      "min_state": 10319,
+      "max_state": 10324,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:diorite_slab",
+      "block_id": 645,
+      "default_state": 10328,
+      "min_state": 10325,
+      "max_state": 10330,
+      "num_states": 6,
+      "properties": [
+        "type",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:brick_wall",
+      "block_id": 646,
+      "default_state": 10390,
+      "min_state": 10331,
+      "max_state": 10394,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:prismarine_wall",
+      "block_id": 647,
+      "default_state": 10454,
+      "min_state": 10395,
+      "max_state": 10458,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:red_sandstone_wall",
+      "block_id": 648,
+      "default_state": 10518,
+      "min_state": 10459,
+      "max_state": 10522,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:mossy_stone_brick_wall",
+      "block_id": 649,
+      "default_state": 10582,
+      "min_state": 10523,
+      "max_state": 10586,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:granite_wall",
+      "block_id": 650,
+      "default_state": 10646,
+      "min_state": 10587,
+      "max_state": 10650,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:stone_brick_wall",
+      "block_id": 651,
+      "default_state": 10710,
+      "min_state": 10651,
+      "max_state": 10714,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:nether_brick_wall",
+      "block_id": 652,
+      "default_state": 10774,
+      "min_state": 10715,
+      "max_state": 10778,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:andesite_wall",
+      "block_id": 653,
+      "default_state": 10838,
+      "min_state": 10779,
+      "max_state": 10842,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:red_nether_brick_wall",
+      "block_id": 654,
+      "default_state": 10902,
+      "min_state": 10843,
+      "max_state": 10906,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:sandstone_wall",
+      "block_id": 655,
+      "default_state": 10966,
+      "min_state": 10907,
+      "max_state": 10970,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:end_stone_brick_wall",
+      "block_id": 656,
+      "default_state": 11030,
+      "min_state": 10971,
+      "max_state": 11034,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:diorite_wall",
+      "block_id": 657,
+      "default_state": 11094,
+      "min_state": 11035,
+      "max_state": 11098,
+      "num_states": 64,
+      "properties": [
+        "east",
+        "north",
+        "south",
+        "up",
+        "waterlogged",
+        "west"
+      ]
+    },
+    {
+      "name": "minecraft:scaffolding",
+      "block_id": 658,
+      "default_state": 11130,
+      "min_state": 11099,
+      "max_state": 11130,
+      "num_states": 32,
+      "properties": [
+        "bottom",
+        "distance",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:loom",
+      "block_id": 659,
+      "default_state": 11131,
+      "min_state": 11131,
+      "max_state": 11134,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:barrel",
+      "block_id": 660,
+      "default_state": 11136,
+      "min_state": 11135,
+      "max_state": 11146,
+      "num_states": 12,
+      "properties": [
+        "facing",
+        "open"
+      ]
+    },
+    {
+      "name": "minecraft:smoker",
+      "block_id": 661,
+      "default_state": 11148,
+      "min_state": 11147,
+      "max_state": 11154,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:blast_furnace",
+      "block_id": 662,
+      "default_state": 11156,
+      "min_state": 11155,
+      "max_state": 11162,
+      "num_states": 8,
+      "properties": [
+        "facing",
+        "lit"
+      ]
+    },
+    {
+      "name": "minecraft:cartography_table",
+      "block_id": 663,
+      "default_state": 11163,
+      "min_state": 11163,
+      "max_state": 11163,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:fletching_table",
+      "block_id": 664,
+      "default_state": 11164,
+      "min_state": 11164,
+      "max_state": 11164,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:grindstone",
+      "block_id": 665,
+      "default_state": 11169,
+      "min_state": 11165,
+      "max_state": 11176,
+      "num_states": 12,
+      "properties": [
+        "face",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:lectern",
+      "block_id": 666,
+      "default_state": 11180,
+      "min_state": 11177,
+      "max_state": 11192,
+      "num_states": 16,
+      "properties": [
+        "facing",
+        "has_book",
+        "powered"
+      ]
+    },
+    {
+      "name": "minecraft:smithing_table",
+      "block_id": 667,
+      "default_state": 11193,
+      "min_state": 11193,
+      "max_state": 11193,
+      "num_states": 1,
+      "properties": null
+    },
+    {
+      "name": "minecraft:stonecutter",
+      "block_id": 668,
+      "default_state": 11194,
+      "min_state": 11194,
+      "max_state": 11197,
+      "num_states": 4,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:bell",
+      "block_id": 669,
+      "default_state": 11198,
+      "min_state": 11198,
+      "max_state": 11213,
+      "num_states": 16,
+      "properties": [
+        "attachment",
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:lantern",
+      "block_id": 670,
+      "default_state": 11215,
+      "min_state": 11214,
+      "max_state": 11215,
+      "num_states": 2,
+      "properties": [
+        "hanging"
+      ]
+    },
+    {
+      "name": "minecraft:campfire",
+      "block_id": 671,
+      "default_state": 11219,
+      "min_state": 11216,
+      "max_state": 11247,
+      "num_states": 32,
+      "properties": [
+        "facing",
+        "lit",
+        "signal_fire",
+        "waterlogged"
+      ]
+    },
+    {
+      "name": "minecraft:sweet_berry_bush",
+      "block_id": 672,
+      "default_state": 11248,
+      "min_state": 11248,
+      "max_state": 11251,
+      "num_states": 4,
+      "properties": [
+        "age"
+      ]
+    },
+    {
+      "name": "minecraft:structure_block",
+      "block_id": 673,
+      "default_state": 11252,
+      "min_state": 11252,
+      "max_state": 11255,
+      "num_states": 4,
+      "properties": [
+        "mode"
+      ]
+    },
+    {
+      "name": "minecraft:jigsaw",
+      "block_id": 674,
+      "default_state": 11260,
+      "min_state": 11256,
+      "max_state": 11261,
+      "num_states": 6,
+      "properties": [
+        "facing"
+      ]
+    },
+    {
+      "name": "minecraft:composter",
+      "block_id": 675,
+      "default_state": 11262,
+      "min_state": 11262,
+      "max_state": 11270,
+      "num_states": 9,
+      "properties": [
+        "level"
+      ]
+    }
+  ]
+}

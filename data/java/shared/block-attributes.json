@@ -1,0 +1,289 @@
+{
+  "_provenance": {
+    "kind": "curated",
+    "note": "Per-block facts that no shipped server report carries, plus the block-state property VALUE domains the extracted per-version blocks.json drops (it keeps only property NAMES). Transcribed from the decompiled vanilla sources; every ordering here is the order Property.getPossibleValues() returns, because that is the order StateDefinition builds the state table in (properties sorted by name, LAST property varying fastest). DataGen only emits values for a block when exactly one candidate assignment reproduces the block's own state count, so a wrong or missing entry degrades that block to 'names, no values' instead of producing a wrong value. The lists are keyed by identifier and the pre-flattening registries use their own identifiers, so an era-specific spelling gets its own entry: minecraft:slime is the 1.8-1.12.2 name of the block the flattening renamed to minecraft:slime_block, and without it the whole 47-340 band reported the vanilla default friction 0.6 for it. air/fluid already carry the pre-flattening flowing_water and flowing_lava.",
+    "sources": [
+      "net/minecraft/world/level/block/state/properties/BlockStateProperties.java",
+      "net/minecraft/world/level/block/state/properties/BooleanProperty.java (VALUES = List.of(true, false))",
+      "net/minecraft/core/Direction.java",
+      "net/minecraft/world/level/block/state/BlockBehaviour.java (friction/speedFactor/jumpFactor defaults)",
+      "MinecraftOfficial/1.8.9/src/minecraft/net/minecraft/block/BlockSlime.java (slipperiness 0.8F) and Block.java#registerBlocks (id 165 -> minecraft:slime)",
+      "net/minecraft/world/level/block/KelpBlock.java:72-74 getFluidState -> Fluids.WATER.getSource(false) (1.21.11; 1.14.4 :55, 26.2 :73)",
+      "net/minecraft/world/level/block/KelpPlantBlock.java:35-37 (1.21.11; 1.14.4 :30, 26.2 :35)",
+      "net/minecraft/world/level/block/SeagrassBlock.java:79-81 (1.21.11; 1.14.4 Seagrass.java:65, 26.2 :87)",
+      "net/minecraft/world/level/block/TallSeagrassBlock.java:79-81 (1.21.11; 1.14.4 TallSeagrass.java:64, 26.2 :80)",
+      "net/minecraft/world/level/block/BubbleColumnBlock.java:69-71 - the fifth such block, deliberately NOT listed"
+    ]
+  },
+
+  "air": ["minecraft:air", "minecraft:cave_air", "minecraft:void_air"],
+
+  "fluid": [
+    "minecraft:water",
+    "minecraft:lava",
+    "minecraft:flowing_water",
+    "minecraft:flowing_lava"
+  ],
+
+  "_intrinsically_waterlogged_note": "Blocks whose getFluidState is an UNCONDITIONAL water source rather than the usual WATERLOGGED ? water : super conditional. They CONTAIN water; they are not water, so this is the Waterlogged axis and not the fluid list above (the fluid list additionally sets Replaceable and suppresses the shape-derived BlocksMotion/Solid classification, which would be a lie about blocks whose collision shape is empty for an unrelated reason). None of them can carry a waterlogged PROPERTY: they implement the bare LiquidBlockContainer with canPlaceLiquid returning false rather than SimpleWaterloggedBlock, which is what installs the property, so a property-derived flag can never reach them and this list is the only place the fact can live. Exactly five blocks in the whole block package have such an override, verified identical in 1.14.4, 1.21.11 and 26.2, and all five are listed. The fifth, minecraft:bubble_column, was deliberately omitted while its lift was unmodelled, because classifying it as water without the lift trades one wrong answer for another that ALSO drains the bot's air. Both halves of that objection are now answered: PlayerPhysics ports BubbleColumnBlock.entityInside's upward arm (Entity.java:2813-2823), and BreathModel.IsSubmerged carries vanilla's own air-drain exemption for a bubble-column eye cell (LivingEntity.java:437-438), so a body inside a column is buoyant, lifted, and does not lose breath - which is what vanilla does. The DOWNWARD arm is still unmodelled; a drag=true column is water without its downdraft, which is a strictly better answer than air but not the whole one (course row E13 records the remainder).",
+
+  "intrinsically_waterlogged": [
+    "minecraft:kelp",
+    "minecraft:kelp_plant",
+    "minecraft:seagrass",
+    "minecraft:tall_seagrass",
+    "minecraft:bubble_column"
+  ],
+
+  "friction": {
+    "minecraft:ice": 0.98,
+    "minecraft:packed_ice": 0.98,
+    "minecraft:frosted_ice": 0.98,
+    "minecraft:blue_ice": 0.989,
+    "minecraft:slime_block": 0.8,
+    "minecraft:slime": 0.8
+  },
+
+  "speed_factor": {
+    "minecraft:soul_sand": 0.4,
+    "minecraft:honey_block": 0.4
+  },
+
+  "jump_factor": {
+    "minecraft:honey_block": 0.5
+  },
+
+  "properties": {
+    "active": { "kind": "bool" },
+    "attached": { "kind": "bool" },
+    "berries": { "kind": "bool" },
+    "bloom": { "kind": "bool" },
+    "bottom": { "kind": "bool" },
+    "can_summon": { "kind": "bool" },
+    "conditional": { "kind": "bool" },
+    "cracked": { "kind": "bool" },
+    "crafting": { "kind": "bool" },
+    "disarmed": { "kind": "bool" },
+    "down": { "kind": "bool" },
+    "drag": { "kind": "bool" },
+    "enabled": { "kind": "bool" },
+    "extended": { "kind": "bool" },
+    "eye": { "kind": "bool" },
+    "falling": { "kind": "bool" },
+    "hanging": { "kind": "bool" },
+    "has_book": { "kind": "bool" },
+    "has_bottle_0": { "kind": "bool" },
+    "has_bottle_1": { "kind": "bool" },
+    "has_bottle_2": { "kind": "bool" },
+    "has_record": { "kind": "bool" },
+    "in_wall": { "kind": "bool" },
+    "inverted": { "kind": "bool" },
+    "lit": { "kind": "bool" },
+    "locked": { "kind": "bool" },
+    "natural": { "kind": "bool" },
+    "occupied": { "kind": "bool" },
+    "ominous": { "kind": "bool" },
+    "open": { "kind": "bool" },
+    "persistent": { "kind": "bool" },
+    "powered": { "kind": "bool" },
+    "short": { "kind": "bool" },
+    "shrieking": { "kind": "bool" },
+    "signal_fire": { "kind": "bool" },
+    "slot_0_occupied": { "kind": "bool" },
+    "slot_1_occupied": { "kind": "bool" },
+    "slot_2_occupied": { "kind": "bool" },
+    "slot_3_occupied": { "kind": "bool" },
+    "slot_4_occupied": { "kind": "bool" },
+    "slot_5_occupied": { "kind": "bool" },
+    "snowy": { "kind": "bool" },
+    "tip": { "kind": "bool" },
+    "triggered": { "kind": "bool" },
+    "unstable": { "kind": "bool" },
+    "up": { "kind": "bool" },
+    "waterlogged": { "kind": "bool" },
+
+    "age": { "kind": "int", "open": { "min": 0 } },
+    "bites": { "kind": "int", "ranges": [[0, 7]] },
+    "candles": { "kind": "int", "ranges": [[1, 4]] },
+    "charges": { "kind": "int", "ranges": [[0, 5]] },
+    "delay": { "kind": "int", "ranges": [[1, 4]] },
+    "distance": { "kind": "int", "ranges": [[1, 7], [0, 8]] },
+    "dusted": { "kind": "int", "ranges": [[0, 4]] },
+    "eggs": { "kind": "int", "ranges": [[1, 4]] },
+    "flower_amount": { "kind": "int", "ranges": [[1, 4]] },
+    "hatch": { "kind": "int", "ranges": [[0, 3]] },
+    "honey_level": { "kind": "int", "ranges": [[0, 6]] },
+    "hydration": { "kind": "int", "ranges": [[0, 4]] },
+    "layers": { "kind": "int", "ranges": [[1, 8]] },
+    "level": { "kind": "int", "ranges": [[0, 16], [0, 9], [0, 4], [1, 3]] },
+    "moisture": { "kind": "int", "ranges": [[0, 8]] },
+    "note": { "kind": "int", "ranges": [[0, 25]] },
+    "pickles": { "kind": "int", "ranges": [[1, 4]] },
+    "power": { "kind": "int", "ranges": [[0, 16]] },
+    "rotation": { "kind": "int", "ranges": [[0, 16]] },
+    "segment_amount": { "kind": "int", "ranges": [[1, 4]] },
+    "stage": { "kind": "int", "ranges": [[0, 2]] },
+
+    "attachment": { "kind": "enum", "candidates": [["floor", "ceiling", "single_wall", "double_wall"]] },
+    "axis": { "kind": "enum", "candidates": [["x", "y", "z"], ["x", "z"]] },
+    "creaking_heart_state": { "kind": "enum", "candidates": [["uprooted", "dormant", "awake"]] },
+    "east": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] },
+    "face": { "kind": "enum", "candidates": [["floor", "wall", "ceiling"]] },
+    "facing": {
+      "note": "Three different vanilla properties share the name, and only one of the three takes its order from an explicit list. BlockStateProperties.FACING is EnumProperty.create(\"facing\", Direction.class, NORTH, EAST, SOUTH, WEST, UP, DOWN), the varargs overload, so it really is n/e/s/w/u/d. FACING_HOPPER is create(\"facing\", Direction.class, d -> d != UP): the PREDICATE overload, whose body is Arrays.stream(getEnumConstants()).filter(pred), so it is Direction DECLARATION order minus up, d/n/s/w/e. HORIZONTAL_FACING is create(\"facing\", Direction.class, Direction.Plane.HORIZONTAL), and Plane implements BOTH Iterable<Direction> AND Predicate<Direction>, so Java binds the SAME Predicate overload rather than the array Plane iterates: the values are declaration order filtered to horizontals, north/south/west/east, NOT the north/east/south/west that Plane.HORIZONTAL.iterator() yields. Confirmed against the 1.21.4 server's own --reports blocks.json, where all 255 four-valued facing blocks read [north, south, west, east].",
+      "kind": "enum",
+      "candidates": [
+        ["north", "east", "south", "west", "up", "down"],
+        ["down", "north", "south", "west", "east"],
+        ["north", "south", "west", "east"]
+      ]
+    },
+    "half": { "kind": "enum", "candidates": [["top", "bottom"]] },
+    "hinge": { "kind": "enum", "candidates": [["left", "right"]] },
+    "instrument": {
+      "kind": "enum",
+      "candidates": [
+        [
+          "harp", "basedrum", "snare", "hat", "bass", "flute", "bell", "guitar", "chime",
+          "xylophone", "iron_xylophone", "cow_bell", "didgeridoo", "bit", "banjo", "pling",
+          "zombie", "skeleton", "creeper", "dragon", "wither_skeleton", "piglin", "custom_head"
+        ]
+      ]
+    },
+    "leaves": { "kind": "enum", "candidates": [["none", "small", "large"]] },
+    "mode": {
+      "kind": "enum",
+      "candidates": [
+        ["compare", "subtract"],
+        ["save", "load", "corner", "data"],
+        ["start", "log", "fail", "accept"]
+      ]
+    },
+    "north": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] },
+    "orientation": {
+      "kind": "enum",
+      "candidates": [[
+        "down_east", "down_north", "down_south", "down_west",
+        "up_east", "up_north", "up_south", "up_west",
+        "west_up", "east_up", "north_up", "south_up"
+      ]]
+    },
+    "part": { "kind": "enum", "candidates": [["head", "foot"]] },
+    "sculk_sensor_phase": { "kind": "enum", "candidates": [["inactive", "active", "cooldown"]] },
+    "shape": {
+      "kind": "enum",
+      "candidates": [
+        ["straight", "inner_left", "inner_right", "outer_left", "outer_right"],
+        ["north_south", "east_west", "ascending_east", "ascending_west", "ascending_north", "ascending_south"],
+        [
+          "north_south", "east_west", "ascending_east", "ascending_west", "ascending_north",
+          "ascending_south", "south_east", "south_west", "north_west", "north_east"
+        ]
+      ]
+    },
+    "south": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] },
+    "thickness": { "kind": "enum", "candidates": [["tip_merge", "tip", "frustum", "middle", "base"]] },
+    "tilt": { "kind": "enum", "candidates": [["none", "unstable", "partial", "full"]] },
+    "trial_spawner_state": {
+      "kind": "enum",
+      "candidates": [[
+        "inactive", "waiting_for_players", "active",
+        "waiting_for_reward_ejection", "ejecting_reward", "cooldown"
+      ]]
+    },
+    "type": { "kind": "enum", "candidates": [["normal", "sticky"]] },
+    "vault_state": { "kind": "enum", "candidates": [["inactive", "active", "unlocking", "ejecting"]] },
+    "vertical_direction": { "kind": "enum", "candidates": [["up", "down"]] },
+    "west": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] }
+  },
+
+  "property_overrides": [
+    {
+      "note": "Doors and two-tall plants carry DoubleBlockHalf, everything else with a 'half' carries Half. Same domain size, so only a per-block rule can tell them apart.",
+      "blocks": [
+        "*_door", "minecraft:sunflower", "minecraft:lilac", "minecraft:tall_grass",
+        "minecraft:large_fern", "minecraft:rose_bush", "minecraft:peony",
+        "minecraft:tall_seagrass", "minecraft:pitcher_plant", "minecraft:small_dripleaf"
+      ],
+      "property": "half",
+      "values": ["upper", "lower"]
+    },
+    {
+      "note": "SlabType and ChestType are both three-valued.",
+      "blocks": ["*_slab"],
+      "property": "type",
+      "values": ["top", "bottom", "double"]
+    },
+    {
+      "blocks": ["minecraft:chest", "minecraft:trapped_chest", "minecraft:ender_chest"],
+      "property": "type",
+      "values": ["single", "left", "right"]
+    },
+    {
+      "note": "WallSide and RedstoneSide are both three-valued; redstone_wire is the only RedstoneSide user.",
+      "blocks": ["minecraft:redstone_wire"],
+      "property": "north",
+      "values": ["up", "side", "none"]
+    },
+    { "blocks": ["minecraft:redstone_wire"], "property": "east", "values": ["up", "side", "none"] },
+    { "blocks": ["minecraft:redstone_wire"], "property": "south", "values": ["up", "side", "none"] },
+    { "blocks": ["minecraft:redstone_wire"], "property": "west", "values": ["up", "side", "none"] },
+    {
+      "note": "Cocoa is the one block where two facing candidates both close the arithmetic (12 states is 4x3 and 6x2), so the resolver rejects it without this. CocoaBlock uses HorizontalDirectionalBlock.FACING, so the order is the HORIZONTAL_FACING order; the 1.21.4 report reads cocoa facing as [north, south, west, east] with states 8193..8196 age=0 north/south/west/east.",
+      "blocks": ["minecraft:cocoa"],
+      "property": "facing",
+      "values": ["north", "south", "west", "east"]
+    },
+    {
+      "note": "StructureMode and TestBlockMode are both four-valued.",
+      "blocks": ["minecraft:structure_block"],
+      "property": "mode",
+      "values": ["save", "load", "corner", "data"]
+    },
+    {
+      "blocks": ["minecraft:test_block"],
+      "property": "mode",
+      "values": ["start", "log", "fail", "accept"]
+    }
+  ],
+
+  "default_state_checks": [
+    {
+      "note": "Each entry pins the decode of a block's own default state against a value known from vanilla. These run in DataGen verify on every band that carries property names, so a wrong domain ORDER (which the state-count arithmetic cannot catch) fails the dataset instead of shipping a plausible lie.",
+      "block": "minecraft:dispenser",
+      "values": { "facing": "north", "triggered": "false" }
+    },
+    { "block": "minecraft:observer", "values": { "facing": "south", "powered": "false" } },
+    { "block": "minecraft:hopper", "values": { "facing": "down", "enabled": "true" } },
+    { "block": "minecraft:piston", "values": { "facing": "north", "extended": "false" } },
+    { "block": "minecraft:wheat", "values": { "age": "0" } },
+    { "block": "minecraft:water", "values": { "level": "0" } },
+    { "block": "minecraft:oak_stairs", "values": { "facing": "north", "half": "bottom", "shape": "straight", "waterlogged": "false" } },
+    { "block": "minecraft:oak_door", "values": { "facing": "north", "half": "lower", "hinge": "left", "open": "false", "powered": "false" } },
+    { "block": "minecraft:snow", "values": { "layers": "1" } },
+    { "block": "minecraft:repeater", "values": { "delay": "1", "facing": "north", "locked": "false", "powered": "false" } },
+    { "block": "minecraft:oak_slab", "values": { "type": "bottom", "waterlogged": "false" } },
+    { "block": "minecraft:redstone_wire", "values": { "east": "none", "north": "none", "power": "0", "south": "none", "west": "none" } },
+    { "block": "minecraft:farmland", "values": { "moisture": "0" } },
+    { "block": "minecraft:oak_log", "values": { "axis": "y" } },
+    { "block": "minecraft:ladder", "values": { "facing": "north", "waterlogged": "false" } },
+    { "block": "minecraft:cocoa", "values": { "age": "0", "facing": "north" } },
+    {
+      "note": "north is index 0 in the right horizontal-facing order AND in the wrong one, so every check above is blind to a permuted domain: all 255 of vanilla's four-valued facing blocks default to north. These name the other three facings by state offset instead. Ladder is [facing(4), waterlogged(2)], name-sorted with waterlogged varying fastest on every flattened band, so offset = facingIndex*2 + 1 is the dry state of each facing. Vanilla 1.21.4 --reports: ladder states 4741..4748 are north/south/west/east, each waterlogged true then false.",
+      "block": "minecraft:ladder",
+      "state_offset": 3,
+      "values": { "facing": "south", "waterlogged": "false" }
+    },
+    { "block": "minecraft:ladder", "state_offset": 5, "values": { "facing": "west", "waterlogged": "false" } },
+    { "block": "minecraft:ladder", "state_offset": 7, "values": { "facing": "east", "waterlogged": "false" } },
+    {
+      "note": "Cocoa carries the per-block facing override rather than the shared candidates, so it needs its own non-north pin. It is [age(3), facing(4)], name-sorted with facing varying fastest; vanilla 1.21.4 --reports gives states 8193..8196 as age=0 facing north/south/west/east.",
+      "block": "minecraft:cocoa",
+      "state_offset": 1,
+      "values": { "age": "0", "facing": "south" }
+    },
+    { "note": "Vanilla changed this default at 1.17: save through 1.16.5, load from 1.17.", "block": "minecraft:structure_block", "values": { "mode": "load" }, "min_protocol": 755 },
+    { "block": "minecraft:structure_block", "values": { "mode": "save" }, "max_protocol": 754 },
+    { "block": "minecraft:cauldron", "values": { "level": "0" } }
+  ]
+}

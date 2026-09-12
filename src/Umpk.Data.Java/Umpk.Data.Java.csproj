@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Generated packet, registry, block, item, entity, and collision data for every Minecraft Java protocol supported by UMPK.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+  </ItemGroup>
+</Project>

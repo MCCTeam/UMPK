@@ -1,0 +1,440 @@
+{
+  "_provenance": {
+    "kind": "curated",
+    "note": "ordered catalog; names map N:1 onto protocols"
+  },
+  "versions": [
+    {
+      "name": "1.8",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.1",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.2",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.3",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.4",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.5",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.6",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.7",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.8",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.8.9",
+      "protocol": 47,
+      "dataset": "47",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.9",
+      "protocol": 107,
+      "dataset": "107",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.9.1",
+      "protocol": 108,
+      "dataset": "108",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.9.2",
+      "protocol": 109,
+      "dataset": "109",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.9.3",
+      "protocol": 110,
+      "dataset": "110",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.9.4",
+      "protocol": 110,
+      "dataset": "110",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.10",
+      "protocol": 210,
+      "dataset": "210",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.10.1",
+      "protocol": 210,
+      "dataset": "210",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.10.2",
+      "protocol": 210,
+      "dataset": "210",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.11",
+      "protocol": 315,
+      "dataset": "315",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.11.1",
+      "protocol": 316,
+      "dataset": "316",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.11.2",
+      "protocol": 316,
+      "dataset": "316",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.12",
+      "protocol": 335,
+      "dataset": "335",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.12.1",
+      "protocol": 338,
+      "dataset": "338",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.12.2",
+      "protocol": 340,
+      "dataset": "340",
+      "identity": "legacy"
+    },
+    {
+      "name": "1.13",
+      "protocol": 393,
+      "dataset": "393",
+      "identity": "flat"
+    },
+    {
+      "name": "1.13.1",
+      "protocol": 401,
+      "dataset": "401",
+      "identity": "flat"
+    },
+    {
+      "name": "1.13.2",
+      "protocol": 404,
+      "dataset": "404",
+      "identity": "flat"
+    },
+    {
+      "name": "1.14",
+      "protocol": 477,
+      "dataset": "477",
+      "identity": "flat"
+    },
+    {
+      "name": "1.14.1",
+      "protocol": 480,
+      "dataset": "480",
+      "identity": "flat"
+    },
+    {
+      "name": "1.14.2",
+      "protocol": 485,
+      "dataset": "485",
+      "identity": "flat"
+    },
+    {
+      "name": "1.14.3",
+      "protocol": 490,
+      "dataset": "490",
+      "identity": "flat"
+    },
+    {
+      "name": "1.14.4",
+      "protocol": 498,
+      "dataset": "498",
+      "identity": "flat"
+    },
+    {
+      "name": "1.15",
+      "protocol": 573,
+      "dataset": "573",
+      "identity": "flat"
+    },
+    {
+      "name": "1.15.1",
+      "protocol": 575,
+      "dataset": "575",
+      "identity": "flat"
+    },
+    {
+      "name": "1.15.2",
+      "protocol": 578,
+      "dataset": "578",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16",
+      "protocol": 735,
+      "dataset": "735",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16.1",
+      "protocol": 736,
+      "dataset": "736",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16.2",
+      "protocol": 751,
+      "dataset": "751",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16.3",
+      "protocol": 753,
+      "dataset": "753",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16.4",
+      "protocol": 754,
+      "dataset": "754",
+      "identity": "flat"
+    },
+    {
+      "name": "1.16.5",
+      "protocol": 754,
+      "dataset": "754",
+      "identity": "flat"
+    },
+    {
+      "name": "1.17",
+      "protocol": 755,
+      "dataset": "755",
+      "identity": "flat"
+    },
+    {
+      "name": "1.17.1",
+      "protocol": 756,
+      "dataset": "756",
+      "identity": "flat"
+    },
+    {
+      "name": "1.18",
+      "protocol": 757,
+      "dataset": "757",
+      "identity": "flat"
+    },
+    {
+      "name": "1.18.1",
+      "protocol": 757,
+      "dataset": "757",
+      "identity": "flat"
+    },
+    {
+      "name": "1.18.2",
+      "protocol": 758,
+      "dataset": "758",
+      "identity": "flat"
+    },
+    {
+      "name": "1.19",
+      "protocol": 759,
+      "dataset": "759",
+      "identity": "flat"
+    },
+    {
+      "name": "1.19.1",
+      "protocol": 760,
+      "dataset": "760",
+      "identity": "flat"
+    },
+    {
+      "name": "1.19.2",
+      "protocol": 760,
+      "dataset": "760",
+      "identity": "flat"
+    },
+    {
+      "name": "1.19.3",
+      "protocol": 761,
+      "dataset": "761",
+      "identity": "flat"
+    },
+    {
+      "name": "1.19.4",
+      "protocol": 762,
+      "dataset": "762",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20",
+      "protocol": 763,
+      "dataset": "763",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.1",
+      "protocol": 763,
+      "dataset": "763",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.2",
+      "protocol": 764,
+      "dataset": "764",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.3",
+      "protocol": 765,
+      "dataset": "765",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.4",
+      "protocol": 765,
+      "dataset": "765",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.5",
+      "protocol": 766,
+      "dataset": "766",
+      "identity": "flat"
+    },
+    {
+      "name": "1.20.6",
+      "protocol": 766,
+      "dataset": "766",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21",
+      "protocol": 767,
+      "dataset": "767",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.1",
+      "protocol": 767,
+      "dataset": "767",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.2",
+      "protocol": 768,
+      "dataset": "768",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.3",
+      "protocol": 768,
+      "dataset": "768",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.4",
+      "protocol": 769,
+      "dataset": "769",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.5",
+      "protocol": 770,
+      "dataset": "770",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.6",
+      "protocol": 771,
+      "dataset": "771",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.7",
+      "protocol": 772,
+      "dataset": "772",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.8",
+      "protocol": 772,
+      "dataset": "772",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.9",
+      "protocol": 773,
+      "dataset": "773",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.10",
+      "protocol": 773,
+      "dataset": "773",
+      "identity": "flat"
+    },
+    {
+      "name": "1.21.11",
+      "protocol": 774,
+      "dataset": "774",
+      "identity": "flat"
+    },
+    {
+      "name": "26.1",
+      "protocol": 775,
+      "dataset": "775",
+      "identity": "flat"
+    },
+    {
+      "name": "26.2",
+      "protocol": 776,
+      "dataset": "776",
+      "identity": "flat"
+    }
+  ]
+}

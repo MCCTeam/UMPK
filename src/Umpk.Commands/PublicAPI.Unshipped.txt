@@ -1,0 +1,131 @@
+#nullable enable
+~override Umpk.Commands.CommandUsage.Equals(object obj) -> bool
+override Umpk.Commands.CommandUsage.GetHashCode() -> int
+~override Umpk.Commands.CommandUsage.ToString() -> string
+~override Umpk.Commands.CompletionSuggestion.Equals(object obj) -> bool
+override Umpk.Commands.CompletionSuggestion.GetHashCode() -> int
+~override Umpk.Commands.CompletionSuggestion.ToString() -> string
+~override Umpk.Commands.CommandLocation.Equals(object obj) -> bool
+override Umpk.Commands.CommandLocation.GetHashCode() -> int
+~override Umpk.Commands.CommandLocation.ToString() -> string
+static Umpk.Commands.Arguments.Bool() -> Umpk.Commands.IArgumentType<bool>!
+static Umpk.Commands.Arguments.ChunkPos() -> Umpk.Commands.IArgumentType<Umpk.Geometry.ChunkPos>!
+static Umpk.Commands.Arguments.Double(double min, double max) -> Umpk.Commands.IArgumentType<double>!
+static Umpk.Commands.Arguments.Double() -> Umpk.Commands.IArgumentType<double>!
+static Umpk.Commands.Arguments.Float(float min, float max) -> Umpk.Commands.IArgumentType<float>!
+static Umpk.Commands.Arguments.Float() -> Umpk.Commands.IArgumentType<float>!
+static Umpk.Commands.Arguments.GreedyString() -> Umpk.Commands.IArgumentType<string!>!
+static Umpk.Commands.Arguments.Identifier() -> Umpk.Commands.IArgumentType<Umpk.Identifier>!
+static Umpk.Commands.Arguments.Integer(int min, int max) -> Umpk.Commands.IArgumentType<int>!
+static Umpk.Commands.Arguments.Integer() -> Umpk.Commands.IArgumentType<int>!
+static Umpk.Commands.Arguments.Location(bool centerCorrect = true) -> Umpk.Commands.IArgumentType<Umpk.Commands.CommandLocation>!
+static Umpk.Commands.Arguments.Long(long min, long max) -> Umpk.Commands.IArgumentType<long>!
+static Umpk.Commands.Arguments.Long() -> Umpk.Commands.IArgumentType<long>!
+static Umpk.Commands.Arguments.QuotableString() -> Umpk.Commands.IArgumentType<string!>!
+static Umpk.Commands.Arguments.RegistryId(Umpk.Identifier registryId) -> Umpk.Commands.IArgumentType<Umpk.Identifier>!
+static Umpk.Commands.Arguments.Word() -> Umpk.Commands.IArgumentType<string!>!
+static Umpk.Commands.CommandLocation.operator !=(Umpk.Commands.CommandLocation left, Umpk.Commands.CommandLocation right) -> bool
+static Umpk.Commands.CommandLocation.operator ==(Umpk.Commands.CommandLocation left, Umpk.Commands.CommandLocation right) -> bool
+static Umpk.Commands.CommandResult.Failure(string! errorMessage, int errorPosition = -1) -> Umpk.Commands.CommandResult!
+static Umpk.Commands.CommandResult.Ok(int value) -> Umpk.Commands.CommandResult!
+static Umpk.Commands.CommandUsage.operator !=(Umpk.Commands.CommandUsage left, Umpk.Commands.CommandUsage right) -> bool
+static Umpk.Commands.CommandUsage.operator ==(Umpk.Commands.CommandUsage left, Umpk.Commands.CommandUsage right) -> bool
+static Umpk.Commands.CompletionResult.Empty.get -> Umpk.Commands.CompletionResult!
+static Umpk.Commands.CompletionSuggestion.operator !=(Umpk.Commands.CompletionSuggestion left, Umpk.Commands.CompletionSuggestion right) -> bool
+static Umpk.Commands.CompletionSuggestion.operator ==(Umpk.Commands.CompletionSuggestion left, Umpk.Commands.CompletionSuggestion right) -> bool
+Umpk.Commands.ArgumentCommandBuilder<TSource, T>
+Umpk.Commands.ArgumentCommandBuilder<TSource, T>.Name.get -> string!
+Umpk.Commands.ArgumentCommandBuilder<TSource, T>.Suggests(Umpk.Commands.ArgumentSuggestionProvider<TSource>! provider) -> Umpk.Commands.ArgumentCommandBuilder<TSource, T>!
+Umpk.Commands.Arguments
+Umpk.Commands.ArgumentSuggestionProvider<TSource>
+Umpk.Commands.CommandBuilder<TSource>
+Umpk.Commands.CommandBuilder<TSource>.Literal(string! name, System.Action<Umpk.Commands.LiteralCommandBuilder<TSource>!>! configure) -> Umpk.Commands.CommandBuilder<TSource>!
+Umpk.Commands.CommandExecution<TSource>
+Umpk.Commands.CommandLocation
+Umpk.Commands.CommandLocation.CommandLocation(double X, double Y, double Z, bool IsLocal, byte Relativity) -> void
+Umpk.Commands.CommandLocation.CommandLocation() -> void
+Umpk.Commands.CommandLocation.Deconstruct(out double X, out double Y, out double Z, out bool IsLocal, out byte Relativity) -> void
+Umpk.Commands.CommandLocation.Equals(Umpk.Commands.CommandLocation other) -> bool
+Umpk.Commands.CommandLocation.IsLocal.get -> bool
+Umpk.Commands.CommandLocation.IsLocal.init -> void
+Umpk.Commands.CommandLocation.IsRelativeX.get -> bool
+Umpk.Commands.CommandLocation.IsRelativeY.get -> bool
+Umpk.Commands.CommandLocation.IsRelativeZ.get -> bool
+Umpk.Commands.CommandLocation.Relativity.get -> byte
+Umpk.Commands.CommandLocation.Relativity.init -> void
+Umpk.Commands.CommandLocation.ToAbsolute(Umpk.Geometry.Vec3d current) -> Umpk.Geometry.Vec3d
+Umpk.Commands.CommandLocation.ToAbsolute(Umpk.Geometry.Vec3d origin, float yaw, float pitch) -> Umpk.Geometry.Vec3d
+Umpk.Commands.CommandLocation.ToBlockPos(Umpk.Geometry.Vec3d current) -> Umpk.Geometry.BlockPos
+Umpk.Commands.CommandLocation.X.get -> double
+Umpk.Commands.CommandLocation.X.init -> void
+Umpk.Commands.CommandLocation.Y.get -> double
+Umpk.Commands.CommandLocation.Y.init -> void
+Umpk.Commands.CommandLocation.Z.get -> double
+Umpk.Commands.CommandLocation.Z.init -> void
+Umpk.Commands.CommandNodeBuilder<TSource>
+Umpk.Commands.CommandNodeBuilder<TSource>.Executes(System.Func<Umpk.Commands.ICommandContext<TSource>!, int>! execution) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandNodeBuilder<TSource>.Executes(Umpk.Commands.CommandExecution<TSource>! execution) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandNodeBuilder<TSource>.RedirectTo(Umpk.Commands.CommandNodeBuilder<TSource>! target) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandNodeBuilder<TSource>.Requires(System.Predicate<TSource>! requirement) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandNodeBuilder<TSource>.ThenArgument<T>(string! name, Umpk.Commands.IArgumentType<T>! type, System.Action<Umpk.Commands.ArgumentCommandBuilder<TSource, T>!>! configure) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandNodeBuilder<TSource>.ThenLiteral(string! name, System.Action<Umpk.Commands.CommandNodeBuilder<TSource>!>! configure) -> Umpk.Commands.CommandNodeBuilder<TSource>!
+Umpk.Commands.CommandResult
+Umpk.Commands.CommandResult.ErrorMessage.get -> string?
+Umpk.Commands.CommandResult.ErrorPosition.get -> int
+Umpk.Commands.CommandResult.Success.get -> bool
+Umpk.Commands.CommandResult.Value.get -> int
+Umpk.Commands.CommandService<TSource>
+Umpk.Commands.CommandService<TSource>.CommandService() -> void
+Umpk.Commands.CommandService<TSource>.CompleteAsync(string! input, int cursor, TSource source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Commands.CompletionResult!>!
+Umpk.Commands.CommandService<TSource>.CreateScope(string! ownerId) -> Umpk.Commands.ICommandRegistrationScope<TSource>!
+Umpk.Commands.CommandService<TSource>.ExecuteAsync(string! input, TSource source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Commands.CommandResult!>!
+Umpk.Commands.CommandService<TSource>.GetUsage(string! commandName, TSource source) -> System.Collections.Immutable.ImmutableArray<string!>
+Umpk.Commands.CommandService<TSource>.GetUsage(TSource source) -> System.Collections.Immutable.ImmutableArray<Umpk.Commands.CommandUsage>
+Umpk.Commands.CommandUsage
+Umpk.Commands.CommandUsage.CommandUsage(string! Name, string! Usage) -> void
+Umpk.Commands.CommandUsage.CommandUsage() -> void
+Umpk.Commands.CommandUsage.Deconstruct(out string! Name, out string! Usage) -> void
+Umpk.Commands.CommandUsage.Equals(Umpk.Commands.CommandUsage other) -> bool
+Umpk.Commands.CommandUsage.Name.get -> string!
+Umpk.Commands.CommandUsage.Name.init -> void
+Umpk.Commands.CommandUsage.Usage.get -> string!
+Umpk.Commands.CommandUsage.Usage.init -> void
+Umpk.Commands.CompletionResult
+Umpk.Commands.CompletionResult.CompletionResult(int rangeStart, int rangeEnd, System.Collections.Immutable.ImmutableArray<Umpk.Commands.CompletionSuggestion> suggestions) -> void
+Umpk.Commands.CompletionResult.RangeEnd.get -> int
+Umpk.Commands.CompletionResult.RangeStart.get -> int
+Umpk.Commands.CompletionResult.Suggestions.get -> System.Collections.Immutable.ImmutableArray<Umpk.Commands.CompletionSuggestion>
+Umpk.Commands.CompletionSuggestion
+Umpk.Commands.CompletionSuggestion.CompletionSuggestion(string! Text, int StartIndex, int EndIndex, string? Tooltip) -> void
+Umpk.Commands.CompletionSuggestion.CompletionSuggestion() -> void
+Umpk.Commands.CompletionSuggestion.Deconstruct(out string! Text, out int StartIndex, out int EndIndex, out string? Tooltip) -> void
+Umpk.Commands.CompletionSuggestion.EndIndex.get -> int
+Umpk.Commands.CompletionSuggestion.EndIndex.init -> void
+Umpk.Commands.CompletionSuggestion.Equals(Umpk.Commands.CompletionSuggestion other) -> bool
+Umpk.Commands.CompletionSuggestion.StartIndex.get -> int
+Umpk.Commands.CompletionSuggestion.StartIndex.init -> void
+Umpk.Commands.CompletionSuggestion.Text.get -> string!
+Umpk.Commands.CompletionSuggestion.Text.init -> void
+Umpk.Commands.CompletionSuggestion.Tooltip.get -> string?
+Umpk.Commands.CompletionSuggestion.Tooltip.init -> void
+Umpk.Commands.IArgumentType<T>
+Umpk.Commands.ICommandContext<TSource>
+Umpk.Commands.ICommandContext<TSource>.GetArgument<T>(string! name) -> T
+Umpk.Commands.ICommandContext<TSource>.Input.get -> string!
+Umpk.Commands.ICommandContext<TSource>.Source.get -> TSource
+Umpk.Commands.ICommandRegistrationScope<TSource>
+Umpk.Commands.ICommandRegistrationScope<TSource>.OwnerId.get -> string!
+Umpk.Commands.ICommandRegistrationScope<TSource>.Register(System.Action<Umpk.Commands.CommandBuilder<TSource>!>! build) -> void
+Umpk.Commands.ICommandSource
+Umpk.Commands.ICommandSource.GetService<T>() -> T?
+Umpk.Commands.ICommandSource.ReplyAsync(Umpk.Text.Component! message, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Umpk.Commands.IRegistrySuggestionSource
+Umpk.Commands.IRegistrySuggestionSource.GetEntries(Umpk.Identifier registryId) -> System.Collections.Generic.IEnumerable<Umpk.Identifier>!
+Umpk.Commands.ISuggestionSink
+Umpk.Commands.ISuggestionSink.Remaining.get -> string!
+Umpk.Commands.ISuggestionSink.Suggest(string! text, string! tooltip) -> void
+Umpk.Commands.ISuggestionSink.Suggest(string! text) -> void
+Umpk.Commands.LiteralCommandBuilder<TSource>
+Umpk.Commands.LiteralCommandBuilder<TSource>.Literal.get -> string!
+virtual Umpk.Commands.ArgumentSuggestionProvider<TSource>.Invoke(Umpk.Commands.ICommandContext<TSource>! context, Umpk.Commands.ISuggestionSink! builder) -> System.Threading.Tasks.ValueTask
+virtual Umpk.Commands.CommandExecution<TSource>.Invoke(Umpk.Commands.ICommandContext<TSource>! context) -> System.Threading.Tasks.ValueTask<int>

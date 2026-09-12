@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.png binary
+*.jar binary
+*.umpkcap binary
+# Raw single-packet payload fixtures (fixtures/commands/**). Mostly printable bytes, so Git's
+# text=auto heuristic would classify them as text and could rewrite line endings inside a wire frame.
+*.bin binary
+# Packet corpus fixtures move to Git LFS in P8:
+# *.umpkcap filter=lfs diff=lfs merge=lfs -text

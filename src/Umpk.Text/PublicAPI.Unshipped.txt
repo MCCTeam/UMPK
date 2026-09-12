@@ -1,0 +1,355 @@
+#nullable enable
+Umpk.Text.LayeredTranslationSource
+Umpk.Text.LayeredTranslationSource.LayerCount.get -> int
+Umpk.Text.LayeredTranslationSource.LayeredTranslationSource(params Umpk.Text.ITranslationSource![]! layers) -> void
+Umpk.Text.LayeredTranslationSource.SetLayer(int index, Umpk.Text.ITranslationSource! source) -> void
+Umpk.Text.LayeredTranslationSource.this[int index].get -> Umpk.Text.ITranslationSource!
+Umpk.Text.LayeredTranslationSource.TryResolve(string! key, out string? template) -> bool
+Umpk.Text.TranslationTable
+Umpk.Text.TranslationTable.Count.get -> int
+Umpk.Text.TranslationTable.TryResolve(string! key, out string? template) -> bool
+static Umpk.Text.TranslationTable.FromEntries(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string!>>! entries) -> Umpk.Text.TranslationTable!
+static readonly Umpk.Text.TranslationTable.Empty -> Umpk.Text.TranslationTable!
+Umpk.Text.ClickEvent
+Umpk.Text.ClickEvent.<Clone>$() -> Umpk.Text.ClickEvent!
+Umpk.Text.ClickEvent.Action.get -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEvent.ClickEvent(Umpk.Text.ClickEventAction action, string! value) -> void
+Umpk.Text.ClickEvent.ClickEvent(string! id, Umpk.Nbt.NbtTag? payload) -> void
+Umpk.Text.ClickEvent.Equals(Umpk.Text.ClickEvent? other) -> bool
+Umpk.Text.ClickEvent.Payload.get -> Umpk.Nbt.NbtTag?
+Umpk.Text.ClickEvent.Value.get -> string!
+Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.ChangePage = 4 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.CopyToClipboard = 5 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.Custom = 7 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.OpenFile = 1 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.OpenUrl = 0 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.RunCommand = 2 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.ShowDialog = 6 -> Umpk.Text.ClickEventAction
+Umpk.Text.ClickEventAction.SuggestCommand = 3 -> Umpk.Text.ClickEventAction
+Umpk.Text.Component
+Umpk.Text.Component.<Clone>$() -> Umpk.Text.Component!
+Umpk.Text.Component.Children.get -> System.Collections.Generic.IReadOnlyList<Umpk.Text.Component!>!
+Umpk.Text.Component.Component(Umpk.Text.ComponentContent! content) -> void
+Umpk.Text.Component.Component(Umpk.Text.ComponentContent! content, Umpk.Text.Style! style) -> void
+Umpk.Text.Component.Component(Umpk.Text.ComponentContent! content, Umpk.Text.Style! style, System.Collections.Generic.IReadOnlyList<Umpk.Text.Component!>! children) -> void
+Umpk.Text.Component.Content.get -> Umpk.Text.ComponentContent!
+Umpk.Text.Component.Equals(Umpk.Text.Component? other) -> bool
+Umpk.Text.Component.Style.get -> Umpk.Text.Style!
+Umpk.Text.Component.ToPlainText(Umpk.Text.ITranslationSource? translations = null) -> string!
+Umpk.Text.ComponentContent
+Umpk.Text.ComponentContent.ComponentContent(Umpk.Text.ComponentContent! original) -> void
+Umpk.Text.ComponentFlattenOptions
+Umpk.Text.ComponentFlattenOptions.BaseStyle.get -> Umpk.Text.Style!
+Umpk.Text.ComponentFlattenOptions.BaseStyle.init -> void
+Umpk.Text.ComponentFlattenOptions.ComponentFlattenOptions() -> void
+Umpk.Text.ComponentFlattenOptions.DecodeLegacyCodes.get -> bool
+Umpk.Text.ComponentFlattenOptions.DecodeLegacyCodes.init -> void
+Umpk.Text.ComponentFlattenOptions.Equals(Umpk.Text.ComponentFlattenOptions other) -> bool
+Umpk.Text.ComponentFlattenOptions.Translations.get -> Umpk.Text.ITranslationSource?
+Umpk.Text.ComponentFlattenOptions.Translations.init -> void
+Umpk.Text.ComponentFlattener
+Umpk.Text.HoverEvent
+Umpk.Text.HoverEvent.HoverEvent(Umpk.Text.HoverEvent! original) -> void
+Umpk.Text.HoverShowEntity
+Umpk.Text.HoverShowEntity.EntityType.get -> string!
+Umpk.Text.HoverShowEntity.Equals(Umpk.Text.HoverShowEntity? other) -> bool
+Umpk.Text.HoverShowEntity.HoverShowEntity(string! entityType, System.Guid id, Umpk.Text.Component? name) -> void
+Umpk.Text.HoverShowEntity.Id.get -> System.Guid
+Umpk.Text.HoverShowEntity.Name.get -> Umpk.Text.Component?
+Umpk.Text.HoverShowItem
+Umpk.Text.HoverShowItem.Count.get -> int
+Umpk.Text.HoverShowItem.Data.get -> Umpk.Nbt.NbtTag?
+Umpk.Text.HoverShowItem.Equals(Umpk.Text.HoverShowItem? other) -> bool
+Umpk.Text.HoverShowItem.HoverShowItem(string! itemId, int count, Umpk.Nbt.NbtTag? data) -> void
+Umpk.Text.HoverShowItem.ItemId.get -> string!
+Umpk.Text.HoverShowText
+Umpk.Text.HoverShowText.Equals(Umpk.Text.HoverShowText? other) -> bool
+Umpk.Text.HoverShowText.HoverShowText(Umpk.Text.Component! text) -> void
+Umpk.Text.HoverShowText.Text.get -> Umpk.Text.Component!
+Umpk.Text.IComponentContentVisitor<TResult>
+Umpk.Text.IComponentContentVisitor<TResult>.VisitKeybind(Umpk.Text.KeybindContent! content) -> TResult
+Umpk.Text.IComponentContentVisitor<TResult>.VisitNbt(Umpk.Text.NbtContent! content) -> TResult
+Umpk.Text.IComponentContentVisitor<TResult>.VisitScore(Umpk.Text.ScoreContent! content) -> TResult
+Umpk.Text.IComponentContentVisitor<TResult>.VisitSelector(Umpk.Text.SelectorContent! content) -> TResult
+Umpk.Text.IComponentContentVisitor<TResult>.VisitText(Umpk.Text.TextContent! content) -> TResult
+Umpk.Text.IComponentContentVisitor<TResult>.VisitTranslatable(Umpk.Text.TranslatableContent! content) -> TResult
+Umpk.Text.IStyledRunSink
+Umpk.Text.IStyledRunSink.Accept(in Umpk.Text.StyledRun run) -> void
+Umpk.Text.ITranslationSource
+Umpk.Text.ITranslationSource.TryResolve(string! key, out string? template) -> bool
+Umpk.Text.KeybindContent
+Umpk.Text.KeybindContent.Equals(Umpk.Text.KeybindContent? other) -> bool
+Umpk.Text.KeybindContent.Keybind.get -> string!
+Umpk.Text.KeybindContent.KeybindContent(string! keybind) -> void
+Umpk.Text.NbtContent
+Umpk.Text.NbtContent.Equals(Umpk.Text.NbtContent? other) -> bool
+Umpk.Text.NbtContent.Interpret.get -> bool
+Umpk.Text.NbtContent.NbtContent(string! nbtPath, bool interpret, Umpk.Text.Component? separator, Umpk.Text.NbtDataSource source, string! sourceValue) -> void
+Umpk.Text.NbtContent.NbtPath.get -> string!
+Umpk.Text.NbtContent.Separator.get -> Umpk.Text.Component?
+Umpk.Text.NbtContent.Source.get -> Umpk.Text.NbtDataSource
+Umpk.Text.NbtContent.SourceValue.get -> string!
+Umpk.Text.NbtDataSource
+Umpk.Text.NbtDataSource.Block = 0 -> Umpk.Text.NbtDataSource
+Umpk.Text.NbtDataSource.Entity = 1 -> Umpk.Text.NbtDataSource
+Umpk.Text.NbtDataSource.Storage = 2 -> Umpk.Text.NbtDataSource
+Umpk.Text.NullTranslationSource
+Umpk.Text.NullTranslationSource.TryResolve(string! key, out string? template) -> bool
+Umpk.Text.ScoreContent
+Umpk.Text.ScoreContent.Equals(Umpk.Text.ScoreContent? other) -> bool
+Umpk.Text.ScoreContent.Name.get -> string!
+Umpk.Text.ScoreContent.Objective.get -> string!
+Umpk.Text.ScoreContent.ScoreContent(string! name, string! objective) -> void
+Umpk.Text.SelectorContent
+Umpk.Text.SelectorContent.Equals(Umpk.Text.SelectorContent? other) -> bool
+Umpk.Text.SelectorContent.Pattern.get -> string!
+Umpk.Text.SelectorContent.SelectorContent(string! pattern, Umpk.Text.Component? separator) -> void
+Umpk.Text.SelectorContent.Separator.get -> Umpk.Text.Component?
+Umpk.Text.Serialization.ComponentFormatException
+Umpk.Text.Serialization.ComponentFormatException.ComponentFormatException(string! message) -> void
+Umpk.Text.Serialization.ComponentFormatException.ComponentFormatException(string! message, System.Exception! innerException) -> void
+Umpk.Text.Serialization.ComponentJson
+Umpk.Text.Serialization.ComponentJsonLiteralForm
+Umpk.Text.Serialization.ComponentJsonLiteralForm.Collapsed = 0 -> Umpk.Text.Serialization.ComponentJsonLiteralForm
+Umpk.Text.Serialization.ComponentJsonLiteralForm.Object = 1 -> Umpk.Text.Serialization.ComponentJsonLiteralForm
+Umpk.Text.Serialization.ComponentNbt
+Umpk.Text.Serialization.ComponentWireEra
+Umpk.Text.Serialization.ComponentWireEra.Legacy = 0 -> Umpk.Text.Serialization.ComponentWireEra
+Umpk.Text.Serialization.ComponentWireEra.Modern = 1 -> Umpk.Text.Serialization.ComponentWireEra
+Umpk.Text.Serialization.LegacyText
+Umpk.Text.Style
+Umpk.Text.Style.<Clone>$() -> Umpk.Text.Style!
+Umpk.Text.Style.ApplyTo(Umpk.Text.Style! parent) -> Umpk.Text.Style!
+Umpk.Text.Style.Bold.get -> bool?
+Umpk.Text.Style.Bold.init -> void
+Umpk.Text.Style.ClickEvent.get -> Umpk.Text.ClickEvent?
+Umpk.Text.Style.ClickEvent.init -> void
+Umpk.Text.Style.Color.get -> Umpk.Text.TextColor?
+Umpk.Text.Style.Color.init -> void
+Umpk.Text.Style.Equals(Umpk.Text.Style? other) -> bool
+Umpk.Text.Style.Font.get -> string?
+Umpk.Text.Style.Font.init -> void
+Umpk.Text.Style.HoverEvent.get -> Umpk.Text.HoverEvent?
+Umpk.Text.Style.HoverEvent.init -> void
+Umpk.Text.Style.Insertion.get -> string?
+Umpk.Text.Style.Insertion.init -> void
+Umpk.Text.Style.IsEmpty.get -> bool
+Umpk.Text.Style.Italic.get -> bool?
+Umpk.Text.Style.Italic.init -> void
+Umpk.Text.Style.Obfuscated.get -> bool?
+Umpk.Text.Style.Obfuscated.init -> void
+Umpk.Text.Style.Strikethrough.get -> bool?
+Umpk.Text.Style.Strikethrough.init -> void
+Umpk.Text.Style.Style() -> void
+Umpk.Text.Style.Underlined.get -> bool?
+Umpk.Text.Style.Underlined.init -> void
+Umpk.Text.StyledRun
+Umpk.Text.StyledRun.Bold.get -> bool
+Umpk.Text.StyledRun.ClickEvent.get -> Umpk.Text.ClickEvent?
+Umpk.Text.StyledRun.Color.get -> Umpk.Text.TextColor?
+Umpk.Text.StyledRun.Deconstruct(out string! Text, out Umpk.Text.Style! Style) -> void
+Umpk.Text.StyledRun.Equals(Umpk.Text.StyledRun other) -> bool
+Umpk.Text.StyledRun.Font.get -> string?
+Umpk.Text.StyledRun.HoverEvent.get -> Umpk.Text.HoverEvent?
+Umpk.Text.StyledRun.Insertion.get -> string?
+Umpk.Text.StyledRun.Italic.get -> bool
+Umpk.Text.StyledRun.Obfuscated.get -> bool
+Umpk.Text.StyledRun.Strikethrough.get -> bool
+Umpk.Text.StyledRun.Style.get -> Umpk.Text.Style!
+Umpk.Text.StyledRun.Style.init -> void
+Umpk.Text.StyledRun.StyledRun() -> void
+Umpk.Text.StyledRun.StyledRun(string! Text, Umpk.Text.Style! Style) -> void
+Umpk.Text.StyledRun.Text.get -> string!
+Umpk.Text.StyledRun.Text.init -> void
+Umpk.Text.StyledRun.Underlined.get -> bool
+Umpk.Text.TextColor
+Umpk.Text.TextColor.Equals(Umpk.Text.TextColor other) -> bool
+Umpk.Text.TextColor.IsNamed.get -> bool
+Umpk.Text.TextColor.Name.get -> string?
+Umpk.Text.TextColor.Rgb.get -> int
+Umpk.Text.TextColor.Serialize() -> string!
+Umpk.Text.TextColor.TextColor() -> void
+Umpk.Text.TextContent
+Umpk.Text.TextContent.Equals(Umpk.Text.TextContent? other) -> bool
+Umpk.Text.TextContent.Text.get -> string!
+Umpk.Text.TextContent.TextContent(string! text) -> void
+Umpk.Text.TranslatableContent
+Umpk.Text.TranslatableContent.Args.get -> System.Collections.Generic.IReadOnlyList<Umpk.Text.Component!>!
+Umpk.Text.TranslatableContent.Equals(Umpk.Text.TranslatableContent? other) -> bool
+Umpk.Text.TranslatableContent.Fallback.get -> string?
+Umpk.Text.TranslatableContent.Key.get -> string!
+Umpk.Text.TranslatableContent.TranslatableContent(string! key, string? fallback, System.Collections.Generic.IReadOnlyList<Umpk.Text.Component!>! args) -> void
+abstract Umpk.Text.ComponentContent.<Clone>$() -> Umpk.Text.ComponentContent!
+abstract Umpk.Text.ComponentContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+abstract Umpk.Text.ComponentContent.TypeName.get -> string!
+abstract Umpk.Text.HoverEvent.<Clone>$() -> Umpk.Text.HoverEvent!
+abstract Umpk.Text.HoverEvent.ActionName.get -> string!
+const Umpk.Text.Serialization.LegacyText.Prefix = '§' -> char
+override Umpk.Text.ClickEvent.Equals(object? obj) -> bool
+override Umpk.Text.ClickEvent.GetHashCode() -> int
+override Umpk.Text.ClickEvent.ToString() -> string!
+override Umpk.Text.Component.Equals(object? obj) -> bool
+override Umpk.Text.Component.GetHashCode() -> int
+override Umpk.Text.Component.ToString() -> string!
+override Umpk.Text.ComponentContent.Equals(object? obj) -> bool
+override Umpk.Text.ComponentContent.GetHashCode() -> int
+override Umpk.Text.ComponentContent.ToString() -> string!
+override Umpk.Text.ComponentFlattenOptions.GetHashCode() -> int
+override Umpk.Text.HoverEvent.Equals(object? obj) -> bool
+override Umpk.Text.HoverEvent.GetHashCode() -> int
+override Umpk.Text.HoverEvent.ToString() -> string!
+override Umpk.Text.HoverShowEntity.<Clone>$() -> Umpk.Text.HoverShowEntity!
+override Umpk.Text.HoverShowEntity.ActionName.get -> string!
+override Umpk.Text.HoverShowEntity.Equals(object? obj) -> bool
+override Umpk.Text.HoverShowEntity.GetHashCode() -> int
+override Umpk.Text.HoverShowEntity.ToString() -> string!
+override Umpk.Text.HoverShowItem.<Clone>$() -> Umpk.Text.HoverShowItem!
+override Umpk.Text.HoverShowItem.ActionName.get -> string!
+override Umpk.Text.HoverShowItem.Equals(object? obj) -> bool
+override Umpk.Text.HoverShowItem.GetHashCode() -> int
+override Umpk.Text.HoverShowItem.ToString() -> string!
+override Umpk.Text.HoverShowText.<Clone>$() -> Umpk.Text.HoverShowText!
+override Umpk.Text.HoverShowText.ActionName.get -> string!
+override Umpk.Text.HoverShowText.Equals(object? obj) -> bool
+override Umpk.Text.HoverShowText.GetHashCode() -> int
+override Umpk.Text.HoverShowText.ToString() -> string!
+override Umpk.Text.KeybindContent.<Clone>$() -> Umpk.Text.KeybindContent!
+override Umpk.Text.KeybindContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.KeybindContent.Equals(object? obj) -> bool
+override Umpk.Text.KeybindContent.GetHashCode() -> int
+override Umpk.Text.KeybindContent.ToString() -> string!
+override Umpk.Text.KeybindContent.TypeName.get -> string!
+override Umpk.Text.NbtContent.<Clone>$() -> Umpk.Text.NbtContent!
+override Umpk.Text.NbtContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.NbtContent.Equals(object? obj) -> bool
+override Umpk.Text.NbtContent.GetHashCode() -> int
+override Umpk.Text.NbtContent.ToString() -> string!
+override Umpk.Text.NbtContent.TypeName.get -> string!
+override Umpk.Text.ScoreContent.<Clone>$() -> Umpk.Text.ScoreContent!
+override Umpk.Text.ScoreContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.ScoreContent.Equals(object? obj) -> bool
+override Umpk.Text.ScoreContent.GetHashCode() -> int
+override Umpk.Text.ScoreContent.ToString() -> string!
+override Umpk.Text.ScoreContent.TypeName.get -> string!
+override Umpk.Text.SelectorContent.<Clone>$() -> Umpk.Text.SelectorContent!
+override Umpk.Text.SelectorContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.SelectorContent.Equals(object? obj) -> bool
+override Umpk.Text.SelectorContent.GetHashCode() -> int
+override Umpk.Text.SelectorContent.ToString() -> string!
+override Umpk.Text.SelectorContent.TypeName.get -> string!
+override Umpk.Text.Style.Equals(object? obj) -> bool
+override Umpk.Text.Style.GetHashCode() -> int
+override Umpk.Text.Style.ToString() -> string!
+override Umpk.Text.StyledRun.GetHashCode() -> int
+override Umpk.Text.TextColor.Equals(object? obj) -> bool
+override Umpk.Text.TextColor.GetHashCode() -> int
+override Umpk.Text.TextColor.ToString() -> string!
+override Umpk.Text.TextContent.<Clone>$() -> Umpk.Text.TextContent!
+override Umpk.Text.TextContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.TextContent.Equals(object? obj) -> bool
+override Umpk.Text.TextContent.GetHashCode() -> int
+override Umpk.Text.TextContent.ToString() -> string!
+override Umpk.Text.TextContent.TypeName.get -> string!
+override Umpk.Text.TranslatableContent.<Clone>$() -> Umpk.Text.TranslatableContent!
+override Umpk.Text.TranslatableContent.Accept<TResult>(Umpk.Text.IComponentContentVisitor<TResult>! visitor) -> TResult
+override Umpk.Text.TranslatableContent.Equals(object? obj) -> bool
+override Umpk.Text.TranslatableContent.GetHashCode() -> int
+override Umpk.Text.TranslatableContent.ToString() -> string!
+override Umpk.Text.TranslatableContent.TypeName.get -> string!
+override sealed Umpk.Text.HoverShowEntity.Equals(Umpk.Text.HoverEvent? other) -> bool
+override sealed Umpk.Text.HoverShowItem.Equals(Umpk.Text.HoverEvent? other) -> bool
+override sealed Umpk.Text.HoverShowText.Equals(Umpk.Text.HoverEvent? other) -> bool
+override sealed Umpk.Text.KeybindContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+override sealed Umpk.Text.NbtContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+override sealed Umpk.Text.ScoreContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+override sealed Umpk.Text.SelectorContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+override sealed Umpk.Text.TextContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+override sealed Umpk.Text.TranslatableContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+static Umpk.Text.ClickEvent.operator !=(Umpk.Text.ClickEvent? left, Umpk.Text.ClickEvent? right) -> bool
+static Umpk.Text.ClickEvent.operator ==(Umpk.Text.ClickEvent? left, Umpk.Text.ClickEvent? right) -> bool
+static Umpk.Text.Component.Empty.get -> Umpk.Text.Component!
+static Umpk.Text.Component.Text(string! text) -> Umpk.Text.Component!
+static Umpk.Text.Component.Translatable(string! key, params Umpk.Text.Component![]! args) -> Umpk.Text.Component!
+static Umpk.Text.Component.operator !=(Umpk.Text.Component? left, Umpk.Text.Component? right) -> bool
+static Umpk.Text.Component.operator ==(Umpk.Text.Component? left, Umpk.Text.Component? right) -> bool
+static Umpk.Text.ComponentContent.operator !=(Umpk.Text.ComponentContent? left, Umpk.Text.ComponentContent? right) -> bool
+static Umpk.Text.ComponentContent.operator ==(Umpk.Text.ComponentContent? left, Umpk.Text.ComponentContent? right) -> bool
+static Umpk.Text.ComponentFlattenOptions.For(Umpk.Text.ITranslationSource? translations) -> Umpk.Text.ComponentFlattenOptions
+static Umpk.Text.ComponentFlattenOptions.operator !=(Umpk.Text.ComponentFlattenOptions left, Umpk.Text.ComponentFlattenOptions right) -> bool
+static Umpk.Text.ComponentFlattenOptions.operator ==(Umpk.Text.ComponentFlattenOptions left, Umpk.Text.ComponentFlattenOptions right) -> bool
+static Umpk.Text.ComponentFlattener.Flatten(Umpk.Text.Component! component) -> System.Collections.Generic.IReadOnlyList<Umpk.Text.StyledRun>!
+static Umpk.Text.ComponentFlattener.Flatten(Umpk.Text.Component! component, Umpk.Text.ITranslationSource? translations) -> System.Collections.Generic.IReadOnlyList<Umpk.Text.StyledRun>!
+static Umpk.Text.ComponentFlattener.Flatten(Umpk.Text.Component! component, in Umpk.Text.ComponentFlattenOptions options) -> System.Collections.Generic.IReadOnlyList<Umpk.Text.StyledRun>!
+static Umpk.Text.ComponentFlattener.Flatten<TSink>(Umpk.Text.Component! component, TSink sink, in Umpk.Text.ComponentFlattenOptions options) -> void
+static Umpk.Text.HoverEvent.operator !=(Umpk.Text.HoverEvent? left, Umpk.Text.HoverEvent? right) -> bool
+static Umpk.Text.HoverEvent.operator ==(Umpk.Text.HoverEvent? left, Umpk.Text.HoverEvent? right) -> bool
+static Umpk.Text.HoverShowEntity.operator !=(Umpk.Text.HoverShowEntity? left, Umpk.Text.HoverShowEntity? right) -> bool
+static Umpk.Text.HoverShowEntity.operator ==(Umpk.Text.HoverShowEntity? left, Umpk.Text.HoverShowEntity? right) -> bool
+static Umpk.Text.HoverShowItem.operator !=(Umpk.Text.HoverShowItem? left, Umpk.Text.HoverShowItem? right) -> bool
+static Umpk.Text.HoverShowItem.operator ==(Umpk.Text.HoverShowItem? left, Umpk.Text.HoverShowItem? right) -> bool
+static Umpk.Text.HoverShowText.operator !=(Umpk.Text.HoverShowText? left, Umpk.Text.HoverShowText? right) -> bool
+static Umpk.Text.HoverShowText.operator ==(Umpk.Text.HoverShowText? left, Umpk.Text.HoverShowText? right) -> bool
+static Umpk.Text.KeybindContent.operator !=(Umpk.Text.KeybindContent? left, Umpk.Text.KeybindContent? right) -> bool
+static Umpk.Text.KeybindContent.operator ==(Umpk.Text.KeybindContent? left, Umpk.Text.KeybindContent? right) -> bool
+static Umpk.Text.NbtContent.operator !=(Umpk.Text.NbtContent? left, Umpk.Text.NbtContent? right) -> bool
+static Umpk.Text.NbtContent.operator ==(Umpk.Text.NbtContent? left, Umpk.Text.NbtContent? right) -> bool
+static Umpk.Text.ScoreContent.operator !=(Umpk.Text.ScoreContent? left, Umpk.Text.ScoreContent? right) -> bool
+static Umpk.Text.ScoreContent.operator ==(Umpk.Text.ScoreContent? left, Umpk.Text.ScoreContent? right) -> bool
+static Umpk.Text.SelectorContent.operator !=(Umpk.Text.SelectorContent? left, Umpk.Text.SelectorContent? right) -> bool
+static Umpk.Text.SelectorContent.operator ==(Umpk.Text.SelectorContent? left, Umpk.Text.SelectorContent? right) -> bool
+static Umpk.Text.Serialization.ComponentJson.Parse(System.ReadOnlySpan<byte> utf8Json) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentJson.Parse(System.ReadOnlySpan<byte> utf8Json, Umpk.Text.Serialization.ComponentWireEra era) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentJson.Parse(string! json) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentJson.Parse(string! json, Umpk.Text.Serialization.ComponentWireEra era) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentJson.ToJsonString(Umpk.Text.Component! component, Umpk.Text.Serialization.ComponentWireEra era = Umpk.Text.Serialization.ComponentWireEra.Modern, Umpk.Text.Serialization.ComponentJsonLiteralForm literalForm = Umpk.Text.Serialization.ComponentJsonLiteralForm.Collapsed) -> string!
+static Umpk.Text.Serialization.ComponentJson.ToUtf8Bytes(Umpk.Text.Component! component, Umpk.Text.Serialization.ComponentWireEra era = Umpk.Text.Serialization.ComponentWireEra.Modern, Umpk.Text.Serialization.ComponentJsonLiteralForm literalForm = Umpk.Text.Serialization.ComponentJsonLiteralForm.Collapsed) -> byte[]!
+static Umpk.Text.Serialization.ComponentNbt.From(Umpk.Nbt.NbtTag! tag) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentNbt.From(Umpk.Nbt.NbtTag! tag, Umpk.Text.Serialization.ComponentWireEra era) -> Umpk.Text.Component!
+static Umpk.Text.Serialization.ComponentNbt.To(Umpk.Text.Component! component, Umpk.Text.Serialization.ComponentWireEra era = Umpk.Text.Serialization.ComponentWireEra.Modern) -> Umpk.Nbt.NbtTag!
+static Umpk.Text.Serialization.LegacyText.Decompose<TSink>(string! text, Umpk.Text.Style! baseStyle, TSink sink) -> void
+static Umpk.Text.Serialization.LegacyText.Encode(Umpk.Text.Component! component) -> string!
+static Umpk.Text.Serialization.LegacyText.Parse(string! text) -> Umpk.Text.Component!
+static Umpk.Text.Style.operator !=(Umpk.Text.Style? left, Umpk.Text.Style? right) -> bool
+static Umpk.Text.Style.operator ==(Umpk.Text.Style? left, Umpk.Text.Style? right) -> bool
+static Umpk.Text.StyledRun.operator !=(Umpk.Text.StyledRun left, Umpk.Text.StyledRun right) -> bool
+static Umpk.Text.StyledRun.operator ==(Umpk.Text.StyledRun left, Umpk.Text.StyledRun right) -> bool
+static Umpk.Text.TextColor.Aqua.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Black.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Blue.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkAqua.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkBlue.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkGray.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkGreen.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkPurple.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.DarkRed.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.FromName(string! name) -> Umpk.Text.TextColor?
+static Umpk.Text.TextColor.FromRgb(int rgb) -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Gold.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Gray.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Green.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.LightPurple.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Parse(string! value) -> Umpk.Text.TextColor?
+static Umpk.Text.TextColor.Red.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.White.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.Yellow.get -> Umpk.Text.TextColor
+static Umpk.Text.TextColor.operator !=(Umpk.Text.TextColor left, Umpk.Text.TextColor right) -> bool
+static Umpk.Text.TextColor.operator ==(Umpk.Text.TextColor left, Umpk.Text.TextColor right) -> bool
+static Umpk.Text.TextContent.operator !=(Umpk.Text.TextContent? left, Umpk.Text.TextContent? right) -> bool
+static Umpk.Text.TextContent.operator ==(Umpk.Text.TextContent? left, Umpk.Text.TextContent? right) -> bool
+static Umpk.Text.TranslatableContent.operator !=(Umpk.Text.TranslatableContent? left, Umpk.Text.TranslatableContent? right) -> bool
+static Umpk.Text.TranslatableContent.operator ==(Umpk.Text.TranslatableContent? left, Umpk.Text.TranslatableContent? right) -> bool
+static readonly Umpk.Text.ComponentFlattenOptions.Default -> Umpk.Text.ComponentFlattenOptions
+static readonly Umpk.Text.NullTranslationSource.Instance -> Umpk.Text.NullTranslationSource!
+static readonly Umpk.Text.Style.Empty -> Umpk.Text.Style!
+static readonly Umpk.Text.TextContent.Empty -> Umpk.Text.TextContent!
+virtual Umpk.Text.ComponentContent.EqualityContract.get -> System.Type!
+virtual Umpk.Text.ComponentContent.Equals(Umpk.Text.ComponentContent? other) -> bool
+virtual Umpk.Text.ComponentContent.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual Umpk.Text.HoverEvent.EqualityContract.get -> System.Type!
+virtual Umpk.Text.HoverEvent.Equals(Umpk.Text.HoverEvent? other) -> bool
+virtual Umpk.Text.HoverEvent.PrintMembers(System.Text.StringBuilder! builder) -> bool
+~override Umpk.Text.ComponentFlattenOptions.Equals(object obj) -> bool
+~override Umpk.Text.ComponentFlattenOptions.ToString() -> string
+~override Umpk.Text.StyledRun.Equals(object obj) -> bool
+~override Umpk.Text.StyledRun.ToString() -> string

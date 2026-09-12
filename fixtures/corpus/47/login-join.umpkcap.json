@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.8",
+  "protocol": 47,
+  "scenario": "login-join",
+  "frameCount": 27,
+  "clientboundCount": 27,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-08T00:33:46.6843888\u002B00:00",
+  "durationMs": 4077,
+  "contentHash": "34706b86ef0a291043ae360bff0323c37764dcbf710254272fae5c24abf1e394",
+  "notes": "1.8 login \u002B initial map_chunk_bulk region (no config phase pre-1.20.2)"
+}

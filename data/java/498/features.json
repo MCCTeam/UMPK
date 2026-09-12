@@ -1,0 +1,35 @@
+{
+  "_provenance": {
+    "version": "1.14.4",
+    "protocol": 498,
+    "mapping_source": "mojang-proguard",
+    "kind": "curated",
+    "note": "flattening era feature toggles; pre-signing, pre-configuration, pre-components"
+  },
+  "flags": {
+    "configurationPhase": false,
+    "bundles": false,
+    "chatSigning": "none",
+    "nbtWireFormat": "javaNamedRoot",
+    "blockPosLayout": "modern",
+    "itemStackFormat": "varintId",
+    "hashedSlots": false,
+    "lightInChunkPacket": false,
+    "dimensionEncoding": "int",
+    "metadataTerminator": "0xff",
+    "fluidMovement": "swimmingUpdate",
+    "waterTravel": "sprintAware",
+    "waterClimbBump": true,
+    "elytra": true,
+    "swimPose": true,
+    "crawlPose": true,
+    "perSectionFluidCounts": false,
+    "argumentTypeEra": "v1_14",
+    "componentInteractionEra": "legacy"
+  },
+  "physics": {
+    "poseBoundingBoxEra": "modern",
+    "defaultFriction": 0.6,
+    "waterFriction": 0.8
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.21.5",
+  "protocol": 770,
+  "scenario": "play-idle",
+  "frameCount": 4548,
+  "clientboundCount": 4548,
+  "serverboundCount": 0,
+  "recordedAtUtc": "2026-07-07T20:20:51.8535166\u002B00:00",
+  "durationMs": 20096,
+  "contentHash": "9154f0860cfd12da6dc9673e91a81ff1face083ab6185a36805eccb74bd6ea3c",
+  "notes": "Join plus idle play: chunk stream around spawn, entities, time, keep-alive. Headless join\u002Bwait (no chat/container drive possible)."
+}

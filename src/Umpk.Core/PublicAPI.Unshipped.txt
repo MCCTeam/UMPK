@@ -1,0 +1,284 @@
+#nullable enable
+const Umpk.Identifier.DefaultNamespace = "minecraft" -> string!
+const Umpk.ServerEndpoint.DefaultJavaPort = 25565 -> ushort
+override Umpk.GameProfile.Equals(object? obj) -> bool
+override Umpk.GameProfile.GetHashCode() -> int
+override Umpk.GameProfile.ToString() -> string!
+override Umpk.GameVersion.Equals(object? obj) -> bool
+override Umpk.GameVersion.GetHashCode() -> int
+override Umpk.GameVersion.ToString() -> string!
+override Umpk.Geometry.Aabb.Equals(object? obj) -> bool
+override Umpk.Geometry.Aabb.GetHashCode() -> int
+override Umpk.Geometry.Aabb.ToString() -> string!
+~override Umpk.Geometry.BlockPos.Equals(object obj) -> bool
+override Umpk.Geometry.BlockPos.GetHashCode() -> int
+override Umpk.Geometry.BlockPos.ToString() -> string!
+~override Umpk.Geometry.ChunkPos.Equals(object obj) -> bool
+override Umpk.Geometry.ChunkPos.GetHashCode() -> int
+override Umpk.Geometry.ChunkPos.ToString() -> string!
+override Umpk.Geometry.Vec3d.Equals(object? obj) -> bool
+override Umpk.Geometry.Vec3d.GetHashCode() -> int
+override Umpk.Geometry.Vec3d.ToString() -> string!
+override Umpk.Identifier.Equals(object? obj) -> bool
+override Umpk.Identifier.GetHashCode() -> int
+override Umpk.Identifier.ToString() -> string!
+override Umpk.ProfileCredentials.Equals(object? obj) -> bool
+override Umpk.ProfileCredentials.GetHashCode() -> int
+override Umpk.ProfileCredentials.ToString() -> string!
+override Umpk.ProfileProperty.Equals(object? obj) -> bool
+override Umpk.ProfileProperty.GetHashCode() -> int
+override Umpk.ProfileProperty.ToString() -> string!
+override Umpk.ServerEndpoint.Equals(object? obj) -> bool
+override Umpk.ServerEndpoint.GetHashCode() -> int
+override Umpk.ServerEndpoint.ToString() -> string!
+readonly Umpk.Geometry.Aabb.MaxX -> double
+readonly Umpk.Geometry.Aabb.MaxY -> double
+readonly Umpk.Geometry.Aabb.MaxZ -> double
+readonly Umpk.Geometry.Aabb.MinX -> double
+readonly Umpk.Geometry.Aabb.MinY -> double
+readonly Umpk.Geometry.Aabb.MinZ -> double
+readonly Umpk.Geometry.Vec3d.X -> double
+readonly Umpk.Geometry.Vec3d.Y -> double
+readonly Umpk.Geometry.Vec3d.Z -> double
+static readonly Umpk.Geometry.Aabb.Empty -> Umpk.Geometry.Aabb
+static readonly Umpk.Geometry.BlockPos.Zero -> Umpk.Geometry.BlockPos
+static readonly Umpk.Geometry.ChunkPos.Zero -> Umpk.Geometry.ChunkPos
+static readonly Umpk.Geometry.Vec3d.Zero -> Umpk.Geometry.Vec3d
+static readonly Umpk.Hosting.PeriodicTimerTickSource.DefaultInterval -> System.TimeSpan
+static Umpk.GameProfile.operator !=(Umpk.GameProfile? left, Umpk.GameProfile? right) -> bool
+static Umpk.GameProfile.operator ==(Umpk.GameProfile? left, Umpk.GameProfile? right) -> bool
+static Umpk.GameVersion.operator !=(Umpk.GameVersion? left, Umpk.GameVersion? right) -> bool
+static Umpk.GameVersion.operator ==(Umpk.GameVersion? left, Umpk.GameVersion? right) -> bool
+static Umpk.Geometry.Aabb.BlockAt(int x, int y, int z) -> Umpk.Geometry.Aabb
+static Umpk.Geometry.Aabb.OfSize(double centerX, double feetY, double centerZ, double width, double height) -> Umpk.Geometry.Aabb
+static Umpk.Geometry.Aabb.operator !=(Umpk.Geometry.Aabb a, Umpk.Geometry.Aabb b) -> bool
+static Umpk.Geometry.Aabb.operator ==(Umpk.Geometry.Aabb a, Umpk.Geometry.Aabb b) -> bool
+static Umpk.Geometry.BlockPos.Containing(double x, double y, double z) -> Umpk.Geometry.BlockPos
+static Umpk.Geometry.BlockPos.Containing(Umpk.Geometry.Vec3d position) -> Umpk.Geometry.BlockPos
+static Umpk.Geometry.BlockPos.operator !=(Umpk.Geometry.BlockPos left, Umpk.Geometry.BlockPos right) -> bool
+static Umpk.Geometry.BlockPos.operator ==(Umpk.Geometry.BlockPos left, Umpk.Geometry.BlockPos right) -> bool
+static Umpk.Geometry.ChunkPos.Containing(Umpk.Geometry.BlockPos block) -> Umpk.Geometry.ChunkPos
+static Umpk.Geometry.ChunkPos.operator !=(Umpk.Geometry.ChunkPos left, Umpk.Geometry.ChunkPos right) -> bool
+static Umpk.Geometry.ChunkPos.operator ==(Umpk.Geometry.ChunkPos left, Umpk.Geometry.ChunkPos right) -> bool
+static Umpk.Geometry.DirectionExtensions.GetAxis(this Umpk.Geometry.Direction direction) -> Umpk.Geometry.Axis
+static Umpk.Geometry.DirectionExtensions.Opposite(this Umpk.Geometry.Direction direction) -> Umpk.Geometry.Direction
+static Umpk.Geometry.DirectionExtensions.StepX(this Umpk.Geometry.Direction direction) -> int
+static Umpk.Geometry.DirectionExtensions.StepY(this Umpk.Geometry.Direction direction) -> int
+static Umpk.Geometry.DirectionExtensions.StepZ(this Umpk.Geometry.Direction direction) -> int
+static Umpk.Geometry.Vec3d.operator *(Umpk.Geometry.Vec3d a, double s) -> Umpk.Geometry.Vec3d
+static Umpk.Geometry.Vec3d.operator -(Umpk.Geometry.Vec3d a) -> Umpk.Geometry.Vec3d
+static Umpk.Geometry.Vec3d.operator !=(Umpk.Geometry.Vec3d a, Umpk.Geometry.Vec3d b) -> bool
+static Umpk.Geometry.Vec3d.operator ==(Umpk.Geometry.Vec3d a, Umpk.Geometry.Vec3d b) -> bool
+static Umpk.Geometry.Vec3d.operator +(Umpk.Geometry.Vec3d a, Umpk.Geometry.Vec3d b) -> Umpk.Geometry.Vec3d
+static Umpk.Geometry.Vec3d.operator -(Umpk.Geometry.Vec3d a, Umpk.Geometry.Vec3d b) -> Umpk.Geometry.Vec3d
+static Umpk.Identifier.Minecraft(string! path) -> Umpk.Identifier
+static Umpk.Identifier.operator !=(Umpk.Identifier left, Umpk.Identifier right) -> bool
+static Umpk.Identifier.operator ==(Umpk.Identifier left, Umpk.Identifier right) -> bool
+static Umpk.Identifier.Parse(string! value) -> Umpk.Identifier
+static Umpk.Identifier.TryParse(string? value, out Umpk.Identifier identifier) -> bool
+static Umpk.ProfileCredentials.operator !=(Umpk.ProfileCredentials? left, Umpk.ProfileCredentials? right) -> bool
+static Umpk.ProfileCredentials.operator ==(Umpk.ProfileCredentials? left, Umpk.ProfileCredentials? right) -> bool
+static Umpk.ProfileProperty.operator !=(Umpk.ProfileProperty? left, Umpk.ProfileProperty? right) -> bool
+static Umpk.ProfileProperty.operator ==(Umpk.ProfileProperty? left, Umpk.ProfileProperty? right) -> bool
+static Umpk.ServerEndpoint.operator !=(Umpk.ServerEndpoint? left, Umpk.ServerEndpoint? right) -> bool
+static Umpk.ServerEndpoint.operator ==(Umpk.ServerEndpoint? left, Umpk.ServerEndpoint? right) -> bool
+static Umpk.ServerEndpoint.Parse(string! value) -> Umpk.ServerEndpoint!
+static Umpk.ServerEndpoint.TryParse(string? value, out Umpk.ServerEndpoint! endpoint) -> bool
+Umpk.Events.SubscriptionList<T>
+Umpk.Events.SubscriptionList<T>.Count.get -> int
+Umpk.Events.SubscriptionList<T>.Invoke(T args) -> void
+Umpk.Events.SubscriptionList<T>.Subscribe(System.Action<T>! handler) -> System.IDisposable!
+Umpk.Events.SubscriptionList<T>.SubscriptionList(System.Action<System.Exception!, System.Delegate!>? errorSink = null) -> void
+Umpk.GameEdition
+Umpk.GameEdition.Bedrock = 1 -> Umpk.GameEdition
+Umpk.GameEdition.Java = 0 -> Umpk.GameEdition
+Umpk.GameProfile
+Umpk.GameProfile.<Clone>$() -> Umpk.GameProfile!
+Umpk.GameProfile.Deconstruct(out System.Guid Id, out string! Name) -> void
+Umpk.GameProfile.Equals(Umpk.GameProfile? other) -> bool
+Umpk.GameProfile.GameProfile(System.Guid Id, string! Name) -> void
+Umpk.GameProfile.Id.get -> System.Guid
+Umpk.GameProfile.Id.init -> void
+Umpk.GameProfile.Name.get -> string!
+Umpk.GameProfile.Name.init -> void
+Umpk.GameProfile.Properties.get -> System.Collections.Generic.IReadOnlyList<Umpk.ProfileProperty!>!
+Umpk.GameProfile.Properties.init -> void
+Umpk.GameVersion
+Umpk.GameVersion.<Clone>$() -> Umpk.GameVersion!
+Umpk.GameVersion.Deconstruct(out Umpk.GameEdition Edition, out string! Name, out int Protocol) -> void
+Umpk.GameVersion.Edition.get -> Umpk.GameEdition
+Umpk.GameVersion.Edition.init -> void
+Umpk.GameVersion.Equals(Umpk.GameVersion? other) -> bool
+Umpk.GameVersion.GameVersion(Umpk.GameEdition Edition, string! Name, int Protocol) -> void
+Umpk.GameVersion.Name.get -> string!
+Umpk.GameVersion.Name.init -> void
+Umpk.GameVersion.Protocol.get -> int
+Umpk.GameVersion.Protocol.init -> void
+Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.Aabb(double x1, double y1, double z1, double x2, double y2, double z2) -> void
+Umpk.Geometry.Aabb.Aabb() -> void
+Umpk.Geometry.Aabb.Collide(int axis, Umpk.Geometry.Aabb other, double movement) -> double
+Umpk.Geometry.Aabb.CollideX(Umpk.Geometry.Aabb other, double movement) -> double
+Umpk.Geometry.Aabb.CollideY(Umpk.Geometry.Aabb other, double movement) -> double
+Umpk.Geometry.Aabb.CollideZ(Umpk.Geometry.Aabb other, double movement) -> double
+Umpk.Geometry.Aabb.Contains(double x, double y, double z) -> bool
+Umpk.Geometry.Aabb.Deflate(double x, double y, double z) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.DistanceSqrTo(Umpk.Geometry.Vec3d point) -> double
+Umpk.Geometry.Aabb.Equals(Umpk.Geometry.Aabb other) -> bool
+Umpk.Geometry.Aabb.ExpandTowards(double dx, double dy, double dz) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.ExpandTowards(Umpk.Geometry.Vec3d v) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.GetBottomCenter() -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Aabb.GetCenter() -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Aabb.Inflate(double v) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.Inflate(double x, double y, double z) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.Intersects(double x1, double y1, double z1, double x2, double y2, double z2) -> bool
+Umpk.Geometry.Aabb.Intersects(Umpk.Geometry.Aabb other) -> bool
+Umpk.Geometry.Aabb.Max(int axis) -> double
+Umpk.Geometry.Aabb.Min(int axis) -> double
+Umpk.Geometry.Aabb.Move(double dx, double dy, double dz) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.Move(Umpk.Geometry.Vec3d v) -> Umpk.Geometry.Aabb
+Umpk.Geometry.Aabb.XSize.get -> double
+Umpk.Geometry.Aabb.YSize.get -> double
+Umpk.Geometry.Aabb.ZSize.get -> double
+Umpk.Geometry.Axis
+Umpk.Geometry.Axis.X = 0 -> Umpk.Geometry.Axis
+Umpk.Geometry.Axis.Y = 1 -> Umpk.Geometry.Axis
+Umpk.Geometry.Axis.Z = 2 -> Umpk.Geometry.Axis
+Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.Above(int count = 1) -> Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.Below(int count = 1) -> Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.BlockPos(int X, int Y, int Z) -> void
+Umpk.Geometry.BlockPos.BlockPos() -> void
+Umpk.Geometry.BlockPos.BottomCenter.get -> Umpk.Geometry.Vec3d
+Umpk.Geometry.BlockPos.Center.get -> Umpk.Geometry.Vec3d
+Umpk.Geometry.BlockPos.Deconstruct(out int X, out int Y, out int Z) -> void
+Umpk.Geometry.BlockPos.Equals(Umpk.Geometry.BlockPos other) -> bool
+Umpk.Geometry.BlockPos.MinCorner.get -> Umpk.Geometry.Vec3d
+Umpk.Geometry.BlockPos.Offset(int dx, int dy, int dz) -> Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.Offset(Umpk.Geometry.Direction direction, int count) -> Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.Offset(Umpk.Geometry.Direction direction) -> Umpk.Geometry.BlockPos
+Umpk.Geometry.BlockPos.X.get -> int
+Umpk.Geometry.BlockPos.X.init -> void
+Umpk.Geometry.BlockPos.Y.get -> int
+Umpk.Geometry.BlockPos.Y.init -> void
+Umpk.Geometry.BlockPos.Z.get -> int
+Umpk.Geometry.BlockPos.Z.init -> void
+Umpk.Geometry.ChunkPos
+Umpk.Geometry.ChunkPos.ChunkPos(int X, int Z) -> void
+Umpk.Geometry.ChunkPos.ChunkPos() -> void
+Umpk.Geometry.ChunkPos.Deconstruct(out int X, out int Z) -> void
+Umpk.Geometry.ChunkPos.Equals(Umpk.Geometry.ChunkPos other) -> bool
+Umpk.Geometry.ChunkPos.MinBlockX.get -> int
+Umpk.Geometry.ChunkPos.MinBlockZ.get -> int
+Umpk.Geometry.ChunkPos.X.get -> int
+Umpk.Geometry.ChunkPos.X.init -> void
+Umpk.Geometry.ChunkPos.Z.get -> int
+Umpk.Geometry.ChunkPos.Z.init -> void
+Umpk.Geometry.Direction
+Umpk.Geometry.Direction.Down = 0 -> Umpk.Geometry.Direction
+Umpk.Geometry.Direction.East = 5 -> Umpk.Geometry.Direction
+Umpk.Geometry.DirectionExtensions
+Umpk.Geometry.Direction.North = 2 -> Umpk.Geometry.Direction
+Umpk.Geometry.Direction.South = 3 -> Umpk.Geometry.Direction
+Umpk.Geometry.Direction.Up = 1 -> Umpk.Geometry.Direction
+Umpk.Geometry.Direction.West = 4 -> Umpk.Geometry.Direction
+Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Add(double x, double y, double z) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Add(Umpk.Geometry.Vec3d other) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Equals(Umpk.Geometry.Vec3d other) -> bool
+Umpk.Geometry.Vec3d.Get(int axis) -> double
+Umpk.Geometry.Vec3d.HorizontalDistanceSqr() -> double
+Umpk.Geometry.Vec3d.Length() -> double
+Umpk.Geometry.Vec3d.LengthSqr() -> double
+Umpk.Geometry.Vec3d.Multiply(double x, double y, double z) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Multiply(Umpk.Geometry.Vec3d other) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Normalize() -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Scale(double factor) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Subtract(double x, double y, double z) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Subtract(Umpk.Geometry.Vec3d other) -> Umpk.Geometry.Vec3d
+Umpk.Geometry.Vec3d.Vec3d(double x, double y, double z) -> void
+Umpk.Geometry.Vec3d.Vec3d() -> void
+Umpk.Geometry.Vec3d.With(int axis, double value) -> Umpk.Geometry.Vec3d
+Umpk.Hosting.ChannelSessionScheduler
+Umpk.Hosting.ChannelSessionScheduler.ChannelSessionScheduler(System.Action<System.Exception!>? errorSink = null) -> void
+Umpk.Hosting.ChannelSessionScheduler.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Umpk.Hosting.ChannelSessionScheduler.InvokeAsync(System.Action! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+Umpk.Hosting.ChannelSessionScheduler.InvokeAsync(System.Func<System.Threading.Tasks.ValueTask>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+Umpk.Hosting.ChannelSessionScheduler.InvokeAsync<TResult>(System.Func<System.Threading.Tasks.ValueTask<TResult>>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TResult>!
+Umpk.Hosting.ChannelSessionScheduler.InvokeAsync<TResult>(System.Func<TResult>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TResult>!
+Umpk.Hosting.ChannelSessionScheduler.IsCurrent.get -> bool
+Umpk.Hosting.ChannelSessionScheduler.Post(System.Action! work) -> void
+Umpk.Hosting.CronScheduler
+Umpk.Hosting.CronScheduler.At(System.DateTimeOffset when, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.CronScheduler.CronScheduler(System.TimeProvider? timeProvider = null, Microsoft.Extensions.Logging.ILogger? logger = null) -> void
+Umpk.Hosting.CronScheduler.DailyAt(System.TimeOnly timeOfDay, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.CronScheduler.DisposeAll() -> void
+Umpk.Hosting.CronScheduler.Every(System.TimeSpan interval, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.CronScheduler.EveryWithJitter(System.TimeSpan min, System.TimeSpan max, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.ICronScheduler
+Umpk.Hosting.ICronScheduler.At(System.DateTimeOffset when, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.ICronScheduler.DailyAt(System.TimeOnly timeOfDay, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.ICronScheduler.Every(System.TimeSpan interval, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.ICronScheduler.EveryWithJitter(System.TimeSpan min, System.TimeSpan max, System.Action! callback) -> System.IDisposable!
+Umpk.Hosting.ISessionScheduler
+Umpk.Hosting.ISessionScheduler.InvokeAsync(System.Action! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+Umpk.Hosting.ISessionScheduler.InvokeAsync(System.Func<System.Threading.Tasks.ValueTask>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+Umpk.Hosting.ISessionScheduler.InvokeAsync<TResult>(System.Func<System.Threading.Tasks.ValueTask<TResult>>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TResult>!
+Umpk.Hosting.ISessionScheduler.InvokeAsync<TResult>(System.Func<TResult>! work, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TResult>!
+Umpk.Hosting.ISessionScheduler.IsCurrent.get -> bool
+Umpk.Hosting.ISessionScheduler.Post(System.Action! work) -> void
+Umpk.Hosting.ITickSource
+Umpk.Hosting.ITickSource.TickInterval.get -> System.TimeSpan
+Umpk.Hosting.ITickSource.Ticks(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<long>!
+Umpk.Hosting.ManualTickSource
+Umpk.Hosting.ManualTickSource.Advance(int count = 1) -> void
+Umpk.Hosting.ManualTickSource.Complete() -> void
+Umpk.Hosting.ManualTickSource.ManualTickSource(System.TimeSpan? nominalInterval = null) -> void
+Umpk.Hosting.ManualTickSource.TickInterval.get -> System.TimeSpan
+Umpk.Hosting.ManualTickSource.Ticks(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<long>!
+Umpk.Hosting.PeriodicTimerTickSource
+Umpk.Hosting.PeriodicTimerTickSource.PeriodicTimerTickSource(System.TimeSpan interval, System.TimeProvider! timeProvider) -> void
+Umpk.Hosting.PeriodicTimerTickSource.PeriodicTimerTickSource(System.TimeSpan interval) -> void
+Umpk.Hosting.PeriodicTimerTickSource.PeriodicTimerTickSource() -> void
+Umpk.Hosting.PeriodicTimerTickSource.TickInterval.get -> System.TimeSpan
+Umpk.Hosting.PeriodicTimerTickSource.Ticks(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<long>!
+Umpk.Identifier
+Umpk.Identifier.Equals(Umpk.Identifier other) -> bool
+Umpk.Identifier.Identifier(string! namespace, string! path) -> void
+Umpk.Identifier.Identifier() -> void
+Umpk.Identifier.IsMinecraft.get -> bool
+Umpk.Identifier.Namespace.get -> string!
+Umpk.Identifier.Path.get -> string!
+Umpk.ProfileCredentials
+Umpk.ProfileCredentials.AccessToken.get -> string!
+Umpk.ProfileCredentials.AccessToken.init -> void
+Umpk.ProfileCredentials.<Clone>$() -> Umpk.ProfileCredentials!
+Umpk.ProfileCredentials.Deconstruct(out Umpk.GameProfile! Profile, out string! AccessToken) -> void
+Umpk.ProfileCredentials.Equals(Umpk.ProfileCredentials? other) -> bool
+Umpk.ProfileCredentials.ProfileCredentials(Umpk.GameProfile! Profile, string! AccessToken) -> void
+Umpk.ProfileCredentials.Profile.get -> Umpk.GameProfile!
+Umpk.ProfileCredentials.Profile.init -> void
+Umpk.ProfileProperty
+Umpk.ProfileProperty.<Clone>$() -> Umpk.ProfileProperty!
+Umpk.ProfileProperty.Deconstruct(out string! Name, out string! Value, out string? Signature) -> void
+Umpk.ProfileProperty.Equals(Umpk.ProfileProperty? other) -> bool
+Umpk.ProfileProperty.Name.get -> string!
+Umpk.ProfileProperty.Name.init -> void
+Umpk.ProfileProperty.ProfileProperty(string! Name, string! Value, string? Signature = null) -> void
+Umpk.ProfileProperty.Signature.get -> string?
+Umpk.ProfileProperty.Signature.init -> void
+Umpk.ProfileProperty.Value.get -> string!
+Umpk.ProfileProperty.Value.init -> void
+Umpk.ServerEndpoint
+Umpk.ServerEndpoint.<Clone>$() -> Umpk.ServerEndpoint!
+Umpk.ServerEndpoint.Deconstruct(out string! Host, out ushort Port) -> void
+Umpk.ServerEndpoint.Equals(Umpk.ServerEndpoint? other) -> bool
+Umpk.ServerEndpoint.Host.get -> string!
+Umpk.ServerEndpoint.Host.init -> void
+Umpk.ServerEndpoint.Port.get -> ushort
+Umpk.ServerEndpoint.Port.init -> void
+Umpk.ServerEndpoint.ServerEndpoint(string! Host, ushort Port = 25565) -> void
+Umpk.IdentifierMatch
+static Umpk.IdentifierMatch.BarePath(string! needle) -> string!
+static Umpk.IdentifierMatch.Matches(Umpk.Identifier id, string! needle) -> bool
+static Umpk.IdentifierMatch.Matches(Umpk.Identifier id, string! needle, string! barePath) -> bool

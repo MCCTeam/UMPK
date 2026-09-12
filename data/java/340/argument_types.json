@@ -1,0 +1,12 @@
+{
+ "_provenance": {
+  "version": "1.12.2",
+  "protocol": 340,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "pre-flattening has no brigadier command tree (arrived at 1.13)"
+  ],
+  "kind": "curated"
+ },
+ "entries": []
+}

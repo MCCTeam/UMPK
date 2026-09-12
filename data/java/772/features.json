@@ -1,0 +1,32 @@
+{
+  "_provenance": {
+    "version": "1.21.7",
+    "protocol": 772,
+    "kind": "curated",
+    "note": "feature toggles"
+  },
+  "flags": {
+    "configurationPhase": true,
+    "bundles": true,
+    "chatSigning": "v3",
+    "nbtWireFormat": "javaRootTagOrString",
+    "blockPosLayout": "modern",
+    "itemStackFormat": "hashed",
+    "hashedSlots": true,
+    "lightInChunkPacket": false,
+    "dimensionEncoding": "registryHolder",
+    "metadataTerminator": "0xff",
+    "fluidMovement": "swimmingUpdate",
+    "waterTravel": "sprintAware",
+    "waterClimbBump": true,
+    "elytra": true,
+    "swimPose": true,
+    "crawlPose": true,
+    "argumentTypeEra": "v1_21_7"
+  },
+  "physics": {
+    "poseBoundingBoxEra": "modern",
+    "defaultFriction": 0.6,
+    "waterFriction": 0.8
+  }
+}

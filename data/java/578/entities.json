@@ -1,0 +1,632 @@
+{
+  "_provenance": {
+    "version": "1.15.2",
+    "protocol": 578,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "reports/registries.json#minecraft:entity_type"
+    ],
+    "kind": "extracted"
+  },
+  "flat_id_space": true,
+  "entries": [
+    {
+      "id": "minecraft:area_effect_cloud",
+      "id_num": 0,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:armor_stand",
+      "id_num": 1,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:arrow",
+      "id_num": 2,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:bat",
+      "id_num": 3,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:bee",
+      "id_num": 4,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:blaze",
+      "id_num": 5,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:boat",
+      "id_num": 6,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:cat",
+      "id_num": 7,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:cave_spider",
+      "id_num": 8,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:chicken",
+      "id_num": 9,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:cod",
+      "id_num": 10,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:cow",
+      "id_num": 11,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:creeper",
+      "id_num": 12,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:donkey",
+      "id_num": 13,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:dolphin",
+      "id_num": 14,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:dragon_fireball",
+      "id_num": 15,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:drowned",
+      "id_num": 16,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:elder_guardian",
+      "id_num": 17,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:end_crystal",
+      "id_num": 18,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:ender_dragon",
+      "id_num": 19,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:enderman",
+      "id_num": 20,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:endermite",
+      "id_num": 21,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:evoker_fangs",
+      "id_num": 22,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:evoker",
+      "id_num": 23,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:experience_orb",
+      "id_num": 24,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:eye_of_ender",
+      "id_num": 25,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:falling_block",
+      "id_num": 26,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:firework_rocket",
+      "id_num": 27,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:fox",
+      "id_num": 28,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:ghast",
+      "id_num": 29,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:giant",
+      "id_num": 30,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:guardian",
+      "id_num": 31,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:horse",
+      "id_num": 32,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:husk",
+      "id_num": 33,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:illusioner",
+      "id_num": 34,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:item",
+      "id_num": 35,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:item_frame",
+      "id_num": 36,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:fireball",
+      "id_num": 37,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:leash_knot",
+      "id_num": 38,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:llama",
+      "id_num": 39,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:llama_spit",
+      "id_num": 40,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:magma_cube",
+      "id_num": 41,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:minecart",
+      "id_num": 42,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:chest_minecart",
+      "id_num": 43,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:command_block_minecart",
+      "id_num": 44,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:furnace_minecart",
+      "id_num": 45,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:hopper_minecart",
+      "id_num": 46,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:spawner_minecart",
+      "id_num": 47,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:tnt_minecart",
+      "id_num": 48,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:mule",
+      "id_num": 49,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:mooshroom",
+      "id_num": 50,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:ocelot",
+      "id_num": 51,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:painting",
+      "id_num": 52,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:panda",
+      "id_num": 53,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:parrot",
+      "id_num": 54,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:pig",
+      "id_num": 55,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:pufferfish",
+      "id_num": 56,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:zombie_pigman",
+      "id_num": 57,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:polar_bear",
+      "id_num": 58,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:tnt",
+      "id_num": 59,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:rabbit",
+      "id_num": 60,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:salmon",
+      "id_num": 61,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:sheep",
+      "id_num": 62,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:shulker",
+      "id_num": 63,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:shulker_bullet",
+      "id_num": 64,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:silverfish",
+      "id_num": 65,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:skeleton",
+      "id_num": 66,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:skeleton_horse",
+      "id_num": 67,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:slime",
+      "id_num": 68,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:small_fireball",
+      "id_num": 69,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:snow_golem",
+      "id_num": 70,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:snowball",
+      "id_num": 71,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:spectral_arrow",
+      "id_num": 72,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:spider",
+      "id_num": 73,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:squid",
+      "id_num": 74,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:stray",
+      "id_num": 75,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:trader_llama",
+      "id_num": 76,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:tropical_fish",
+      "id_num": 77,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:turtle",
+      "id_num": 78,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:egg",
+      "id_num": 79,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:ender_pearl",
+      "id_num": 80,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:experience_bottle",
+      "id_num": 81,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:potion",
+      "id_num": 82,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:trident",
+      "id_num": 83,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:vex",
+      "id_num": 84,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:villager",
+      "id_num": 85,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:iron_golem",
+      "id_num": 86,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:vindicator",
+      "id_num": 87,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:pillager",
+      "id_num": 88,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:wandering_trader",
+      "id_num": 89,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:witch",
+      "id_num": 90,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:wither",
+      "id_num": 91,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:wither_skeleton",
+      "id_num": 92,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:wither_skull",
+      "id_num": 93,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:wolf",
+      "id_num": 94,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:zombie",
+      "id_num": 95,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:zombie_horse",
+      "id_num": 96,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:zombie_villager",
+      "id_num": 97,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:phantom",
+      "id_num": 98,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:ravager",
+      "id_num": 99,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:lightning_bolt",
+      "id_num": 100,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:player",
+      "id_num": 101,
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "minecraft:fishing_bobber",
+      "id_num": 102,
+      "width": null,
+      "height": null
+    }
+  ]
+}

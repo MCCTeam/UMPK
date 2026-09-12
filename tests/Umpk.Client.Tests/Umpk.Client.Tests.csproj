@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
+    <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
+    <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
+  </ItemGroup>
+</Project>

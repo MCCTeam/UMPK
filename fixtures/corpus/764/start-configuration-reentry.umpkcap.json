@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "minecraftVersion": "1.20.2",
+  "protocol": 764,
+  "scenario": "start-configuration-reentry",
+  "frameCount": 4,
+  "clientboundCount": 2,
+  "serverboundCount": 2,
+  "recordedAtUtc": "2026-07-11T00:00:00.0000000\u002B00:00",
+  "durationMs": 3,
+  "contentHash": "6a8657b7059ae35bca6cac28e987fd81cae7da12dee1a2d1d706d192493d974a",
+  "notes": "SYNTHETIC: Play -\u003E Configuration re-entry (start_configuration, configuration_acknowledged, finish_configuration both flows; all empty payloads). Vanilla has no console trigger for the re-entry, so this scenario is synthesized from the protocol 764 descriptor wire ids; wire ids and payload shapes match 1.20.4-decompiled ClientboundStartConfigurationPacket / ServerboundConfigurationAcknowledgedPacket (no fields)."
+}

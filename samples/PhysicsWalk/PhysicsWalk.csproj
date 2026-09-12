@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Vec3d, BlockPos, Aabb -->
+    <ProjectReference Include="../../src/Umpk.Core/Umpk.Core.csproj" />
+    <!-- BlockState, IBlockDataSource, BlockFlags -->
+    <ProjectReference Include="../../src/Umpk.Game/Umpk.Game.csproj" />
+    <!-- PlayerPhysics, MovementInput, PhysicsProfile -->
+    <ProjectReference Include="../../src/Umpk.Physics/Umpk.Physics.csproj" />
+  </ItemGroup>
+</Project>

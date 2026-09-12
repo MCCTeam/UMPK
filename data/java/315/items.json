@@ -1,0 +1,2362 @@
+{
+ "_provenance": {
+  "version": "1.11",
+  "protocol": 315,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "minecraft-data pc/1.11/items.json (+ air=0; base registrations only)"
+  ],
+  "kind": "extracted",
+  "note": "legacy pre-flattening items: composite key (item_id << 16) | damage. Exactly ONE row per item id, named with the era's own registry key and damage 0. minecraft-data carries a 'variations' list per item; it is deliberately NOT expanded into per-damage identifiers, because those identifiers do not exist on these servers. This builder used to emit them as '<name>_<damage>' (dye_5, coal_1, fish_2, flower_pot_9, skull_3, golden_apple_1), which is the same defect protocol 47 had with 1.13-flattened names: vanilla 1.12.2 names purple dye {item: minecraft:dye, data: 5} in its own assets/minecraft/recipes/purple_dye.json, and red wool {item: minecraft:wool, data: 14} in red_wool.json, so 'minecraft:dye_5' is a name the target server cannot round-trip through its own commands. The damage short is carried by ItemStackCodecs.ResolveLegacyItem as a damage component off the base composite and re-encodes byte-for-byte, so nothing is lost."
+ },
+ "identity": "legacy-composite",
+ "identity_formula": "(item_id << 16) | damage",
+ "entries": [
+  {
+   "composite_key": 0,
+   "item_id": 0,
+   "damage": 0,
+   "name": "air"
+  },
+  {
+   "composite_key": 65536,
+   "item_id": 1,
+   "damage": 0,
+   "name": "stone"
+  },
+  {
+   "composite_key": 131072,
+   "item_id": 2,
+   "damage": 0,
+   "name": "grass"
+  },
+  {
+   "composite_key": 196608,
+   "item_id": 3,
+   "damage": 0,
+   "name": "dirt"
+  },
+  {
+   "composite_key": 262144,
+   "item_id": 4,
+   "damage": 0,
+   "name": "cobblestone"
+  },
+  {
+   "composite_key": 327680,
+   "item_id": 5,
+   "damage": 0,
+   "name": "planks"
+  },
+  {
+   "composite_key": 393216,
+   "item_id": 6,
+   "damage": 0,
+   "name": "sapling"
+  },
+  {
+   "composite_key": 458752,
+   "item_id": 7,
+   "damage": 0,
+   "name": "bedrock"
+  },
+  {
+   "composite_key": 786432,
+   "item_id": 12,
+   "damage": 0,
+   "name": "sand"
+  },
+  {
+   "composite_key": 851968,
+   "item_id": 13,
+   "damage": 0,
+   "name": "gravel"
+  },
+  {
+   "composite_key": 917504,
+   "item_id": 14,
+   "damage": 0,
+   "name": "gold_ore"
+  },
+  {
+   "composite_key": 983040,
+   "item_id": 15,
+   "damage": 0,
+   "name": "iron_ore"
+  },
+  {
+   "composite_key": 1048576,
+   "item_id": 16,
+   "damage": 0,
+   "name": "coal_ore"
+  },
+  {
+   "composite_key": 1114112,
+   "item_id": 17,
+   "damage": 0,
+   "name": "log"
+  },
+  {
+   "composite_key": 1179648,
+   "item_id": 18,
+   "damage": 0,
+   "name": "leaves"
+  },
+  {
+   "composite_key": 1245184,
+   "item_id": 19,
+   "damage": 0,
+   "name": "sponge"
+  },
+  {
+   "composite_key": 1310720,
+   "item_id": 20,
+   "damage": 0,
+   "name": "glass"
+  },
+  {
+   "composite_key": 1376256,
+   "item_id": 21,
+   "damage": 0,
+   "name": "lapis_ore"
+  },
+  {
+   "composite_key": 1441792,
+   "item_id": 22,
+   "damage": 0,
+   "name": "lapis_block"
+  },
+  {
+   "composite_key": 1507328,
+   "item_id": 23,
+   "damage": 0,
+   "name": "dispenser"
+  },
+  {
+   "composite_key": 1572864,
+   "item_id": 24,
+   "damage": 0,
+   "name": "sandstone"
+  },
+  {
+   "composite_key": 1638400,
+   "item_id": 25,
+   "damage": 0,
+   "name": "noteblock"
+  },
+  {
+   "composite_key": 1769472,
+   "item_id": 27,
+   "damage": 0,
+   "name": "golden_rail"
+  },
+  {
+   "composite_key": 1835008,
+   "item_id": 28,
+   "damage": 0,
+   "name": "detector_rail"
+  },
+  {
+   "composite_key": 1900544,
+   "item_id": 29,
+   "damage": 0,
+   "name": "sticky_piston"
+  },
+  {
+   "composite_key": 1966080,
+   "item_id": 30,
+   "damage": 0,
+   "name": "web"
+  },
+  {
+   "composite_key": 2031616,
+   "item_id": 31,
+   "damage": 0,
+   "name": "tallgrass"
+  },
+  {
+   "composite_key": 2097152,
+   "item_id": 32,
+   "damage": 0,
+   "name": "deadbush"
+  },
+  {
+   "composite_key": 2162688,
+   "item_id": 33,
+   "damage": 0,
+   "name": "piston"
+  },
+  {
+   "composite_key": 2293760,
+   "item_id": 35,
+   "damage": 0,
+   "name": "wool"
+  },
+  {
+   "composite_key": 2424832,
+   "item_id": 37,
+   "damage": 0,
+   "name": "yellow_flower"
+  },
+  {
+   "composite_key": 2490368,
+   "item_id": 38,
+   "damage": 0,
+   "name": "red_flower"
+  },
+  {
+   "composite_key": 2555904,
+   "item_id": 39,
+   "damage": 0,
+   "name": "brown_mushroom"
+  },
+  {
+   "composite_key": 2621440,
+   "item_id": 40,
+   "damage": 0,
+   "name": "red_mushroom"
+  },
+  {
+   "composite_key": 2686976,
+   "item_id": 41,
+   "damage": 0,
+   "name": "gold_block"
+  },
+  {
+   "composite_key": 2752512,
+   "item_id": 42,
+   "damage": 0,
+   "name": "iron_block"
+  },
+  {
+   "composite_key": 2883584,
+   "item_id": 44,
+   "damage": 0,
+   "name": "stone_slab"
+  },
+  {
+   "composite_key": 2949120,
+   "item_id": 45,
+   "damage": 0,
+   "name": "brick_block"
+  },
+  {
+   "composite_key": 3014656,
+   "item_id": 46,
+   "damage": 0,
+   "name": "tnt"
+  },
+  {
+   "composite_key": 3080192,
+   "item_id": 47,
+   "damage": 0,
+   "name": "bookshelf"
+  },
+  {
+   "composite_key": 3145728,
+   "item_id": 48,
+   "damage": 0,
+   "name": "mossy_cobblestone"
+  },
+  {
+   "composite_key": 3211264,
+   "item_id": 49,
+   "damage": 0,
+   "name": "obsidian"
+  },
+  {
+   "composite_key": 3276800,
+   "item_id": 50,
+   "damage": 0,
+   "name": "torch"
+  },
+  {
+   "composite_key": 3407872,
+   "item_id": 52,
+   "damage": 0,
+   "name": "mob_spawner"
+  },
+  {
+   "composite_key": 3473408,
+   "item_id": 53,
+   "damage": 0,
+   "name": "oak_stairs"
+  },
+  {
+   "composite_key": 3538944,
+   "item_id": 54,
+   "damage": 0,
+   "name": "chest"
+  },
+  {
+   "composite_key": 3670016,
+   "item_id": 56,
+   "damage": 0,
+   "name": "diamond_ore"
+  },
+  {
+   "composite_key": 3735552,
+   "item_id": 57,
+   "damage": 0,
+   "name": "diamond_block"
+  },
+  {
+   "composite_key": 3801088,
+   "item_id": 58,
+   "damage": 0,
+   "name": "crafting_table"
+  },
+  {
+   "composite_key": 3932160,
+   "item_id": 60,
+   "damage": 0,
+   "name": "farmland"
+  },
+  {
+   "composite_key": 3997696,
+   "item_id": 61,
+   "damage": 0,
+   "name": "furnace"
+  },
+  {
+   "composite_key": 4259840,
+   "item_id": 65,
+   "damage": 0,
+   "name": "ladder"
+  },
+  {
+   "composite_key": 4325376,
+   "item_id": 66,
+   "damage": 0,
+   "name": "rail"
+  },
+  {
+   "composite_key": 4390912,
+   "item_id": 67,
+   "damage": 0,
+   "name": "stone_stairs"
+  },
+  {
+   "composite_key": 4521984,
+   "item_id": 69,
+   "damage": 0,
+   "name": "lever"
+  },
+  {
+   "composite_key": 4587520,
+   "item_id": 70,
+   "damage": 0,
+   "name": "stone_pressure_plate"
+  },
+  {
+   "composite_key": 4718592,
+   "item_id": 72,
+   "damage": 0,
+   "name": "wooden_pressure_plate"
+  },
+  {
+   "composite_key": 4784128,
+   "item_id": 73,
+   "damage": 0,
+   "name": "redstone_ore"
+  },
+  {
+   "composite_key": 4980736,
+   "item_id": 76,
+   "damage": 0,
+   "name": "redstone_torch"
+  },
+  {
+   "composite_key": 5046272,
+   "item_id": 77,
+   "damage": 0,
+   "name": "stone_button"
+  },
+  {
+   "composite_key": 5111808,
+   "item_id": 78,
+   "damage": 0,
+   "name": "snow_layer"
+  },
+  {
+   "composite_key": 5177344,
+   "item_id": 79,
+   "damage": 0,
+   "name": "ice"
+  },
+  {
+   "composite_key": 5242880,
+   "item_id": 80,
+   "damage": 0,
+   "name": "snow"
+  },
+  {
+   "composite_key": 5308416,
+   "item_id": 81,
+   "damage": 0,
+   "name": "cactus"
+  },
+  {
+   "composite_key": 5373952,
+   "item_id": 82,
+   "damage": 0,
+   "name": "clay"
+  },
+  {
+   "composite_key": 5505024,
+   "item_id": 84,
+   "damage": 0,
+   "name": "jukebox"
+  },
+  {
+   "composite_key": 5570560,
+   "item_id": 85,
+   "damage": 0,
+   "name": "fence"
+  },
+  {
+   "composite_key": 5636096,
+   "item_id": 86,
+   "damage": 0,
+   "name": "pumpkin"
+  },
+  {
+   "composite_key": 5701632,
+   "item_id": 87,
+   "damage": 0,
+   "name": "netherrack"
+  },
+  {
+   "composite_key": 5767168,
+   "item_id": 88,
+   "damage": 0,
+   "name": "soul_sand"
+  },
+  {
+   "composite_key": 5832704,
+   "item_id": 89,
+   "damage": 0,
+   "name": "glowstone"
+  },
+  {
+   "composite_key": 5963776,
+   "item_id": 91,
+   "damage": 0,
+   "name": "lit_pumpkin"
+  },
+  {
+   "composite_key": 6225920,
+   "item_id": 95,
+   "damage": 0,
+   "name": "stained_glass"
+  },
+  {
+   "composite_key": 6291456,
+   "item_id": 96,
+   "damage": 0,
+   "name": "trapdoor"
+  },
+  {
+   "composite_key": 6356992,
+   "item_id": 97,
+   "damage": 0,
+   "name": "monster_egg"
+  },
+  {
+   "composite_key": 6422528,
+   "item_id": 98,
+   "damage": 0,
+   "name": "stonebrick"
+  },
+  {
+   "composite_key": 6488064,
+   "item_id": 99,
+   "damage": 0,
+   "name": "brown_mushroom_block"
+  },
+  {
+   "composite_key": 6553600,
+   "item_id": 100,
+   "damage": 0,
+   "name": "red_mushroom_block"
+  },
+  {
+   "composite_key": 6619136,
+   "item_id": 101,
+   "damage": 0,
+   "name": "iron_bars"
+  },
+  {
+   "composite_key": 6684672,
+   "item_id": 102,
+   "damage": 0,
+   "name": "glass_pane"
+  },
+  {
+   "composite_key": 6750208,
+   "item_id": 103,
+   "damage": 0,
+   "name": "melon_block"
+  },
+  {
+   "composite_key": 6946816,
+   "item_id": 106,
+   "damage": 0,
+   "name": "vine"
+  },
+  {
+   "composite_key": 7012352,
+   "item_id": 107,
+   "damage": 0,
+   "name": "fence_gate"
+  },
+  {
+   "composite_key": 7077888,
+   "item_id": 108,
+   "damage": 0,
+   "name": "brick_stairs"
+  },
+  {
+   "composite_key": 7143424,
+   "item_id": 109,
+   "damage": 0,
+   "name": "stone_brick_stairs"
+  },
+  {
+   "composite_key": 7208960,
+   "item_id": 110,
+   "damage": 0,
+   "name": "mycelium"
+  },
+  {
+   "composite_key": 7274496,
+   "item_id": 111,
+   "damage": 0,
+   "name": "waterlily"
+  },
+  {
+   "composite_key": 7340032,
+   "item_id": 112,
+   "damage": 0,
+   "name": "nether_brick"
+  },
+  {
+   "composite_key": 7405568,
+   "item_id": 113,
+   "damage": 0,
+   "name": "nether_brick_fence"
+  },
+  {
+   "composite_key": 7471104,
+   "item_id": 114,
+   "damage": 0,
+   "name": "nether_brick_stairs"
+  },
+  {
+   "composite_key": 7602176,
+   "item_id": 116,
+   "damage": 0,
+   "name": "enchanting_table"
+  },
+  {
+   "composite_key": 7864320,
+   "item_id": 120,
+   "damage": 0,
+   "name": "end_portal_frame"
+  },
+  {
+   "composite_key": 7929856,
+   "item_id": 121,
+   "damage": 0,
+   "name": "end_stone"
+  },
+  {
+   "composite_key": 7995392,
+   "item_id": 122,
+   "damage": 0,
+   "name": "dragon_egg"
+  },
+  {
+   "composite_key": 8060928,
+   "item_id": 123,
+   "damage": 0,
+   "name": "redstone_lamp"
+  },
+  {
+   "composite_key": 8257536,
+   "item_id": 126,
+   "damage": 0,
+   "name": "wooden_slab"
+  },
+  {
+   "composite_key": 8388608,
+   "item_id": 128,
+   "damage": 0,
+   "name": "sandstone_stairs"
+  },
+  {
+   "composite_key": 8454144,
+   "item_id": 129,
+   "damage": 0,
+   "name": "emerald_ore"
+  },
+  {
+   "composite_key": 8519680,
+   "item_id": 130,
+   "damage": 0,
+   "name": "ender_chest"
+  },
+  {
+   "composite_key": 8585216,
+   "item_id": 131,
+   "damage": 0,
+   "name": "tripwire_hook"
+  },
+  {
+   "composite_key": 8716288,
+   "item_id": 133,
+   "damage": 0,
+   "name": "emerald_block"
+  },
+  {
+   "composite_key": 8781824,
+   "item_id": 134,
+   "damage": 0,
+   "name": "spruce_stairs"
+  },
+  {
+   "composite_key": 8847360,
+   "item_id": 135,
+   "damage": 0,
+   "name": "birch_stairs"
+  },
+  {
+   "composite_key": 8912896,
+   "item_id": 136,
+   "damage": 0,
+   "name": "jungle_stairs"
+  },
+  {
+   "composite_key": 8978432,
+   "item_id": 137,
+   "damage": 0,
+   "name": "command_block"
+  },
+  {
+   "composite_key": 9043968,
+   "item_id": 138,
+   "damage": 0,
+   "name": "beacon"
+  },
+  {
+   "composite_key": 9109504,
+   "item_id": 139,
+   "damage": 0,
+   "name": "cobblestone_wall"
+  },
+  {
+   "composite_key": 9371648,
+   "item_id": 143,
+   "damage": 0,
+   "name": "wooden_button"
+  },
+  {
+   "composite_key": 9502720,
+   "item_id": 145,
+   "damage": 0,
+   "name": "anvil"
+  },
+  {
+   "composite_key": 9568256,
+   "item_id": 146,
+   "damage": 0,
+   "name": "trapped_chest"
+  },
+  {
+   "composite_key": 9633792,
+   "item_id": 147,
+   "damage": 0,
+   "name": "light_weighted_pressure_plate"
+  },
+  {
+   "composite_key": 9699328,
+   "item_id": 148,
+   "damage": 0,
+   "name": "heavy_weighted_pressure_plate"
+  },
+  {
+   "composite_key": 9895936,
+   "item_id": 151,
+   "damage": 0,
+   "name": "daylight_detector"
+  },
+  {
+   "composite_key": 9961472,
+   "item_id": 152,
+   "damage": 0,
+   "name": "redstone_block"
+  },
+  {
+   "composite_key": 10027008,
+   "item_id": 153,
+   "damage": 0,
+   "name": "quartz_ore"
+  },
+  {
+   "composite_key": 10092544,
+   "item_id": 154,
+   "damage": 0,
+   "name": "hopper"
+  },
+  {
+   "composite_key": 10158080,
+   "item_id": 155,
+   "damage": 0,
+   "name": "quartz_block"
+  },
+  {
+   "composite_key": 10223616,
+   "item_id": 156,
+   "damage": 0,
+   "name": "quartz_stairs"
+  },
+  {
+   "composite_key": 10289152,
+   "item_id": 157,
+   "damage": 0,
+   "name": "activator_rail"
+  },
+  {
+   "composite_key": 10354688,
+   "item_id": 158,
+   "damage": 0,
+   "name": "dropper"
+  },
+  {
+   "composite_key": 10420224,
+   "item_id": 159,
+   "damage": 0,
+   "name": "stained_hardened_clay"
+  },
+  {
+   "composite_key": 10485760,
+   "item_id": 160,
+   "damage": 0,
+   "name": "stained_glass_pane"
+  },
+  {
+   "composite_key": 10551296,
+   "item_id": 161,
+   "damage": 0,
+   "name": "leaves2"
+  },
+  {
+   "composite_key": 10616832,
+   "item_id": 162,
+   "damage": 0,
+   "name": "log2"
+  },
+  {
+   "composite_key": 10682368,
+   "item_id": 163,
+   "damage": 0,
+   "name": "acacia_stairs"
+  },
+  {
+   "composite_key": 10747904,
+   "item_id": 164,
+   "damage": 0,
+   "name": "dark_oak_stairs"
+  },
+  {
+   "composite_key": 10813440,
+   "item_id": 165,
+   "damage": 0,
+   "name": "slime"
+  },
+  {
+   "composite_key": 10878976,
+   "item_id": 166,
+   "damage": 0,
+   "name": "barrier"
+  },
+  {
+   "composite_key": 10944512,
+   "item_id": 167,
+   "damage": 0,
+   "name": "iron_trapdoor"
+  },
+  {
+   "composite_key": 11010048,
+   "item_id": 168,
+   "damage": 0,
+   "name": "prismarine"
+  },
+  {
+   "composite_key": 11075584,
+   "item_id": 169,
+   "damage": 0,
+   "name": "sea_lantern"
+  },
+  {
+   "composite_key": 11141120,
+   "item_id": 170,
+   "damage": 0,
+   "name": "hay_block"
+  },
+  {
+   "composite_key": 11206656,
+   "item_id": 171,
+   "damage": 0,
+   "name": "carpet"
+  },
+  {
+   "composite_key": 11272192,
+   "item_id": 172,
+   "damage": 0,
+   "name": "hardened_clay"
+  },
+  {
+   "composite_key": 11337728,
+   "item_id": 173,
+   "damage": 0,
+   "name": "coal_block"
+  },
+  {
+   "composite_key": 11403264,
+   "item_id": 174,
+   "damage": 0,
+   "name": "packed_ice"
+  },
+  {
+   "composite_key": 11468800,
+   "item_id": 175,
+   "damage": 0,
+   "name": "double_plant"
+  },
+  {
+   "composite_key": 11730944,
+   "item_id": 179,
+   "damage": 0,
+   "name": "red_sandstone"
+  },
+  {
+   "composite_key": 11796480,
+   "item_id": 180,
+   "damage": 0,
+   "name": "red_sandstone_stairs"
+  },
+  {
+   "composite_key": 11927552,
+   "item_id": 182,
+   "damage": 0,
+   "name": "stone_slab2"
+  },
+  {
+   "composite_key": 11993088,
+   "item_id": 183,
+   "damage": 0,
+   "name": "spruce_fence_gate"
+  },
+  {
+   "composite_key": 12058624,
+   "item_id": 184,
+   "damage": 0,
+   "name": "birch_fence_gate"
+  },
+  {
+   "composite_key": 12124160,
+   "item_id": 185,
+   "damage": 0,
+   "name": "jungle_fence_gate"
+  },
+  {
+   "composite_key": 12189696,
+   "item_id": 186,
+   "damage": 0,
+   "name": "dark_oak_fence_gate"
+  },
+  {
+   "composite_key": 12255232,
+   "item_id": 187,
+   "damage": 0,
+   "name": "acacia_fence_gate"
+  },
+  {
+   "composite_key": 12320768,
+   "item_id": 188,
+   "damage": 0,
+   "name": "spruce_fence"
+  },
+  {
+   "composite_key": 12386304,
+   "item_id": 189,
+   "damage": 0,
+   "name": "birch_fence"
+  },
+  {
+   "composite_key": 12451840,
+   "item_id": 190,
+   "damage": 0,
+   "name": "jungle_fence"
+  },
+  {
+   "composite_key": 12517376,
+   "item_id": 191,
+   "damage": 0,
+   "name": "dark_oak_fence"
+  },
+  {
+   "composite_key": 12582912,
+   "item_id": 192,
+   "damage": 0,
+   "name": "acacia_fence"
+  },
+  {
+   "composite_key": 12976128,
+   "item_id": 198,
+   "damage": 0,
+   "name": "end_rod"
+  },
+  {
+   "composite_key": 13041664,
+   "item_id": 199,
+   "damage": 0,
+   "name": "chorus_plant"
+  },
+  {
+   "composite_key": 13107200,
+   "item_id": 200,
+   "damage": 0,
+   "name": "chorus_flower"
+  },
+  {
+   "composite_key": 13172736,
+   "item_id": 201,
+   "damage": 0,
+   "name": "purpur_block"
+  },
+  {
+   "composite_key": 13238272,
+   "item_id": 202,
+   "damage": 0,
+   "name": "purpur_pillar"
+  },
+  {
+   "composite_key": 13303808,
+   "item_id": 203,
+   "damage": 0,
+   "name": "purpur_stairs"
+  },
+  {
+   "composite_key": 13434880,
+   "item_id": 205,
+   "damage": 0,
+   "name": "purpur_slab"
+  },
+  {
+   "composite_key": 13500416,
+   "item_id": 206,
+   "damage": 0,
+   "name": "end_bricks"
+  },
+  {
+   "composite_key": 13631488,
+   "item_id": 208,
+   "damage": 0,
+   "name": "grass_path"
+  },
+  {
+   "composite_key": 13762560,
+   "item_id": 210,
+   "damage": 0,
+   "name": "repeating_command_block"
+  },
+  {
+   "composite_key": 13828096,
+   "item_id": 211,
+   "damage": 0,
+   "name": "chain_command_block"
+  },
+  {
+   "composite_key": 13959168,
+   "item_id": 213,
+   "damage": 0,
+   "name": "magma"
+  },
+  {
+   "composite_key": 14024704,
+   "item_id": 214,
+   "damage": 0,
+   "name": "nether_wart_block"
+  },
+  {
+   "composite_key": 14090240,
+   "item_id": 215,
+   "damage": 0,
+   "name": "red_nether_brick"
+  },
+  {
+   "composite_key": 14155776,
+   "item_id": 216,
+   "damage": 0,
+   "name": "bone_block"
+  },
+  {
+   "composite_key": 14221312,
+   "item_id": 217,
+   "damage": 0,
+   "name": "structure_void"
+  },
+  {
+   "composite_key": 14286848,
+   "item_id": 218,
+   "damage": 0,
+   "name": "observer"
+  },
+  {
+   "composite_key": 14352384,
+   "item_id": 219,
+   "damage": 0,
+   "name": "white_shulker_box"
+  },
+  {
+   "composite_key": 14417920,
+   "item_id": 220,
+   "damage": 0,
+   "name": "orange_shulker_box"
+  },
+  {
+   "composite_key": 14483456,
+   "item_id": 221,
+   "damage": 0,
+   "name": "magenta_shulker_box"
+  },
+  {
+   "composite_key": 14548992,
+   "item_id": 222,
+   "damage": 0,
+   "name": "light_blue_shulker_box"
+  },
+  {
+   "composite_key": 14614528,
+   "item_id": 223,
+   "damage": 0,
+   "name": "yellow_shulker_box"
+  },
+  {
+   "composite_key": 14680064,
+   "item_id": 224,
+   "damage": 0,
+   "name": "lime_shulker_box"
+  },
+  {
+   "composite_key": 14745600,
+   "item_id": 225,
+   "damage": 0,
+   "name": "pink_shulker_box"
+  },
+  {
+   "composite_key": 14811136,
+   "item_id": 226,
+   "damage": 0,
+   "name": "gray_shulker_box"
+  },
+  {
+   "composite_key": 14876672,
+   "item_id": 227,
+   "damage": 0,
+   "name": "silver_shulker_box"
+  },
+  {
+   "composite_key": 14942208,
+   "item_id": 228,
+   "damage": 0,
+   "name": "cyan_shulker_box"
+  },
+  {
+   "composite_key": 15007744,
+   "item_id": 229,
+   "damage": 0,
+   "name": "purple_shulker_box"
+  },
+  {
+   "composite_key": 15073280,
+   "item_id": 230,
+   "damage": 0,
+   "name": "blue_shulker_box"
+  },
+  {
+   "composite_key": 15138816,
+   "item_id": 231,
+   "damage": 0,
+   "name": "brown_shulker_box"
+  },
+  {
+   "composite_key": 15204352,
+   "item_id": 232,
+   "damage": 0,
+   "name": "green_shulker_box"
+  },
+  {
+   "composite_key": 15269888,
+   "item_id": 233,
+   "damage": 0,
+   "name": "red_shulker_box"
+  },
+  {
+   "composite_key": 15335424,
+   "item_id": 234,
+   "damage": 0,
+   "name": "black_shulker_box"
+  },
+  {
+   "composite_key": 16711680,
+   "item_id": 255,
+   "damage": 0,
+   "name": "structure_block"
+  },
+  {
+   "composite_key": 16777216,
+   "item_id": 256,
+   "damage": 0,
+   "name": "iron_shovel"
+  },
+  {
+   "composite_key": 16842752,
+   "item_id": 257,
+   "damage": 0,
+   "name": "iron_pickaxe"
+  },
+  {
+   "composite_key": 16908288,
+   "item_id": 258,
+   "damage": 0,
+   "name": "iron_axe"
+  },
+  {
+   "composite_key": 16973824,
+   "item_id": 259,
+   "damage": 0,
+   "name": "flint_and_steel"
+  },
+  {
+   "composite_key": 17039360,
+   "item_id": 260,
+   "damage": 0,
+   "name": "apple"
+  },
+  {
+   "composite_key": 17104896,
+   "item_id": 261,
+   "damage": 0,
+   "name": "bow"
+  },
+  {
+   "composite_key": 17170432,
+   "item_id": 262,
+   "damage": 0,
+   "name": "arrow"
+  },
+  {
+   "composite_key": 17235968,
+   "item_id": 263,
+   "damage": 0,
+   "name": "coal"
+  },
+  {
+   "composite_key": 17301504,
+   "item_id": 264,
+   "damage": 0,
+   "name": "diamond"
+  },
+  {
+   "composite_key": 17367040,
+   "item_id": 265,
+   "damage": 0,
+   "name": "iron_ingot"
+  },
+  {
+   "composite_key": 17432576,
+   "item_id": 266,
+   "damage": 0,
+   "name": "gold_ingot"
+  },
+  {
+   "composite_key": 17498112,
+   "item_id": 267,
+   "damage": 0,
+   "name": "iron_sword"
+  },
+  {
+   "composite_key": 17563648,
+   "item_id": 268,
+   "damage": 0,
+   "name": "wooden_sword"
+  },
+  {
+   "composite_key": 17629184,
+   "item_id": 269,
+   "damage": 0,
+   "name": "wooden_shovel"
+  },
+  {
+   "composite_key": 17694720,
+   "item_id": 270,
+   "damage": 0,
+   "name": "wooden_pickaxe"
+  },
+  {
+   "composite_key": 17760256,
+   "item_id": 271,
+   "damage": 0,
+   "name": "wooden_axe"
+  },
+  {
+   "composite_key": 17825792,
+   "item_id": 272,
+   "damage": 0,
+   "name": "stone_sword"
+  },
+  {
+   "composite_key": 17891328,
+   "item_id": 273,
+   "damage": 0,
+   "name": "stone_shovel"
+  },
+  {
+   "composite_key": 17956864,
+   "item_id": 274,
+   "damage": 0,
+   "name": "stone_pickaxe"
+  },
+  {
+   "composite_key": 18022400,
+   "item_id": 275,
+   "damage": 0,
+   "name": "stone_axe"
+  },
+  {
+   "composite_key": 18087936,
+   "item_id": 276,
+   "damage": 0,
+   "name": "diamond_sword"
+  },
+  {
+   "composite_key": 18153472,
+   "item_id": 277,
+   "damage": 0,
+   "name": "diamond_shovel"
+  },
+  {
+   "composite_key": 18219008,
+   "item_id": 278,
+   "damage": 0,
+   "name": "diamond_pickaxe"
+  },
+  {
+   "composite_key": 18284544,
+   "item_id": 279,
+   "damage": 0,
+   "name": "diamond_axe"
+  },
+  {
+   "composite_key": 18350080,
+   "item_id": 280,
+   "damage": 0,
+   "name": "stick"
+  },
+  {
+   "composite_key": 18415616,
+   "item_id": 281,
+   "damage": 0,
+   "name": "bowl"
+  },
+  {
+   "composite_key": 18481152,
+   "item_id": 282,
+   "damage": 0,
+   "name": "mushroom_stew"
+  },
+  {
+   "composite_key": 18546688,
+   "item_id": 283,
+   "damage": 0,
+   "name": "golden_sword"
+  },
+  {
+   "composite_key": 18612224,
+   "item_id": 284,
+   "damage": 0,
+   "name": "golden_shovel"
+  },
+  {
+   "composite_key": 18677760,
+   "item_id": 285,
+   "damage": 0,
+   "name": "golden_pickaxe"
+  },
+  {
+   "composite_key": 18743296,
+   "item_id": 286,
+   "damage": 0,
+   "name": "golden_axe"
+  },
+  {
+   "composite_key": 18808832,
+   "item_id": 287,
+   "damage": 0,
+   "name": "string"
+  },
+  {
+   "composite_key": 18874368,
+   "item_id": 288,
+   "damage": 0,
+   "name": "feather"
+  },
+  {
+   "composite_key": 18939904,
+   "item_id": 289,
+   "damage": 0,
+   "name": "gunpowder"
+  },
+  {
+   "composite_key": 19005440,
+   "item_id": 290,
+   "damage": 0,
+   "name": "wooden_hoe"
+  },
+  {
+   "composite_key": 19070976,
+   "item_id": 291,
+   "damage": 0,
+   "name": "stone_hoe"
+  },
+  {
+   "composite_key": 19136512,
+   "item_id": 292,
+   "damage": 0,
+   "name": "iron_hoe"
+  },
+  {
+   "composite_key": 19202048,
+   "item_id": 293,
+   "damage": 0,
+   "name": "diamond_hoe"
+  },
+  {
+   "composite_key": 19267584,
+   "item_id": 294,
+   "damage": 0,
+   "name": "golden_hoe"
+  },
+  {
+   "composite_key": 19333120,
+   "item_id": 295,
+   "damage": 0,
+   "name": "wheat_seeds"
+  },
+  {
+   "composite_key": 19398656,
+   "item_id": 296,
+   "damage": 0,
+   "name": "wheat"
+  },
+  {
+   "composite_key": 19464192,
+   "item_id": 297,
+   "damage": 0,
+   "name": "bread"
+  },
+  {
+   "composite_key": 19529728,
+   "item_id": 298,
+   "damage": 0,
+   "name": "leather_helmet"
+  },
+  {
+   "composite_key": 19595264,
+   "item_id": 299,
+   "damage": 0,
+   "name": "leather_chestplate"
+  },
+  {
+   "composite_key": 19660800,
+   "item_id": 300,
+   "damage": 0,
+   "name": "leather_leggings"
+  },
+  {
+   "composite_key": 19726336,
+   "item_id": 301,
+   "damage": 0,
+   "name": "leather_boots"
+  },
+  {
+   "composite_key": 19791872,
+   "item_id": 302,
+   "damage": 0,
+   "name": "chainmail_helmet"
+  },
+  {
+   "composite_key": 19857408,
+   "item_id": 303,
+   "damage": 0,
+   "name": "chainmail_chestplate"
+  },
+  {
+   "composite_key": 19922944,
+   "item_id": 304,
+   "damage": 0,
+   "name": "chainmail_leggings"
+  },
+  {
+   "composite_key": 19988480,
+   "item_id": 305,
+   "damage": 0,
+   "name": "chainmail_boots"
+  },
+  {
+   "composite_key": 20054016,
+   "item_id": 306,
+   "damage": 0,
+   "name": "iron_helmet"
+  },
+  {
+   "composite_key": 20119552,
+   "item_id": 307,
+   "damage": 0,
+   "name": "iron_chestplate"
+  },
+  {
+   "composite_key": 20185088,
+   "item_id": 308,
+   "damage": 0,
+   "name": "iron_leggings"
+  },
+  {
+   "composite_key": 20250624,
+   "item_id": 309,
+   "damage": 0,
+   "name": "iron_boots"
+  },
+  {
+   "composite_key": 20316160,
+   "item_id": 310,
+   "damage": 0,
+   "name": "diamond_helmet"
+  },
+  {
+   "composite_key": 20381696,
+   "item_id": 311,
+   "damage": 0,
+   "name": "diamond_chestplate"
+  },
+  {
+   "composite_key": 20447232,
+   "item_id": 312,
+   "damage": 0,
+   "name": "diamond_leggings"
+  },
+  {
+   "composite_key": 20512768,
+   "item_id": 313,
+   "damage": 0,
+   "name": "diamond_boots"
+  },
+  {
+   "composite_key": 20578304,
+   "item_id": 314,
+   "damage": 0,
+   "name": "golden_helmet"
+  },
+  {
+   "composite_key": 20643840,
+   "item_id": 315,
+   "damage": 0,
+   "name": "golden_chestplate"
+  },
+  {
+   "composite_key": 20709376,
+   "item_id": 316,
+   "damage": 0,
+   "name": "golden_leggings"
+  },
+  {
+   "composite_key": 20774912,
+   "item_id": 317,
+   "damage": 0,
+   "name": "golden_boots"
+  },
+  {
+   "composite_key": 20840448,
+   "item_id": 318,
+   "damage": 0,
+   "name": "flint"
+  },
+  {
+   "composite_key": 20905984,
+   "item_id": 319,
+   "damage": 0,
+   "name": "porkchop"
+  },
+  {
+   "composite_key": 20971520,
+   "item_id": 320,
+   "damage": 0,
+   "name": "cooked_porkchop"
+  },
+  {
+   "composite_key": 21037056,
+   "item_id": 321,
+   "damage": 0,
+   "name": "painting"
+  },
+  {
+   "composite_key": 21102592,
+   "item_id": 322,
+   "damage": 0,
+   "name": "golden_apple"
+  },
+  {
+   "composite_key": 21168128,
+   "item_id": 323,
+   "damage": 0,
+   "name": "sign"
+  },
+  {
+   "composite_key": 21233664,
+   "item_id": 324,
+   "damage": 0,
+   "name": "wooden_door"
+  },
+  {
+   "composite_key": 21299200,
+   "item_id": 325,
+   "damage": 0,
+   "name": "bucket"
+  },
+  {
+   "composite_key": 21364736,
+   "item_id": 326,
+   "damage": 0,
+   "name": "water_bucket"
+  },
+  {
+   "composite_key": 21430272,
+   "item_id": 327,
+   "damage": 0,
+   "name": "lava_bucket"
+  },
+  {
+   "composite_key": 21495808,
+   "item_id": 328,
+   "damage": 0,
+   "name": "minecart"
+  },
+  {
+   "composite_key": 21561344,
+   "item_id": 329,
+   "damage": 0,
+   "name": "saddle"
+  },
+  {
+   "composite_key": 21626880,
+   "item_id": 330,
+   "damage": 0,
+   "name": "iron_door"
+  },
+  {
+   "composite_key": 21692416,
+   "item_id": 331,
+   "damage": 0,
+   "name": "redstone"
+  },
+  {
+   "composite_key": 21757952,
+   "item_id": 332,
+   "damage": 0,
+   "name": "snowball"
+  },
+  {
+   "composite_key": 21823488,
+   "item_id": 333,
+   "damage": 0,
+   "name": "boat"
+  },
+  {
+   "composite_key": 21889024,
+   "item_id": 334,
+   "damage": 0,
+   "name": "leather"
+  },
+  {
+   "composite_key": 21954560,
+   "item_id": 335,
+   "damage": 0,
+   "name": "milk_bucket"
+  },
+  {
+   "composite_key": 22020096,
+   "item_id": 336,
+   "damage": 0,
+   "name": "brick"
+  },
+  {
+   "composite_key": 22085632,
+   "item_id": 337,
+   "damage": 0,
+   "name": "clay_ball"
+  },
+  {
+   "composite_key": 22151168,
+   "item_id": 338,
+   "damage": 0,
+   "name": "reeds"
+  },
+  {
+   "composite_key": 22216704,
+   "item_id": 339,
+   "damage": 0,
+   "name": "paper"
+  },
+  {
+   "composite_key": 22282240,
+   "item_id": 340,
+   "damage": 0,
+   "name": "book"
+  },
+  {
+   "composite_key": 22347776,
+   "item_id": 341,
+   "damage": 0,
+   "name": "slime_ball"
+  },
+  {
+   "composite_key": 22413312,
+   "item_id": 342,
+   "damage": 0,
+   "name": "chest_minecart"
+  },
+  {
+   "composite_key": 22478848,
+   "item_id": 343,
+   "damage": 0,
+   "name": "furnace_minecart"
+  },
+  {
+   "composite_key": 22544384,
+   "item_id": 344,
+   "damage": 0,
+   "name": "egg"
+  },
+  {
+   "composite_key": 22609920,
+   "item_id": 345,
+   "damage": 0,
+   "name": "compass"
+  },
+  {
+   "composite_key": 22675456,
+   "item_id": 346,
+   "damage": 0,
+   "name": "fishing_rod"
+  },
+  {
+   "composite_key": 22740992,
+   "item_id": 347,
+   "damage": 0,
+   "name": "clock"
+  },
+  {
+   "composite_key": 22806528,
+   "item_id": 348,
+   "damage": 0,
+   "name": "glowstone_dust"
+  },
+  {
+   "composite_key": 22872064,
+   "item_id": 349,
+   "damage": 0,
+   "name": "fish"
+  },
+  {
+   "composite_key": 22937600,
+   "item_id": 350,
+   "damage": 0,
+   "name": "cooked_fish"
+  },
+  {
+   "composite_key": 23003136,
+   "item_id": 351,
+   "damage": 0,
+   "name": "dye"
+  },
+  {
+   "composite_key": 23068672,
+   "item_id": 352,
+   "damage": 0,
+   "name": "bone"
+  },
+  {
+   "composite_key": 23134208,
+   "item_id": 353,
+   "damage": 0,
+   "name": "sugar"
+  },
+  {
+   "composite_key": 23199744,
+   "item_id": 354,
+   "damage": 0,
+   "name": "cake"
+  },
+  {
+   "composite_key": 23265280,
+   "item_id": 355,
+   "damage": 0,
+   "name": "bed"
+  },
+  {
+   "composite_key": 23330816,
+   "item_id": 356,
+   "damage": 0,
+   "name": "repeater"
+  },
+  {
+   "composite_key": 23396352,
+   "item_id": 357,
+   "damage": 0,
+   "name": "cookie"
+  },
+  {
+   "composite_key": 23461888,
+   "item_id": 358,
+   "damage": 0,
+   "name": "filled_map"
+  },
+  {
+   "composite_key": 23527424,
+   "item_id": 359,
+   "damage": 0,
+   "name": "shears"
+  },
+  {
+   "composite_key": 23592960,
+   "item_id": 360,
+   "damage": 0,
+   "name": "melon"
+  },
+  {
+   "composite_key": 23658496,
+   "item_id": 361,
+   "damage": 0,
+   "name": "pumpkin_seeds"
+  },
+  {
+   "composite_key": 23724032,
+   "item_id": 362,
+   "damage": 0,
+   "name": "melon_seeds"
+  },
+  {
+   "composite_key": 23789568,
+   "item_id": 363,
+   "damage": 0,
+   "name": "beef"
+  },
+  {
+   "composite_key": 23855104,
+   "item_id": 364,
+   "damage": 0,
+   "name": "cooked_beef"
+  },
+  {
+   "composite_key": 23920640,
+   "item_id": 365,
+   "damage": 0,
+   "name": "chicken"
+  },
+  {
+   "composite_key": 23986176,
+   "item_id": 366,
+   "damage": 0,
+   "name": "cooked_chicken"
+  },
+  {
+   "composite_key": 24051712,
+   "item_id": 367,
+   "damage": 0,
+   "name": "rotten_flesh"
+  },
+  {
+   "composite_key": 24117248,
+   "item_id": 368,
+   "damage": 0,
+   "name": "ender_pearl"
+  },
+  {
+   "composite_key": 24182784,
+   "item_id": 369,
+   "damage": 0,
+   "name": "blaze_rod"
+  },
+  {
+   "composite_key": 24248320,
+   "item_id": 370,
+   "damage": 0,
+   "name": "ghast_tear"
+  },
+  {
+   "composite_key": 24313856,
+   "item_id": 371,
+   "damage": 0,
+   "name": "gold_nugget"
+  },
+  {
+   "composite_key": 24379392,
+   "item_id": 372,
+   "damage": 0,
+   "name": "nether_wart"
+  },
+  {
+   "composite_key": 24444928,
+   "item_id": 373,
+   "damage": 0,
+   "name": "potion"
+  },
+  {
+   "composite_key": 24510464,
+   "item_id": 374,
+   "damage": 0,
+   "name": "glass_bottle"
+  },
+  {
+   "composite_key": 24576000,
+   "item_id": 375,
+   "damage": 0,
+   "name": "spider_eye"
+  },
+  {
+   "composite_key": 24641536,
+   "item_id": 376,
+   "damage": 0,
+   "name": "fermented_spider_eye"
+  },
+  {
+   "composite_key": 24707072,
+   "item_id": 377,
+   "damage": 0,
+   "name": "blaze_powder"
+  },
+  {
+   "composite_key": 24772608,
+   "item_id": 378,
+   "damage": 0,
+   "name": "magma_cream"
+  },
+  {
+   "composite_key": 24838144,
+   "item_id": 379,
+   "damage": 0,
+   "name": "brewing_stand"
+  },
+  {
+   "composite_key": 24903680,
+   "item_id": 380,
+   "damage": 0,
+   "name": "cauldron"
+  },
+  {
+   "composite_key": 24969216,
+   "item_id": 381,
+   "damage": 0,
+   "name": "ender_eye"
+  },
+  {
+   "composite_key": 25034752,
+   "item_id": 382,
+   "damage": 0,
+   "name": "speckled_melon"
+  },
+  {
+   "composite_key": 25100288,
+   "item_id": 383,
+   "damage": 0,
+   "name": "spawn_egg"
+  },
+  {
+   "composite_key": 25165824,
+   "item_id": 384,
+   "damage": 0,
+   "name": "experience_bottle"
+  },
+  {
+   "composite_key": 25231360,
+   "item_id": 385,
+   "damage": 0,
+   "name": "fire_charge"
+  },
+  {
+   "composite_key": 25296896,
+   "item_id": 386,
+   "damage": 0,
+   "name": "writable_book"
+  },
+  {
+   "composite_key": 25362432,
+   "item_id": 387,
+   "damage": 0,
+   "name": "written_book"
+  },
+  {
+   "composite_key": 25427968,
+   "item_id": 388,
+   "damage": 0,
+   "name": "emerald"
+  },
+  {
+   "composite_key": 25493504,
+   "item_id": 389,
+   "damage": 0,
+   "name": "item_frame"
+  },
+  {
+   "composite_key": 25559040,
+   "item_id": 390,
+   "damage": 0,
+   "name": "flower_pot"
+  },
+  {
+   "composite_key": 25624576,
+   "item_id": 391,
+   "damage": 0,
+   "name": "carrot"
+  },
+  {
+   "composite_key": 25690112,
+   "item_id": 392,
+   "damage": 0,
+   "name": "potato"
+  },
+  {
+   "composite_key": 25755648,
+   "item_id": 393,
+   "damage": 0,
+   "name": "baked_potato"
+  },
+  {
+   "composite_key": 25821184,
+   "item_id": 394,
+   "damage": 0,
+   "name": "poisonous_potato"
+  },
+  {
+   "composite_key": 25886720,
+   "item_id": 395,
+   "damage": 0,
+   "name": "map"
+  },
+  {
+   "composite_key": 25952256,
+   "item_id": 396,
+   "damage": 0,
+   "name": "golden_carrot"
+  },
+  {
+   "composite_key": 26017792,
+   "item_id": 397,
+   "damage": 0,
+   "name": "skull"
+  },
+  {
+   "composite_key": 26083328,
+   "item_id": 398,
+   "damage": 0,
+   "name": "carrot_on_a_stick"
+  },
+  {
+   "composite_key": 26148864,
+   "item_id": 399,
+   "damage": 0,
+   "name": "nether_star"
+  },
+  {
+   "composite_key": 26214400,
+   "item_id": 400,
+   "damage": 0,
+   "name": "pumpkin_pie"
+  },
+  {
+   "composite_key": 26279936,
+   "item_id": 401,
+   "damage": 0,
+   "name": "fireworks"
+  },
+  {
+   "composite_key": 26345472,
+   "item_id": 402,
+   "damage": 0,
+   "name": "firework_charge"
+  },
+  {
+   "composite_key": 26411008,
+   "item_id": 403,
+   "damage": 0,
+   "name": "enchanted_book"
+  },
+  {
+   "composite_key": 26476544,
+   "item_id": 404,
+   "damage": 0,
+   "name": "comparator"
+  },
+  {
+   "composite_key": 26542080,
+   "item_id": 405,
+   "damage": 0,
+   "name": "netherbrick"
+  },
+  {
+   "composite_key": 26607616,
+   "item_id": 406,
+   "damage": 0,
+   "name": "quartz"
+  },
+  {
+   "composite_key": 26673152,
+   "item_id": 407,
+   "damage": 0,
+   "name": "tnt_minecart"
+  },
+  {
+   "composite_key": 26738688,
+   "item_id": 408,
+   "damage": 0,
+   "name": "hopper_minecart"
+  },
+  {
+   "composite_key": 26804224,
+   "item_id": 409,
+   "damage": 0,
+   "name": "prismarine_shard"
+  },
+  {
+   "composite_key": 26869760,
+   "item_id": 410,
+   "damage": 0,
+   "name": "prismarine_crystals"
+  },
+  {
+   "composite_key": 26935296,
+   "item_id": 411,
+   "damage": 0,
+   "name": "rabbit"
+  },
+  {
+   "composite_key": 27000832,
+   "item_id": 412,
+   "damage": 0,
+   "name": "cooked_rabbit"
+  },
+  {
+   "composite_key": 27066368,
+   "item_id": 413,
+   "damage": 0,
+   "name": "rabbit_stew"
+  },
+  {
+   "composite_key": 27131904,
+   "item_id": 414,
+   "damage": 0,
+   "name": "rabbit_foot"
+  },
+  {
+   "composite_key": 27197440,
+   "item_id": 415,
+   "damage": 0,
+   "name": "rabbit_hide"
+  },
+  {
+   "composite_key": 27262976,
+   "item_id": 416,
+   "damage": 0,
+   "name": "armor_stand"
+  },
+  {
+   "composite_key": 27328512,
+   "item_id": 417,
+   "damage": 0,
+   "name": "iron_horse_armor"
+  },
+  {
+   "composite_key": 27394048,
+   "item_id": 418,
+   "damage": 0,
+   "name": "golden_horse_armor"
+  },
+  {
+   "composite_key": 27459584,
+   "item_id": 419,
+   "damage": 0,
+   "name": "diamond_horse_armor"
+  },
+  {
+   "composite_key": 27525120,
+   "item_id": 420,
+   "damage": 0,
+   "name": "lead"
+  },
+  {
+   "composite_key": 27590656,
+   "item_id": 421,
+   "damage": 0,
+   "name": "name_tag"
+  },
+  {
+   "composite_key": 27656192,
+   "item_id": 422,
+   "damage": 0,
+   "name": "command_block_minecart"
+  },
+  {
+   "composite_key": 27721728,
+   "item_id": 423,
+   "damage": 0,
+   "name": "mutton"
+  },
+  {
+   "composite_key": 27787264,
+   "item_id": 424,
+   "damage": 0,
+   "name": "cooked_mutton"
+  },
+  {
+   "composite_key": 27852800,
+   "item_id": 425,
+   "damage": 0,
+   "name": "banner"
+  },
+  {
+   "composite_key": 27918336,
+   "item_id": 426,
+   "damage": 0,
+   "name": "end_crystal"
+  },
+  {
+   "composite_key": 27983872,
+   "item_id": 427,
+   "damage": 0,
+   "name": "spruce_door"
+  },
+  {
+   "composite_key": 28049408,
+   "item_id": 428,
+   "damage": 0,
+   "name": "birch_door"
+  },
+  {
+   "composite_key": 28114944,
+   "item_id": 429,
+   "damage": 0,
+   "name": "jungle_door"
+  },
+  {
+   "composite_key": 28180480,
+   "item_id": 430,
+   "damage": 0,
+   "name": "acacia_door"
+  },
+  {
+   "composite_key": 28246016,
+   "item_id": 431,
+   "damage": 0,
+   "name": "dark_oak_door"
+  },
+  {
+   "composite_key": 28311552,
+   "item_id": 432,
+   "damage": 0,
+   "name": "chorus_fruit"
+  },
+  {
+   "composite_key": 28377088,
+   "item_id": 433,
+   "damage": 0,
+   "name": "chorus_fruit_popped"
+  },
+  {
+   "composite_key": 28442624,
+   "item_id": 434,
+   "damage": 0,
+   "name": "beetroot"
+  },
+  {
+   "composite_key": 28508160,
+   "item_id": 435,
+   "damage": 0,
+   "name": "beetroot_seeds"
+  },
+  {
+   "composite_key": 28573696,
+   "item_id": 436,
+   "damage": 0,
+   "name": "beetroot_soup"
+  },
+  {
+   "composite_key": 28639232,
+   "item_id": 437,
+   "damage": 0,
+   "name": "dragon_breath"
+  },
+  {
+   "composite_key": 28704768,
+   "item_id": 438,
+   "damage": 0,
+   "name": "splash_potion"
+  },
+  {
+   "composite_key": 28770304,
+   "item_id": 439,
+   "damage": 0,
+   "name": "spectral_arrow"
+  },
+  {
+   "composite_key": 28835840,
+   "item_id": 440,
+   "damage": 0,
+   "name": "tipped_arrow"
+  },
+  {
+   "composite_key": 28901376,
+   "item_id": 441,
+   "damage": 0,
+   "name": "lingering_potion"
+  },
+  {
+   "composite_key": 28966912,
+   "item_id": 442,
+   "damage": 0,
+   "name": "shield"
+  },
+  {
+   "composite_key": 29032448,
+   "item_id": 443,
+   "damage": 0,
+   "name": "elytra"
+  },
+  {
+   "composite_key": 29097984,
+   "item_id": 444,
+   "damage": 0,
+   "name": "spruce_boat"
+  },
+  {
+   "composite_key": 29163520,
+   "item_id": 445,
+   "damage": 0,
+   "name": "birch_boat"
+  },
+  {
+   "composite_key": 29229056,
+   "item_id": 446,
+   "damage": 0,
+   "name": "jungle_boat"
+  },
+  {
+   "composite_key": 29294592,
+   "item_id": 447,
+   "damage": 0,
+   "name": "acacia_boat"
+  },
+  {
+   "composite_key": 29360128,
+   "item_id": 448,
+   "damage": 0,
+   "name": "dark_oak_boat"
+  },
+  {
+   "composite_key": 29425664,
+   "item_id": 449,
+   "damage": 0,
+   "name": "totem"
+  },
+  {
+   "composite_key": 29491200,
+   "item_id": 450,
+   "damage": 0,
+   "name": "shulker_shell"
+  },
+  {
+   "composite_key": 147849216,
+   "item_id": 2256,
+   "damage": 0,
+   "name": "record_13"
+  },
+  {
+   "composite_key": 147914752,
+   "item_id": 2257,
+   "damage": 0,
+   "name": "record_cat"
+  },
+  {
+   "composite_key": 147980288,
+   "item_id": 2258,
+   "damage": 0,
+   "name": "record_blocks"
+  },
+  {
+   "composite_key": 148045824,
+   "item_id": 2259,
+   "damage": 0,
+   "name": "record_chirp"
+  },
+  {
+   "composite_key": 148111360,
+   "item_id": 2260,
+   "damage": 0,
+   "name": "record_far"
+  },
+  {
+   "composite_key": 148176896,
+   "item_id": 2261,
+   "damage": 0,
+   "name": "record_mall"
+  },
+  {
+   "composite_key": 148242432,
+   "item_id": 2262,
+   "damage": 0,
+   "name": "record_mellohi"
+  },
+  {
+   "composite_key": 148307968,
+   "item_id": 2263,
+   "damage": 0,
+   "name": "record_stal"
+  },
+  {
+   "composite_key": 148373504,
+   "item_id": 2264,
+   "damage": 0,
+   "name": "record_strad"
+  },
+  {
+   "composite_key": 148439040,
+   "item_id": 2265,
+   "damage": 0,
+   "name": "record_ward"
+  },
+  {
+   "composite_key": 148504576,
+   "item_id": 2266,
+   "damage": 0,
+   "name": "record_11"
+  },
+  {
+   "composite_key": 148570112,
+   "item_id": 2267,
+   "damage": 0,
+   "name": "record_wait"
+  }
+ ]
+}

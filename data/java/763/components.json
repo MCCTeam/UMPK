@@ -1,0 +1,12 @@
+{
+  "_provenance": {
+    "version": "1.20.1",
+    "protocol": 763,
+    "mapping_source": "mojang-proguard",
+    "sources": [
+      "reports/registries.json#minecraft:data_component_type"
+    ],
+    "kind": "extracted"
+  },
+  "entries": []
+}

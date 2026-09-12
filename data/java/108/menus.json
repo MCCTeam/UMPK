@@ -1,0 +1,92 @@
+{
+ "_provenance": {
+  "version": "1.9.1",
+  "protocol": 108,
+  "mapping_source": "minecraft-data",
+  "sources": [
+   "pre-1.14 window types are string ids, not a numeric registry"
+  ],
+  "kind": "curated",
+  "note": "pre-1.14 window types are STRING ids on the wire (wire_id); id_num is a synthetic dense index, not a wire value. Slot counts ride on the open-window packet, so slots stays null."
+ },
+ "entries": [
+  {
+   "id": "minecraft:anvil",
+   "id_num": 0,
+   "wire_id": "minecraft:anvil",
+   "slots": null
+  },
+  {
+   "id": "minecraft:beacon",
+   "id_num": 1,
+   "wire_id": "minecraft:beacon",
+   "slots": null
+  },
+  {
+   "id": "minecraft:brewing_stand",
+   "id_num": 2,
+   "wire_id": "minecraft:brewing_stand",
+   "slots": null
+  },
+  {
+   "id": "minecraft:chest",
+   "id_num": 3,
+   "wire_id": "minecraft:chest",
+   "slots": null
+  },
+  {
+   "id": "minecraft:container",
+   "id_num": 4,
+   "wire_id": "minecraft:container",
+   "slots": null
+  },
+  {
+   "id": "minecraft:crafting_table",
+   "id_num": 5,
+   "wire_id": "minecraft:crafting_table",
+   "slots": null
+  },
+  {
+   "id": "minecraft:dispenser",
+   "id_num": 6,
+   "wire_id": "minecraft:dispenser",
+   "slots": null
+  },
+  {
+   "id": "minecraft:dropper",
+   "id_num": 7,
+   "wire_id": "minecraft:dropper",
+   "slots": null
+  },
+  {
+   "id": "minecraft:enchanting_table",
+   "id_num": 8,
+   "wire_id": "minecraft:enchanting_table",
+   "slots": null
+  },
+  {
+   "id": "minecraft:furnace",
+   "id_num": 9,
+   "wire_id": "minecraft:furnace",
+   "slots": null
+  },
+  {
+   "id": "minecraft:hopper",
+   "id_num": 10,
+   "wire_id": "minecraft:hopper",
+   "slots": null
+  },
+  {
+   "id": "minecraft:villager",
+   "id_num": 11,
+   "wire_id": "minecraft:villager",
+   "slots": null
+  },
+  {
+   "id": "umpk:entity_horse",
+   "id_num": 12,
+   "wire_id": "EntityHorse",
+   "slots": null
+  }
+ ]
+}

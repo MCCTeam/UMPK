@@ -1,6 +1,6 @@
 ---
-title: Vanilla as the oracle
-description: How UMPK verifies behavior against Mojang releases and records maintainable conclusions.
+title: "Vanilla as the oracle"
+description: "How UMPK verifies behavior against Mojang releases and records maintainable conclusions."
 sidebar:
   order: 2
 ---
@@ -44,7 +44,7 @@ Release jars and libraries are not redistributable and must stay in the gitignor
 
 A codec test must assert decoded values from a real or byte-annotated frame and require byte-identical encoding of the result. A successful decode by itself is insufficient because a wrong layout can still produce plausible values.
 
-An era test must state its expectation independently of the dataset. Reading a feature value and then asserting that the engine copied the same value only tests the adapter. Use a literal table that covers every supported protocol and places the boundary explicitly. [Era gating](/concepts/era-gating) describes that pattern.
+An era test must state its expectation independently of the dataset. Reading a feature value and then asserting that the engine copied the same value only tests the adapter. Use a literal table that covers every supported protocol and places the boundary explicitly. [Era gating](era-gating.md) describes that pattern.
 
 ## Write durable comments
 
@@ -57,4 +57,4 @@ A useful implementation comment answers one of these questions:
 
 Avoid implementation history, research paths, tool transcripts, and source-symbol citations. Those details become stale quickly and distract from the maintained contract.
 
-When evidence is incomplete, say so in the change review and add the strongest available test. Do not turn uncertainty into a confident source comment. The [development guide](/contributing/development) lists the complete validation gate.
+When evidence is incomplete, say so in the change review and add the strongest available test. Do not turn uncertainty into a confident source comment. The [development guide](../contributing/development.md) lists the complete validation gate.

@@ -1,8 +1,8 @@
 ---
-title: Umpk.Pathfinding
-description: An A* planner over a captured world region, plus per-move execution templates that drive the physics engine.
+title: "Umpk.Pathfinding"
+description: "An A* planner over a captured world region, plus per-move execution templates that drive the physics engine."
 sidebar:
-  order: 10
+  order: 11
 ---
 
 `Umpk.Pathfinding` is two halves that meet in the middle. The planner is a session-free A* search over a detached snapshot of the world that produces a list of block positions and the move type used to reach each one. The executor turns that list into per-tick `MovementInput` values by running a small template per move and checking the result against what the physics engine actually did.
@@ -11,11 +11,11 @@ The split matters. Planning is pure and can run off the session loop against a f
 
 ## Its place in the stack
 
-`Umpk.Pathfinding` depends on [Umpk.Core](/packages/umpk-core), [Umpk.Game](/packages/umpk-game) and [Umpk.Physics](/packages/umpk-physics). It has no idea a network exists. [Umpk.Client](/packages/umpk-client) wraps it in `Navigator` and exposes it as `client.Actions.Movement.NavigateAsync`.
+`Umpk.Pathfinding` depends on [Umpk.Core](umpk-core.md), [Umpk.Game](umpk-game.md) and [Umpk.Physics](umpk-physics.md). It has no idea a network exists. [Umpk.Client](umpk-client.md) wraps it in `Navigator` and exposes it as `client.Actions.Movement.NavigateAsync`.
 
 ## Main entry points
 
-`PlanningWorldView.Capture(world, shapes, a, b, margin)` copies a box of blocks out of a live [Umpk.Game](/packages/umpk-game) `World` into a `RegionSnapshot` and wraps it. That snapshot is what the planner reads, and it does not change under you while the search runs.
+`PlanningWorldView.Capture(world, shapes, a, b, margin)` copies a box of blocks out of a live [Umpk.Game](umpk-game.md) `World` into a `RegionSnapshot` and wraps it. That snapshot is what the planner reads, and it does not change under you while the search runs.
 
 `PathPlanner.FindPath` and `FindPathAsync` are the front door: a world view, a `PathfinderOptions`, a start `BlockPos` and an `IGoal`, returning a `PathResult`.
 
@@ -101,6 +101,6 @@ The executor is not fire and forget. It compares the physics state you hand it a
 1. Apply `Output.TargetYaw` and `Output.TargetPitch` to the physics engine.
 2. Pass `Output.Input` to `PlayerPhysics.Step`.
 
-Execution templates are era-sensitive through the `PhysicsProfile` you put in the `PathExecutionContext`. A jump that clears a gap on 1.21 may not clear it on 1.8. Use the profile for the version you are actually connected to, not `PhysicsProfile.Modern`. See [movement and pathfinding](/guides/movement-and-pathfinding).
+Execution templates are era-sensitive through the `PhysicsProfile` you put in the `PathExecutionContext`. A jump that clears a gap on 1.21 may not clear it on 1.8. Use the profile for the version you are actually connected to, not `PhysicsProfile.Modern`. See [movement and pathfinding](../guides/movement-and-pathfinding.md).
 
 `PathfinderOptions.BlocksToAvoid` is a set of `Identifier`, matched against block identifiers. It makes the planner route around, not refuse: a goal only reachable through an avoided block still fails.

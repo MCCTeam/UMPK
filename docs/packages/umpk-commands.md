@@ -1,8 +1,8 @@
 ---
-title: Umpk.Commands
-description: A Brigadier-backed command tree with scoped registration, typed arguments, requirements and completions.
+title: "Umpk.Commands"
+description: "A Brigadier-backed command tree with scoped registration, typed arguments, requirements and completions."
 sidebar:
-  order: 11
+  order: 12
 ---
 
 `Umpk.Commands` is a command dispatcher for commands your own program owns: the ones a bot exposes to its operator, or a plugin registers for other plugins to call. It wraps `Brigadier.NET` behind a small UMPK-shaped API, with scoped registration so a plugin can add commands and take them away again.
@@ -11,7 +11,7 @@ To be clear about what it is not: this does not send commands to a Minecraft ser
 
 ## Its place in the stack
 
-`Umpk.Commands` depends on [Umpk.Core](/packages/umpk-core) and [Umpk.Text](/packages/umpk-text), and on the `Brigadier.NET` package. [Umpk.Client](/packages/umpk-client) uses it: `client.Commands` is a `CommandService<ClientCommandSource>`, and a plugin gets its own registration scope through `ClientPluginContext.Commands`.
+`Umpk.Commands` depends on [Umpk.Core](umpk-core.md) and [Umpk.Text](umpk-text.md), and on the `Brigadier.NET` package. [Umpk.Client](umpk-client.md) uses it: `client.Commands` is a `CommandService<ClientCommandSource>`, and a plugin gets its own registration scope through `ClientPluginContext.Commands`.
 
 Brigadier is wrapped, not exposed. No public member of this package mentions a Brigadier type, and there is a test that fails the build if one ever does. That is deliberate: the dispatcher underneath is a pre-release dependency, and swapping it must not break consumers.
 

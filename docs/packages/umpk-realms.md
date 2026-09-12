@@ -1,17 +1,17 @@
 ---
-title: Umpk.Realms
-description: The Realms HTTP API client: list your worlds, join one, check compatibility and accept the terms.
+title: "Umpk.Realms"
+description: "The Realms HTTP API client: list your worlds, join one, check compatibility and accept the terms."
 sidebar:
-  order: 13
+  order: 14
 ---
 
 `Umpk.Realms` talks to Mojang's Realms service over HTTP. It lists the worlds an account can see, asks one of them for a server address, reports whether the client version you claim is still accepted, and records agreement to the terms of service.
 
-That is the whole scope. It resolves an address; it does not connect. Once you have a `RealmServerAddress` you hand it to [Umpk.Client](/packages/umpk-client) like any other server.
+That is the whole scope. It resolves an address; it does not connect. Once you have a `RealmServerAddress` you hand it to [Umpk.Client](umpk-client.md) like any other server.
 
 ## Its place in the stack
 
-`Umpk.Realms` depends on [Umpk.Auth](/packages/umpk-auth) and nothing else directly, which pulls in [Umpk.Core](/packages/umpk-core) and [Umpk.Protocol.Java](/packages/umpk-protocol-java) transitively. It reuses `Umpk.Auth`'s `IHttpMessageHandlerFactory` seam so tests can script the HTTP layer.
+`Umpk.Realms` depends on [Umpk.Auth](umpk-auth.md) and nothing else directly, which pulls in [Umpk.Core](umpk-core.md) and [Umpk.Protocol.Java](umpk-protocol-java.md) transitively. It reuses `Umpk.Auth`'s `IHttpMessageHandlerFactory` seam so tests can script the HTTP layer.
 
 Nothing depends on `Umpk.Realms`, and the `Umpk` meta package does not reference it. Add the package explicitly if you want Realms.
 

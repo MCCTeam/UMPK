@@ -1,6 +1,6 @@
 ---
-title: Inventory and resource packs
-description: Read inventory state safely, send container actions, and choose an explicit resource-pack policy.
+title: "Inventory and resource packs"
+description: "Read inventory state safely, send container actions, and choose an explicit resource-pack policy."
 sidebar:
   order: 4
 ---
@@ -122,6 +122,6 @@ The downloader accepts only HTTP or HTTPS URLs. It enforces `MaxDownloadBytes`, 
 
 ## Next
 
-- [A minimal bot](/getting-started/minimal-bot) shows the connection lifecycle around these APIs.
-- [Movement and pathfinding](/guides/movement-and-pathfinding) covers navigation after the player has spawned.
-- [Limitations](/reference/limitations#resource-packs-are-downloaded-not-rendered) states the headless-client boundary in full.
+- [A minimal bot](../getting-started/minimal-bot.md) shows the connection lifecycle around these APIs.
+- [Movement and pathfinding](movement-and-pathfinding.md) covers navigation after the player has spawned.
+- [Limitations](../reference/limitations.md#resource-packs-are-downloaded-not-rendered) states the headless-client boundary in full.

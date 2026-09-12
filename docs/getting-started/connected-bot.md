@@ -1,11 +1,11 @@
 ---
-title: A connected bot
-description: Status ping, auth, connect, and an interactive chat loop in one program.
+title: "A connected bot"
+description: "Status ping, auth, connect, and an interactive chat loop in one program."
 sidebar:
   order: 5
 ---
 
-` samples/ConnectedBot/Program.cs` ties four layers together: it pings the server, logs in, joins, and then trades chat lines with the server until you type `/quit`. It is the sample to read after [a minimal bot](/getting-started/minimal-bot), which says one line and leaves, and after the [offline samples](/getting-started/offline-samples), which need no server.
+` samples/ConnectedBot/Program.cs` ties four layers together: it pings the server, logs in, joins, and then trades chat lines with the server until you type `/quit`. It is the sample to read after [a minimal bot](minimal-bot.md), which says one line and leaves, and after the [offline samples](offline-samples.md), which need no server.
 
 ## Run the sample
 
@@ -106,7 +106,7 @@ A leading slash runs a command. That branch matters: on 1.19 and later, sending 
 
 ## What to read next
 
-- [Offline samples](/getting-started/offline-samples) for each layer on its own with no server.
-- [Authentication](/guides/authentication) for the online, offline, and third party flows in full.
-- [Chat and signing](/guides/chat-and-signing) for what 1.19 changed about sending a message.
-- [Umpk.Client](/packages/umpk-client) for the rest of the action and event surface.
+- [Offline samples](offline-samples.md) for each layer on its own with no server.
+- [Authentication](../guides/authentication.md) for the online, offline, and third party flows in full.
+- [Chat and signing](../guides/chat-and-signing.md) for what 1.19 changed about sending a message.
+- [Umpk.Client](../packages/umpk-client.md) for the rest of the action and event surface.

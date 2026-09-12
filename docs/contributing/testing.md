@@ -1,6 +1,6 @@
 ---
-title: Testing
-description: The 17 suites, what the recorded fixtures prove, how to regenerate the pins, and why a green test run is not evidence on its own.
+title: "Testing"
+description: "The 17 suites, what the recorded fixtures prove, how to regenerate the pins, and why a green test run is not evidence on its own."
 sidebar:
   order: 2
 ---
@@ -36,6 +36,15 @@ Counts below are the baseline totals in `engineering/testcounts/expected_counts.
 Nineteen project directories sit under `tests/`. Seventeen are test suites. `Umpk.TestKit` is a shared library rather than a suite, and `Umpk.Benchmarks` is BenchmarkDotNet.
 
 The suite that surprises people is `Umpk.Protocol.Java.Tests` at 4,574. That is what per-protocol codec coverage costs when there are 49 protocols and a packet can have seven wire forms across them.
+
+## Intentional skips
+
+The default test run can report environment-gated skips. A skipped test did not pass.
+
+- The Native AOT smoke test needs a published `MinimalBot` executable. The dedicated `AOT publish smoke + size budget` CI job publishes the executable and runs this test with `UMPK_AOT_BINARY` set.
+- Four live-server tests need `UMPK_NIGHTLY=1` and isolated, provisioned vanilla server directories. They run only when those prerequisites exist.
+- The vanilla citation test needs local decompiled Mojang trees under `MinecraftOfficial/` or `UMPK_ORACLE_ROOT`. Those non-redistributable trees are not present on ordinary CI runners.
+- Two directory-symlink cycle tests run only on Linux because Windows test discovery commonly lacks permission to create symbolic links.
 
 ## The fixture layer
 
@@ -137,6 +146,6 @@ Three habits, in the order they matter.
 
 Write the failing test first and watch it fail. Not as ritual: watch what the failure output actually says. A test that fails for a different reason than you predicted is telling you your model of the bug is wrong, and that is the most useful five seconds in the whole cycle.
 
-Assert values, not survival. For a codec, decode a real frame, assert the decoded fields, then assert that re-encoding produces byte-identical output. For an era boundary, state the expectation independently of the dataset, as [era gating](/concepts/era-gating) describes.
+Assert values, not survival. For a codec, decode a real frame, assert the decoded fields, then assert that re-encoding produces byte-identical output. For an era boundary, state the expectation independently of the dataset, as [era gating](../concepts/era-gating.md) describes.
 
 Do not weaken a test to make a build pass. If a test is wrong, prove it is wrong, and say so in the commit message.

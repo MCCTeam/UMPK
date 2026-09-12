@@ -1,6 +1,6 @@
 ---
-title: Releasing NuGet packages
-description: One-time NuGet.org and GitHub setup, the release checklist, and recovery rules for publishing all UMPK packages.
+title: "Releasing NuGet packages"
+description: "The release checklist and recovery rules for publishing all UMPK packages."
 sidebar:
   order: 5
 ---
@@ -8,18 +8,6 @@ sidebar:
 UMPK publishes fourteen packages together from a `v<version>` Git tag. A release workflow rebuilds and verifies the repository, creates primary and symbol packages, checks their metadata and contents, publishes them to NuGet.org with a short-lived OpenID Connect credential, and then creates a GitHub Release containing the packages and SHA-256 checksums. `Umpk.Server` and `Umpk.Proxy` are reserved projects and are never packed.
 
 Merging a pull request into `master` does not publish a release. Only an annotated version tag starts the release workflow, so documentation and other non-.NET changes cannot trigger it on their own. GitHub does not evaluate path filters for tag pushes; the tag is the maintainer's explicit release approval.
-
-## One-time account setup
-
-Complete these steps before pushing the first release tag.
-
-1. Create or select the NuGet.org account or organization that will own every `Umpk*` package ID. The same owner must cover all fourteen packages.
-2. In the GitHub repository, create an environment named `nuget`. Add required reviewers so a tag cannot publish until a maintainer approves the deployment. Restrict deployment branches and tags to release tags if the repository settings allow it.
-3. Add an environment secret named `NUGET_USER`. Set it to the NuGet.org profile name that owns the trusted-publishing policy, not an email address or API key.
-4. On NuGet.org, open the account's Trusted Publishing settings and add a GitHub Actions policy with repository owner `MCCTeam`, repository `UMPK`, workflow file `release.yml`, and environment `nuget`. Scope the policy to the UMPK packages owned by that account. NuGet.org may show a new policy as pending until its first successful publish.
-5. In GitHub branch protection or rulesets, require the PR workflow's build, test, format, dataset, generated-output, AOT, and NuGet package jobs before merging to `master`.
-
-The release workflow requests `id-token: write` only in the NuGet publishing job. `NuGet/login` exchanges that GitHub OIDC identity for a temporary NuGet key immediately before upload, so the repository does not store a long-lived publishing key.
 
 ## Prepare a release
 

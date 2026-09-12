@@ -1,6 +1,6 @@
 ---
-title: Supported versions
-description: Every Minecraft Java Edition version UMPK supports, grouped by the protocol number it maps onto.
+title: "Supported versions"
+description: "Every Minecraft Java Edition version UMPK supports, grouped by the protocol number it maps onto."
 sidebar:
   order: 1
 ---
@@ -71,7 +71,7 @@ The `identity` column names the block and item id scheme. `legacy` is the pre-fl
 
 A version name is what a player sees in the launcher. A protocol number is what the client puts in the handshake packet. Mojang bumps the protocol number when the wire format changes, and leaves it alone when it does not, so the mapping is many-to-one: 14 of the 49 protocols cover more than one release. Protocol 47 alone covers all ten 1.8.x releases.
 
-UMPK keys off the protocol number everywhere. [Versions and protocols](/concepts/versions-and-protocols) explains why, and what the consequences are when you go looking for a version by name.
+UMPK keys off the protocol number everywhere. [Versions and protocols](../concepts/versions-and-protocols.md) explains why, and what the consequences are when you go looking for a version by name.
 
 Counted the other way: 24 names are pre-flattening (11 protocols, 47 through
 340) and 48 are flattened (38 protocols, 393 through 776).
@@ -97,6 +97,6 @@ One wrinkle worth knowing before it surprises you. `JavaVersion.Version.Name` ho
 
 ## Where the data comes from
 
-Each protocol directory holds the extracted dataset for that version: packets, blocks, items, entities, registries, menus, argument types, metadata, collision shapes, and the feature flags that drive era-dependent behavior. See [the dataset](/concepts/the-dataset) for what is in those files and how they become compiled C#, and [adding a version](/contributing/adding-a-version) for how a new row gets here.
+Each protocol directory holds the extracted dataset for that version: packets, blocks, items, entities, registries, menus, argument types, metadata, collision shapes, and the feature flags that drive era-dependent behavior. See [the dataset](../concepts/the-dataset.md) for what is in those files and how they become compiled C#, and [adding a version](../contributing/adding-a-version.md) for how a new row gets here.
 
-Recorded packet captures under `fixtures/corpus/` exist for all 49 protocols. The dataset and hand-authored frames still cover behavior that a capture does not exercise. [Limitations](/reference/limitations) lists the remaining gaps.
+Recorded packet captures under `fixtures/corpus/` exist for all 49 protocols. The dataset and hand-authored frames still cover behavior that a capture does not exercise. [Limitations](limitations.md) lists the remaining gaps.

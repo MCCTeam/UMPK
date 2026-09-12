@@ -19,12 +19,12 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - name: Validate release tag and project version
         id: version
         shell: bash
@@ -70,7 +70,7 @@ jobs:
       - name: Create checksums
         working-directory: artifacts/packages
         run: sha256sum *.nupkg *.snupkg > SHA256SUMS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: nuget-${{ steps.version.outputs.version }}
           path: artifacts/packages/
@@ -87,7 +87,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: nuget-${{ needs.build-and-pack.outputs.version }}
           path: artifacts/packages
@@ -117,7 +117,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: nuget-${{ needs.build-and-pack.outputs.version }}
           path: artifacts/packages

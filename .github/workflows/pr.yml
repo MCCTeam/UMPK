@@ -21,10 +21,10 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
       - name: Test
@@ -42,20 +42,20 @@ jobs:
     name: format check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - run: dotnet format --verify-no-changes
 
   datagen-verify:
     name: dataset verify + generated-code freshness
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - run: dotnet run --project tools/Umpk.DataGen -- verify --data data/java
       - run: dotnet run --project tools/Umpk.DataGen -- generate --data data/java --out src/Umpk.Data.Java --out-lang src/Umpk.Data.Lang --protocol-out src/Umpk.Protocol.Java
       - run: git diff --exit-code data/java src/Umpk.Data.Java src/Umpk.Data.Lang src/Umpk.Protocol.Java
@@ -64,12 +64,12 @@ jobs:
     name: NuGet package validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - run: dotnet restore UMPK.sln
       - run: dotnet build UMPK.sln --no-restore -c Release
       - name: Read package version
@@ -90,10 +90,10 @@ jobs:
     name: AOT publish smoke + size budget
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       # samples/MinimalBot, not samples/StatusPing: the status exchange is version-blind, so StatusPing
       # never builds a descriptor and the trimmer drops the whole codec graph before this job starts.
       # MinimalBot references Umpk.Data.Java and Umpk.Client, so the graph has to survive for it to run.

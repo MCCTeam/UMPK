@@ -1,6 +1,6 @@
 ---
-title: Adding a version
-description: The workflow for supporting a Minecraft release, from the server jar through the dataset, packet timelines, and verification pins.
+title: "Adding a version"
+description: "The workflow for supporting a Minecraft release, from the server jar through the dataset, packet timelines, and verification pins."
 sidebar:
   order: 3
 ---

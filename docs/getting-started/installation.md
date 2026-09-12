@@ -1,6 +1,6 @@
 ---
-title: Installation
-description: How to install UMPK from NuGet or reference a checkout, and which packages a client or status ping needs.
+title: "Installation"
+description: "How to install UMPK from NuGet or reference a checkout, and which packages a client or status ping needs."
 sidebar:
   order: 1
 ---
@@ -85,7 +85,7 @@ To reference a checkout for a client that joins a server, add these five project
 
 `Umpk.Client` already references `Umpk.Game`, `Umpk.Text`, `Umpk.Commands`, `Umpk.Physics`, `Umpk.Pathfinding` and `Umpk.Data.Java` transitively, so those come along whether or not you name them. Naming the ones you use directly is still worth doing, since it keeps the intent visible.
 
-Two project names in `src/` are reserved and empty. `Umpk.Server` and `Umpk.Proxy` contain no `.cs` files and are not published. See [Packages](/packages/overview) for the full map.
+Two project names in `src/` are reserved and empty. `Umpk.Server` and `Umpk.Proxy` contain no `.cs` files and are not published. See [Packages](../packages/overview.md) for the full map.
 
 ## AOT
 
@@ -120,4 +120,4 @@ To confirm the reference chain:
 
 3. Read the output. The output must contain a version name and a player count.
 
-The walkthrough of that sample is in [your first status ping](/getting-started/status-ping).
+The walkthrough of that sample is in [your first status ping](status-ping.md).

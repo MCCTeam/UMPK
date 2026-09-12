@@ -1,6 +1,6 @@
 ---
-title: Umpk.Core
-description: The protocol-neutral kernel: identifiers, profiles, geometry primitives, a subscription list, and the hosting seams.
+title: "Umpk.Core"
+description: "The protocol-neutral kernel: identifiers, profiles, geometry primitives, a subscription list, and the hosting seams."
 sidebar:
   order: 2
 ---
@@ -21,7 +21,7 @@ Everything depends on `Umpk.Core`, directly or through something else. Nothing d
 
 `GameProfile` is a UUID, a name and a list of `ProfileProperty` (name, value, optional signature). `ProfileCredentials` pairs a profile with an access token. `GameVersion` is an edition, a version name and a protocol number; `GameEdition` has `Java` and `Bedrock` members, but only `Java` is implemented anywhere in this repository.
 
-`Umpk.Geometry` holds `Vec3d`, `BlockPos`, `ChunkPos`, `Aabb`, `Direction` and `Axis`. All four of the first are readonly structs. `Aabb` carries vanilla's axis-separated collision helpers (`CollideX`, `CollideY`, `CollideZ` and the generic `Collide(int axis, ...)`), which is what [Umpk.Physics](/packages/umpk-physics) resolves movement with.
+`Umpk.Geometry` holds `Vec3d`, `BlockPos`, `ChunkPos`, `Aabb`, `Direction` and `Axis`. All four of the first are readonly structs. `Aabb` carries vanilla's axis-separated collision helpers (`CollideX`, `CollideY`, `CollideZ` and the generic `Collide(int axis, ...)`), which is what [Umpk.Physics](umpk-physics.md) resolves movement with.
 
 `Umpk.Events.SubscriptionList<T>` is a small multicast list with `Subscribe` returning an `IDisposable`, an `Invoke`, and an optional error sink so one throwing handler does not take out the rest.
 
@@ -66,6 +66,6 @@ double allowedX = wall.CollideX(player, movement: 0.5);
 
 `Aabb.Collide` takes the axis as an `int` (0, 1, 2), matching `Axis.X`, `Axis.Y` and `Axis.Z`. So does `Vec3d.Get(int axis)` and `Vec3d.With(int axis, double value)`. The enum is there for readability but the methods take the raw index.
 
-`GameVersion.Protocol` is the wire protocol number, not the Minecraft version string. Several Minecraft versions share one protocol number (all ten 1.8.x releases are protocol 47), which is exactly why `GameVersion` carries both. See [versions and protocols](/concepts/versions-and-protocols).
+`GameVersion.Protocol` is the wire protocol number, not the Minecraft version string. Several Minecraft versions share one protocol number (all ten 1.8.x releases are protocol 47), which is exactly why `GameVersion` carries both. See [versions and protocols](../concepts/versions-and-protocols.md).
 
 `ManualTickSource` takes a nominal interval that it reports through `TickInterval` but does not wait for. It only advances when you call `Advance`. That is the point, but it means a test that forgets to call `Complete` will hang on the enumerator rather than finish.

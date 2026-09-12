@@ -17,12 +17,12 @@ jobs:
       # fetches them intact. When they move to Git LFS (planned Q3), this checkout MUST add `lfs: true`
       # (below) or it fetches LFS pointer files and CorpusLoader.Parse throws bad-magic, silently
       # breaking the corpus gate. Uncomment `with: lfs: true` at that conversion.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         # with:
         #   lfs: true   # required once fixtures/corpus/**/*.umpkcap are LFS-tracked (Q3)
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - run: dotnet test tests/Umpk.Protocol.Java.Conformance/Umpk.Protocol.Java.Conformance.csproj -c Release
 
   # Live-server matrix: boots a per-version isolated vanilla server (port 25599 only, one at a time),
@@ -47,12 +47,12 @@ jobs:
           - version: "1.8"
             java: "8"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
       - name: Set up server JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}

@@ -1,6 +1,6 @@
 ---
-title: Umpk.Data.Java
-description: Generated per-protocol tables for 49 protocols, plus the JavaVersions catalog and the JavaGameData accessors.
+title: "Umpk.Data.Java"
+description: "Generated per-protocol tables for 49 protocols, plus the JavaVersions catalog and the JavaGameData accessors."
 sidebar:
   order: 6
 ---
@@ -11,9 +11,9 @@ You rarely use this package for its own sake. You use it to get two things: a `J
 
 ## Its place in the stack
 
-`Umpk.Data.Java` depends on [Umpk.Protocol.Java](/packages/umpk-protocol-java), which is the direction that surprises people. Generated descriptors are built out of protocol types (`ProtocolDescriptor`, `ProtocolFeatures`, `JavaVersion`), so the data package sits above the protocol package rather than below it. `Umpk.Protocol.Java` carries no version tables of its own; it is handed a descriptor.
+`Umpk.Data.Java` depends on [Umpk.Protocol.Java](umpk-protocol-java.md), which is the direction that surprises people. Generated descriptors are built out of protocol types (`ProtocolDescriptor`, `ProtocolFeatures`, `JavaVersion`), so the data package sits above the protocol package rather than below it. `Umpk.Protocol.Java` carries no version tables of its own; it is handed a descriptor.
 
-[Umpk.Client](/packages/umpk-client) references it directly, which is how a session gets default block shapes without you asking.
+[Umpk.Client](umpk-client.md) references it directly, which is how a session gets default block shapes without you asking.
 
 ## Main entry points
 
@@ -75,8 +75,8 @@ The generator overwrites every generated output. Start with no uncommitted gener
 
 1. Edit the file under `data/java/`.
 2. Run `dotnet run --project tools/Umpk.DataGen -- verify --data data/java`. The command must print `verify: OK (49 protocols)`.
-3. Run the three-output generation and Git comparison in [the dataset](/concepts/the-dataset).
+3. Run the three-output generation and Git comparison in [the dataset](../concepts/the-dataset.md).
 4. Review every generated-file difference that Git reports.
 5. Run `dotnet build UMPK.sln`. The build must report 0 warnings and 0 errors.
 
-The dataset is also how era behavior is selected. Feature axes in `data/java/<protocol>/features.json` thread through the generator into `ProtocolFeatures` and the physics profile factory. Do not write `if (protocol >= N)` in engine code. Add a feature axis, or read the one that already exists. See [era gating](/concepts/era-gating) and [the dataset](/concepts/the-dataset).
+The dataset is also how era behavior is selected. Feature axes in `data/java/<protocol>/features.json` thread through the generator into `ProtocolFeatures` and the physics profile factory. Do not write `if (protocol >= N)` in engine code. Add a feature axis, or read the one that already exists. See [era gating](../concepts/era-gating.md) and [the dataset](../concepts/the-dataset.md).

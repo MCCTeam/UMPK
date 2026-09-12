@@ -1,8 +1,8 @@
 ---
-title: Umpk.Physics
-description: A tick-accurate player movement and collision engine with per-era profiles, mirroring vanilla at 20 TPS.
+title: "Umpk.Physics"
+description: "A tick-accurate player movement and collision engine with per-era profiles, mirroring vanilla at 20 TPS."
 sidebar:
-  order: 9
+  order: 10
 ---
 
 `Umpk.Physics` moves a player the way vanilla moves a player: one tick at a time, with the same friction, the same drag, the same jump impulse, the same axis-separated collision resolution and the same floating-point widths. Constants are verified against Mojang releases, which is why `PhysicsConstants.WaterWalkerSlowDownTarget` is `0.54600006` instead of a tidier number. Source comments describe the behavior while change reviews retain the detailed research.
@@ -11,7 +11,7 @@ It handles ground and air travel, water and lava, creative flight, elytra glidin
 
 ## Its place in the stack
 
-`Umpk.Physics` depends on [Umpk.Core](/packages/umpk-core) (geometry) and [Umpk.Game](/packages/umpk-game) (block states and poses). It knows nothing about packets. [Umpk.Pathfinding](/packages/umpk-pathfinding) builds on it, and [Umpk.Client](/packages/umpk-client) drives it once per tick when the physics feature is on.
+`Umpk.Physics` depends on [Umpk.Core](umpk-core.md) (geometry) and [Umpk.Game](umpk-game.md) (block states and poses). It knows nothing about packets. [Umpk.Pathfinding](umpk-pathfinding.md) builds on it, and [Umpk.Client](umpk-client.md) drives it once per tick when the physics feature is on.
 
 ## Main entry points
 
@@ -97,7 +97,7 @@ The engine needs two settling ticks after `Reset` before `OnGround` and the flui
 
 `Step` takes its argument by `in` and returns a `StepResult` you should destructure or read immediately. `PhysicsState` and `StepEvents` are readonly structs with `init` properties, so building one by hand is possible but rarely what you want; let the engine produce them.
 
-`IPhysicsWorldView.GetCollisionShapes` is where real block geometry enters. Warning: a shape source that returns a full cube for every block makes the player walk through a staircase as though it were solid. Give the world view a real source, such as `JavaGameData.BlockShapes(protocol)` from [Umpk.Data.Java](/packages/umpk-data-java).
+`IPhysicsWorldView.GetCollisionShapes` is where real block geometry enters. Warning: a shape source that returns a full cube for every block makes the player walk through a staircase as though it were solid. Give the world view a real source, such as `JavaGameData.BlockShapes(protocol)` from [Umpk.Data.Java](umpk-data-java.md).
 
 `PositionSendCadence` is not a physics behavior at all. It describes how often the client sends its position, which is a send-loop concern, and it is computed from the protocol number rather than from any dataset field. It rides on `PhysicsProfile` because that is where the rest of the per-era movement settings live.
 

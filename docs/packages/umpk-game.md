@@ -1,17 +1,17 @@
 ---
-title: Umpk.Game
-description: The game model: blocks, chunks, entities, items and components, containers, scoreboards and registries.
+title: "Umpk.Game"
+description: "The game model: blocks, chunks, entities, items and components, containers, scoreboards and registries."
 sidebar:
   order: 5
 ---
 
 `Umpk.Game` is everything Minecraft has that is not a packet. Block states and chunk storage, entities and their metadata, item stacks and the 1.20.5+ data components, container layouts and click simulation, tab list, boss bars, maps, advancements, scoreboards, and the registry machinery that ties network ids to identifiers.
 
-It is the largest public surface after [Umpk.Protocol.Java](/packages/umpk-protocol-java), and it is deliberately passive. Nothing here sends or receives anything. The client applies decoded packets into these types; you read them.
+It is the largest public surface after [Umpk.Protocol.Java](umpk-protocol-java.md), and it is deliberately passive. Nothing here sends or receives anything. The client applies decoded packets into these types; you read them.
 
 ## Its place in the stack
 
-`Umpk.Game` depends on [Umpk.Core](/packages/umpk-core), [Umpk.Nbt](/packages/umpk-nbt) and [Umpk.Text](/packages/umpk-text). [Umpk.Protocol.Java](/packages/umpk-protocol-java) uses it as the decode target, [Umpk.Physics](/packages/umpk-physics) reads block states and shapes out of it, [Umpk.Pathfinding](/packages/umpk-pathfinding) plans over a snapshot of it, and [Umpk.Client](/packages/umpk-client) owns the live instances.
+`Umpk.Game` depends on [Umpk.Core](umpk-core.md), [Umpk.Nbt](umpk-nbt.md) and [Umpk.Text](umpk-text.md). [Umpk.Protocol.Java](umpk-protocol-java.md) uses it as the decode target, [Umpk.Physics](umpk-physics.md) reads block states and shapes out of it, [Umpk.Pathfinding](umpk-pathfinding.md) plans over a snapshot of it, and [Umpk.Client](umpk-client.md) owns the live instances.
 
 ## Main entry points
 
@@ -19,7 +19,7 @@ Registries first, because everything else refers to them. `Registry<T>` maps a n
 
 `Umpk.Game.Blocks` has `BlockState`, a readonly struct that pairs a state id with an `IBlockDataSource` and answers `IsAir`, `IsSolid`, `IsFluid`, `IsClimbable`, `IsWaterlogged`, `BlocksMotion`, `Friction`, `SpeedFactor`, `JumpFactor` and the block's property names and values. `BlockFlags` is the underlying bitmask.
 
-`Umpk.Game.World` has `World` (chunk columns keyed by `ChunkPos`, block entities, the world border and the dimension), `ChunkColumn`, `ChunkSection`, `DimensionState` (height, minimum Y, section count, skylight), and `RegionSnapshot`, a detached copy of a box of blocks that [Umpk.Pathfinding](/packages/umpk-pathfinding) plans against. `Raycast.CastBlock` and `Raycast.CastEntities` do line-of-sight queries.
+`Umpk.Game.World` has `World` (chunk columns keyed by `ChunkPos`, block entities, the world border and the dimension), `ChunkColumn`, `ChunkSection`, `DimensionState` (height, minimum Y, section count, skylight), and `RegionSnapshot`, a detached copy of a box of blocks that [Umpk.Pathfinding](umpk-pathfinding.md) plans against. `Raycast.CastBlock` and `Raycast.CastEntities` do line-of-sight queries.
 
 `Umpk.Game.Entities` has `Entity` (position, rotation, velocity, pose, effects, attributes, equipment, passengers and vehicle) and `EntityStore`, which indexes entities by id and by UUID and can list `Nearby`. `EntityMetadata` holds the raw indexed metadata; `EntityMetadataKeys` gives you the semantic handles (`Health`, `CustomName`, `Pose`, `SharedFlags`, `AirSupply` and more) that resolve to the right index for whichever version you are on.
 
@@ -66,7 +66,7 @@ foreach (SlotChange change in result.ChangedSlots)
 
 ## Things that catch people out
 
-`Umpk.Game` declares `IBlockDataSource` but ships no public implementation of it. The one the client uses is internal and is built from the version's block registry. [Umpk.Data.Java](/packages/umpk-data-java) does not supply one either. So you cannot construct a standalone `World` without writing your own `IBlockDataSource` (the test suites each have one). If you want a world, take the one on a live session at `client.State.World`.
+`Umpk.Game` declares `IBlockDataSource` but ships no public implementation of it. The one the client uses is internal and is built from the version's block registry. [Umpk.Data.Java](umpk-data-java.md) does not supply one either. So you cannot construct a standalone `World` without writing your own `IBlockDataSource` (the test suites each have one). If you want a world, take the one on a live session at `client.State.World`.
 
 `RegistryAccess.Attributes` is deliberately empty on every protocol, and so are `Biomes` and `DimensionTypes` when they come from `JavaGameData.Registries`. Biomes and dimension types arrive as config-phase registry data at runtime. Attributes stay empty because `AttributeDefinition` needs default, minimum and maximum values that no vanilla registries report carries, and a zero-filled definition would clamp every attribute to zero. An empty registry means "not resolvable here", never "does not exist".
 
@@ -76,7 +76,7 @@ foreach (SlotChange change in result.ChangedSlots)
 
 `ItemStack` is immutable. `WithCount`, `Grow` and `Shrink` return new stacks; they do not mutate. And mutating anything in this package does not change the server's mind about it. Container contents in particular are a local model of what the server last told you. To move an item for real:
 
-1. Send the action through [Umpk.Client](/packages/umpk-client).
+1. Send the action through [Umpk.Client](umpk-client.md).
 2. Wait for the server to confirm the change.
 
 `ClickSimulator.Apply` is a prediction, not a command. `ClickResult.TouchedServerAuthoritativeSlot` tells you when the prediction covered a slot whose contents only the server can decide (a crafting output, for example), which is your cue to trust the server's next update over your own arithmetic.
@@ -89,4 +89,4 @@ Entity metadata has two tiers, and they behave differently. The raw tier is inde
 
 `ClickAction` is an abstract record with nested subtypes: `ClickAction.Pickup`, `.QuickMove`, `.Swap`, `.Throw`, `.Drag`, `.CloneSlot` and `.PickupAll`. Write `new ClickAction.QuickMove(0, MouseButton.Left)`, not `new QuickMove(...)`.
 
-There are two unrelated `ProfileProperty` types and two unrelated `ResolvableProfile` types in this package (one pair under `Umpk.Game.Entities`, one under `Umpk.Game.Items.Components`), plus `Umpk.ProfileProperty` in [Umpk.Core](/packages/umpk-core). They are not interchangeable. Watch your `using` directives.
+There are two unrelated `ProfileProperty` types and two unrelated `ResolvableProfile` types in this package (one pair under `Umpk.Game.Entities`, one under `Umpk.Game.Items.Components`), plus `Umpk.ProfileProperty` in [Umpk.Core](umpk-core.md). They are not interchangeable. Watch your `using` directives.

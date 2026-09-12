@@ -1,6 +1,6 @@
 ---
-title: Umpk.Nbt
-description: NBT tags, the three Java root framings, SNBT parsing and printing, and a byte and depth accounter.
+title: "Umpk.Nbt"
+description: "NBT tags, the three Java root framings, SNBT parsing and printing, and a byte and depth accounter."
 sidebar:
   order: 3
 ---
@@ -11,7 +11,7 @@ It is usable entirely on its own. If all you want is to read a `level.dat` or ro
 
 ## Its place in the stack
 
-`Umpk.Nbt` depends only on [Umpk.Core](/packages/umpk-core). Above it, [Umpk.Text](/packages/umpk-text) uses it for the NBT form of chat components, [Umpk.Game](/packages/umpk-game) uses it for item component payloads and block entity data, and [Umpk.Protocol.Java](/packages/umpk-protocol-java) reads and writes tags straight off the wire.
+`Umpk.Nbt` depends only on [Umpk.Core](umpk-core.md). Above it, [Umpk.Text](umpk-text.md) uses it for the NBT form of chat components, [Umpk.Game](umpk-game.md) uses it for item component payloads and block entity data, and [Umpk.Protocol.Java](umpk-protocol-java.md) reads and writes tags straight off the wire.
 
 ## Main entry points
 

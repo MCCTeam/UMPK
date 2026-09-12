@@ -1,6 +1,6 @@
 ---
-title: Limitations
-description: What does not work, what is missing, and the known API gaps, listed plainly so you find them here rather than at three in the morning.
+title: "Limitations"
+description: "What does not work, what is missing, and the known API gaps, listed plainly so you find them here rather than at three in the morning."
 sidebar:
   order: 2
 ---
@@ -148,6 +148,6 @@ Submerged air budgeting is optimistic for short diagonal segments with startup, 
 
 ## What is not on this list
 
-Movement, chunk decoding, chat signing, authentication and Realms all work and are covered by tests against recorded traffic. The [packages overview](/packages/overview) is the place to see what each one does. This page is deliberately the pessimistic view; it is not a summary of the project.
+Movement, chunk decoding, chat signing, authentication and Realms all work and are covered by tests against recorded traffic. The [packages overview](../packages/overview.md) is the place to see what each one does. This page is deliberately the pessimistic view; it is not a summary of the project.
 
 No public-server compatibility claim follows from a successful login or from the local vanilla and proxy tests. In particular, the compatibility investigation did not reproduce Donut SMP, and this change does not claim to fix it. A public-server conclusion needs an authorized account, an explicit action scope and packet-level evidence from that server.

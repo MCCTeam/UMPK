@@ -1,6 +1,6 @@
 ---
-title: A minimal bot
-description: A walkthrough of the MinimalBot sample connect in offline mode, subscribe to events, send one message, and leave cleanly.
+title: "A minimal bot"
+description: "A walkthrough of the MinimalBot sample connect in offline mode, subscribe to events, send one message, and leave cleanly."
 sidebar:
   order: 3
 ---
@@ -29,7 +29,7 @@ Do not run the sample against a server you do not control. The sample sends a ch
 
 ## Finding the protocol first
 
-A client is built for one protocol version, so the sample has to know the version before it can build anything. It asks the server, with the same status ping from [your first status ping](/getting-started/status-ping):
+A client is built for one protocol version, so the sample has to know the version before it can build anything. It asks the server, with the same status ping from [your first status ping](status-ping.md):
 
 ```csharp
 // SRV lookup only when the user typed no port, which is what vanilla does.
@@ -56,7 +56,7 @@ if (!JavaVersions.TryGetByProtocol(protocol, out JavaVersion version))
 
 `JavaVersions` lives in `Umpk.Data.Java` and is the generated catalog of all 49 supported versions. Besides `TryGetByProtocol` it offers `TryGetByName`, an `All` list, and one static property per version, so `JavaVersions.V1_21_8` works when you already know what you are talking to.
 
-`status.Protocol` is already the decoded `version.protocol` field, an `int?`. `ServerStatus.Parse` does the fiddly part for you: some proxies stringify the number, and vanilla itself would show no version at all for that shape, but real proxies emit one, so a stringified protocol is still accepted. A missing or genuinely malformed field leaves `Protocol` null, which is the cue this sample checks for. See [your first status ping](/getting-started/status-ping#what-serverstatus-carries) for everything else `ServerStatus` decodes.
+`status.Protocol` is already the decoded `version.protocol` field, an `int?`. `ServerStatus.Parse` does the fiddly part for you: some proxies stringify the number, and vanilla itself would show no version at all for that shape, but real proxies emit one, so a stringified protocol is still accepted. A missing or genuinely malformed field leaves `Protocol` null, which is the cue this sample checks for. See [your first status ping](status-ping.md#what-serverstatus-carries) for everything else `ServerStatus` decodes.
 
 ## Building the client
 
@@ -74,7 +74,7 @@ await using UmpkClient client = new UmpkClientBuilder()
 
 Three points here.
 
-Offline mode is not a flag. It is the absence of `UseAuthenticator`. If you never call it, the login runs unauthenticated and the server had better be in offline mode too. See [authentication](/guides/authentication) for the other half.
+Offline mode is not a flag. It is the absence of `UseAuthenticator`. If you never call it, the login runs unauthenticated and the server had better be in offline mode too. See [authentication](../guides/authentication.md) for the other half.
 
 `OfflineIdentity.ComputeProfile(username)` returns a `GameProfile` whose id is the UUID a vanilla offline server derives from the name. Using it means the bot keeps the same identity across reconnects, which matters for anything that persists per player.
 
@@ -99,7 +99,7 @@ using IDisposable disconnectSubscription = client.Events.Subscribe<Disconnected>
 
 The handlers run on the session loop. That is why every one of them here does the smallest possible thing and returns: printing a line, or completing a `TaskCompletionSource` that the main flow is waiting on. Do real work in a handler and you stall packet processing for the whole session. The completion source is created with `TaskCreationOptions.RunContinuationsAsynchronously`, so the continuation does not run inline on the loop either.
 
-Something over seventy event types live under `Umpk.Client.Events`, covering chat, world, entities, inventory, UI and connection lifecycle. [World and entities](/guides/world-and-entities) goes through the ones that matter for state.
+Something over seventy event types live under `Umpk.Client.Events`, covering chat, world, entities, inventory, UI and connection lifecycle. [World and entities](../guides/world-and-entities.md) goes through the ones that matter for state.
 
 ## Two decisions that look wrong
 
@@ -119,7 +119,7 @@ catch (OperationCanceledException) when (ct.IsCancellationRequested)
 
 Neither `ConnectAsync` nor `ConnectAndWaitForSpawnAsync` makes any decision about what happens after the session ends. A sample with no reconnect policy configured has nothing to accidentally misconfigure: it connects once, and a kick reads as a kick rather than as the bot silently redialing a server that just threw it out.
 
-Reach for `UmpkClientSupervisor` (`Umpk.Client.Supervision`) once you actually want automatic reconnect. It owns a session across many connections instead of one: `StartAsync` runs the first attempt inline and arms a background watch, an `IReconnectPolicyProvider` is consulted after every unexpected disconnect, and `ConnectFailedException` / `LoginRejectedException` replace the five-way exception ladder a bare `ConnectAsync` caller has to write by hand. See [Umpk.Client](/packages/umpk-client) for the rest of its surface.
+Reach for `UmpkClientSupervisor` (`Umpk.Client.Supervision`) once you actually want automatic reconnect. It owns a session across many connections instead of one: `StartAsync` runs the first attempt inline and arms a background watch, an `IReconnectPolicyProvider` is consulted after every unexpected disconnect, and `ConnectFailedException` / `LoginRejectedException` replace the five-way exception ladder a bare `ConnectAsync` caller has to write by hand. See [Umpk.Client](../packages/umpk-client.md) for the rest of its surface.
 
 ### It waits for the spawn, not just the connect
 
@@ -142,7 +142,7 @@ It connects, then awaits `client.Spawned`, a task armed before `ConnectAsync` is
 await client.Actions.Chat.SendChatAsync("Hello from UMPK.", ct);
 ```
 
-`client.Actions` groups the outbound API: `Chat`, `Movement`, `Inventory`, `Interaction`, `Dialog`, `Session`, plus a `Capabilities` view of what the negotiated version can actually do. `SendChatAsync` applies the instance chat cooldown, splits anything past 256 characters, and picks the signed or unsigned path by version. [Chat and signing](/guides/chat-and-signing) covers what that means.
+`client.Actions` groups the outbound API: `Chat`, `Movement`, `Inventory`, `Interaction`, `Dialog`, `Session`, plus a `Capabilities` view of what the negotiated version can actually do. `SendChatAsync` applies the instance chat cooldown, splits anything past 256 characters, and picks the signed or unsigned path by version. [Chat and signing](../guides/chat-and-signing.md) covers what that means.
 
 The shutdown has one detail worth stealing:
 
@@ -158,9 +158,9 @@ If you pass the already-cancelled token here, the disconnect never reaches the s
 
 ## What to read next
 
-- [Offline samples](/getting-started/offline-samples) to try chat, NBT, physics, versions, and identity with no server.
-- [A connected bot](/getting-started/connected-bot) to ping, log in, join, and trade chat lines.
-- [Authentication](/guides/authentication) to replace the offline profile with a real account.
-- [Chat and signing](/guides/chat-and-signing) for what 1.19 changed about sending a message.
-- [Movement and pathfinding](/guides/movement-and-pathfinding) to make the bot go somewhere.
-- [Umpk.Client](/packages/umpk-client) for the rest of the surface.
+- [Offline samples](offline-samples.md) to try chat, NBT, physics, versions, and identity with no server.
+- [A connected bot](connected-bot.md) to ping, log in, join, and trade chat lines.
+- [Authentication](../guides/authentication.md) to replace the offline profile with a real account.
+- [Chat and signing](../guides/chat-and-signing.md) for what 1.19 changed about sending a message.
+- [Movement and pathfinding](../guides/movement-and-pathfinding.md) to make the bot go somewhere.
+- [Umpk.Client](../packages/umpk-client.md) for the rest of the surface.

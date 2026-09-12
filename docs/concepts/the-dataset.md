@@ -1,6 +1,6 @@
 ---
-title: The dataset
-description: What lives under data/java/, how DataGen turns it into compiled C#, and why no generated file is ever edited by hand.
+title: "The dataset"
+description: "What lives under data/java/, how DataGen turns it into compiled C#, and why no generated file is ever edited by hand."
 sidebar:
   order: 3
 ---
@@ -35,7 +35,7 @@ One directory per protocol number, named for the number. The file set varies by 
 
 Every file carries a `_provenance` block naming where it came from: a server data report, a decompiled class, or a human decision. When you are trying to work out how much to trust a value, that block is the first thing to read.
 
-Alongside the per-protocol directories sit `versions.json`, the release-name catalog described in [versions and protocols](/concepts/versions-and-protocols), and `shared/`, which holds cross-version curated tables such as block attributes, packet name aliases and the legacy item bridge.
+Alongside the per-protocol directories sit `versions.json`, the release-name catalog described in [versions and protocols](versions-and-protocols.md), and `shared/`, which holds cross-version curated tables such as block attributes, packet name aliases and the legacy item bridge.
 
 ## From JSON to compiled tables
 
@@ -52,7 +52,7 @@ PacketRegistrar.Register(builder, ProtocolPhase.Handshake, PacketFlow.Serverboun
 PacketRegistrar.Register(builder, ProtocolPhase.Login, PacketFlow.Clientbound, 0x00, "minecraft:login_disconnect");
 ```
 
-The generated code knows wire ids and identifiers. It knows nothing about codecs and no longer carries a per-version `codecKey`. `PacketRegistrar.Register` accepts no codec key. Choosing which codec implements a packet on a given protocol happens in the hand-authored, family-local packet timelines described in [the packet pipeline](/concepts/packet-pipeline). Keeping that split is what stops the generator from having to understand era logic and stops the codecs from being generated.
+The generated code knows wire ids and identifiers. It knows nothing about codecs and no longer carries a per-version `codecKey`. `PacketRegistrar.Register` accepts no codec key. Choosing which codec implements a packet on a given protocol happens in the hand-authored, family-local packet timelines described in [the packet pipeline](packet-pipeline.md). Keeping that split is what stops the generator from having to understand era logic and stops the codecs from being generated.
 
 ## Generated files are not edited
 
@@ -100,4 +100,4 @@ The Git command must print nothing and exit with status 0.
 
 That comparison proves that the committed generated code is what the current dataset produces and that the emitter is deterministic. A diff means that somebody edited generated code, changed the dataset without regenerating, or introduced non-deterministic output. Investigate all three cases.
 
-Run it after any dataset change, before you decide you are done. [Development](/contributing/development) puts it in the context of the full build gate, and [adding a version](/contributing/adding-a-version) walks the extraction path that produces new dataset files in the first place.
+Run it after any dataset change, before you decide you are done. [Development](../contributing/development.md) puts it in the context of the full build gate, and [adding a version](../contributing/adding-a-version.md) walks the extraction path that produces new dataset files in the first place.

@@ -13,8 +13,8 @@ public sealed class AotSmokeFactAttribute : FactAttribute
         string? binary = Environment.GetEnvironmentVariable("UMPK_AOT_BINARY");
         if (string.IsNullOrEmpty(binary))
         {
-            Skip = "No published binary. Publish samples/MinimalBot with PublishAot and point "
-                + "UMPK_AOT_BINARY at it to run.";
+            Skip = "The default suite has no published native binary. The dedicated AOT publish smoke + size budget "
+                + "job runs this test. To run it locally, publish samples/MinimalBot and set UMPK_AOT_BINARY.";
             return;
         }
 

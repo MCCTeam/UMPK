@@ -225,6 +225,7 @@ Treat a stable packet identifier as insufficient evidence: packet IDs, layouts, 
 - Keep newlines only where syntax or structure requires them, such as headings, blank lines, lists, tables, block quotes, and code blocks. Long prose lines are expected and preferred.
 - Do not apply an 80, 100, or 120-column limit to prose. Optimize text files for wide screens.
 - Nullable annotations and warnings-as-errors are part of the contract.
+- When you change `<Version>` in `Directory.Build.props`, update `CHANGELOG.md` in the same change.
 - Add public API additions to the affected `PublicAPI.Unshipped.txt`.
 - Library diagnostics use `ILogger`; banned APIs are listed in `engineering/BannedSymbols.txt`.
 - Preserve Native AOT compatibility. Prefer generated tables and explicit registration over reflection.

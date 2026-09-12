@@ -1,6 +1,6 @@
 ---
-title: Umpk.Text
-description: Minecraft chat components: the tree model, styles, click and hover events, and JSON, NBT and legacy serializers.
+title: "Umpk.Text"
+description: "Minecraft chat components: the tree model, styles, click and hover events, and JSON, NBT and legacy serializers."
 sidebar:
   order: 4
 ---
@@ -11,7 +11,7 @@ The tree itself carries no version information. Only the serializers know that c
 
 ## Its place in the stack
 
-`Umpk.Text` depends on [Umpk.Core](/packages/umpk-core) and [Umpk.Nbt](/packages/umpk-nbt). [Umpk.Game](/packages/umpk-game), [Umpk.Protocol.Java](/packages/umpk-protocol-java) and [Umpk.Commands](/packages/umpk-commands) all build on it. Chat, item names and lore, container titles, kick messages, scoreboard display names and command error text are all `Component` values.
+`Umpk.Text` depends on [Umpk.Core](umpk-core.md) and [Umpk.Nbt](umpk-nbt.md). [Umpk.Game](umpk-game.md), [Umpk.Protocol.Java](umpk-protocol-java.md) and [Umpk.Commands](umpk-commands.md) all build on it. Chat, item names and lore, container titles, kick messages, scoreboard display names and command error text are all `Component` values.
 
 ## Main entry points
 

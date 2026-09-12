@@ -1,6 +1,6 @@
 ---
-title: Versions and protocols
-description: Why UMPK keys everything off the protocol number instead of the release name, and what the catalog in data/java/versions.json actually holds.
+title: "Versions and protocols"
+description: "Why UMPK keys everything off the protocol number instead of the release name, and what the catalog in data/java/versions.json actually holds."
 sidebar:
   order: 1
 ---
@@ -28,7 +28,7 @@ So the number is the real unit. Everything in UMPK is keyed on it.
 
 There is no directory named `1.20.4`. There is no per-release anything. If you go looking for a file that belongs to a release rather than a protocol, you will not find one, and that is the design working rather than something missing.
 
-The full mapping is in [supported versions](/reference/supported-versions).
+The full mapping is in [supported versions](../reference/supported-versions.md).
 
 ## What this buys
 
@@ -64,6 +64,6 @@ Here is the wrinkle that catches people. `JavaVersion.Version.Name` is a single 
 
 ## Where the number comes from at runtime
 
-In practice you rarely type a protocol number. A status ping reports the server's, and the handshake carries whatever you decide to send. See [your first status ping](/getting-started/status-ping) for the ping path and [installation](/getting-started/installation) for wiring a version into a client.
+In practice you rarely type a protocol number. A status ping reports the server's, and the handshake carries whatever you decide to send. See [your first status ping](../getting-started/status-ping.md) for the ping path and [installation](../getting-started/installation.md) for wiring a version into a client.
 
-The number then selects a `ProtocolDescriptor`, which is the packet table plus the codec bindings for that wire format, and a `ProtocolFeatures` record, which is the feature flags that drive behavior the packet table cannot express. Those two objects are the whole of what "this is version X" means inside the library. The [packet pipeline](/concepts/packet-pipeline) covers the first, and [era gating](/concepts/era-gating) covers the second.
+The number then selects a `ProtocolDescriptor`, which is the packet table plus the codec bindings for that wire format, and a `ProtocolFeatures` record, which is the feature flags that drive behavior the packet table cannot express. Those two objects are the whole of what "this is version X" means inside the library. The [packet pipeline](packet-pipeline.md) covers the first, and [era gating](era-gating.md) covers the second.

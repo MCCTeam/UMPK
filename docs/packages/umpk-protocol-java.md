@@ -1,8 +1,8 @@
 ---
-title: Umpk.Protocol.Java
-description: Codecs, packet registration, framing and encryption, login, chat signing and status pings for 49 protocols.
+title: "Umpk.Protocol.Java"
+description: "Codecs, packet registration, framing and encryption, login, chat signing and status pings for 49 protocols."
 sidebar:
-  order: 7
+  order: 8
 ---
 
 `Umpk.Protocol.Java` is the wire. It owns framing (length prefix, compression, AES-CFB8 encryption), the packet model and its registration tables, the login and configuration handshakes, chat message signing, and the two status pings. It is the biggest package in the repository, and the one where "vanilla decides" is enforced hardest: a codec is proven by decoding bytes a real server sent, then re-encoding them byte-identically.
@@ -11,9 +11,9 @@ Nothing in here knows which version it is talking to until you hand it a `Protoc
 
 ## Its place in the stack
 
-It depends on [Umpk.Core](/packages/umpk-core), [Umpk.Nbt](/packages/umpk-nbt), [Umpk.Text](/packages/umpk-text) and [Umpk.Game](/packages/umpk-game). It does not depend on [Umpk.Data.Java](/packages/umpk-data-java); the arrow points the other way, because the generated descriptors are built out of types defined here.
+It depends on [Umpk.Core](umpk-core.md), [Umpk.Nbt](umpk-nbt.md), [Umpk.Text](umpk-text.md) and [Umpk.Game](umpk-game.md). It does not depend on [Umpk.Data.Java](umpk-data-java.md); the arrow points the other way, because the generated descriptors are built out of types defined here.
 
-[Umpk.Client](/packages/umpk-client) drives it, and [Umpk.Auth](/packages/umpk-auth) implements its `ISessionAuthenticator` seam.
+[Umpk.Client](umpk-client.md) drives it, and [Umpk.Auth](umpk-auth.md) implements its `ISessionAuthenticator` seam.
 
 ## Main entry points
 
@@ -116,6 +116,6 @@ Encryption and compression are enabled at exact points in the login flow, and th
 
 `JavaServerLogin`, `JavaServerLoginOptions`, `ServerLoginResult` and `IServerSessionVerifier` exist in this package even though `Umpk.Server` is empty. They are the server side of the login handshake and nothing else. There is no server-side connection layer above them.
 
-Chat signing has three eras (`ChatSignatureEra.V1_19`, `V1_19_1` and `V1_19_3`) and they differ in what gets hashed and how the last-seen window is tracked, not just in packet layout. See [chat and signing](/guides/chat-and-signing).
+Chat signing has three eras (`ChatSignatureEra.V1_19`, `V1_19_1` and `V1_19_3`) and they differ in what gets hashed and how the last-seen window is tracked, not just in packet layout. See [chat and signing](../guides/chat-and-signing.md).
 
 Bundles (`BundleAccumulator`, `BundleFeed`, `PacketBundle`) only exist from 1.19.4 on. The gate is the binding itself: `BoundPacketCodec` marks an entry `FrameRole.BundleDelimiter` when its identifier is `minecraft:bundle_delimiter`, so a protocol whose dataset registers no such packet has no delimiter to mark and everything arrives loose.

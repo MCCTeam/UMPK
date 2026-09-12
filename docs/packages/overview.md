@@ -1,6 +1,6 @@
 ---
-title: Package overview
-description: The fourteen shipping UMPK packages, what each one owns, and which way the dependencies point.
+title: "Package overview"
+description: "The fourteen shipping UMPK packages, what each one owns, and which way the dependencies point."
 sidebar:
   order: 1
 ---
@@ -11,19 +11,19 @@ UMPK is split into fourteen NuGet packages. Thirteen of them contain code; the f
 
 | Package | What it owns |
 | --- | --- |
-| [Umpk.Core](/packages/umpk-core) | Identity, geometry, the event helper, hosting seams. No dependencies at all. |
-| [Umpk.Nbt](/packages/umpk-nbt) | NBT tags, the three Java wire framings, SNBT, allocation accounting. |
-| [Umpk.Text](/packages/umpk-text) | Chat components, styles, click and hover events, JSON and NBT serializers. |
-| [Umpk.Game](/packages/umpk-game) | The game model: blocks, entities, items and components, containers, registries, world storage. |
-| [Umpk.Data.Java](/packages/umpk-data-java) | Generated per-protocol tables for 49 protocols, plus `JavaVersions` and `JavaGameData`. |
-| [Umpk.Data.Lang](/packages/umpk-data-lang) | Generated per-protocol vanilla `en_us` translations with hand-written lookup and formatting support. |
-| [Umpk.Protocol.Java](/packages/umpk-protocol-java) | Codecs, packet registration, framing, login and encryption, chat signing, status pings. |
-| [Umpk.Client](/packages/umpk-client) | The session runtime: connect, apply packets to state, raise events, send actions. |
-| [Umpk.Physics](/packages/umpk-physics) | Tick-accurate player movement and collision with per-era profiles. |
-| [Umpk.Pathfinding](/packages/umpk-pathfinding) | An A* planner over a captured world region, plus per-move execution templates. |
-| [Umpk.Commands](/packages/umpk-commands) | A Brigadier-backed command tree with scoped registration and completions. |
-| [Umpk.Auth](/packages/umpk-auth) | Microsoft device code and browser flows, Yggdrasil, offline identity, a token store. |
-| [Umpk.Realms](/packages/umpk-realms) | The Realms HTTP API: list worlds, join one, check compatibility. |
+| [Umpk.Core](umpk-core.md) | Identity, geometry, the event helper, hosting seams. No dependencies at all. |
+| [Umpk.Nbt](umpk-nbt.md) | NBT tags, the three Java wire framings, SNBT, allocation accounting. |
+| [Umpk.Text](umpk-text.md) | Chat components, styles, click and hover events, JSON and NBT serializers. |
+| [Umpk.Game](umpk-game.md) | The game model: blocks, entities, items and components, containers, registries, world storage. |
+| [Umpk.Data.Java](umpk-data-java.md) | Generated per-protocol tables for 49 protocols, plus `JavaVersions` and `JavaGameData`. |
+| [Umpk.Data.Lang](umpk-data-lang.md) | Generated per-protocol vanilla `en_us` translations with hand-written lookup and formatting support. |
+| [Umpk.Protocol.Java](umpk-protocol-java.md) | Codecs, packet registration, framing, login and encryption, chat signing, status pings. |
+| [Umpk.Client](umpk-client.md) | The session runtime: connect, apply packets to state, raise events, send actions. |
+| [Umpk.Physics](umpk-physics.md) | Tick-accurate player movement and collision with per-era profiles. |
+| [Umpk.Pathfinding](umpk-pathfinding.md) | An A* planner over a captured world region, plus per-move execution templates. |
+| [Umpk.Commands](umpk-commands.md) | A Brigadier-backed command tree with scoped registration and completions. |
+| [Umpk.Auth](umpk-auth.md) | Microsoft device code and browser flows, Yggdrasil, offline identity, a token store. |
+| [Umpk.Realms](umpk-realms.md) | The Realms HTTP API: list worlds, join one, check compatibility. |
 | `Umpk` | Meta package. References `Umpk.Client`, `Umpk.Data.Java`, `Umpk.Data.Lang`, `Umpk.Auth`, `Umpk.Physics` and `Umpk.Pathfinding`. It contains no code of its own. |
 
 Worth noticing about the meta package: it does not reference `Umpk.Realms`, and it only picks up `Umpk.Commands`, `Umpk.Game`, `Umpk.Text`, `Umpk.Nbt`, `Umpk.Core` and `Umpk.Protocol.Java` transitively through `Umpk.Client`. If you want Realms, reference `Umpk.Realms` explicitly.
@@ -67,4 +67,4 @@ Those `PublicAPI.Unshipped.txt` files are also the most reliable index of what a
 
 Every shipping package targets `net10.0`, enables nullable reference types, builds with `TreatWarningsAsErrors`, and is marked `IsAotCompatible`. That last one is why you will not find reflection-based activation or assembly scanning anywhere in `src/`: the design always has a generated table or an explicit registration instead.
 
-Where to go next: [installation](/getting-started/installation), then the [status ping](/getting-started/status-ping) and [minimal bot](/getting-started/minimal-bot) walkthroughs. For the ideas that run through all of these packages, read [versions and protocols](/concepts/versions-and-protocols) and [vanilla as the oracle](/concepts/vanilla-as-the-oracle).
+Where to go next: [installation](../getting-started/installation.md), then the [status ping](../getting-started/status-ping.md) and [minimal bot](../getting-started/minimal-bot.md) walkthroughs. For the ideas that run through all of these packages, read [versions and protocols](../concepts/versions-and-protocols.md) and [vanilla as the oracle](../concepts/vanilla-as-the-oracle.md).

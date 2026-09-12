@@ -1,8 +1,8 @@
 ---
-title: Umpk.Auth
-description: Microsoft device code and browser login, Yggdrasil, offline identity, session caching and the session-join seam.
+title: "Umpk.Auth"
+description: "Microsoft device code and browser login, Yggdrasil, offline identity, session caching and the session-join seam."
 sidebar:
-  order: 12
+  order: 13
 ---
 
 `Umpk.Auth` turns a person into a `JavaSession`: a game profile, an access token, an expiry and a refresh token. It runs the Microsoft device code flow, the Microsoft browser flow, or Yggdrasil for third-party auth servers, caches the result so the next start does not prompt again, and provides the session-join call an online-mode login needs.
@@ -11,11 +11,11 @@ The package performs no console output and asks for nothing directly. Every prom
 
 ## Its place in the stack
 
-`Umpk.Auth` depends on [Umpk.Core](/packages/umpk-core) and [Umpk.Protocol.Java](/packages/umpk-protocol-java). It implements `ISessionAuthenticator`, the client-role session-join seam that `Umpk.Protocol.Java` declares, and it produces the `PlayerCertificates` that 1.19+ chat signing needs.
+`Umpk.Auth` depends on [Umpk.Core](umpk-core.md) and [Umpk.Protocol.Java](umpk-protocol-java.md). It implements `ISessionAuthenticator`, the client-role session-join seam that `Umpk.Protocol.Java` declares, and it produces the `PlayerCertificates` that 1.19+ chat signing needs.
 
-[Umpk.Client](/packages/umpk-client) does not reference `Umpk.Auth`. The dependency runs the other way: you pass an authenticator into `UmpkClientBuilder.UseAuthenticator`. An offline bot never pulls in the auth stack at all.
+[Umpk.Client](umpk-client.md) does not reference `Umpk.Auth`. The dependency runs the other way: you pass an authenticator into `UmpkClientBuilder.UseAuthenticator`. An offline bot never pulls in the auth stack at all.
 
-[Umpk.Realms](/packages/umpk-realms) is the one package that depends on `Umpk.Auth` directly.
+[Umpk.Realms](umpk-realms.md) is the one package that depends on `Umpk.Auth` directly.
 
 ## Main entry points
 
@@ -97,4 +97,4 @@ Online mode needs both halves. `UseProfile` alone gets you an offline identity e
 
 `BrowserRedirectUri` defaults to a hosted paste page registered against the default `ClientId`: the code arrives in the URL fragment, the page shows it, and your `IAuthInteraction` reads it back. Override it only when you control the Azure application behind your own `ClientId`. `BrowserRedirectStrategy.Resolve` tells you which mode a given redirect URI implies, `HostedPastePage` or `LoopbackListener`.
 
-Never log a `JavaSession`, an access token or a refresh token. The package itself logs neither. See [the authentication guide](/guides/authentication).
+Never log a `JavaSession`, an access token or a refresh token. The package itself logs neither. See [the authentication guide](../guides/authentication.md).

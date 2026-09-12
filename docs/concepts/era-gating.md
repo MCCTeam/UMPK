@@ -1,11 +1,11 @@
 ---
-title: Era gating
-description: Version-dependent behavior comes from dataset feature axes, never from a protocol-number comparison in engine code, and the tests that keep it honest.
+title: "Era gating"
+description: "Version-dependent behavior comes from dataset feature axes, never from a protocol-number comparison in engine code, and the tests that keep it honest."
 sidebar:
   order: 5
 ---
 
-Some differences between versions are structural: a packet gained a field, an id moved. Those are handled by the packet tables, and [the packet pipeline](/concepts/packet-pipeline) covers them. This page is about the other kind, where the wire is unchanged but the game behaves differently. Water travel got a sprinting arm at 1.13. Ladders became usable while swimming at 1.14. Nothing on the wire tells you that; the client has to know.
+Some differences between versions are structural: a packet gained a field, an id moved. Those are handled by the packet tables, and [the packet pipeline](packet-pipeline.md) covers them. This page is about the other kind, where the wire is unchanged but the game behaves differently. Water travel got a sprinting arm at 1.13. Ladders became usable while swimming at 1.14. Nothing on the wire tells you that; the client has to know.
 
 The rule is short. Engine code never compares protocol numbers. It reads a named axis from the dataset.
 
@@ -111,4 +111,4 @@ The maintenance cost is real. Adding a protocol means adding a row to each table
 
 ## Adding an axis
 
-Changing a dataset value or adding an axis moves behavior on up to 49 protocols at once, so it is a decision to raise before making, not after. The mechanics are in [adding a version](/contributing/adding-a-version) and the surrounding gate is in [development](/contributing/development).
+Changing a dataset value or adding an axis moves behavior on up to 49 protocols at once, so it is a decision to raise before making, not after. The mechanics are in [adding a version](../contributing/adding-a-version.md) and the surrounding gate is in [development](../contributing/development.md).

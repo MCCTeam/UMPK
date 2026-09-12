@@ -1,6 +1,6 @@
 ---
-title: Using AI
-description: Rules for using AI assistance without weakening evidence, reviews, or secret handling.
+title: "Using AI"
+description: "Rules for using AI assistance without weakening evidence, reviews, or secret handling."
 sidebar:
   order: 4
 ---
@@ -30,4 +30,4 @@ Do not accept an AI citation as protocol evidence. Record the source version, ar
 
 Never edit a `.g.cs` file by hand. Change the dataset or generator, then regenerate the output. Do not weaken a test, remove a pin, or change an expected count only to make generated code pass.
 
-AI can propose an implementation. A maintainer owns the final change, its evidence, and its validation. Read [Development](/contributing/development) and [Testing](/contributing/testing) before you open a pull request.
+AI can propose an implementation. A maintainer owns the final change, its evidence, and its validation. Read [Development](development.md) and [Testing](testing.md) before you open a pull request.

@@ -1,8 +1,8 @@
 ---
-title: World and entities
-description: How world and entity state reaches the caller through appliers, client state and events, and what is tracked versus what is not.
+title: "World and entities"
+description: "How world and entity state reaches the caller through appliers, client state and events, and what is tracked versus what is not."
 sidebar:
-  order: 4
+  order: 5
 ---
 
 A packet arrives, gets decoded, and then something has to happen to it. In UMPK that something is an applier: a small class that recognizes a packet type, mutates the session's state, and publishes an event. Your side of that is two things, `client.State` and `client.Events`, and nothing else.
@@ -156,6 +156,6 @@ A session end clears less: any open dialog, the per-connection server state, and
 
 ## Related reading
 
-- [Packet pipeline](/concepts/packet-pipeline) for what happens before the applier.
-- [Umpk.Game](/packages/umpk-game) for the world, block and entity model itself.
-- [Movement and pathfinding](/guides/movement-and-pathfinding) for the physics that reads this state.
+- [Packet pipeline](../concepts/packet-pipeline.md) for what happens before the applier.
+- [Umpk.Game](../packages/umpk-game.md) for the world, block and entity model itself.
+- [Movement and pathfinding](movement-and-pathfinding.md) for the physics that reads this state.

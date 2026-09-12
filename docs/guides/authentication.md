@@ -1,6 +1,6 @@
 ---
-title: Authentication
-description: What Umpk.Auth supports Microsoft device code and browser flows, Yggdrasil, the token store, session resume, and offline identity.
+title: "Authentication"
+description: "What Umpk.Auth supports Microsoft device code and browser flows, Yggdrasil, the token store, session resume, and offline identity."
 sidebar:
   order: 1
 ---
@@ -200,7 +200,7 @@ public static GameProfile ComputeProfile(string username);
 
 `OfflineIdentity.ComputeProfile` derives the UUID a vanilla offline server assigns: MD5 of `"OfflinePlayer:<name>"` in UTF-8, with the version nibble forced to 3 and the RFC 4122 variant bits set, assembled big-endian to match Java's `UUID.nameUUIDFromBytes`. Same name, same UUID, every time, which is what lets a bot keep its identity across reconnects.
 
-You do not need `MinecraftAuthFlow` for this. The [minimal bot](/getting-started/minimal-bot) calls `OfflineIdentity.ComputeProfile(username)` directly, and that is the normal way to use it. Going through the flow with `FlowKind = AuthFlowKind.Offline` gives you a `JavaSession` whose `AccessToken` is the empty string and whose `ExpiresAt` is `DateTimeOffset.MaxValue`. Offline sessions are never cached. Never pair one with `UseAuthenticator`.
+You do not need `MinecraftAuthFlow` for this. The [minimal bot](../getting-started/minimal-bot.md) calls `OfflineIdentity.ComputeProfile(username)` directly, and that is the normal way to use it. Going through the flow with `FlowKind = AuthFlowKind.Offline` gives you a `JavaSession` whose `AccessToken` is the empty string and whose `ExpiresAt` is `DateTimeOffset.MaxValue`. Offline sessions are never cached. Never pair one with `UseAuthenticator`.
 
 ## Handing the session to a client
 
@@ -240,7 +240,7 @@ Offline mode is the absence of `UseAuthenticator`. Nothing else distinguishes th
 
 `GetCertificatesAsync` fetches the profile key pair a 1.19+ server needs to verify your messages, and caches it under `"certificates:" + name`. A cached copy is reused until `PlayerCertificates.IsExpired` says otherwise.
 
-The client does not call it for you. You wire it up by implementing `IChatSigningProvider` and passing it to `UmpkClientBuilder.UseChatSigning`. The contract there has real constraints on caching and re-entrancy, which [chat and signing](/guides/chat-and-signing) goes through.
+The client does not call it for you. You wire it up by implementing `IChatSigningProvider` and passing it to `UmpkClientBuilder.UseChatSigning`. The contract there has real constraints on caching and re-entrancy, which [chat and signing](chat-and-signing.md) goes through.
 
 ## What is not here
 
@@ -251,4 +251,4 @@ The client does not call it for you. You wire it up by implementing `IChatSignin
 - No HTTP timeout, retry or poll-interval settings. To change any of that you replace the whole `IHttpMessageHandlerFactory`.
 - `PersistedRefreshToken` is public and serializable, but nothing in the flow ever writes one.
 
-More detail on the package surface in [Umpk.Auth](/packages/umpk-auth).
+More detail on the package surface in [Umpk.Auth](../packages/umpk-auth.md).

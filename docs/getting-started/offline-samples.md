@@ -1,6 +1,6 @@
 ---
-title: Offline samples
-description: Five small programs that run with no server, each showing one layer of UMPK in isolation.
+title: "Offline samples"
+description: "Five small programs that run with no server, each showing one layer of UMPK in isolation."
 sidebar:
   order: 4
 ---
@@ -76,7 +76,7 @@ engine.Step(MovementInput.None);
 
 Reading `OnGround` right after `Reset` tells you nothing. Those two quiet ticks give the engine ground and fluid state before measurement starts. The world comes through `IPhysicsWorldView`, four members: `GetBlock`, `GetCollisionShapes`, `IsChunkLoaded`, and `CollectEntityColliders`. Shapes use local block space, 0 to 1. Mixing that with world space is the easy mistake here.
 
-For the era correct profile in real code, map the dataset flags through `PhysicsProfile.FromFeatures` instead of using `Modern` or `ForProtocol`. The client builds it that way internally. See [movement and pathfinding](/guides/movement-and-pathfinding) for the full story.
+For the era correct profile in real code, map the dataset flags through `PhysicsProfile.FromFeatures` instead of using `Modern` or `ForProtocol`. The client builds it that way internally. See [movement and pathfinding](../guides/movement-and-pathfinding.md) for the full story.
 
 Start here if you want to simulate a jump before you commit to it, or if movement numbers look like magic.
 
@@ -111,10 +111,10 @@ await using UmpkClient client = new UmpkClientBuilder()
 
 The UUID is MD5 of `"OfflinePlayer:<name>"` with version and variant bits set to match Java. Same name gives the same UUID every time, which is what keeps player data stable across reconnects. Case matters, since the hash covers the exact string.
 
-Online login is a separate flow through `MinecraftAuthFlow`, covered in [authentication](/guides/authentication). Never pair an offline profile with `UseAuthenticator`. The two modes exclude each other.
+Online login is a separate flow through `MinecraftAuthFlow`, covered in [authentication](../guides/authentication.md). Never pair an offline profile with `UseAuthenticator`. The two modes exclude each other.
 
 Start here if you want to join an offline test server, or if you need stable test identities.
 
 ## What to read next
 
-Once the offline shapes feel familiar, read [your first status ping](/getting-started/status-ping) and [a minimal bot](/getting-started/minimal-bot). Those two use the same pieces against a live server: ping to pick the protocol, registries to decode, components to render, and the client to join.
+Once the offline shapes feel familiar, read [your first status ping](status-ping.md) and [a minimal bot](minimal-bot.md). Those two use the same pieces against a live server: ping to pick the protocol, registries to decode, components to render, and the client to join.

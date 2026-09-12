@@ -149,37 +149,41 @@ public sealed class ResourcePackPolicy
                 return;
             }
 
-            await using Stream source = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
-            await using var destination = new FileStream(
+            string actualHash;
+            await using (Stream source = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false))
+            await using (var destination = new FileStream(
                 temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920,
-                FileOptions.Asynchronous | FileOptions.SequentialScan);
-            using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA1);
-            byte[] buffer = ArrayPool<byte>.Shared.Rent(81920);
-            long total = 0;
-            try
+                FileOptions.Asynchronous | FileOptions.SequentialScan))
             {
-                while (true)
+                using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA1);
+                byte[] buffer = ArrayPool<byte>.Shared.Rent(81920);
+                long total = 0;
+                try
                 {
-                    int read = await source.ReadAsync(buffer.AsMemory(0, buffer.Length), ct).ConfigureAwait(false);
-                    if (read == 0)
-                        break;
-                    total += read;
-                    if (total > options.MaxDownloadBytes)
+                    while (true)
                     {
-                        await report(ResourcePackResponse.FailedDownload).ConfigureAwait(false);
-                        return;
+                        int read = await source.ReadAsync(buffer.AsMemory(0, buffer.Length), ct).ConfigureAwait(false);
+                        if (read == 0)
+                            break;
+                        total += read;
+                        if (total > options.MaxDownloadBytes)
+                        {
+                            await report(ResourcePackResponse.FailedDownload).ConfigureAwait(false);
+                            return;
+                        }
+                        hash.AppendData(buffer, 0, read);
+                        await destination.WriteAsync(buffer.AsMemory(0, read), ct).ConfigureAwait(false);
                     }
-                    hash.AppendData(buffer, 0, read);
-                    await destination.WriteAsync(buffer.AsMemory(0, read), ct).ConfigureAwait(false);
                 }
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(buffer);
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer);
+                }
+
+                await destination.FlushAsync(ct).ConfigureAwait(false);
+                actualHash = Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
             }
 
-            await destination.FlushAsync(ct).ConfigureAwait(false);
-            string actualHash = Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
             if (!string.IsNullOrWhiteSpace(request.Hash)
                 && !string.Equals(request.Hash, actualHash, StringComparison.OrdinalIgnoreCase))
             {

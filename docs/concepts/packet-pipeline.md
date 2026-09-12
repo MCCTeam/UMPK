@@ -1,6 +1,6 @@
 ---
-title: The packet pipeline
-description: How a Minecraft frame becomes a typed packet, client state, and events, including the checks that keep era bindings honest.
+title: "The packet pipeline"
+description: "How a Minecraft frame becomes a typed packet, client state, and events, including the checks that keep era bindings honest."
 sidebar:
   order: 4
 ---

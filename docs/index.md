@@ -1,6 +1,6 @@
 ---
-title: UMPK
-description: A .NET 10 library for the Minecraft Java Edition protocol, covering 49 versions from 1.8 to 26.2 in one codebase.
+title: "UMPK"
+description: "A .NET 10 library for the Minecraft Java Edition protocol, covering 49 versions from 1.8 to 26.2 in one codebase."
 sidebar:
   order: 1
 ---
@@ -55,7 +55,7 @@ The other half of the approach is evidence. Wire formats and physics constants a
 - [Packages](packages/overview.md) if you would rather see the module map first.
 - [Supported versions](reference/supported-versions.md) for the full protocol table.
 - [Using AI](contributing/using-ai.md) for rules that keep generated changes reviewable and safe.
-- [Releasing NuGet packages](contributing/releasing.md) for maintainer setup, validation, publishing, and recovery.
+- [Releasing NuGet packages](contributing/releasing.md) for validation, publishing, and recovery.
 
 ## What is not here
 

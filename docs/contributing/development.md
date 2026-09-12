@@ -1,6 +1,6 @@
 ---
-title: Development
-description: The build gate you must pass before calling a change done, the repository layout, and the conventions that fail a build when broken.
+title: "Development"
+description: "The build gate you must pass before calling a change done, the repository layout, and the conventions that fail a build when broken."
 sidebar:
   order: 1
 ---
@@ -38,7 +38,7 @@ The count detector must find 12,407 tests across 17 suites. It detects missing s
    python3 engineering/testcounts/check_test_counts.py /tmp/test.log --baseline engineering/testcounts/expected_counts.json
    ```
 
-The detector must report every suite at its expected total. [Testing](/contributing/testing) explains what the detector catches.
+The detector must report every suite at its expected total. [Testing](testing.md) explains what the detector catches.
 
 4. Check the formatting.
 
@@ -56,7 +56,7 @@ The command must exit with code 0.
 
 The command must print `verify: OK (49 protocols)`.
 
-If you changed anything under `data/java/`, you must also regenerate the data package and prove the result is unchanged. See [the dataset](/concepts/the-dataset) for that procedure.
+If you changed anything under `data/java/`, you must also regenerate the data package and prove the result is unchanged. See [the dataset](../concepts/the-dataset.md) for that procedure.
 
 Continuous integration runs the build and test suite on Linux, Windows and macOS. Separate Linux jobs run the format check, dataset verify, generated-code freshness checks for `Umpk.Data.Java` and `Umpk.Protocol.Java`, and the legacy extraction verifier. CI does not run the count detector, so run the detector locally. Generate and compare `Umpk.Data.Lang` locally when language data or its emitter changes.
 
@@ -91,9 +91,9 @@ Do not run the full solution suite on every edit. It is slow.
 | `engineering/` | build policies, validation baselines, and repository maintenance tools |
 | `docs/` | this documentation site |
 
-[Packages](/packages/overview) covers what each package owns. Two names in `src/` are reserved and empty: `Umpk.Server` and `Umpk.Proxy` contain no code at all. See [limitations](/reference/limitations).
+[Packages](../packages/overview.md) covers what each package owns. Two names in `src/` are reserved and empty: `Umpk.Server` and `Umpk.Proxy` contain no code at all. See [limitations](../reference/limitations.md).
 
-Read [Using AI](/contributing/using-ai) before you use an AI tool on this repository. The same review, evidence, and validation rules apply to assisted changes.
+Read [Using AI](using-ai.md) before you use an AI tool on this repository. The same review, evidence, and validation rules apply to assisted changes.
 
 ## Conventions that fail the build
 
@@ -125,7 +125,7 @@ M:System.Reflection.Assembly.GetExportedTypes;No assembly scanning in src/
 
 `System.Console` is banned because a package that prints to standard output takes a decision away from the application hosting it. Report through `ILogger` instead, or raise an event.
 
-The other three are banned for Native AOT. Reflection-based activation and assembly scanning defeat trimming, and a trimmer that cannot prove a type is unused keeps it. Every package sets `IsAotCompatible`, so the design always needs a generated-table or explicit-registration answer instead of a scan. The registration table in [the packet pipeline](/concepts/packet-pipeline) is what that constraint produces.
+The other three are banned for Native AOT. Reflection-based activation and assembly scanning defeat trimming, and a trimmer that cannot prove a type is unused keeps it. Every package sets `IsAotCompatible`, so the design always needs a generated-table or explicit-registration answer instead of a scan. The registration table in [the packet pipeline](../concepts/packet-pipeline.md) is what that constraint produces.
 
 ### Nullable reference types
 
@@ -148,6 +148,6 @@ The count baseline in `engineering/testcounts/expected_counts.json` is a contrac
 
 Everything above is checkable by a machine, which is why it is written as steps. The review bar that actually decides whether a change is good is not.
 
-Verify behavior against vanilla and retain the detailed research with the change review. Source comments should describe the resulting behavior or invariant, not raw source locations. See [vanilla as the oracle](/concepts/vanilla-as-the-oracle). Prove codec work with bytes rather than shapes, because a successful decode may still have interpreted the frame incorrectly. Write the failing test first and confirm that it fails for the expected reason.
+Verify behavior against vanilla and retain the detailed research with the change review. Source comments should describe the resulting behavior or invariant, not raw source locations. See [vanilla as the oracle](../concepts/vanilla-as-the-oracle.md). Prove codec work with bytes rather than shapes, because a successful decode may still have interpreted the frame incorrectly. Write the failing test first and confirm that it fails for the expected reason.
 
 And be honest about what your evidence supports. "Twenty clean runs bound the failure rate below something" is a real statement. "This is fixed" usually is not.

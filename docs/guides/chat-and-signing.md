@@ -1,6 +1,6 @@
 ---
-title: Chat and signing
-description: Sending and receiving chat, what 1.19 changed with message signing and session keys, and which half of it you have to supply.
+title: "Chat and signing"
+description: "Sending and receiving chat, what 1.19 changed with message signing and session keys, and which half of it you have to supply."
 sidebar:
   order: 2
 ---
@@ -88,7 +88,7 @@ public sealed record PlayerCertificates(
 
 Wire it in with `UmpkClientBuilder.UseChatSigning(provider)`. If you never call it, or the negotiated version has no signing era, the send path stays unsigned, byte-identical to what an offline session emits. An `enforce-secure-profile=false` server takes those happily.
 
-`MinecraftAuthFlow.GetCertificatesAsync(session, ct)` from [Umpk.Auth](/guides/authentication) fetches and caches exactly this record, so a provider is usually a thin wrapper around it.
+`MinecraftAuthFlow.GetCertificatesAsync(session, ct)` from [Umpk.Auth](authentication.md) fetches and caches exactly this record, so a provider is usually a thin wrapper around it.
 
 The client owns everything else: the per-session `ChatSigningSession`, the era derived from the version, the message index and signature chain, both flavors of last-seen window, the rotation bookkeeping, and the `chat_session_update` announcement.
 
@@ -151,6 +151,6 @@ The second shape is what an offline session emits, byte for byte. Servers runnin
 
 ## Related reading
 
-- [Authentication](/guides/authentication) for where `PlayerCertificates` comes from.
-- [Era gating](/concepts/era-gating) for how the version-dependent behavior is selected.
-- [Umpk.Client](/packages/umpk-client) for the rest of the action surface.
+- [Authentication](authentication.md) for where `PlayerCertificates` comes from.
+- [Era gating](../concepts/era-gating.md) for how the version-dependent behavior is selected.
+- [Umpk.Client](../packages/umpk-client.md) for the rest of the action surface.

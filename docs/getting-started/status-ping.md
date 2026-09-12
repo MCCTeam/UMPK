@@ -1,6 +1,6 @@
 ---
-title: Your first status ping
-description: A walkthrough of the StatusPing sample: SRV resolution, JavaStatus.QueryAsync, the legacy fallback, and reading the MOTD.
+title: "Your first status ping"
+description: "A walkthrough of the StatusPing sample: SRV resolution, JavaStatus.QueryAsync, the legacy fallback, and reading the MOTD."
 sidebar:
   order: 2
 ---
@@ -131,7 +131,7 @@ A string-shaped description containing section-sign codes has them expanded into
 
 `ToPlainText` takes an optional `ITranslationSource` if you want `translate` components resolved; without one they fall back to their key or their `with` arguments.
 
-More on the component model in [Umpk.Text](/packages/umpk-text).
+More on the component model in [Umpk.Text](../packages/umpk-text.md).
 
 ## The legacy fallback
 
@@ -177,4 +177,4 @@ Worth noting that `ProtocolViolationException` and `ConnectionClosedException` a
 
 ## Next
 
-[A minimal bot](/getting-started/minimal-bot) uses this same ping as its first step, to find out which protocol the server speaks before building a client for it.
+[A minimal bot](minimal-bot.md) uses this same ping as its first step, to find out which protocol the server speaks before building a client for it.

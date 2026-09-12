@@ -1,6 +1,6 @@
 ---
-title: Movement and pathfinding
-description: The tick-accurate physics engine, its per-era profiles, the A* planner and its execution templates, and what a caller actually drives.
+title: "Movement and pathfinding"
+description: "The tick-accurate physics engine, its per-era profiles, the A* planner and its execution templates, and what a caller actually drives."
 sidebar:
   order: 3
 ---
@@ -29,7 +29,7 @@ public sealed record PhysicsProfile
 
 Every one of those is `required`, so an object initializer must set all eight. Concretely: on 1.8 there is no elytra and no swim pose, the crouch height is 1.65 rather than 1.5, and the ledge hop out of water does not exist. Sprint changes water travel from 1.13. Crawling arrives at 1.14 and moves the pose dimensions with it.
 
-The engine never compares a protocol number to decide any of this. The axes come from the dataset, via the version's `ProtocolFeatures`. See [era gating](/concepts/era-gating) for why that matters more than it might seem.
+The engine never compares a protocol number to decide any of this. The axes come from the dataset, via the version's `ProtocolFeatures`. See [era gating](../concepts/era-gating.md) for why that matters more than it might seem.
 
 Two computed properties fall out of the axes: `CrouchHeight` (1.5 modern, 1.65 legacy) and `SwimHeight`. `StandingHeight` is 1.8 and `Width` is 0.6 on every version.
 
@@ -232,6 +232,6 @@ piston.Tick((IPistonPushTarget)engine);
 
 ## Related reading
 
-- [Umpk.Physics](/packages/umpk-physics) and [Umpk.Pathfinding](/packages/umpk-pathfinding) for the full surface.
-- [Vanilla as the oracle](/concepts/vanilla-as-the-oracle) for where the constants come from.
-- [Limitations](/reference/limitations) for the known gaps.
+- [Umpk.Physics](../packages/umpk-physics.md) and [Umpk.Pathfinding](../packages/umpk-pathfinding.md) for the full surface.
+- [Vanilla as the oracle](../concepts/vanilla-as-the-oracle.md) for where the constants come from.
+- [Limitations](../reference/limitations.md) for the known gaps.

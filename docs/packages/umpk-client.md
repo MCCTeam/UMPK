@@ -1,8 +1,8 @@
 ---
-title: Umpk.Client
-description: The session runtime: connect and log in, apply packets into state, raise typed events, and send actions.
+title: "Umpk.Client"
+description: "The session runtime: connect and log in, apply packets into state, raise typed events, and send actions."
 sidebar:
-  order: 8
+  order: 9
 ---
 
 `Umpk.Client` is the part you actually hold. It connects, logs in, runs the configuration phase, enters play, and from then on applies every decoded packet into a state model, raises a typed event, and lets you send actions back. It is the only package here with a session loop and a lifecycle.
@@ -11,7 +11,7 @@ If you are writing a bot, this is your API. Almost everything else in the reposi
 
 ## Its place in the stack
 
-`Umpk.Client` references more than anything else: [Umpk.Core](/packages/umpk-core), [Umpk.Game](/packages/umpk-game), [Umpk.Protocol.Java](/packages/umpk-protocol-java), [Umpk.Commands](/packages/umpk-commands), [Umpk.Text](/packages/umpk-text), [Umpk.Physics](/packages/umpk-physics), [Umpk.Pathfinding](/packages/umpk-pathfinding) and [Umpk.Data.Java](/packages/umpk-data-java). It does not reference [Umpk.Auth](/packages/umpk-auth); online-mode login goes through the `ISessionAuthenticator` seam that `Umpk.Auth` implements, so an offline bot never pulls in the auth stack.
+`Umpk.Client` references more than anything else: [Umpk.Core](umpk-core.md), [Umpk.Game](umpk-game.md), [Umpk.Protocol.Java](umpk-protocol-java.md), [Umpk.Commands](umpk-commands.md), [Umpk.Text](umpk-text.md), [Umpk.Physics](umpk-physics.md), [Umpk.Pathfinding](umpk-pathfinding.md) and [Umpk.Data.Java](umpk-data-java.md). It does not reference [Umpk.Auth](umpk-auth.md); online-mode login goes through the `ISessionAuthenticator` seam that `Umpk.Auth` implements, so an offline bot never pulls in the auth stack.
 
 Nothing depends on `Umpk.Client` except the `Umpk` meta package.
 
@@ -21,7 +21,7 @@ Nothing depends on `Umpk.Client` except the `Umpk` meta package.
 
 `UmpkClient` is the session. `ConnectAsync` runs the whole handshake and completes when play begins. `DisconnectAsync` closes cleanly, and the client is `IAsyncDisposable`; final disposal closes an owned socket transport rather than waiting for peer timeout or garbage collection. `Status` reports `Created`, `Connecting`, `Configuring`, `Playing` or `Disconnected` (never `Authenticating` or `Reconnecting`, which are supervisor-only states). `StatusChanged` raises every transition synchronously, and `LastDisconnect` holds the reason the most recent session ended, populated even when a kick during login or configuration throws out of `ConnectAsync` before a session ever reaches play. `Session` gives you the endpoint, profile, version and phase once connected.
 
-`Umpk.Client.Supervision.UmpkClientSupervisor` owns a session across many connections instead of one. `StartAsync` runs the first attempt inline and arms a background reconnect watch; `ReconnectAsync` tears the current session down and dials a fresh one, optionally on a new endpoint; `StopAsync` ends it for good. It takes an `IClientSessionFactory` rather than a client, because a `UmpkClient` resolves its version, wire index and identity at construction, so a reconnect that switches account or lands on a server with a different version has to build a new one. `IReconnectPolicyProvider` is consulted after every unexpected disconnect (and again after every failed retry), and `ConnectFailedException` / `LoginRejectedException` (both a `SessionStartException`, alongside `VersionResolutionException`) are what a caller catches instead of pattern-matching `ConnectionClosedException.Reason` by hand. See [a minimal bot](/getting-started/minimal-bot) for why the sample there does not use it.
+`Umpk.Client.Supervision.UmpkClientSupervisor` owns a session across many connections instead of one. `StartAsync` runs the first attempt inline and arms a background reconnect watch; `ReconnectAsync` tears the current session down and dials a fresh one, optionally on a new endpoint; `StopAsync` ends it for good. It takes an `IClientSessionFactory` rather than a client, because a `UmpkClient` resolves its version, wire index and identity at construction, so a reconnect that switches account or lands on a server with a different version has to build a new one. `IReconnectPolicyProvider` is consulted after every unexpected disconnect (and again after every failed retry), and `ConnectFailedException` / `LoginRejectedException` (both a `SessionStartException`, alongside `VersionResolutionException`) are what a caller catches instead of pattern-matching `ConnectionClosedException.Reason` by hand. See [a minimal bot](../getting-started/minimal-bot.md) for why the sample there does not use it.
 
 Server-directed transfers are surfaced by every client but are followed only when `ClientSupervisorOptions.FollowServerTransfers` is enabled. A followed hop creates a fresh client with the same profile, copies owned cookie bytes into the destination session, uses the transfer handshake intent, and is bounded by `MaxTransferHops`. This is independent of ordinary reconnect policy.
 
@@ -105,7 +105,7 @@ Disabled features throw rather than returning empty. `ClientState.World` raises 
 
 `ClientState.Registries` is nullable and is null before the configuration phase has delivered them. `ClientState.HasWorld` and `IsLocalChunkLoaded` are the guards for the world being usable at all.
 
-Not every action exists on every protocol. Sending one that does not raises `ActionNotSupportedException`, which carries the action name, the packet identifier and the protocol number. Check `client.Capabilities` first: `CanPlaceBlock`, `CanUpdateSign`, `CanEditBook`, `CanRenameItem`, `CanSpectatorTeleport`, `CanSubmitDialog` and the rest are per-version booleans. See [era gating](/concepts/era-gating).
+Not every action exists on every protocol. Sending one that does not raises `ActionNotSupportedException`, which carries the action name, the packet identifier and the protocol number. Check `client.Capabilities` first: `CanPlaceBlock`, `CanUpdateSign`, `CanEditBook`, `CanRenameItem`, `CanSpectatorTeleport`, `CanSubmitDialog` and the rest are per-version booleans. See [era gating](../concepts/era-gating.md).
 
 `ConnectAsync` makes no reconnect decision at all; that is `UmpkClientSupervisor`'s job. `ReconnectPolicy` has `MaxAttempts`, `InitialDelay`, `MaxDelay`, `BackoffFactor` and a `ShouldRetry` predicate over the `DisconnectInfo`; `ReconnectPolicy.IsRetryable` is the pure decision the supervisor applies, and it is public so a host can reuse it.
 

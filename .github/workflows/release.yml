@@ -3,12 +3,21 @@ name: Release
 on:
   push:
     tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing annotated release tag to publish"
+        required: true
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.release_tag || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -17,11 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     outputs:
+      tag: ${{ steps.version.outputs.tag }}
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ env.RELEASE_TAG }}
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.401
@@ -29,25 +40,27 @@ jobs:
         id: version
         shell: bash
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
             echo "Tag must be a SemVer release tag such as v0.9.0 or v1.0.0-rc.1" >&2
             exit 1
           fi
-          if [[ "$(git cat-file -t "$GITHUB_REF_NAME")" != "tag" ]]; then
+          git fetch --force origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG" "refs/heads/master:refs/remotes/origin/master"
+          if [[ "$(git cat-file -t "refs/tags/$RELEASE_TAG")" != "tag" ]]; then
             echo "Release tags must be annotated tags" >&2
             exit 1
           fi
-          release_commit=$(git rev-list -n 1 "$GITHUB_REF_NAME")
+          release_commit=$(git rev-list -n 1 "refs/tags/$RELEASE_TAG")
           if ! git merge-base --is-ancestor "$release_commit" origin/master; then
             echo "Release tag must point to a commit on master" >&2
             exit 1
           fi
-          version="${GITHUB_REF_NAME#v}"
+          version="${RELEASE_TAG#v}"
           project_version=$(dotnet msbuild src/Umpk/Umpk.csproj -nologo -getProperty:Version)
           if [[ "$project_version" != "$version" ]]; then
-            echo "Tag $GITHUB_REF_NAME does not match Directory.Build.props Version $project_version" >&2
+            echo "Tag $RELEASE_TAG does not match Directory.Build.props Version $project_version" >&2
             exit 1
           fi
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - run: dotnet restore UMPK.sln
       - run: dotnet build UMPK.sln --no-restore -c Release
@@ -125,17 +138,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build-and-pack.outputs.tag }}
         shell: bash
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             for asset in artifacts/packages/*; do
               asset_name="${asset##*/}"
-              if gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name' | grep -Fxq "$asset_name"; then
+              if gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | grep -Fxq "$asset_name"; then
                 echo "Release asset already exists: $asset_name"
               else
-                gh release upload "$GITHUB_REF_NAME" "$asset"
+                gh release upload "$RELEASE_TAG" "$asset"
               fi
             done
           else
-            gh release create "$GITHUB_REF_NAME" artifacts/packages/* --verify-tag --generate-notes --title "UMPK ${{ needs.build-and-pack.outputs.version }}"
+            gh release create "$RELEASE_TAG" artifacts/packages/* --verify-tag --generate-notes --title "UMPK ${{ needs.build-and-pack.outputs.version }}"
           fi

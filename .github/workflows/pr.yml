@@ -193,5 +193,4 @@ jobs:
           PY
         env:
           UMPK_AOT_BINARY: ${{ github.workspace }}/publish/minimalbot/MinimalBot
-      # The live-server leg stays out: nightly.yml's jar provisioning is a stub until Q3, so there is
-      # nothing for a published binary to dial. It joins this job when that hook is made real.
+      # The live-server leg stays out because CI does not provision vanilla server jars.

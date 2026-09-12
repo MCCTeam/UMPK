@@ -39,7 +39,7 @@ Per-state physics fields (friction, speed factor, jump factor, fluid state) are 
 
 ## Documentation and tooling gaps
 
-Continuous integration publishes the `MinimalBot` sample with `PublishAot`, enforces a 24 MiB binary budget, and runs the published binary against committed corpus frames and an in-memory server. The nightly live-server matrix is still partly stubbed: server jar provisioning is not implemented, so those legs skip rather than fail.
+Continuous integration publishes the `MinimalBot` sample with `PublishAot`, enforces a 24 MiB binary budget, and runs the published binary against committed corpus frames and an in-memory server. CI does not run the live-server matrix because it does not provision vanilla server jars.
 
 XML documentation warnings are suppressed repository-wide (`CS1591`), so a missing doc comment on a public member does not fail the build the way other warnings do.
 

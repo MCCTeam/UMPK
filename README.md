@@ -131,6 +131,7 @@ The [package overview](docs/packages/overview.md) explains each library and its 
 
 | Item | Plan |
 | --- | --- |
+| Integration Tests on real Minecraft servers | Run automated integration tests against real vanilla Minecraft servers. |
 | Java 1.7.2 | Add protocol 4 data, codecs, fixtures, and live tests. |
 | Java 1.7.4 | Add its version mapping and compare its protocol behavior with vanilla. |
 | Java 1.7.10 | Add protocol 5 data, codecs, fixtures, and live tests. |

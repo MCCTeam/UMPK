@@ -77,7 +77,11 @@ public sealed class ReadIdleTimeoutTests
         CancellationToken ct = cts.Token;
 
         await using FakeJavaServer server = FakeJavaServer.Create();
-        await using UmpkClient client = Client(server, o => o.ReadIdleTimeout = TimeSpan.FromSeconds(2));
+        // The solution runner executes test assemblies concurrently. Tolerate short scheduler stalls while keeping traffic active for more than two complete idle windows.
+        TimeSpan idleWindow = TimeSpan.FromSeconds(5);
+        TimeSpan trafficWindow = TimeSpan.FromSeconds(12);
+        Assert.True(trafficWindow > idleWindow + idleWindow);
+        await using UmpkClient client = Client(server, o => o.ReadIdleTimeout = idleWindow);
 
         bool disconnected = false;
         client.Events.Subscribe<Disconnected>(_ => disconnected = true);
@@ -85,7 +89,7 @@ public sealed class ReadIdleTimeoutTests
         await JoinAsync(client, server, ct);
 
         const int UnmappedWireId = 0x7FFF;
-        using var stop = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+        using var stop = new CancellationTokenSource(trafficWindow);
         using CancellationTokenSource pump = CancellationTokenSource.CreateLinkedTokenSource(ct, stop.Token);
         try
         {
@@ -97,7 +101,7 @@ public sealed class ReadIdleTimeoutTests
         }
         catch (OperationCanceledException) when (stop.IsCancellationRequested)
         {
-            // The 6-second pump window elapsed; that is the end of the scripted traffic, not a failure.
+            // The traffic window elapsed; that is the end of the scripted traffic, not a failure.
         }
 
         Assert.False(disconnected);

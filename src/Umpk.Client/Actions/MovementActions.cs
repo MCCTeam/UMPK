@@ -191,10 +191,20 @@ public sealed class MovementActions
 
     /// <summary><see cref="NavigateAsync"/>, verified against an explicit <paramref name="target"/> point; see <see cref="Navigation.Navigator.NavigateVerifiedAsync(Umpk.Pathfinding.Goals.IGoal, Umpk.Geometry.Vec3d, System.Threading.CancellationToken)"/> for why the target cannot be derived from the goal alone.</summary>
     public Task<Navigation.MoveResult> NavigateVerifiedAsync(
-        Umpk.Pathfinding.Goals.IGoal goal, Vec3d target, CancellationToken ct = default)
+        Umpk.Pathfinding.Goals.IGoal goal, Vec3d target, CancellationToken ct)
     {
         Navigation.Navigator nav = _navigator()
             ?? throw new FeatureDisabledException("Pathfinding");
         return nav.NavigateVerifiedAsync(goal, target, ct);
+    }
+
+    /// <summary><see cref="NavigateVerifiedAsync(Umpk.Pathfinding.Goals.IGoal, Vec3d, CancellationToken)"/> planned under caller-supplied options, for a caller that needs limits the defaults refuse (see <see cref="Umpk.Pathfinding.PathfinderOptions.UnsafeFalls"/>).</summary>
+    public Task<Navigation.MoveResult> NavigateVerifiedAsync(
+        Umpk.Pathfinding.Goals.IGoal goal, Vec3d target, Umpk.Pathfinding.PathfinderOptions options, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        Navigation.Navigator nav = _navigator()
+            ?? throw new FeatureDisabledException("Pathfinding");
+        return nav.NavigateVerifiedAsync(goal, target, options, ct);
     }
 }

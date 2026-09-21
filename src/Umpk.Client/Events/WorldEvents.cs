@@ -14,6 +14,12 @@ public sealed record BlockChanged(BlockPos Position, int BlockStateId) : IClient
 /// <summary>Raised when the world time changes.</summary>
 public sealed record TimeChanged(long WorldAge, long TimeOfDay) : IClientEvent;
 
+/// <summary>Raised when the server's reported rain level or raining flag changes (game events 1, 2 and 7).</summary>
+public sealed record RainLevelChanged(float Level, bool Raining) : IClientEvent;
+
+/// <summary>Raised when the server's reported thunder level changes (game event 8).</summary>
+public sealed record ThunderLevelChanged(float Level) : IClientEvent;
+
 /// <summary>Raised when the world border state changes.</summary>
 public sealed record WorldBorderChanged : IClientEvent;
 

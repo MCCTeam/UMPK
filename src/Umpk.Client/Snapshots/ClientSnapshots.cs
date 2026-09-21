@@ -131,6 +131,10 @@ public sealed class ClientSnapshots
     public Task<BlockSnapshot> BlockAsync(BlockPos position, CancellationToken ct = default) =>
         _client.InvokeAsync(client => ReadBlock(client.State.World, position), ct);
 
+    /// <summary>Snapshots the server-reported weather (rain/thunder levels and the raining flag). Requires the Terrain feature.</summary>
+    public Task<WeatherSnapshot> WeatherAsync(CancellationToken ct = default) =>
+        _client.InvokeAsync(client => WeatherSnapshot.Project(client.State.World), ct);
+
     /// <summary>Samples the top-down surface of a rectangular XZ region in one session-loop read; see <see cref="SurfaceRegionSnapshot.Sample"/>. Requires the Terrain feature.</summary>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="width"/> or <paramref name="length"/> is not positive.</exception>
     public Task<SurfaceRegionSnapshot> SurfaceRegionAsync(

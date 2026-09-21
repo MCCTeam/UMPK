@@ -80,7 +80,7 @@ Umpk.Client.Actions.MovementActions.MoveToAsync(Umpk.Geometry.Vec3d target, Syst
 Umpk.Client.Actions.MovementActions.MoveToVerifiedAsync(Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
 Umpk.Client.Actions.MovementActions.MoveToVerifiedAsync(Umpk.Geometry.Vec3d target, Umpk.Pathfinding.PathfinderOptions! options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
 Umpk.Client.Actions.MovementActions.NavigateAsync(Umpk.Pathfinding.Goals.IGoal! goal, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
-Umpk.Client.Actions.MovementActions.NavigateVerifiedAsync(Umpk.Pathfinding.Goals.IGoal! goal, Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
+Umpk.Client.Actions.MovementActions.NavigateVerifiedAsync(Umpk.Pathfinding.Goals.IGoal! goal, Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
 Umpk.Client.Actions.MovementActions.SendPositionAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Umpk.Client.Actions.MovementActions.SetRotation(float yaw, float pitch) -> void
 Umpk.Client.Actions.MovementActions.SetRotationAsync(float yaw, float pitch, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
@@ -1378,10 +1378,8 @@ Umpk.Client.Snapshots.EntitySnapshot
 Umpk.Client.Snapshots.EntitySnapshot.<Clone>$() -> Umpk.Client.Snapshots.EntitySnapshot!
 Umpk.Client.Snapshots.EntitySnapshot.CustomName.get -> Umpk.Text.Component?
 Umpk.Client.Snapshots.EntitySnapshot.CustomName.init -> void
-Umpk.Client.Snapshots.EntitySnapshot.Deconstruct(out int Id, out System.Guid Uuid, out Umpk.Identifier TypeId, out Umpk.Geometry.Vec3d Position, out Umpk.Geometry.Vec3d Velocity, out float Yaw, out float Pitch, out float HeadYaw, out bool OnGround, out Umpk.Game.Entities.EntityPose Pose, out Umpk.Text.Component? CustomName, out string? PlayerName, out System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Entities.EquipmentSlot, Umpk.Game.Items.ItemStack!>! Equipment, out System.Collections.Generic.IReadOnlyList<Umpk.Client.Snapshots.EffectSnapshot!>! Effects, out System.Collections.Generic.IReadOnlyList<int>! PassengerIds, out int? VehicleId) -> void
 Umpk.Client.Snapshots.EntitySnapshot.Effects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Client.Snapshots.EffectSnapshot!>!
 Umpk.Client.Snapshots.EntitySnapshot.Effects.init -> void
-Umpk.Client.Snapshots.EntitySnapshot.EntitySnapshot(int Id, System.Guid Uuid, Umpk.Identifier TypeId, Umpk.Geometry.Vec3d Position, Umpk.Geometry.Vec3d Velocity, float Yaw, float Pitch, float HeadYaw, bool OnGround, Umpk.Game.Entities.EntityPose Pose, Umpk.Text.Component? CustomName, string? PlayerName, System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Entities.EquipmentSlot, Umpk.Game.Items.ItemStack!>! Equipment, System.Collections.Generic.IReadOnlyList<Umpk.Client.Snapshots.EffectSnapshot!>! Effects, System.Collections.Generic.IReadOnlyList<int>! PassengerIds, int? VehicleId) -> void
 Umpk.Client.Snapshots.EntitySnapshot.Equals(Umpk.Client.Snapshots.EntitySnapshot? other) -> bool
 Umpk.Client.Snapshots.EntitySnapshot.Equipment.get -> System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Entities.EquipmentSlot, Umpk.Game.Items.ItemStack!>!
 Umpk.Client.Snapshots.EntitySnapshot.Equipment.init -> void
@@ -2443,3 +2441,52 @@ static readonly Umpk.Client.Snapshots.SurfaceColumn.Unloaded -> Umpk.Client.Snap
 ~override Umpk.Client.Snapshots.RecipeBookFlags.ToString() -> string
 ~override Umpk.Client.State.WorldSpawnPoint.Equals(object obj) -> bool
 ~override Umpk.Client.State.WorldSpawnPoint.ToString() -> string
+override Umpk.Client.Events.RainLevelChanged.Equals(object? obj) -> bool
+override Umpk.Client.Events.RainLevelChanged.GetHashCode() -> int
+override Umpk.Client.Events.RainLevelChanged.ToString() -> string!
+override Umpk.Client.Events.ThunderLevelChanged.Equals(object? obj) -> bool
+override Umpk.Client.Events.ThunderLevelChanged.GetHashCode() -> int
+override Umpk.Client.Events.ThunderLevelChanged.ToString() -> string!
+override Umpk.Client.Snapshots.WeatherSnapshot.Equals(object? obj) -> bool
+override Umpk.Client.Snapshots.WeatherSnapshot.GetHashCode() -> int
+override Umpk.Client.Snapshots.WeatherSnapshot.ToString() -> string!
+static Umpk.Client.Events.RainLevelChanged.operator !=(Umpk.Client.Events.RainLevelChanged? left, Umpk.Client.Events.RainLevelChanged? right) -> bool
+static Umpk.Client.Events.RainLevelChanged.operator ==(Umpk.Client.Events.RainLevelChanged? left, Umpk.Client.Events.RainLevelChanged? right) -> bool
+static Umpk.Client.Events.ThunderLevelChanged.operator !=(Umpk.Client.Events.ThunderLevelChanged? left, Umpk.Client.Events.ThunderLevelChanged? right) -> bool
+static Umpk.Client.Events.ThunderLevelChanged.operator ==(Umpk.Client.Events.ThunderLevelChanged? left, Umpk.Client.Events.ThunderLevelChanged? right) -> bool
+static Umpk.Client.Snapshots.WeatherSnapshot.operator !=(Umpk.Client.Snapshots.WeatherSnapshot? left, Umpk.Client.Snapshots.WeatherSnapshot? right) -> bool
+static Umpk.Client.Snapshots.WeatherSnapshot.operator ==(Umpk.Client.Snapshots.WeatherSnapshot? left, Umpk.Client.Snapshots.WeatherSnapshot? right) -> bool
+static Umpk.Client.Snapshots.WeatherSnapshot.Project(Umpk.Game.World.World! world) -> Umpk.Client.Snapshots.WeatherSnapshot!
+Umpk.Client.Actions.MovementActions.NavigateVerifiedAsync(Umpk.Pathfinding.Goals.IGoal! goal, Umpk.Geometry.Vec3d target, Umpk.Pathfinding.PathfinderOptions! options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
+Umpk.Client.Events.RainLevelChanged
+Umpk.Client.Events.RainLevelChanged.<Clone>$() -> Umpk.Client.Events.RainLevelChanged!
+Umpk.Client.Events.RainLevelChanged.Deconstruct(out float Level, out bool Raining) -> void
+Umpk.Client.Events.RainLevelChanged.Equals(Umpk.Client.Events.RainLevelChanged? other) -> bool
+Umpk.Client.Events.RainLevelChanged.Level.get -> float
+Umpk.Client.Events.RainLevelChanged.Level.init -> void
+Umpk.Client.Events.RainLevelChanged.Raining.get -> bool
+Umpk.Client.Events.RainLevelChanged.Raining.init -> void
+Umpk.Client.Events.RainLevelChanged.RainLevelChanged(float Level, bool Raining) -> void
+Umpk.Client.Events.ThunderLevelChanged
+Umpk.Client.Events.ThunderLevelChanged.<Clone>$() -> Umpk.Client.Events.ThunderLevelChanged!
+Umpk.Client.Events.ThunderLevelChanged.Deconstruct(out float Level) -> void
+Umpk.Client.Events.ThunderLevelChanged.Equals(Umpk.Client.Events.ThunderLevelChanged? other) -> bool
+Umpk.Client.Events.ThunderLevelChanged.Level.get -> float
+Umpk.Client.Events.ThunderLevelChanged.Level.init -> void
+Umpk.Client.Events.ThunderLevelChanged.ThunderLevelChanged(float Level) -> void
+Umpk.Client.Snapshots.ClientSnapshots.WeatherAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Client.Snapshots.WeatherSnapshot!>!
+Umpk.Client.Snapshots.EntitySnapshot.CarriedItem.get -> Umpk.Game.Items.ItemStack?
+Umpk.Client.Snapshots.EntitySnapshot.CarriedItem.init -> void
+Umpk.Client.Snapshots.EntitySnapshot.Deconstruct(out int Id, out System.Guid Uuid, out Umpk.Identifier TypeId, out Umpk.Geometry.Vec3d Position, out Umpk.Geometry.Vec3d Velocity, out float Yaw, out float Pitch, out float HeadYaw, out bool OnGround, out Umpk.Game.Entities.EntityPose Pose, out Umpk.Text.Component? CustomName, out string? PlayerName, out System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Entities.EquipmentSlot, Umpk.Game.Items.ItemStack!>! Equipment, out System.Collections.Generic.IReadOnlyList<Umpk.Client.Snapshots.EffectSnapshot!>! Effects, out System.Collections.Generic.IReadOnlyList<int>! PassengerIds, out int? VehicleId, out Umpk.Game.Items.ItemStack? CarriedItem) -> void
+Umpk.Client.Snapshots.EntitySnapshot.EntitySnapshot(int Id, System.Guid Uuid, Umpk.Identifier TypeId, Umpk.Geometry.Vec3d Position, Umpk.Geometry.Vec3d Velocity, float Yaw, float Pitch, float HeadYaw, bool OnGround, Umpk.Game.Entities.EntityPose Pose, Umpk.Text.Component? CustomName, string? PlayerName, System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Entities.EquipmentSlot, Umpk.Game.Items.ItemStack!>! Equipment, System.Collections.Generic.IReadOnlyList<Umpk.Client.Snapshots.EffectSnapshot!>! Effects, System.Collections.Generic.IReadOnlyList<int>! PassengerIds, int? VehicleId, Umpk.Game.Items.ItemStack? CarriedItem = null) -> void
+Umpk.Client.Snapshots.WeatherSnapshot
+Umpk.Client.Snapshots.WeatherSnapshot.<Clone>$() -> Umpk.Client.Snapshots.WeatherSnapshot!
+Umpk.Client.Snapshots.WeatherSnapshot.Deconstruct(out float RainLevel, out float ThunderLevel, out bool IsRaining) -> void
+Umpk.Client.Snapshots.WeatherSnapshot.Equals(Umpk.Client.Snapshots.WeatherSnapshot? other) -> bool
+Umpk.Client.Snapshots.WeatherSnapshot.IsRaining.get -> bool
+Umpk.Client.Snapshots.WeatherSnapshot.IsRaining.init -> void
+Umpk.Client.Snapshots.WeatherSnapshot.RainLevel.get -> float
+Umpk.Client.Snapshots.WeatherSnapshot.RainLevel.init -> void
+Umpk.Client.Snapshots.WeatherSnapshot.ThunderLevel.get -> float
+Umpk.Client.Snapshots.WeatherSnapshot.ThunderLevel.init -> void
+Umpk.Client.Snapshots.WeatherSnapshot.WeatherSnapshot(float RainLevel, float ThunderLevel, bool IsRaining) -> void

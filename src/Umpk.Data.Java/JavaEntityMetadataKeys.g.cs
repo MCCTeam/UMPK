@@ -18,7 +18,7 @@ public sealed partial class JavaEntityMetadataKeys
         107 or 108 or 109 or 110 => Band107,
         210 or 315 or 316 or 335 or 338 or 340 or 393 or 401 or 404 => Band210,
         477 or 480 or 485 or 490 or 498 or 573 or 575 or 578 or 735 or 736 or 751 or 753 or 754 => Band477,
-        755 or 756 or 757 or 758 or 759 or 760 or 761 or 762 or 763 or 764 or 765 or 766 or 767 or 768 or 769 or 770 or 771 or 772 or 773 or 774 or 775 or 776 => Band755,
+        755 or 756 or 757 or 758 or 759 or 760 or 761 or 762 or 763 or 764 or 765 or 766 or 767 or 768 or 769 or 770 or 771 or 772 or 773 or 774 or 775 or 776 or 777 => Band755,
         _ => throw Unsupported(protocol),
     };
 
@@ -85,7 +85,7 @@ public sealed partial class JavaEntityMetadataKeys
             new(EntityMetadataKeys.ArrowCount, 11),
         ]);
 
-    /// <summary>Protocols 755 through 776 (1.17 through 26.2).</summary>
+    /// <summary>Protocols 755 through 777 (1.17 through 26.3).</summary>
     private static JavaEntityMetadataKeys Band755 { get; } = new(
         8,
         [

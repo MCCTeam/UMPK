@@ -211,7 +211,7 @@ internal sealed class ChatApplier : IApplier
             }
         }
 
-        // The server's chat filter verdict for this message. Present on protocols 760-776; protocol 759 carries no mask field at all, so FilterType is 0 there and this yields PassThrough.
+        // The server's chat filter verdict for this message. Present on protocols 760-777; protocol 759 carries no mask field at all, so FilterType is 0 there and this yields PassThrough.
         Protocol.Java.Signing.ChatFilterMask mask =
             Protocol.Java.Signing.ChatFilterMask.Read(packet.FilterType, packet.FilterBits);
 
@@ -242,7 +242,7 @@ internal sealed class ChatApplier : IApplier
             return;
         }
 
-        // From 1.19 the server sends the bare body and leaves the client to compose the line, so the sender name has to be applied here. Skipping it made every inbound player line render as the body alone on protocols 759-776, where 754 and older still showed "<name> body" because the pre-1.19 server sent an already-composed component. Which decoration to apply is the server's own chat_type registry when it resolves the id, and the default chat.type.text when it does not. See ChatTypeDecoration.
+        // From 1.19 the server sends the bare body and leaves the client to compose the line, so the sender name has to be applied here. Skipping it made every inbound player line render as the body alone on protocols 759-777, where 754 and older still showed "<name> body" because the pre-1.19 server sent an already-composed component. Which decoration to apply is the server's own chat_type registry when it resolves the id, and the default chat.type.text when it does not. See ChatTypeDecoration.
         int chatType = Internal.ChatTypeDecoration.ToRegistryId(packet.ChatTypeId, context.Version.Version.Protocol);
         await context.PublishAsync(new ChatMessageReceived(
             Internal.ChatTypeDecoration.Decorate(

@@ -365,8 +365,14 @@ public sealed class InteractionActions
             ct).AsTask();
 
     /// <summary>Swings the given arm.</summary>
+    /// <remarks>26.3 removes the swing-arm send in favour of the handless punch: when the session binds punch, both hands send it (the packet carries no hand to choose with); older eras keep the hand-carrying swing. The branch reads the bound outbound table, never a protocol number.</remarks>
     public Task SwingAsync(Hand hand = Hand.Main, CancellationToken ct = default)
-        => _sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct).AsTask();
+    {
+        if (_services.Wire.CanSendPlay(EntityPackets.Serverbound.Punch))
+            return _sink.SendAsync(new ServerboundPunchPacket(), ct).AsTask();
+
+        return _sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct).AsTask();
+    }
 
     /// <summary>Updates the text of the sign at <paramref name="position"/> (the sign whose editor the server opened). The <paramref name="isFrontText"/> flag selects the front/back side on 1.20+ and is ignored on older versions. Lines beyond four are dropped and missing lines are sent empty.</summary>
     /// <exception cref="ActionNotSupportedException">The negotiated version cannot carry <c>sign_update</c>; ask <see cref="ClientActionCapabilities.CanUpdateSign"/> to branch instead of catching. Protocol 47 registers the identifier but leaves it a deliberate marker (its lines are JSON components), so this is one of the cases an identifier lookup gets wrong.</exception>

@@ -21,7 +21,7 @@ public sealed class PlayerChatCodecTests
 
     /// <summary>Every protocol in the modern inbound player-chat band.</summary>
     public static TheoryData<int> ModernBand =>
-        [764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776];
+        [764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777];
 
     private static byte[] Sig(byte fill)
     {
@@ -72,15 +72,16 @@ public sealed class PlayerChatCodecTests
         Assert.Equal(frame, bound.Encode(decoded));
     }
 
-    // 770-776 (1.21.5 - 26.2): leading globalIndex VarInt, modern-interaction NBT components.
+    // 770-777 (1.21.5 - 26.3): leading globalIndex VarInt, modern-interaction NBT components.
 
-    /// <summary>1.21.5 prefixed the packet with a <c>globalIndex</c> VarInt and moved components to the modern interaction era. The layout remains byte-identical through 26.2, so one codec covers 770-776. A codec bound one era low would read the globalIndex as the first UUID byte and desync the whole frame.</summary>
+    /// <summary>1.21.5 prefixed the packet with a <c>globalIndex</c> VarInt and moved components to the modern interaction era. The layout remains byte-identical through 26.3, so one codec covers 770-777. A codec bound one era low would read the globalIndex as the first UUID byte and desync the whole frame.</summary>
     [Theory]
     [InlineData(770)]
     [InlineData(773)]
     [InlineData(775)]
     [InlineData(776)]
-    public void PlayerChat_770_To_776_ModernWireLayout_DecodesFrameExact_AndReEncodes(int protocol)
+    [InlineData(777)]
+    public void PlayerChat_770_To_777_ModernWireLayout_DecodesFrameExact_AndReEncodes(int protocol)
     {
         byte[] frame = BuildFrame(hasGlobalIndex: true, WriteModernComponent);
 

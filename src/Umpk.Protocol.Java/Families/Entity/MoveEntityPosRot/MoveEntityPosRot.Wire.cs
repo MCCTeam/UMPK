@@ -40,12 +40,37 @@ internal static partial class EntityMoveCodecs
             static (ref PacketReader r, PacketCodecContext _) =>
                 new ClientboundMoveEntityPosRotPacket(r.ReadVarInt(), r.ReadShort(), r.ReadShort(), r.ReadShort(), r.ReadAngle(), r.ReadAngle(), r.ReadBool()));
 
+    /// <summary>26.3 relative move + rotation (protocol 777): VarInt id, stepped deltas, then byte yaw and pitch.</summary>
+    public static readonly PacketCodec<ClientboundMoveEntityPosRotPacket> MoveEntityPosRotV26_3 =
+        PacketCodec<ClientboundMoveEntityPosRotPacket>.Of(
+            static (ref PacketWriter w, ClientboundMoveEntityPosRotPacket p, PacketCodecContext _) =>
+            {
+                w.WriteVarInt(p.EntityId);
+                WriteSteppedDeltas(ref w, p.Steps, p.DeltaX, p.DeltaY, p.DeltaZ, p.OnGround);
+                w.WriteAngle(p.Yaw);
+                w.WriteAngle(p.Pitch);
+            },
+            static (ref PacketReader r, PacketCodecContext _) =>
+            {
+                int id = r.ReadVarInt();
+                (IReadOnlyList<EntityMoveStep> steps, short dx, short dy, short dz, bool onGround) =
+                    ReadSteppedDeltas(ref r);
+                float yaw = r.ReadAngle();
+                float pitch = r.ReadAngle();
+                return new ClientboundMoveEntityPosRotPacket(id, dx, dy, dz, yaw, pitch, onGround)
+                {
+                    Steps = steps,
+                };
+            },
+            WireShape.Of("varint,varint,varint*(varint,short,short,short),angle,angle"));
+
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareMoveEntityPosRot(PacketBindings bindings)
     {
         bindings.Packet(EntityPackets.Clientbound.MoveEntityPosRot)
             .From(JavaProtocols.V1_8, EntityMoveCodecs.MoveEntityPosRotV1_8)
             .From(JavaProtocols.V1_9, EntityMoveCodecs.MoveEntityPosRotV1_9)
+            .From(JavaProtocols.V26_3, EntityMoveCodecs.MoveEntityPosRotV26_3)
             .AliasedAs(Identifier.Minecraft("move_entity_position_rotation"));
     }
 }

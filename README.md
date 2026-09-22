@@ -26,7 +26,7 @@ UMPK supports 49 Java protocol revisions across 72 named Minecraft releases. Pro
 
 ## Supported Minecraft versions
 
-UMPK supports Java Edition play protocols from 1.8 through 26.2.
+UMPK supports Java Edition play protocols from 1.8 through 26.3.
 
 | Family | Supported releases |
 | --- | --- |
@@ -53,7 +53,7 @@ Minecraft versions earlier than 1.8 are not supported. The legacy status ping ca
 Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), then add the complete client stack:
 
 ```bash
-dotnet add package Umpk --version 0.9.0-beta.1
+dotnet add package Umpk --version 0.9.0-beta.2
 ```
 
 You can instead install focused packages such as `Umpk.Protocol.Java`, `Umpk.Nbt`, or `Umpk.Text`. To build the source:
@@ -99,7 +99,7 @@ flowchart LR
     Runtime -->|uses| Protocol[Protocol foundations<br/>Protocol.Java, Nbt, Core]
     Runtime -->|uses| Generated[Generated version data<br/>Data.Java, Data.Lang]
 
-    Dataset[(data/java<br/>49 protocol datasets)] --> DataGen[Umpk.DataGen]
+    Dataset[(data/java<br/>50 protocol datasets)] --> DataGen[Umpk.DataGen]
     DataGen -->|emits| Generated
     Generated -->|binds codecs and registries| Protocol
     Protocol <-->|Minecraft Java protocol| Server[Minecraft Java server]

@@ -17,7 +17,7 @@ public class GeneratedCatalogTests
             [JavaVersions.V26_2],
         ];
 
-    // The sampled versions plus the 764-767 and 768-775 versions: every registered packet in each of these descriptors must resolve a codec or a marker, and every descriptor must build.
+    // The sampled versions plus the 764-767 and 768-777 versions: every registered packet in each of these descriptors must resolve a codec or a marker, and every descriptor must build.
     public static IEnumerable<object[]> AllVersions =>
     [
         [JavaVersions.V1_8],
@@ -28,7 +28,7 @@ public class GeneratedCatalogTests
         [JavaVersions.V1_20_2], [JavaVersions.V1_20_3], [JavaVersions.V1_20_5], [JavaVersions.V1_21],
         [JavaVersions.V1_21_2], [JavaVersions.V1_21_4], [JavaVersions.V1_21_5],
         [JavaVersions.V1_21_6], [JavaVersions.V1_21_7], [JavaVersions.V1_21_9], [JavaVersions.V1_21_11],
-        [JavaVersions.V26_1], [JavaVersions.V26_2],
+        [JavaVersions.V26_1], [JavaVersions.V26_2], [JavaVersions.V26_3],
     ];
 
     [Theory]
@@ -60,11 +60,11 @@ public class GeneratedCatalogTests
         int distinctProtocols = JavaVersions.All.Select(v => v.Version.Protocol).Distinct().Count();
         Assert.Equal(distinctProtocols, JavaVersions.All.Count);
 
-        // 49 distinct protocols: 47/770/776, the pre-flattening range 107-340 (1.9-1.12.2), the 1.13.x protocols 393/401/404, the flattening era 477/480/485/490/498 (1.14.x) + 573/575/578 (1.15.x), netty-modern 735-758 (1.16-1.18.2), and 759-763, 764-767, 768-775.
-        Assert.Equal(49, JavaVersions.All.Count);
+        // 50 distinct protocols: 47/770/776, the pre-flattening range 107-340 (1.9-1.12.2), the 1.13.x protocols 393/401/404, the flattening era 477/480/485/490/498 (1.14.x) + 573/575/578 (1.15.x), netty-modern 735-758 (1.16-1.18.2), and 759-763, 764-767, 768-777.
+        Assert.Equal(50, JavaVersions.All.Count);
 
         // Every supported protocol resolves by number.
-        foreach (int protocol in new[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776 })
+        foreach (int protocol in new[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777 })
         {
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out _), $"protocol {protocol} must resolve");
         }
@@ -77,7 +77,7 @@ public class GeneratedCatalogTests
                      "1.13", "1.13.1", "1.13.2",
                      "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1",
                      "1.21.2", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8",
-                     "1.21.9", "1.21.10", "1.21.11", "26.1", "26.2",
+                     "1.21.9", "1.21.10", "1.21.11", "26.1", "26.2", "26.3",
                  })
         {
             Assert.True(JavaVersions.TryGetByName(name, out _), name);

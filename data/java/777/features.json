@@ -1,0 +1,33 @@
+{
+  "_provenance": {
+    "version": "26.3",
+    "protocol": 777,
+    "kind": "curated",
+    "note": "feature toggles; verified against 26.3 decompiled source (config phase, bundles, v3 chat signing, hashed stacks, separate light packet, DYE_COLOR metadata id 43)"
+  },
+  "flags": {
+    "configurationPhase": true,
+    "bundles": true,
+    "chatSigning": "v3",
+    "nbtWireFormat": "javaRootTagOrString",
+    "blockPosLayout": "modern",
+    "itemStackFormat": "hashed",
+    "hashedSlots": true,
+    "lightInChunkPacket": false,
+    "dimensionEncoding": "registryHolder",
+    "metadataTerminator": "0xff",
+    "fluidMovement": "swimmingUpdate",
+    "waterTravel": "sprintAware",
+    "waterClimbBump": true,
+    "elytra": true,
+    "swimPose": true,
+    "crawlPose": true,
+    "perSectionFluidCounts": true,
+    "argumentTypeEra": "v26_3"
+  },
+  "physics": {
+    "poseBoundingBoxEra": "modern",
+    "defaultFriction": 0.6,
+    "waterFriction": 0.8
+  }
+}

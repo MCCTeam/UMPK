@@ -1,0 +1,235 @@
+{
+  "_provenance": {
+    "version": "26.3",
+    "protocol": 777,
+    "mapping_source": "vineflower-direct",
+    "sources": [
+      "net/minecraft/network/syncher/EntityDataSerializers.java"
+    ],
+    "kind": "extracted",
+    "codec_key_note": "candidate era V26_2; DYE_COLOR (id 43) appended by 26.3 as EntityDataSerializer.forValueType(DyeColor.STREAM_CODEC), a VarInt dye id"
+  },
+  "terminator": "0xff",
+  "serializers": [
+    {
+      "id": 0,
+      "field": "BYTE",
+      "codec": "Byte"
+    },
+    {
+      "id": 1,
+      "field": "INT",
+      "codec": "VarInt"
+    },
+    {
+      "id": 2,
+      "field": "LONG",
+      "codec": "VarLong"
+    },
+    {
+      "id": 3,
+      "field": "FLOAT",
+      "codec": "Float"
+    },
+    {
+      "id": 4,
+      "field": "STRING",
+      "codec": "String"
+    },
+    {
+      "id": 5,
+      "field": "COMPONENT",
+      "codec": "Component"
+    },
+    {
+      "id": 6,
+      "field": "OPTIONAL_COMPONENT",
+      "codec": "OptionalComponent"
+    },
+    {
+      "id": 7,
+      "field": "ITEM_STACK",
+      "codec": "ItemStack"
+    },
+    {
+      "id": 8,
+      "field": "BOOLEAN",
+      "codec": "Boolean"
+    },
+    {
+      "id": 9,
+      "field": "ROTATIONS",
+      "codec": "Rotations"
+    },
+    {
+      "id": 10,
+      "field": "BLOCK_POS",
+      "codec": "BlockPos"
+    },
+    {
+      "id": 11,
+      "field": "OPTIONAL_BLOCK_POS",
+      "codec": "OptionalBlockPos"
+    },
+    {
+      "id": 12,
+      "field": "DIRECTION",
+      "codec": "Direction"
+    },
+    {
+      "id": 13,
+      "field": "OPTIONAL_LIVING_ENTITY_REFERENCE",
+      "codec": "OptionalLivingEntityReference"
+    },
+    {
+      "id": 14,
+      "field": "BLOCK_STATE",
+      "codec": "BlockState"
+    },
+    {
+      "id": 15,
+      "field": "OPTIONAL_BLOCK_STATE",
+      "codec": "OptionalBlockState"
+    },
+    {
+      "id": 16,
+      "field": "PARTICLE",
+      "codec": "Particle"
+    },
+    {
+      "id": 17,
+      "field": "PARTICLES",
+      "codec": "Particles"
+    },
+    {
+      "id": 18,
+      "field": "VILLAGER_DATA",
+      "codec": "VillagerData"
+    },
+    {
+      "id": 19,
+      "field": "OPTIONAL_UNSIGNED_INT",
+      "codec": "OptionalUnsignedInt"
+    },
+    {
+      "id": 20,
+      "field": "POSE",
+      "codec": "Pose"
+    },
+    {
+      "id": 21,
+      "field": "CAT_VARIANT",
+      "codec": "CatVariant"
+    },
+    {
+      "id": 22,
+      "field": "CAT_SOUND_VARIANT",
+      "codec": "CatSoundVariant"
+    },
+    {
+      "id": 23,
+      "field": "COW_VARIANT",
+      "codec": "CowVariant"
+    },
+    {
+      "id": 24,
+      "field": "COW_SOUND_VARIANT",
+      "codec": "CowSoundVariant"
+    },
+    {
+      "id": 25,
+      "field": "WOLF_VARIANT",
+      "codec": "WolfVariant"
+    },
+    {
+      "id": 26,
+      "field": "WOLF_SOUND_VARIANT",
+      "codec": "WolfSoundVariant"
+    },
+    {
+      "id": 27,
+      "field": "FROG_VARIANT",
+      "codec": "FrogVariant"
+    },
+    {
+      "id": 28,
+      "field": "PIG_VARIANT",
+      "codec": "PigVariant"
+    },
+    {
+      "id": 29,
+      "field": "PIG_SOUND_VARIANT",
+      "codec": "PigSoundVariant"
+    },
+    {
+      "id": 30,
+      "field": "CHICKEN_VARIANT",
+      "codec": "ChickenVariant"
+    },
+    {
+      "id": 31,
+      "field": "CHICKEN_SOUND_VARIANT",
+      "codec": "ChickenSoundVariant"
+    },
+    {
+      "id": 32,
+      "field": "ZOMBIE_NAUTILUS_VARIANT",
+      "codec": "ZombieNautilusVariant"
+    },
+    {
+      "id": 33,
+      "field": "OPTIONAL_GLOBAL_POS",
+      "codec": "OptionalGlobalPos"
+    },
+    {
+      "id": 34,
+      "field": "PAINTING_VARIANT",
+      "codec": "PaintingVariant"
+    },
+    {
+      "id": 35,
+      "field": "SNIFFER_STATE",
+      "codec": "SnifferState"
+    },
+    {
+      "id": 36,
+      "field": "ARMADILLO_STATE",
+      "codec": "ArmadilloState"
+    },
+    {
+      "id": 37,
+      "field": "COPPER_GOLEM_STATE",
+      "codec": "CopperGolemState"
+    },
+    {
+      "id": 38,
+      "field": "WEATHERING_COPPER_STATE",
+      "codec": "WeatheringCopperState"
+    },
+    {
+      "id": 39,
+      "field": "VECTOR3",
+      "codec": "Vector3"
+    },
+    {
+      "id": 40,
+      "field": "QUATERNION",
+      "codec": "Quaternion"
+    },
+    {
+      "id": 41,
+      "field": "RESOLVABLE_PROFILE",
+      "codec": "ResolvableProfile"
+    },
+    {
+      "id": 42,
+      "field": "HUMANOID_ARM",
+      "codec": "HumanoidArm"
+    },
+    {
+      "id": 43,
+      "field": "DYE_COLOR",
+      "codec": "DyeColor"
+    }
+  ]
+}

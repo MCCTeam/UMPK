@@ -1,11 +1,11 @@
 ---
 title: "UMPK"
-description: "A .NET 10 library for the Minecraft Java Edition protocol, covering 49 versions from 1.8 to 26.2 in one codebase."
+description: "A .NET 10 library for the Minecraft Java Edition protocol, covering 50 protocol datasets from 1.8 to 26.3 in one codebase."
 sidebar:
   order: 1
 ---
 
-UMPK is a .NET library for talking to Minecraft Java Edition servers. One codebase covers 49 protocol versions, from 1.8 (protocol 47) through 26.2 (protocol 776). There are no per-version forks, no reflection at runtime, and every package is marked AOT compatible.
+UMPK is a .NET library for talking to Minecraft Java Edition servers. One codebase covers 50 protocol datasets, from 1.8 (protocol 47) through 26.3 (protocol 777). There are no per-version forks, no reflection at runtime, and every package is marked AOT compatible.
 
 It is designed for headless clients, protocol tools, and automation applications.
 

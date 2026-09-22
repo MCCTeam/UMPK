@@ -18,7 +18,7 @@ public static partial class UiPackets
     }
 }
 
-/// <summary>Update advancements (770/776): a reset flag, the added advancements (each with an optional DisplayInfo carrying an ItemStack icon), the removed ids, the per-advancement progress maps, and the show-advancements flag. <c>ClientboundUpdateAdvancementsPacket</c>; the only 26.2 delta is the icon's ItemStack era codec.</summary>
+/// <summary>Update advancements (770/776/777): a reset flag, the added advancements (each with an optional DisplayInfo carrying an ItemStack icon), the removed ids, the per-advancement progress maps, and the show-advancements flag. <c>ClientboundUpdateAdvancementsPacket</c>; the only 26.2 delta is the icon's ItemStack era codec, and 26.3 appends tab-position floats to each added element.</summary>
 public sealed record ClientboundUpdateAdvancementsPacket(
     bool Reset,
     IReadOnlyList<AdvancementEntry> Added,

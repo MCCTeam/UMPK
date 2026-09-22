@@ -58,6 +58,7 @@ public static class LiveMatrix
         ("1.21.11", 774),
         ("26.1", 775),
         ("26.2", 776),
+        ("26.3", 777),
     ];
 
     /// <summary>The point releases collapsed onto each tested representative (same protocol, wire-identical). This is documentation of what one leg implicitly covers, not an assertion input.</summary>

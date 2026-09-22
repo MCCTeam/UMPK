@@ -1,6 +1,6 @@
 ---
 title: "Umpk.Data.Java"
-description: "Generated per-protocol tables for 49 protocols, plus the JavaVersions catalog and the JavaGameData accessors."
+description: "Generated per-protocol tables for 50 protocols, plus the JavaVersions catalog and the JavaGameData accessors."
 sidebar:
   order: 6
 ---
@@ -63,7 +63,7 @@ IBlockPushSource push = JavaGameData.BlockPushData(protocol: 770);
 
 ## Things that catch people out
 
-There are 72 version properties but only 49 protocols, and `JavaVersions.All` has 49 entries. `JavaVersions.V1_8_9` and `JavaVersions.V1_8` return the same object, because all ten 1.8.x releases are protocol 47. `TryGetByProtocol` returns the first version in `All` with that protocol number, so `TryGetByProtocol(47, out var v)` gives you a version whose `Version.Name` is `"1.8.9"`, the representative release stored by that descriptor. If you need to report the exact version a server named, keep the server's own string.
+There are 73 version properties but only 50 protocols, and `JavaVersions.All` has 50 entries. `JavaVersions.V1_8_9` and `JavaVersions.V1_8` return the same object, because all ten 1.8.x releases are protocol 47. `TryGetByProtocol` returns the first version in `All` with that protocol number, so `TryGetByProtocol(47, out var v)` gives you a version whose `Version.Name` is `"1.8.9"`, the representative release stored by that descriptor. If you need to report the exact version a server named, keep the server's own string.
 
 `JavaGameData.Registries` does not populate everything. `Attributes` is empty on purpose. `Biomes` and `DimensionTypes` are empty because those are dynamic registries that arrive during the configuration phase at runtime. `Enchantments` is empty on protocols 47 through 404 (no vanilla registries report existed yet) and on 767 and later (vanilla moved enchantments onto the config-phase sync). An empty registry means "cannot be resolved statically", never "no such thing exists".
 
@@ -74,7 +74,7 @@ Every `.g.cs` file is regenerated from `data/java/`, so a hand edit is overwritt
 The generator overwrites every generated output. Start with no uncommitted generated-file changes. To change a table:
 
 1. Edit the file under `data/java/`.
-2. Run `dotnet run --project tools/Umpk.DataGen -- verify --data data/java`. The command must print `verify: OK (49 protocols)`.
+2. Run `dotnet run --project tools/Umpk.DataGen -- verify --data data/java`. The command must print `verify: OK (50 protocols)`.
 3. Run the three-output generation and Git comparison in [the dataset](../concepts/the-dataset.md).
 4. Review every generated-file difference that Git reports.
 5. Run `dotnet build UMPK.sln`. The build must report 0 warnings and 0 errors.

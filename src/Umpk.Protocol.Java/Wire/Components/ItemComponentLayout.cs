@@ -4,7 +4,7 @@ namespace Umpk.Protocol.Java.Codecs;
 
 /// <summary>
 /// Everything one component era decides about its own table, in one named value per era. Keeping these choices together makes a protocol's complete component layout directly observable.
-/// <para>The fields are deliberately NOT collapsed into a single era number. Six of them move at six different releases, and the pair that most invites collapsing must never be collapsed: the id ORDERING (766, 767, 768, 770, 774, 775, 776) and the component PAYLOAD shapes (769, 771, 773, 775, 776) are different axes, and 1.21.6 is the standing proof, since it keeps 1.21.5's ordering byte-for-byte while changing <c>attribute_modifiers</c>. The interaction dialect is a third axis again, moving at 770 alone.</para>
+/// <para>The fields are deliberately NOT collapsed into a single era number. Six of them move at six different releases, and the pair that most invites collapsing must never be collapsed: the id ORDERING (766, 767, 768, 770, 774, 775, 776, 777) and the component PAYLOAD shapes (769, 771, 773, 775, 776, 777) are different axes, and 1.21.6 is the standing proof, since it keeps 1.21.5's ordering byte-for-byte while changing <c>attribute_modifiers</c>. The interaction dialect is a third axis again, moving at 770 alone.</para>
 /// <para>Every instance states every field, including the ones its own builder does not consult, because the value is a fact about the era rather than a switch for a code path: 770 really does carry the four-list <c>custom_model_data</c> and the 1.21.2 payload family, and saying so costs nothing while a <c>false</c> there would be a lie the next reader has to disprove.</para>
 /// </summary>
 /// <param name="Ordering">The era's component id ordering.</param>
@@ -16,6 +16,7 @@ namespace Umpk.Protocol.Java.Codecs;
 /// <param name="ShearableEquippable">771+: <c>equippable</c> gained the <c>canBeSheared</c> + <c>shearingSound</c> tail. Set on the same eras as <paramref name="AttributeDisplay"/> and kept separate from it, because one field is appended to a modifier entry and the other to the equippable record; nothing says the next release moves them together.</param>
 /// <param name="TypedEntityData">773+: <c>profile</c> changed shape, while <c>entity_data</c> and <c>block_entity_data</c> gained a registry type id before the tag. <c>bucket_entity_data</c> did not move with them.</param>
 /// <param name="UnwrappedHolders">775+: <c>damage_resistant</c> became a holder set, and <c>instrument</c> and <c>jukebox_playable</c> lost their holder-or-inline wrapper.</param>
+/// <param name="PotDecorationsStacks">777+: <c>pot_decorations</c> is exactly four optional item-stack templates (back, left, right, front) instead of a counted id list.</param>
 internal readonly record struct ItemComponentLayout(
     string[] Ordering,
     ComponentWireEra Dialect,
@@ -25,7 +26,8 @@ internal readonly record struct ItemComponentLayout(
     bool AttributeDisplay,
     bool ShearableEquippable,
     bool TypedEntityData,
-    bool UnwrappedHolders)
+    bool UnwrappedHolders,
+    bool PotDecorationsStacks = false)
 {
     /// <summary>766 (1.20.5/1.20.6): the first component era.</summary>
     public static ItemComponentLayout V1_20_5 { get; } = Legacy(ComponentIds.V1_20_5);
@@ -65,12 +67,19 @@ internal readonly record struct ItemComponentLayout(
     /// <summary>776 (26.2): the 111-id ordering (<c>sulfur_cube_content</c> at 78), the 26.1 payloads.</summary>
     public static ItemComponentLayout V26_2 { get; } = V26_1 with { Ordering = ComponentIds.V26_2 };
 
+    /// <summary>777 (26.3): its own 122-id ordering (thirteen components added, <c>swing_animation</c> and <c>map_color</c> removed), the 26.1 payloads. New components stay unmodeled until typed: the table reports their identifiers and the compact path raises the packet-scoped fault.</summary>
+    public static ItemComponentLayout V26_3 { get; } = V26_2 with { Ordering = ComponentIds.V26_3, PotDecorationsStacks = true };
+
     /// <inheritdoc />
-    public override string ToString() =>
-        $"ids={WireShapeDigest.Of(Ordering)},{Dialect},{NestedStacks},wideid={(WideIdPayloads ? 1 : 0)}," +
-        $"cmdlist={(ListCustomModelData ? 1 : 0)},attrdisplay={(AttributeDisplay ? 1 : 0)}," +
-        $"shear={(ShearableEquippable ? 1 : 0)},typedentity={(TypedEntityData ? 1 : 0)}," +
-        $"unwrapped={(UnwrappedHolders ? 1 : 0)}";
+    public override string ToString()
+    {
+        string form =
+            $"ids={WireShapeDigest.Of(Ordering)},{Dialect},{NestedStacks},wideid={(WideIdPayloads ? 1 : 0)}," +
+            $"cmdlist={(ListCustomModelData ? 1 : 0)},attrdisplay={(AttributeDisplay ? 1 : 0)}," +
+            $"shear={(ShearableEquippable ? 1 : 0)},typedentity={(TypedEntityData ? 1 : 0)}," +
+            $"unwrapped={(UnwrappedHolders ? 1 : 0)}";
+        return PotDecorationsStacks ? $"{form},potstacks=1" : form;
+    }
 
     private static ItemComponentLayout Legacy(string[] ordering) =>
         new(

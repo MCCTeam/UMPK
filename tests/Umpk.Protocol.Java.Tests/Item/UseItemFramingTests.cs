@@ -26,7 +26,7 @@ public sealed class UseItemFramingTests
     public static readonly int[] SequenceBand = [759, 760, 761, 762, 763, 764, 765, 766];
 
     /// <summary>Every protocol whose use_item is hand + sequence + yRot + xRot.</summary>
-    public static readonly int[] RotationBand = [767, 768, 769, 770, 771, 772, 773, 774, 775, 776];
+    public static readonly int[] RotationBand = [767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777];
 
     /// <summary>The three bands together, read by <c>AllProtocolTableCoverageTests</c>.</summary>
     public static IReadOnlyList<int> Protocols() => [.. HandOnlyBand, .. SequenceBand, .. RotationBand];

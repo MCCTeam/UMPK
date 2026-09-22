@@ -61,6 +61,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.ItemNames,
         775 => global::Umpk.Data.Java.V775.Descriptor.ItemNames,
         776 => global::Umpk.Data.Java.V776.Descriptor.ItemNames,
+        777 => global::Umpk.Data.Java.V777.Descriptor.ItemNames,
         _ => throw Unsupported(protocol, "item-name"),
     };
 
@@ -116,6 +117,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.SoundNames,
         775 => global::Umpk.Data.Java.V775.Descriptor.SoundNames,
         776 => global::Umpk.Data.Java.V776.Descriptor.SoundNames,
+        777 => global::Umpk.Data.Java.V777.Descriptor.SoundNames,
         _ => throw Unsupported(protocol, "sound-event name"),
     };
 
@@ -171,6 +173,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.BlockDefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.BlockDefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.BlockDefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.BlockDefs,
         _ => throw Unsupported(protocol, "block-definition"),
     };
 
@@ -226,6 +229,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.BlockAttrs,
         775 => global::Umpk.Data.Java.V775.Descriptor.BlockAttrs,
         776 => global::Umpk.Data.Java.V776.Descriptor.BlockAttrs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.BlockAttrs,
         _ => throw Unsupported(protocol, "block-attribute"),
     };
 
@@ -281,6 +285,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.EntityNames,
         775 => global::Umpk.Data.Java.V775.Descriptor.EntityNames,
         776 => global::Umpk.Data.Java.V776.Descriptor.EntityNames,
+        777 => global::Umpk.Data.Java.V777.Descriptor.EntityNames,
         _ => throw Unsupported(protocol, "entity-name"),
     };
 
@@ -336,6 +341,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.LegacyObjectEntityNames,
         775 => global::Umpk.Data.Java.V775.Descriptor.LegacyObjectEntityNames,
         776 => global::Umpk.Data.Java.V776.Descriptor.LegacyObjectEntityNames,
+        777 => global::Umpk.Data.Java.V777.Descriptor.LegacyObjectEntityNames,
         _ => throw Unsupported(protocol, "legacy object-entity name"),
     };
 
@@ -391,6 +397,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.MenuDefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.MenuDefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.MenuDefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.MenuDefs,
         _ => throw Unsupported(protocol, "menu-definition"),
     };
 
@@ -446,6 +453,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.CollisionShapes,
         775 => global::Umpk.Data.Java.V775.Descriptor.CollisionShapes,
         776 => global::Umpk.Data.Java.V776.Descriptor.CollisionShapes,
+        777 => global::Umpk.Data.Java.V777.Descriptor.CollisionShapes,
         _ => throw Unsupported(protocol, "collision-shape"),
     };
 
@@ -501,6 +509,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.BlockShapeRefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.BlockShapeRefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.BlockShapeRefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.BlockShapeRefs,
         _ => throw Unsupported(protocol, "block shape-reference"),
     };
 
@@ -556,6 +565,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.BlockPush,
         775 => global::Umpk.Data.Java.V775.Descriptor.BlockPush,
         776 => global::Umpk.Data.Java.V776.Descriptor.BlockPush,
+        777 => global::Umpk.Data.Java.V777.Descriptor.BlockPush,
         _ => throw Unsupported(protocol, "block-push"),
     };
 
@@ -611,6 +621,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.EnchantmentDefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.EnchantmentDefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.EnchantmentDefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.EnchantmentDefs,
         _ => throw Unsupported(protocol, "enchantment-definition"),
     };
 
@@ -666,6 +677,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.MobEffectDefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.MobEffectDefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.MobEffectDefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.MobEffectDefs,
         _ => throw Unsupported(protocol, "mob-effect definition"),
     };
 
@@ -721,6 +733,7 @@ public static partial class JavaGameData
         774 => global::Umpk.Data.Java.V774.Descriptor.AttributeDefs,
         775 => global::Umpk.Data.Java.V775.Descriptor.AttributeDefs,
         776 => global::Umpk.Data.Java.V776.Descriptor.AttributeDefs,
+        777 => global::Umpk.Data.Java.V777.Descriptor.AttributeDefs,
         _ => throw Unsupported(protocol, "attribute-definition"),
     };
 

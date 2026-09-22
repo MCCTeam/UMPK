@@ -772,6 +772,10 @@ Umpk.Protocol.Java.Packets.AdvancementEntry.Id.get -> Umpk.Identifier
 Umpk.Protocol.Java.Packets.AdvancementEntry.Id.init -> void
 Umpk.Protocol.Java.Packets.AdvancementEntry.Value.get -> Umpk.Protocol.Java.Packets.AdvancementNode!
 Umpk.Protocol.Java.Packets.AdvancementEntry.Value.init -> void
+Umpk.Protocol.Java.Packets.AdvancementEntry.PositionX.get -> float?
+Umpk.Protocol.Java.Packets.AdvancementEntry.PositionX.init -> void
+Umpk.Protocol.Java.Packets.AdvancementEntry.PositionY.get -> float?
+Umpk.Protocol.Java.Packets.AdvancementEntry.PositionY.init -> void
 Umpk.Protocol.Java.Packets.AdvancementFrameType
 Umpk.Protocol.Java.Packets.AdvancementFrameType.Challenge = 1 -> Umpk.Protocol.Java.Packets.AdvancementFrameType
 Umpk.Protocol.Java.Packets.AdvancementFrameType.Goal = 2 -> Umpk.Protocol.Java.Packets.AdvancementFrameType
@@ -1000,6 +1004,16 @@ Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.Yaw.get -> float
 Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.Yaw.init -> void
 Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.Z.get -> double
 Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.Z.init -> void
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket!
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.BlockStateId.get -> int
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.BlockStateId.init -> void
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.ClientboundAddTransientBlockPacket(Umpk.Geometry.BlockPos Position, int BlockStateId) -> void
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Deconstruct(out Umpk.Geometry.BlockPos Position, out int BlockStateId) -> void
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Position.get -> Umpk.Geometry.BlockPos
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Position.init -> void
+Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundAnimatePacket
 Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundAnimatePacket!
 Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.Action.get -> byte
@@ -1212,6 +1226,14 @@ Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.Equals(Umpk.Protocol.Java
 Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.Id.get -> int
 Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.Id.init -> void
 Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket!
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.ClientboundConfigPostEffectsPacket(System.Collections.Generic.IReadOnlyList<Umpk.Identifier>! Effects) -> void
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Identifier>! Effects) -> void
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Effects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Identifier>!
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Effects.init -> void
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket
 Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket!
 Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.ClientboundConfigRegistryBlobPacket(Umpk.Nbt.NbtTag! Registries) -> void
@@ -1496,6 +1518,8 @@ Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.EntityId.init -> 
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket? other) -> bool
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.OnGround.get -> bool
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.OnGround.init -> void
+Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Path.get -> Umpk.Protocol.Java.Packets.EntityPositionPath?
+Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Path.init -> void
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Values.get -> Umpk.Protocol.Java.Packets.PositionMoveRotation!
 Umpk.Protocol.Java.Packets.ClientboundEntityPositionSyncPacket.Values.init -> void
@@ -1528,6 +1552,8 @@ Umpk.Protocol.Java.Packets.ClientboundExplodePacket.Particle.get -> Umpk.Protoco
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.Particle.init -> void
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.ParticleSoundTail.get -> byte[]?
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.ParticleSoundTail.init -> void
+Umpk.Protocol.Java.Packets.ClientboundExplodePacket.PlaySound.get -> bool
+Umpk.Protocol.Java.Packets.ClientboundExplodePacket.PlaySound.init -> void
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.Radius.get -> float
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.Radius.init -> void
 Umpk.Protocol.Java.Packets.ClientboundExplodePacket.Sound.get -> Umpk.Protocol.Java.Packets.SoundEventHolder?
@@ -1872,6 +1898,12 @@ Umpk.Protocol.Java.Packets.SlotDisplay.Tag.Name.get -> string!
 Umpk.Protocol.Java.Packets.SlotDisplay.Tag.Name.init -> void
 Umpk.Protocol.Java.Packets.SlotDisplay.Tag.Tag(string! Name) -> void
 Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.Deconstruct(out System.Collections.Generic.IReadOnlyList<int>! ItemIds) -> void
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.Equals(Umpk.Protocol.Java.Packets.SlotDisplay.TagItems? other) -> bool
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.ItemIds.get -> System.Collections.Generic.IReadOnlyList<int>!
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.ItemIds.init -> void
+Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.TagItems(System.Collections.Generic.IReadOnlyList<int>! ItemIds) -> void
 Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.Deconstruct(out Umpk.Protocol.Java.Packets.SlotDisplay! Display) -> void
 Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.Display.get -> Umpk.Protocol.Java.Packets.SlotDisplay!
 Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.Display.init -> void
@@ -1989,6 +2021,10 @@ override Umpk.Protocol.Java.Packets.SlotDisplay.Tag.<Clone>$() -> Umpk.Protocol.
 override Umpk.Protocol.Java.Packets.SlotDisplay.Tag.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.SlotDisplay.Tag.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.SlotDisplay.Tag.ToString() -> string!
+override Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.<Clone>$() -> Umpk.Protocol.Java.Packets.SlotDisplay.TagItems!
+override Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.ToString() -> string!
 override Umpk.Protocol.Java.Packets.SlotDisplay.ToString() -> string!
 override Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.<Clone>$() -> Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion!
 override Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.Equals(object? obj) -> bool
@@ -2025,6 +2061,7 @@ override sealed Umpk.Protocol.Java.Packets.SlotDisplay.OnlyWithComponent.Equals(
 override sealed Umpk.Protocol.Java.Packets.SlotDisplay.SmithingTrim.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
 override sealed Umpk.Protocol.Java.Packets.SlotDisplay.Stack.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
 override sealed Umpk.Protocol.Java.Packets.SlotDisplay.Tag.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
+override sealed Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
 override sealed Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
 override sealed Umpk.Protocol.Java.Packets.SlotDisplay.WithRemainder.Equals(Umpk.Protocol.Java.Packets.SlotDisplay? other) -> bool
 override sealed Umpk.Protocol.Java.Packets.TrimPatternDisplay.Nested.Equals(Umpk.Protocol.Java.Packets.TrimPatternDisplay? other) -> bool
@@ -2056,6 +2093,7 @@ Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.<Clone>$() -> Umpk.Pr
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.AlwaysShow.get -> bool
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.AlwaysShow.init -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ClientboundLevelParticlesPacket(bool OverrideLimiter, bool AlwaysShow, double X, double Y, double Z, float XDist, float YDist, float ZDist, float MaxSpeed, int Count, Umpk.Protocol.Java.Codecs.ParticleData Particle) -> void
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ClientboundLevelParticlesPacket(bool overrideLimiter, bool alwaysShow, double x, double y, double z, float xDist, float yDist, float zDist, float xMaxSpeed, float yMaxSpeed, float zMaxSpeed, int count, Umpk.Protocol.Java.Codecs.ParticleData particle, Umpk.Protocol.Java.Packets.LevelParticleRandomizationType randomization = Umpk.Protocol.Java.Packets.LevelParticleRandomizationType.Default) -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Count.get -> int
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Count.init -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Deconstruct(out bool OverrideLimiter, out bool AlwaysShow, out double X, out double Y, out double Z, out float XDist, out float YDist, out float ZDist, out float MaxSpeed, out int Count, out Umpk.Protocol.Java.Codecs.ParticleData Particle) -> void
@@ -2066,6 +2104,8 @@ Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.OverrideLimiter.get -
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.OverrideLimiter.init -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Particle.get -> Umpk.Protocol.Java.Codecs.ParticleData
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Particle.init -> void
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Randomization.get -> Umpk.Protocol.Java.Packets.LevelParticleRandomizationType
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Randomization.init -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.X.get -> double
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.X.init -> void
@@ -2079,6 +2119,14 @@ Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Z.get -> double
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.Z.init -> void
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ZDist.get -> float
 Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ZDist.init -> void
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.YMaxSpeed.get -> float
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.YMaxSpeed.init -> void
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ZMaxSpeed.get -> float
+Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket.ZMaxSpeed.init -> void
+Umpk.Protocol.Java.Packets.LevelParticleRandomizationType
+Umpk.Protocol.Java.Packets.LevelParticleRandomizationType.Alternative = 1 -> Umpk.Protocol.Java.Packets.LevelParticleRandomizationType
+Umpk.Protocol.Java.Packets.LevelParticleRandomizationType.AlternativeWithSpeed = 2 -> Umpk.Protocol.Java.Packets.LevelParticleRandomizationType
+Umpk.Protocol.Java.Packets.LevelParticleRandomizationType.Default = 0 -> Umpk.Protocol.Java.Packets.LevelParticleRandomizationType
 Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket
 Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket!
 Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket.ChunkX.get -> int
@@ -2234,6 +2282,8 @@ Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.EntityId.init -> void
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket? other) -> bool
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.OnGround.get -> bool
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.OnGround.init -> void
+Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.Steps.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.EntityMoveStep!>!
+Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.Steps.init -> void
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket!
@@ -2252,6 +2302,8 @@ Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.OnGround.get -> boo
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.OnGround.init -> void
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Pitch.get -> float
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Pitch.init -> void
+Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Steps.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.EntityMoveStep!>!
+Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Steps.init -> void
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Yaw.get -> float
 Umpk.Protocol.Java.Packets.ClientboundMoveEntityPosRotPacket.Yaw.init -> void
@@ -2449,6 +2501,14 @@ Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.Yaw.get -> float
 Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.Yaw.init -> void
 Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.Z.get -> double
 Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.Z.init -> void
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket!
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.ClientboundPostEffectsPacket(System.Collections.Generic.IReadOnlyList<Umpk.Identifier>! Effects) -> void
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Identifier>! Effects) -> void
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Effects.get -> System.Collections.Generic.IReadOnlyList<Umpk.Identifier>!
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Effects.init -> void
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket
 Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket!
 Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.ClientboundPongResponsePacket(long Payload) -> void
@@ -3042,6 +3102,20 @@ Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.Key.init -> void
 Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.Payload.get -> byte[]!
 Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.Payload.init -> void
 Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket!
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.AnimationType.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.AnimationType.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.ClientboundSwingAnimationPacket(int EntityId, int Hand, int AnimationType, int Duration) -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Deconstruct(out int EntityId, out int Hand, out int AnimationType, out int Duration) -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Duration.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Duration.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.EntityId.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.EntityId.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Hand.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Hand.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket
 Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket!
 Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.ClientboundSystemChatPacket(Umpk.Text.Component! Content, bool Overlay) -> void
@@ -3611,6 +3685,37 @@ Umpk.Protocol.Java.Packets.PlayerInfoEntry.Properties.get -> System.Collections.
 Umpk.Protocol.Java.Packets.PlayerInfoEntry.Properties.init -> void
 Umpk.Protocol.Java.Packets.PlayerInfoEntry.ShowHat.get -> bool
 Umpk.Protocol.Java.Packets.PlayerInfoEntry.ShowHat.init -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep
+Umpk.Protocol.Java.Packets.EntityMoveStep.<Clone>$() -> Umpk.Protocol.Java.Packets.EntityMoveStep!
+Umpk.Protocol.Java.Packets.EntityMoveStep.Deconstruct(out int Ticks, out short DeltaX, out short DeltaY, out short DeltaZ) -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaX.get -> short
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaX.init -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaY.get -> short
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaY.init -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaZ.get -> short
+Umpk.Protocol.Java.Packets.EntityMoveStep.DeltaZ.init -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep.EntityMoveStep(int Ticks, short DeltaX, short DeltaY, short DeltaZ) -> void
+Umpk.Protocol.Java.Packets.EntityMoveStep.Equals(Umpk.Protocol.Java.Packets.EntityMoveStep? other) -> bool
+Umpk.Protocol.Java.Packets.EntityMoveStep.Ticks.get -> int
+Umpk.Protocol.Java.Packets.EntityMoveStep.Ticks.init -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath
+Umpk.Protocol.Java.Packets.EntityPositionPath.EntityPositionPath(Umpk.Protocol.Java.Packets.EntityPositionPath! original) -> void
+abstract Umpk.Protocol.Java.Packets.EntityPositionPath.<Clone>$() -> Umpk.Protocol.Java.Packets.EntityPositionPath!
+virtual Umpk.Protocol.Java.Packets.EntityPositionPath.EqualityContract.get -> System.Type!
+virtual Umpk.Protocol.Java.Packets.EntityPositionPath.Equals(Umpk.Protocol.Java.Packets.EntityPositionPath? other) -> bool
+virtual Umpk.Protocol.Java.Packets.EntityPositionPath.PrintMembers(System.Text.StringBuilder! builder) -> bool
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Deconstruct(out Umpk.Geometry.Vec3d Position) -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Equals(Umpk.Protocol.Java.Packets.EntityPositionPath.Linear? other) -> bool
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Linear(Umpk.Geometry.Vec3d Position) -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Position.get -> Umpk.Geometry.Vec3d
+Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Position.init -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.PositionPathStep!>! Steps) -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Equals(Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped? other) -> bool
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Stepped(System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.PositionPathStep!>! Steps) -> void
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Steps.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.PositionPathStep!>!
+Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Steps.init -> void
 Umpk.Protocol.Java.Packets.PositionMoveRotation
 Umpk.Protocol.Java.Packets.PositionMoveRotation.<Clone>$() -> Umpk.Protocol.Java.Packets.PositionMoveRotation!
 Umpk.Protocol.Java.Packets.PositionMoveRotation.Deconstruct(out Umpk.Geometry.Vec3d Position, out Umpk.Geometry.Vec3d DeltaMovement, out float YRot, out float XRot) -> void
@@ -3624,6 +3729,15 @@ Umpk.Protocol.Java.Packets.PositionMoveRotation.XRot.get -> float
 Umpk.Protocol.Java.Packets.PositionMoveRotation.XRot.init -> void
 Umpk.Protocol.Java.Packets.PositionMoveRotation.YRot.get -> float
 Umpk.Protocol.Java.Packets.PositionMoveRotation.YRot.init -> void
+Umpk.Protocol.Java.Packets.PositionPathStep
+Umpk.Protocol.Java.Packets.PositionPathStep.<Clone>$() -> Umpk.Protocol.Java.Packets.PositionPathStep!
+Umpk.Protocol.Java.Packets.PositionPathStep.Deconstruct(out Umpk.Geometry.Vec3d Position, out int TickOffset) -> void
+Umpk.Protocol.Java.Packets.PositionPathStep.Equals(Umpk.Protocol.Java.Packets.PositionPathStep? other) -> bool
+Umpk.Protocol.Java.Packets.PositionPathStep.Position.get -> Umpk.Geometry.Vec3d
+Umpk.Protocol.Java.Packets.PositionPathStep.Position.init -> void
+Umpk.Protocol.Java.Packets.PositionPathStep.PositionPathStep(Umpk.Geometry.Vec3d Position, int TickOffset) -> void
+Umpk.Protocol.Java.Packets.PositionPathStep.TickOffset.get -> int
+Umpk.Protocol.Java.Packets.PositionPathStep.TickOffset.init -> void
 Umpk.Protocol.Java.Packets.PredictedSlot
 Umpk.Protocol.Java.Packets.PredictedSlot.<Clone>$() -> Umpk.Protocol.Java.Packets.PredictedSlot!
 Umpk.Protocol.Java.Packets.PredictedSlot.Deconstruct(out short Slot, out Umpk.Game.Items.ItemStack! Stack) -> void
@@ -3771,8 +3885,21 @@ Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.<Clone>$() -> Um
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Deconstruct(out int TeleportId) -> void
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Equals(Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket? other) -> bool
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.ServerboundAcceptTeleportationPacket(int TeleportId) -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.ServerboundAcceptTeleportationPacket(int teleportId, double x, double y, double z, float yRot, float xRot) -> void
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.TeleportId.get -> int
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.TeleportId.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.X.get -> double
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.X.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.XRot.get -> float
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.XRot.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Y.get -> double
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Y.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.YRot.get -> float
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.YRot.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Z.get -> double
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Z.init -> void
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.HasDestination.get -> bool
+Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.HasDestination.init -> void
 Umpk.Protocol.Java.Packets.ServerboundAcceptTeleportationPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ServerboundAttackPacket
 Umpk.Protocol.Java.Packets.ServerboundAttackPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ServerboundAttackPacket!
@@ -4437,6 +4564,11 @@ Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.<Clone>$() -> Umpk.Prot
 Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.Equals(Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket? other) -> bool
 Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.ServerboundPlayerLoadedPacket() -> void
 Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ServerboundPunchPacket
+Umpk.Protocol.Java.Packets.ServerboundPunchPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ServerboundPunchPacket!
+Umpk.Protocol.Java.Packets.ServerboundPunchPacket.Equals(Umpk.Protocol.Java.Packets.ServerboundPunchPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ServerboundPunchPacket.ServerboundPunchPacket() -> void
+Umpk.Protocol.Java.Packets.ServerboundPunchPacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket
 Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket!
 Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket.BookType.get -> int
@@ -5145,6 +5277,9 @@ override Umpk.Protocol.Java.Codecs.EntityDataEntry.GetHashCode() -> int
 override Umpk.Protocol.Java.Codecs.EntityItemSlot.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Codecs.EntityItemSlot.GetHashCode() -> int
 override Umpk.Protocol.Java.Codecs.EntityItemSlot.ToString() -> string!
+override Umpk.Protocol.Java.Packets.EntityMoveStep.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.EntityMoveStep.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.EntityMoveStep.ToString() -> string!
 override Umpk.Protocol.Java.Codecs.EntityMetadataList.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Codecs.EntityMetadataList.GetHashCode() -> int
 override Umpk.Protocol.Java.Codecs.EntityMetadataList.ToString() -> string!
@@ -5245,6 +5380,9 @@ override Umpk.Protocol.Java.Packets.ClientboundAddPaintingPacket.ToString() -> s
 override Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.ToString() -> string!
+override Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.ToString() -> string!
 override Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.ToString() -> string!
@@ -5314,6 +5452,9 @@ override Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket.ToString() 
 override Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.ToString() -> string!
+override Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.ToString() -> string!
 override Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.ToString() -> string!
@@ -5527,6 +5668,9 @@ override Umpk.Protocol.Java.Packets.ClientboundPlayerInfoUpdatePacket.ToString()
 override Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.ToString() -> string!
+override Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.ToString() -> string!
 override Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.ToString() -> string!
@@ -5689,6 +5833,9 @@ override Umpk.Protocol.Java.Packets.ClientboundStopSoundPacket.ToString() -> str
 override Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.ToString() -> string!
+override Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.ToString() -> string!
 override Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.ToString() -> string!
@@ -5806,9 +5953,25 @@ override Umpk.Protocol.Java.Packets.PackedRegistryEntry.ToString() -> string!
 override Umpk.Protocol.Java.Packets.PlayerInfoEntry.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.PlayerInfoEntry.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.PlayerInfoEntry.ToString() -> string!
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.EntityPositionPath.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.EntityPositionPath.ToString() -> string!
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.<Clone>$() -> Umpk.Protocol.Java.Packets.EntityPositionPath.Linear!
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.ToString() -> string!
+override sealed Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.Equals(Umpk.Protocol.Java.Packets.EntityPositionPath? other) -> bool
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.<Clone>$() -> Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped!
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.ToString() -> string!
+override sealed Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.Equals(Umpk.Protocol.Java.Packets.EntityPositionPath? other) -> bool
 override Umpk.Protocol.Java.Packets.PositionMoveRotation.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.PositionMoveRotation.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.PositionMoveRotation.ToString() -> string!
+override Umpk.Protocol.Java.Packets.PositionPathStep.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.PositionPathStep.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.PositionPathStep.ToString() -> string!
 override Umpk.Protocol.Java.Packets.PredictedSlot.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.PredictedSlot.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.PredictedSlot.ToString() -> string!
@@ -6022,6 +6185,9 @@ override Umpk.Protocol.Java.Packets.ServerboundPlayerInputPacket.ToString() -> s
 override Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket.ToString() -> string!
+override Umpk.Protocol.Java.Packets.ServerboundPunchPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ServerboundPunchPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ServerboundPunchPacket.ToString() -> string!
 override Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket.Equals(object? obj) -> bool
 override Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket.GetHashCode() -> int
 override Umpk.Protocol.Java.Packets.ServerboundRecipeBookChangeSettingsPacket.ToString() -> string!
@@ -6187,6 +6353,7 @@ static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_13.get -> Umpk.Protocol.Ja
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_21_5.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_21_6.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V26_2.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
+static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V26_3.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_19.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_19_3.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
 static Umpk.Protocol.Java.Codecs.CommandTreeCodecs.V1_19_4.get -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCommandsPacket!>!
@@ -6218,6 +6385,8 @@ static Umpk.Protocol.Java.Codecs.EntityDataEntry.operator ==(Umpk.Protocol.Java.
 static Umpk.Protocol.Java.Codecs.EntityItemSlot.Empty.get -> Umpk.Protocol.Java.Codecs.EntityItemSlot!
 static Umpk.Protocol.Java.Codecs.EntityItemSlot.operator !=(Umpk.Protocol.Java.Codecs.EntityItemSlot? left, Umpk.Protocol.Java.Codecs.EntityItemSlot? right) -> bool
 static Umpk.Protocol.Java.Codecs.EntityItemSlot.operator ==(Umpk.Protocol.Java.Codecs.EntityItemSlot? left, Umpk.Protocol.Java.Codecs.EntityItemSlot? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityMoveStep.operator !=(Umpk.Protocol.Java.Packets.EntityMoveStep? left, Umpk.Protocol.Java.Packets.EntityMoveStep? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityMoveStep.operator ==(Umpk.Protocol.Java.Packets.EntityMoveStep? left, Umpk.Protocol.Java.Packets.EntityMoveStep? right) -> bool
 static Umpk.Protocol.Java.Codecs.EntityMetadataList.operator !=(Umpk.Protocol.Java.Codecs.EntityMetadataList? left, Umpk.Protocol.Java.Codecs.EntityMetadataList? right) -> bool
 static Umpk.Protocol.Java.Codecs.EntityMetadataList.operator ==(Umpk.Protocol.Java.Codecs.EntityMetadataList? left, Umpk.Protocol.Java.Codecs.EntityMetadataList? right) -> bool
 static Umpk.Protocol.Java.Codecs.HashedStackValue.Empty.get -> Umpk.Protocol.Java.Codecs.HashedStackValue!
@@ -6246,6 +6415,7 @@ static Umpk.Protocol.Java.Codecs.ParticleCodec.ModernV1_21_5.get -> System.Colle
 static Umpk.Protocol.Java.Codecs.ParticleCodec.ModernV1_21_9.get -> System.Collections.Generic.IReadOnlyDictionary<int, Umpk.Protocol.Java.Codecs.ParticleOptionShape>!
 static Umpk.Protocol.Java.Codecs.ParticleCodec.ModernV26_1.get -> System.Collections.Generic.IReadOnlyDictionary<int, Umpk.Protocol.Java.Codecs.ParticleOptionShape>!
 static Umpk.Protocol.Java.Codecs.ParticleCodec.ModernV26_2.get -> System.Collections.Generic.IReadOnlyDictionary<int, Umpk.Protocol.Java.Codecs.ParticleOptionShape>!
+static Umpk.Protocol.Java.Codecs.ParticleCodec.ModernV26_3.get -> System.Collections.Generic.IReadOnlyDictionary<int, Umpk.Protocol.Java.Codecs.ParticleOptionShape>!
 static Umpk.Protocol.Java.Codecs.ParticleCodec.ReadLegacy(ref Umpk.Protocol.Java.Codecs.PacketReader r) -> Umpk.Protocol.Java.Codecs.ParticleData
 static Umpk.Protocol.Java.Codecs.ParticleCodec.WriteLegacy(ref Umpk.Protocol.Java.Codecs.PacketWriter w, Umpk.Protocol.Java.Codecs.ParticleData particle) -> void
 static Umpk.Protocol.Java.Codecs.ParticleCodec.WriteModern(ref Umpk.Protocol.Java.Codecs.PacketWriter w, Umpk.Protocol.Java.Codecs.ParticleData particle) -> void
@@ -6324,6 +6494,7 @@ static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.ReadProperties(ref Umpk.P
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V1_21_5.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V1_21_6.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V26_2.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
+static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V26_3.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V759.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V761.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
 static Umpk.Protocol.Java.Packets.ArgumentTypeRegistry.V764.get -> Umpk.Protocol.Java.Packets.ArgumentTypeRegistry!
@@ -6348,6 +6519,8 @@ static Umpk.Protocol.Java.Packets.ClientboundAddPaintingPacket.operator !=(Umpk.
 static Umpk.Protocol.Java.Packets.ClientboundAddPaintingPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundAddPaintingPacket? left, Umpk.Protocol.Java.Packets.ClientboundAddPaintingPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket? left, Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket? left, Umpk.Protocol.Java.Packets.ClientboundAddPlayerPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket? left, Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket? left, Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundAnimatePacket? left, Umpk.Protocol.Java.Packets.ClientboundAnimatePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundAnimatePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundAnimatePacket? left, Umpk.Protocol.Java.Packets.ClientboundAnimatePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundBlockChangedAckPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundBlockChangedAckPacket? left, Umpk.Protocol.Java.Packets.ClientboundBlockChangedAckPacket? right) -> bool
@@ -6394,6 +6567,8 @@ static Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket.operator !=(U
 static Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigRegistryBlobPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundConfigRegistryDataPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundConfigRegistryDataPacket? left, Umpk.Protocol.Java.Packets.ClientboundConfigRegistryDataPacket? right) -> bool
@@ -6536,6 +6711,8 @@ static Umpk.Protocol.Java.Packets.ClientboundPlayerInfoUpdatePacket.operator !=(
 static Umpk.Protocol.Java.Packets.ClientboundPlayerInfoUpdatePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundPlayerInfoUpdatePacket? left, Umpk.Protocol.Java.Packets.ClientboundPlayerInfoUpdatePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket? left, Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket? left, Umpk.Protocol.Java.Packets.ClientboundPlayerPositionPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket? left, Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket? left, Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket? left, Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket? left, Umpk.Protocol.Java.Packets.ClientboundPongResponsePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundRecipeBookAddPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundRecipeBookAddPacket? left, Umpk.Protocol.Java.Packets.ClientboundRecipeBookAddPacket? right) -> bool
@@ -6644,6 +6821,8 @@ static Umpk.Protocol.Java.Packets.ClientboundStopSoundPacket.operator !=(Umpk.Pr
 static Umpk.Protocol.Java.Packets.ClientboundStopSoundPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundStopSoundPacket? left, Umpk.Protocol.Java.Packets.ClientboundStopSoundPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket? left, Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket? left, Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket? left, Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket? left, Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket? left, Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket? left, Umpk.Protocol.Java.Packets.ClientboundSystemChatPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundTabListPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundTabListPacket? left, Umpk.Protocol.Java.Packets.ClientboundTabListPacket? right) -> bool
@@ -6725,8 +6904,16 @@ static Umpk.Protocol.Java.Packets.PackedRegistryEntry.operator !=(Umpk.Protocol.
 static Umpk.Protocol.Java.Packets.PackedRegistryEntry.operator ==(Umpk.Protocol.Java.Packets.PackedRegistryEntry? left, Umpk.Protocol.Java.Packets.PackedRegistryEntry? right) -> bool
 static Umpk.Protocol.Java.Packets.PlayerInfoEntry.operator !=(Umpk.Protocol.Java.Packets.PlayerInfoEntry? left, Umpk.Protocol.Java.Packets.PlayerInfoEntry? right) -> bool
 static Umpk.Protocol.Java.Packets.PlayerInfoEntry.operator ==(Umpk.Protocol.Java.Packets.PlayerInfoEntry? left, Umpk.Protocol.Java.Packets.PlayerInfoEntry? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.operator !=(Umpk.Protocol.Java.Packets.EntityPositionPath? left, Umpk.Protocol.Java.Packets.EntityPositionPath? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.operator ==(Umpk.Protocol.Java.Packets.EntityPositionPath? left, Umpk.Protocol.Java.Packets.EntityPositionPath? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.operator !=(Umpk.Protocol.Java.Packets.EntityPositionPath.Linear? left, Umpk.Protocol.Java.Packets.EntityPositionPath.Linear? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.Linear.operator ==(Umpk.Protocol.Java.Packets.EntityPositionPath.Linear? left, Umpk.Protocol.Java.Packets.EntityPositionPath.Linear? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.operator !=(Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped? left, Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped? right) -> bool
+static Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped.operator ==(Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped? left, Umpk.Protocol.Java.Packets.EntityPositionPath.Stepped? right) -> bool
 static Umpk.Protocol.Java.Packets.PositionMoveRotation.operator !=(Umpk.Protocol.Java.Packets.PositionMoveRotation? left, Umpk.Protocol.Java.Packets.PositionMoveRotation? right) -> bool
 static Umpk.Protocol.Java.Packets.PositionMoveRotation.operator ==(Umpk.Protocol.Java.Packets.PositionMoveRotation? left, Umpk.Protocol.Java.Packets.PositionMoveRotation? right) -> bool
+static Umpk.Protocol.Java.Packets.PositionPathStep.operator !=(Umpk.Protocol.Java.Packets.PositionPathStep? left, Umpk.Protocol.Java.Packets.PositionPathStep? right) -> bool
+static Umpk.Protocol.Java.Packets.PositionPathStep.operator ==(Umpk.Protocol.Java.Packets.PositionPathStep? left, Umpk.Protocol.Java.Packets.PositionPathStep? right) -> bool
 static Umpk.Protocol.Java.Packets.PredictedSlot.operator !=(Umpk.Protocol.Java.Packets.PredictedSlot? left, Umpk.Protocol.Java.Packets.PredictedSlot? right) -> bool
 static Umpk.Protocol.Java.Packets.PredictedSlot.operator ==(Umpk.Protocol.Java.Packets.PredictedSlot? left, Umpk.Protocol.Java.Packets.PredictedSlot? right) -> bool
 static Umpk.Protocol.Java.Packets.ProfilePublicKeyData.operator !=(Umpk.Protocol.Java.Packets.ProfilePublicKeyData? left, Umpk.Protocol.Java.Packets.ProfilePublicKeyData? right) -> bool
@@ -6919,6 +7106,8 @@ static Umpk.Protocol.Java.Packets.ServerboundStatusRequestPacket.operator !=(Ump
 static Umpk.Protocol.Java.Packets.ServerboundStatusRequestPacket.operator ==(Umpk.Protocol.Java.Packets.ServerboundStatusRequestPacket? left, Umpk.Protocol.Java.Packets.ServerboundStatusRequestPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket.operator !=(Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket? left, Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket.operator ==(Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket? left, Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ServerboundPunchPacket.operator !=(Umpk.Protocol.Java.Packets.ServerboundPunchPacket? left, Umpk.Protocol.Java.Packets.ServerboundPunchPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ServerboundPunchPacket.operator ==(Umpk.Protocol.Java.Packets.ServerboundPunchPacket? left, Umpk.Protocol.Java.Packets.ServerboundPunchPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ServerboundSwingPacket.operator !=(Umpk.Protocol.Java.Packets.ServerboundSwingPacket? left, Umpk.Protocol.Java.Packets.ServerboundSwingPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ServerboundSwingPacket.operator ==(Umpk.Protocol.Java.Packets.ServerboundSwingPacket? left, Umpk.Protocol.Java.Packets.ServerboundSwingPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ServerboundTeleportToEntityPacket.operator !=(Umpk.Protocol.Java.Packets.ServerboundTeleportToEntityPacket? left, Umpk.Protocol.Java.Packets.ServerboundTeleportToEntityPacket? right) -> bool
@@ -6953,6 +7142,8 @@ static Umpk.Protocol.Java.Packets.SlotDisplay.Stack.operator !=(Umpk.Protocol.Ja
 static Umpk.Protocol.Java.Packets.SlotDisplay.Stack.operator ==(Umpk.Protocol.Java.Packets.SlotDisplay.Stack? left, Umpk.Protocol.Java.Packets.SlotDisplay.Stack? right) -> bool
 static Umpk.Protocol.Java.Packets.SlotDisplay.Tag.operator !=(Umpk.Protocol.Java.Packets.SlotDisplay.Tag? left, Umpk.Protocol.Java.Packets.SlotDisplay.Tag? right) -> bool
 static Umpk.Protocol.Java.Packets.SlotDisplay.Tag.operator ==(Umpk.Protocol.Java.Packets.SlotDisplay.Tag? left, Umpk.Protocol.Java.Packets.SlotDisplay.Tag? right) -> bool
+static Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.operator !=(Umpk.Protocol.Java.Packets.SlotDisplay.TagItems? left, Umpk.Protocol.Java.Packets.SlotDisplay.TagItems? right) -> bool
+static Umpk.Protocol.Java.Packets.SlotDisplay.TagItems.operator ==(Umpk.Protocol.Java.Packets.SlotDisplay.TagItems? left, Umpk.Protocol.Java.Packets.SlotDisplay.TagItems? right) -> bool
 static Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.operator !=(Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion? left, Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion? right) -> bool
 static Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion.operator ==(Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion? left, Umpk.Protocol.Java.Packets.SlotDisplay.WithAnyPotion? right) -> bool
 static Umpk.Protocol.Java.Packets.SlotDisplay.WithRemainder.operator !=(Umpk.Protocol.Java.Packets.SlotDisplay.WithRemainder? left, Umpk.Protocol.Java.Packets.SlotDisplay.WithRemainder? right) -> bool
@@ -7023,6 +7214,7 @@ static readonly Umpk.Protocol.Java.Codecs.AdvancementCodecs.UpdateAdvancementsV1
 static readonly Umpk.Protocol.Java.Codecs.AdvancementCodecs.UpdateAdvancementsV1_21_9 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundUpdateAdvancementsPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.AdvancementCodecs.UpdateAdvancementsV26_1 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundUpdateAdvancementsPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.AdvancementCodecs.UpdateAdvancementsV26_2 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundUpdateAdvancementsPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.AdvancementCodecs.UpdateAdvancementsV26_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundUpdateAdvancementsPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.BossBarCodecs.BossEventV1_20_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBossEventPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.BossBarCodecs.BossEventV1_21_5 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBossEventPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.BossBarCodecs.BossEventV1_9 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBossEventPacket!>!
@@ -7082,6 +7274,7 @@ static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.FinishServer -> Um
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.KeepAliveClient -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundConfigKeepAlivePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.KeepAliveServer -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundConfigKeepAlivePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.Ping -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundConfigPingPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.PostEffects -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.Pong -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundConfigPongPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.RegistryData -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundConfigRegistryDataPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.ConfigurationCodecs.ResetChat -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundConfigResetChatPacket!>!
@@ -7137,6 +7330,7 @@ static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.ClientTickEnd -> Umpk
 static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.CookieRequest -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundCookieRequestPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.CookieResponse -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundCookieResponsePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.PlayerLoaded -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundPlayerLoadedPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.PostEffects -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.StoreCookie -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.PlayCommonCodecs.Transfer -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundTransferPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.PlayKeepAliveCodecs.ClientV1_12_2 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundPlayKeepAlivePacket!>!
@@ -7218,6 +7412,7 @@ static readonly Umpk.Protocol.Java.Codecs.UiMiscCodecs.SignUpdateV1_14 -> Umpk.P
 static readonly Umpk.Protocol.Java.Codecs.UiMiscCodecs.SignUpdateV1_20 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundSignUpdatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.UiMiscCodecs.SignUpdateV1_9 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ServerboundSignUpdatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.UiMiscCodecs.WaypointV1_21_6 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundWaypointPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldBlockCodecs.AddTransientBlockV26_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldBlockCodecs.BlockChangedAckV1_19 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBlockChangedAckPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldBlockCodecs.BlockDestructionV1_14 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBlockDestructionPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldBlockCodecs.BlockDestructionV1_8 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundBlockDestructionPacket!>!
@@ -7255,6 +7450,7 @@ static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.ExplodeV1_21_9 -> Um
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.ExplodeV1_8 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundExplodePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.ExplodeV26_1 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundExplodePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.ExplodeV26_2 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundExplodePacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.ExplodeV26_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundExplodePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelEventV1_14 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelEventPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelEventV1_8 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelEventPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV1_13 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket!>!
@@ -7271,6 +7467,7 @@ static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV1_21_
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV1_8 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV26_1 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV26_2 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.LevelParticlesV26_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLevelParticlesPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.NamedSoundV1_8 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundNamedSoundPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.SoundEntityV1_14 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundSoundEntityPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldEffectCodecs.SoundV1_10 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundSoundPacket!>!
@@ -7299,6 +7496,7 @@ static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.LightUpdateV1_14 -> U
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.LightUpdateV1_16 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.LightUpdateV1_17 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.LightUpdateV1_20 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.LightUpdateV26_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundLightUpdatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.RespawnV1_14 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundRespawnPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.RespawnV1_15 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundRespawnPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.RespawnV1_16 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundRespawnPacket!>!
@@ -7355,6 +7553,7 @@ static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.SetExperien
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.SetHealth -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSetHealthPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.SetHeldSlot -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSetHeldSlotPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.SetPassengers -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSetPassengersPacket!>!
+static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.SwingAnimation -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSwingAnimationPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.TakeItemEntity -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTakeItemEntityPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.TeleportEntity -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTeleportEntityPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Clientbound.UpdateAttributes -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundUpdateAttributesPacket!>!
@@ -7375,6 +7574,7 @@ static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.PlayerComma
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.PlayerInput -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundPlayerInputPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.SetCarriedItem -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundSetCarriedItemPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.SteerVehicle -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundSteerVehiclePacket!>!
+static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.Punch -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundPunchPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.Swing -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundSwingPacket!>!
 static readonly Umpk.Protocol.Java.Packets.EntityPackets.Serverbound.TeleportToEntity -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundTeleportToEntityPacket!>!
 static readonly Umpk.Protocol.Java.Packets.HandshakePackets.Serverbound.Intention -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundHandshakePacket!>!
@@ -7430,6 +7630,7 @@ static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.ResourcePac
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.ResourcePackPop -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigResourcePackPopPacket!>!
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.ResourcePackPush -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigResourcePackPushPacket!>!
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.ServerLinks -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigServerLinksPacket!>!
+static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.PostEffects -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigPostEffectsPacket!>!
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.ShowDialog -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigShowDialogPacket!>!
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.StoreCookie -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigStoreCookiePacket!>!
 static readonly Umpk.Protocol.Java.Packets.LoginFamilyPackets.Config.Transfer -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundConfigTransferPacket!>!
@@ -7454,6 +7655,7 @@ static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.LegacyChat ->
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.LevelChunk -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundLevelChunkPacket!>!
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.Login -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundLoginPacket!>!
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.MapChunkBulk -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundMapChunkBulkPacket!>!
+static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.PostEffects -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundPostEffectsPacket!>!
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.StartConfiguration -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundStartConfigurationPacket!>!
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.StoreCookie -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundStoreCookiePacket!>!
 static readonly Umpk.Protocol.Java.Packets.PlayPackets.Clientbound.Transfer -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTransferPacket!>!
@@ -7534,6 +7736,7 @@ static readonly Umpk.Protocol.Java.Packets.UiPackets.Serverbound.Pong -> Umpk.Pr
 static readonly Umpk.Protocol.Java.Packets.UiPackets.Serverbound.ResourcePack -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundResourcePackPacket!>!
 static readonly Umpk.Protocol.Java.Packets.UiPackets.Serverbound.SeenAdvancements -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundSeenAdvancementsPacket!>!
 static readonly Umpk.Protocol.Java.Packets.UiPackets.Serverbound.SignUpdate -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ServerboundSignUpdatePacket!>!
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.AddTransientBlock -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundAddTransientBlockPacket!>!
 static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.BlockChangedAck -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundBlockChangedAckPacket!>!
 static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.BlockDestruction -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundBlockDestructionPacket!>!
 static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.BlockEntityData -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundBlockEntityDataPacket!>!

@@ -29,6 +29,7 @@ internal static class ConfigurationBindings
         ConfigurationCodecs.DeclareSelectKnownPacks(bindings);
         ConfigurationCodecs.DeclareServerLinksConfiguration(bindings);
         ConfigurationCodecs.DeclareShowDialogConfiguration(bindings);
+        ConfigurationCodecs.DeclarePostEffectsConfiguration(bindings);
         ConfigurationCodecs.DeclareStoreCookieConfiguration(bindings);
         ConfigurationCodecs.DeclareTransferConfiguration(bindings);
         ConfigurationCodecs.DeclareUpdateEnabledFeatures(bindings);

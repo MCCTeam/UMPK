@@ -49,7 +49,7 @@ public sealed class VanillaTranslationsTests
         [
             47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490,
             498, 573, 575, 578, 735, 736, 751, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763,
-            764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776,
+            764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
         ];
         Assert.Equal(expected, VanillaTranslations.Protocols.ToArray());
     }
@@ -57,7 +57,7 @@ public sealed class VanillaTranslationsTests
     [Fact]
     public void Latest_IsTheNewestCatalogProtocol()
     {
-        Assert.Same(VanillaTranslations.ForProtocol(776), VanillaTranslations.Latest);
+        Assert.Same(VanillaTranslations.ForProtocol(777), VanillaTranslations.Latest);
     }
 
     public static TheoryData<int, int> CountRows => new()
@@ -66,6 +66,7 @@ public sealed class VanillaTranslationsTests
         { 340, 3303 },
         { 393, 3907 },
         { 776, 8123 },
+        { 777, 8559 },
     };
 
     [Theory]

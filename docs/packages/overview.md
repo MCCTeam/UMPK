@@ -15,7 +15,7 @@ UMPK is split into fourteen NuGet packages. Thirteen of them contain code; the f
 | [Umpk.Nbt](umpk-nbt.md) | NBT tags, the three Java wire framings, SNBT, allocation accounting. |
 | [Umpk.Text](umpk-text.md) | Chat components, styles, click and hover events, JSON and NBT serializers. |
 | [Umpk.Game](umpk-game.md) | The game model: blocks, entities, items and components, containers, registries, world storage. |
-| [Umpk.Data.Java](umpk-data-java.md) | Generated per-protocol tables for 49 protocols, plus `JavaVersions` and `JavaGameData`. |
+| [Umpk.Data.Java](umpk-data-java.md) | Generated per-protocol tables for 50 protocols, plus `JavaVersions` and `JavaGameData`. |
 | [Umpk.Data.Lang](umpk-data-lang.md) | Generated per-protocol vanilla `en_us` translations with hand-written lookup and formatting support. |
 | [Umpk.Protocol.Java](umpk-protocol-java.md) | Codecs, packet registration, framing, login and encryption, chat signing, status pings. |
 | [Umpk.Client](umpk-client.md) | The session runtime: connect, apply packets to state, raise events, send actions. |

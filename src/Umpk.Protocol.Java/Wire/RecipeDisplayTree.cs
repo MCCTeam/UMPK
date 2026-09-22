@@ -36,9 +36,13 @@ public abstract record SlotDisplay
     /// <param name="Value">The stack.</param>
     public sealed record Stack(ItemStack Value) : SlotDisplay;
 
-    /// <summary>Everything in an item tag, encoded as a single resource-location string.</summary>
+    /// <summary>Everything in an item tag by name. Through 26.2 this is the whole payload (one resource-location string); from 26.3 the payload is a holder set and this is its named form (see <see cref="TagItems"/> for the inline-ids form).</summary>
     /// <param name="Name">The tag's resource location, exactly as it appears on the wire.</param>
     public sealed record Tag(string Name) : SlotDisplay;
+
+    /// <summary>26.3+: everything in an inline item holder set (the tag payload's direct-ids form).</summary>
+    /// <param name="ItemIds">The item network ids, in wire order.</param>
+    public sealed record TagItems(IReadOnlyList<int> ItemIds) : SlotDisplay;
 
     /// <summary>A smithing-trim preview.</summary>
     /// <param name="Base">The base item display.</param>

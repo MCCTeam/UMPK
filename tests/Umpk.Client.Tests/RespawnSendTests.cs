@@ -12,15 +12,15 @@ using Xunit;
 
 namespace Umpk.Client.Tests;
 
-/// <summary>Send-path coverage for the <c>client_command</c> respawn request on every supported protocol. The packet must have a bound codec and remain sendable on all 49 versions.</summary>
+/// <summary>Send-path coverage for the <c>client_command</c> respawn request on every supported protocol. The packet must have a bound codec and remain sendable on all 50 protocols.</summary>
 public sealed class RespawnSendTests
 {
-    /// <summary>All 49 supported protocols, 1.8 through 26.2, kept as an independent literal table so the test cannot inherit an omission from the catalog it verifies.</summary>
+    /// <summary>All 50 supported protocols, 1.8 through 26.3, kept as an independent literal table so the test cannot inherit an omission from the catalog it verifies.</summary>
     private static readonly int[] All =
     [
         47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490, 498, 573,
         575, 578, 735, 736, 751, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767,
-        768, 769, 770, 771, 772, 773, 774, 775, 776,
+        768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
     ];
 
     public static TheoryData<int> AllProtocols

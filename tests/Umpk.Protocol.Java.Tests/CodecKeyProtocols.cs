@@ -39,6 +39,7 @@ internal static class CodecKeyProtocols
         ["V1_21_11"] = 774,
         ["V26_1"] = 775,
         ["V26_2"] = 776,
+        ["V26_3"] = 777,
     };
 
     /// <summary>The representative protocol number for a codec-era key.</summary>

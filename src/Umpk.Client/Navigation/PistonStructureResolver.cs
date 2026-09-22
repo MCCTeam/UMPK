@@ -20,7 +20,7 @@ namespace Umpk.Client.Navigation;
 /// <para>Two details remain version-dependent:</para>
 /// <list type="number">
 /// <item>
-/// The hardcoded refusal set is obsidian at 498 and 578; adds crying obsidian and respawn anchors at 755 and 756; and adds reinforced deepslate from 759 through 776. Those blocks do not exist on the bands that do not name them (<c>crying_obsidian</c> and <c>respawn_anchor</c> first at protocol 735, <c>reinforced_deepslate</c> first at 759), so one union set is exact on all of them.
+/// The hardcoded refusal set is obsidian at 498 and 578; adds crying obsidian and respawn anchors at 755 and 756; and adds reinforced deepslate from 759 through 777. Those blocks do not exist on the bands that do not name them (<c>crying_obsidian</c> and <c>respawn_anchor</c> first at protocol 735, <c>reinforced_deepslate</c> first at 759), so one union set is exact on all of them.
 /// </item>
 /// <item>
 /// World-border containment uses strict <c>&gt;</c> with a <c>+1</c> offset on the min edge through 1.20.6 (protocol 766), <c>&gt;=</c> with no offset from 1.21 (protocol 767) on. Unlike the refusal set, this one canNOT be unified onto either formula: they disagree whenever the border's own bounds are not integers (an ordinary <c>/worldborder set/center</c> configuration), and whichever formula is picked is wrong on the other band for exactly that case. See <see cref="WorldBorderContainmentEra"/> for the two formulas and <see cref="_borderEra"/> for how the caller supplies the right one.

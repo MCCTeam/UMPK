@@ -149,4 +149,7 @@ internal static class JavaProtocols
 
     /// <summary>26.2.</summary>
     public const int V26_2 = 776;
+
+    /// <summary>26.3.</summary>
+    public const int V26_3 = 777;
 }

@@ -85,3 +85,4 @@ static Umpk.Data.Java.JavaVersions.V1_9_3.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V1_9_4.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V26_1.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V26_2.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaVersions.V26_3.get -> Umpk.Protocol.Java.JavaVersion!

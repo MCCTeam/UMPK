@@ -229,6 +229,12 @@ public static class ParticleCodec
     private static readonly IReadOnlyDictionary<int, ParticleOptionShape> ShapesV26_2 =
         ResolveShapes(ParticleIds.V26_2, PayloadsV26_2);
 
+    /// <summary>777 (26.3). Its own ids (the three poplar-leaves particles are option-free, so the payload list is the 776 one).</summary>
+    private static readonly (string Name, ParticleOptionShape Shape)[] PayloadsV26_3 = PayloadsV26_2;
+
+    private static readonly IReadOnlyDictionary<int, ParticleOptionShape> ShapesV26_3 =
+        ResolveShapes(ParticleIds.V26_3, PayloadsV26_3);
+
     /// <summary>Joins an era's payload table onto its generated id ordering. A payload named for a type the era does not have is a hard failure rather than a dropped entry: a missing shape reads zero option bytes for a type that carries some, which desynchronizes every byte behind it.</summary>
     private static IReadOnlyDictionary<int, ParticleOptionShape> ResolveShapes(
         string[] ids, (string Name, ParticleOptionShape Shape)[] payloads)
@@ -267,6 +273,9 @@ public static class ParticleCodec
 
     /// <summary>The 26.2 (protocol 776) particle option shape table.</summary>
     public static IReadOnlyDictionary<int, ParticleOptionShape> ModernV26_2 => ShapesV26_2;
+
+    /// <summary>The 26.3 (protocol 777) particle option shape table.</summary>
+    public static IReadOnlyDictionary<int, ParticleOptionShape> ModernV26_3 => ShapesV26_3;
 
     /// <summary>Reads a modern particle: a VarInt type id, then the type-specific options captured verbatim. The shape table tells the reader how many option bytes the type carries. Item particles read a full modern <c>ItemStack</c> (era-selected via <paramref name="icons"/>, including data components) and re-serialize it into the captured option bytes so the payload still round-trips byte-exactly.</summary>
     internal static ParticleData ReadModern(

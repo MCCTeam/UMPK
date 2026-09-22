@@ -155,6 +155,10 @@ internal sealed partial class ItemComponentTable
     /// <returns>The table.</returns>
     public static ItemComponentTable V26_2() => Build(ItemComponentLayout.V26_2);
 
+    /// <summary>Builds the 26.3 (protocol 777) component id table: its own 122-id ordering, the 26.x payload family, and the 26.1 nested-stack template form.</summary>
+    /// <returns>The table.</returns>
+    public static ItemComponentTable V26_3() => Build(ItemComponentLayout.V26_3);
+
     /// <summary>
     /// The three components whose payload shapes change at 1.21.9 and therefore require codecs from protocol 773 onward that differ from their 1.21.5 codecs.
     /// <list type="bullet">
@@ -194,6 +198,11 @@ internal sealed partial class ItemComponentTable
         NestedStackComponentCodec useRemainder = ItemComponentCodecs.MakeUseRemainder(layout.NestedStacks);
         NestedStackComponentCodec sulfurCube = ItemComponentCodecs.MakeSulfurCubeContent();
 
+        // 26.3 replaces the counted sherd-id list with four optional template stacks; older eras keep the list codec.
+        ItemComponentCodec potDecorations = layout.PotDecorationsStacks
+            ? ItemComponentCodecs.MakePotDecorationsV26_3()
+            : ItemComponentCodecs.PotDecorations;
+
         ItemComponentCodec[] typed =
         [
             ItemComponentCodecs.CustomData,
@@ -218,7 +227,7 @@ internal sealed partial class ItemComponentTable
             container,
             bundle,
             charged,
-            ItemComponentCodecs.PotDecorations,
+            potDecorations,
             ItemComponentCodecs.PotionContents,
             layout.TypedEntityData ? ItemComponentCodecs.ProfileV1_21_9 : ItemComponentCodecs.Profile,
             ItemComponentCodecs.WritableBookContent,
@@ -296,6 +305,9 @@ internal sealed partial class ItemComponentTable
         charged.Bind(table);
         useRemainder.Bind(table);
         sulfurCube.Bind(table);
+        if (potDecorations is NestedStackComponentCodec nestedPotDecorations)
+            nestedPotDecorations.Bind(table);
+
         return table;
     }
 
@@ -399,7 +411,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.Fireworks,
             ItemComponentCodecs.FireworkExplosion,
 
-            // pot_decorations has the same VarInt-counted list of at most four item registry ids across every structured-component era.
+            // pot_decorations has the same VarInt-counted list of at most four item registry ids on these pre-1.21.5 eras (26.3 replaces it with four optional template stacks; see the modern table above).
             ItemComponentCodecs.PotDecorations,
 
             // These components are included on every era that declares them. Ids the era does not carry drop out of the binding loop by themselves, which is what keeps the 1.21.2 additions (consumable, use_cooldown, damage_resistant, enchantable, equippable, repairable, death_protection) and 1.21's jukebox_playable off 766/767 without a gate. Only the shape that genuinely MOVES inside this table is gated: instrument's direct holder changed at 1.21.2 (a VarInt tick count became a FLOAT second count and a description component was appended), so it follows WideIdPayloads.

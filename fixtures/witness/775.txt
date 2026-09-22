@@ -188,7 +188,7 @@ Play Clientbound 0x7A minecraft:tab_list PlayerListCodecs.TabListV1_21_5 src:non
 Play Clientbound 0x7C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x7D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 src:none
 Play Clientbound 0x81 minecraft:transfer PlayCommonCodecs.Transfer src:none
-Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_1 src:synth w:377 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=D104C683
+Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_1 src:synth w:377 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P774(UnmodeledItemComponentException) reject:P776(Display=523C5EC4)
 Play Clientbound 0x83 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 src:none
 Play Clientbound 0x84 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 src:none

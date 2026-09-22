@@ -19,6 +19,9 @@ public static partial class CommandTreeCodecs
     /// <summary>The 26.2 (protocol 776) declare-commands codec.</summary>
     public static PacketCodec<ClientboundCommandsPacket> V26_2 { get; } = Build(ArgumentTypeRegistry.V26_2);
 
+    /// <summary>The 26.3 (protocol 777) declare-commands codec.</summary>
+    public static PacketCodec<ClientboundCommandsPacket> V26_3 { get; } = Build(ArgumentTypeRegistry.V26_3);
+
     // Internal (not private) so the per-version era members can bind their own argument-type tables. timeHasMin is the second per-era axis: minecraft:time gained its int min at protocol 762, so the 759-761 members must read and write an EMPTY payload for it (see ArgumentTypeRegistry.ReadProperties).
     internal static PacketCodec<ClientboundCommandsPacket> Build(ArgumentTypeRegistry registry, bool timeHasMin = true) =>
         PacketCodec<ClientboundCommandsPacket>.Of(
@@ -166,7 +169,8 @@ public static partial class CommandTreeCodecs
             .From(JavaProtocols.V1_20_5, CommandTreeCodecs.V1_20_5)
             .From(JavaProtocols.V1_21_5, CommandTreeCodecs.V1_21_5)
             .From(JavaProtocols.V1_21_6, CommandTreeCodecs.V1_21_6)
-            .From(JavaProtocols.V26_2, CommandTreeCodecs.V26_2);
+            .From(JavaProtocols.V26_2, CommandTreeCodecs.V26_2)
+            .From(JavaProtocols.V26_3, CommandTreeCodecs.V26_3);
     }
 
     /// <summary>The protocol-759/760 (1.19, 1.19.1, 1.19.2) declare-commands codec. <c>minecraft:time</c> is a payload-free singleton here.</summary>

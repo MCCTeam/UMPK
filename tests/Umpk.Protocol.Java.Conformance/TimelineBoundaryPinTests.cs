@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Umpk.Protocol.Java.Conformance;
 
-/// <summary>The packet-shaped dimension of the registration ratchet. <see cref="CodecIdentityPinTests"/> freezes one protocol's bindings per file, which answers "what does 776 bind" and cannot answer "which protocols does this codec govern" without reading 49 files. This pin is the transpose: one line per packet listing the runs of protocols that resolve one codec.</summary>
+/// <summary>The packet-shaped dimension of the registration ratchet. <see cref="CodecIdentityPinTests"/> freezes one protocol's bindings per file, which answers "what does 777 bind" and cannot answer "which protocols does this codec govern" without reading 50 files. This pin is the transpose: one line per packet listing the runs of protocols that resolve one codec.</summary>
 /// <remarks>
 /// <para>The table is rendered from the built descriptors rather than from the codec-identity fixtures, so it is a second independent view rather than a copy, and <see cref="TheBandTable_ProjectsOntoTheCodecIdentityPin"/> is what ties the two together: expanding every range back into protocols must reproduce that protocol's frozen identity table exactly. A band arithmetic bug would pin cleanly and fail there.</para>
 /// </remarks>

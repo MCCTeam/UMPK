@@ -45,7 +45,10 @@ internal static class RecipeDisplayCodecs
     internal static SlotDisplayTable SlotsV1_21_5 { get; } = new(KindsV1_21_2, trimPatternIsHolder: true);
 
     /// <summary>26.1 - 26.2 (775, 776): the eleven-variant table, holder-form trim pattern.</summary>
-    internal static SlotDisplayTable SlotsV26_1 { get; } = new(KindsV26_1, trimPatternIsHolder: true);
+    internal static SlotDisplayTable SlotsV26_1 { get; } = new(KindsV26_1, trimPatternIsHolder: true, tagIsHolderSet: false);
+
+    /// <summary>26.3 (777): the eleven-variant table, holder-form trim pattern, holder-set tag payload.</summary>
+    internal static SlotDisplayTable SlotsV26_3 { get; } = new(KindsV26_1, trimPatternIsHolder: true, tagIsHolderSet: true);
 
     /// <summary>One variant of <c>SlotDisplay</c>, named rather than numbered so the era tables can differ.</summary>
     internal enum SlotDisplayKind
@@ -84,16 +87,21 @@ internal static class RecipeDisplayCodecs
         Dyed,
     }
 
-    /// <summary>One era's <c>slot_display</c> wire rules: the registration order (which IS the id mapping) plus the shape of <c>smithing_trim</c>'s third field. The two move independently across the nine protocols this packet exists on, and getting either wrong misreads every byte that follows, so they travel together and a codec is bound with one of these rather than with a loose array.</summary>
+    /// <summary>One era's <c>slot_display</c> wire rules: the registration order (which IS the id mapping) plus the shape of <c>smithing_trim</c>'s third field and of the <c>tag</c> payload. The three move independently across the ten protocols this packet exists on, and getting any wrong misreads every byte that follows, so they travel together and a codec is bound with one of these rather than with a loose array.</summary>
     internal sealed class SlotDisplayTable
     {
         private readonly SlotDisplayKind[] _kinds;
 
-        internal SlotDisplayTable(SlotDisplayKind[] kinds, bool trimPatternIsHolder)
+        internal SlotDisplayTable(SlotDisplayKind[] kinds, bool trimPatternIsHolder, bool tagIsHolderSet = false)
         {
             _kinds = kinds;
             TrimPatternIsHolder = trimPatternIsHolder;
+            TagIsHolderSet = tagIsHolderSet;
             Form = $"{string.Join('+', kinds)},trimholder={(trimPatternIsHolder ? 1 : 0)}";
+            if (tagIsHolderSet)
+            {
+                Form += ",tagholderset=1";
+            }
         }
 
         /// <summary>This era's contribution to the wire shape of any codec that reads through it.</summary>
@@ -101,6 +109,9 @@ internal static class RecipeDisplayCodecs
 
         /// <summary>True from 1.21.5, when <c>smithing_trim</c>'s pattern uses a registry holder.</summary>
         internal bool TrimPatternIsHolder { get; }
+
+        /// <summary>True from 26.3, when the <c>tag</c> payload is an item holder set (VarInt count+1, where 0 names a tag next and anything else counts inline ids) instead of a bare identifier string.</summary>
+        internal bool TagIsHolderSet { get; }
 
         /// <summary>How many variants this era registers.</summary>
         internal int Count => _kinds.Length;
@@ -417,7 +428,10 @@ internal static class RecipeDisplayCodecs
                 return new SlotDisplay.Stack(readStack(ref r, context));
 
             case SlotDisplayKind.Tag:
-                // One resource-location string.
+                // Through 26.2 the tag is one resource-location string. From 26.3 it is an item holder set: VarInt 0 names a tag next, anything else counts inline network ids.
+                if (table.TagIsHolderSet)
+                    return ReadTagHolderSet(ref r);
+
                 return new SlotDisplay.Tag(r.ReadString());
 
             case SlotDisplayKind.SmithingTrim:
@@ -461,6 +475,20 @@ internal static class RecipeDisplayCodecs
         }
     }
 
+    /// <summary>Reads a 26.3+ tag holder set: a VarInt of <c>count + 1</c>, where 0 means "a tag, named next" and anything else means that many inline item network ids.</summary>
+    private static SlotDisplay ReadTagHolderSet(ref PacketReader r)
+    {
+        int size = r.ReadVarInt();
+        if (size == 0)
+            return new SlotDisplay.Tag(r.ReadString());
+
+        var ids = new int[size - 1];
+        for (int i = 0; i < ids.Length; i++)
+            ids[i] = r.ReadVarInt();
+
+        return new SlotDisplay.TagItems(ids);
+    }
+
     private static void WriteSlot(
         ref PacketWriter w,
         SlotDisplay slot,
@@ -485,7 +513,23 @@ internal static class RecipeDisplayCodecs
                 break;
 
             case SlotDisplay.Tag tag:
-                w.WriteString(tag.Name);
+                if (table.TagIsHolderSet)
+                {
+                    w.WriteVarInt(0);
+                    w.WriteString(tag.Name);
+                }
+                else
+                    w.WriteString(tag.Name);
+                break;
+
+            case SlotDisplay.TagItems tagItems:
+                if (!table.TagIsHolderSet)
+                    throw new ProtocolViolationException(
+                        "Inline tag holder sets have no wire form on this protocol's string-form tag payload.");
+
+                w.WriteVarInt(tagItems.ItemIds.Count + 1);
+                foreach (int id in tagItems.ItemIds)
+                    w.WriteVarInt(id);
                 break;
 
             case SlotDisplay.SmithingTrim trim:
@@ -630,6 +674,7 @@ internal static class RecipeDisplayCodecs
         SlotDisplay.Item => SlotDisplayKind.Item,
         SlotDisplay.Stack => SlotDisplayKind.ItemStack,
         SlotDisplay.Tag => SlotDisplayKind.Tag,
+        SlotDisplay.TagItems => SlotDisplayKind.Tag,
         SlotDisplay.SmithingTrim => SlotDisplayKind.SmithingTrim,
         SlotDisplay.WithRemainder => SlotDisplayKind.WithRemainder,
         SlotDisplay.Composite => SlotDisplayKind.Composite,

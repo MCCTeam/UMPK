@@ -15,9 +15,12 @@ public static partial class EntityPackets
     }
 }
 
-/// <summary>Entity position sync (1.21.2+): entity id, position/move/rotation, on-ground.</summary>
+/// <summary>Entity position sync (1.21.2+): entity id, position/move/rotation, on-ground. From 26.3 the path itself rides the packet (see <see cref="Path"/>); <see cref="Values"/> mirrors the destination so era-blind consumers keep working.</summary>
 public sealed record ClientboundEntityPositionSyncPacket(int EntityId, PositionMoveRotation Values, bool OnGround) : IPacket
 {
     /// <inheritdoc />
     public PacketType Type => EntityPackets.Clientbound.EntityPositionSync;
+
+    /// <summary>The 26.3+ position path. Null on older eras, which carry a single position/move/rotation instead.</summary>
+    public EntityPositionPath? Path { get; init; }
 }

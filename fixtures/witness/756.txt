@@ -134,7 +134,7 @@ Play Clientbound 0x5D minecraft:stop_sound WorldEffectCodecs.StopSoundV1_13 src:
 Play Clientbound 0x5E minecraft:tab_list PlayerListCodecs.TabListV1_9 src:none
 Play Clientbound 0x60 minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x61 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
-Play Clientbound 0x62 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_13_2 src:synth w:368 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=8851FFCC
+Play Clientbound 0x62 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_13_2 src:synth w:368 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6D3907CB
     reject:P393(NbtFormatException) reject:P763(ProtocolViolationException)
 Play Clientbound 0x63 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
 Play Clientbound 0x64 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_8 src:none

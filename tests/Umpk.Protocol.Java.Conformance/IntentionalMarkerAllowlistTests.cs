@@ -179,7 +179,7 @@ public sealed class IntentionalMarkerAllowlistTests
 
         // These exact totals make every marker addition, removal, and reason change an explicit update.
         Assert.Equal(71, IntentionalMarkers.All.Count);
-        Assert.Equal(1103, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
+        Assert.Equal(1146, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
         Assert.Equal(2, byReason[MarkerReason.HandledElsewhere]);
         Assert.Equal(4, byReason[MarkerReason.WrongCodecWouldBeWorse]);
         Assert.Equal(2, byReason[MarkerReason.DatasetArtifact]);

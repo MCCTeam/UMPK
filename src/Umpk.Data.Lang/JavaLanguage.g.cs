@@ -12,7 +12,7 @@ internal static class JavaLanguage
     public static ReadOnlySpan<byte> Pool => LangTables.LanguagePoolShared;
 
     // Every protocol with a shipped table, ascending (indexMember is a SortedDictionary, so this and the Index(...) switch below are always built from the same order).
-    public static ReadOnlySpan<int> Protocols => new int[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490, 498, 573, 575, 578, 735, 736, 751, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776 };
+    public static ReadOnlySpan<int> Protocols => new int[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490, 498, 573, 575, 578, 735, 736, 751, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777 };
 
     public static ReadOnlySpan<byte> Index(int protocol) => protocol switch
     {
@@ -65,6 +65,7 @@ internal static class JavaLanguage
         774 => LangTables.LanguageIndexV774,
         775 => LangTables.LanguageIndexV775,
         776 => LangTables.LanguageIndexV776,
+        777 => LangTables.LanguageIndexV777,
         _ => default,
     };
 }

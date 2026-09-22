@@ -1,6 +1,6 @@
 # Contributing to UMPK
 
-Thanks for helping with UMPK. Small, well-tested changes are easier to review and safer across 49 protocol revisions.
+Thanks for helping with UMPK. Small, well-tested changes are easier to review and safer across 50 protocol revisions.
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 

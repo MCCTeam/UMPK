@@ -198,7 +198,7 @@ public static class ActionCosts
     public const double JumpPenalty = 2.0;
 
     /// <summary>The only floor speed factor below 1.0 in supported versions: <b>0.4</b>, used by <c>minecraft:soul_sand</c> and <c>minecraft:honey_block</c>.</summary>
-    /// <remarks>Across all 49 supported protocol registries, these are the only blocks whose speed factor is not 1.0. This exhaustive result allows <see cref="SpeedFactorCostMultiplier(double)"/> to be a MEASURED number at 0.4 and a conservative estimate everywhere else.</remarks>
+    /// <remarks>Across all 50 supported protocol registries, these are the only blocks whose speed factor is not 1.0. This exhaustive result allows <see cref="SpeedFactorCostMultiplier(double)"/> to be a MEASURED number at 0.4 and a conservative estimate everywhere else.</remarks>
     public const double MeasuredSlowFloorSpeedFactor = 0.4;
 
     /// <summary>What walking over a <see cref="MeasuredSlowFloorSpeedFactor"/> floor really costs, relative to open ground: <b>1.691</b>, not the 2.5 that <c>1 / 0.4</c> implies.</summary>

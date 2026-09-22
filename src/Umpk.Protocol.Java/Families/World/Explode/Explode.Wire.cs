@@ -193,9 +193,13 @@ public static partial class WorldEffectCodecs
     public static readonly PacketCodec<ClientboundExplodePacket> ExplodeV26_2 =
         RadiusExplode(ParticleCodec.ModernV26_2, ItemPacketCodecShared.Table776);
 
-    /// <summary>The 773-776 explosion body, parameterized by the two particle-facing era tables.</summary>
+    /// <summary>26.3 (777) explosion: the 773 frame plus a trailing bool playSound after the weighted block-particle list, with the 777 particle ordering and the 777 component table.</summary>
+    public static readonly PacketCodec<ClientboundExplodePacket> ExplodeV26_3 =
+        RadiusExplode(ParticleCodec.ModernV26_3, ItemPacketCodecShared.Table777, hasPlaySoundField: true);
+
+    /// <summary>The 773-777 explosion body, parameterized by the two particle-facing era tables. <paramref name="hasPlaySoundField"/> selects the 777 trailing bool after the weighted block-particle list; 773-776 carry no such field and always play the sound.</summary>
     private static PacketCodec<ClientboundExplodePacket> RadiusExplode(
-        IReadOnlyDictionary<int, ParticleOptionShape> shapes, ItemComponentTable components) =>
+        IReadOnlyDictionary<int, ParticleOptionShape> shapes, ItemComponentTable components, bool hasPlaySoundField = false) =>
         PacketCodec<ClientboundExplodePacket>.Of(
             (ref PacketWriter w, ClientboundExplodePacket p, PacketCodecContext _) =>
             {
@@ -212,6 +216,8 @@ public static partial class WorldEffectCodecs
                     ew.WriteFloat(info.Speed);
                     ew.WriteVarInt(info.Weight);
                 });
+                if (hasPlaySoundField)
+                    w.WriteBool(p.PlaySound);
             },
             (ref PacketReader r, PacketCodecContext ctx) =>
             {
@@ -226,19 +232,24 @@ public static partial class WorldEffectCodecs
                     ParticleData bp = ParticleCodec.ReadModern(ref er, shapes, components, ctx);
                     return new ExplosionParticleInfo(bp, er.ReadFloat(), er.ReadFloat(), er.ReadVarInt());
                 });
-                return new ClientboundExplodePacket(center, 0f, [], 0f, 0f, 0f, knockback, particle, sound, radius, blockCount, blockParticles);
-            });
+                bool play = !hasPlaySoundField || r.ReadBool();
+                return new ClientboundExplodePacket(center, 0f, [], 0f, 0f, 0f, knockback, particle, sound, radius, blockCount, blockParticles) { PlaySound = play };
+            },
+            hasPlaySoundField
+                ? WireShape.Of("vec3,float,int,optional_vec3,particle,sound,weighted_particles,bool")
+                : WireShape.Opaque);
 
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareExplode(PacketBindings bindings)
     {
-        // The explosion frame has six wire eras:
+        // The explosion frame has seven wire eras:
         //   47-754  1.8-1.16.5    float center, strength, INT-counted offsets, float motion
         //   755-760 1.17-1.19.2   the same with a VarInt-counted list
         //   761-764 1.19.3-1.20.2 the same with a DOUBLE center
         //   765-767 1.20.3-1.21.1 + block-interaction ordinal + (particle, particle, sound) tail
         //   768-772 1.21.2-1.21.8 center, optional knockback, particle, sound holder
         //   773-776 1.21.9-26.2   + radius, block count, weighted block-particle list
+        //   777     26.3          + trailing bool playSound
         //
         // From 768, particle ids and item-particle payloads also follow the active particle registry and item-component table. The bindings therefore use the same boundaries as level-particles.
         bindings.Packet(WorldPackets.Clientbound.Explode)
@@ -253,6 +264,7 @@ public static partial class WorldEffectCodecs
             .From(JavaProtocols.V1_21_9, WorldEffectCodecs.ExplodeV1_21_9)
             .From(JavaProtocols.V1_21_11, WorldEffectCodecs.ExplodeV1_21_11)
             .From(JavaProtocols.V26_1, WorldEffectCodecs.ExplodeV26_1)
-            .From(JavaProtocols.V26_2, WorldEffectCodecs.ExplodeV26_2);
+            .From(JavaProtocols.V26_2, WorldEffectCodecs.ExplodeV26_2)
+            .From(JavaProtocols.V26_3, WorldEffectCodecs.ExplodeV26_3);
     }
 }

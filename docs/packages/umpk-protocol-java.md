@@ -1,13 +1,13 @@
 ---
 title: "Umpk.Protocol.Java"
-description: "Codecs, packet registration, framing and encryption, login, chat signing and status pings for 49 protocols."
+description: "Codecs, packet registration, framing and encryption, login, chat signing and status pings for 50 protocols."
 sidebar:
   order: 8
 ---
 
 `Umpk.Protocol.Java` is the wire. It owns framing (length prefix, compression, AES-CFB8 encryption), the packet model and its registration tables, the login and configuration handshakes, chat message signing, and the two status pings. It is the biggest package in the repository, and the one where "vanilla decides" is enforced hardest: a codec is proven by decoding bytes a real server sent, then re-encoding them byte-identically.
 
-Nothing in here knows which version it is talking to until you hand it a `ProtocolDescriptor`. That is what keeps 49 protocols in one codebase.
+Nothing in here knows which version it is talking to until you hand it a `ProtocolDescriptor`. That is what keeps 50 protocols in one codebase.
 
 ## Its place in the stack
 

@@ -231,6 +231,7 @@ SERIALIZER_CODEC = {
     "SNIFFER_STATE": "SnifferState",
     "WEATHERING_COPPER_STATE": "WeatheringCopperState",
     "COPPER_GOLEM_STATE": "CopperGolemState",
+    "DYE_COLOR": "DyeColor",
     "VECTOR3": "Vector3",
     "QUATERNION": "Quaternion",
     "RESOLVABLE_PROFILE": "ResolvableProfile",

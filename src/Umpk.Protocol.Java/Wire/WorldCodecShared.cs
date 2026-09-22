@@ -184,6 +184,57 @@ internal static class WorldCodecShared
             },
             WireShape.OfEra("level_particles_modern", era));
 
+    /// <summary>The 26.3 (777) level-particles frame. Vanilla <c>ClientboundLevelParticlesPacket.STREAM_CODEC</c> proves the exact order: the particle (type id plus options) FIRST, then <c>overrideLimiter</c> bool, <c>alwaysShow</c> bool, double x/y/z, float xDist/yDist/zDist, float xMaxSpeed/yMaxSpeed/zMaxSpeed, VarInt count, VarInt randomization type (0 default, 1 alternative, 2 alternative-with-speed). The single speed of every earlier modern era splits into three per-axis floats here, and the count narrows from a big-endian int to a VarInt, so a 777 frame read under the 776 codec leaves the two extra speed floats plus the int-vs-VarInt delta behind as trailing bytes.</summary>
+    /// <param name="era">The era's particle tables and frame shape.</param>
+    /// <returns>The codec.</returns>
+    internal static PacketCodec<ClientboundLevelParticlesPacket> MakeLevelParticles777(ParticlesWire era) =>
+        PacketCodec<ClientboundLevelParticlesPacket>.Of(
+            (ref PacketWriter w, ClientboundLevelParticlesPacket p, PacketCodecContext _) =>
+            {
+                if (!Enum.IsDefined(p.Randomization))
+                    throw new ProtocolViolationException($"Unknown level-particles randomization type {(int)p.Randomization}.");
+
+                ParticleCodec.WriteModern(ref w, p.Particle);
+                w.WriteBool(p.OverrideLimiter);
+                w.WriteBool(p.AlwaysShow);
+                w.WriteDouble(p.X);
+                w.WriteDouble(p.Y);
+                w.WriteDouble(p.Z);
+                w.WriteFloat(p.XDist);
+                w.WriteFloat(p.YDist);
+                w.WriteFloat(p.ZDist);
+                w.WriteFloat(p.MaxSpeed);
+                w.WriteFloat(p.YMaxSpeed);
+                w.WriteFloat(p.ZMaxSpeed);
+                w.WriteVarInt(p.Count);
+                w.WriteVarInt((int)p.Randomization);
+            },
+            (ref PacketReader r, PacketCodecContext ctx) =>
+            {
+                ParticleData particle = ParticleCodec.ReadModern(ref r, era.Shapes, era.Icons, ctx);
+                bool limiter = r.ReadBool();
+                bool alwaysShow = r.ReadBool();
+                double x = r.ReadDouble();
+                double y = r.ReadDouble();
+                double z = r.ReadDouble();
+                float xd = r.ReadFloat();
+                float yd = r.ReadFloat();
+                float zd = r.ReadFloat();
+                float xSpeed = r.ReadFloat();
+                float ySpeed = r.ReadFloat();
+                float zSpeed = r.ReadFloat();
+                int count = r.ReadVarInt();
+
+                // Vanilla maps an out-of-range id to DEFAULT (ByIdMap.OutOfBoundsStrategy.ZERO), so the reader does the same rather than faulting.
+                int randomization = r.ReadVarInt();
+                var kind = randomization is 0 or 1 or 2
+                    ? (LevelParticleRandomizationType)randomization
+                    : LevelParticleRandomizationType.Default;
+                return new ClientboundLevelParticlesPacket(
+                    limiter, alwaysShow, x, y, z, xd, yd, zd, xSpeed, ySpeed, zSpeed, count, particle, kind);
+            },
+            WireShape.OfEra("level_particles_777", era));
+
     /// <summary>The 1.14-1.20.4 level-particles frame, where the particle TYPE ID is written FIRST and only the type-specific options trail the packet. Two things vary across that band and nothing else does.</summary>
     /// <param name="varIntTypeId">False for 477-758, where the id is a raw big-endian int; true from 1.19 (759), where it became a VarInt through protocol 765.</param>
     /// <param name="doublePosition">False for 477-498, where x/y/z are floats; true from 1.15 (573), where they became doubles. Twelve bytes of difference means a frame read under the wrong form never lines up.</param>
@@ -289,6 +340,64 @@ internal static class WorldCodecShared
         for (int i = 0; i < values.Length; i++)
             w.WriteLong(values[i]);
 
+    }
+
+    /// <summary>Reads a 26.3 BitSet mask: a VarInt length followed by that many bytes, little-endian (bit <c>i</c> lives in byte <c>i / 8</c> at bit <c>i % 8</c>), grouped into longs for the shared <see cref="LightUpdateData"/> model. A zero length reads as the empty set.</summary>
+    internal static long[] ReadBitSetMask(ref PacketReader r)
+    {
+        byte[] bytes = r.ReadByteArray().ToArray();
+        var values = new long[(bytes.Length + 7) / 8];
+        for (int i = 0; i < bytes.Length; i++)
+            values[i / 8] |= (long)bytes[i] << ((i % 8) * 8);
+
+        return values;
+    }
+
+    /// <summary>Writes a 26.3 BitSet mask: the little-endian bytes of the set bits with trailing zero bytes stripped (java.util.BitSet.toByteArray canonical form; the empty set writes zero length). Trailing zero longs in the model carry no bits, so stripping them is lossless: decode(encode(x)) names the same bit set.</summary>
+    internal static void WriteBitSetMask(ref PacketWriter w, long[] values)
+    {
+        int end = values.Length;
+        while (end > 0 && values[end - 1] == 0)
+            end--;
+
+        if (end == 0)
+        {
+            w.WriteVarInt(0);
+            return;
+        }
+
+        long last = values[end - 1];
+        int lastBytes = 8;
+        while (lastBytes > 0 && ((last >> ((lastBytes - 1) * 8)) & 0xFF) == 0)
+            lastBytes--;
+
+        int total = ((end - 1) * 8) + lastBytes;
+        w.WriteVarInt(total);
+        for (int i = 0; i < total; i++)
+            w.WriteByte((byte)((values[i / 8] >> ((i % 8) * 8)) & 0xFF));
+    }
+
+    /// <summary>Writes the 26.3 light-data block: byte-array BitSet masks, then the shared nibble-array lists.</summary>
+    internal static void WriteLightData777(ref PacketWriter w, LightUpdateData light)
+    {
+        WriteBitSetMask(ref w, light.SkyYMask);
+        WriteBitSetMask(ref w, light.BlockYMask);
+        WriteBitSetMask(ref w, light.EmptySkyYMask);
+        WriteBitSetMask(ref w, light.EmptyBlockYMask);
+        WriteNibbleArrays(ref w, light.SkyUpdates);
+        WriteNibbleArrays(ref w, light.BlockUpdates);
+    }
+
+    /// <summary>Reads the 26.3 light-data block.</summary>
+    internal static LightUpdateData ReadLightData777(ref PacketReader r)
+    {
+        long[] sky = ReadBitSetMask(ref r);
+        long[] block = ReadBitSetMask(ref r);
+        long[] emptySky = ReadBitSetMask(ref r);
+        long[] emptyBlock = ReadBitSetMask(ref r);
+        byte[][] skyUpdates = ReadNibbleArrays(ref r);
+        byte[][] blockUpdates = ReadNibbleArrays(ref r);
+        return new LightUpdateData(sky, block, emptySky, emptyBlock, skyUpdates, blockUpdates);
     }
 
     internal static long[] ReadLongArray(ref PacketReader r)

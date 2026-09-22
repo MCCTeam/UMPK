@@ -181,6 +181,9 @@ internal static partial class ItemStackCodecs
     /// <summary>The 26.2 component era (protocol 776 component id table, attribute-modifier display field).</summary>
     public static ItemComponentTable ComponentsV26_2 { get; } = ItemComponentTable.V26_2();
 
+    /// <summary>The 26.3 component era (protocol 777 component id table).</summary>
+    public static ItemComponentTable ComponentsV26_3 { get; } = ItemComponentTable.V26_3();
+
     /// <summary>Reads a modern component-based item stack under the given component era table.</summary>
     public static ItemStack ReadModernStack(ref PacketReader reader, PacketCodecContext context, ItemComponentTable table) =>
         ReadModernStackCore(ref reader, context, table, StackTrust.Trusted);

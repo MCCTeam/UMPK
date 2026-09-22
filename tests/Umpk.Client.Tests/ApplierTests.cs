@@ -44,6 +44,20 @@ public sealed class ApplierTests
     }
 
     [Fact]
+    public async Task Self_Position_777_ConfirmsTeleportWithoutPositionEcho()
+    {
+        // 26.3 applies the teleport from the destination-carrying accept itself (vanilla client sends nothing else), so the follow-up position echo that older eras require would be a second position packet in the same tick.
+        var harness = new ApplierHarness(JavaVersions.V26_3);
+        var pos = new ClientboundPlayerPositionPacket(10, 65, -3, 90, 0, 0, TeleportId: 7, ModernValues: null);
+
+        await harness.ApplyAsync(pos);
+
+        Assert.Equal(new Vec3d(10, 65, -3), harness.State.Self.Position);
+        var accept = Assert.IsType<ServerboundAcceptTeleportationPacket>(Assert.Single(harness.Recorder.Packets));
+        Assert.Equal(new ServerboundAcceptTeleportationPacket(7, 10, 65, -3, 90, 0), accept);
+    }
+
+    [Fact]
     public async Task Self_Abilities_Pushes_PhysicsConditions()
     {
         var harness = new ApplierHarness(Version);
@@ -157,6 +171,23 @@ public sealed class ApplierTests
         await harness.ApplyAsync(new ClientboundMoveEntityPosPacket(42, 4096, 0, 0, OnGround: true));
 
         Assert.Equal(1.0, harness.State.Entities.Get(42)!.Position.X, 3);
+    }
+
+    [Fact]
+    public async Task Entity_MultiStepMove_AppliesCumulativeDeltas()
+    {
+        var harness = new ApplierHarness(Version);
+        await harness.ApplyAsync(new ClientboundAddEntityPacket(
+            EntityId: 42, Uuid: Guid.NewGuid(), TypeId: 0, X: 0, Y: 64, Z: 0,
+            XRot: 0, YRot: 0, YHeadRot: 0, Data: 0, VelocityX: 0, VelocityY: 0, VelocityZ: 0, ModernVelocityRaw: null));
+
+        await harness.ApplyAsync(new ClientboundMoveEntityPosPacket(42, 0, 0, 0, OnGround: true)
+        {
+            Steps = [new EntityMoveStep(0, 4096, 0, 0), new EntityMoveStep(1, 0, 2048, 0)],
+        });
+
+        Assert.Equal(1.0, harness.State.Entities.Get(42)!.Position.X, 3);
+        Assert.Equal(64.5, harness.State.Entities.Get(42)!.Position.Y, 3);
     }
 
     [Fact]

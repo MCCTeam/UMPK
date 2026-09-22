@@ -62,7 +62,9 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosPacket move:
                 if (store.TryGet(move.EntityId, out Entity? posEntity) && posEntity is not null)
                 {
-                    posEntity.Position = posEntity.Position.Add(move.DeltaX / 4096.0, move.DeltaY / 4096.0, move.DeltaZ / 4096.0);
+                    // 26.3 may carry stepped deltas: apply every step cumulatively, not just the mirrored first one.
+                    (double dx, double dy, double dz) = SumSteps(move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
+                    posEntity.Position = posEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
                     posEntity.OnGround = move.OnGround;
                     await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
                 }
@@ -82,7 +84,8 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosRotPacket posRot:
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
-                    prEntity.Position = prEntity.Position.Add(posRot.DeltaX / 4096.0, posRot.DeltaY / 4096.0, posRot.DeltaZ / 4096.0);
+                    (double dx, double dy, double dz) = SumSteps(posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
+                    prEntity.Position = prEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
                     prEntity.Yaw = posRot.Yaw;
                     prEntity.Pitch = posRot.Pitch;
                     prEntity.OnGround = posRot.OnGround;
@@ -213,6 +216,24 @@ internal sealed class EntityApplier : IApplier
     /// <remarks>Two wire forms, and the era decides which one holds the value. Through protocol 772 the packet is three shorts of <c>value * 8000</c>, clamped SERVER-side to +/-3.9 before they are written, which is why the client applies no clamp of its own. From 1.21.9 (protocol 773, so 1.21.9/1.21.10/1.21.11/26.1/26.2) the three shorts are replaced by the low-precision quantized block and the bound codec parks it in <c>ModernVelocityRaw</c> with the shorts left at literal zero, so reading the shorts on those protocols yields zero for every entity.</remarks>
     private static Vec3d ReadVelocity(ClientboundSetEntityMotionPacket motion)
         => SpawnVelocity(motion.VelocityX, motion.VelocityY, motion.VelocityZ, motion.ModernVelocityRaw);
+
+    /// <summary>Sums a 26.3+ stepped relative move into raw wire deltas. An empty step list falls back to the legacy single-delta fields, so pre-26.3 packets and zero-step frames take the same path.</summary>
+    private static (double Dx, double Dy, double Dz) SumSteps(
+        IReadOnlyList<EntityMoveStep> steps, short deltaX, short deltaY, short deltaZ)
+    {
+        if (steps.Count == 0)
+            return (deltaX, deltaY, deltaZ);
+
+        long dx = 0, dy = 0, dz = 0;
+        foreach (EntityMoveStep step in steps)
+        {
+            dx += step.DeltaX;
+            dy += step.DeltaY;
+            dz += step.DeltaZ;
+        }
+
+        return (dx, dy, dz);
+    }
 
     /// <summary>The velocity a spawn frame (<c>add_entity</c> / <c>add_mob</c>) or a <c>set_entity_motion</c> frame carries, in blocks per tick. One decode for both, so the two paths cannot drift apart.</summary>
     /// <remarks>

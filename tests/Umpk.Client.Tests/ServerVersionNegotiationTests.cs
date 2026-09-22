@@ -57,13 +57,13 @@ public sealed class ServerVersionNegotiationTests
         Assert.True(negotiation.Succeeded);
         Assert.Equal(VersionNegotiationFailure.None, negotiation.Failure);
         Assert.NotNull(negotiation.Status);
-        Assert.Same(JavaVersions.V26_2, negotiation.Version);
+        Assert.Same(JavaVersions.V26_3, negotiation.Version);
     }
 
     [Fact]
     public async Task DetectAsync_UnsupportedProtocol_FallsBackToClosestSupported()
     {
-        // "future" has no version tokens, so mining fails and numeric closest wins. 999999 is far above ceiling 776 → closest is highest (26.2 / 776).
+        // "future" has no version tokens, so mining fails and numeric closest wins. 999999 is far above ceiling 777 → closest is highest (26.3 / 777).
         const string json = "{\"version\":{\"name\":\"future\",\"protocol\":999999}}";
         using var server = new ScriptedStatusServer(json);
         var negotiator = new ServerVersionNegotiator();
@@ -74,7 +74,7 @@ public sealed class ServerVersionNegotiationTests
         Assert.True(negotiation.Succeeded);
         Assert.Equal(VersionNegotiationFailure.None, negotiation.Failure);
         Assert.Equal(999999, negotiation.Status?.Protocol);
-        Assert.Same(JavaVersions.V26_2, negotiation.Version);
+        Assert.Same(JavaVersions.V26_3, negotiation.Version);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public sealed class ServerVersionNegotiationTests
             new ServerEndpoint("127.0.0.1", server.Port), ct: Ct());
 
         Assert.True(negotiation.Succeeded);
-        Assert.Same(JavaVersions.V26_2, negotiation.Version);
+        Assert.Same(JavaVersions.V26_3, negotiation.Version);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public sealed class ServerVersionNegotiationTests
             new ServerEndpoint("127.0.0.1", server.Port), ct: Ct());
 
         Assert.True(negotiation.Succeeded);
-        Assert.Same(JavaVersions.V26_2, negotiation.Version);
+        Assert.Same(JavaVersions.V26_3, negotiation.Version);
         Assert.Equal(VersionNegotiationFailure.None, negotiation.Failure);
     }
 
@@ -165,7 +165,7 @@ public sealed class ServerVersionNegotiationTests
             new ServerEndpoint("127.0.0.1", server.Port), ct: Ct());
 
         Assert.True(negotiation.Succeeded);
-        Assert.Same(JavaVersions.V26_2, negotiation.Version);
+        Assert.Same(JavaVersions.V26_3, negotiation.Version);
     }
 
     [Fact]

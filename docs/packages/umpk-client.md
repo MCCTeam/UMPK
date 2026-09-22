@@ -7,7 +7,7 @@ sidebar:
 
 `Umpk.Client` is the part you actually hold. It connects, logs in, runs the configuration phase, enters play, and from then on applies every decoded packet into a state model, raises a typed event, and lets you send actions back. It is the only package here with a session loop and a lifecycle.
 
-If you are writing a bot, this is your API. Almost everything else in the repository exists to make this package correct across 49 protocols.
+If you are writing a bot, this is your API. Almost everything else in the repository exists to make this package correct across 50 protocols.
 
 ## Its place in the stack
 

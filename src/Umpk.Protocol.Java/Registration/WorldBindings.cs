@@ -9,6 +9,7 @@ internal static class WorldBindings
     /// <summary>Adds this family's packet timelines to the binding table.</summary>
     public static void Register(PacketBindings bindings)
     {
+        WorldBlockCodecs.DeclareAddTransientBlock(bindings);
         WorldBlockCodecs.DeclareBlockChangedAck(bindings);
         WorldBlockCodecs.DeclareBlockDestruction(bindings);
         WorldBlockCodecs.DeclareBlockEntityData(bindings);

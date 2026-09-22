@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-`data/java/` is the part of UMPK that would survive a rewrite. It is JSON describing 49 protocol versions of Minecraft: which packet id means what, which blocks exist and what shape they collide as, which items and entities and registries and menus and command argument types the version knows, and which behavioral eras it belongs to. The C# in `src/` is a reader for it.
+`data/java/` is the part of UMPK that would survive a rewrite. It is JSON describing 50 protocol datasets for Minecraft: which packet id means what, which blocks exist and what shape they collide as, which items and entities and registries and menus and command argument types the version knows, and which behavioral eras it belongs to. The C# in `src/` is a reader for it.
 
 Calling it the canonical dataset is not marketing. When the dataset and the code disagree, the code is wrong by definition, because the dataset is what was extracted from Mojang's own server jars and the code is what somebody wrote afterwards.
 
@@ -77,7 +77,7 @@ Run all three from the repository root.
    dotnet run --project tools/Umpk.DataGen -- verify --data data/java
    ```
 
-The command must print `verify: OK (49 protocols)`. Any other output is a failure.
+The command must print `verify: OK (50 protocols)`. Any other output is a failure.
 
 2. Compare two protocols:
 

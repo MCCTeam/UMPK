@@ -54,7 +54,7 @@ if (!JavaVersions.TryGetByProtocol(protocol, out JavaVersion version))
 }
 ```
 
-`JavaVersions` lives in `Umpk.Data.Java` and is the generated catalog of all 49 supported versions. Besides `TryGetByProtocol` it offers `TryGetByName`, an `All` list, and one static property per version, so `JavaVersions.V1_21_8` works when you already know what you are talking to.
+`JavaVersions` lives in `Umpk.Data.Java` and is the generated catalog of all 50 supported protocols. Besides `TryGetByProtocol` it offers `TryGetByName`, an `All` list, and one static property per version name, so `JavaVersions.V1_21_8` works when you already know what you are talking to.
 
 `status.Protocol` is already the decoded `version.protocol` field, an `int?`. `ServerStatus.Parse` does the fiddly part for you: some proxies stringify the number, and vanilla itself would show no version at all for that shape, but real proxies emit one, so a stringified protocol is still accepted. A missing or genuinely malformed field leaves `Protocol` null, which is the cue this sample checks for. See [your first status ping](status-ping.md#what-serverstatus-carries) for everything else `ServerStatus` decodes.
 

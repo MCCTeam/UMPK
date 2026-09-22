@@ -390,4 +390,53 @@ internal sealed partial class ModernMetadataTable
         ModernMetadataSerializer.ResolvableProfile, // 41 RESOLVABLE_PROFILE
         ModernMetadataSerializer.VarIntHolder, // 42 HUMANOID_ARM
     ]);
+
+    /// <summary>Protocol 777 (26.3) serializer order (ids 0-43).</summary>
+    public static ModernMetadataTable V777 { get; } = new(
+    [
+        ModernMetadataSerializer.Byte, // 0 BYTE
+        ModernMetadataSerializer.Int, // 1 INT
+        ModernMetadataSerializer.Long, // 2 LONG
+        ModernMetadataSerializer.Float, // 3 FLOAT
+        ModernMetadataSerializer.String, // 4 STRING
+        ModernMetadataSerializer.Component, // 5 COMPONENT
+        ModernMetadataSerializer.OptionalComponent, // 6 OPTIONAL_COMPONENT
+        ModernMetadataSerializer.ItemStack, // 7 ITEM_STACK
+        ModernMetadataSerializer.Boolean, // 8 BOOLEAN
+        ModernMetadataSerializer.Rotations, // 9 ROTATIONS
+        ModernMetadataSerializer.BlockPos, // 10 BLOCK_POS
+        ModernMetadataSerializer.OptionalBlockPos, // 11 OPTIONAL_BLOCK_POS
+        ModernMetadataSerializer.Direction, // 12 DIRECTION
+        ModernMetadataSerializer.OptionalUuid, // 13 OPTIONAL_LIVING_ENTITY_REFERENCE
+        ModernMetadataSerializer.BlockState, // 14 BLOCK_STATE
+        ModernMetadataSerializer.OptionalBlockState, // 15 OPTIONAL_BLOCK_STATE
+        ModernMetadataSerializer.Particle, // 16 PARTICLE
+        ModernMetadataSerializer.Particles, // 17 PARTICLES
+        ModernMetadataSerializer.VillagerData, // 18 VILLAGER_DATA
+        ModernMetadataSerializer.OptionalUnsignedInt, // 19 OPTIONAL_UNSIGNED_INT
+        ModernMetadataSerializer.Pose, // 20 POSE
+        ModernMetadataSerializer.VarIntHolder, // 21 CAT_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 22 CAT_SOUND_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 23 COW_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 24 COW_SOUND_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 25 WOLF_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 26 WOLF_SOUND_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 27 FROG_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 28 PIG_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 29 PIG_SOUND_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 30 CHICKEN_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 31 CHICKEN_SOUND_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 32 ZOMBIE_NAUTILUS_VARIANT
+        ModernMetadataSerializer.OptionalGlobalPos, // 33 OPTIONAL_GLOBAL_POS
+        ModernMetadataSerializer.VarIntHolder, // 34 PAINTING_VARIANT
+        ModernMetadataSerializer.VarIntHolder, // 35 SNIFFER_STATE
+        ModernMetadataSerializer.VarIntHolder, // 36 ARMADILLO_STATE
+        ModernMetadataSerializer.VarIntHolder, // 37 COPPER_GOLEM_STATE
+        ModernMetadataSerializer.VarIntHolder, // 38 WEATHERING_COPPER_STATE
+        ModernMetadataSerializer.Vector3, // 39 VECTOR3
+        ModernMetadataSerializer.Quaternion, // 40 QUATERNION
+        ModernMetadataSerializer.ResolvableProfile, // 41 RESOLVABLE_PROFILE
+        ModernMetadataSerializer.VarIntHolder, // 42 HUMANOID_ARM
+        ModernMetadataSerializer.VarIntHolder, // 43 DYE_COLOR
+    ]);
 }

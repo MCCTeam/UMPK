@@ -109,6 +109,26 @@ public sealed class EntitySnapshotTests
     }
 
     [Fact]
+    public void CarriedItem_AbsentByDefault()
+    {
+        EntitySnapshot snapshot = EntitySnapshot.Project(NewEntity());
+
+        Assert.Null(snapshot.CarriedItem);
+    }
+
+    [Fact]
+    public void CarriedItem_ProjectsTheDroppedStack()
+    {
+        Entity entity = NewEntity(typeId: "minecraft:item");
+        var dirt = new ItemStack(Registries.Items[Identifier.Parse("minecraft:dirt")], 5);
+        entity.CarriedItem = dirt;
+
+        EntitySnapshot snapshot = EntitySnapshot.Project(entity);
+
+        Assert.Same(dirt, snapshot.CarriedItem);
+    }
+
+    [Fact]
     public void Effects_ProjectAResolvedRegistryEntry()
     {
         Entity entity = NewEntity();

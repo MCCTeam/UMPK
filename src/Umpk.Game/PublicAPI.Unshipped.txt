@@ -2133,16 +2133,21 @@ Umpk.Game.World.World.GetBlockStateId(Umpk.Geometry.BlockPos pos) -> int
 Umpk.Game.World.World.GetColumn(Umpk.Geometry.BlockPos pos) -> Umpk.Game.World.ChunkColumn?
 Umpk.Game.World.World.GetColumn(Umpk.Geometry.ChunkPos pos) -> Umpk.Game.World.ChunkColumn?
 Umpk.Game.World.World.GetLight(Umpk.Geometry.BlockPos pos) -> Umpk.Game.World.LightLevels
+Umpk.Game.World.World.IsRaining.get -> bool
 Umpk.Game.World.World.LoadColumn(Umpk.Game.World.ChunkColumn! column) -> void
 Umpk.Game.World.World.LoadColumn(Umpk.Geometry.ChunkPos pos) -> Umpk.Game.World.ChunkColumn!
 Umpk.Game.World.World.LoadedColumns.get -> System.Collections.Generic.IReadOnlyCollection<Umpk.Game.World.ChunkColumn!>!
 Umpk.Game.World.World.MergeColumnSections(Umpk.Game.World.ChunkColumn! column) -> void
+Umpk.Game.World.World.RainLevel.get -> float
 Umpk.Game.World.World.RemoveBlockEntity(Umpk.Geometry.BlockPos pos) -> bool
 Umpk.Game.World.World.SetBlock(Umpk.Geometry.BlockPos pos, Umpk.Game.Blocks.BlockState state) -> void
 Umpk.Game.World.World.SetBlockEntity(Umpk.Game.World.BlockEntityData! data) -> void
 Umpk.Game.World.World.SetBlockStateId(Umpk.Geometry.BlockPos pos, int stateId) -> void
 Umpk.Game.World.World.SetBorder(Umpk.Game.World.WorldBorderState! border) -> void
+Umpk.Game.World.World.SetRain(float level, bool raining) -> void
+Umpk.Game.World.World.SetThunder(float level) -> void
 Umpk.Game.World.World.SetTime(long worldAge, long timeOfDay) -> void
+Umpk.Game.World.World.ThunderLevel.get -> float
 Umpk.Game.World.World.TimeOfDay.get -> long
 Umpk.Game.World.World.UnloadColumn(Umpk.Geometry.ChunkPos pos) -> bool
 Umpk.Game.World.World.ViewRegion(Umpk.Geometry.BlockPos min, Umpk.Geometry.BlockPos max, bool includeBiomes = false) -> Umpk.Game.World.RegionSnapshot!

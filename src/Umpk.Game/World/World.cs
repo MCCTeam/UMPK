@@ -22,6 +22,9 @@ public sealed class World
     private WorldBorderState _border = WorldBorderState.Default;
     private long _worldAge;
     private long _timeOfDay;
+    private float _rainLevel;
+    private float _thunderLevel;
+    private bool _raining;
 
     /// <summary>Creates a world for a dimension over a block data source and biome registry.</summary>
     /// <param name="dimension">The dimension identity and vertical bounds.</param>
@@ -72,6 +75,25 @@ public sealed class World
         Interlocked.Exchange(ref _worldAge, worldAge);
         Interlocked.Exchange(ref _timeOfDay, timeOfDay);
     }
+
+    /// <summary>The current rain level, 0 (clear) to 1 (full rain), as last reported by the server's game events. Mirrors vanilla's own level (including its start/stop fade endpoints), never interpolated here.</summary>
+    public float RainLevel => Volatile.Read(ref _rainLevel);
+
+    /// <summary>The current thunder level, 0 to 1, as last reported by the server's game events.</summary>
+    public float ThunderLevel => Volatile.Read(ref _thunderLevel);
+
+    /// <summary>Whether the server currently reports rain (set by the begin/end raining game events).</summary>
+    public bool IsRaining => Volatile.Read(ref _raining);
+
+    /// <summary>Sets the rain state. Session-loop only.</summary>
+    public void SetRain(float level, bool raining)
+    {
+        Volatile.Write(ref _rainLevel, level);
+        Volatile.Write(ref _raining, raining);
+    }
+
+    /// <summary>Sets the thunder level. Session-loop only.</summary>
+    public void SetThunder(float level) => Volatile.Write(ref _thunderLevel, level);
 
     /// <summary>The loaded column at a chunk position, or null.</summary>
     public ChunkColumn? GetColumn(ChunkPos pos) =>

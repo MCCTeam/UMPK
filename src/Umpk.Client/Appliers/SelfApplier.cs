@@ -248,6 +248,53 @@ internal sealed class SelfApplier : IApplier
             context.State.Self.GameMode = mode;
             context.PhysicsConditionsDirty();
             await context.PublishAsync(new GameModeChanged(mode)).ConfigureAwait(false);
+            return;
+        }
+
+        // Weather, vanilla-mapped (ClientPacketListener.handleGameEvent): 1 begins raining
+        // (vanilla resets the level to 0.0 and lets level packets build it), 2 ends raining
+        // (vanilla leaves 1.0 to fade), 7 carries the rain level, 8 the thunder level.
+        Umpk.Game.World.World world;
+        try
+        {
+            world = context.State.World;
+        }
+        catch (InvalidOperationException)
+        {
+            return;
+        }
+        switch (packet.Event)
+        {
+            case 1:
+                world.SetRain(0.0f, raining: true);
+                await context.PublishAsync(new RainLevelChanged(0.0f, true)).ConfigureAwait(false);
+                break;
+            case 2:
+                world.SetRain(1.0f, raining: false);
+                await context.PublishAsync(new RainLevelChanged(1.0f, false)).ConfigureAwait(false);
+                break;
+            case 7:
+                {
+                    float level = Math.Clamp(packet.Param, 0.0f, 1.0f);
+                    if (level != world.RainLevel)
+                    {
+                        world.SetRain(level, raining: level > 0.0f);
+                        await context.PublishAsync(new RainLevelChanged(level, level > 0.0f)).ConfigureAwait(false);
+                    }
+
+                    break;
+                }
+            case 8:
+                {
+                    float level = Math.Clamp(packet.Param, 0.0f, 1.0f);
+                    if (level != world.ThunderLevel)
+                    {
+                        world.SetThunder(level);
+                        await context.PublishAsync(new ThunderLevelChanged(level)).ConfigureAwait(false);
+                    }
+
+                    break;
+                }
         }
     }
 }

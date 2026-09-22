@@ -22,6 +22,7 @@ namespace Umpk.Client.Snapshots;
 /// <param name="Effects">Active status effects on the entity.</param>
 /// <param name="PassengerIds">The ids of entities riding this one.</param>
 /// <param name="VehicleId">The id of the entity this one rides, or null.</param>
+/// <param name="CarriedItem">The stack carried by a dropped-item entity, or null when absent, empty, or not yet received. Carried separately because the metadata slot behind it is version-shaped while consumers need the resolved stack.</param>
 public sealed record EntitySnapshot(
     int Id,
     Guid Uuid,
@@ -38,7 +39,8 @@ public sealed record EntitySnapshot(
     IReadOnlyDictionary<EquipmentSlot, ItemStack> Equipment,
     IReadOnlyList<EffectSnapshot> Effects,
     IReadOnlyList<int> PassengerIds,
-    int? VehicleId)
+    int? VehicleId,
+    ItemStack? CarriedItem = null)
 {
     /// <summary>Projects an <see cref="EntitySnapshot"/> from a live tracked entity. Pure; no session loop involved.</summary>
     /// <exception cref="ArgumentNullException"><paramref name="entity"/> is null.</exception>
@@ -74,6 +76,7 @@ public sealed record EntitySnapshot(
             equipment,
             effects,
             passengers,
-            entity.Vehicle?.Id);
+            entity.Vehicle?.Id,
+            entity.CarriedItem as ItemStack);
     }
 }

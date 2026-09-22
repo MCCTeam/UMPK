@@ -15,11 +15,11 @@ Counts below are the baseline totals in `engineering/testcounts/expected_counts.
 
 | Suite | Baseline total | Covers |
 | --- | --- | --- |
-| `Umpk.Protocol.Java.Tests` | 4,574 | codecs, framing, login and encryption, chat signing, command trees |
-| `Umpk.Client.Tests` | 2,623 | appliers, client state, navigation, physics profile conformance |
-| `Umpk.Data.Java.Tests` | 1,557 | the generated tables and the dataset they came from |
+| `Umpk.Protocol.Java.Tests` | 4,670 | codecs, framing, login and encryption, chat signing, command trees |
+| `Umpk.Client.Tests` | 2,640 | appliers, client state, navigation, physics profile conformance |
+| `Umpk.Data.Java.Tests` | 1,567 | the generated tables and the dataset they came from |
 | `Umpk.Pathfinding.Tests` | 1,045 | the planner and its execution templates |
-| `Umpk.Protocol.Java.Conformance` | 872 | corpus replay, the pins, the marker allowlist |
+| `Umpk.Protocol.Java.Conformance` | 881 | corpus replay, the pins, the marker allowlist |
 | `Umpk.Game.Tests` | 484 | blocks, entities, inventory, registries |
 | `Umpk.Physics.Tests` | 292 | the tick-accurate movement engine and its vanilla traces |
 | `Umpk.Text.Tests` | 218 | chat components and styles |
@@ -27,7 +27,7 @@ Counts below are the baseline totals in `engineering/testcounts/expected_counts.
 | `Umpk.Core.Tests` | 144 | identity, geometry, events |
 | `Umpk.Nbt.Tests` | 118 | NBT reading and writing |
 | `Umpk.Commands.Tests` | 85 | Brigadier trees and argument types |
-| `Umpk.Data.Lang.Tests` | 78 | translation tables and formatting |
+| `Umpk.Data.Lang.Tests` | 80 | translation tables and formatting |
 | `Umpk.DataGen.Tests` | 67 | the dataset validator and the emitter, against golden files |
 | `Umpk.Realms.Tests` | 53 | the Realms API client |
 | `Umpk.IntegrationTests` | 46 | real sockets, local servers, the live matrix |
@@ -35,7 +35,7 @@ Counts below are the baseline totals in `engineering/testcounts/expected_counts.
 
 Nineteen project directories sit under `tests/`. Seventeen are test suites. `Umpk.TestKit` is a shared library rather than a suite, and `Umpk.Benchmarks` is BenchmarkDotNet.
 
-The suite that surprises people is `Umpk.Protocol.Java.Tests` at 4,574. That is what per-protocol codec coverage costs when there are 49 protocols and a packet can have seven wire forms across them.
+The suite that surprises people is `Umpk.Protocol.Java.Tests` at 4,670. That is what per-protocol codec coverage costs when there are 50 protocols and a packet can have seven wire forms across them.
 
 ## Intentional skips
 
@@ -72,7 +72,7 @@ The codec name catches a rebinding. The byte count catches an edit to a codec bo
 
 ### Registration pins
 
-`fixtures/registration/` is the coarser twin, also 49 files: the packet id table per protocol, with each entry marked `codec` or `marker`. A packet quietly losing its codec shows up here as a one-word diff.
+`fixtures/registration/` is the coarser twin, also 50 files: the packet id table per protocol, with each entry marked `codec` or `marker`. A packet quietly losing its codec shows up here as a one-word diff.
 
 ### Command frames
 

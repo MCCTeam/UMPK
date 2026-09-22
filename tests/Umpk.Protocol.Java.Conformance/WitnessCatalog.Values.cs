@@ -195,7 +195,12 @@ internal static partial class WitnessCatalog
                             Y: 2.25f),
                         Criteria: ["seen"],
                         Requirements: [["seen"]],
-                        SendsTelemetryEvent: true)),
+                        SendsTelemetryEvent: true))
+                {
+                    // 26.3 positions the added element itself; older eras neither write nor read these.
+                    PositionX = 1.5f,
+                    PositionY = 2.25f,
+                },
             ],
             Removed: [Identifier.Minecraft("story/gone")],
             Progress:

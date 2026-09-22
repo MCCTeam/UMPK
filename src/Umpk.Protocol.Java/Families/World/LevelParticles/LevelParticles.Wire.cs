@@ -126,6 +126,10 @@ public static partial class WorldEffectCodecs
     public static readonly PacketCodec<ClientboundLevelParticlesPacket> LevelParticlesV26_2 =
         MakeModernParticles(new ParticlesWire(ParticleCodec.ModernV26_2, ItemStackCodecs.ComponentsV26_2));
 
+    /// <summary>26.3 (777) particles: the particle moves to the FRONT of the frame, the single speed splits into three per-axis maximum speeds, the count becomes a VarInt, and a VarInt randomization type trails. Its own particle ids (the three poplar-leaves particles) and the 777 item component era.</summary>
+    public static readonly PacketCodec<ClientboundLevelParticlesPacket> LevelParticlesV26_3 =
+        MakeLevelParticles777(new ParticlesWire(ParticleCodec.ModernV26_3, ItemStackCodecs.ComponentsV26_3));
+
     /// <summary>level_particles for 1.19-1.20.4 (759-765): the particle TYPE id is a VarInt written FIRST, then overrideLimiter bool, double x/y/z, float xOff/yOff/zOff, float maxSpeed, int count, then the particle-specific data as the trailing remainder. The modern (1.20.5+) codec moves the type id into the particle payload at the end, so decoding a 1.19 frame with it re-encodes at equal length but different bytes. Versions 1.19 through 1.20.4 write the VarInt id first. Version 1.20.5 is the first to move it to the end. This member therefore covers 764 and 765 as well. The particle data is the frame remainder, captured raw for byte-exact re-encode.</summary>
     internal static readonly PacketCodec<ClientboundLevelParticlesPacket> LevelParticlesV1_19 =
         PacketCodec<ClientboundLevelParticlesPacket>.Of(
@@ -173,7 +177,8 @@ public static partial class WorldEffectCodecs
         //   573-758  int id first, DOUBLE coordinates.
         //   759-765  the id becomes a VarInt and remains FIRST.
         //   766-768  the particle moves to the END; no alwaysShow bool yet.
-        //   769+     a second leading bool, alwaysShow.
+        //   769-776 a second leading bool, alwaysShow.
+        //   777     the particle moves to the FRONT; the single speed splits into x/y/z maximum speeds, the count becomes a VarInt, and a VarInt randomization type trails.
         // Applying the modern frame below 766 reads the id from the wrong offset; applying the 769 form to 766-768 also consumes an alwaysShow boolean that those protocols do not carry.
         //
         // Axis 2, the particle registry and its option payloads, which is why the modern band cannot be one entry: ParticleCodec owns the per-era tables. Protocol 775 in particular was bound to the 776 table, whose ids are shifted by the geyser family.
@@ -194,6 +199,7 @@ public static partial class WorldEffectCodecs
             .From(JavaProtocols.V1_21_9, WorldEffectCodecs.LevelParticlesV1_21_9)
             .From(JavaProtocols.V1_21_11, WorldEffectCodecs.LevelParticlesV1_21_11)
             .From(JavaProtocols.V26_1, WorldEffectCodecs.LevelParticlesV26_1)
-            .From(JavaProtocols.V26_2, WorldEffectCodecs.LevelParticlesV26_2);
+            .From(JavaProtocols.V26_2, WorldEffectCodecs.LevelParticlesV26_2)
+            .From(JavaProtocols.V26_3, WorldEffectCodecs.LevelParticlesV26_3);
     }
 }

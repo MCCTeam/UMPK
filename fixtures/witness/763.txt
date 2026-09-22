@@ -144,7 +144,7 @@ Play Clientbound 0x64 minecraft:system_chat ChatDisplayCodecs.SystemChatV1_19 sr
 Play Clientbound 0x65 minecraft:tab_list PlayerListCodecs.TabListV1_9 src:none
 Play Clientbound 0x67 minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x68 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
-Play Clientbound 0x69 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20 src:corpus@763 w:320 ok UpdateAdvancements{Added=[2:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=9A3D74BE
+Play Clientbound 0x69 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20 src:corpus@763 w:320 ok UpdateAdvancements{Added=[2:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=BF59BEA8
     reject:P404(FormatException) reject:P764(ProtocolViolationException)
 Play Clientbound 0x6A minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
 Play Clientbound 0x6C minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 src:none

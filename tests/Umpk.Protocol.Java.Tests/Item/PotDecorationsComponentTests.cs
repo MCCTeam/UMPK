@@ -11,7 +11,7 @@ namespace Umpk.Protocol.Java.Tests.Item;
 /// <summary><c>minecraft:pot_decorations</c> was listed-but-untyped on 766, 767, 768 and 769 - the pre-1.21.5 era-table family, even though the very same codec (<see cref="ItemComponentCodecs.PotDecorations"/>) has been bound on 770-776 (the <c>Build</c> family) all along. A decorated-pot item stack carrying real sherds therefore cost the WHOLE packet on exactly those four protocols: decoding raised <see cref="UnmodeledItemComponentException"/> and <see cref="JavaConnection"/> dropped the frame.</summary>
 /// <remarks>
 /// On protocol 766, <c>advancement grant &lt;player&gt; everything</c> sends <c>minecraft:update_advancements</c> carrying a decorated-pot advancement's icon with a populated <c>pot_decorations</c> patch entry, and the packet was dropped (the READ LOOP survives - see <c>UnmodeledComponentSessionSurvivalTests</c> - the lost data is that one packet's advancement state).
-/// <para>The payload writes a VarInt count (at most 4) followed by that many VarInt item-registry ids. The wire shape is unchanged throughout the structured-component range, so no era gate is needed.</para>
+/// <para>The payload writes a VarInt count (at most 4) followed by that many VarInt item-registry ids through 26.2; 26.3 replaces it with exactly four optional item-stack templates (see <see cref="PotDecorationsStacks_777_FourOptionalTemplates_RoundTrip"/>). The wire shape moves once, at 777, so the old form needs no era gate below it and the new form binds only there.</para>
 /// <para>Every frame here is composed at the FIELD level and pushed through the codec the registrar actually binds for that protocol (<see cref="BoundCodec"/> -&gt; <c>BoundPacketCodec.Decode</c>, the live dispatcher's entry point), matching <c>UnmodeledComponentRecoveryTests</c>' convention, never through the codec under test directly.</para>
 /// </remarks>
 public class PotDecorationsComponentTests
@@ -98,6 +98,84 @@ public class PotDecorationsComponentTests
         w.WriteShort((short)slot);
         w.WriteVarInt(1);            // count
         w.WriteVarInt(itemId);
+        w.WriteVarInt(1);            // added
+        w.WriteVarInt(0);            // removed
+        w.WriteVarInt(componentWireId);
+        write(ref w);
+
+        return buffer.WrittenSpan.ToArray();
+    }
+
+    /// <summary>26.3 replaces the counted id list with exactly four optional item-stack templates (back, left, right, front). Live-observed on 777: a decorated-pot advancement icon with back absent, a heart sherd, right absent, and an explorer sherd (wire ids 1609/1605, real sherds the item test registries do not carry, so this frame uses stone/diamond in the same shape).</summary>
+    [Fact]
+    public void PotDecorationsStacks_777_FourOptionalTemplates_RoundTrip()
+    {
+        // Template stacks: holder id, count, empty patch. Stone and diamond stand in for the two real sherds.
+        byte[] frame = SetSlotTemplateFrame(
+            slot: 6,
+            itemId: ItemTestRegistries.Stone,
+            componentWireId: 76,
+            write: static (ref PacketWriter w) =>
+            {
+                w.WriteBool(false); // back: absent (brick face)
+                w.WriteBool(true); // left: present
+                w.WriteVarInt(ItemTestRegistries.Stone);
+                w.WriteVarInt(1);
+                w.WriteVarInt(0);
+                w.WriteVarInt(0);
+                w.WriteBool(false); // right: absent
+                w.WriteBool(true); // front: present
+                w.WriteVarInt(ItemTestRegistries.DiamondSword);
+                w.WriteVarInt(1);
+                w.WriteVarInt(0);
+                w.WriteVarInt(0);
+            });
+
+        BoundPacketCodec bound = BoundCodec.At(777, PacketFlow.Clientbound, SetSlot);
+        var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.DecodeFrame(frame));
+
+        Assert.True(packet.Item.Components.TryGet(DataComponents.PotDecorations, out PotDecorationsComponent? pot));
+        Assert.NotNull(pot!.FaceStacks);
+        Assert.Equal(4, pot.FaceStacks!.Count);
+        Assert.True(pot.FaceStacks[0].IsEmpty);
+        Assert.Equal(ItemTestRegistries.Stone, pot.FaceStacks[1].Item.NetworkId);
+        Assert.True(pot.FaceStacks[2].IsEmpty);
+        Assert.Equal(ItemTestRegistries.DiamondSword, pot.FaceStacks[3].Item.NetworkId);
+        Assert.Equal([ItemTestRegistries.Stone, ItemTestRegistries.DiamondSword], pot.SherdItemIds);
+
+        // Frame-exact both ways.
+        Assert.Equal(frame, bound.Encode(packet));
+    }
+
+    /// <summary>A hand-built component carrying only sherd ids has no 777 wire form: the writer must refuse, not emit a counted list the era cannot parse.</summary>
+    [Fact]
+    public void PotDecorationsStacks_777_BareIds_RejectEncode()
+    {
+        ItemComponentTable table = ItemPacketCodecShared.Table777;
+        ItemComponentCodec codec = table.ByKey(DataComponents.PotDecorations);
+
+        Assert.ThrowsAny<Exception>(() => EncodeBareIds(codec));
+    }
+
+    private static void EncodeBareIds(ItemComponentCodec codec)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new PacketWriter(buffer);
+        codec.Encode(ref writer, new PotDecorationsComponent([1, 2]), ItemTestRegistries.Context);
+    }
+
+    /// <summary>Composes a 777 container_set_slot frame at the field level: VarInt container id, VarInt state id, short slot, then the count-first top-level stack whose single patch entry is the payload under test. Only the four nested pot faces use item-stack templates.</summary>
+    private static byte[] SetSlotTemplateFrame(
+        int slot, int itemId, int componentWireId, PayloadWriter write)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        var w = new PacketWriter(buffer);
+
+        w.WriteVarInt(0);            // container id
+        w.WriteVarInt(1);            // state id
+        w.WriteShort((short)slot);
+        w.WriteVarInt(1);            // top-level stack count
+        w.WriteVarInt(itemId);       // top-level item holder id
         w.WriteVarInt(1);            // added
         w.WriteVarInt(0);            // removed
         w.WriteVarInt(componentWireId);

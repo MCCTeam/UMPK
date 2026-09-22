@@ -165,7 +165,7 @@ Play Clientbound 0x69 minecraft:system_chat ChatDisplayCodecs.SystemChatV1_20_3 
 Play Clientbound 0x6A minecraft:tab_list PlayerListCodecs.TabListV1_20_3 src:none
 Play Clientbound 0x6C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x6D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
-Play Clientbound 0x70 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20_3 src:synth w:337 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=D104C683
+Play Clientbound 0x70 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20_3 src:synth w:337 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P764(ComponentFormatException) reject:P766(FormatException)
 Play Clientbound 0x71 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
 Play Clientbound 0x72 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 src:none

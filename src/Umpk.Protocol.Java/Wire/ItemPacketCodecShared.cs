@@ -32,6 +32,9 @@ internal static class ItemPacketCodecShared
     /// <summary>The protocol 775 (26.1) component era table.</summary>
     internal static ItemComponentTable Table775 { get; } = ItemComponentTable.V26_1();
 
+    /// <summary>The protocol 777 (26.3) component era table.</summary>
+    internal static ItemComponentTable Table777 { get; } = ItemComponentTable.V26_3();
+
     /// <summary>The component eras whose <c>container_click</c> still carries the FULL item stack: 768 and 769. The hashed stack arrives at 1.21.5, so these two are the tail of the full-stack timeline rather than the head of the hashed one, and the split is declared here instead of being re-derived as a protocol comparison at the bind site.</summary>
     private static (int Protocol, string Era, ItemComponentTable Table)[] PreHashedStackComponentEras { get; } =
     [
@@ -48,6 +51,7 @@ internal static class ItemPacketCodecShared
         (JavaProtocols.V1_21_11, nameof(Table774), Table774),
         (JavaProtocols.V26_1, nameof(Table775), Table775),
         (JavaProtocols.V26_2, nameof(Table776), Table776),
+        (JavaProtocols.V26_3, nameof(Table777), Table777),
     ];
 
     /// <summary>
@@ -62,6 +66,7 @@ internal static class ItemPacketCodecShared
     /// <item>774: its own 104-id ordering (diverges from 770 at wire id 5).</item>
     /// <item>775: its own 110-id ordering (776 inserts <c>sulfur_cube_content</c> at 78).</item>
     /// <item>776: the 111-id ordering.</item>
+    /// <item>777: the 122-id ordering (thirteen components added, <c>swing_animation</c> and <c>map_color</c> removed).</item>
     /// </list>
     /// Every item-family packet that carries a component stack walks this list, so a new era is added in exactly one place instead of once per packet.
     /// <para><c>Era</c> is the table member's own name, carried as data because the binding loops need it. The codec-identity pin defaults to the call site's source expression, and inside a loop that expression reads <c>Make...(table)</c> identically on every era, so without this name the eight binds would pin as one indistinguishable token. The explicit name keeps neighbouring era tables distinct even when their call-site expressions are identical.</para>

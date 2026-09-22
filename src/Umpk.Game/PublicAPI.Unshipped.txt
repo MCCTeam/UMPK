@@ -1277,6 +1277,8 @@ Umpk.Game.Items.Components.PotDecorationsComponent.<Clone>$() -> Umpk.Game.Items
 Umpk.Game.Items.Components.PotDecorationsComponent.Deconstruct(out System.Collections.Generic.IReadOnlyList<int>! SherdItemIds) -> void
 Umpk.Game.Items.Components.PotDecorationsComponent.Equals(Umpk.Game.Items.Components.PotDecorationsComponent? other) -> bool
 Umpk.Game.Items.Components.PotDecorationsComponent.PotDecorationsComponent(System.Collections.Generic.IReadOnlyList<int>! SherdItemIds) -> void
+Umpk.Game.Items.Components.PotDecorationsComponent.FaceStacks.get -> System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.ItemStack!>?
+Umpk.Game.Items.Components.PotDecorationsComponent.FaceStacks.init -> void
 Umpk.Game.Items.Components.PotDecorationsComponent.SherdItemIds.get -> System.Collections.Generic.IReadOnlyList<int>!
 Umpk.Game.Items.Components.PotDecorationsComponent.SherdItemIds.init -> void
 Umpk.Game.Items.Components.PotionContentsComponent

@@ -82,13 +82,13 @@ Play Clientbound 0x0D minecraft:chunks_biomes WorldStateCodecs.ChunksBiomesV1_19
 Play Clientbound 0x0E minecraft:clear_titles TitleCodecs.ClearTitlesV1_17 src:none
 Play Clientbound 0x0F minecraft:command_suggestions CommandSuggestionCodecs.CommandSuggestionsV1_20_3 src:none
 Play Clientbound 0x10 minecraft:commands CommandTreeCodecs.V26_2 src:synth w:59 ok Commands{Tree=CommandTreeData{Nodes=[6:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0,H h=D5E568DA
-    reject:P771(Argument=A93B87B8)
+    reject:P771(Argument=A93B87B8) reject:P777(Argument=F154E9FF)
 Play Clientbound 0x11 minecraft:container_close ContainerCodecs.ContainerCloseClientModern src:none
 Play Clientbound 0x12 minecraft:container_set_content MakeContainerSetContent(Table776) src:synth w:143 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=f h=55AE0975
-    reject:P775(UnmodeledItemComponentException)
+    reject:P775(UnmodeledItemComponentException) reject:P777(UnmodeledItemComponentException)
 Play Clientbound 0x13 minecraft:container_set_data ContainerCodecs.ContainerSetDataModern src:none
 Play Clientbound 0x14 minecraft:container_set_slot MakeContainerSetSlot(Table776) src:synth w:51 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataCompon h=3A9A78F1
-    reject:P775(UnmodeledItemComponentException)
+    reject:P775(UnmodeledItemComponentException) reject:P777(read:24)
 Play Clientbound 0x15 minecraft:cookie_request PlayCommonCodecs.CookieRequest src:none
 Play Clientbound 0x16 minecraft:cooldown UiMiscCodecs.CooldownV1_21_2 src:none
 Play Clientbound 0x17 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 src:none
@@ -112,7 +112,7 @@ Play Clientbound 0x30 minecraft:light_update WorldStateCodecs.LightUpdateV1_20 s
 Play Clientbound 0x31 minecraft:login JoinGameCodecs.V26_2 src:none
 Play Clientbound 0x33 minecraft:map_item_data WorldMapCodecs.MapItemDataV1_21_5 src:none
 Play Clientbound 0x34 minecraft:merchant_offers MakeMerchantOffers(Table776) src:synth w:170 ok MerchantOffers{ContainerId=3,Offers=MerchantOffers{CanRestock=true,Experience=40,IsRegularVillag h=7C52A3AF
-    reject:P775(UnmodeledItemComponentException)
+    reject:P775(UnmodeledItemComponentException) reject:P777(UnmodeledItemComponentException)
 Play Clientbound 0x35 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV1_9 src:none
 Play Clientbound 0x36 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV1_9 src:none
 Play Clientbound 0x38 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRot src:none
@@ -153,12 +153,12 @@ Play Clientbound 0x5D minecraft:set_camera EntityStateCodecs.SetCamera src:none
 Play Clientbound 0x5E minecraft:set_chunk_cache_center WorldStateCodecs.SetChunkCacheCenterV1_14 src:none
 Play Clientbound 0x5F minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunkCacheRadiusV1_14 src:none
 Play Clientbound 0x60 minecraft:set_cursor_item MakeSetCursorItem(Table776) src:synth w:47 ok SetCursorItem{Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=false,Type=279 h=74B7ED4D
-    reject:P775(UnmodeledItemComponentException)
+    reject:P775(UnmodeledItemComponentException) reject:P777(read:20)
 Play Clientbound 0x61 minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_21_9 src:corpus@773 w:36 ok SetDefaultSpawnPosition{Angle=0,Dimension='minecraft:overworld',Pitch=0,Position=BlockPos{Bottom h=9C344FBB
     reject:P755(read:12)
 Play Clientbound 0x62 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_20_2 src:none
 Play Clientbound 0x63 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV26_2 src:corpus@776 w:9 ok SetEntityData{EntityId=66,Metadata=EntityMetadataList{Entries=[1:EntityDataEntry{Index=8,Value=m h=49237BC5
-    reject:P775(Slot:BCA63A16)
+    reject:P775(Slot:BCA63A16) reject:P777(Slot:A984791E)
 Play Clientbound 0x64 minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_9 src:none
 Play Clientbound 0x65 minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotionV1_21_9 src:none
 Play Clientbound 0x66 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_16 src:corpus@768 w:7 ok SetEquipment{EntityId=90,LegacyItem=null,LegacySlot=MainHand,ModernRaw=b[6:E20473DE]}
@@ -169,7 +169,7 @@ Play Clientbound 0x69 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_21
 Play Clientbound 0x6A minecraft:set_objective ScoreboardCodecs.SetObjectiveV1_21_5 src:none
 Play Clientbound 0x6B minecraft:set_passengers EntityStateCodecs.SetPassengers src:none
 Play Clientbound 0x6C minecraft:set_player_inventory MakeSetPlayerInventory(Table776) src:synth w:48 ok SetPlayerInventory{Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=false,Typ h=B8D9165B
-    reject:P775(UnmodeledItemComponentException)
+    reject:P775(UnmodeledItemComponentException) reject:P777(read:21)
 Play Clientbound 0x6D minecraft:set_player_team ScoreboardCodecs.SetPlayerTeamV26_2 src:synth w:163 ok SetPlayerTeam{Method=Add,Name='witnesses',Parameters=TeamParameters{CollisionRule=PushOwnTeam,Co h=0D356D0B
     reject:P770(ProtocolViolationException)
 Play Clientbound 0x6E minecraft:set_score ScoreboardCodecs.SetScoreV1_21_5 src:none
@@ -188,8 +188,8 @@ Play Clientbound 0x7A minecraft:tab_list PlayerListCodecs.TabListV1_21_5 src:non
 Play Clientbound 0x7C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x7D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 src:none
 Play Clientbound 0x81 minecraft:transfer PlayCommonCodecs.Transfer src:none
-Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_2 src:synth w:377 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=D104C683
-    reject:P775(UnmodeledItemComponentException)
+Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_2 src:synth w:377 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
+    reject:P775(UnmodeledItemComponentException) reject:P777(ProtocolViolationException)
 Play Clientbound 0x83 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 src:none
 Play Clientbound 0x84 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 src:none
 Play Clientbound 0x85 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
@@ -244,7 +244,7 @@ Play Serverbound 0x33 minecraft:select_trade MerchantCodecs.SelectTradeModern sr
 Play Serverbound 0x35 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x36 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
 Play Serverbound 0x38 minecraft:set_creative_mode_slot MakeCreativeSlot(Table776) src:synth w:50 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsR h=7219E539
-    reject:P775(Type=C0E32A97)
+    reject:P775(Type=C0E32A97) reject:P777(ProtocolViolationException)
 Play Serverbound 0x3D minecraft:sign_update UiMiscCodecs.SignUpdateV1_20 src:none
 Play Serverbound 0x3F minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none
 Play Serverbound 0x40 minecraft:teleport_to_entity EntityServerboundCodecs.TeleportToEntity src:none

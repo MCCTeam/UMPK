@@ -129,6 +129,122 @@ internal static class EntityCodecShared
         w.WriteFloat(v.YRot); w.WriteFloat(v.XRot);
     }
 
+    private static void WritePathVec3(ref PacketWriter w, Vec3d v)
+    {
+        w.WriteDouble(v.X); w.WriteDouble(v.Y); w.WriteDouble(v.Z);
+    }
+
+    private static Vec3d ReadPathVec3(ref PacketReader r) =>
+        new(r.ReadDouble(), r.ReadDouble(), r.ReadDouble());
+
+    /// <summary>Writes the 26.3+ stepped relative-move deltas shared by the move packets: a VarInt properties word (step count in bits 1+, on-ground in bit 0), then bare three shorts for zero steps or one VarInt tick delay plus three shorts per step.</summary>
+    internal static void WriteSteppedDeltas(
+        ref PacketWriter w, IReadOnlyList<EntityMoveStep> steps, short dx, short dy, short dz, bool onGround)
+    {
+        w.WriteVarInt((steps.Count << 1) | (onGround ? 1 : 0));
+        if (steps.Count == 0)
+        {
+            w.WriteShort(dx);
+            w.WriteShort(dy);
+            w.WriteShort(dz);
+        }
+        else
+            foreach (EntityMoveStep step in steps)
+            {
+                w.WriteVarInt(step.Ticks);
+                w.WriteShort(step.DeltaX);
+                w.WriteShort(step.DeltaY);
+                w.WriteShort(step.DeltaZ);
+            }
+    }
+
+    /// <summary>Reads the 26.3+ stepped relative-move deltas, returning the steps plus the legacy mirror (the bare shorts for zero steps, the first step's deltas otherwise) and the properties on-ground bit.</summary>
+    /// <exception cref="ProtocolViolationException">The step count is implausible for the remaining payload.</exception>
+    internal static (IReadOnlyList<EntityMoveStep> Steps, short Dx, short Dy, short Dz, bool OnGround) ReadSteppedDeltas(
+        ref PacketReader r)
+    {
+        int properties = r.ReadVarInt();
+        int stepCount = properties >> 1;
+        bool onGround = (properties & 1) != 0;
+        if (stepCount < 0 || (long)stepCount * 7 > r.Remaining)
+            throw new ProtocolViolationException(
+                $"26.3 stepped-delta step count {stepCount} is implausible for {r.Remaining} remaining byte(s).");
+
+        if (stepCount == 0)
+            return ([], r.ReadShort(), r.ReadShort(), r.ReadShort(), onGround);
+
+        var steps = new EntityMoveStep[stepCount];
+        for (int i = 0; i < stepCount; i++)
+            steps[i] = new EntityMoveStep(r.ReadVarInt(), r.ReadShort(), r.ReadShort(), r.ReadShort());
+
+        return (steps, steps[0].DeltaX, steps[0].DeltaY, steps[0].DeltaZ, onGround);
+    }
+
+    /// <summary>Writes a 26.3+ entity position path: a VarInt type ordinal (0 linear, 1 stepped), then three doubles for a linear destination or a VarInt knot count and three doubles plus a VarInt tick offset per stepped knot.</summary>
+    internal static void WritePositionPath(ref PacketWriter w, EntityPositionPath path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        switch (path)
+        {
+            case EntityPositionPath.Linear linear:
+                w.WriteVarInt(0);
+                WritePathVec3(ref w, linear.Position);
+                break;
+
+            case EntityPositionPath.Stepped stepped:
+                if (stepped.Steps.Count == 0)
+                    throw new ProtocolViolationException(
+                        "26.3 entity_position_sync stepped paths carry at least one knot; an empty list has no wire form on this era.");
+
+                w.WriteVarInt(1);
+                w.WriteVarInt(stepped.Steps.Count);
+                foreach (PositionPathStep step in stepped.Steps)
+                {
+                    WritePathVec3(ref w, step.Position);
+                    w.WriteVarInt(step.TickOffset);
+                }
+
+                break;
+
+            default:
+                throw new ProtocolViolationException(
+                    $"Unhandled position path variant {path.GetType().Name} in entity_position_sync.");
+        }
+    }
+
+    /// <summary>Reads a 26.3+ entity position path.</summary>
+    /// <exception cref="ProtocolViolationException">The type ordinal is not a known position-path form.</exception>
+    internal static EntityPositionPath ReadPositionPath(ref PacketReader r)
+    {
+        int type = r.ReadVarInt();
+        switch (type)
+        {
+            case 0:
+                return new EntityPositionPath.Linear(ReadPathVec3(ref r));
+
+            case 1:
+                {
+                    int count = r.ReadVarInt();
+                    if (count <= 0 || (long)count * 25 > r.Remaining)
+                        throw new ProtocolViolationException(
+                            $"26.3 entity_position_sync knot count {count} is implausible for {r.Remaining} remaining byte(s).");
+
+                    var steps = new PositionPathStep[count];
+                    for (int i = 0; i < count; i++)
+                    {
+                        Vec3d position = ReadPathVec3(ref r);
+                        steps[i] = new PositionPathStep(position, r.ReadVarInt());
+                    }
+
+                    return new EntityPositionPath.Stepped(steps);
+                }
+
+            default:
+                throw new ProtocolViolationException(
+                    $"Unknown position path type {type} in entity_position_sync.");
+        }
+    }
+
     /// <summary>The 1.20.3+ set-entity-data codec (network-NBT COMPONENT values). <paramref name="particles"/> supplies the era's particle option-shape and item-component tables; passing it is what makes a PARTICLE / PARTICLES metadata value decode structurally instead of collapsing the rest of the list into a raw tail.</summary>
     /// <remarks><paramref name="era"/> is mandatory because the interaction dialect changes independently of the surrounding metadata framing. Through 769 the style fields are <c>clickEvent</c>/<c>hoverEvent</c>, and <c>show_entity</c> is nested under <c>contents</c> as <c>type</c>/<c>id</c>, while 1.21.5 renames them <c>click_event</c>/<c>hover_event</c> and inlines <c>show_entity</c> as <c>id</c>/<c>uuid</c>. Reading a legacy frame with the modern dialect silently loses the hovered entity's UUID, and writing one emits field names a 765-769 client does not know.</remarks>
     /// <param name="table">The era's metadata serializer table.</param>

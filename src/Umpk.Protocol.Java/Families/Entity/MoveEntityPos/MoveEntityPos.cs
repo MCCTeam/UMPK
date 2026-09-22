@@ -20,4 +20,7 @@ public sealed record ClientboundMoveEntityPosPacket(int EntityId, short DeltaX, 
 {
     /// <inheritdoc />
     public PacketType Type => EntityPackets.Clientbound.MoveEntityPos;
+
+    /// <summary>The 26.3+ stepped deltas. Empty on older eras (and on 26.3 zero-step frames); the legacy delta fields mirror the first step where one exists so era-blind consumers keep working.</summary>
+    public IReadOnlyList<EntityMoveStep> Steps { get; init; } = [];
 }

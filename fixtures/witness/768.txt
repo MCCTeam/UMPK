@@ -186,7 +186,7 @@ Play Clientbound 0x74 minecraft:tab_list PlayerListCodecs.TabListV1_20_3 src:non
 Play Clientbound 0x76 minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x77 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 src:none
 Play Clientbound 0x7A minecraft:transfer PlayCommonCodecs.Transfer src:none
-Play Clientbound 0x7B minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_21_2 src:synth w:379 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=D104C683
+Play Clientbound 0x7B minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_21_2 src:synth w:379 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P767(ProtocolViolationException) reject:P769(Display=E6DBBD23)
 Play Clientbound 0x7C minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 src:none
 Play Clientbound 0x7D minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 src:none

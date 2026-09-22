@@ -152,7 +152,7 @@ public sealed class BlockAttributeTests
         Assert.Equal(1.0f, Block(protocol, "stone").JumpFactor, 3);
     }
 
-    /// <summary>EXACTLY two blocks in the whole game slow a walk, on every one of the 49 protocols: soul sand always, and honey from 1.15 (protocol 735), both at 0.4.</summary>
+    /// <summary>EXACTLY two blocks in the whole game slow a walk, on every one of the 50 protocols: soul sand always, and honey from 1.15 (protocol 735), both at 0.4.</summary>
     /// <remarks>
     /// <para>An exhaustive sweep is required because a downstream consumer relies on the closure and not on the two examples. <c>ActionCosts.SpeedFactorCostMultiplier</c> charges a calibrated 1.691 at 0.4 and falls back to <c>1 / factor</c> for anything else; that distinction is valid only while 0.4 is the only sub-unit factor the dataset carries, and "is 0.4 the only one" is a claim about all 1000-odd blocks, not about two of them.</para>
     /// <para>The expectation is a literal pair of names and a literal protocol boundary, stated here rather than read out of the table under test, so a dataset that grew a third slow block fails this row instead of quietly widening it.</para>
@@ -200,7 +200,7 @@ public sealed class BlockAttributeTests
         Assert.Equal(1.0f, Block(protocol, "soul_sand").JumpFactor, 3);
     }
 
-    /// <summary>The whole climbable set, on every one of the 49 protocols, is vanilla's own <c>#minecraft:climbable</c> tag intersected with the blocks that era actually has.</summary>
+    /// <summary>The whole climbable set, on every one of the 50 protocols, is vanilla's own <c>#minecraft:climbable</c> tag intersected with the blocks that era actually has.</summary>
     /// <remarks>
     /// <para><b>The tag is data, not an inferred behavior.</b> The 1.16 set contains ladder, vine, scaffolding, and both forms of weeping and twisting vines. The 1.17 set adds both cave-vine entries. Nether and cave vines were therefore climbable from the tick they existed, which is why the curated list needs no era switch of its own: the curated flag is intersected with the version's own block table (<c>BlockAttributeResolver.ResolveBlockAttributes</c>), so a name that era does not carry contributes nothing.</para>
     /// <para>The expectation uses literal sets and protocol boundaries, independent of the table under test. The sweep covers every block in each registry.</para>
@@ -247,7 +247,7 @@ public sealed class BlockAttributeTests
         Assert.Equal(expected, climbable);
     }
 
-    /// <summary>Every block in the game whose <c>getFluidState</c> is an unconditional water source, on every one of the 49 protocols. Five blocks, and <c>minecraft:bubble_column</c> is the fifth.</summary>
+    /// <summary>Every block in the game whose <c>getFluidState</c> is an unconditional water source, on every one of the 50 protocols. Five blocks, and <c>minecraft:bubble_column</c> is the fifth.</summary>
     /// <remarks>
     /// <para>The <c>Waterlogged</c> flag is what <c>MoveHelper.IsWater</c> and <c>PlayerPhysics.IsWater</c> both read, so this list decides buoyancy, swim passability, fall-damage absorption and the breath model for every block on it. The exhaustive set prevents a block from silently joining or leaving this behavior.</para>
     /// <para><b>Bubble columns require both water and lift behavior.</b> Classifying a column as water without its lift also drains the bot's air. Both halves are modeled: <c>PlayerPhysics</c> applies its lift and <c>BreathModel.IsSubmerged</c> applies the air-drain exemption, so the block belongs in the set.</para>
@@ -366,7 +366,7 @@ public sealed class BlockAttributeTests
     /// <summary>Kelp, kelp plant, seagrass, tall seagrass, and bubble columns contain water.</summary>
     /// <remarks>
     /// <para>These blocks contain a full water source in every state, with no property to condition it on. The same five blocks and only those five carry an unconditional water fluid state across the supported eras. Every other water-source result in the supported set is conditional on a <c>waterlogged</c> property.</para>
-    /// <para><c>minecraft:bubble_column</c> belongs in the set because the engine models both its lift and its air-drain exemption. The closure over all 49 protocols is <see cref="IntrinsicallyWaterloggedBlocks_AreTheFiveWithAnUnconditionalWaterFluidState"/>.</para>
+    /// <para><c>minecraft:bubble_column</c> belongs in the set because the engine models both its lift and its air-drain exemption. The closure over all 50 protocols is <see cref="IntrinsicallyWaterloggedBlocks_AreTheFiveWithAnUnconditionalWaterFluidState"/>.</para>
     /// <para>The axis is <c>Waterlogged</c> and not the <c>fluid</c> list, because these are blocks that CONTAIN water rather than blocks that ARE water. The fluid list also sets <c>Replaceable</c> and suppresses the shape-derived <c>BlocksMotion</c>/<c>Solid</c> classification entirely, which would be a lie about four blocks whose collision shape is genuinely empty for a different reason.</para>
     /// </remarks>
     [Theory]

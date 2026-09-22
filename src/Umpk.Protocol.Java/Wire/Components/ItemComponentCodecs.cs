@@ -150,6 +150,10 @@ internal static partial class ItemComponentCodecs
     /// <summary><c>minecraft:pot_decorations</c>: a VarInt-counted list of at most four item registry ids. The raw ids are retained on decode, so an id outside the session item registry still round-trips (this component reaches clients through advancement display icons, which must never fault the session).</summary>
     public static ItemComponentCodec PotDecorations { get; } = new PotDecorationsCodecImpl();
 
+    /// <summary>Builds a 26.3+ <c>minecraft:pot_decorations</c> codec: exactly four optional item-stack templates (back, left, right, front), bound to a nested-stack era table.</summary>
+    /// <returns>The codec.</returns>
+    public static NestedStackComponentCodec MakePotDecorationsV26_3() => new PotDecorationsStacksCodecImpl();
+
     /// <summary>Builds a <c>minecraft:charged_projectiles</c> codec bound to a nested-stack era table.</summary>
     /// <param name="form">The era's nested item-stack wire form.</param>
     /// <returns>The codec.</returns>
@@ -384,7 +388,6 @@ internal static partial class ItemComponentCodecs
             writer.WriteVarInt(ids.Count);
             foreach (int id in ids)
                 writer.WriteVarInt(id);
-
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
@@ -402,6 +405,55 @@ internal static partial class ItemComponentCodecs
             }
 
             return ops.List(hashes);
+        }
+    }
+
+    /// <summary><c>minecraft:pot_decorations</c> from 26.3: exactly four optional item-stack templates in face order (back, left, right, front).</summary>
+    private sealed class PotDecorationsStacksCodecImpl() : NestedStackComponentCodec(DataComponents.PotDecorations)
+    {
+        private static readonly string[] FaceNames = ["back", "left", "right", "front"];
+
+        public override object Decode(ref PacketReader reader, PacketCodecContext context)
+        {
+            var faces = new ItemStack[FaceNames.Length];
+            var ids = new List<int>(FaceNames.Length);
+            for (int i = 0; i < faces.Length; i++)
+            {
+                faces[i] = ItemStackCodecs.ReadOptionalTemplateStack(ref reader, context, Table);
+                if (!faces[i].IsEmpty)
+                    ids.Add(faces[i].Item.NetworkId);
+            }
+
+            return new PotDecorationsComponent(ids) { FaceStacks = faces };
+        }
+
+        public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
+        {
+            if (value is not PotDecorationsComponent decorations
+                || decorations.FaceStacks is not { Count: 4 } faces)
+                throw new ProtocolViolationException(
+                    "26.3 pot_decorations requires four face stacks (back, left, right, front); a bare sherd-id list has no wire form on this era.");
+
+            foreach (ItemStack stack in faces)
+                ItemStackCodecs.WriteOptionalTemplateStack(ref writer, stack, context, Table);
+        }
+
+        public override int Hash(in HashOps ops, object value, PacketCodecContext context)
+        {
+            if (value is not PotDecorationsComponent decorations
+                || decorations.FaceStacks is not { Count: 4 } faces)
+                throw new ProtocolViolationException(
+                    "26.3 pot_decorations requires four face stacks (back, left, right, front) to hash.");
+
+            var entries = new List<(int, int)>(faces.Count);
+            for (int i = 0; i < faces.Count; i++)
+            {
+                ItemStack stack = faces[i];
+                if (!stack.IsEmpty)
+                    entries.Add((ops.String(FaceNames[i]), ItemStackCodecs.HashTemplateStack(ops, stack, Table, context)));
+            }
+
+            return ops.Map(entries);
         }
     }
 

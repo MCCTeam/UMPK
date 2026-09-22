@@ -120,7 +120,7 @@ public sealed class JavaGameDataTests
     }
 
     /// <summary>Every supported protocol resolves every per-protocol table. The tables answer an unsupported protocol by throwing, so this walk is what says the 49 that exist are complete: a version added without its arm fails here instead of returning an empty span that reads as "no blocks".</summary>
-    /// <remarks>The item-name table is reached through <see cref="JavaGameData.Registries"/> on the flattened protocols only, because the legacy protocols resolve items from the composite table instead. That is the one table this walk cannot force on all 49, and it does not matter for a new version: every protocol added from here on is flattened.</remarks>
+    /// <remarks>The item-name table is reached through <see cref="JavaGameData.Registries"/> on the flattened protocols only, because the legacy protocols resolve items from the composite table instead. That is the one table this walk cannot force on all 50, and it does not matter for a new version: every protocol added from here on is flattened.</remarks>
     [Fact]
     public void EverySupportedProtocol_ResolvesEveryTable()
     {

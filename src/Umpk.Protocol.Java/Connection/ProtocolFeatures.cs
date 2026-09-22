@@ -58,7 +58,7 @@ public sealed record ProtocolFeatures
             ? ComponentWireEra.Legacy
             : ComponentWireEra.Modern;
 
-    /// <summary>The command-tree argument-type table era, one value per dataset version (<c>none</c>, <c>v1_13</c> .. <c>v26_2</c>). Numeric parser ids start at <c>v1_19</c>; the earlier eras name parsers with a resource-location string and consult no numeric table.</summary>
+    /// <summary>The command-tree argument-type table era, one value per dataset version (<c>none</c>, <c>v1_13</c> .. <c>v26_3</c>). Numeric parser ids start at <c>v1_19</c>; the earlier eras name parsers with a resource-location string and consult no numeric table.</summary>
     public string ArgumentTypeEra { get; init; } = "v1_21_5";
 
     /// <summary>The <see cref="Packets.ArgumentTypeRegistry"/> derived from <see cref="ArgumentTypeEra"/>. This lets the command-tree applier select the parser table off the bound descriptor instead of comparing a protocol number, mirroring how the item codecs pick their component table at bind time.</summary>
@@ -72,6 +72,7 @@ public sealed record ProtocolFeatures
         "v1_20_5" or "v1_21" or "v1_21_2" or "v1_21_4" => Packets.ArgumentTypeRegistry.V766,
         "v1_21_6" or "v1_21_7" or "v1_21_9" or "v1_21_11" or "v26_1" => Packets.ArgumentTypeRegistry.V1_21_6,
         "v26_2" => Packets.ArgumentTypeRegistry.V26_2,
+        "v26_3" => Packets.ArgumentTypeRegistry.V26_3,
         _ => Packets.ArgumentTypeRegistry.V1_21_5,
     };
 }

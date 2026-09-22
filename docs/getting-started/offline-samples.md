@@ -82,7 +82,7 @@ Start here if you want to simulate a jump before you commit to it, or if movemen
 
 ## VersionTable: the catalog
 
-`samples/VersionTable/Program.cs` lists all 49 protocols, then shows the two lookups a bot uses at startup.
+`samples/VersionTable/Program.cs` lists all 50 protocols, then shows the two lookups a bot uses at startup.
 
 A client is built for one protocol, so a bot pings first, reads `version.protocol`, then builds. `MinimalBot` follows exactly this flow. The catalog calls are:
 

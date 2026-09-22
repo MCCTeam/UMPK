@@ -27,6 +27,19 @@ import sys
 REACTIONS = ("NORMAL", "DESTROY", "BLOCK", "IGNORE", "PUSH_ONLY")
 DEFAULT_REACTION = "NORMAL"
 
+# 26.3 renamed vanilla's PushReaction constants. The per-block assignment is unchanged,
+# verified state-by-state against the 26.2 table (glazed terracotta PUSH_ONLY -> PUSH,
+# obsidian BLOCK -> IMMOVEABLE, torch DESTROY -> POPPED, stone NORMAL -> PUSH_PULL, and the
+# sticky-piston retract check `reaction != PUSH_PULL` is the old `reaction == NORMAL` pull
+# rule), so the fold normalizes to the stable dataset spelling DataGen and Umpk.Game share.
+REACTION_ALIASES = {
+    "PUSH_PULL": "NORMAL",
+    "POPPED": "DESTROY",
+    "IMMOVEABLE": "BLOCK",
+    "PUSH": "PUSH_ONLY",
+    "IGNORE_ENTITY": "IGNORE",
+}
+
 
 def load_state_names(blocks_path):
     """state id -> block name, from the committed per-protocol block table."""
@@ -54,8 +67,9 @@ def build(dump, names):
                 "dump carries state %d which the committed blocks.json does not define" % state
             )
         reaction, destroy_speed, has_block_entity, _is_air = row
+        reaction = REACTION_ALIASES.get(reaction, reaction)
         if reaction not in REACTIONS:
-            raise SystemExit("unknown PushReaction %r at state %d" % (reaction, state))
+            raise SystemExit("unknown PushReaction %r at state %d" % (row[0], state))
         value = (reaction, destroy_speed == -1.0, bool(has_block_entity))
         name = names[state]
         seen = per_block.setdefault(name, value)
@@ -107,15 +121,17 @@ def main(argv):
         )
 
     reactions, unbreakable, block_entity = build(dump, names)
+    # 26.1+ jars ship unobfuscated, so PushDump runs with mappings "none" and there is no
+    # server_mappings.txt to cite; older bands cite theirs.
+    sources = ["downloads/%s/server.jar" % args.version]
+    if args.mapping_source != "vineflower-direct":
+        sources.append("downloads/%s/server_mappings.txt" % args.version)
     document = {
         "_provenance": {
             "version": args.version,
             "protocol": args.protocol,
             "mapping_source": args.mapping_source,
-            "sources": [
-                "downloads/%s/server.jar" % args.version,
-                "downloads/%s/server_mappings.txt" % args.version,
-            ],
+            "sources": sources,
             "kind": "extracted",
             "tool": "tools/extraction/shape-extractor/PushDump.java",
             "note": (

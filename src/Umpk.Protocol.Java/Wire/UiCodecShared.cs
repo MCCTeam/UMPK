@@ -403,17 +403,27 @@ internal static class UiCodecShared
     /// <param name="HasCriteria">True on 1.12-1.20.1 (335-763), where the node carries the criterion-name list.</param>
     /// <param name="HasTelemetry">True from 1.20 (763), where the node gained the telemetry bool.</param>
     /// <param name="HasShowAdvancements">True from 1.21.5 (770), where the packet gained the trailing show-advancements bool. When false the bool is neither written nor read and decode surfaces ShowAdvancements as true (those versions always show).</param>
+    /// <param name="HasPositions">True from 26.3 (777), where each added element carries trailing Float x and Float y after the node. When false the floats are neither written nor read.</param>
+    /// <param name="HasDisplayCoordinates">True through 26.2 (776), where DisplayInfo carries its own trailing Float x and Float y. From 26.3 the tab position rides only on the outer added element and the inner floats are neither written nor read.</param>
     internal readonly record struct AdvancementWireShape(
         AdvancementIconStrategy Icon,
         ComponentWire Text,
         bool HasCriteria,
         bool HasTelemetry,
-        bool HasShowAdvancements)
+        bool HasShowAdvancements,
+        bool HasPositions = false,
+        bool HasDisplayCoordinates = true)
     {
         /// <inheritdoc />
-        public override string ToString() =>
-            $"icon={Icon},text={Text},criteria={(HasCriteria ? 1 : 0)}," +
-            $"telemetry={(HasTelemetry ? 1 : 0)},showadv={(HasShowAdvancements ? 1 : 0)}";
+        public override string ToString()
+        {
+            string form =
+                $"icon={Icon},text={Text},criteria={(HasCriteria ? 1 : 0)}," +
+                $"telemetry={(HasTelemetry ? 1 : 0)},showadv={(HasShowAdvancements ? 1 : 0)}";
+            return HasPositions || !HasDisplayCoordinates
+                ? $"{form},positions={(HasPositions ? 1 : 0)},displaycoords={(HasDisplayCoordinates ? 1 : 0)}"
+                : form;
+        }
     }
 
     /// <summary>The advancement icon's era item-stack read/write pair.</summary>
@@ -471,6 +481,15 @@ internal static class UiCodecShared
                 {
                     WriteIdentifier(ref aw, e.Id);
                     WriteAdvancementNode(ref aw, e.Value, shape, ctx);
+                    if (shape.HasPositions)
+                    {
+                        if (e.PositionX is not float x || e.PositionY is not float y)
+                            throw new ProtocolViolationException(
+                                "26.3 update_advancements requires each added element's position; a positionless entry has no wire form on this era.");
+
+                        aw.WriteFloat(x);
+                        aw.WriteFloat(y);
+                    }
                 });
                 w.WriteList(p.Removed, WriteIdentifier);
                 w.WriteList(p.Progress, static (ref PacketWriter pw, AdvancementProgressEntry e) =>
@@ -493,7 +512,9 @@ internal static class UiCodecShared
                 {
                     Identifier id = ReadIdentifier(ref ar);
                     AdvancementNode node = ReadAdvancementNode(ref ar, shape, ctx);
-                    return new AdvancementEntry(id, node);
+                    float? x = shape.HasPositions ? ar.ReadFloat() : null;
+                    float? y = shape.HasPositions ? ar.ReadFloat() : null;
+                    return new AdvancementEntry(id, node) { PositionX = x, PositionY = y };
                 });
                 Identifier[] removed = r.ReadList(static (ref PacketReader rr) => ReadIdentifier(ref rr));
                 AdvancementProgressEntry[] progress = r.ReadList(static (ref PacketReader pr) =>
@@ -560,8 +581,11 @@ internal static class UiCodecShared
         if (d.Background is { } background)
             WriteIdentifier(ref w, background);
 
-        w.WriteFloat(d.X);
-        w.WriteFloat(d.Y);
+        if (shape.HasDisplayCoordinates)
+        {
+            w.WriteFloat(d.X);
+            w.WriteFloat(d.Y);
+        }
     }
 
     internal static AdvancementDisplayInfo ReadAdvancementDisplayInfo(ref PacketReader r, AdvancementWireShape shape, PacketCodecContext ctx)
@@ -574,8 +598,8 @@ internal static class UiCodecShared
         Identifier? background = (flags & 1) != 0 ? ReadIdentifier(ref r) : null;
         bool showToast = (flags & 2) != 0;
         bool hidden = (flags & 4) != 0;
-        float x = r.ReadFloat();
-        float y = r.ReadFloat();
+        float x = shape.HasDisplayCoordinates ? r.ReadFloat() : 0f;
+        float y = shape.HasDisplayCoordinates ? r.ReadFloat() : 0f;
         return new AdvancementDisplayInfo(title, description, icon, frame, background, showToast, hidden, x, y);
     }
 

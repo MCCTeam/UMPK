@@ -92,6 +92,17 @@ public static partial class AdvancementCodecs
     public static readonly PacketCodec<ClientboundUpdateAdvancementsPacket> UpdateAdvancementsV26_2 =
         MakeUpdateAdvancementsV26_1(ItemStackCodecs.ComponentsV26_2);
 
+    /// <summary>Update advancements (protocol 777, 26.3 component era, template icon, positioned added elements).</summary>
+    public static readonly PacketCodec<ClientboundUpdateAdvancementsPacket> UpdateAdvancementsV26_3 =
+        MakeUpdateAdvancementsV26_3(ItemStackCodecs.ComponentsV26_3);
+
+    /// <summary>Builds a 26.3 update-advancements codec: the 26.1 layout whose added elements each carry trailing Float x and Float y, and whose DisplayInfo carries no inner coordinates.</summary>
+    /// <param name="table">The protocol's component era table.</param>
+    /// <returns>The codec.</returns>
+    internal static PacketCodec<ClientboundUpdateAdvancementsPacket> MakeUpdateAdvancementsV26_3(ItemComponentTable table) =>
+        UpdateAdvancements(new AdvancementWireShape(
+            IconTemplateComponents(table), ComponentWire.V1_21_5, HasCriteria: false, HasTelemetry: true, HasShowAdvancements: true, HasPositions: true, HasDisplayCoordinates: false));
+
     /// <summary>768 (1.21.2/1.21.3) update advancements: identical to the 1.21.5 layout except the trailing show-advancements bool does not exist yet. Decode surfaces <see cref="ClientboundUpdateAdvancementsPacket.ShowAdvancements"/> as true (these versions always show); encode drops the field because it has no wire slot.</summary>
     /// <remarks>Protocols 768 and 769 use their own component tables so icon component ids resolve in the correct era ordering.</remarks>
     public static readonly PacketCodec<ClientboundUpdateAdvancementsPacket> UpdateAdvancementsV1_21_2 =
@@ -137,6 +148,7 @@ public static partial class AdvancementCodecs
             .From(JavaProtocols.V1_21_9, AdvancementCodecs.UpdateAdvancementsV1_21_9)
             .From(JavaProtocols.V1_21_11, AdvancementCodecs.UpdateAdvancementsV1_21_11)
             .From(JavaProtocols.V26_1, AdvancementCodecs.UpdateAdvancementsV26_1)
-            .From(JavaProtocols.V26_2, AdvancementCodecs.UpdateAdvancementsV26_2);
+            .From(JavaProtocols.V26_2, AdvancementCodecs.UpdateAdvancementsV26_2)
+            .From(JavaProtocols.V26_3, AdvancementCodecs.UpdateAdvancementsV26_3);
     }
 }

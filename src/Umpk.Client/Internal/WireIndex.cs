@@ -32,9 +32,19 @@ internal sealed class WireIndex
         ArgumentNullException.ThrowIfNull(type);
 
         // Exactly the predicate DescriptorFrameCodecBinding.TryEncode applies, IsImplemented included, so a true answer here means the frame encodes rather than throwing inside the connection's write lock. The marker path cannot reach a real PacketType today, but mirroring the encoder's whole condition is what keeps that true if it ever can.
-        return _descriptor.TryGetRegistry(phase, PacketFlow.Serverbound, out PhaseRegistry registry)
+        return OutboundCodec(phase, type) is not null;
+    }
+
+    /// <summary>The bound outbound entry for a packet TYPE on this version, or null when it has no implemented codec. Lets callers branch on what the bound codec reads (its wire shape) rather than on a protocol number.</summary>
+    internal BoundPacketCodec? OutboundCodec(ProtocolPhase phase, PacketType type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        if (_descriptor.TryGetRegistry(phase, PacketFlow.Serverbound, out PhaseRegistry registry)
             && registry.TryGetOutbound(type, out _, out BoundPacketCodec entry)
-            && entry.IsImplemented;
+            && entry.IsImplemented)
+            return entry;
+
+        return null;
     }
 
     private int Lookup(ProtocolPhase phase, PacketFlow flow, Identifier id)

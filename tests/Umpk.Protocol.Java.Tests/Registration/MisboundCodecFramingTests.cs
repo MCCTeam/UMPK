@@ -30,7 +30,7 @@ public sealed class MisboundCodecFramingTests
         47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404,
         477, 480, 485, 490, 498, 573, 575, 578,
         735, 736, 751, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763,
-        764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776,
+        764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
     ];
 
     /// <summary>The literal table's protocol column, read by <c>AllProtocolTableCoverageTests</c>.</summary>
@@ -51,7 +51,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> BareResponseProtocols => Range(477, 764);
 
     /// <summary>Protocols whose resource-pack response carries the pack uuid ahead of the action.</summary>
-    public static TheoryData<int> UuidResponseProtocols => Range(765, 776);
+    public static TheoryData<int> UuidResponseProtocols => Range(765, 777);
 
     [Theory]
     [MemberData(nameof(BareResponseProtocols))]
@@ -209,7 +209,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> ItemCooldownProtocols => Range(107, 767);
 
     /// <summary>Protocols whose cooldown names a cooldown group by identifier.</summary>
-    public static TheoryData<int> GroupCooldownProtocols => Range(768, 776);
+    public static TheoryData<int> GroupCooldownProtocols => Range(768, 777);
 
     private static byte[] ItemCooldownFrame => Cat(VarInt(280), VarInt(40));
 
@@ -254,7 +254,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> SteerInputProtocols => Range(107, 767);
 
     /// <summary>Protocols whose player_input is the seven-flag byte.</summary>
-    public static TheoryData<int> FlagInputProtocols => Range(768, 776);
+    public static TheoryData<int> FlagInputProtocols => Range(768, 777);
 
     private static byte[] SteerInputFrame => Cat(F32(0.5f), F32(-0.25f), [0x03]);
 
@@ -297,7 +297,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> NoOnGroundProtocols => Range(107, 768);
 
     /// <summary>Protocols whose vehicle move carries the trailing on-ground bool.</summary>
-    public static TheoryData<int> OnGroundProtocols => Range(769, 776);
+    public static TheoryData<int> OnGroundProtocols => Range(769, 777);
 
     private static byte[] VehicleBody => Cat(F64(1.5), F64(64.0), F64(-2.5), F32(90f), F32(-10f));
 
@@ -342,7 +342,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> JsonObjectiveProtocols => Range(393, 764);
 
     /// <summary>Protocols whose set_objective is the NBT body with the optional number format.</summary>
-    public static TheoryData<int> NbtObjectiveProtocols => Range(765, 776);
+    public static TheoryData<int> NbtObjectiveProtocols => Range(765, 777);
 
     // A STYLED display name on purpose: a bare text component serialises to a naked JSON string and to a network-NBT TAG_String, which look alike enough to blur the boundary. With a style the JSON form is an object ('{') and the NBT form is a TAG_Compound (0x0A). No click or hover event, so the component's interaction dialect (a separate 770 boundary) cannot leak into this assertion.
     private static ClientboundSetObjectivePacket Objective { get; } = new(
@@ -409,7 +409,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> ByteSlotProtocols => Range(107, 763);
 
     /// <summary>Protocols whose display slot is a VarInt.</summary>
-    public static TheoryData<int> VarIntSlotProtocols => Range(764, 776);
+    public static TheoryData<int> VarIntSlotProtocols => Range(764, 777);
 
     [Theory]
     [MemberData(nameof(ByteSlotProtocols))]
@@ -521,7 +521,7 @@ public sealed class MisboundCodecFramingTests
     public static TheoryData<int> JsonNameMapProtocols => Range(755, 764);
 
     /// <summary>Protocols whose map packet carries a network-NBT icon name.</summary>
-    public static TheoryData<int> NbtNameMapProtocols => Range(765, 776);
+    public static TheoryData<int> NbtNameMapProtocols => Range(765, 777);
 
     // A NAMED icon: an unnamed one encodes a single absent-flag byte under every era and would not tell the component transports apart. Styled for the same reason the objective display name is.
     private static Component IconName { get; } =

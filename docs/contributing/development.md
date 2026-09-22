@@ -54,7 +54,7 @@ The command must exit with code 0.
    dotnet run --project tools/Umpk.DataGen -- verify --data data/java
    ```
 
-The command must print `verify: OK (49 protocols)`.
+The command must print `verify: OK (50 protocols)`.
 
 If you changed anything under `data/java/`, you must also regenerate the data package and prove the result is unchanged. See [the dataset](../concepts/the-dataset.md) for that procedure.
 

@@ -9,10 +9,10 @@ is "Your game mode has been updated" (zero arguments); 1.9's is "Your game mode 
 been updated to %s" (one argument). Resolving a 1.8 chat line against the modern
 table would print a trailing "to " with nothing after it. This is not a legacy-only
 problem either: 1.13's `commands.spawnpoint.success.single` takes four positional
-arguments, 26.2's takes six, and `menu.preparingSpawn` gained a `%s%%` progress
+arguments, 26.3's takes six, and `menu.preparingSpawn` gained a `%s%%` progress
 suffix at 1.14.4 (protocol 498) that 1.13 (protocol 393) never had. So the dataset
 carries one full table per protocol rather than a base-plus-overlay scheme: the
-tables are human-auditable text, and 49 of them still compress far better than the
+tables are human-auditable text, and 50 of them still compress far better than the
 arity bugs a partial table would reintroduce.
 
 Representative version per protocol

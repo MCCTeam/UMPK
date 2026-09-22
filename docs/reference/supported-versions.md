@@ -5,9 +5,9 @@ sidebar:
   order: 1
 ---
 
-72 Minecraft version names map onto 49 protocol numbers, 47 through 776. The table below is generated from `data/java/versions.json`, which is the catalog the library and its tooling both read. Every row is one protocol: one dataset directory, one generated descriptor, one set of codecs. The version names on a row are wire-identical to each other.
+73 Minecraft version names map onto 50 protocol numbers, 47 through 777. The table below is generated from `data/java/versions.json`, which is the catalog the library and its tooling both read. Every row is one protocol: one dataset directory, one generated descriptor, one set of codecs. The version names on a row are wire-identical to each other.
 
-If you only want the short answer: anything from 1.8 to 26.2 works, and you address it either by release name or by protocol number.
+If you only want the short answer: anything from 1.8 to 26.3 works, and you address it either by release name or by protocol number.
 
 Minecraft Java versions before 1.8 are not supported. Do not use the legacy status ping as evidence of play-protocol support. It only reads a server-list response.
 
@@ -66,15 +66,15 @@ The `identity` column names the block and item id scheme. `legacy` is the pre-fl
 | 774 | `data/java/774/` | flat | 1.21.11 |
 | 775 | `data/java/775/` | flat | 26.1 |
 | 776 | `data/java/776/` | flat | 26.2 |
+| 777 | `data/java/777/` | flat | 26.3 |
 
 ## What the numbers mean
 
-A version name is what a player sees in the launcher. A protocol number is what the client puts in the handshake packet. Mojang bumps the protocol number when the wire format changes, and leaves it alone when it does not, so the mapping is many-to-one: 14 of the 49 protocols cover more than one release. Protocol 47 alone covers all ten 1.8.x releases.
+A version name is what a player sees in the launcher. A protocol number is what the client puts in the handshake packet. Mojang bumps the protocol number when the wire format changes, and leaves it alone when it does not, so the mapping is many-to-one: 14 of the 50 protocols cover more than one release. Protocol 47 alone covers all ten 1.8.x releases.
 
 UMPK keys off the protocol number everywhere. [Versions and protocols](../concepts/versions-and-protocols.md) explains why, and what the consequences are when you go looking for a version by name.
 
-Counted the other way: 24 names are pre-flattening (11 protocols, 47 through
-340) and 48 are flattened (38 protocols, 393 through 776).
+Counted the other way: 24 names are pre-flattening (11 protocols, 47 through 340) and 49 are flattened (39 protocols, 393 through 777).
 
 ## Looking a version up in code
 
@@ -88,7 +88,7 @@ if (JavaVersions.TryGetByProtocol(47, out JavaVersion v))
     Console.WriteLine(v.Version.Name);   // "1.8.9"
 }
 
-// By release name. All 72 names in the table resolve, including the aliases:
+// By release name. All 73 names in the table resolve, including the aliases:
 // "1.20.3" and "1.20.4" both land on protocol 765.
 JavaVersions.TryGetByName("1.21.10", out JavaVersion latestish);
 ```

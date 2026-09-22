@@ -38,6 +38,7 @@ internal static class EntityBindings
         EntityServerboundCodecs.DeclarePlayerInput(bindings);
         EntityServerboundCodecs.DeclareSetCarriedItem(bindings);
         EntityServerboundCodecs.DeclareSteerVehicle(bindings);
+        EntityServerboundCodecs.DeclarePunch(bindings);
         EntityServerboundCodecs.DeclareSwing(bindings);
         EntityServerboundCodecs.DeclareTeleportToEntity(bindings);
         EntitySpawnCodecs.DeclareAddEntity(bindings);
@@ -57,6 +58,7 @@ internal static class EntityBindings
         EntityStateCodecs.DeclareSetHealth(bindings);
         EntityStateCodecs.DeclareSetHeldSlot(bindings);
         EntityStateCodecs.DeclareSetPassengers(bindings);
+        EntityStateCodecs.DeclareSwingAnimation(bindings);
         EntityStateCodecs.DeclareTakeItemEntity(bindings);
         EntityStateCodecs.DeclareUseBed(bindings);
     }

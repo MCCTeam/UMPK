@@ -11,7 +11,7 @@ namespace Umpk.Client.Tests;
 /// <summary>A bottom slab rests a falling player half a block up, on EVERY supported protocol.</summary>
 /// <remarks>
 /// <para>Every committed dataset carries the <c>[0,0,0,1,0.5,1]</c> collision box for a bottom slab. The same fall must therefore stop at y+0.5 on all supported protocols.</para>
-/// <para>This test runs the same fall on all 49 protocols. A player already at rest inside a block that later becomes solid is a separate update-order case.</para>
+/// <para>This test runs the same fall on all 50 protocols. A player already at rest inside a block that later becomes solid is a separate update-order case.</para>
 /// <para>Pre-flattening bands select the slab by numeric block ID 44. Block ID 43 is the full-cube double slab. This keeps the geometry test independent from legacy identifier aliases.</para>
 /// </remarks>
 public sealed class SlabRestCompatibilityTests
@@ -24,7 +24,7 @@ public sealed class SlabRestCompatibilityTests
         477, 480, 485, 490, 498, 573, 575, 578,
         735, 736, 751, 753, 754, 755, 756, 757, 758,
         759, 760, 761, 762, 763, 764, 765, 766, 767,
-        768, 769, 770, 771, 772, 773, 774, 775, 776,
+        768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
     ];
 
     /// <summary>The literal table's protocol column, read by <c>AllProtocolTableCoverageTests</c>.</summary>

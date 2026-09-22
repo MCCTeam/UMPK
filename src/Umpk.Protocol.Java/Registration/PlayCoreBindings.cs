@@ -30,6 +30,7 @@ internal static class PlayCoreBindings
         PlayCommonCodecs.DeclareCookieResponsePlay(bindings);
         PlayCommonCodecs.DeclareDisconnectPlay(bindings);
         PlayCommonCodecs.DeclarePlayerLoaded(bindings);
+        PlayCommonCodecs.DeclarePostEffectsPlay(bindings);
         PlayCommonCodecs.DeclareStoreCookiePlay(bindings);
         PlayCommonCodecs.DeclareTransferPlay(bindings);
         PlayKeepAliveCodecs.DeclareKeepAlivePlay(bindings);

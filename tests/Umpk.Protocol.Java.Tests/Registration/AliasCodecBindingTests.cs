@@ -19,7 +19,7 @@ public sealed class AliasCodecBindingTests
     [
         47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404,
         477, 480, 485, 490, 498, 573, 575, 578, 735, 736, 751, 753, 754, 755, 756, 757, 758,
-        759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776,
+        759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
     ];
 
     /// <summary>The literal table's protocol column, read by <c>AllProtocolTableCoverageTests</c>.</summary>
@@ -190,7 +190,7 @@ public sealed class AliasCodecBindingTests
         }
 
         // 1.17 renames the packet and adds the horizontal-collision flag, so the successor has a separate binding.
-        foreach (int protocol in Band(755, 776))
+        foreach (int protocol in Band(755, 777))
             Assert.True(BoundCodec.IsImplementedAt(
                 protocol, ProtocolPhase.Play, PacketFlow.Serverbound, "minecraft:move_player_status_only"));
 
@@ -289,13 +289,13 @@ public sealed class AliasCodecBindingTests
             BoundCodec.At(47, PacketFlow.Serverbound, "minecraft:spectate").Type.Id);
     }
 
-    // bundle_delimiter: an empty body on 762-776.
+    // bundle_delimiter: an empty body on 762-777.
 
     /// <summary>The delimiter carries no payload, so it must decode a zero-byte frame and reject a one-byte frame.</summary>
     [Fact]
     public void BundleDelimiter_IsAnEmptyBody_AcrossTheBand()
     {
-        foreach (int protocol in Band(762, 776))
+        foreach (int protocol in Band(762, 777))
         {
             BoundPacketCodec bound = BoundCodec.At(protocol, PacketFlow.Clientbound, "minecraft:bundle_delimiter");
             Assert.Empty(bound.Encode(new ClientboundBundleDelimiterPacket()));

@@ -27,6 +27,9 @@ public sealed partial class ArgumentTypeRegistry
     /// <summary>The 26.2 (protocol 776) argument-type table.</summary>
     public static ArgumentTypeRegistry V26_2 { get; } = Build(ArgumentTypeTables.V776);
 
+    /// <summary>The 26.3 (protocol 777) argument-type table: the 776 order plus <c>context_float_provider</c>, <c>context_int_provider</c>, <c>slot_source</c>, <c>feature</c> and <c>swing_animation</c> (all serialized with empty property payloads).</summary>
+    public static ArgumentTypeRegistry V26_3 { get; } = Build(ArgumentTypeTables.V777);
+
     /// <summary>The number of parser entries in this table.</summary>
     public int Count => _idToName.Length;
 

@@ -183,6 +183,14 @@ internal static partial class EntityDataCodecs
             ComponentItems(ItemStackCodecs.ComponentsV26_2),
             new MetadataParticleEra(ParticleCodec.ModernV26_2, ItemStackCodecs.ComponentsV26_2));
 
+    /// <summary>777 (26.3) entity metadata: the 777 serializer table (DYE_COLOR appended at id 43) with the 777 particle/item eras.</summary>
+    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV26_3 =
+        SetEntityDataModern(
+            ModernMetadataTable.V777,
+            ComponentWireEra.Modern,
+            ComponentItems(ItemStackCodecs.ComponentsV26_3),
+            new MetadataParticleEra(ParticleCodec.ModernV26_3, ItemStackCodecs.ComponentsV26_3));
+
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareSetEntityData(PacketBindings bindings)
     {
@@ -211,6 +219,7 @@ internal static partial class EntityDataCodecs
             .From(JavaProtocols.V1_21_9, EntityDataCodecs.SetEntityDataV1_21_9)
             .From(JavaProtocols.V1_21_11, EntityDataCodecs.SetEntityDataV1_21_11)
             .From(JavaProtocols.V26_1, EntityDataCodecs.SetEntityDataV26_1)
-            .From(JavaProtocols.V26_2, EntityDataCodecs.SetEntityDataV26_2);
+            .From(JavaProtocols.V26_2, EntityDataCodecs.SetEntityDataV26_2)
+            .From(JavaProtocols.V26_3, EntityDataCodecs.SetEntityDataV26_3);
     }
 }

@@ -277,12 +277,16 @@ public static class JavaVersions
     public static JavaVersion V26_2 => s_v776 ??= global::Umpk.Data.Java.V776.Descriptor.Build();
     private static JavaVersion? s_v776;
 
+    /// <summary>26.3 (protocol 777).</summary>
+    public static JavaVersion V26_3 => s_v777 ??= global::Umpk.Data.Java.V777.Descriptor.Build();
+    private static JavaVersion? s_v777;
+
     /// <summary>All supported versions. References every version and therefore roots the full data set.</summary>
     public static IReadOnlyList<JavaVersion> All => s_all ??= BuildAll();
     private static IReadOnlyList<JavaVersion>? s_all;
 
     private static IReadOnlyList<JavaVersion> BuildAll() =>
-        new JavaVersion[] { V1_8, V1_9, V1_9_1, V1_9_2, V1_9_3, V1_10, V1_11, V1_11_1, V1_12, V1_12_1, V1_12_2, V1_13, V1_13_1, V1_13_2, V1_14, V1_14_1, V1_14_2, V1_14_3, V1_14_4, V1_15, V1_15_1, V1_15_2, V1_16, V1_16_1, V1_16_2, V1_16_3, V1_16_4, V1_17, V1_17_1, V1_18, V1_18_2, V1_19, V1_19_1, V1_19_3, V1_19_4, V1_20, V1_20_2, V1_20_3, V1_20_5, V1_21, V1_21_2, V1_21_4, V1_21_5, V1_21_6, V1_21_7, V1_21_9, V1_21_11, V26_1, V26_2 };
+        new JavaVersion[] { V1_8, V1_9, V1_9_1, V1_9_2, V1_9_3, V1_10, V1_11, V1_11_1, V1_12, V1_12_1, V1_12_2, V1_13, V1_13_1, V1_13_2, V1_14, V1_14_1, V1_14_2, V1_14_3, V1_14_4, V1_15, V1_15_1, V1_15_2, V1_16, V1_16_1, V1_16_2, V1_16_3, V1_16_4, V1_17, V1_17_1, V1_18, V1_18_2, V1_19, V1_19_1, V1_19_3, V1_19_4, V1_20, V1_20_2, V1_20_3, V1_20_5, V1_21, V1_21_2, V1_21_4, V1_21_5, V1_21_6, V1_21_7, V1_21_9, V1_21_11, V26_1, V26_2, V26_3 };
 
     /// <summary>Look up a version by protocol number. Walks All lazily.</summary>
     public static bool TryGetByProtocol(int protocol, out JavaVersion version)
@@ -376,6 +380,7 @@ public static class JavaVersions
             "1.21.11" => 774,
             "26.1" => 775,
             "26.2" => 776,
+            "26.3" => 777,
             _ => -1,
         };
         return protocol >= 0 && TryGetByProtocol(protocol, out version) || Fail(out version);

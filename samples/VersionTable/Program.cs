@@ -42,7 +42,7 @@ if (args.Length > 1)
     return 2;
 }
 
-// All holds one entry per protocol, 49 of them. Several release names share one protocol, so the named properties outnumber the list. Ten 1.8.x releases share protocol 47, for example, and All still holds it once.
+// All holds one entry per protocol, 50 of them. Several release names share one protocol, so the named properties outnumber the list. Ten 1.8.x releases share protocol 47, for example, and All still holds it once.
 Console.WriteLine($"Supported protocols: {JavaVersions.All.Count}");
 Console.WriteLine();
 Console.WriteLine("Protocol  Version");

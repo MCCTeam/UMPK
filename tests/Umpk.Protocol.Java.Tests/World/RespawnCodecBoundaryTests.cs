@@ -28,7 +28,7 @@ public sealed class RespawnCodecBoundaryTests
         477, 480, 485, 490, 498, 573, 575, 578,
         735, 736, 751, 753, 754, 755, 756, 757, 758,
         759, 760, 761, 762, 763, 764, 765, 766, 767,
-        768, 769, 770, 771, 772, 773, 774, 775, 776,
+        768, 769, 770, 771, 772, 773, 774, 775, 776, 777,
     ];
 
     /// <summary>The literal table's protocol column, read by <c>AllProtocolTableCoverageTests</c>.</summary>
@@ -331,7 +331,7 @@ public sealed class RespawnCodecBoundaryTests
         Assert.Equal(frame, Respawn(protocol).Encode(p));
     }
 
-    /// <summary>768-776: the 766 shape plus the trailing sea-level VarInt.</summary>
+    /// <summary>768-777: the 766 shape plus the trailing sea-level VarInt.</summary>
     private static byte[] Frame768(int dimensionTypeId) =>
         Cat(
             VarInt(dimensionTypeId), Str(Nether), I64(Seed), [1], [0], [0], [1], [0],
@@ -343,6 +343,7 @@ public sealed class RespawnCodecBoundaryTests
     [InlineData(770)]
     [InlineData(773)]
     [InlineData(776)]
+    [InlineData(777)]
     public void Respawn_AppendsSeaLevel(int protocol)
     {
         byte[] frame = Frame768(4);
@@ -360,6 +361,7 @@ public sealed class RespawnCodecBoundaryTests
     [InlineData(766)]
     [InlineData(768)]
     [InlineData(776)]
+    [InlineData(777)]
     public void ADimensionTypeIdOfZero_IsARegistryId_NotAnInlineNbtValue(int protocol)
     {
         byte[] frame = protocol < 768 ? Frame766(0) : Frame768(0);
@@ -417,6 +419,7 @@ public sealed class RespawnCodecBoundaryTests
     [InlineData(767, 38)]
     [InlineData(768, 39)]   // ... + varint(63) sea level
     [InlineData(776, 39)]
+    [InlineData(777, 39)]
     public void ModernBands_EncodeToTheirOwnExactWidth(int protocol, int expected)
     {
         var nbt = new NbtCompound();

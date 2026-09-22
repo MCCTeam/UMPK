@@ -8,7 +8,7 @@ namespace Umpk.Protocol.Java.Tests.Signing;
 
 /// <summary>Which codec the REGISTRAR actually binds for <c>minecraft:chat_command</c> and <c>minecraft:chat_command_signed</c> at every protocol number.</summary>
 /// <remarks>
-/// <para>Both identifiers sat in the packet timeline as markers on every protocol that declares them (<c>chat_command</c> on 759-776, <c>chat_command_signed</c> on 766-776), so the frame had a real wire id, no codec, and no way to be sent. Nothing threw: the command send path silently fell back to writing "/cmd" down the ordinary chat wire, which from 1.19 onward is broadcast as chat text and never dispatched. Codec-level tests cannot see that; only resolving by protocol number can.</para>
+/// <para>Both identifiers sat in the packet timeline as markers on every protocol that declares them (<c>chat_command</c> on 759-777, <c>chat_command_signed</c> on 766-777), so the frame had a real wire id, no codec, and no way to be sent. Nothing threw: the command send path silently fell back to writing "/cmd" down the ordinary chat wire, which from 1.19 onward is broadcast as chat text and never dispatched. Codec-level tests cannot see that; only resolving by protocol number can.</para>
 /// <para>Each era assertion encodes a fixed packet through the BOUND codec and compares it against bytes built field-by-field from the era's wire order, so a timeline that resolves a neighbouring era's codec fails here rather than silently producing a frame the server rejects.</para>
 /// </remarks>
 public sealed class ChatCommandCodecBindingTests
@@ -21,7 +21,7 @@ public sealed class ChatCommandCodecBindingTests
 
     /// <summary>Every protocol that declares a serverbound <c>chat_command</c> (1.19 through 26.2).</summary>
     public static TheoryData<int> ChatCommandProtocols =>
-        [759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776];
+        [759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777];
 
     /// <summary>The pre-1.19 protocols, where the packet does not exist and the chat path IS the command path.</summary>
     public static TheoryData<int> PreSigningProtocols =>

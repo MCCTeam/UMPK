@@ -189,7 +189,14 @@ public sealed record AdvancementNode(
     bool SendsTelemetryEvent);
 
 /// <summary>An added advancement: its identifier and node value.</summary>
-public sealed record AdvancementEntry(Identifier Id, AdvancementNode Value);
+public sealed record AdvancementEntry(Identifier Id, AdvancementNode Value)
+{
+    /// <summary>The 26.3+ tab position X, retained only where the era carries it; null on older eras.</summary>
+    public float? PositionX { get; init; }
+
+    /// <summary>The 26.3+ tab position Y, retained only where the era carries it; null on older eras.</summary>
+    public float? PositionY { get; init; }
+}
 
 /// <summary>The progress of a single criterion: the epoch-millis instant when it was obtained, or null if unobtained.</summary>
 public sealed record CriterionProgressEntry(string CriterionId, long? ObtainedEpochMillis);

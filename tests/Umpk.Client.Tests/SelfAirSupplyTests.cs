@@ -21,7 +21,7 @@ namespace Umpk.Client.Tests;
 
 /// <summary>
 /// The local player's air supply (breath): the metadata path, the local per-tick rule, and the precedence between them.
-/// <para><c>EntityMetadataKeys.AirSupply</c> existed and <c>JavaEntityMetadataKeys</c> mapped it at index 1 on all 49 protocols, but nothing consumed it for the LOCAL player: self is not a member of the shared <c>EntityStore</c>, so <c>EntityApplier</c>'s <c>set_entity_data</c> arm looked the id up, missed, and returned true anyway. Self air frames must update the local state rather than only decode, and <c>SelfState</c> carried no air field to put it in. A bot could not see its own breath, so nothing underwater could be breath-aware.</para>
+/// <para><c>EntityMetadataKeys.AirSupply</c> existed and <c>JavaEntityMetadataKeys</c> mapped it at index 1 on all 50 protocols, but nothing consumed it for the LOCAL player: self is not a member of the shared <c>EntityStore</c>, so <c>EntityApplier</c>'s <c>set_entity_data</c> arm looked the id up, missed, and returned true anyway. Self air frames must update the local state rather than only decode, and <c>SelfState</c> carried no air field to put it in. A bot could not see its own breath, so nothing underwater could be breath-aware.</para>
 /// </summary>
 /// <remarks>Maximum air is 300. While the eye is underwater and no immunity applies, air decreases by one per tick; at -20 it resets to zero and drowning damage applies. Out of water it refills by four per tick. Protocols from 1.21.5 rely on synchronized air state, while UMPK predicts locally on every era; see <c>AirSupplyRule</c> for the reconciliation boundary.</remarks>
 public sealed class SelfAirSupplyTests
@@ -68,7 +68,7 @@ public sealed class SelfAirSupplyTests
     /// <summary>
     /// The self-air frame, decoded through the codec the catalog binds, on both metadata wire formats.
     /// <para>Protocol 47 bytes: <c>01</c> VarInt entity id 1 | <c>21</c> the packed 1.8 header <c>(type 1 &lt;&lt; 5) | index 1</c>, type 1 being the DataWatcher's 16-bit short | <c>0089</c> short 137 | <c>7F</c> the 1.8 list terminator. Protocol 772 bytes: <c>01</c> VarInt entity id 1 | <c>01</c> index byte 1 | <c>01</c> VarInt serializer id 1 (<c>INT</c>) | <c>8901</c> VarInt 137 | <c>FF</c> the modern terminator.</para>
-    /// <para>Index 1 on both, and on every protocol between them: air is the second field vanilla declares on <c>Entity</c> and nothing has ever been inserted above it (pinned across all 49 protocols by <c>EntityMetadataKeyTableTests</c>).</para>
+    /// <para>Index 1 on both, and on every protocol between them: air is the second field vanilla declares on <c>Entity</c> and nothing has ever been inserted above it (pinned across all 50 protocols by <c>EntityMetadataKeyTableTests</c>).</para>
     /// </summary>
     [Theory]
     [InlineData(LegacyProtocol, "012100897F")]

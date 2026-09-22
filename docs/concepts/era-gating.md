@@ -47,7 +47,7 @@ and on protocol 47:
 
 `waterClimbBump` is the in-water climbable bump: when you are horizontally colliding and on a ladder or a vine, the vertical velocity is replaced by 0.2 just before damping. It is what makes a ladder usable while swimming. The boundary is 404 to 477, which is 1.13.2 to 1.14.
 
-`fluidMovement` reads `swimmingUpdate` on all 49 protocols, so it currently gates nothing. The selected depth-strider blend is unchanged across the supported range. Retaining the axis makes that verified uniformity explicit and leaves room for a future boundary without changing the engine contract.
+`fluidMovement` reads `swimmingUpdate` on all 50 protocols, so it currently gates nothing. The selected depth-strider blend is unchanged across the supported range. Retaining the axis makes that verified uniformity explicit and leaves room for a future boundary without changing the engine contract.
 
 Note also what did not happen: `waterClimbBump` was not folded into `waterTravel` even though both are about water, and not aliased onto the crawl pose flag even though both change at 477. A coincident boundary is not a shared cause. If a future correction moves the pose boundary, water travel must not move with it.
 
@@ -111,4 +111,4 @@ The maintenance cost is real. Adding a protocol means adding a row to each table
 
 ## Adding an axis
 
-Changing a dataset value or adding an axis moves behavior on up to 49 protocols at once, so it is a decision to raise before making, not after. The mechanics are in [adding a version](../contributing/adding-a-version.md) and the surrounding gate is in [development](../contributing/development.md).
+Changing a dataset value or adding an axis moves behavior on up to 50 protocols at once, so it is a decision to raise before making, not after. The mechanics are in [adding a version](../contributing/adding-a-version.md) and the surrounding gate is in [development](../contributing/development.md).

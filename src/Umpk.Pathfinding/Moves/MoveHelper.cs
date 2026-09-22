@@ -670,7 +670,7 @@ public static class MoveHelper
 
     /// <summary><c>minecraft:cobweb</c>, and <c>minecraft:web</c> - the same block under the name the pre-flattening registries carry (block id 30, <c>legacy block registration</c>).</summary>
     /// <param name="state">The state to test.</param>
-    /// <returns>True for a cobweb on any of the 49 protocols.</returns>
+    /// <returns>True for a cobweb on any of the 50 protocols.</returns>
     public static bool IsCobweb(BlockState state)
         => !state.IsDefault && (state.Block.Id == CobwebId || state.Block.Id == LegacyCobwebId);
 
@@ -684,7 +684,7 @@ public static class MoveHelper
     /// <summary>A landing that BOUNCES a body rather than stopping it: <c>minecraft:slime_block</c>, and the pre-flattening registries' <c>minecraft:slime</c>.</summary>
     /// <remarks><c>slime bounce response</c> inverts a downward velocity outright for a living entity - <c>vy = -vy * 1.0</c>, no decay factor at all - unless the player is sneaking, in which case landing zeroes vertical velocity instead. The executor reads this to decide whether a landing needs the sneak that cancels the bounce, and whether its completion has to wait for a body that is still bouncing. Hay is deliberately NOT here: it softens a fall and does not bounce.</remarks>
     /// <param name="state">The state to test.</param>
-    /// <returns>True for a slime block on any of the 49 protocols.</returns>
+    /// <returns>True for a slime block on any of the 50 protocols.</returns>
     public static bool IsBouncyLanding(BlockState state)
         => !state.IsDefault && (state.Block.Id == SlimeBlockId || state.Block.Id == LegacySlimeBlockId);
 
@@ -753,7 +753,7 @@ public static class MoveHelper
     /// <remarks>
     /// <para><b>The floor can take the jump away.</b> Effective jump strength is multiplied by the supporting block's jump factor, and the only block in the game with a jump factor under 1.0 is <c>minecraft:honey_block</c> at 0.5. A stone takeoff apexes at 1.2522 blocks and clears an ordinary kerb, and a honey takeoff apexes at <b>0.383852</b> - below even the 0.6 auto-step, so a jump out of honey buys the body nothing a walk did not already give it. No jump-requiring move may be planned from one.</para>
     /// <para>The feet cell is read first, and the cell below is consulted only when its factor is 1.0. This preserves the behavior of a carpet laid over honey, where the feet never touch the honey's own box: the carpet reads 1.0, the fallback finds the honey, and the apex is the same 0.383852. A one-cell classifier sees carpet and clears the jump.</para>
-    /// <para><b>Exact today, conservative if the dataset grows.</b> Across all 49 supported protocols, 0.5 is the only sub-unit factor. A future factor near 1.0 might still clear a kerb and would be refused here; refusing costs a route, granting strands the bot in front of a wall it cannot climb.</para>
+    /// <para><b>Exact today, conservative if the dataset grows.</b> Across all 50 supported protocols, 0.5 is the only sub-unit factor. A future factor near 1.0 might still clear a kerb and would be refused here; refusing costs a route, granting strands the bot in front of a wall it cannot climb.</para>
     /// </remarks>
     /// <param name="ctx">The planning context.</param>
     /// <param name="x">The takeoff cell's X.</param>

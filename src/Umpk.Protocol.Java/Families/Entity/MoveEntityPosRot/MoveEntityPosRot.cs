@@ -21,4 +21,14 @@ public sealed record ClientboundMoveEntityPosRotPacket(
 {
     /// <inheritdoc />
     public PacketType Type => EntityPackets.Clientbound.MoveEntityPosRot;
+
+    /// <summary>The 26.3+ stepped deltas. Empty on older eras (and on 26.3 zero-step frames); the legacy delta fields mirror the first step where one exists so era-blind consumers keep working.</summary>
+    public IReadOnlyList<EntityMoveStep> Steps { get; init; } = [];
 }
+
+/// <summary>One 26.3+ relative-move step: the tick delay plus the short deltas applied when it elapses.</summary>
+/// <param name="Ticks">Ticks to wait before applying this step.</param>
+/// <param name="DeltaX">The X delta in 1/4096 blocks.</param>
+/// <param name="DeltaY">The Y delta in 1/4096 blocks.</param>
+/// <param name="DeltaZ">The Z delta in 1/4096 blocks.</param>
+public sealed record EntityMoveStep(int Ticks, short DeltaX, short DeltaY, short DeltaZ);

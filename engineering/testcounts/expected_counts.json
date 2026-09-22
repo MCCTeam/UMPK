@@ -1,10 +1,10 @@
 {
   "Umpk.Auth.Tests.dll": 136,
-  "Umpk.Client.Tests.dll": 2623,
+  "Umpk.Client.Tests.dll": 2640,
   "Umpk.Commands.Tests.dll": 85,
   "Umpk.Core.Tests.dll": 144,
-  "Umpk.Data.Java.Tests.dll": 1557,
-  "Umpk.Data.Lang.Tests.dll": 78,
+  "Umpk.Data.Java.Tests.dll": 1567,
+  "Umpk.Data.Lang.Tests.dll": 80,
   "Umpk.DataGen.Tests.dll": 67,
   "Umpk.Game.Tests.dll": 484,
   "Umpk.IntegrationTests.dll": 46,
@@ -12,8 +12,8 @@
   "Umpk.PacketRecorder.Tests.dll": 14,
   "Umpk.Pathfinding.Tests.dll": 1045,
   "Umpk.Physics.Tests.dll": 292,
-  "Umpk.Protocol.Java.Conformance.dll": 872,
-  "Umpk.Protocol.Java.Tests.dll": 4574,
+  "Umpk.Protocol.Java.Conformance.dll": 881,
+  "Umpk.Protocol.Java.Tests.dll": 4670,
   "Umpk.Realms.Tests.dll": 53,
   "Umpk.Text.Tests.dll": 218
 }

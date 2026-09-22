@@ -124,6 +124,7 @@ public sealed class PhysicsProfileConformanceTests
         { 774, "sprintAware" },   // 1.21.10
         { 775, "sprintAware" },   // 26.1
         { 776, "sprintAware" },   // 26.2
+        { 777, "sprintAware" },   // 26.3
     };
 
     [Theory]
@@ -204,6 +205,7 @@ public sealed class PhysicsProfileConformanceTests
         { 774, true },    // 1.21.10
         { 775, true },    // 26.1
         { 776, true },    // 26.2
+        { 777, true },    // 26.3
     };
 
     [Theory]

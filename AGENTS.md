@@ -2,7 +2,7 @@
 
 ## Project overview
 
-UMPK is a .NET 10 library for the Minecraft Java protocol. One codebase supports 49 protocol datasets from protocol 47 through 776. Vanilla source, official artifacts, and real packet captures are the acceptance oracle.
+UMPK is a .NET 10 library for the Minecraft Java protocol. One codebase supports 50 protocol datasets from protocol 47 through 777. Vanilla source, official artifacts, and real packet captures are the acceptance oracle.
 
 ## Local skills
 

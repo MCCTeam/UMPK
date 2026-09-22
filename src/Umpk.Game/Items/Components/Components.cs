@@ -142,7 +142,11 @@ public sealed record SulfurCubeContentComponent(ItemStack AbsorbedBlockItemStack
 
 /// <summary>The four decorated-pot faces (<c>minecraft:pot_decorations</c>), as raw item network ids in wire order (back, left, right, front; a brick face is the plain brick item). Raw ids keep the component registry-independent: an id outside the session item registry still round-trips.</summary>
 /// <param name="SherdItemIds">The per-face item network ids, up to four.</param>
-public sealed record PotDecorationsComponent(IReadOnlyList<int> SherdItemIds);
+public sealed record PotDecorationsComponent(IReadOnlyList<int> SherdItemIds)
+{
+    /// <summary>26.3+: the four faces as item-stack templates in wire order (back, left, right, front); absent faces are <see cref="ItemStack.Empty"/>. Null on older eras, whose wire carries bare SherdItemIds instead.</summary>
+    public IReadOnlyList<ItemStack>? FaceStacks { get; init; }
+}
 
 /// <summary>A player head profile (<c>minecraft:profile</c>).</summary>
 /// <param name="Profile">The resolvable profile.</param>

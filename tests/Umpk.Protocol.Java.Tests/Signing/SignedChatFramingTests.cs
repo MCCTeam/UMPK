@@ -17,7 +17,7 @@ namespace Umpk.Protocol.Java.Tests.Signing;
 /// v2, protocol 760: the v1 fields plus a trailing last-seen update. Its wire order is a string capped at 256 characters, epoch-millis long, salt long, length-prefixed signature, preview boolean, a counted list of UUID-and-signature entries, then one optional entry of the same shape.
 /// </description></item>
 /// <item><description>
-/// v3, protocols 761-776: message, instant, salt, a NULLABLE FIXED 256-byte signature, then the offset/bitset acknowledgement window. The 20-bit bitset is 3 bytes; 770 appends a checksum byte.
+/// v3, protocols 761-777: message, instant, salt, a NULLABLE FIXED 256-byte signature, then the offset/bitset acknowledgement window. The 20-bit bitset is 3 bytes; 770 appends a checksum byte.
 /// </description></item>
 /// </list>
 /// <para>The per-protocol length matrix pins the one-byte checksum difference between adjacent v3 bands.</para>
@@ -36,7 +36,7 @@ public sealed class SignedChatFramingTests
     private static readonly int[] V3NoChecksum = [761, 762, 763, 764, 765, 766, 767, 768, 769];
 
     /// <summary>Every protocol carrying the v3 body WITH the acknowledgement checksum byte.</summary>
-    private static readonly int[] V3Checksum = [770, 771, 772, 773, 774, 775, 776];
+    private static readonly int[] V3Checksum = [770, 771, 772, 773, 774, 775, 776, 777];
 
     private static readonly Guid Alex = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
 

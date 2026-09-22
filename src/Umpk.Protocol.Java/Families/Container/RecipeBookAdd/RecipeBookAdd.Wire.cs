@@ -39,11 +39,12 @@ internal static partial class RecipeCodecs
             // one re-encodes byte-identically while reporting the id as the count and the count as the id;
             // only a field assertion separates them, never a round trip.
             .From(JavaProtocols.V26_1, RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_1(Table775)))
-            .From(JavaProtocols.V26_2, RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_1(Table776)));
+            .From(JavaProtocols.V26_2, RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_1(Table776)))
+            .From(JavaProtocols.V26_3, RecipeCodecs.RecipeBookAdd(RecipeBookWire.V26_3(Table777)));
     }
 }
 
-/// <summary>How one era frames a recipe-book-add frame. The two axes inside it move independently and both move twice: <c>slot_display</c> changed at 1.21.5 (<c>smithing_trim</c>'s pattern became a <c>Holder&lt;TrimPattern&gt;</c>) and again at 26.1, which inserted three variants so every type id from 2 up shifted; the nested item stack moved to <c>ItemStackTemplate</c> at 26.1 and carries a per-protocol component table besides. Three era facts on one factory is what a named shape is for.</summary>
+/// <summary>How one era frames a recipe-book-add frame. The axes inside it move independently: <c>slot_display</c> changed at 1.21.5 (<c>smithing_trim</c>'s pattern became a <c>Holder&lt;TrimPattern&gt;</c>), again at 26.1, which inserted three variants so every type id from 2 up shifted, and again at 26.3, where the <c>tag</c> payload became an item holder set; the nested item stack moved to <c>ItemStackTemplate</c> at 26.1 and carries a per-protocol component table besides. Era facts on one factory is what a named shape is for.</summary>
 /// <param name="Slots">The era's <c>slot_display</c> wire rules.</param>
 /// <param name="Stacks">The era's item-stack reader and writer.</param>
 internal readonly record struct RecipeBookWire(RecipeDisplayCodecs.SlotDisplayTable Slots, StackWire Stacks)
@@ -65,6 +66,12 @@ internal readonly record struct RecipeBookWire(RecipeDisplayCodecs.SlotDisplayTa
     /// <returns>The shape.</returns>
     internal static RecipeBookWire V26_1(ItemComponentTable table) =>
         new(RecipeDisplayCodecs.SlotsV26_1, StackWire.Templates(table));
+
+    /// <summary>777 (26.3): the holder-set tag payload, template stacks under the era's component table.</summary>
+    /// <param name="table">The era's component table.</param>
+    /// <returns>The shape.</returns>
+    internal static RecipeBookWire V26_3(ItemComponentTable table) =>
+        new(RecipeDisplayCodecs.SlotsV26_3, StackWire.Templates(table));
 
     /// <inheritdoc />
     public override string ToString() => $"slots={Slots.Form},stacks={Stacks}";

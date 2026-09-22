@@ -26,6 +26,22 @@ public static partial class WorldStateCodecs
                 return new ClientboundLightUpdatePacket(x, z, ReadLightData(ref r));
             });
 
+    /// <summary>26.3 standalone light update (protocol 777): the 1.20 body with the four BitSet masks as VarInt-length-prefixed byte arrays (little-endian, trailing zeros stripped) instead of long arrays. The nibble-array lists are unchanged.</summary>
+    public static readonly PacketCodec<ClientboundLightUpdatePacket> LightUpdateV26_3 =
+        PacketCodec<ClientboundLightUpdatePacket>.Of(
+            static (ref PacketWriter w, ClientboundLightUpdatePacket p, PacketCodecContext _) =>
+            {
+                w.WriteVarInt(p.ChunkX);
+                w.WriteVarInt(p.ChunkZ);
+                WriteLightData777(ref w, p.Light);
+            },
+            static (ref PacketReader r, PacketCodecContext _) =>
+            {
+                int x = r.ReadVarInt();
+                int z = r.ReadVarInt();
+                return new ClientboundLightUpdatePacket(x, z, ReadLightData777(ref r));
+            });
+
     /// <summary>Flattening-era standalone light update (1.14-1.15.2, protocols 477-578). Both versions carry two VarInt chunk coords, four single-VarInt section masks (sky/block/emptySky/emptyBlock), then one VarInt-length-prefixed 2048-byte array per set bit of the sky mask followed by one per set bit of the block mask. There is no trailing trust-edges bool (1.17+) and the masks are single VarInts, not the 1.17 BitSet long arrays. Each single-int mask is carried in a length-1 <c>long[]</c> so the shared <see cref="LightUpdateData"/> record fits.</summary>
     public static readonly PacketCodec<ClientboundLightUpdatePacket> LightUpdateV1_14 =
         PacketCodec<ClientboundLightUpdatePacket>.Of(
@@ -127,16 +143,18 @@ public static partial class WorldStateCodecs
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareLightUpdate(PacketBindings bindings)
     {
-        // Standalone light packet from 1.14. Four wire eras:
+        // Standalone light packet from 1.14. Five wire eras:
         //  - 477-578 (1.14-1.15.2): single-VarInt masks, no trust-edges bool.
         //  - 735-754 (1.16-1.16.5): the same masks with a trust-edges bool after the coordinates.
         //  - 755-762 (1.17-1.19.4): BitSet masks + counted array lists, bool still present.
-        //  - 763+ (1.20 onward): BitSet masks, bool removed.
+        //  - 763-776 (1.20-26.2): BitSet masks, bool removed.
+        //  - 777+ (26.3): the masks are VarInt-length-prefixed byte arrays (BitSet.toByteArray form), bool still absent.
         // The band boundary at the top is 763, not 764: the 1.20.1 light tail parses only without the boolean, while the 1.19.4 tail parses only with it.
         bindings.Packet(WorldPackets.Clientbound.LightUpdate)
             .From(JavaProtocols.V1_14, WorldStateCodecs.LightUpdateV1_14)
             .From(JavaProtocols.V1_16, WorldStateCodecs.LightUpdateV1_16)
             .From(JavaProtocols.V1_17, WorldStateCodecs.LightUpdateV1_17)
-            .From(JavaProtocols.V1_20, WorldStateCodecs.LightUpdateV1_20);
+            .From(JavaProtocols.V1_20, WorldStateCodecs.LightUpdateV1_20)
+            .From(JavaProtocols.V26_3, WorldStateCodecs.LightUpdateV26_3);
     }
 }

@@ -156,8 +156,14 @@ public sealed class MovementActions
     };
 
     /// <summary>Swings the main arm.</summary>
+    /// <remarks>Same 26.3 punch split as <see cref="InteractionActions.SwingAsync"/>: the handless punch when the session binds it, the hand-carrying swing otherwise. Reads the bound outbound table, never a protocol number.</remarks>
     public Task SwingArmAsync(CancellationToken ct = default)
-        => _sink.SendAsync(new ServerboundSwingPacket(0, HasHand: true), ct).AsTask();
+    {
+        if (_services.Wire.CanSendPlay(EntityPackets.Serverbound.Punch))
+            return _sink.SendAsync(new ServerboundPunchPacket(), ct).AsTask();
+
+        return _sink.SendAsync(new ServerboundSwingPacket(0, HasHand: true), ct).AsTask();
+    }
 
     /// <summary>Straight-line/step movement to a target under the Physics feature (no planner).</summary>
     public Task MoveToAsync(Vec3d target, CancellationToken ct = default)

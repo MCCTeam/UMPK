@@ -4,6 +4,7 @@ using Umpk.Client.State;
 using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
+using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
 
@@ -137,22 +138,41 @@ internal sealed class SelfApplier : IApplier
 
         if (pos.TeleportId is { } teleportId)
         {
-            await context.Sink.SendAsync(new ServerboundAcceptTeleportationPacket(teleportId), ct).ConfigureAwait(false);
-            await context.Sink.SendAsync(
-                    new ServerboundMovePlayerPosRotPacket(
-                        x,
-                        y,
-                        z,
-                        yaw,
-                        pitch,
-                        OnGround: false,
-                        HorizontalCollision: false),
-                    ct)
-                .ConfigureAwait(false);
+            bool acceptCarriesDestination = AcceptCarriesDestination(context.Wire);
+
+            // The confirmation shape is era-bound: 26.3 echoes the resolved destination after the id, while older eras carry the id alone. The outbound codec capability selects the matching packet model without branching on a protocol number.
+            if (context.Wire.CanSendPlay(EntityPackets.Serverbound.AcceptTeleportation))
+            {
+                var confirmation = acceptCarriesDestination
+                    ? new ServerboundAcceptTeleportationPacket(teleportId, x, y, z, yaw, pitch)
+                    : new ServerboundAcceptTeleportationPacket(teleportId);
+                await context.Sink.SendAsync(
+                    confirmation,
+                    ct).ConfigureAwait(false);
+            }
+
+            // No position echo where the bound accept already carried the destination: the server applies the teleport from the accept itself, and a second position packet in the same tick trips its per-tick double-position disconnect. Older eras keep the echo because their id-only accept carries no coordinates.
+            if (!acceptCarriesDestination)
+                await context.Sink.SendAsync(
+                        new ServerboundMovePlayerPosRotPacket(
+                            x,
+                            y,
+                            z,
+                            yaw,
+                            pitch,
+                            OnGround: false,
+                            HorizontalCollision: false),
+                        ct)
+                    .ConfigureAwait(false);
         }
 
         await context.PublishAsync(new PositionCorrected(self.Position, yaw, pitch)).ConfigureAwait(false);
     }
+
+    /// <summary>Whether the session's bound accept_teleportation codec carries the echoed destination (26.3+: VarInt id, three doubles, two floats). Reads the bound codec's wire shape off the outbound table, never a protocol number: a rewording of either shape token flips the echo the wrong way, and the 770-era applier test (both packets) plus the 777-era applier test (accept only) pin both sides loudly.</summary>
+    private static bool AcceptCarriesDestination(WireIndex wire) =>
+        wire.OutboundCodec(ProtocolPhase.Play, EntityPackets.Serverbound.AcceptTeleportation) is { } bound &&
+        string.Equals(bound.Shape.Token, "varint,double,double,double,float,float", StringComparison.Ordinal);
 
     /// <summary>The modern (1.21.2+) delta-movement resolution of <c>absolute teleport resolution</c>. <paramref name="newYaw"/> / <paramref name="newPitch"/> are the already-resolved absolute rotation; the self state still holds the pre-teleport rotation and delta, which is exactly what vanilla reads for the <c>ROTATE_DELTA</c> correction.</summary>
     private static Vec3d ResolveModernDelta(SelfState self, Vec3d packetDelta, int flags, float newYaw, float newPitch)
@@ -191,7 +211,7 @@ internal sealed class SelfApplier : IApplier
 
     /// <summary>Applies the fields of a self <c>set_entity_data</c> frame that <see cref="SelfState"/> tracks. Today that is the air supply alone; every other index stays where the entity store would have put it, which for self is nowhere.</summary>
     /// <remarks>
-    /// <para>The index is resolved through the version's tier-2 key table rather than written as a literal. It is 1 on all 49 protocols because air is the second field and nothing has ever been inserted above it, but that is the TABLE's fact to state, not this applier's.</para>
+    /// <para>The index is resolved through the version's tier-2 key table rather than written as a literal. It is 1 on all 50 protocols because air is the second field and nothing has ever been inserted above it, but that is the TABLE's fact to state, not this applier's.</para>
     /// <para>Only a <see cref="MetadataValueKind.VarInt"/> is taken. On 1.8 the field is a 16-bit short rather than a VarInt, and the legacy metadata decoder already normalises both onto that one kind (<c>EntityMetadataCodec.ReadLegacy</c>: type 1 short and type 2 int both build <c>MetadataValue.VarInt</c>), so the check costs nothing on any era and refuses a value whose shape says the index does not mean what this table thinks it means.</para>
     /// <para>A frame carries only dirty metadata entries, so "this frame has no air in it" is the ordinary case and must leave the tracked value alone rather than reset it.</para>
     /// </remarks>

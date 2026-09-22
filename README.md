@@ -53,7 +53,7 @@ Minecraft versions earlier than 1.8 are not supported. The legacy status ping ca
 Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), then add the complete client stack:
 
 ```bash
-dotnet add package Umpk --version 0.9.0-beta.1
+dotnet add package Umpk --version 0.9.0-beta.2
 ```
 
 You can instead install focused packages such as `Umpk.Protocol.Java`, `Umpk.Nbt`, or `Umpk.Text`. To build the source:

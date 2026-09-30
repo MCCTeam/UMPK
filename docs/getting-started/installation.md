@@ -9,7 +9,7 @@ sidebar:
 
 .NET 10. Every project in `src/` inherits `TargetFramework` `net10.0` from the repository's `Directory.Build.props`, along with `Nullable` enable, `ImplicitUsings` enable and `TreatWarningsAsErrors` true. There is no multi-targeting and no older TFM.
 
-Nothing else is required to build. The library's runtime dependencies are deliberately small: `Microsoft.Extensions.Logging.Abstractions` in `Umpk.Core`, `Umpk.Auth` and `Umpk.Realms`, `Microsoft.Extensions.Options` and `Microsoft.Extensions.DependencyInjection.Abstractions` in `Umpk.Client`, and `Brigadier.NET` in `Umpk.Commands`. Everything else is project references between the packages themselves.
+Nothing else is required to build. The library's runtime dependencies are deliberately small: `Microsoft.Extensions.Logging.Abstractions` in `Umpk.Core`, `Umpk.Auth` and `Umpk.Realms`, `Microsoft.Extensions.Options` and `Microsoft.Extensions.DependencyInjection.Abstractions` in `Umpk.Client`, `QuickProxyNet` in `Umpk.Protocol.Java`, and `Brigadier.NET` in `Umpk.Commands`. Everything else is project references between the packages themselves.
 
 ## Install from NuGet
 

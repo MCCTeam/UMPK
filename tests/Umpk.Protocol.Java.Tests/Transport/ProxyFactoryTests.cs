@@ -46,6 +46,33 @@ public class ProxyFactoryTests
     }
 
     [Fact]
+    public async Task HttpConnect_WithAuth_SendsBasicCredentials()
+    {
+        using var proxy = new FakeProxy(FakeProxy.Kind.HttpConnect, auth: true);
+        var factory = new HttpConnectConnectionFactory(new ProxyOptions
+        {
+            Host = "127.0.0.1",
+            Port = proxy.Port,
+            Username = "user",
+            Password = "pass",
+        });
+
+        var pipe = await factory.ConnectAsync(new ServerEndpoint("target.example", 25565), Ct());
+        await AssertEchoAsync(pipe);
+    }
+
+    [Fact]
+    public async Task HttpConnect_MalformedSuccessStatus_ThrowsConnectionClosedWithProtocolViolation()
+    {
+        using var proxy = new FakeProxy(FakeProxy.Kind.HttpConnect, auth: false, httpStatusLine: "NOTHTTP 200 OK");
+        var factory = new HttpConnectConnectionFactory(new ProxyOptions { Host = "127.0.0.1", Port = proxy.Port });
+
+        ConnectionClosedException ex = await Assert.ThrowsAsync<ConnectionClosedException>(
+            async () => await factory.ConnectAsync(new ServerEndpoint("target.example", 25565), Ct()));
+        Assert.Equal(CloseReason.ProtocolViolation, ex.Reason);
+    }
+
+    [Fact]
     public async Task Socks4_NoUserId_TunnelsAndTransfersData()
     {
         using var proxy = new FakeProxy(FakeProxy.Kind.Socks4, auth: false);
@@ -91,6 +118,29 @@ public class ProxyFactoryTests
         Assert.Equal(CloseReason.ProtocolViolation, ex.Reason);
     }
 
+    [Fact]
+    public async Task Socks5_CancellationDuringNegotiation_PropagatesCancellation()
+    {
+        using var proxy = new FakeProxy(FakeProxy.Kind.Stall, auth: false);
+        var factory = new Socks5ConnectionFactory(new ProxyOptions { Host = "127.0.0.1", Port = proxy.Port });
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(200));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            async () => await factory.ConnectAsync(new ServerEndpoint("target.example", 25565), cts.Token));
+    }
+
+    [Fact]
+    public async Task ProxyPipe_Dispose_SendsPeerObservedEof()
+    {
+        using var proxy = new FakeProxy(FakeProxy.Kind.Socks5, auth: false);
+        var factory = new Socks5ConnectionFactory(new ProxyOptions { Host = "127.0.0.1", Port = proxy.Port });
+        var pipe = await factory.ConnectAsync(new ServerEndpoint("target.example", 25565), Ct());
+
+        await Assert.IsAssignableFrom<IAsyncDisposable>(pipe).DisposeAsync();
+
+        await proxy.ClientEof.WaitAsync(Ct());
+    }
+
     private static async Task AssertEchoAsync(System.IO.Pipelines.IDuplexPipe pipe)
     {
         byte[] payload = [0xDE, 0xAD, 0xBE, 0xEF];
@@ -117,13 +167,16 @@ public class ProxyFactoryTests
 
     private sealed class FakeProxy : IDisposable
     {
-        public enum Kind { Socks5, HttpConnect, Socks4, Socks4a }
+        public enum Kind { Socks5, HttpConnect, Socks4, Socks4a, Stall }
 
         private readonly Socket _listener;
         private readonly CancellationTokenSource _cts = new();
+        private readonly string _httpStatusLine;
+        private readonly TaskCompletionSource _clientEof = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        public FakeProxy(Kind kind, bool auth, bool rejectSocks4 = false)
+        public FakeProxy(Kind kind, bool auth, bool rejectSocks4 = false, string httpStatusLine = "HTTP/1.1 200 Connection established")
         {
+            _httpStatusLine = httpStatusLine;
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _listener.Bind(new IPEndPoint(IPAddress.Loopback, 0));
             _listener.Listen(1);
@@ -132,6 +185,8 @@ public class ProxyFactoryTests
         }
 
         public ushort Port { get; }
+
+        public Task ClientEof => _clientEof.Task;
 
         private async Task ServeAsync(Kind kind, bool auth, bool rejectSocks4)
         {
@@ -146,6 +201,12 @@ public class ProxyFactoryTests
             }
 
             using var stream = new NetworkStream(client, ownsSocket: true);
+            if (kind == Kind.Stall)
+            {
+                await Task.Delay(Timeout.InfiniteTimeSpan, _cts.Token).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
+                return;
+            }
+
             bool ok = true;
             switch (kind)
             {
@@ -159,7 +220,7 @@ public class ProxyFactoryTests
                     ok = await HandleSocks4Async(stream, remoteDns: true, reject: rejectSocks4, hasUserId: auth);
                     break;
                 default:
-                    await HandleHttpAsync(stream);
+                    await HandleHttpAsync(stream, auth);
                     break;
             }
 
@@ -181,7 +242,10 @@ public class ProxyFactoryTests
                 }
 
                 if (n == 0)
+                {
+                    _clientEof.TrySetResult();
                     return;
+                }
 
                 await stream.WriteAsync(buffer.AsMemory(0, n), _cts.Token);
                 await stream.FlushAsync(_cts.Token);
@@ -198,7 +262,10 @@ public class ProxyFactoryTests
             Assert.Equal(25565, port);
 
             if (remoteDns)
-                Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0x01 }, head[4..8]);
+            {
+                Assert.Equal(new byte[] { 0x00, 0x00, 0x00 }, head[4..7]);
+                Assert.NotEqual((byte)0x00, head[7]);
+            }
 
             else
                 Assert.Equal(new byte[] { 127, 0, 0, 1 }, head[4..8]);
@@ -256,6 +323,8 @@ public class ProxyFactoryTests
                 await ReadExactAsync(stream, plen);
                 byte[] pass = new byte[plen[0]];
                 await ReadExactAsync(stream, pass);
+                Assert.Equal("user"u8.ToArray(), user);
+                Assert.Equal("pass"u8.ToArray(), pass);
                 await stream.WriteAsync(new byte[] { 0x01, 0x00 }, _cts.Token); // auth ok
             }
             else
@@ -288,7 +357,7 @@ public class ProxyFactoryTests
             return len[0];
         }
 
-        private async Task HandleHttpAsync(NetworkStream stream)
+        private async Task HandleHttpAsync(NetworkStream stream, bool auth)
         {
             // Read request lines until a blank line.
             var sb = new StringBuilder();
@@ -303,7 +372,10 @@ public class ProxyFactoryTests
             }
 
             Assert.StartsWith("CONNECT ", sb.ToString());
-            byte[] ok = Encoding.ASCII.GetBytes("HTTP/1.1 200 Connection established\r\n\r\n");
+            if (auth)
+                Assert.Contains("Proxy-Authorization: Basic dXNlcjpwYXNz\r\n", sb.ToString(), StringComparison.Ordinal);
+
+            byte[] ok = Encoding.ASCII.GetBytes($"{_httpStatusLine}\r\n\r\n");
             await stream.WriteAsync(ok, _cts.Token);
             await stream.FlushAsync(_cts.Token);
         }

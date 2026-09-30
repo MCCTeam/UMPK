@@ -11,7 +11,7 @@ Nothing in here knows which version it is talking to until you hand it a `Protoc
 
 ## Its place in the stack
 
-It depends on [Umpk.Core](umpk-core.md), [Umpk.Nbt](umpk-nbt.md), [Umpk.Text](umpk-text.md) and [Umpk.Game](umpk-game.md). It does not depend on [Umpk.Data.Java](umpk-data-java.md); the arrow points the other way, because the generated descriptors are built out of types defined here.
+It depends on [Umpk.Core](umpk-core.md), [Umpk.Nbt](umpk-nbt.md), [Umpk.Text](umpk-text.md), [Umpk.Game](umpk-game.md) and `QuickProxyNet` for outbound HTTP CONNECT and SOCKS negotiation. It does not depend on [Umpk.Data.Java](umpk-data-java.md); the arrow points the other way, because the generated descriptors are built out of types defined here.
 
 [Umpk.Client](umpk-client.md) drives it, and [Umpk.Auth](umpk-auth.md) implements its `ISessionAuthenticator` seam.
 
@@ -19,9 +19,9 @@ It depends on [Umpk.Core](umpk-core.md), [Umpk.Nbt](umpk-nbt.md), [Umpk.Text](um
 
 Status, if all you want is a ping. `JavaStatus.QueryAsync` runs the modern handshake and returns a `ServerStatus` (the raw JSON plus a measured latency). `JavaLegacyPing.QueryAsync` runs the pre-1.7 `0xFE 0x01` ping and returns a `LegacyServerStatus`. Both take a `JavaStatusOptions` with a `Timeout` and a `Logger`.
 
-Transport. `IConnectionFactory` produces an `IDuplexPipe`; `TcpConnectionFactory.Shared` is the plain one, and `Socks5ConnectionFactory` and `HttpConnectConnectionFactory` take a `ProxyOptions`. `IServerAddressResolver` resolves the endpoint; `DnsSrvResolver` does the `_minecraft._tcp` lookup and `DnsSrvResolver.Passthrough` does not.
+Transport. `IConnectionFactory` produces an `IDuplexPipe`; `TcpConnectionFactory.Shared` is the plain one. `Socks4ConnectionFactory` supports SOCKS4 and SOCKS4a, `Socks5ConnectionFactory` supports optional username/password authentication, and `HttpConnectConnectionFactory` supports optional Basic authentication; all three take a `ProxyOptions` and delegate proxy negotiation to `QuickProxyNet`. `IServerAddressResolver` resolves the endpoint; `DnsSrvResolver` does the `_minecraft._tcp` lookup and `DnsSrvResolver.Passthrough` does not.
 
-Socket factories return a resource-owning `SocketDuplexPipe`. Completing its input and output preserves the ordinary pipe shutdown contract, while disposing `JavaConnection` also disposes that adapter and closes its `NetworkStream` and socket. Custom or in-memory `IDuplexPipe` implementations are disposed only when they explicitly implement `IAsyncDisposable` or `IDisposable`.
+`TcpConnectionFactory` returns a resource-owning `SocketDuplexPipe`, while the proxy factories adapt QuickProxyNet's owned stream to the same duplex-pipe lifetime. Completing input and output preserves the ordinary pipe shutdown contract, while disposing `JavaConnection` also disposes the owning adapter and closes the underlying stream and socket. Custom or in-memory `IDuplexPipe` implementations are disposed only when they explicitly implement `IAsyncDisposable` or `IDisposable`.
 
 `JavaConnection` wraps a pipe and turns it into packets. It owns the phase (`SetPhase`), compression (`EnableCompression`), encryption (`EnableEncryption`), the codec binding (`BindCodec`, `SetCodecState`), and three receive shapes: `ReceiveAsync` for one item, `ReceiveAllAsync` for a stream of decoded `InboundItem`, and `ReceiveFramesAsync` for raw `InboundFrame`. `JavaConnectionOptions` carries the frame length cap, timeouts, and the two failure policies.
 

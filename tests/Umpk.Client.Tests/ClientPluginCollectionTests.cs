@@ -13,7 +13,15 @@ using Xunit;
 
 namespace Umpk.Client.Tests;
 
+/// <summary>Runs the live plugin-session fixtures away from CPU-heavy client tests so their thread-pool-backed session loops are tested rather than starved by the runner.</summary>
+[CollectionDefinition(Name, DisableParallelization = true)]
+public sealed class ClientPluginCollectionTestCollection
+{
+    public const string Name = "client plugin collection";
+}
+
 /// <summary><see cref="ClientPluginCollection"/>: runtime plugin membership on a live <see cref="UmpkClient"/>. Before this, the only entry point for a plugin was <see cref="UmpkClientBuilder.AddPlugin"/> before <see cref="UmpkClientBuilder.Build"/>, so nothing could add or remove a plugin once a client existed, let alone while a session was live. <see cref="PluginLifecycleTests"/> stays untouched and green: it still proves <see cref="PluginHost.Detach"/> itself releases every resource class, which this suite does not re-prove. What is new here is membership and timing: attach/detach at the right moment relative to the session loop, and isolation between plugins sharing one collection.</summary>
+[Collection(ClientPluginCollectionTestCollection.Name)]
 public sealed class ClientPluginCollectionTests
 {
     private static readonly TimeSpan Budget = PluginSessionHarness.Budget;

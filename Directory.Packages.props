@@ -4,6 +4,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+    <PackageVersion Include="QuickProxyNet" Version="3.0.0" />
     <!-- Pinned prerelease; the vendor-or-stable decision is a 1.0 release gate -->
     <PackageVersion Include="Brigadier.NET" Version="2.0.15-beta" />
 

@@ -246,6 +246,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.ItemModel,
             ItemComponentCodecs.TooltipStyle,
             ItemComponentCodecs.NoteBlockSound,
+            ItemComponentCodecs.PaintingVariant,
             ItemComponentCodecs.BaseColor,
             ItemComponentCodecs.TooltipDisplay,
             ItemComponentCodecs.CustomModelData,

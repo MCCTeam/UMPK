@@ -580,7 +580,7 @@ public class EnchantmentAndFireworkComponentTests
     /// <summary>How many components each era DECLARES versus how many UMPK types. Every untyped one is a packet-dropper the moment it appears on a compact patch, so this number is the real blast radius and it belongs in the suite rather than in a report that goes stale. Measured by walking each table's wire ids until <see cref="ProtocolViolationException"/> and counting the ids with no codec.</summary>
     /// <remarks>
     /// Typing <c>enchantments</c>, <c>stored_enchantments</c>, <c>fireworks</c> and <c>firework_explosion</c> moved these from 18/19/25/25/40/40/40/47/51/51. Typing <c>pot_decorations</c> on <c>BuildPreV1_21_5</c> then moved 766/767/768/769 down by one more each (14/15/21/21 -&gt; 13/14/20/20).
-    /// <para>The current numbers come from typing the fifteen components that had no codec on ANY protocol (<c>banner_patterns, bees, can_break, can_place_on, consumable, damage_resistant, death_protection, enchantable, equippable, instrument, jukebox_playable, lodestone_tracker, repairable, suspicious_stew_effects, use_cooldown</c>), moving the untyped counts <c>13/14/20/20/38/38/38/45/49/49</c> to <c>6/6/5/5/25/25/25/32/36/36</c> for 766/767/768/769/770/771/773/774/775/776. The per-era deltas differ because the eras declare different subsets: 766 gains 7 (<c>banner_patterns, bees, can_break, can_place_on, instrument, lodestone_tracker, suspicious_stew_effects</c>), 767 gains those 8 with <c>jukebox_playable</c>, 768/769 gain all 15, and 770-776 gain 13 - everything except <c>can_break</c> and <c>can_place_on</c>, which stay untyped there because 1.21.5 appended <c>DataComponentMatchers</c> to <c>BlockPredicate</c> (see <c>ItemComponentCodecs.AdventureModePredicateCodecImpl</c>'s remarks).</para>
+    /// <para>Typing the fifteen components that previously had no codec on any protocol moved the untyped counts to <c>6/6/5/5/25/25/25/32/36/36</c> for 766/767/768/769/770/771/773/774/775/776. Typing <c>painting/variant</c> then moved the 770+ counts down once more to <c>24/24/24/24/31/35/35/47</c> for 770/771/772/773/774/775/776/777. It remains absent before 770, matching vanilla's introduction boundary.</para>
     /// <para>What is still untyped is now dominated by 1.21.5+ additions no normal session needs to decode (<c>weapon</c>, <c>blocks_attacks</c>, the mob <c>*/variant</c> family, <c>break_sound</c>), plus <c>can_break</c>/<c>can_place_on</c> on 770+, and on 766-769 the six components whose pre-1.21.5 wire shape genuinely differs (<c>attribute_modifiers</c>, <c>dyed_color</c>, <c>potion_contents</c>, <c>trim</c>, <c>tool</c>, and on 766/767 <c>food</c>). A drop in a number here without a corresponding new codec means the table lost entries, which is the opposite of progress.</para>
     /// </remarks>
     [Theory]
@@ -588,12 +588,14 @@ public class EnchantmentAndFireworkComponentTests
     [InlineData(767, 57, 6)]
     [InlineData(768, 67, 5)]
     [InlineData(769, 67, 5)]
-    [InlineData(770, 96, 25)]
-    [InlineData(771, 96, 25)]
-    [InlineData(773, 96, 25)]
-    [InlineData(774, 104, 32)]
-    [InlineData(775, 110, 36)]
-    [InlineData(776, 111, 36)]
+    [InlineData(770, 96, 24)]
+    [InlineData(771, 96, 24)]
+    [InlineData(772, 96, 24)]
+    [InlineData(773, 96, 24)]
+    [InlineData(774, 104, 31)]
+    [InlineData(775, 110, 35)]
+    [InlineData(776, 111, 35)]
+    [InlineData(777, 122, 47)]
     public void WireLayoutTable_DeclaresAndTypesTheseManyComponents(int protocol, int declared, int untyped)
     {
         ItemComponentTable table = TableFor(protocol);
@@ -629,10 +631,12 @@ public class EnchantmentAndFireworkComponentTests
         769 => ItemComponentTable.V1_21_4(),
         770 => ItemComponentTable.V1_21_5(),
         771 => ItemComponentTable.V1_21_6(),
+        772 => ItemComponentTable.V1_21_6(),
         773 => ItemComponentTable.V1_21_9(),
         774 => ItemComponentTable.V1_21_11(),
         775 => ItemComponentTable.V26_1(),
-        _ => ItemComponentTable.V26_2(),
+        776 => ItemComponentTable.V26_2(),
+        _ => ItemComponentTable.V26_3(),
     };
 
     // Helpers.

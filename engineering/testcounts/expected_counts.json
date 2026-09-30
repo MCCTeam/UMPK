@@ -7,13 +7,13 @@
   "Umpk.Data.Lang.Tests.dll": 80,
   "Umpk.DataGen.Tests.dll": 67,
   "Umpk.Game.Tests.dll": 484,
-  "Umpk.IntegrationTests.dll": 46,
+  "Umpk.IntegrationTests.dll": 47,
   "Umpk.Nbt.Tests.dll": 118,
   "Umpk.PacketRecorder.Tests.dll": 14,
   "Umpk.Pathfinding.Tests.dll": 1045,
   "Umpk.Physics.Tests.dll": 292,
   "Umpk.Protocol.Java.Conformance.dll": 881,
-  "Umpk.Protocol.Java.Tests.dll": 4674,
+  "Umpk.Protocol.Java.Tests.dll": 4692,
   "Umpk.Realms.Tests.dll": 53,
   "Umpk.Text.Tests.dll": 218
 }

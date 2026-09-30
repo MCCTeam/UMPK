@@ -74,6 +74,9 @@ internal static partial class ItemComponentCodecs
     public static ItemComponentCodec InstrumentV26_1 { get; } =
         new InstrumentCodecImpl(v1_21_2Form: true, eitherWrapped: false, ComponentWireEra.Modern);
 
+    /// <summary><c>minecraft:painting/variant</c> from protocol 770: a registry holder whose inline branch is width, height, asset id, optional title, and optional author.</summary>
+    public static ItemComponentCodec PaintingVariant { get; } = new PaintingVariantCodecImpl();
+
     /// <summary><c>minecraft:jukebox_playable</c> on 767-769: a leading boolean chooses a holder or bare registry-key identifier, followed by a <c>showInTooltip</c> boolean. The component does not exist on 766.</summary>
     public static ItemComponentCodec JukeboxPlayableV1_21 { get; } =
         new JukeboxPlayableCodecImpl(eitherWrapped: true, hasShowInTooltip: true, ComponentWireEra.Legacy);
@@ -710,6 +713,72 @@ internal static partial class ItemComponentCodecs
             return instrument.ReferenceKey is { } key
                 ? ops.String(key.ToString())
                 : ops.Map([(ops.String("sound_event"), HashSoundEvent(ops, instrument.Direct!.Sound))]);
+        }
+    }
+
+    /// <summary><c>minecraft:painting/variant</c>; stable from protocol 770 onward.</summary>
+    private sealed class PaintingVariantCodecImpl() : ItemComponentCodec(DataComponents.PaintingVariant)
+    {
+        public override object Decode(ref PacketReader reader, PacketCodecContext context)
+        {
+            int marker = reader.ReadVarInt();
+            if (marker != 0)
+                return new PaintingVariantComponent(marker - 1, null);
+
+            int width = reader.ReadVarInt();
+            int height = reader.ReadVarInt();
+            Identifier assetId = Identifier.Parse(reader.ReadString());
+            Component? title = reader.ReadOptional(static (ref PacketReader r) =>
+                ItemCodecPrimitives.ReadNetworkComponent(ref r, ComponentWireEra.Modern));
+            Component? author = reader.ReadOptional(static (ref PacketReader r) =>
+                ItemCodecPrimitives.ReadNetworkComponent(ref r, ComponentWireEra.Modern));
+            return new PaintingVariantComponent(
+                null,
+                new PaintingVariantDetails(width, height, assetId, title, author));
+        }
+
+        public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
+        {
+            var painting = (PaintingVariantComponent)value;
+            if (painting.HolderId is { } id)
+            {
+                writer.WriteVarInt(id + 1);
+                return;
+            }
+
+            PaintingVariantDetails direct = painting.Direct
+                ?? throw new ProtocolViolationException("A painting-variant component carries neither a holder id nor an inline variant.");
+
+            writer.WriteVarInt(0);
+            writer.WriteVarInt(direct.Width);
+            writer.WriteVarInt(direct.Height);
+            writer.WriteString(direct.AssetId.ToString());
+            writer.WriteOptional(direct.Title, static (ref PacketWriter w, Component component) =>
+                ItemCodecPrimitives.WriteNetworkComponent(ref w, component, ComponentWireEra.Modern));
+            writer.WriteOptional(direct.Author, static (ref PacketWriter w, Component component) =>
+                ItemCodecPrimitives.WriteNetworkComponent(ref w, component, ComponentWireEra.Modern));
+        }
+
+        public override int Hash(in HashOps ops, object value, PacketCodecContext context)
+        {
+            var painting = (PaintingVariantComponent)value;
+            if (painting.HolderId is { } id)
+                return ops.Int(id);
+
+            PaintingVariantDetails direct = painting.Direct!;
+            var entries = new List<(int, int)>(5)
+            {
+                (ops.String("width"), ops.Int(direct.Width)),
+                (ops.String("height"), ops.Int(direct.Height)),
+                (ops.String("asset_id"), ops.String(direct.AssetId.ToString())),
+            };
+            if (direct.Title is { } title)
+                entries.Add((ops.String("title"), ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(title, ComponentWireEra.Modern))));
+
+            if (direct.Author is { } author)
+                entries.Add((ops.String("author"), ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(author, ComponentWireEra.Modern))));
+
+            return ops.Map(entries);
         }
     }
 

@@ -1,6 +1,6 @@
 # UMPK
 
-UMPK is a .NET 10 toolkit for programs that speak the Minecraft Java Edition protocol. One codebase supports protocol 47 (Minecraft 1.8) through protocol 776 (Minecraft 26.2), with generated version data, a supervised client runtime, authentication, game state, chat, inventory, physics, and pathfinding.
+UMPK is a .NET 10 toolkit for programs that speak the Minecraft Java Edition protocol. One codebase supports protocol 47 (Minecraft 1.8) through protocol 777 (Minecraft 26.3), with generated version data, a supervised client runtime, authentication, game state, chat, inventory, physics, and pathfinding.
 
 Install the complete client stack:
 

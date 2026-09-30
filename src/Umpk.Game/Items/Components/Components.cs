@@ -348,6 +348,11 @@ public sealed record EquippableComponent(
 /// <param name="ReferenceKey">The registry key identifier, for the 770-774 either-right branch.</param>
 public sealed record InstrumentComponent(int? HolderId, InstrumentDetails? Direct, Identifier? ReferenceKey = null);
 
+/// <summary>The painting variant applied by a painting item (<c>minecraft:painting/variant</c>, 1.21.5+).</summary>
+/// <param name="HolderId">The painting-variant registry network id, for the reference branch.</param>
+/// <param name="Direct">The inline painting variant, for the direct branch.</param>
+public sealed record PaintingVariantComponent(int? HolderId, PaintingVariantDetails? Direct);
+
 /// <summary>The music-disc song an item plays in a jukebox (<c>minecraft:jukebox_playable</c>, 1.21+).</summary>
 /// <param name="HolderId">The jukebox-song registry network id, for the reference branch.</param>
 /// <param name="Direct">The inline song, for the direct branch.</param>

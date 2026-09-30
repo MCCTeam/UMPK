@@ -241,6 +241,9 @@ public static class DataComponents
     /// <summary><c>minecraft:instrument</c>.</summary>
     public static DataComponentType<InstrumentComponent> Instrument { get; } = Make<InstrumentComponent>("instrument");
 
+    /// <summary><c>minecraft:painting/variant</c> (1.21.5+).</summary>
+    public static DataComponentType<PaintingVariantComponent> PaintingVariant { get; } = Make<PaintingVariantComponent>("painting/variant");
+
     /// <summary><c>minecraft:jukebox_playable</c> (1.21+).</summary>
     public static DataComponentType<JukeboxPlayableComponent> JukeboxPlayable { get; } = Make<JukeboxPlayableComponent>("jukebox_playable");
 
@@ -277,7 +280,7 @@ public static class DataComponents
         WolfCollar, CatCollar, SheepColor, ShulkerColor, TropicalFishBaseColor,
         TropicalFishPatternColor, Dye, MinimumAttackCharge, AdditionalTradeCost,
         Bees, CanBreak, CanPlaceOn, Consumable, DamageResistant, DeathProtection, Enchantable,
-        Equippable, Instrument, JukeboxPlayable, LodestoneTracker, Repairable, UseCooldown,
+        Equippable, Instrument, PaintingVariant, JukeboxPlayable, LodestoneTracker, Repairable, UseCooldown,
         LegacyNbt,
     ];
 }

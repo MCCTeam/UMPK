@@ -20,6 +20,8 @@ internal static class ProxyConnection
             ? null
             : new NetworkCredential(proxy.Username, proxy.Password ?? string.Empty);
         IProxyClient client = ProxyClientFactory.Instance.Create(type, proxy.Host, proxy.Port, credentials);
+        // QuickProxyNet defaults to abortive close, which reports a reset instead of EOF on some operating systems.
+        client.LingerState = null;
 
         try
         {

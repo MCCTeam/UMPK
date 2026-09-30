@@ -5,6 +5,7 @@ This file records notable changes to UMPK.
 ## 0.9.0-beta.4 - 2026-09-30
 
 - Replace the built-in HTTP CONNECT and SOCKS negotiation code with QuickProxyNet while preserving UMPK's proxy factory API and transport lifetime.
+- Preserve graceful proxy transport shutdown across operating systems instead of inheriting QuickProxyNet's abortive socket-close default.
 
 ## 0.9.0-beta.3 - 2026-09-30
 

@@ -1,5 +1,7 @@
 # UMPK
 
+[![NuGet prerelease](https://img.shields.io/nuget/vpre/Umpk?style=flat-square&logo=nuget&label=NuGet&color=004880)](https://www.nuget.org/packages/Umpk) [![NuGet downloads](https://img.shields.io/nuget/dt/Umpk?style=flat-square&logo=nuget&label=downloads&color=004880)](https://www.nuget.org/packages/Umpk) [![Build status](https://img.shields.io/github/actions/workflow/status/MCCTeam/UMPK/pr.yml?branch=master&style=flat-square&logo=github&label=build)](https://github.com/MCCTeam/UMPK/actions/workflows/pr.yml) [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/10.0) [![C# 14](https://img.shields.io/badge/C%23-14-239120?style=flat-square&logo=csharp)](https://learn.microsoft.com/dotnet/csharp/) [![License: MIT](https://img.shields.io/github/license/MCCTeam/UMPK?style=flat-square&color=blue)](LICENSE)
+
 UMPK, the Universal Minecraft Protocol Kit, is a .NET 10 toolkit for programs that need to speak Minecraft Java Edition. Use it to build bots, automated players, protocol tools, and other clients without running the official game. The library handles the wire protocol, sessions, game state, authentication, chat, inventory, and movement.
 
 UMPK supports 49 Java protocol revisions across 72 named Minecraft releases. Protocol data comes from Mojang artifacts, vanilla source, and recorded server traffic. Version differences live in data and capability tables instead of separate client forks.
@@ -53,7 +55,7 @@ Minecraft versions earlier than 1.8 are not supported. The legacy status ping ca
 Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), then add the complete client stack:
 
 ```bash
-dotnet add package Umpk --version 0.9.0-beta.2
+dotnet add package Umpk --version 0.9.0-beta.3
 ```
 
 You can instead install focused packages such as `Umpk.Protocol.Java`, `Umpk.Nbt`, or `Umpk.Text`. To build the source:

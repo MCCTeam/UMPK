@@ -2988,6 +2988,41 @@ static Umpk.Game.Items.DataComponents.Unbreakable.get -> Umpk.Game.Items.DataCom
 static Umpk.Game.Items.DataComponents.Unmodeled(Umpk.Identifier id) -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.UnmodeledComponent!>!
 static Umpk.Game.Items.DataComponents.UseCooldown.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.UseCooldownComponent!>!
 static Umpk.Game.Items.DataComponents.UseRemainder.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.UseRemainderComponent!>!
+Umpk.Game.Items.Components.PaintingVariantComponent
+Umpk.Game.Items.Components.PaintingVariantComponent.<Clone>$() -> Umpk.Game.Items.Components.PaintingVariantComponent!
+Umpk.Game.Items.Components.PaintingVariantComponent.Deconstruct(out int? HolderId, out Umpk.Game.Items.Components.PaintingVariantDetails? Direct) -> void
+Umpk.Game.Items.Components.PaintingVariantComponent.Direct.get -> Umpk.Game.Items.Components.PaintingVariantDetails?
+Umpk.Game.Items.Components.PaintingVariantComponent.Direct.init -> void
+Umpk.Game.Items.Components.PaintingVariantComponent.Equals(Umpk.Game.Items.Components.PaintingVariantComponent? other) -> bool
+Umpk.Game.Items.Components.PaintingVariantComponent.HolderId.get -> int?
+Umpk.Game.Items.Components.PaintingVariantComponent.HolderId.init -> void
+Umpk.Game.Items.Components.PaintingVariantComponent.PaintingVariantComponent(int? HolderId, Umpk.Game.Items.Components.PaintingVariantDetails? Direct) -> void
+Umpk.Game.Items.Components.PaintingVariantDetails
+Umpk.Game.Items.Components.PaintingVariantDetails.<Clone>$() -> Umpk.Game.Items.Components.PaintingVariantDetails!
+Umpk.Game.Items.Components.PaintingVariantDetails.AssetId.get -> Umpk.Identifier
+Umpk.Game.Items.Components.PaintingVariantDetails.AssetId.init -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.Author.get -> Umpk.Text.Component?
+Umpk.Game.Items.Components.PaintingVariantDetails.Author.init -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.Deconstruct(out int Width, out int Height, out Umpk.Identifier AssetId, out Umpk.Text.Component? Title, out Umpk.Text.Component? Author) -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.Equals(Umpk.Game.Items.Components.PaintingVariantDetails? other) -> bool
+Umpk.Game.Items.Components.PaintingVariantDetails.Height.get -> int
+Umpk.Game.Items.Components.PaintingVariantDetails.Height.init -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.PaintingVariantDetails(int Width, int Height, Umpk.Identifier AssetId, Umpk.Text.Component? Title, Umpk.Text.Component? Author) -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.Title.get -> Umpk.Text.Component?
+Umpk.Game.Items.Components.PaintingVariantDetails.Title.init -> void
+Umpk.Game.Items.Components.PaintingVariantDetails.Width.get -> int
+Umpk.Game.Items.Components.PaintingVariantDetails.Width.init -> void
+override Umpk.Game.Items.Components.PaintingVariantComponent.Equals(object? obj) -> bool
+override Umpk.Game.Items.Components.PaintingVariantComponent.GetHashCode() -> int
+override Umpk.Game.Items.Components.PaintingVariantComponent.ToString() -> string!
+override Umpk.Game.Items.Components.PaintingVariantDetails.Equals(object? obj) -> bool
+override Umpk.Game.Items.Components.PaintingVariantDetails.GetHashCode() -> int
+override Umpk.Game.Items.Components.PaintingVariantDetails.ToString() -> string!
+static Umpk.Game.Items.Components.PaintingVariantComponent.operator !=(Umpk.Game.Items.Components.PaintingVariantComponent? left, Umpk.Game.Items.Components.PaintingVariantComponent? right) -> bool
+static Umpk.Game.Items.Components.PaintingVariantComponent.operator ==(Umpk.Game.Items.Components.PaintingVariantComponent? left, Umpk.Game.Items.Components.PaintingVariantComponent? right) -> bool
+static Umpk.Game.Items.Components.PaintingVariantDetails.operator !=(Umpk.Game.Items.Components.PaintingVariantDetails? left, Umpk.Game.Items.Components.PaintingVariantDetails? right) -> bool
+static Umpk.Game.Items.Components.PaintingVariantDetails.operator ==(Umpk.Game.Items.Components.PaintingVariantDetails? left, Umpk.Game.Items.Components.PaintingVariantDetails? right) -> bool
+static Umpk.Game.Items.DataComponents.PaintingVariant.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.PaintingVariantComponent!>!
 static Umpk.Game.Items.DataComponents.WolfCollar.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.DyeColorValueComponent!>!
 static Umpk.Game.Items.DataComponents.WritableBookContent.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.WritableBookContentComponent!>!
 static Umpk.Game.Items.DataComponents.WrittenBookContent.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.WrittenBookContentComponent!>!

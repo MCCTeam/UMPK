@@ -186,6 +186,19 @@ public sealed record InstrumentDetails(
     float Range,
     Component? Description);
 
+/// <summary>The inline form of a painting variant (<c>PaintingVariant.DIRECT_STREAM_CODEC</c>).</summary>
+/// <param name="Width">The painting width in blocks.</param>
+/// <param name="Height">The painting height in blocks.</param>
+/// <param name="AssetId">The painting texture asset identifier.</param>
+/// <param name="Title">The optional translated or literal title.</param>
+/// <param name="Author">The optional translated or literal author.</param>
+public sealed record PaintingVariantDetails(
+    int Width,
+    int Height,
+    Identifier AssetId,
+    Component? Title,
+    Component? Author);
+
 /// <summary>The inline (direct-holder) form of a jukebox song (<c>JukeboxSong.DIRECT_STREAM_CODEC</c>).</summary>
 /// <param name="Sound">The song's sound event.</param>
 /// <param name="Description">The song's description component.</param>

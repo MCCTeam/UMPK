@@ -64,9 +64,9 @@ Play Clientbound 0x0E minecraft:clear_titles TitleCodecs.ClearTitlesV1_17 read:1
 Play Clientbound 0x0F minecraft:command_suggestions CommandSuggestionCodecs.CommandSuggestionsV1_20_3 read:4 shape:opaque
 Play Clientbound 0x10 minecraft:commands CommandTreeCodecs.V1_21_6 fault:ProtocolViolationException shape:varint*node,varint|argtypes/116da89b,timemin=1
 Play Clientbound 0x11 minecraft:container_close ContainerCodecs.ContainerCloseClientModern read:1 shape:opaque
-Play Clientbound 0x12 minecraft:container_set_content MakeContainerSetContent(Table773) read:4 shape:varint,varint,varint*stack,stack|components/989bb708
+Play Clientbound 0x12 minecraft:container_set_content MakeContainerSetContent(Table773) read:4 shape:varint,varint,varint*stack,stack|components/25dbf4b2
 Play Clientbound 0x13 minecraft:container_set_data ContainerCodecs.ContainerSetDataModern read:5 shape:opaque
-Play Clientbound 0x14 minecraft:container_set_slot MakeContainerSetSlot(Table773) read:5 shape:varint,varint,short,stack|components/989bb708
+Play Clientbound 0x14 minecraft:container_set_slot MakeContainerSetSlot(Table773) read:5 shape:varint,varint,short,stack|components/25dbf4b2
 Play Clientbound 0x15 minecraft:cookie_request PlayCommonCodecs.CookieRequest fault:FormatException shape:identifier
 Play Clientbound 0x16 minecraft:cooldown UiMiscCodecs.CooldownV1_21_2 fault:FormatException shape:opaque
 Play Clientbound 0x17 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 read:2 shape:opaque
@@ -92,11 +92,11 @@ Play Clientbound 0x2A minecraft:initialize_border WorldBorderCodecs.InitializeBo
 Play Clientbound 0x2B minecraft:keep_alive PlayKeepAliveCodecs.ClientV1_12_2 read:8 shape:long
 Play Clientbound 0x2C minecraft:level_chunk_with_light ChunkCodecs.V1_21_5 read:256 shape:chunk_modern(FixedSize,fluid=0,biome=1,min=6)
 Play Clientbound 0x2D minecraft:level_event WorldEffectCodecs.LevelEventV1_14 read:17 shape:opaque
-Play Clientbound 0x2E minecraft:level_particles WorldEffectCodecs.LevelParticlesV1_21_9 read:47 shape:level_particles_modern(shapes=1e5467a5,icons=components/989bb708,alwaysshow=1)
+Play Clientbound 0x2E minecraft:level_particles WorldEffectCodecs.LevelParticlesV1_21_9 read:47 shape:level_particles_modern(shapes=1e5467a5,icons=components/25dbf4b2,alwaysshow=1)
 Play Clientbound 0x2F minecraft:light_update WorldStateCodecs.LightUpdateV1_20 read:8 shape:opaque
 Play Clientbound 0x30 minecraft:login JoinGameCodecs.V1_21_2 read:30 shape:join_game(legacy=0,onlinemode=0)
 Play Clientbound 0x31 minecraft:map_item_data WorldMapCodecs.MapItemDataV1_21_5 read:5 shape:varint,byte,bool,opt(varint*icon),patch|nbt/modern
-Play Clientbound 0x32 minecraft:merchant_offers MakeMerchantOffers(Table773) read:6 shape:varint,varint*offer,varint,varint,bool,bool|components/989bb708
+Play Clientbound 0x32 minecraft:merchant_offers MakeMerchantOffers(Table773) read:6 shape:varint,varint*offer,varint,varint,bool,bool|components/25dbf4b2
 Play Clientbound 0x33 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV1_9 read:8 shape:opaque
 Play Clientbound 0x34 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV1_9 read:10 shape:opaque
 Play Clientbound 0x35 minecraft:move_minecart_along_track marker n/a shape:opaque
@@ -118,7 +118,7 @@ Play Clientbound 0x44 minecraft:player_info_update PlayerListCodecs.PlayerInfoUp
 Play Clientbound 0x45 minecraft:player_look_at marker n/a shape:opaque
 Play Clientbound 0x46 minecraft:player_position EntityMoveCodecs.PlayerPositionV1_21_2 read:61 shape:opaque
 Play Clientbound 0x47 minecraft:player_rotation marker n/a shape:opaque
-Play Clientbound 0x48 minecraft:recipe_book_add RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table773)) read:2 shape:recipe_book_add(slots=Empty+AnyFuel+Item+ItemStack+Tag+SmithingTrim+WithRemainder+Composite,trimholder=1,stacks=countfirst/components/989bb708)
+Play Clientbound 0x48 minecraft:recipe_book_add RecipeCodecs.RecipeBookAdd(RecipeBookWire.V1_21_5(Table773)) read:2 shape:recipe_book_add(slots=Empty+AnyFuel+Item+ItemStack+Tag+SmithingTrim+WithRemainder+Composite,trimholder=1,stacks=countfirst/components/25dbf4b2)
 Play Clientbound 0x49 minecraft:recipe_book_remove RecipeCodecs.RecipeBookRemoveModern read:1 shape:opaque
 Play Clientbound 0x4A minecraft:recipe_book_settings RecipeCodecs.RecipeBookSettingsModern read:8 shape:opaque
 Play Clientbound 0x4B minecraft:remove_entities EntitySpawnCodecs.RemoveEntities read:1 shape:opaque
@@ -140,10 +140,10 @@ Play Clientbound 0x5A minecraft:set_border_warning_distance WorldBorderCodecs.Se
 Play Clientbound 0x5B minecraft:set_camera EntityStateCodecs.SetCamera read:1 shape:opaque
 Play Clientbound 0x5C minecraft:set_chunk_cache_center WorldStateCodecs.SetChunkCacheCenterV1_14 read:2 shape:opaque
 Play Clientbound 0x5D minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunkCacheRadiusV1_14 read:1 shape:opaque
-Play Clientbound 0x5E minecraft:set_cursor_item MakeSetCursorItem(Table773) read:1 shape:stack|components/989bb708
+Play Clientbound 0x5E minecraft:set_cursor_item MakeSetCursorItem(Table773) read:1 shape:stack|components/25dbf4b2
 Play Clientbound 0x5F minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_21_9 read:17 shape:opaque
 Play Clientbound 0x60 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_20_2 read:2 shape:opaque
-Play Clientbound 0x61 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_21_9 fault:ProtocolViolationException shape:varint,metadata|metadata/2680d497,Modern,countfirst/components/989bb708,particles=components/989bb708
+Play Clientbound 0x61 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_21_9 fault:ProtocolViolationException shape:varint,metadata|metadata/2680d497,Modern,countfirst/components/25dbf4b2,particles=components/25dbf4b2
 Play Clientbound 0x62 minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_9 read:8 shape:opaque
 Play Clientbound 0x63 minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotionV1_21_9 read:2 shape:opaque
 Play Clientbound 0x64 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_16 read:256 shape:opaque
@@ -152,7 +152,7 @@ Play Clientbound 0x66 minecraft:set_health EntityStateCodecs.SetHealth read:9 sh
 Play Clientbound 0x67 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_21_4 read:1 shape:opaque
 Play Clientbound 0x68 minecraft:set_objective ScoreboardCodecs.SetObjectiveV1_21_5 fault:ComponentFormatException shape:opaque
 Play Clientbound 0x69 minecraft:set_passengers EntityStateCodecs.SetPassengers read:2 shape:opaque
-Play Clientbound 0x6A minecraft:set_player_inventory MakeSetPlayerInventory(Table773) read:2 shape:varint,stack|components/989bb708
+Play Clientbound 0x6A minecraft:set_player_inventory MakeSetPlayerInventory(Table773) read:2 shape:varint,stack|components/25dbf4b2
 Play Clientbound 0x6B minecraft:set_player_team ScoreboardCodecs.SetPlayerTeamV1_21_5 fault:ComponentFormatException shape:set_player_team(V1_21_5)
 Play Clientbound 0x6C minecraft:set_score ScoreboardCodecs.SetScoreV1_21_5 read:5 shape:opaque
 Play Clientbound 0x6D minecraft:set_simulation_distance WorldStateCodecs.SetSimulationDistanceV1_18 read:1 shape:opaque
@@ -174,7 +174,7 @@ Play Clientbound 0x7C minecraft:test_instance_block_status marker n/a shape:opaq
 Play Clientbound 0x7D minecraft:ticking_state marker n/a shape:opaque
 Play Clientbound 0x7E minecraft:ticking_step marker n/a shape:opaque
 Play Clientbound 0x7F minecraft:transfer PlayCommonCodecs.Transfer read:2 shape:string,varint
-Play Clientbound 0x80 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_21_9 read:5 shape:update_advancements(icon=countfirst/components/989bb708,text=nbt/modern,criteria=0,telemetry=1,showadv=1)
+Play Clientbound 0x80 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_21_9 read:5 shape:update_advancements(icon=countfirst/components/25dbf4b2,text=nbt/modern,criteria=0,telemetry=1,showadv=1)
 Play Clientbound 0x81 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 read:2 shape:opaque
 Play Clientbound 0x82 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 read:5 shape:opaque
 Play Clientbound 0x83 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern read:256 shape:opaque
@@ -202,7 +202,7 @@ Play Serverbound 0x0D minecraft:client_information PlayClientInformationCodecs.V
 Play Serverbound 0x0E minecraft:command_suggestion CommandSuggestionCodecs.ServerCommandSuggestionV1_13 read:2 shape:opaque
 Play Serverbound 0x0F minecraft:configuration_acknowledged ConfigurationCodecs.ConfigurationAcknowledged read:0 shape:opaque
 Play Serverbound 0x10 minecraft:container_button_click ContainerCodecs.ContainerButtonClickModern read:2 shape:opaque
-Play Serverbound 0x11 minecraft:container_click MakeContainerClick(Table773) read:8 shape:varint,varint,short,byte,varint,varint*(short,hashed_stack),hashed_stack|components/989bb708
+Play Serverbound 0x11 minecraft:container_click MakeContainerClick(Table773) read:8 shape:varint,varint,short,byte,varint,varint*(short,hashed_stack),hashed_stack|components/25dbf4b2
 Play Serverbound 0x12 minecraft:container_close ContainerCodecs.ContainerCloseServerModern read:1 shape:opaque
 Play Serverbound 0x13 minecraft:container_slot_state_changed ContainerCodecs.ContainerSlotStateChangedModern read:3 shape:opaque
 Play Serverbound 0x14 minecraft:cookie_response PlayCommonCodecs.CookieResponse fault:FormatException shape:identifier,opt_bytes
@@ -240,7 +240,7 @@ Play Serverbound 0x33 minecraft:set_beacon marker n/a shape:opaque
 Play Serverbound 0x34 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem read:2 shape:opaque
 Play Serverbound 0x35 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 read:11 shape:opaque
 Play Serverbound 0x36 minecraft:set_command_minecart marker n/a shape:opaque
-Play Serverbound 0x37 minecraft:set_creative_mode_slot MakeCreativeSlot(Table773) read:3 shape:short,delimited_stack|components/989bb708
+Play Serverbound 0x37 minecraft:set_creative_mode_slot MakeCreativeSlot(Table773) read:3 shape:short,delimited_stack|components/25dbf4b2
 Play Serverbound 0x38 minecraft:set_jigsaw_block marker n/a shape:opaque
 Play Serverbound 0x39 minecraft:set_structure_block marker n/a shape:opaque
 Play Serverbound 0x3A minecraft:set_test_block marker n/a shape:opaque

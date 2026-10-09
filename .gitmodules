@@ -1,0 +1,3 @@
+[submodule "MCC-Skills"]
+	path = MCC-Skills
+	url = https://github.com/MCCTeam/MCC-Skills.git

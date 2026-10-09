@@ -6,16 +6,23 @@ UMPK is a .NET 10 library for the Minecraft Java protocol. One codebase supports
 
 ## Local skills
 
+Initialize the shared skills with `git submodule update --init MCC-Skills`.
+
 | Skill | Use for |
 |---|---|
-| `.skills/csharp-best-practices` | C# implementation and async review |
-| `.skills/csharp-solid-principles` | Design, refactoring, and API boundaries |
-| `.skills/asd-ste100` | Unambiguous procedures, errors, and agent instructions |
-| `.skills/dotnet-performance-profiling-and-optimization` | Measured performance diagnosis |
-| `.skills/dotnet-security-review` | Security and supply-chain review |
-| `.skills/umpk-integration-testing` | Isolated live tests against vanilla servers |
+| `.skills/csharp-best-practices/SKILL.md` | C# implementation and async review |
+| `.skills/csharp-solid-principles/SKILL.md` | Design, refactoring, and API boundaries |
+| `.skills/dotnet-performance-profiling-and-optimization/SKILL.md` | Measured performance diagnosis |
+| `.skills/dotnet-security-review/SKILL.md` | Security and supply-chain review |
+| `.skills/beacon-scripting/SKILL.md` | Beacon scripts in MCC and DMCBK hosts |
+| `.skills/dmcbk-plugin-authoring/SKILL.md` | DMCBK plugin contracts, lifecycle and packaging |
+| `.skills/dmcbk-marketplace-authoring/SKILL.md` | Schema-2 plugin catalogues and releases |
+| `.skills/asd-ste100/SKILL.md` | Unambiguous procedures, errors, and agent instructions |
+| `.skills/umpk-integration-testing/SKILL.md` | Isolated live tests against vanilla servers |
 
-Read a matching `SKILL.md` before using a skill. Resolve its relative references from its own directory.
+Seven `.skills` entries link to the pinned [MCC Skills](https://github.com/MCCTeam/MCC-Skills) submodule under `MCC-Skills/skills`. ASD-STE100 and UMPK integration testing remain local. `.claude/skills`, `.agents/skills`, `.codex/skill` and `.codex/skills` link to `.skills`.
+
+Read a matching `SKILL.md` before using a skill. Resolve its relative references from its own directory. Edit shared skills in MCC Skills rather than creating another local copy. Read [agent skills](docs/contributing/agent-skills.md) before updating the submodule revision.
 
 ## Commands
 

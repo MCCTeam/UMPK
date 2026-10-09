@@ -13,6 +13,16 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 You need the .NET 10 SDK. Protocol extraction also needs Python 3.10 or later and a compatible Java runtime. Keep Mojang jars, mappings, and decompiled source in the ignored `MinecraftOfficial/` directory.
 
+## Shared agent skills
+
+Initialize the skills from the repository directory:
+
+```bash
+git submodule update --init MCC-Skills
+```
+
+The `.skills` shortcuts link to the pinned MCC Skills submodule. ASD-STE100 and UMPK integration testing remain local. Read [agent skills](docs/contributing/agent-skills.md) for setup and revision updates.
+
 ## Build the repository
 
 ```bash

@@ -16,6 +16,10 @@ AI can help with repetitive edits, test ideas, and documentation. It does not re
 
 Do not paste authentication caches, device-code prompts, packet dumps, or user data into an external service. Redaction is safer than an assumption about a tool's retention policy.
 
+## Repository skills
+
+Use the pinned [agent skills](agent-skills.md) for C# development and related MCC or DMCBK tasks. Initialize MCC Skills before using the `.skills` shortcuts. UMPK integration testing remains a local skill with its own server procedures.
+
 ## Review the result
 
 1. Read every changed line.

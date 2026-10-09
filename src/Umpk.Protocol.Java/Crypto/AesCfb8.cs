@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Umpk.Protocol.Java.Crypto;
 
@@ -8,7 +9,10 @@ public sealed class AesCfb8
 {
     private const int BlockSize = 16;
 
-    private readonly IAesBlockTransform _cipher;
+    // Each constructor selects exactly one backend; both share the same continuous feedback register.
+    private readonly IAesBlockTransform? _cipher;
+
+    private readonly NativeArm32AesCfb8? _arm32Cipher;
 
     private readonly byte[] _iv = new byte[BlockSize];
 
@@ -18,18 +22,31 @@ public sealed class AesCfb8
         iv[..BlockSize].CopyTo(_iv);
     }
 
-    /// <summary>Creates a transform seeded with <paramref name="keyAndIv"/> as both the AES key and the initial IV, selecting the hardware path when available. This is the shape Minecraft uses.</summary>
+    private AesCfb8(NativeArm32AesCfb8 cipher, ReadOnlySpan<byte> iv)
+    {
+        _arm32Cipher = cipher;
+        iv[..BlockSize].CopyTo(_iv);
+    }
+
+    /// <summary>Creates a transform seeded with <paramref name="keyAndIv"/> as both the AES key and the initial IV. ARM32 uses the platform AES provider; other architectures select the hardware path when available. This is the shape Minecraft uses.</summary>
     public static AesCfb8 Create(ReadOnlySpan<byte> keyAndIv) =>
         Create(keyAndIv, keyAndIv, forceSoftware: false);
 
     /// <summary>Creates a transform with an explicit key and IV. <paramref name="forceSoftware"/> selects the portable table-driven AES path even when intrinsics are available (test cross-check).</summary>
     public static AesCfb8 Create(ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, bool forceSoftware)
+        => Create(key, iv, forceSoftware, RuntimeInformation.ProcessArchitecture);
+
+    // Explicit architecture input lets tests exercise the ARM32 route on a different development CPU.
+    internal static AesCfb8 Create(ReadOnlySpan<byte> key, ReadOnlySpan<byte> iv, bool forceSoftware, Architecture processArchitecture)
     {
         if (key.Length != BlockSize)
             throw new ArgumentException("AES-128 requires a 16-byte key.", nameof(key));
 
         if (iv.Length < BlockSize)
             throw new ArgumentException("CFB8 requires a 16-byte IV.", nameof(iv));
+
+        if (!forceSoftware && processArchitecture == Architecture.Arm)
+            return new AesCfb8(new NativeArm32AesCfb8(key), iv);
 
         IAesBlockTransform cipher = !forceSoftware && AesNiTransform.IsSupported
             ? AesNiTransform.Create(key)
@@ -38,8 +55,10 @@ public sealed class AesCfb8
         return new AesCfb8(cipher, iv);
     }
 
-    /// <summary>True when this instance is backed by a hardware AES path on this machine.</summary>
+    /// <summary>True when this instance uses UMPK's hardware AES intrinsics. The ARM32 platform provider reports false because its own acceleration is not exposed here.</summary>
     public bool IsHardwareAccelerated => _cipher is AesNiTransform;
+
+    internal bool UsesNativeArm32 => _arm32Cipher is not null;
 
     /// <summary>Encrypts <paramref name="input"/> into <paramref name="output"/> (may alias in place), advancing the shift register. CFB8 processes one byte at a time.</summary>
     [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -48,11 +67,17 @@ public sealed class AesCfb8
         if (output.Length < input.Length)
             throw new ArgumentException("Output span is shorter than input.", nameof(output));
 
+        if (_arm32Cipher is not null)
+        {
+            _arm32Cipher.Encrypt(input, output, _iv);
+            return;
+        }
+
         Span<byte> keystream = stackalloc byte[BlockSize];
         Span<byte> iv = _iv;
         for (int i = 0; i < input.Length; i++)
         {
-            _cipher.EncryptBlock(iv, keystream);
+            _cipher!.EncryptBlock(iv, keystream);
             byte cipherByte = (byte)(input[i] ^ keystream[0]);
             output[i] = cipherByte;
 
@@ -69,11 +94,17 @@ public sealed class AesCfb8
         if (output.Length < input.Length)
             throw new ArgumentException("Output span is shorter than input.", nameof(output));
 
+        if (_arm32Cipher is not null)
+        {
+            _arm32Cipher.Decrypt(input, output, _iv);
+            return;
+        }
+
         Span<byte> keystream = stackalloc byte[BlockSize];
         Span<byte> iv = _iv;
         for (int i = 0; i < input.Length; i++)
         {
-            _cipher.EncryptBlock(iv, keystream);
+            _cipher!.EncryptBlock(iv, keystream);
             byte cipherByte = input[i];
             output[i] = (byte)(cipherByte ^ keystream[0]);
 

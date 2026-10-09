@@ -61,7 +61,7 @@ dotnet add package Umpk --version 0.9.0-beta.4
 You can instead install focused packages such as `Umpk.Protocol.Java`, `Umpk.Nbt`, or `Umpk.Text`. To build the source:
 
 ```bash
-git clone https://github.com/MCCTeam/UMPK.git
+git clone --recurse-submodules https://github.com/MCCTeam/UMPK.git
 cd UMPK
 dotnet build UMPK.sln
 dotnet test UMPK.sln
@@ -158,6 +158,8 @@ Roadmap entries describe intent, not shipped features.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. UMPK treats vanilla behavior and real packet bytes as evidence, so protocol changes need more than a passing unit test.
 
 AI tools are welcome for drafts, repetitive work, and test ideas. Review every changed line. Never send credentials, session data, private packet captures, or downloaded Minecraft artifacts to an external service. Read [Using AI](docs/contributing/using-ai.md) for the project rules.
+
+The checkout includes [MCC Skills](https://github.com/MCCTeam/MCC-Skills) as a pinned submodule. Read [agent skills](docs/contributing/agent-skills.md) for setup, available skills and revision updates.
 
 ## License
 

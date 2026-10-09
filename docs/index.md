@@ -55,6 +55,7 @@ The other half of the approach is evidence. Wire formats and physics constants a
 - [Packages](packages/overview.md) if you would rather see the module map first.
 - [Supported versions](reference/supported-versions.md) for the full protocol table.
 - [Using AI](contributing/using-ai.md) for rules that keep generated changes reviewable and safe.
+- [Agent skills](contributing/agent-skills.md) for shared C# and authoring skills, setup, and revision updates.
 - [Releasing NuGet packages](contributing/releasing.md) for validation, publishing, and recovery.
 
 ## What is not here

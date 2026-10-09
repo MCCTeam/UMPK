@@ -32,12 +32,14 @@ All packages in one release use the same version. The project is pre-1.0, so pin
 
 Use project references when you want to test an unreleased commit or contribute to UMPK. The samples use this arrangement and are the canonical local examples.
 
+The recursive clone includes MCC Skills for agent guidance. The library restores its dependencies through NuGet. For an existing checkout, run `git submodule update --init MCC-Skills`. Read [agent skills](../contributing/agent-skills.md) for setup and Windows symbolic-link support.
+
 To get a working checkout:
 
 1. Clone the repository.
 
    ```bash
-   git clone https://github.com/MCCTeam/UMPK.git
+   git clone --recurse-submodules https://github.com/MCCTeam/UMPK.git
    ```
 
 2. Change to the repository root.

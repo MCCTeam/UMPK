@@ -2,6 +2,10 @@
 
 This file records notable changes to UMPK.
 
+## 0.9.0-beta.5 - 2026-10-09
+
+- Use the platform AES-CFB8 provider for ARM32 processes while preserving the existing cipher selection on other architectures and the explicit software fallback.
+
 ## 0.9.0-beta.4 - 2026-09-30
 
 - Replace the built-in HTTP CONNECT and SOCKS negotiation code with QuickProxyNet while preserving UMPK's proxy factory API and transport lifetime.

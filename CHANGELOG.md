@@ -2,6 +2,12 @@
 
 This file records notable changes to UMPK.
 
+## 0.9.0-beta.6 - 2026-10-10
+
+- Support encrypted offline login without session authentication on Minecraft 1.20.5+ and report authentication separately from encryption.
+- Renew Microsoft access tokens during certificate renewal, using the Minecraft token expiry and retaining refresh tokens when no replacement is returned.
+- Refresh certificates at their renewal time and serialize concurrent session refreshes.
+
 ## 0.9.0-beta.5 - 2026-10-09
 
 - Use the platform AES-CFB8 provider for ARM32 processes while preserving the existing cipher selection on other architectures and the explicit software fallback.

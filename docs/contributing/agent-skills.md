@@ -5,13 +5,13 @@ sidebar:
   order: 6
 ---
 
-An agent skill gives a coding assistant instructions, reference material, and examples for a specific task. [MCC Skills](https://github.com/MCCTeam/MCC-Skills) provides skills for Beacon, plugins, marketplaces, and C# development.
+An agent skill gives a coding assistant instructions, reference material, and examples for a specific task. [MCC Skills](https://github.com/MCCTeam/MCC-Skills) provides skills for Beacon, plugins, marketplaces, C# development, and clear technical writing.
 
 The shared C# skills support UMPK development. Beacon, plugin and marketplace skills support applications built with MCC or DMCBK. Those features belong to the host or DMCBK.
 
 ## Use skills in this checkout
 
-UMPK includes MCC Skills as a pinned Git submodule at `MCC-Skills/`. Seven entries in `.skills/` are relative symbolic links to that submodule. ASD-STE100 and UMPK integration testing remain local. The Claude, Codex and Agents discovery directories all point to `.skills/`.
+UMPK includes MCC Skills as a pinned Git submodule at `MCC-Skills/`. Eight entries in `.skills/`, including ASD-STE100, are relative symbolic links to that submodule. UMPK integration testing remains local. The Claude, Codex and Agents discovery directories all point to `.skills/`.
 
 Initialize the submodule from the UMPK repository directory:
 
@@ -90,6 +90,7 @@ Add `--global` when you want the skill across projects. The default installs it 
 | Review interfaces and responsibilities | [C# SOLID principles](https://github.com/MCCTeam/MCC-Skills/tree/master/skills/csharp-solid-principles) |
 | Diagnose .NET performance | [Performance](https://github.com/MCCTeam/MCC-Skills/tree/master/skills/dotnet-performance-profiling-and-optimization) |
 | Review .NET security | [Security](https://github.com/MCCTeam/MCC-Skills/tree/master/skills/dotnet-security-review) |
+| Rewrite ambiguous instructions and diagnostics | [ASD-STE100](https://github.com/MCCTeam/MCC-Skills/tree/master/skills/asd-ste100) |
 
 Install the two publishing skills together:
 

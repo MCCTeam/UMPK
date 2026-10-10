@@ -67,6 +67,8 @@ dotnet build UMPK.sln
 dotnet test UMPK.sln
 ```
 
+The `--recurse-submodules` option includes MCC-Skills, which supplies the shared ASD-STE100 skill. For an existing checkout, run `git submodule update --init MCC-Skills`.
+
 Query a Java server without an account:
 
 ```bash

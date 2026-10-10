@@ -11,7 +11,7 @@ public class EncryptionGateTests
 {
     private static CancellationToken Ct() => new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token;
 
-    /// <summary>A connection reports whether encryption was ever enabled on it. That fact is the only way a caller can tell an online-mode server (which sends an encryption request) from an offline-mode one (which never does), and a client that signs chat needs it: an offline-mode server assigns an offline UUID, so a Mojang-signed profile key can never validate against it and the join is rejected.</summary>
+    /// <summary>A connection reports whether encryption was enabled independently of session authentication.</summary>
     [Fact]
     public async Task Connection_ReportsWhetherEncryptionWasEnabled()
     {

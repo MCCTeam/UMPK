@@ -206,7 +206,7 @@ You do not need `MinecraftAuthFlow` for this. The [minimal bot](../getting-start
 
 ## Handing the session to a client
 
-This is the step nothing in the repository does for you, so here it is in full. The client takes a `GameProfile` and, for online mode, an `ISessionAuthenticator` plus a `ProfileCredentials`:
+Configure the session-join service explicitly for servers that require authentication. The client takes a `GameProfile` and, for online mode, an `ISessionAuthenticator` plus a `ProfileCredentials`. An offline server can request encryption with `shouldAuthenticate=false` on 1.20.5+; UMPK performs the key exchange without calling the session service, even when an online account is configured. Older encryption requests and requests with `shouldAuthenticate=true` still require session authentication. `SessionInfo.IsAuthenticated` records the login result independently of `IsConnectionEncrypted`:
 
 ```csharp
 using Umpk;

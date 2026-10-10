@@ -121,3 +121,7 @@ AES-CFB8 selects the platform AES provider for a 32-bit ARM process (`RuntimeInf
 Chat signing has three eras (`ChatSignatureEra.V1_19`, `V1_19_1` and `V1_19_3`) and they differ in what gets hashed and how the last-seen window is tracked, not just in packet layout. See [chat and signing](../guides/chat-and-signing.md).
 
 Bundles (`BundleAccumulator`, `BundleFeed`, `PacketBundle`) only exist from 1.19.4 on. The gate is the binding itself: `BoundPacketCodec` marks an entry `FrameRole.BundleDelimiter` when its identifier is `minecraft:bundle_delimiter`, so a protocol whose dataset registers no such packet has no delimiter to mark and everything arrives loose.
+
+## Encryption and session authentication
+
+`JavaClientLogin` always completes the RSA/AES-CFB8 exchange when the server requests encryption. On 1.20.5+, `ClientboundHelloPacket.ShouldAuthenticate` controls whether the driver first calls `ISessionAuthenticator.JoinServerAsync`; a false flag allows encrypted offline login without credentials. Earlier protocols default the absent flag to true. `LoginResult.IsAuthenticated` reports whether server-requested session authentication completed; `JavaConnection.IsEncrypted` reports the cipher state.

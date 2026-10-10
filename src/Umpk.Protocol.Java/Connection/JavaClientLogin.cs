@@ -9,7 +9,7 @@ using Umpk.Protocol.Java.Transport;
 
 namespace Umpk.Protocol.Java;
 
-/// <summary>Options for the client login driver. Offline mode needs only the username and dialed host/port; online mode additionally supplies an <see cref="ISessionAuthenticator"/> and the profile <see cref="Credentials"/> so the driver can answer the server's encryption request.</summary>
+/// <summary>Options for the client login driver. Offline mode needs only the username and dialed host/port; online mode additionally supplies an <see cref="ISessionAuthenticator"/> and the profile <see cref="Credentials"/> when the server requires session authentication. Offline encryption (1.20.5+) needs neither.</summary>
 public sealed record JavaLoginOptions
 {
     /// <summary>The username to log in with (must match the credentials profile name in online mode).</summary>
@@ -33,10 +33,10 @@ public sealed record JavaLoginOptions
     /// </summary>
     public PlayerCertificates? ProfileCertificates { get; init; }
 
-    /// <summary>The session authenticator used to prove ownership before the server enables encryption. When <see langword="null"/> the driver runs offline mode and ignores any encryption request.</summary>
+    /// <summary>The session authenticator used to prove ownership before the server enables encryption. Required only when the encryption request asks for session authentication; offline encryption does not call it.</summary>
     public ISessionAuthenticator? Authenticator { get; init; }
 
-    /// <summary>The profile plus access token proving ownership, required when <see cref="Authenticator"/> is set.</summary>
+    /// <summary>The profile plus access token proving ownership, required with <see cref="Authenticator"/> when the server requests session authentication.</summary>
     public ProfileCredentials? Credentials { get; init; }
 
     /// <summary>The static registries (item registry etc.) to install into the codec context at the transition into the Play phase, before the first play packet is decoded. When <see langword="null"/> the codec context keeps its empty registries, which cannot resolve non-air item ids. A composition root that has the version's data supplies this (see <c>Umpk.Data.Java.JavaGameData.Registries</c>).</summary>
@@ -66,7 +66,7 @@ public sealed record JavaLoginOptions
     /// <summary>The configuration-to-play finalizer propagated to the phase driver.</summary>
     public Func<CancellationToken, ValueTask<Umpk.Game.Registries.RegistryAccess?>>? BeforePlay { get; init; }
 
-    /// <summary>True when this login should run the online-mode encryption handshake.</summary>
+    /// <summary>True when a session authenticator is configured. The server's encryption request determines whether authentication is required.</summary>
     public bool IsOnlineMode => Authenticator is not null;
 
     /// <summary>Projects the login options onto the phase-independent configuration options. Login announces the client information; see <see cref="JavaConfigurationOptions.AnnounceClientInformation"/>.</summary>
@@ -82,13 +82,17 @@ public sealed record JavaLoginOptions
 }
 
 /// <summary>The result of a successful login reach-play.</summary>
-public sealed record LoginResult(Guid Uuid, string Username, ProtocolPhase Phase);
+public sealed record LoginResult(Guid Uuid, string Username, ProtocolPhase Phase)
+{
+    /// <summary>Whether the server requested session authentication and the session join completed. Encryption alone does not imply authentication.</summary>
+    public bool IsAuthenticated { get; init; }
+}
 
-/// <summary>Drives an offline-mode client login on a bound <see cref="JavaConnection"/> to the play phase and keeps it there. Handles handshake, login start, set-compression, login success, the 1.20.2+ login-acknowledged handoff, and the configuration phase (client information, known packs, registry data drain, finish configuration). Answers every login-plugin request nothing claims with <c>understood = false</c>, allowing the server to continue past an unsupported query.</summary>
+/// <summary>Drives a client login on a bound <see cref="JavaConnection"/> to the play phase and keeps it there. Handles handshake, login start, set-compression, login success, the 1.20.2+ login-acknowledged handoff, and the configuration phase (client information, known packs, registry data drain, finish configuration). Answers every login-plugin request nothing claims with <c>understood = false</c>, allowing the server to continue past an unsupported query.</summary>
 /// <remarks>The driver reads at the frame level so it can respond to registered-but-unimplemented packets (custom_query, ping, keep-alive) without needing their codecs, decoding only the handful it acts on.</remarks>
 public static class JavaClientLogin
 {
-    /// <summary>Runs the login handshake through to the play phase on an offline server.</summary>
+    /// <summary>Runs the login handshake through to the play phase, negotiating encryption and session authentication when requested by the server.</summary>
     public static async Task<LoginResult> LoginAsync(
         JavaConnection connection, JavaVersion version, JavaLoginOptions options, CancellationToken ct)
     {
@@ -142,10 +146,11 @@ public static class JavaClientLogin
         int disconnectId = WireIdOf(loginIn, Identifier.Minecraft("login_disconnect"));
         int cookieRequestId = WireIdOf(loginIn, Identifier.Minecraft("cookie_request"));
 
+        bool isAuthenticated = false;
         await foreach (InboundFrame frame in connection.ReceiveFramesAsync(ct).ConfigureAwait(false))
         {
             if (frame.WireId == helloId && helloId >= 0)
-                await HandleEncryptionRequestAsync(connection, descriptor, loginIn, options, frame.CopyPayload(), ct)
+                isAuthenticated = await HandleEncryptionRequestAsync(connection, descriptor, loginIn, options, frame.CopyPayload(), ct)
                     .ConfigureAwait(false);
 
             else if (frame.WireId == compressionId && compressionId >= 0)
@@ -196,7 +201,8 @@ public static class JavaClientLogin
                 }
 
                 return new LoginResult(finished.Uuid, finished.Username,
-                    hasConfigPhase ? ProtocolPhase.Configuration : ProtocolPhase.Play);
+                    hasConfigPhase ? ProtocolPhase.Configuration : ProtocolPhase.Play)
+                { IsAuthenticated = isAuthenticated };
             }
             else if (frame.WireId == disconnectId && disconnectId >= 0)
             {
@@ -211,10 +217,10 @@ public static class JavaClientLogin
     }
 
     /// <summary>
-    /// Handles the server's encryption request (online mode): generate a 16-byte shared secret, RSA-encrypt the secret (PKCS#1 v1.5), compute the server-id hash, prove session ownership through the authenticator, send the key response, then enable AES-CFB8 encryption on the connection. Offline logins that unexpectedly receive a hello with no authenticator configured fail fast rather than stalling.
+    /// Handles the server's encryption request: generate a 16-byte shared secret, RSA-encrypt the secret (PKCS#1 v1.5), authenticate the session only when the request requires it, send the key response, then enable AES-CFB8 encryption. Before 1.20.5 the hello codec defaults the absent authentication flag to true.
     /// <para>The verify token itself is handled two ways: normally it is RSA-encrypted with the server's key and echoed back, but on the 1.19/1.19.1 signing eras (protocols 759/760), when <see cref="JavaLoginOptions.ProfileKey"/> was attached to login-start, the server already holds that profile public key and its wire reader for THIS packet unconditionally expects a signed challenge (the token plus a salt, signed with the paired private key) instead - see <c>LoginCodecs.KeyV1_19</c> for the wire evidence. Sending the plain form there desyncs the frame and the server's decoder closes the connection without a graceful login disconnect.</para>
     /// </summary>
-    private static async Task HandleEncryptionRequestAsync(
+    private static async Task<bool> HandleEncryptionRequestAsync(
         JavaConnection connection, ProtocolDescriptor descriptor, PhaseRegistry loginIn,
         JavaLoginOptions options, ReadOnlyMemory<byte> payload, CancellationToken ct)
     {
@@ -224,9 +230,9 @@ public static class JavaClientLogin
         var hello = (ClientboundHelloPacket)DecodeRequired(
             connection, entry, payload.Span, BindingContext(connection), suppressEvidence: true);
 
-        if (!options.IsOnlineMode || options.Authenticator is null || options.Credentials is null)
+        if (hello.ShouldAuthenticate && (options.Authenticator is null || options.Credentials is null))
             throw new ProtocolViolationException(
-                "Server requested encryption but no session authenticator was configured (online mode required).");
+                "Server requested session authentication but no session authenticator or credentials were configured (online mode required).");
 
         if (options.ProfileKey is not null && options.ProfileCertificates is null)
         {
@@ -246,13 +252,17 @@ public static class JavaClientLogin
         ServerboundKeyPacket keyPacket = BuildKeyResponse(
             descriptor.Version.Protocol, options, encryptedSecret, hello.VerifyToken, rsa);
 
-        string serverIdHash = MinecraftServerId.Compute(hello.ServerId, sharedSecret, hello.PublicKey);
-        await options.Authenticator.JoinServerAsync(serverIdHash, options.Credentials, ct).ConfigureAwait(false);
+        if (hello.ShouldAuthenticate)
+        {
+            string serverIdHash = MinecraftServerId.Compute(hello.ServerId, sharedSecret, hello.PublicKey);
+            await options.Authenticator!.JoinServerAsync(serverIdHash, options.Credentials!, ct).ConfigureAwait(false);
+        }
 
         await SendAsync(connection, descriptor, ProtocolPhase.Login, keyPacket, ct).ConfigureAwait(false);
 
         // Vanilla enables encryption immediately after sending the key response, before the next read.
         connection.EnableEncryption(sharedSecret);
+        return hello.ShouldAuthenticate;
     }
 
     /// <summary>Builds the encryption response, choosing which of vanilla's two arms to fill in. The signed challenge is built only when the protocol's <c>key</c> packet actually HAS a second arm - the 1.19/1.19.1 Either shape, per <c>LoginCodecs.KeyPacketIsEitherWrapped</c>, which is the same era condition that binds <c>LoginCodecs.KeyV1_19</c> - and only when a profile key was presented at login-start, which is what makes the server demand it.</summary>

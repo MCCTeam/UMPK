@@ -259,7 +259,7 @@ public sealed class UmpkClient : IAsyncDisposable
     /// <summary>The plugin-channel surface: play and configuration registrations, the two sends, and the set of channels the server announced. Usable from <see cref="ClientStatus.Created"/> onward, which is how a registration lands before the session's first inbound frame.</summary>
     public ClientChannels Channels { get; }
 
-    /// <summary>Whether the live connection negotiated encryption, which is exactly whether the server sent an encryption request and so whether it is running in online mode. False before a connection exists and after one ends. See <see cref="JavaConnection.IsEncrypted"/> for why a chat-signing host cares.</summary>
+    /// <summary>Whether the live connection negotiated encryption. Offline servers can request encryption without session authentication; see <see cref="SessionInfo.IsAuthenticated"/>. False before a connection exists and after one ends.</summary>
     public bool IsConnectionEncrypted => _connection?.IsEncrypted ?? false;
 
     /// <summary>The high-level lifecycle status. Never <see cref="ClientStatus.Authenticating"/> or <see cref="ClientStatus.Reconnecting"/>: both are supervisor-only states.</summary>
@@ -447,6 +447,7 @@ public sealed class UmpkClient : IAsyncDisposable
             Endpoint = target,
             Version = _settings.Version,
             Phase = ProtocolPhase.Play,
+            IsAuthenticated = login.IsAuthenticated,
         };
 
         // A vanilla server changes its INBOUND decoder from LOGIN to PLAY when it writes its first clientbound PLAY frame, not when it writes login success. Until that frame has crossed the wire, every serverbound play packet (brand, REGISTER, plugin traffic, or a host action) can be decoded against the three-entry LOGIN table and disconnect the session. Receive and apply that first item before opening any local play sender. An unknown/marker item is sufficient: vanilla switched before writing it, and no packet-specific JoinGame assumption is needed here.

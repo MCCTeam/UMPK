@@ -14,6 +14,9 @@ public sealed record SessionInfo
     /// <summary>The negotiated protocol version.</summary>
     public required JavaVersion Version { get; init; }
 
+    /// <summary>Whether login completed session authentication requested by the server. An offline server can encrypt the connection without authenticating the session.</summary>
+    public bool IsAuthenticated { get; init; }
+
     /// <summary>The current protocol phase.</summary>
     public ProtocolPhase Phase { get; init; } = ProtocolPhase.Handshake;
 }

@@ -88,6 +88,9 @@ public sealed class ChatSessionAnnouncementOrderTests
         await server.SendFrameAsync(joinWireId, joinBody, ct);
         await connect.WaitAsync(Budget, ct);
 
+        Assert.NotNull(client.Session);
+        Assert.False(client.Session.IsAuthenticated);
+
         // And now it is allowed, and it happens: the announcement is the first thing the client sends.
         InboundFrame announced = await server.NextFrameAsync(ct);
         Assert.Equal(

@@ -6,7 +6,7 @@ namespace Umpk.Client;
 /// <summary>
 /// The engine's own version, read back from the assembly rather than restated in code.
 /// <para>The build version becomes this assembly's <see cref="AssemblyInformationalVersionAttribute"/>. A host reads the same attribute from the assembly containing <see cref="UmpkClient"/>, avoiding a second version literal.</para>
-/// <para><see cref="Informational"/> is whatever the attribute says. On a plain build that is exactly <c>"0.9.0-beta.5"</c>; a build that also sets <c>SourceRevisionId</c> (SourceLink does) gets <c>"0.9.0-beta.5+&lt;sha&gt;"</c>. <see cref="Current"/> is the core <c>major.minor.patch</c> triple with any prerelease or build metadata removed, which is the form a version RANGE is compared against.</para>
+/// <para><see cref="Informational"/> is whatever the attribute says. On a plain build that is exactly <c>"0.9.0-beta.6"</c>; a build that also sets <c>SourceRevisionId</c> (SourceLink does) gets <c>"0.9.0-beta.6+&lt;sha&gt;"</c>. <see cref="Current"/> is the core <c>major.minor.patch</c> triple with any prerelease or build metadata removed, which is the form a version RANGE is compared against.</para>
 /// </summary>
 public static class UmpkVersion
 {
@@ -37,7 +37,7 @@ public static class UmpkVersion
     /// <summary>The core <c>major.minor.patch</c> triple, with any <c>-prerelease</c> and <c>+build</c> metadata stripped: <c>"0.9.0"</c>. This is the form to compare a version range against.</summary>
     public static string Current { get; }
 
-    /// <summary>The full informational version as the assembly carries it, build metadata included: <c>"0.9.0-beta.5"</c>, or <c>"0.9.0-beta.5+&lt;sha&gt;"</c> on a build that stamps a source revision.</summary>
+    /// <summary>The full informational version as the assembly carries it, build metadata included: <c>"0.9.0-beta.6"</c>, or <c>"0.9.0-beta.6+&lt;sha&gt;"</c> on a build that stamps a source revision.</summary>
     public static string Informational { get; }
 
     /// <summary>The major component of <see cref="Current"/>.</summary>

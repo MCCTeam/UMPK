@@ -16,14 +16,14 @@ Nothing else is required to build. The library's runtime dependencies are delibe
 Install the `Umpk` meta package when you want the complete client stack:
 
 ```bash
-dotnet add package Umpk --version 0.9.0-beta.5
+dotnet add package Umpk --version 0.9.0-beta.6
 ```
 
 Install a focused package when you only need one layer. For example, a status tool can start with the Java protocol package, while an NBT utility needs only the NBT package:
 
 ```bash
-dotnet add package Umpk.Protocol.Java --version 0.9.0-beta.5
-dotnet add package Umpk.Nbt --version 0.9.0-beta.5
+dotnet add package Umpk.Protocol.Java --version 0.9.0-beta.6
+dotnet add package Umpk.Nbt --version 0.9.0-beta.6
 ```
 
 All packages in one release use the same version. The project is pre-1.0, so pin that version rather than using a floating range.
@@ -32,7 +32,7 @@ All packages in one release use the same version. The project is pre-1.0, so pin
 
 Use project references when you want to test an unreleased commit or contribute to UMPK. The samples use this arrangement and are the canonical local examples.
 
-The recursive clone includes MCC Skills for agent guidance. The library restores its dependencies through NuGet. For an existing checkout, run `git submodule update --init MCC-Skills`. Read [agent skills](../contributing/agent-skills.md) for setup and Windows symbolic-link support.
+The `--recurse-submodules` option includes MCC Skills and the shared ASD-STE100 skill. The library restores its dependencies through NuGet. For an existing checkout, run `git submodule update --init MCC-Skills`. Read [agent skills](../contributing/agent-skills.md) for setup and Windows symbolic-link support.
 
 To get a working checkout:
 

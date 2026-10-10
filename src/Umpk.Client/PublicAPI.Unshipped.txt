@@ -1216,6 +1216,8 @@ Umpk.Client.SessionInfo.<Clone>$() -> Umpk.Client.SessionInfo!
 Umpk.Client.SessionInfo.Endpoint.get -> Umpk.ServerEndpoint!
 Umpk.Client.SessionInfo.Endpoint.init -> void
 Umpk.Client.SessionInfo.Equals(Umpk.Client.SessionInfo? other) -> bool
+Umpk.Client.SessionInfo.IsAuthenticated.get -> bool
+Umpk.Client.SessionInfo.IsAuthenticated.init -> void
 Umpk.Client.SessionInfo.Phase.get -> Umpk.Protocol.Java.ProtocolPhase
 Umpk.Client.SessionInfo.Phase.init -> void
 Umpk.Client.SessionInfo.Profile.get -> Umpk.GameProfile!

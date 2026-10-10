@@ -177,6 +177,8 @@ Exception messages from this package carry stage names, HTTP status codes and OA
 
 ## Session resume
 
+`JavaSession.ExpiresAt` follows the Minecraft services access token lifetime returned by `login_with_xbox`, independently of the Microsoft access token lifetime. Silent renewal applies to both Microsoft login flows. It does not start an interactive login or replace a revoked refresh token with browser authentication.
+
 ```csharp
 JavaSession? resumed = await flow.TryResumeAsync("player@example.com", CancellationToken.None);
 JavaSession session = resumed ?? await flow.LoginAsync(interaction, CancellationToken.None, "player@example.com");
@@ -185,8 +187,8 @@ JavaSession session = resumed ?? await flow.LoginAsync(interaction, Cancellation
 `TryResumeAsync` reads the store under `"session:" + loginHint.ToUpperInvariant()` and then decides:
 
 - Nothing cached, return null.
-- Cached and not expired, return it with no network call at all.
-- Expired, Microsoft, and a refresh token present: refresh, re-cache, return the new session.
+- Cached and more than one minute from expiry, return it without a network call.
+- Expired or within one minute of expiry, Microsoft, and a refresh token present: refresh, re-cache, return the new session.
 - Anything else (an expired Yggdrasil session, an expired Microsoft session with no refresh token), return null and let the caller log in again.
 
 `LoginAsync` caches under the profile name and, when the login hint differs, under the hint too. That double keying is why you can resume by either. It also means `InvalidateAsync` is sharper than it looks: it removes only the key you name, so invalidating by email leaves the gamertag-keyed copy of the same access token on disk. Call it for both if you mean to wipe an account.
@@ -204,7 +206,7 @@ You do not need `MinecraftAuthFlow` for this. The [minimal bot](../getting-start
 
 ## Handing the session to a client
 
-This is the step nothing in the repository does for you, so here it is in full. The client takes a `GameProfile` and, for online mode, an `ISessionAuthenticator` plus a `ProfileCredentials`:
+Configure the session-join service explicitly for servers that require authentication. The client takes a `GameProfile` and, for online mode, an `ISessionAuthenticator` plus a `ProfileCredentials`. An offline server can request encryption with `shouldAuthenticate=false` on 1.20.5+; UMPK performs the key exchange without calling the session service, even when an online account is configured. Older encryption requests and requests with `shouldAuthenticate=true` still require session authentication. `SessionInfo.IsAuthenticated` records the login result independently of `IsConnectionEncrypted`:
 
 ```csharp
 using Umpk;
@@ -238,9 +240,9 @@ Offline mode is the absence of `UseAuthenticator`. Nothing else distinguishes th
 
 ## Chat signing certificates
 
-`GetCertificatesAsync` fetches the profile key pair a 1.19+ server needs to verify your messages, and caches it under `"certificates:" + name`. A cached copy is reused until `PlayerCertificates.IsExpired` says otherwise.
+`GetCertificatesAsync` fetches the profile key pair a 1.19+ server needs to verify your messages, and caches it under `"certificates:" + name`. A cached copy is reused until its `RefreshedAfter` renewal time or expiry. Before fetching certificates, the flow silently renews an expired or nearly expired Microsoft access token. If the certificate endpoint rejects an otherwise valid token with HTTP 401, the flow renews it and retries once. Concurrent resume and certificate requests share one refresh operation. Failed refreshes preserve the cached session for a later retry.
 
-The client does not call it for you. You wire it up by implementing `IChatSigningProvider` and passing it to `UmpkClientBuilder.UseChatSigning`. The contract there has real constraints on caching and re-entrancy, which [chat and signing](chat-and-signing.md) goes through.
+Wire `new AuthFlowCertificateProvider(flow, session)` into `UmpkClientBuilder.UseChatSigning`. Keep the flow and its token store alive for the connection lifetime. The provider can retain the original immutable session: certificate fetching resolves the latest cached credentials. A later resume by the account email also resolves the renewed profile entry before using an older alias. The contract there has real constraints on caching and re-entrancy, which [chat and signing](chat-and-signing.md) goes through.
 
 ## What is not here
 

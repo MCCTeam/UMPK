@@ -175,7 +175,7 @@ public sealed class JavaConnection : IAsyncDisposable
         gate?.TrySetResult();
     }
 
-    /// <summary>Whether <see cref="EnableEncryption"/> has run on this connection, which is exactly whether the server sent an encryption request. That is the observable difference between an online-mode server and an offline-mode one, and it is load bearing for chat signing: an offline-mode server assigns an offline UUID (derived from the name), while a Mojang profile key's signature covers the account's real UUID, so announcing that key to an unencrypted server can only ever fail its validation.</summary>
+    /// <summary>Whether <see cref="EnableEncryption"/> has run on this connection. Encryption can be requested without session authentication on 1.20.5+; it does not determine the server's online mode.</summary>
     public bool IsEncrypted => Volatile.Read(ref _encrypted) != 0;
 
     /// <summary>Switches inbound delivery to frame mode with the given decode filter.</summary>

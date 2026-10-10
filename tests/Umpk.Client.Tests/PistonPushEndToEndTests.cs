@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Data.Java;
@@ -68,8 +69,6 @@ public sealed class PistonPushEndToEndTests
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
 
-        await DrainAsync(ct);
-
         double moved = client.State.Self.Position.X - start.X;
         Assert.Equal(VanillaFullPush, moved, BoxWidthTolerance);
         Assert.Equal(start.Z, client.State.Self.Position.Z, 9);
@@ -78,7 +77,7 @@ public sealed class PistonPushEndToEndTests
         Assert.Equal(0, corrections);
 
         // The value reaches its EFFECT, not merely a field: the client's own movement packet carries it.
-        Vec3d last = LastMovePosition(frames);
+        Vec3d last = await LastMovePositionAsync(frames, ticks.TickCount, ct);
         Assert.Equal(start.X + VanillaFullPush, last.X, BoxWidthTolerance);
     }
 
@@ -105,8 +104,6 @@ public sealed class PistonPushEndToEndTests
 
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
-
-        await DrainAsync(ct);
 
         Assert.Equal(start.X, client.State.Self.Position.X, 9);
     }
@@ -146,8 +143,6 @@ public sealed class PistonPushEndToEndTests
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
 
-        await DrainAsync(ct);
-
         Assert.Equal(start.X, client.State.Self.Position.X, 9);
     }
 
@@ -175,23 +170,23 @@ public sealed class PistonPushEndToEndTests
         await SendBlockEventAsync(client, server, piston, action: 0, ct);
 
         await ticks.FireAsync(ct);
-        await WaitForAsync(() => client.State.Self.Position.X > start.X + 0.2, ct);
         Assert.Equal(0.31000001192092896, client.State.Self.Position.X - start.X, BoxWidthTolerance);
 
         await ticks.FireAsync(ct);
-        await WaitForAsync(() => client.State.Self.Position.X > start.X + 0.6, ct);
         Assert.Equal(VanillaFullPush, client.State.Self.Position.X - start.X, BoxWidthTolerance);
     }
 
     /// <summary>THE PUSHED BLOCK, which is the half of the model that did not exist. A stone block sits in the piston's way and the player stands TWO blocks from the piston, where the piston's own head can never reach: the only thing that can move the player is the stone the piston carries.</summary>
     /// <remarks>The arithmetic is the same as the head's because the geometry is: the moved block's box comes to rest with its <c>maxX</c> exactly on the player's start plane, so tick one's movement is the player's own half-width (<c>float32(0.6)/2</c>) and tick two is clamped to the remaining delta. Total <c>0.30000001192092896 + 0.01 + 0.49 + 0.01</c>.</remarks>
-    [Fact]
-    public async Task APushedBlockMovesThePlayerTheFullVanillaPush()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(350)]
+    public async Task APushedBlockMovesThePlayerTheFullVanillaPush(int tickDelayMilliseconds)
     {
         using var cts = new CancellationTokenSource(Budget);
         CancellationToken ct = cts.Token;
 
-        var ticks = new ManualTickSource();
+        var ticks = new ManualTickSource(TimeSpan.FromMilliseconds(tickDelayMilliseconds));
         await using FakeJavaServer server = FakeJavaServer.Create();
         await using UmpkClient client = Client(server, ticks);
         var frames = new ConcurrentQueue<InboundFrame>();
@@ -216,14 +211,12 @@ public sealed class PistonPushEndToEndTests
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
 
-        await DrainAsync(ct);
-
         double moved = client.State.Self.Position.X - start.X;
         Assert.Equal(VanillaFullPush, moved, BoxWidthTolerance);
         Assert.Equal(start.Z, client.State.Self.Position.Z, 9);
         Assert.Equal(0, corrections);
 
-        Vec3d last = LastMovePosition(frames);
+        Vec3d last = await LastMovePositionAsync(frames, ticks.TickCount, ct);
         Assert.Equal(start.X + VanillaFullPush, last.X, BoxWidthTolerance);
     }
 
@@ -251,8 +244,6 @@ public sealed class PistonPushEndToEndTests
         await SendBlockEventAsync(client, server, piston, action: 0, ct);
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
-
-        await DrainAsync(ct);
 
         Assert.Equal(start.X, client.State.Self.Position.X, 9);
     }
@@ -288,8 +279,6 @@ public sealed class PistonPushEndToEndTests
         await SendBlockEventAsync(client, server, piston, action: 0, ct);
         for (int i = 0; i < 6; i++)
             await ticks.FireAsync(ct);
-
-        await DrainAsync(ct);
 
         Assert.Equal(start.X, client.State.Self.Position.X, 9);
     }
@@ -345,10 +334,7 @@ public sealed class PistonPushEndToEndTests
         for (int i = 0; i < 5; i++)
             await ticks.FireAsync(ct);
 
-        await WaitForAsync(() => client.State.Self.OnGround, ct);
-
-        // The tick channel is unbounded, so the wait above can return with settle ticks still queued. Draining matters for the tick-by-tick test, where a leftover tick would run BOTH piston ticks before the first hand-fired one and the 0.31 intermediate would never be observable.
-        await DrainAsync(ct);
+        Assert.True(client.State.Self.OnGround);
     }
 
     /// <summary>Sends a <c>block_event</c> with action and facing fields, using EAST = 5, and waits for the client to have APPLIED it. Waiting on the client's own <see cref="BlockEventOccurred"/> rather than on a delay is what keeps the following ticks deterministic: the frame and the tick are two independent queues onto one session loop.</summary>
@@ -367,8 +353,13 @@ public sealed class PistonPushEndToEndTests
         await applied.Task.WaitAsync(Budget, ct);
     }
 
-    private static Vec3d LastMovePosition(ConcurrentQueue<InboundFrame> frames)
+    private static async Task<Vec3d> LastMovePositionAsync(
+        ConcurrentQueue<InboundFrame> frames, long completedTicks, CancellationToken ct)
     {
+        // Each tick sends this marker after its movement packet. Observing the final marker proves the collector has received all completed ticks.
+        int tickEndWire = new Internal.WireIndex(Version).ServerboundPlay(PlayPackets.Serverbound.ClientTickEnd.Id);
+        await WaitForAsync(() => frames.Count(frame => frame.WireId == tickEndWire) >= completedTicks, ct);
+
         ProtocolDescriptor descriptor = Version.Protocol;
         Assert.True(descriptor.TryGetRegistry(ProtocolPhase.Play, PacketFlow.Serverbound, out PhaseRegistry registry));
         int posWire = new Internal.WireIndex(Version).ServerboundPlay(EntityPackets.Serverbound.MovePlayerPos.Id);
@@ -414,9 +405,6 @@ public sealed class PistonPushEndToEndTests
         Assert.True(data.Blocks.TryGet(Identifier.Parse(blockName), out RegistryEntry<BlockDefinition> entry));
         return entry.Value.DefaultStateId;
     }
-
-    /// <summary>Lets every frame the client has already written reach the collector before asserting.</summary>
-    private static Task DrainAsync(CancellationToken ct) => Task.Delay(250, ct);
 
     private static async Task JoinAsync(
         UmpkClient client, FakeJavaServer server, ConcurrentQueue<InboundFrame> frames, CancellationToken ct)
@@ -531,18 +519,47 @@ public sealed class PistonPushEndToEndTests
             => ValueTask.FromResult(pipe);
     }
 
-    /// <summary>A tick source the test advances by hand, so a tick lands exactly where it is wanted.</summary>
-    private sealed class ManualTickSource : ITickSource
+    /// <summary>A tick source that waits for the consumer to finish each tick before accepting the next test step.</summary>
+    private sealed class ManualTickSource(TimeSpan processingDelay = default) : ITickSource
     {
-        private readonly Channel<long> _ticks = Channel.CreateUnbounded<long>();
+        private readonly Channel<TickRequest> _ticks = Channel.CreateUnbounded<TickRequest>();
         private long _next;
 
         public TimeSpan TickInterval => TimeSpan.FromMilliseconds(50);
 
-        public IAsyncEnumerable<long> Ticks(CancellationToken cancellationToken = default) =>
-            _ticks.Reader.ReadAllAsync(cancellationToken);
+        public long TickCount => Interlocked.Read(ref _next);
 
-        public ValueTask FireAsync(CancellationToken ct) =>
-            _ticks.Writer.WriteAsync(Interlocked.Increment(ref _next), ct);
+        public async IAsyncEnumerable<long> Ticks(
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await foreach (TickRequest request in _ticks.Reader.ReadAllAsync(cancellationToken))
+            {
+                try
+                {
+                    if (processingDelay > TimeSpan.Zero)
+                        await Task.Delay(processingDelay, cancellationToken);
+
+                    yield return request.Number;
+                    // UmpkClient requests the next item only after its scheduler invocation finishes.
+                    request.Completed.TrySetResult();
+                }
+                finally
+                {
+                    request.Completed.TrySetCanceled(cancellationToken);
+                }
+            }
+        }
+
+        public async Task FireAsync(CancellationToken ct)
+        {
+            var request = new TickRequest(Interlocked.Increment(ref _next));
+            await _ticks.Writer.WriteAsync(request, ct);
+            await request.Completed.Task.WaitAsync(ct);
+        }
+
+        private sealed record TickRequest(long Number)
+        {
+            public TaskCompletionSource Completed { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        }
     }
 }

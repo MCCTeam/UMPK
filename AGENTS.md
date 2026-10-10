@@ -20,7 +20,7 @@ Initialize the shared skills with `git submodule update --init MCC-Skills`.
 | `.skills/asd-ste100/SKILL.md` | Unambiguous procedures, errors, and agent instructions |
 | `.skills/umpk-integration-testing/SKILL.md` | Isolated live tests against vanilla servers |
 
-Seven `.skills` entries link to the pinned [MCC Skills](https://github.com/MCCTeam/MCC-Skills) submodule under `MCC-Skills/skills`. ASD-STE100 and UMPK integration testing remain local. `.claude/skills`, `.agents/skills`, `.codex/skill` and `.codex/skills` link to `.skills`.
+Eight `.skills` entries, including ASD-STE100, link to the pinned [MCC Skills](https://github.com/MCCTeam/MCC-Skills) submodule under `MCC-Skills/skills`. UMPK integration testing remains local. `.claude/skills`, `.agents/skills`, `.codex/skill` and `.codex/skills` link to `.skills`.
 
 Read a matching `SKILL.md` before using a skill. Resolve its relative references from its own directory. Edit shared skills in MCC Skills rather than creating another local copy. Read [agent skills](docs/contributing/agent-skills.md) before updating the submodule revision.
 

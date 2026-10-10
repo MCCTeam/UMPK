@@ -669,6 +669,8 @@ Umpk.Protocol.Java.LoginResult
 Umpk.Protocol.Java.LoginResult.<Clone>$() -> Umpk.Protocol.Java.LoginResult!
 Umpk.Protocol.Java.LoginResult.Deconstruct(out System.Guid Uuid, out string! Username, out Umpk.Protocol.Java.ProtocolPhase Phase) -> void
 Umpk.Protocol.Java.LoginResult.Equals(Umpk.Protocol.Java.LoginResult? other) -> bool
+Umpk.Protocol.Java.LoginResult.IsAuthenticated.get -> bool
+Umpk.Protocol.Java.LoginResult.IsAuthenticated.init -> void
 Umpk.Protocol.Java.LoginResult.LoginResult(System.Guid Uuid, string! Username, Umpk.Protocol.Java.ProtocolPhase Phase) -> void
 Umpk.Protocol.Java.LoginResult.Phase.get -> Umpk.Protocol.Java.ProtocolPhase
 Umpk.Protocol.Java.LoginResult.Phase.init -> void

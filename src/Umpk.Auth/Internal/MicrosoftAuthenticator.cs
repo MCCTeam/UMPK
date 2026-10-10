@@ -131,7 +131,10 @@ internal sealed class MicrosoftAuthenticator
             "client_id=" + Uri.EscapeDataString(_clientId)
             + "&grant_type=refresh_token"
             + "&refresh_token=" + Uri.EscapeDataString(refreshToken);
-        return await RequestTokenAsync(form, "refresh", ct).ConfigureAwait(false);
+        MsaToken token = await RequestTokenAsync(form, "refresh", ct).ConfigureAwait(false);
+        return string.IsNullOrWhiteSpace(token.RefreshToken)
+            ? token with { RefreshToken = refreshToken }
+            : token;
     }
 
     private async Task<MsaToken> RequestTokenAsync(string form, string stage, CancellationToken ct)
@@ -148,14 +151,13 @@ internal sealed class MicrosoftAuthenticator
     {
         XboxToken xbl = await XblAuthenticateAsync(msa.AccessToken, ct).ConfigureAwait(false);
         XboxToken xsts = await XstsAuthenticateAsync(xbl.Token, ct).ConfigureAwait(false);
-        string mcToken = await LoginWithXboxAsync(xsts.UserHash, xsts.Token, ct).ConfigureAwait(false);
+        MinecraftToken mcToken = await LoginWithXboxAsync(xsts.UserHash, xsts.Token, ct).ConfigureAwait(false);
 
-        if (!await HasEntitlementAsync(mcToken, ct).ConfigureAwait(false))
+        if (!await HasEntitlementAsync(mcToken.AccessToken, ct).ConfigureAwait(false))
             throw new NoMinecraftEntitlementException("The signed-in account does not own Minecraft.");
 
-        GameProfile profile = await GetProfileAsync(mcToken, ct).ConfigureAwait(false);
-        DateTimeOffset expiresAt = _time.GetUtcNow() + TimeSpan.FromSeconds(msa.ExpiresInSeconds);
-        return new JavaSession(profile, mcToken, expiresAt, msa.RefreshToken, AuthKind.Microsoft);
+        GameProfile profile = await GetProfileAsync(mcToken.AccessToken, ct).ConfigureAwait(false);
+        return new JavaSession(profile, mcToken.AccessToken, mcToken.ExpiresAt, msa.RefreshToken, AuthKind.Microsoft);
     }
 
     private async Task<XboxToken> XblAuthenticateAsync(string msaAccessToken, CancellationToken ct)
@@ -213,7 +215,7 @@ internal sealed class MicrosoftAuthenticator
         throw new AuthServiceException("xsts", response.StatusCode, "XSTS authorization failed.");
     }
 
-    private async Task<string> LoginWithXboxAsync(string userHash, string xstsToken, CancellationToken ct)
+    private async Task<MinecraftToken> LoginWithXboxAsync(string userHash, string xstsToken, CancellationToken ct)
     {
         string payload = "{\"identityToken\":\"XBL3.0 x=" + JsonEncode(userHash) + ";" + JsonEncode(xstsToken) + "\"}";
         AuthHttpResponse response = await _http.PostJsonAsync(new Uri(LoginWithXboxUrl), payload, null, null, ct).ConfigureAwait(false);
@@ -221,8 +223,12 @@ internal sealed class MicrosoftAuthenticator
             throw new AuthServiceException("login_with_xbox", response.StatusCode, "Minecraft services login failed.");
 
         using JsonDocument doc = response.ParseJson();
-        return doc.RootElement.GetProperty("access_token").GetString()!;
+        JsonElement root = doc.RootElement;
+        DateTimeOffset expiresAt = _time.GetUtcNow() + TimeSpan.FromSeconds(GetInt(root, "expires_in"));
+        return new MinecraftToken(root.GetProperty("access_token").GetString()!, expiresAt);
     }
+
+    private readonly record struct MinecraftToken(string AccessToken, DateTimeOffset ExpiresAt);
 
     private async Task<bool> HasEntitlementAsync(string mcToken, CancellationToken ct)
     {

@@ -19,7 +19,7 @@ The package performs no console output and asks for nothing directly. Every prom
 
 ## Main entry points
 
-`MinecraftAuthFlow` is the orchestrator, and it is `IDisposable`. `LoginAsync(interaction, ct, loginHint)` runs the configured flow and caches the session. `TryResumeAsync(loginHint, ct)` returns a cached session, refreshing an expired Microsoft token transparently, or null. `InvalidateAsync` drops a cached session. `GetCertificatesAsync(session, ct)` fetches the player key pair for chat signing.
+`MinecraftAuthFlow` is the orchestrator, and it is `IDisposable`. `LoginAsync(interaction, ct, loginHint)` runs the configured flow and caches the session. `TryResumeAsync(loginHint, ct)` returns a cached session, refreshing an expired or nearly expired Microsoft token transparently, or null. `InvalidateAsync` drops a cached session. `GetCertificatesAsync(session, ct)` renews Microsoft credentials as needed and fetches the player key pair when its renewal time arrives. `JavaSession.ExpiresAt` is the Minecraft access token expiry.
 
 `MinecraftAuthOptions` configures it. `FlowKind` picks the flow, `ClientId` is the Azure application id (it defaults to a registered public client), `TokenStore` is the cache, `YggdrasilBaseUrl` points at an authlib-injector server, `OfflineUsername` is required for the offline flow, and `HttpHandlerFactory`, `Logger`, `TimeProvider`, `BrowserRedirectUri` and `LoopbackReceiverFactory` are the seams.
 

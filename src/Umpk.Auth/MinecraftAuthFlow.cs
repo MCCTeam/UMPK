@@ -8,9 +8,12 @@ namespace Umpk.Auth;
 /// <summary>The single login orchestrator. Runs the flow selected by <see cref="MinecraftAuthOptions.FlowKind"/>, caches sessions and certificates through the configured <see cref="ITokenStore"/>, and refreshes expired Microsoft tokens transparently. Host interaction (device code, browser, credentials) is delegated to <see cref="IAuthInteraction"/>; the library performs no console I/O and logs no tokens. Stays sealed; <see cref="IMinecraftAuthFlow"/> is the seam a consumer fakes against.</summary>
 public sealed class MinecraftAuthFlow : IMinecraftAuthFlow
 {
+    private static readonly TimeSpan RefreshLeadTime = TimeSpan.FromMinutes(1);
+
     private const string SessionKeyPrefix = "session:";
     private const string CertificatesKeyPrefix = "certificates:";
 
+    private readonly SemaphoreSlim _sessionGate = new(1, 1);
     private readonly MinecraftAuthOptions _options;
     private readonly AuthHttpClient _http;
     private readonly MicrosoftAuthenticator _microsoft;
@@ -43,57 +46,102 @@ public sealed class MinecraftAuthFlow : IMinecraftAuthFlow
             _ => throw new AuthException("Unsupported auth flow kind: " + _options.FlowKind),
         };
 
-        await CacheSessionAsync(LoginHintFor(session), session, ct).ConfigureAwait(false);
-        await CacheAliasAsync(loginHint, session, ct).ConfigureAwait(false);
-        return session;
+        await _sessionGate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
+            await CacheSessionAsync(LoginHintFor(session), session, ct).ConfigureAwait(false);
+            await CacheAliasAsync(loginHint, session, ct).ConfigureAwait(false);
+            return session;
+        }
+        finally
+        {
+            _sessionGate.Release();
+        }
     }
 
-    /// <summary>Attempts to reuse a cached session for <paramref name="loginHint"/>. A still-valid session is returned as-is; a Microsoft session with a refresh token is refreshed and re-cached; anything else returns null so the caller falls back to <see cref="LoginAsync"/>.</summary>
+    /// <summary>Attempts to reuse a cached session for <paramref name="loginHint"/>. A session more than one minute from expiry is reused; an expired or nearly expired Microsoft session with a refresh token is refreshed and re-cached; anything else returns null so the caller falls back to <see cref="LoginAsync"/>.</summary>
     public async Task<JavaSession?> TryResumeAsync(string loginHint, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(loginHint);
-
-        JavaSession? cached = await _options.TokenStore.GetAsync<JavaSession>(SessionKey(loginHint), ct).ConfigureAwait(false);
-        if (cached is null)
-            return null;
-
-        if (!cached.IsExpired(_options.TimeProvider.GetUtcNow()))
-            return cached;
-
-        if (cached.Kind == AuthKind.Microsoft && cached.RefreshToken is { } refresh)
+        await _sessionGate.WaitAsync(ct).ConfigureAwait(false);
+        try
         {
-            _options.Logger.LogDebug("Cached Microsoft session expired; refreshing.");
-            MsaToken msa = await _microsoft.RefreshAsync(refresh, ct).ConfigureAwait(false);
-            JavaSession refreshed = await _microsoft.CompleteChainAsync(msa, ct).ConfigureAwait(false);
-            await CacheSessionAsync(loginHint, refreshed, ct).ConfigureAwait(false);
-            await CacheAliasAsync(LoginHintFor(refreshed), refreshed, ct).ConfigureAwait(false);
-            return refreshed;
-        }
+            JavaSession? cached = await _options.TokenStore.GetAsync<JavaSession>(SessionKey(loginHint), ct).ConfigureAwait(false);
+            if (cached is null)
+                return null;
 
-        return null;
+            // The profile entry may already have been renewed by live certificate fetching. Resolve it before using an older email alias's refresh token.
+            JavaSession current = await ResolveCachedSessionAsync(cached, ct).ConfigureAwait(false);
+            if (NeedsRefresh(current))
+            {
+                if (!CanRefresh(current))
+                    return null;
+
+                current = await RefreshSessionAsync(current, ct).ConfigureAwait(false);
+            }
+
+            await CacheAliasAsync(loginHint, current, ct).ConfigureAwait(false);
+            return current;
+        }
+        finally
+        {
+            _sessionGate.Release();
+        }
     }
 
-    /// <summary>Returns the player profile-key certificates for a session, using the cache when present and unexpired, otherwise fetching and caching them.</summary>
+    /// <summary>Returns the player profile-key certificates for a session, using the cache until its renewal time, otherwise silently renewing Microsoft credentials as needed before fetching and caching them.</summary>
     public async Task<PlayerCertificates> GetCertificatesAsync(JavaSession session, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(session);
+        await _sessionGate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
+            string key = CertificatesKey(LoginHintFor(session));
+            DateTimeOffset now = _options.TimeProvider.GetUtcNow();
+            PlayerCertificates? cached = await _options.TokenStore.GetAsync<PlayerCertificates>(key, ct).ConfigureAwait(false);
+            if (cached is not null && !cached.IsExpired(now) && now < cached.RefreshedAfter)
+                return cached;
 
-        string key = CertificatesKey(LoginHintFor(session));
-        PlayerCertificates? cached = await _options.TokenStore.GetAsync<PlayerCertificates>(key, ct).ConfigureAwait(false);
-        if (cached is not null && !cached.IsExpired(_options.TimeProvider.GetUtcNow()))
-            return cached;
+            JavaSession current = await ResolveCachedSessionAsync(session, ct).ConfigureAwait(false);
+            bool refreshed = NeedsRefresh(current) && CanRefresh(current);
+            if (refreshed)
+                current = await RefreshSessionAsync(current, ct).ConfigureAwait(false);
 
-        PlayerCertificates fetched = await _certificates.FetchAsync(session.AccessToken, ct).ConfigureAwait(false);
-        await _options.TokenStore.SetAsync(key, fetched, ct).ConfigureAwait(false);
-        return fetched;
+            PlayerCertificates fetched;
+            try
+            {
+                fetched = await _certificates.FetchAsync(current.AccessToken, ct).ConfigureAwait(false);
+            }
+            catch (AuthServiceException ex) when (ex.StatusCode == 401 && !refreshed && CanRefresh(current))
+            {
+                // The service can reject a token before its recorded expiry. Renew it once, without opening an interactive login or retrying indefinitely.
+                current = await RefreshSessionAsync(current, ct).ConfigureAwait(false);
+                fetched = await _certificates.FetchAsync(current.AccessToken, ct).ConfigureAwait(false);
+            }
+
+            await _options.TokenStore.SetAsync(key, fetched, ct).ConfigureAwait(false);
+            return fetched;
+        }
+        finally
+        {
+            _sessionGate.Release();
+        }
     }
 
     /// <summary>Removes any cached session and certificates for <paramref name="loginHint"/>.</summary>
     public async Task InvalidateAsync(string loginHint, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(loginHint);
-        await _options.TokenStore.RemoveAsync(SessionKey(loginHint), ct).ConfigureAwait(false);
-        await _options.TokenStore.RemoveAsync(CertificatesKey(loginHint), ct).ConfigureAwait(false);
+        await _sessionGate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
+            await _options.TokenStore.RemoveAsync(SessionKey(loginHint), ct).ConfigureAwait(false);
+            await _options.TokenStore.RemoveAsync(CertificatesKey(loginHint), ct).ConfigureAwait(false);
+        }
+        finally
+        {
+            _sessionGate.Release();
+        }
     }
 
     private async Task<JavaSession> LoginDeviceCodeAsync(IAuthInteraction interaction, CancellationToken ct)
@@ -175,6 +223,34 @@ public sealed class MinecraftAuthFlow : IMinecraftAuthFlow
         return new JavaSession(profile, string.Empty, DateTimeOffset.MaxValue, null, AuthKind.Offline);
     }
 
+    private bool NeedsRefresh(JavaSession session)
+    {
+        DateTimeOffset now = _options.TimeProvider.GetUtcNow();
+        return session.IsExpired(now)
+            || (CanRefresh(session) && session.ExpiresAt - now <= RefreshLeadTime);
+    }
+
+    private static bool CanRefresh(JavaSession session) =>
+        session.Kind == AuthKind.Microsoft && !string.IsNullOrWhiteSpace(session.RefreshToken);
+
+    private async Task<JavaSession> ResolveCachedSessionAsync(JavaSession session, CancellationToken ct)
+    {
+        JavaSession? cached = await _options.TokenStore.GetAsync<JavaSession>(SessionKey(LoginHintFor(session)), ct).ConfigureAwait(false);
+        return cached is not null && cached.Kind == session.Kind && cached.Profile.Id == session.Profile.Id && cached.ExpiresAt >= session.ExpiresAt
+            ? cached
+            : session;
+    }
+
+    private async Task<JavaSession> RefreshSessionAsync(JavaSession session, CancellationToken ct)
+    {
+        _options.Logger.LogDebug("Renewing Microsoft session access token.");
+        MsaToken msa = await _microsoft.RefreshAsync(session.RefreshToken!, ct).ConfigureAwait(false);
+        JavaSession refreshed = await _microsoft.CompleteChainAsync(msa, ct).ConfigureAwait(false);
+        await CacheSessionAsync(LoginHintFor(session), refreshed, ct).ConfigureAwait(false);
+        await CacheAliasAsync(LoginHintFor(refreshed), refreshed, ct).ConfigureAwait(false);
+        return refreshed;
+    }
+
     private async Task CacheSessionAsync(string loginHint, JavaSession session, CancellationToken ct)
     {
         if (session.Kind == AuthKind.Offline)
@@ -202,5 +278,9 @@ public sealed class MinecraftAuthFlow : IMinecraftAuthFlow
         CertificatesKeyPrefix + loginHint.ToUpperInvariant();
 
     /// <inheritdoc />
-    public void Dispose() => _http.Dispose();
+    public void Dispose()
+    {
+        _http.Dispose();
+        _sessionGate.Dispose();
+    }
 }

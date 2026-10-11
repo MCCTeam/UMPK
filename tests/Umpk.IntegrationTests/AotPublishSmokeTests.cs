@@ -15,11 +15,12 @@ using Xunit;
 
 namespace Umpk.IntegrationTests;
 
-/// <summary>Verifies that the natively published <c>samples/MinimalBot</c> decodes the oldest and newest supported protocol frames, then logs in and chats over a loopback socket.</summary>
+/// <summary>Verifies that the natively published <c>samples/MinimalBot</c> decodes committed legacy and modern frames, then exercises the latest session's scheduler, subscriptions, and chat over a loopback socket.</summary>
 /// <remarks>Packet descriptors and codecs are discovered through data and can otherwise be removed by native trimming. The socket bridge copies bytes without interpreting them, leaving framing, compression, and phase transitions to the normal client and server paths.</remarks>
 public sealed class AotPublishSmokeTests
 {
-    private const int SessionProtocol = 776;
+    private const int SessionProtocol = 777;
+    private const int ModernCorpusProtocol = 776;
 
     [AotSmokeFact]
     public async Task PublishedBot_DecodesBothWireLayoutsAndJoinsTheFakeServer()
@@ -29,7 +30,7 @@ public sealed class AotPublishSmokeTests
         Assert.True(File.Exists(binary), $"UMPK_AOT_BINARY names {binary}, which does not exist.");
 
         string oldest = await FrameArgumentAsync(47, cts.Token);
-        string newest = await FrameArgumentAsync(SessionProtocol, cts.Token);
+        string modern = await FrameArgumentAsync(ModernCorpusProtocol, cts.Token);
 
         await using FakeJavaServer server = FakeJavaServer.Create();
         using var listener = new Socket(SocketType.Stream, ProtocolType.Tcp);
@@ -47,7 +48,7 @@ public sealed class AotPublishSmokeTests
                     $"127.0.0.1:{port}",
                     SessionProtocol.ToString(System.Globalization.CultureInfo.InvariantCulture),
                     oldest,
-                    newest,
+                    modern,
                 },
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -70,8 +71,9 @@ public sealed class AotPublishSmokeTests
             // Asserted before the server script is awaited: a bot that died says why here, where a wait on the script would only say that no frame ever arrived.
             Assert.True(bot.ExitCode == 0, $"exit {bot.ExitCode}. stdout:\n{output}\nstderr:\n{errors}");
             Assert.Contains("decoded protocol=47 ", output, StringComparison.Ordinal);
-            Assert.Contains($"decoded protocol={SessionProtocol} ", output, StringComparison.Ordinal);
+            Assert.Contains($"decoded protocol={ModernCorpusProtocol} ", output, StringComparison.Ordinal);
             Assert.Contains("joined ", output, StringComparison.Ordinal);
+            Assert.Contains("verified native scheduler and subscription filters.", output, StringComparison.Ordinal);
             await session;
         }
         catch (Exception ex)
@@ -184,11 +186,23 @@ public sealed class AotPublishSmokeTests
             new ClientboundSetTimePacket(GameTime: 0, DayTime: 0, TickDayTime: false, ClockUpdates: []), ct);
 
         Assert.True(descriptor.TryGetRegistry(ProtocolPhase.Play, PacketFlow.Serverbound, out PhaseRegistry play));
-        InboundFrame chat = await server.NextFrameAsync(ct);
-        Assert.True(play.TryGetInbound(chat.WireId, out BoundPacketCodec codec));
-        Assert.Equal("minecraft:chat", codec.DatasetIdentifier.ToString());
-        var message = Assert.IsType<ServerboundSignedChatPacket>(codec.Decode(chat.Payload, PacketCodecContext.Registryless));
-        Assert.Equal("aot-smoke", message.Message);
+        for (int i = 0; i < 10; i++)
+        {
+            InboundFrame frame = await server.NextFrameAsync(ct);
+            Assert.True(play.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            object packet = codec.Decode(frame.Payload, PacketCodecContext.Registryless);
+            if (packet is ServerboundSignedChatPacket message)
+            {
+                Assert.Equal("minecraft:chat", codec.DatasetIdentifier.ToString());
+                Assert.Equal("aot-smoke", message.Message);
+                return;
+            }
+
+            // The native smoke waits for two plugin ticks before chatting; only their normal tick-end frames may precede the chat.
+            Assert.IsType<ServerboundClientTickEndPacket>(packet);
+        }
+
+        throw new Xunit.Sdk.XunitException("Native smoke did not chat within ten tick frames.");
     }
 
     private static async Task StopProcessAsync(Process process)

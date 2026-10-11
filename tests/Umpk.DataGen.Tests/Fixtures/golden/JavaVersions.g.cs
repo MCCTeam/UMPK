@@ -27,19 +27,16 @@ public static class JavaVersions
     private static IReadOnlyList<JavaVersion> BuildAll() =>
         new JavaVersion[] { V1_8, V1_21_5 };
 
-    /// <summary>Look up a version by protocol number. Walks All lazily.</summary>
+    /// <summary>Look up a version by protocol number. Initializes only the requested version.</summary>
     public static bool TryGetByProtocol(int protocol, out JavaVersion version)
     {
-        foreach (JavaVersion candidate in All)
+        version = protocol switch
         {
-            if (candidate.Version.Protocol == protocol)
-            {
-                version = candidate;
-                return true;
-            }
-        }
-        version = default!;
-        return false;
+            47 => V1_8,
+            770 => V1_21_5,
+            _ => default!,
+        };
+        return version is not null;
     }
 
     /// <summary>Look up a version by name ("1.21.5"). Resolves N:1 aliases ("1.20.3" and "1.20.4" both map to protocol 765) via the generated name table, which the single-name <c>JavaVersion.HasName</c> cannot express.</summary>

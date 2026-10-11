@@ -89,32 +89,32 @@ internal sealed class WorldApplier : IApplier
                 return true;
 
             case ClientboundSetBorderCenterPacket center:
-                UpdateBorder(world, b => new Game.World.WorldBorderState(
-                    center.CenterX, center.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, b.WarningTimeSeconds));
+                UpdateBorder(world, center, static (b, p) => new Game.World.WorldBorderState(
+                    p.CenterX, p.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, b.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderSizePacket size:
-                UpdateBorder(world, b => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, size.Size, size.Size, 0, b.WarningBlocks, b.WarningTimeSeconds));
+                UpdateBorder(world, size, static (b, p) => new Game.World.WorldBorderState(
+                    b.CenterX, b.CenterZ, p.Size, p.Size, 0, b.WarningBlocks, b.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderLerpSizePacket lerp:
-                UpdateBorder(world, b => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, lerp.OldSize, lerp.NewSize, lerp.LerpTime, b.WarningBlocks, b.WarningTimeSeconds));
+                UpdateBorder(world, lerp, static (b, p) => new Game.World.WorldBorderState(
+                    b.CenterX, b.CenterZ, p.OldSize, p.NewSize, p.LerpTime, b.WarningBlocks, b.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDelayPacket warnDelay:
-                UpdateBorder(world, b => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, warnDelay.WarningDelay));
+                UpdateBorder(world, warnDelay, static (b, p) => new Game.World.WorldBorderState(
+                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, p.WarningDelay));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDistancePacket warnDist:
-                UpdateBorder(world, b => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, warnDist.WarningBlocks, b.WarningTimeSeconds));
+                UpdateBorder(world, warnDist, static (b, p) => new Game.World.WorldBorderState(
+                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, p.WarningBlocks, b.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
@@ -234,6 +234,6 @@ internal sealed class WorldApplier : IApplier
         }
     }
 
-    private static void UpdateBorder(Game.World.World world, Func<Game.World.WorldBorderState, Game.World.WorldBorderState> update)
-        => world.SetBorder(update(world.Border));
+    private static void UpdateBorder<TPacket>(Game.World.World world, TPacket packet, Func<Game.World.WorldBorderState, TPacket, Game.World.WorldBorderState> update)
+        => world.SetBorder(update(world.Border, packet));
 }

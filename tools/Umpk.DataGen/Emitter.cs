@@ -94,19 +94,17 @@ internal sealed partial class Emitter
         sb.Append(string.Join(", ", distinct.Select(e => NameToProperty(e.Name))));
         sb.AppendLine(" };");
         sb.AppendLine();
-        sb.AppendLine("    /// <summary>Look up a version by protocol number. Walks All lazily.</summary>");
+        sb.AppendLine("    /// <summary>Look up a version by protocol number. Initializes only the requested version.</summary>");
         sb.AppendLine("    public static bool TryGetByProtocol(int protocol, out JavaVersion version)");
         sb.AppendLine("    {");
-        sb.AppendLine("        foreach (JavaVersion candidate in All)");
+        sb.AppendLine("        version = protocol switch");
         sb.AppendLine("        {");
-        sb.AppendLine("            if (candidate.Version.Protocol == protocol)");
-        sb.AppendLine("            {");
-        sb.AppendLine("                version = candidate;");
-        sb.AppendLine("                return true;");
-        sb.AppendLine("            }");
-        sb.AppendLine("        }");
-        sb.AppendLine("        version = default!;");
-        sb.AppendLine("        return false;");
+        foreach (VersionCatalogEntry e in distinct)
+            sb.AppendLine($"            {e.Protocol} => {NameToProperty(e.Name)},");
+
+        sb.AppendLine("            _ => default!,");
+        sb.AppendLine("        };");
+        sb.AppendLine("        return version is not null;");
         sb.AppendLine("    }");
         sb.AppendLine();
         sb.AppendLine("    /// <summary>Look up a version by name (\"1.21.5\"). Resolves N:1 aliases (\"1.20.3\" and \"1.20.4\" both map to protocol 765) via the generated name table, which the single-name <c>JavaVersion.HasName</c> cannot express.</summary>");

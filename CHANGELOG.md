@@ -2,6 +2,12 @@
 
 This file records notable changes to UMPK.
 
+## 0.9.0-beta.7 - 2026-10-11
+
+- Reduce packet-processing allocations with cached session capabilities and callbacks, static border updates, and indexed applier dispatch.
+- Initialize only the requested protocol descriptor during version lookup.
+- Read buffered frames before creating timeout resources and decode only the requested sound name.
+
 ## 0.9.0-beta.6 - 2026-10-10
 
 - Support encrypted offline login without session authentication on Minecraft 1.20.5+ and report authentication separately from encryption.

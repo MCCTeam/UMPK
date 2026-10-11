@@ -1,0 +1,24 @@
+#nullable enable
+Umpk.Transport.RakNet.RakNetConnectionFactory
+Umpk.Transport.RakNet.RakNetConnectionFactory.ConnectAsync(System.Net.IPEndPoint! endpoint, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Umpk.Transport.IMessageConnection!>
+Umpk.Transport.RakNet.RakNetConnectionFactory.RakNetConnectionFactory(Umpk.Transport.RakNet.RakNetConnectionOptions? options = null, Microsoft.Extensions.Logging.ILoggerFactory? loggerFactory = null) -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundBytes.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundBytes.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundMessages.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundMessages.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundQueueAge.get -> System.TimeSpan
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumInboundQueueAge.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumMessageBytes.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumMessageBytes.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumMtu.get -> ushort
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumMtu.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumOutboundBytes.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumOutboundBytes.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumOutboundMessages.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumOutboundMessages.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumPendingReliableBytes.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumPendingReliableBytes.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumPendingReliableDatagrams.get -> int
+Umpk.Transport.RakNet.RakNetConnectionOptions.MaximumPendingReliableDatagrams.init -> void
+Umpk.Transport.RakNet.RakNetConnectionOptions.RakNetConnectionOptions() -> void

@@ -1,0 +1,64 @@
+#nullable enable
+Umpk.Protocol.Bedrock.BedrockBehaviorProfileId
+Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.BedrockBehaviorProfileId() -> void
+Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.BedrockBehaviorProfileId(string! value) -> void
+Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.Equals(Umpk.Protocol.Bedrock.BedrockBehaviorProfileId other) -> bool
+Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.Value.get -> string!
+Umpk.Protocol.Bedrock.BedrockCodecContext
+Umpk.Protocol.Bedrock.BedrockCodecContext.<Clone>$() -> Umpk.Protocol.Bedrock.BedrockCodecContext!
+Umpk.Protocol.Bedrock.BedrockCodecContext.BedrockCodecContext(Umpk.Protocol.Bedrock.BedrockProtocolProfile! profile, Umpk.Protocol.Bedrock.BedrockPacketDirection direction, Umpk.Protocol.Bedrock.BedrockSubclientId senderSubclient, Umpk.Protocol.Bedrock.BedrockSubclientId targetSubclient) -> void
+Umpk.Protocol.Bedrock.BedrockCodecContext.Direction.get -> Umpk.Protocol.Bedrock.BedrockPacketDirection
+Umpk.Protocol.Bedrock.BedrockCodecContext.Equals(Umpk.Protocol.Bedrock.BedrockCodecContext? other) -> bool
+Umpk.Protocol.Bedrock.BedrockCodecContext.Profile.get -> Umpk.Protocol.Bedrock.BedrockProtocolProfile!
+Umpk.Protocol.Bedrock.BedrockCodecContext.SenderSubclient.get -> Umpk.Protocol.Bedrock.BedrockSubclientId
+Umpk.Protocol.Bedrock.BedrockCodecContext.TargetSubclient.get -> Umpk.Protocol.Bedrock.BedrockSubclientId
+Umpk.Protocol.Bedrock.BedrockDataProfileId
+Umpk.Protocol.Bedrock.BedrockDataProfileId.BedrockDataProfileId() -> void
+Umpk.Protocol.Bedrock.BedrockDataProfileId.BedrockDataProfileId(string! value) -> void
+Umpk.Protocol.Bedrock.BedrockDataProfileId.Equals(Umpk.Protocol.Bedrock.BedrockDataProfileId other) -> bool
+Umpk.Protocol.Bedrock.BedrockDataProfileId.Value.get -> string!
+Umpk.Protocol.Bedrock.BedrockPacketDialect
+Umpk.Protocol.Bedrock.BedrockPacketDialect.Base2168 = 1 -> Umpk.Protocol.Bedrock.BedrockPacketDialect
+Umpk.Protocol.Bedrock.BedrockPacketDialect.Unknown = 0 -> Umpk.Protocol.Bedrock.BedrockPacketDialect
+Umpk.Protocol.Bedrock.BedrockPacketDirection
+Umpk.Protocol.Bedrock.BedrockPacketDirection.Clientbound = 1 -> Umpk.Protocol.Bedrock.BedrockPacketDirection
+Umpk.Protocol.Bedrock.BedrockPacketDirection.Serverbound = 2 -> Umpk.Protocol.Bedrock.BedrockPacketDirection
+Umpk.Protocol.Bedrock.BedrockPacketDirection.Unknown = 0 -> Umpk.Protocol.Bedrock.BedrockPacketDirection
+Umpk.Protocol.Bedrock.BedrockProtocolProfile
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.<Clone>$() -> Umpk.Protocol.Bedrock.BedrockProtocolProfile!
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.BedrockProtocolProfile(Umpk.GameVersion! version, Umpk.Protocol.Bedrock.BedrockPacketDialect packetDialect, Umpk.Protocol.Bedrock.BedrockDataProfileId dataProfile, Umpk.Protocol.Bedrock.BedrockBehaviorProfileId behaviorProfile) -> void
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.BehaviorProfile.get -> Umpk.Protocol.Bedrock.BedrockBehaviorProfileId
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.DataProfile.get -> Umpk.Protocol.Bedrock.BedrockDataProfileId
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.Equals(Umpk.Protocol.Bedrock.BedrockProtocolProfile? other) -> bool
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.PacketDialect.get -> Umpk.Protocol.Bedrock.BedrockPacketDialect
+Umpk.Protocol.Bedrock.BedrockProtocolProfile.Version.get -> Umpk.GameVersion!
+Umpk.Protocol.Bedrock.BedrockSubclientId
+Umpk.Protocol.Bedrock.BedrockSubclientId.BedrockSubclientId() -> void
+Umpk.Protocol.Bedrock.BedrockSubclientId.BedrockSubclientId(int value) -> void
+Umpk.Protocol.Bedrock.BedrockSubclientId.Equals(Umpk.Protocol.Bedrock.BedrockSubclientId other) -> bool
+Umpk.Protocol.Bedrock.BedrockSubclientId.Value.get -> int
+override Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.GetHashCode() -> int
+override Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.ToString() -> string!
+override Umpk.Protocol.Bedrock.BedrockCodecContext.Equals(object? obj) -> bool
+override Umpk.Protocol.Bedrock.BedrockCodecContext.GetHashCode() -> int
+override Umpk.Protocol.Bedrock.BedrockCodecContext.ToString() -> string!
+override Umpk.Protocol.Bedrock.BedrockDataProfileId.GetHashCode() -> int
+override Umpk.Protocol.Bedrock.BedrockDataProfileId.ToString() -> string!
+override Umpk.Protocol.Bedrock.BedrockProtocolProfile.Equals(object? obj) -> bool
+override Umpk.Protocol.Bedrock.BedrockProtocolProfile.GetHashCode() -> int
+override Umpk.Protocol.Bedrock.BedrockProtocolProfile.ToString() -> string!
+override Umpk.Protocol.Bedrock.BedrockSubclientId.GetHashCode() -> int
+override Umpk.Protocol.Bedrock.BedrockSubclientId.ToString() -> string!
+static Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.operator !=(Umpk.Protocol.Bedrock.BedrockBehaviorProfileId left, Umpk.Protocol.Bedrock.BedrockBehaviorProfileId right) -> bool
+static Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.operator ==(Umpk.Protocol.Bedrock.BedrockBehaviorProfileId left, Umpk.Protocol.Bedrock.BedrockBehaviorProfileId right) -> bool
+static Umpk.Protocol.Bedrock.BedrockCodecContext.operator !=(Umpk.Protocol.Bedrock.BedrockCodecContext? left, Umpk.Protocol.Bedrock.BedrockCodecContext? right) -> bool
+static Umpk.Protocol.Bedrock.BedrockCodecContext.operator ==(Umpk.Protocol.Bedrock.BedrockCodecContext? left, Umpk.Protocol.Bedrock.BedrockCodecContext? right) -> bool
+static Umpk.Protocol.Bedrock.BedrockDataProfileId.operator !=(Umpk.Protocol.Bedrock.BedrockDataProfileId left, Umpk.Protocol.Bedrock.BedrockDataProfileId right) -> bool
+static Umpk.Protocol.Bedrock.BedrockDataProfileId.operator ==(Umpk.Protocol.Bedrock.BedrockDataProfileId left, Umpk.Protocol.Bedrock.BedrockDataProfileId right) -> bool
+static Umpk.Protocol.Bedrock.BedrockProtocolProfile.operator !=(Umpk.Protocol.Bedrock.BedrockProtocolProfile? left, Umpk.Protocol.Bedrock.BedrockProtocolProfile? right) -> bool
+static Umpk.Protocol.Bedrock.BedrockProtocolProfile.operator ==(Umpk.Protocol.Bedrock.BedrockProtocolProfile? left, Umpk.Protocol.Bedrock.BedrockProtocolProfile? right) -> bool
+static Umpk.Protocol.Bedrock.BedrockSubclientId.operator !=(Umpk.Protocol.Bedrock.BedrockSubclientId left, Umpk.Protocol.Bedrock.BedrockSubclientId right) -> bool
+static Umpk.Protocol.Bedrock.BedrockSubclientId.operator ==(Umpk.Protocol.Bedrock.BedrockSubclientId left, Umpk.Protocol.Bedrock.BedrockSubclientId right) -> bool
+~override Umpk.Protocol.Bedrock.BedrockBehaviorProfileId.Equals(object obj) -> bool
+~override Umpk.Protocol.Bedrock.BedrockDataProfileId.Equals(object obj) -> bool
+~override Umpk.Protocol.Bedrock.BedrockSubclientId.Equals(object obj) -> bool

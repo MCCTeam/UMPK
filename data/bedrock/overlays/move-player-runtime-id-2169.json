@@ -1,0 +1,18 @@
+{
+  "id": "D06-move-player-runtime-id",
+  "profiles": ["bedrock-1.26.45-2169"],
+  "protocolSha256": "83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1",
+  "typeName": "packet_move_player",
+  "fieldPath": "runtime_id",
+  "expectedNodeSha256": "abb938b6289f8b5831cccf68ddf73e9963863130a092e39ca742b56c7b034eaa",
+  "operation": "candidate-unsigned-varlong",
+  "status": "candidate",
+  "maxBytes": 10,
+  "fixedBitCount": null,
+  "evidence": [
+    "minecraft-data@8ee2fbe890949fe6c2cf037cd50007ef50444931 declares varint",
+    "Cloudburst MovePlayerSerializer_v2168 declares unsigned VarLong",
+    "candidate-vector:value=4294967296,wire=8080808010",
+    "requires independent BDS bytes before application"
+  ]
+}

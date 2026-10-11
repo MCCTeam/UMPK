@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Generated Minecraft Bedrock protocol descriptors and registries for UMPK.</Description>
+    <IsPackable>false</IsPackable>
+    <!-- The Bedrock public surface requires complete XML documentation; CS1591 stays suppressed for legacy projects. -->
+    <NoWarn>$(NoWarn.Replace(';CS1591', ''))</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Protocol.Bedrock/Umpk.Protocol.Bedrock.csproj" />
+  </ItemGroup>
+</Project>

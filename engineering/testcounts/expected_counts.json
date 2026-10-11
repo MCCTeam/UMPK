@@ -1,8 +1,11 @@
 {
   "Umpk.Auth.Tests.dll": 148,
+  "Umpk.Bedrock.IntegrationTests.dll": 46,
+  "Umpk.BedrockDataGen.Tests.dll": 42,
+  "Umpk.Client.Bedrock.Tests.dll": 305,
   "Umpk.Client.Tests.dll": 2647,
   "Umpk.Commands.Tests.dll": 85,
-  "Umpk.Core.Tests.dll": 144,
+  "Umpk.Core.Tests.dll": 167,
   "Umpk.Data.Java.Tests.dll": 1567,
   "Umpk.Data.Lang.Tests.dll": 80,
   "Umpk.DataGen.Tests.dll": 67,
@@ -12,8 +15,11 @@
   "Umpk.PacketRecorder.Tests.dll": 14,
   "Umpk.Pathfinding.Tests.dll": 1045,
   "Umpk.Physics.Tests.dll": 292,
+  "Umpk.Protocol.Bedrock.Conformance.dll": 42,
+  "Umpk.Protocol.Bedrock.Tests.dll": 432,
   "Umpk.Protocol.Java.Conformance.dll": 881,
   "Umpk.Protocol.Java.Tests.dll": 4737,
   "Umpk.Realms.Tests.dll": 53,
-  "Umpk.Text.Tests.dll": 218
+  "Umpk.Text.Tests.dll": 218,
+  "Umpk.Transport.RakNet.Tests.dll": 26
 }

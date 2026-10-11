@@ -1,0 +1,93 @@
+{
+  "$schema": "bedrock-source-manifest/1",
+  "target": {
+    "release": "26.45",
+    "bdsRelease": "1.26.45.1",
+    "dataset": "1.26.45",
+    "gameProtocol": 2169,
+    "raknetProtocol": 11,
+    "profile": "bedrock-1.26.45-2169"
+  },
+  "bds": {
+    "package": "minecraft-bedrock-server",
+    "packageVersion": "1.26.45.1-1",
+    "architecture": "linux-x64",
+    "sha256": "8ba803f23d681816495c7ac83bdba4b9cd7165a3bee5aedd18fa0c8c3d408ec2",
+    "elfBuildId": "0b40c886132941f2cd98d45e73062bc75e66726e",
+    "installedPath": "/opt/minecraft-bedrock-server",
+    "fixturePolicy": "copy-to-private-isolated-run-directory"
+  },
+  "umpkBaseCommit": "509694de2ad8ba4a0d550da2466a7fb148226d17",
+  "sources": [
+    {
+      "name": "minecraft-data",
+      "revision": "8ee2fbe890949fe6c2cf037cd50007ef50444931",
+      "role": "primary-packet-data",
+      "license": "MIT; repository README notes that individual source-derived data may require different provenance terms",
+      "files": {
+        "data/dataPaths.json": "29cd724082acdde5410854b0d7774081d68cd704761bd04b75b62e8af5ecec41",
+        "data/bedrock/1.26.45/protocol.json": "83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1",
+        "data/bedrock/1.26.45/version.json": "4abf57327908d3c1f197df9b3d6b3162c72148213651fe7cc1cd6db5de9b26e9",
+        "data/bedrock/latest/proto.yml": "ac646a84404ce472dd6e8cbbdcb9b79384a18bd7db6dc88e4214bd1777dc5ee5",
+        "data/bedrock/latest/types.yml": "bc6f09026453b467ca6cd1068fa08e4f824b5011fdd33ca848f10dd544c62cfe",
+        "data/bedrock/1.26.30/items.json": "495695bcd745708ce742f76b581c13f1f21f6e4140a5c19ebcc933766e28dfea",
+        "data/bedrock/1.26.30/blocks.json": "12ff90b5094006b42d87ca7c296ed1bef0e1c2d6d67498aea85b6ece9408b494",
+        "data/bedrock/1.26.30/blockStates.json": "c0a94f5a32597aff028918e152c76280c1823a7840fdf73cd98d7b44814ea041",
+        "data/bedrock/1.26.30/blockCollisionShapes.json": "72a7410456a1f5f556e8c91c07e1d1f61aea5d2fb555f2c0e33eba825247aa90",
+        "data/bedrock/1.21.80/entities.json": "d40a594f788d90001baab41d478d377f67004f590c4011ace101b475fff3e098",
+        "data/bedrock/1.21.60/biomes.json": "15c19c10a6920158d70524f7b775924d1ca6317e3683cdeb2fcf5374295ba6f9",
+        "data/bedrock/1.19.10/recipes.json": "181a65aac131df15831097aa26dce26d0a75549c1df83e38fac388c6f28026c7",
+        "data/bedrock/1.16.201/windows.json": "788ff42696ee766050c564a807ac7101f9cef3ab72abcd186ef26a9f5049445a",
+        "data/bedrock/1.21.70/steve.json": "00af8cf5cc99932f6e764796488d6ae27592ad0252da3d96fa1ebc7631541cf4",
+        "data/bedrock/1.26.30/blocksB2J.json": "775161107b505c025cdc34184b6999d0036630624bcaf4bf5410885ec8336799",
+        "data/bedrock/1.26.30/blocksJ2B.json": "516b880cce503b7ab51c5a7808aa16fa3fff6bf464a309f63ba42471196d4141"
+      },
+      "mutableInputPolicy": "pin-by-content-and-never-read-at-runtime"
+    },
+    {
+      "name": "raknet-fork",
+      "url": "https://github.com/MCCTeam/RakNet",
+      "revision": "f2db1bc898d4e241a1d19338337b240a5f105e21",
+      "role": "transport-source",
+      "bedrockKnowledge": "forbidden"
+    },
+    {
+      "name": "powernukkitx",
+      "revision": "f325c30eb75ae869f3f0652d464526de7c0c9877",
+      "role": "lifecycle-chunk-mapping-reference",
+      "license": "LGPL-3.0",
+      "boundary": "mutable-snapshot-dependency-and-unresolved-artifact"
+    },
+    {
+      "name": "geyser",
+      "revision": "d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d",
+      "role": "translation-and-session-reference",
+      "boundary": "java-authoritative-and-mapping-submodule-uninitialized"
+    },
+    {
+      "name": "cloudburst-protocol",
+      "revision": "db36d289968a1d07d6591f0d54426cc058b227c0",
+      "role": "serializer-cross-check",
+      "boundary": "source-to-artifact-identity-unresolved"
+    },
+    {
+      "name": "bedrock-protocol",
+      "revision": "05940d77bee67b96395c69afb57b92e32bea4148",
+      "role": "connection-authentication-transform-cross-check"
+    },
+    {
+      "name": "gophertunnel",
+      "revision": "b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d",
+      "role": "framing-encryption-cross-check"
+    }
+  ],
+  "raknetPackage": {
+    "strategy": "distinct-version-pinned-package-in-isolated-local-feed",
+    "sourceRevision": "f2db1bc898d4e241a1d19338337b240a5f105e21",
+    "sdkVersion": "10.0.112",
+    "absoluteProjectReference": "forbidden",
+    "indistinguishableUpstreamVersion": "forbidden",
+    "packageVersion": "0.1.0-umpk.20260913.f2db1bc8",
+    "packageSha256": "e7ce34890104d5cc04a795ebed1334ca9db97a5dc237dd64119ccf141e34c08e"
+  }
+}

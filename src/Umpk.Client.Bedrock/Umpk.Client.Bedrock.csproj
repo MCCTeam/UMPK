@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Minecraft Bedrock client runtime for UMPK.</Description>
+    <IsPackable>false</IsPackable>
+    <!-- The Bedrock public surface requires complete XML documentation; CS1591 stays suppressed for legacy projects. -->
+    <NoWarn>$(NoWarn.Replace(';CS1591', ''))</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Umpk.Core/Umpk.Core.csproj" />
+    <ProjectReference Include="../Umpk.Game/Umpk.Game.csproj" />
+    <ProjectReference Include="../Umpk.Protocol.Bedrock/Umpk.Protocol.Bedrock.csproj" />
+    <ProjectReference Include="../Umpk.Data.Bedrock/Umpk.Data.Bedrock.csproj" />
+    <ProjectReference Include="../Umpk.Transport.RakNet/Umpk.Transport.RakNet.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Umpk.Bedrock.IntegrationTests" />
+  </ItemGroup>
+</Project>

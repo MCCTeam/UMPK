@@ -282,3 +282,56 @@ Umpk.IdentifierMatch
 static Umpk.IdentifierMatch.BarePath(string! needle) -> string!
 static Umpk.IdentifierMatch.Matches(Umpk.Identifier id, string! needle) -> bool
 static Umpk.IdentifierMatch.Matches(Umpk.Identifier id, string! needle, string! barePath) -> bool
+Umpk.Transport.IMessageConnection
+Umpk.Transport.IMessageConnection.Abort(Umpk.Transport.MessageConnectionTermination! termination) -> void
+Umpk.Transport.IMessageConnection.CloseAsync(System.TimeSpan drainTimeout, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Umpk.Transport.IMessageConnection.Completion.get -> System.Threading.Tasks.Task<Umpk.Transport.MessageConnectionTermination!>!
+Umpk.Transport.IMessageConnection.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Umpk.Transport.OwnedMessage?>
+Umpk.Transport.IMessageConnection.SendAsync(Umpk.Transport.OwnedMessage! message, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Umpk.Transport.MessageAdmissionResult>
+Umpk.Transport.IMessageSendReservation
+Umpk.Transport.IMessageSendReservation.CommitAsync(Umpk.Transport.OwnedMessage! message) -> System.Threading.Tasks.ValueTask<Umpk.Transport.MessageAdmissionResult>
+Umpk.Transport.IMessageSendReservation.MessageLength.get -> int
+Umpk.Transport.IMessageSendReservationProvider
+Umpk.Transport.IMessageSendReservationProvider.ReserveSendAsync(int messageLength, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Umpk.Transport.MessageSendReservationResult>
+Umpk.Transport.MessageAdmissionResult
+Umpk.Transport.MessageAdmissionResult.MessageAdmissionResult() -> void
+Umpk.Transport.MessageAdmissionResult.OwnershipTransferred.get -> bool
+Umpk.Transport.MessageAdmissionResult.Status.get -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageAdmissionStatus.Accepted = 1 -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageAdmissionStatus.CapacityExceeded = 3 -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageAdmissionStatus.Closed = 2 -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageAdmissionStatus.Unspecified = 0 -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.MessageConnectionTermination
+Umpk.Transport.MessageConnectionTermination.Cause.get -> System.Exception?
+Umpk.Transport.MessageConnectionTermination.Reason.get -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.Aborted = 3 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.Cancelled = 4 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.LocalGracefulClose = 2 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.PeerClosed = 1 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.ProtocolFailure = 5 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.TransportFailure = 6 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageConnectionTerminationReason.Unknown = 0 -> Umpk.Transport.MessageConnectionTerminationReason
+Umpk.Transport.MessageSendReservationResult
+Umpk.Transport.MessageSendReservationResult.IsReserved.get -> bool
+Umpk.Transport.MessageSendReservationResult.MessageSendReservationResult() -> void
+Umpk.Transport.MessageSendReservationResult.Reservation.get -> Umpk.Transport.IMessageSendReservation?
+Umpk.Transport.MessageSendReservationResult.Status.get -> Umpk.Transport.MessageAdmissionStatus
+Umpk.Transport.OwnedMessage
+Umpk.Transport.OwnedMessage.Dispose() -> void
+Umpk.Transport.OwnedMessage.Length.get -> int
+Umpk.Transport.OwnedMessage.Memory.get -> System.Memory<byte>
+Umpk.Transport.OwnedMessage.OwnedMessage(System.Buffers.IMemoryOwner<byte>! owner, int length) -> void
+static Umpk.Transport.MessageAdmissionResult.Accepted.get -> Umpk.Transport.MessageAdmissionResult
+static Umpk.Transport.MessageAdmissionResult.CapacityExceeded.get -> Umpk.Transport.MessageAdmissionResult
+static Umpk.Transport.MessageAdmissionResult.Closed.get -> Umpk.Transport.MessageAdmissionResult
+static Umpk.Transport.MessageConnectionTermination.Aborted(System.Exception? cause = null) -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageConnectionTermination.Cancelled(System.OperationCanceledException? cause = null) -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageConnectionTermination.LocalGracefulClose.get -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageConnectionTermination.PeerClosed.get -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageConnectionTermination.ProtocolFailure(System.Exception! cause) -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageConnectionTermination.TransportFailure(System.Exception! cause) -> Umpk.Transport.MessageConnectionTermination!
+static Umpk.Transport.MessageSendReservationResult.Accepted(Umpk.Transport.IMessageSendReservation! reservation) -> Umpk.Transport.MessageSendReservationResult
+static Umpk.Transport.MessageSendReservationResult.CapacityExceeded.get -> Umpk.Transport.MessageSendReservationResult
+static Umpk.Transport.MessageSendReservationResult.Closed.get -> Umpk.Transport.MessageSendReservationResult

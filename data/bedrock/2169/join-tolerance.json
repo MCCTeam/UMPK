@@ -1,0 +1,127 @@
+{
+  "$schema": "bedrock-join-tolerance/1",
+  "profile": "bedrock-1.26.45-2169",
+  "evidence": "observed-default-world-offline-flow with world-ambient level-event witness",
+  "packets": [
+    {
+      "id": 25,
+      "name": "level_event"
+    },
+    {
+      "id": 27,
+      "name": "entity_event"
+    },
+    {
+      "id": 42,
+      "name": "set_health"
+    },
+    {
+      "id": 43,
+      "name": "set_spawn_position"
+    },
+    {
+      "id": 45,
+      "name": "respawn"
+    },
+    {
+      "id": 52,
+      "name": "crafting_data"
+    },
+    {
+      "id": 56,
+      "name": "block_entity_data"
+    },
+    {
+      "id": 59,
+      "name": "set_commands_enabled"
+    },
+    {
+      "id": 60,
+      "name": "set_difficulty"
+    },
+    {
+      "id": 63,
+      "name": "player_list"
+    },
+    {
+      "id": 72,
+      "name": "game_rules_changed"
+    },
+    {
+      "id": 76,
+      "name": "available_commands"
+    },
+    {
+      "id": 111,
+      "name": "move_entity_delta"
+    },
+    {
+      "id": 121,
+      "name": "network_chunk_publisher_update"
+    },
+    {
+      "id": 123,
+      "name": "level_sound_event"
+    },
+    {
+      "id": 124,
+      "name": "level_event_generic"
+    },
+    {
+      "id": 160,
+      "name": "player_fog"
+    },
+    {
+      "id": 165,
+      "name": "sync_entity_property"
+    },
+    {
+      "id": 187,
+      "name": "update_abilities"
+    },
+    {
+      "id": 188,
+      "name": "update_adventure_settings"
+    },
+    {
+      "id": 198,
+      "name": "camera_presets"
+    },
+    {
+      "id": 199,
+      "name": "unlocked_recipes"
+    },
+    {
+      "id": 302,
+      "name": "trim_data"
+    },
+    {
+      "id": 313,
+      "name": "jigsaw_structure_data"
+    },
+    {
+      "id": 314,
+      "name": "current_structure_feature"
+    },
+    {
+      "id": 320,
+      "name": "camera_aim_assist_presets"
+    },
+    {
+      "id": 337,
+      "name": "voxel_shapes"
+    },
+    {
+      "id": 338,
+      "name": "camera_spline"
+    },
+    {
+      "id": 341,
+      "name": "locator_bar"
+    },
+    {
+      "id": 344,
+      "name": "sync_world_clocks"
+    }
+  ]
+}

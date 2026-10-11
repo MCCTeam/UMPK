@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A source-grounded design for Bedrock protocol 2169, with transport and Native AOT evidence.">
+<title>UMPK: Bedrock 26.45 architecture proposal</title>
+<style>
+:root{
+--canvas:#E3E8ED; --paper:#FFFFFF; --ink:#22303F; --muted:#4A5B6C;
+--navy:#16324F; --navy-line:#0F2740; --teal:#2E6E68; --teal-wash:#EDF4F2;
+--rust:#A34A24; --rust-ink:#6E3418; --rust-wash:#FFF7EC;
+--hairline:#C7D2DB; --code-bg:#F4F6F7;
+--display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+--body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+--mono:ui-monospace,"Cascadia Mono","JetBrains Mono",SFMono-Regular,Consolas,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65}
+.skip{position:absolute;left:-9999px;top:0;background:var(--navy);color:#fff;padding:.6rem 1rem;z-index:50}
+.skip:focus{left:0}
+.sheet{max-width:1180px;margin:0 auto;background:var(--paper);border-left:1px solid var(--hairline);border-right:1px solid var(--hairline)}
+.cover{border-top:10px solid var(--navy);padding:2.2rem clamp(1.2rem,4vw,3rem) 1.6rem}
+.eyebrow{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700;margin:0 0 .6rem}
+.cover h1{font-family:var(--display);color:var(--navy);font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.12;margin:0 0 .7rem;max-width:22ch}
+.dek{font-size:1.05rem;color:var(--muted);max-width:68ch;margin:0 0 1rem}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;margin:0 0 1.4rem;font-size:.9rem;color:var(--muted)}
+.meta strong{color:var(--ink)}
+.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.6rem}
+.btn{font:inherit;font-size:.92rem;font-weight:600;border:2px solid var(--navy);border-radius:6px;padding:.45rem 1rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-solid{background:var(--navy);color:#fff}
+.btn-ghost{background:#fff;color:var(--navy)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.rail{border:1px solid var(--hairline);border-top:4px solid var(--navy);border-radius:8px;padding:1rem 1.1rem;background:#FBFCFD;margin:0 0 .4rem}
+.rail h2{font-family:var(--display);color:var(--navy);font-size:1.02rem;margin:0 0 .7rem}
+.lane{display:grid;grid-template-columns:110px 1fr;gap:.5rem 1rem;align-items:center;padding:.5rem 0;border-top:1px dashed var(--hairline)}
+.lane:first-of-type{border-top:0}
+.lane-tag{font-size:.75rem;font-weight:700;letter-spacing:.08em}
+.lane-java .lane-tag{color:var(--navy)}
+.lane-bedrock .lane-tag{color:var(--teal)}
+.stations{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font-size:.85rem}
+.station{border:1px solid var(--navy);border-radius:999px;padding:.1rem .7rem;background:#fff;white-space:nowrap}
+.lane-bedrock .station{border-color:var(--teal)}
+.arrow{color:var(--muted);font-weight:700}
+.boundary{display:inline-block;font-size:.78rem;font-weight:700;color:var(--rust-ink);background:var(--rust-wash);border:1px solid var(--rust);border-radius:4px;padding:.05rem .5rem}
+.rail p.note{font-size:.85rem;color:var(--muted);margin:.7rem 0 0}
+.layout{display:grid;grid-template-columns:264px minmax(0,1fr);gap:0;border-top:1px solid var(--hairline)}
+.toc-desktop{border-right:1px solid var(--hairline);padding:1.4rem 1.2rem;position:sticky;top:0;max-height:100vh;overflow:auto;align-self:start}
+.toc-desktop h2{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .7rem}
+.toc-desktop nav ul{list-style:none;margin:0;padding:0}
+.toc-desktop nav li{margin:0;padding:0}
+.toc-desktop nav a{display:block;padding:.28rem .5rem;border-left:3px solid transparent;color:var(--ink);text-decoration:none;font-size:.88rem;line-height:1.4}
+.toc-desktop nav a:hover{border-left-color:var(--teal);background:var(--teal-wash)}
+.toc-desktop nav li.sub a{padding-left:1.2rem;font-size:.83rem;color:var(--muted)}
+.toc-mobile{display:none;border-top:1px solid var(--hairline);padding:.8rem clamp(1.2rem,4vw,3rem)}
+.toc-mobile details{border:1px solid var(--hairline);border-radius:6px;background:#FBFCFD}
+.toc-mobile summary{cursor:pointer;padding:.6rem .9rem;font-weight:700;color:var(--navy)}
+.toc-mobile nav ul{list-style:none;margin:0;padding:.2rem .9rem .9rem}
+.toc-mobile nav a{color:var(--ink);text-decoration:none;display:block;padding:.25rem 0}
+article{padding:2rem clamp(1.2rem,4vw,3rem) 3rem;max-width:none;min-width:0}
+.canon-title{display:none}
+article h2,article h3{font-family:var(--display);color:var(--navy);line-height:1.25}
+article h2{font-size:1.55rem;border-bottom:2px solid var(--navy);padding-bottom:.35rem;margin:2.4rem 0 1rem}
+article h3{font-size:1.2rem;margin:1.9rem 0 .7rem}
+article p{margin:0 0 1.05rem;overflow-wrap:break-word;max-width:72ch}
+article a{color:var(--navy);text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--teal)}
+article a:hover{background:var(--teal-wash)}
+article ul,article ol{margin:0 0 1.1rem;padding-left:1.5rem;max-width:72ch}
+article li{margin-bottom:.35rem}
+.table-scroll{overflow-x:auto;margin:0 0 1.4rem;border:1px solid var(--hairline);border-radius:6px}
+.table-scroll table{width:100%;border-collapse:collapse;font-size:.88rem;margin:0}
+article th{background:var(--navy);color:#fff;text-align:left;padding:.55rem .7rem;white-space:normal}
+article td{padding:.55rem .7rem;border-top:1px solid var(--hairline);vertical-align:top}
+article tbody tr:nth-child(even){background:#F6F9FA}
+article code{font-family:var(--mono);font-size:.85em;background:var(--code-bg);border:1px solid var(--hairline);border-radius:4px;padding:.08rem .35rem;overflow-wrap:anywhere}
+article pre{background:var(--code-bg);border:1px solid var(--hairline);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.82rem;line-height:1.55}
+article pre code{background:none;border:0;padding:0}
+article blockquote{border-left:4px solid var(--teal);margin:0 0 1.1rem;padding:.4rem 1rem;background:var(--teal-wash);border-radius:0 6px 6px 0;max-width:72ch}
+figure.diagram{margin:1.6rem 0;border:1px solid var(--hairline);border-radius:8px;background:#fff;overflow:hidden}
+figure.diagram .fig-head{padding:.8rem 1.1rem 0;font-size:.85rem;color:var(--muted)}
+figure.diagram .fig-scroll{overflow-x:auto}
+figure.diagram .fig-scroll svg{display:block;width:100%;min-width:720px;height:auto;background:#fff}
+figure.diagram-wide .fig-scroll{max-height:80vh;overflow:auto}
+figure.diagram-wide .fig-scroll svg{min-width:1500px}
+figure.diagram-wide .fig-scroll{overflow-x:auto;overflow-y:hidden}
+.zoom-toggle{display:flex;align-items:center;gap:.6rem;padding:.55rem 1.1rem 0;font-size:.85rem;color:var(--muted)}
+.zoom-toggle input{width:1.1rem;height:1.1rem;accent-color:var(--teal)}
+.zoom-toggle label{cursor:pointer;font-weight:600;color:var(--navy);border:1px solid var(--hairline);border-radius:6px;padding:.2rem .7rem;background:#FBFCFD}
+.zoom-toggle input:focus-visible + label{outline:3px solid var(--teal);outline-offset:2px}
+.zoom-toggle .zoom-hint{font-weight:400}
+figure.diagram-wide:has(#zoom-fig3:checked) .fig-scroll svg{min-width:2200px}
+figure.diagram figcaption{padding:.7rem 1.1rem 1rem;font-size:.9rem;color:var(--muted);border-top:1px dashed var(--hairline)}
+figure.diagram details{border-top:1px solid var(--hairline);background:#FBFCFD}
+figure.diagram summary{cursor:pointer;padding:.6rem 1.1rem;font-size:.85rem;font-weight:600;color:var(--navy)}
+figure.diagram details pre{margin:.4rem 1.1rem 1.1rem}
+.footer{border-top:1px solid var(--hairline);padding:1.2rem clamp(1.2rem,4vw,3rem) 2rem;font-size:.85rem;color:var(--muted)}
+@media (max-width:920px){
+body{overflow-x:hidden}
+.layout{display:block}
+.toc-desktop{display:none}
+.toc-mobile{display:block}
+article{max-width:100%}
+.lane{grid-template-columns:1fr}
+}
+@media print{
+body{background:#fff;font-size:11pt}
+.sheet{max-width:none;border:0}
+.cover{border-top:0;padding:0 0 .6rem}
+.toolbar,.toc-desktop,.toc-mobile,.skip{display:none !important}
+.layout{display:block;border:0}
+article{max-width:none;padding:0}
+article h2{break-after:avoid}
+.table-scroll{overflow:visible;border:0}
+.table-scroll table{font-size:8.5pt}
+article thead{display:table-header-group}
+article tr{break-inside:avoid}
+article pre{white-space:pre-wrap;overflow:visible}
+figure.diagram{break-inside:avoid}
+figure.diagram .fig-scroll{overflow:visible}
+figure.diagram-wide .fig-scroll{overflow:visible}
+figure.diagram .fig-scroll svg{min-width:0}
+figure.diagram-wide .fig-scroll{max-height:none;overflow:visible}
+figure.diagram-wide:has(#zoom-fig3:checked) .fig-scroll svg{min-width:0}
+.zoom-toggle{display:none}
+figure.diagram details{display:none}
+a{color:#000}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#report-content">Skip to report content</a>
+<div class="sheet">
+<header class="cover">
+<p class="eyebrow">UMPK · Architecture decision report · Bedrock 26.45 / protocol 2169</p>
+<h1>UMPK: Bedrock 26.45 architecture proposal</h1>
+<p class="dek">A source-grounded design for Bedrock protocol 2169, with transport and Native AOT evidence.</p>
+<div class="meta" aria-label="Report metadata">
+<span><strong>Date:</strong> 2026-09-13</span>
+<span><strong>Status:</strong> proposal</span>
+<span><strong>Target:</strong> release 26.45 · dataset 1.26.45 · protocol 2169</span>
+<span><strong>Source:</strong> <a href="BEDROCK-26.45-ARCHITECTURE.md">BEDROCK-26.45-ARCHITECTURE.md</a></span>
+</div>
+<div class="toolbar" role="group" aria-label="Report tools">
+<button class="btn btn-solid" type="button" onclick="window.print()">Print this report</button>
+<a class="btn btn-ghost" href="BEDROCK-26.45-ARCHITECTURE.md">Adjacent Markdown source</a>
+</div>
+<div class="rail" aria-label="Protocol stack boundary">
+<h2>Stack boundary: Java TCP beside Bedrock UDP</h2>
+<div class="lane lane-java">
+<span class="lane-tag">Java · TCP · existing</span>
+<span class="stations"><span class="station">UmpkClient</span><span class="arrow" aria-hidden="true">→</span><span class="station">JavaConnection + codecs</span><span class="arrow" aria-hidden="true">→</span><span class="station">Java server · TCP 25565</span></span>
+</div>
+<div class="lane lane-bedrock">
+<span class="lane-tag">Bedrock · UDP · proposed</span>
+<span class="stations"><span class="station">BedrockClient</span><span class="arrow" aria-hidden="true">→</span><span class="station">Lifecycle + codecs</span><span class="arrow" aria-hidden="true">→</span><span class="station">RakNet adapter · owned messages</span><span class="arrow" aria-hidden="true">→</span><span class="station">BDS 26.45 · UDP · protocol 2169</span> <span class="boundary">New stack boundary</span></span>
+</div>
+<p class="note">Shared core hosting sits behind both lanes. Credential provider, batch and crypto transforms, and the RakNet adapter exist only on the Bedrock side.</p>
+</div>
+</header>
+<div class="toc-mobile"><details><summary>Contents</summary><nav aria-label="Contents (mobile)"><ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#scope-evidence-and-confidence">Scope, evidence, and confidence</a></li>
+<li><a href="#feasibility-and-constraints">Feasibility and constraints</a></li>
+<li class="sub"><a href="#what-umpk-already-provides">What UMPK already provides</a></li>
+<li class="sub"><a href="#java-and-bedrock-cannot-share-these-implementations-directly">Java and Bedrock cannot share these implementations directly</a></li>
+<li class="sub"><a href="#exact-version-data-needs-a-reconciliation-gate">Exact-version data needs a reconciliation gate</a></li>
+<li class="sub"><a href="#what-the-new-server-and-proxy-sources-establish">What the new server and proxy sources establish</a></li>
+<li class="sub"><a href="#field-by-field-2169-reconciliation">Field-by-field 2169 reconciliation</a></li>
+<li class="sub"><a href="#raknet-integration-and-native-aot">RakNet integration and Native AOT</a></li>
+<li><a href="#proposed-architecture">Proposed architecture</a></li>
+<li class="sub"><a href="#package-and-ownership-boundaries">Package and ownership boundaries</a></li>
+<li class="sub"><a href="#detailed-implementation-map">Detailed implementation map</a></li>
+<li class="sub"><a href="#bedrock-wire-stack-and-connection-flow">Bedrock wire stack and connection flow</a></li>
+<li class="sub"><a href="#state-interaction-and-physics">State, interaction, and physics</a></li>
+<li class="sub"><a href="#version-organization-and-future-additions">Version organization and future additions</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks-and-open-questions">Risks and open questions</a></li>
+<li class="sub"><a href="#technical-debt-and-known-compromises">Technical debt and known compromises</a></li>
+<li><a href="#recommendations-and-implementation-sequence">Recommendations and implementation sequence</a></li>
+<li><a href="#review-and-validation-record">Review and validation record</a></li>
+</ul></nav></details></div>
+<div class="layout">
+<aside class="toc-desktop" aria-label="Table of contents"><h2>Contents</h2><nav aria-label="Contents"><ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#scope-evidence-and-confidence">Scope, evidence, and confidence</a></li>
+<li><a href="#feasibility-and-constraints">Feasibility and constraints</a></li>
+<li class="sub"><a href="#what-umpk-already-provides">What UMPK already provides</a></li>
+<li class="sub"><a href="#java-and-bedrock-cannot-share-these-implementations-directly">Java and Bedrock cannot share these implementations directly</a></li>
+<li class="sub"><a href="#exact-version-data-needs-a-reconciliation-gate">Exact-version data needs a reconciliation gate</a></li>
+<li class="sub"><a href="#what-the-new-server-and-proxy-sources-establish">What the new server and proxy sources establish</a></li>
+<li class="sub"><a href="#field-by-field-2169-reconciliation">Field-by-field 2169 reconciliation</a></li>
+<li class="sub"><a href="#raknet-integration-and-native-aot">RakNet integration and Native AOT</a></li>
+<li><a href="#proposed-architecture">Proposed architecture</a></li>
+<li class="sub"><a href="#package-and-ownership-boundaries">Package and ownership boundaries</a></li>
+<li class="sub"><a href="#detailed-implementation-map">Detailed implementation map</a></li>
+<li class="sub"><a href="#bedrock-wire-stack-and-connection-flow">Bedrock wire stack and connection flow</a></li>
+<li class="sub"><a href="#state-interaction-and-physics">State, interaction, and physics</a></li>
+<li class="sub"><a href="#version-organization-and-future-additions">Version organization and future additions</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks-and-open-questions">Risks and open questions</a></li>
+<li class="sub"><a href="#technical-debt-and-known-compromises">Technical debt and known compromises</a></li>
+<li><a href="#recommendations-and-implementation-sequence">Recommendations and implementation sequence</a></li>
+<li><a href="#review-and-validation-record">Review and validation record</a></li>
+</ul></nav></aside>
+<article id="report-content">
+<h1 aria-hidden="true" class="canon-title" id="umpk-bedrock-2645-architecture-proposal">UMPK: Bedrock 26.45 architecture proposal</h1>
+<p>Research date: 13 September 2026 · Target: marketed release <strong>26.45</strong>, dataset <strong>1.26.45</strong>, network protocol <strong>2169</strong> · Scope at research time: client library architecture. Current implementation progress is recorded in the linked plan.</p>
+<h2 id="summary">Summary</h2>
+<p>Bedrock support is feasible. Add a sibling Bedrock transport, protocol, and client stack; preserve the existing Java API and share only foundations whose contracts fit both editions. The supplied RakNet library passed an isolated Linux x64 Native AOT publish and fragmented-message loopback, but needs transport correctness work before adoption. The supplied 2169 dataset needs field-level reconciliation against the exact codecs and packet evidence. Identical 2168/2169 schemas alone do not establish an error: the inspected server also reuses the base codec. Gate each capability on its required evidence while transport and independent subsystems proceed in parallel.</p>
+<h2 id="scope-evidence-and-confidence">Scope, evidence, and confidence</h2>
+<p>This proposal targets ordinary direct connections to a vanilla Bedrock Dedicated Server (BDS), initially one local player per connection. Hosted discovery, NetherNet/signaling, Realms, split-screen subclients, Education, server implementation, and protocol translation are separate capabilities. Packet fields needed to reject or preserve those distinctions still belong in the wire model. Full gameplay automation is a later acceptance milestone, not a consequence of reaching spawn.</p>
+<p><strong>Verified</strong> below means inspected source/data or an explicitly recorded execution. <strong>Recommendation</strong> means an architectural conclusion. <strong>Unresolved</strong> means the evidence does not establish the behavior. Community schemas and implementations describe their own behavior; an exact 26.45 vanilla exchange remains the interoperability oracle. No Java behavior is assumed equivalent merely because a type or feature has the same name.</p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Inspected revision and role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UMPK</td>
+<td><code>509694de2ad8ba4a0d550da2466a7fb148226d17</code>; clean starting checkout; current ownership, APIs, and implementation.</td>
+</tr>
+<tr>
+<td>Supplied minecraft-data</td>
+<td><code>8ee2fbe890949fe6c2cf037cd50007ef50444931</code>; clean <code>umpk-contributions</code> branch in the user's fork, with PrismarineJS upstream; primary packet/data source.</td>
+</tr>
+<tr>
+<td>Supplied RakNet, now the user’s MCCTeam fork</td>
+<td><code>673b6fc737ee4273f05a7fbf2a99bc87311a1517</code>; clean <code>main</code>, origin <code>https://github.com/MCCTeam/RakNet</code>; tracked source unchanged after recloning. Primary .NET transport source.</td>
+</tr>
+<tr>
+<td>Supplied PowerNukkitX</td>
+<td><code>f325c30eb75ae869f3f0652d464526de7c0c9877</code>; clean <code>beta</code>; explicitly selects 1.26.45/2169; server lifecycle, chunk writer and mapping-loader reference.</td>
+</tr>
+<tr>
+<td>Supplied Geyser</td>
+<td><code>d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d</code>; clean checkout; explicitly registers 26.45/2169; translation and session-state reference.</td>
+</tr>
+<tr>
+<td>Supplemental Cloudburst Protocol</td>
+<td><code>db36d289968a1d07d6591f0d54426cc058b227c0</code>; pinned source near Geyser’s timestamped dependency build; exact source-to-binary identity was not established.</td>
+</tr>
+<tr>
+<td>Supplemental PrismarineJS/bedrock-protocol</td>
+<td><code>05940d77bee67b96395c69afb57b92e32bea4148</code>; declares current version 1.26.45; connection/authentication/transform implementation.</td>
+</tr>
+<tr>
+<td>Supplemental Sandertv/gophertunnel</td>
+<td><code>b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d</code>; declares 1.26.45 and 2169; independent framing and crypto cross-check.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The supplied <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/1.26.45/version.json#L2">version.json</a> identifies 2169 and release type <code>release</code>. Mojang's <a href="https://feedback.minecraft.net/hc/en-us/articles/48149564061965-Minecraft-Bedrock-Edition-26-44-45-Hotfix-Changelog">26.45 announcement</a> dates the hotfix to 20 August 2026, and its <a href="https://mojang.github.io/bedrock-protocol-docs/changelog/legacy/entries/changelog-2169-08-18-26/">2169 changelog</a> identifies <code>r/26_u4 hotfix 5</code>. The documentation portal currently displays a newer preview in its navigation; that header must not override the version stated in an older changelog's body.</p>
+<h2 id="feasibility-and-constraints">Feasibility and constraints</h2>
+<h3 id="what-umpk-already-provides">What UMPK already provides</h3>
+<p><code>Umpk.Core.GameVersion</code> already includes <code>GameEdition.Java</code> and <code>Bedrock</code>; retain this identity. The rich <code>JavaVersion</code>, <code>IVersionCatalog</code>, <code>ProtocolDescriptor</code>, and phase registries remain Java-specific. <code>PacketTimeline</code> selects an implementation at a known protocol boundary, and <code>PacketCodecContext</code> deliberately carries bound registries rather than a version integer. These are useful design patterns for a separate Bedrock catalog. They do not make unknown future versions safe. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Core/GameVersion.cs#L4">GameVersion</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Protocol.Java/Connection/JavaVersion.cs#L7">JavaVersion</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Protocol.Java/Registration/PacketTimeline.cs#L9">PacketTimeline</a></p>
+<p><code>UmpkClient</code> is explicitly a Java session. <code>ConnectCoreAsync</code> constructs <code>JavaConnection</code> and <code>DescriptorFrameCodecBinding</code>, then invokes <code>JavaClientLogin</code>. Its builder requires <code>JavaVersion</code>; <code>IConnectionFactory</code> returns <code>IDuplexPipe</code>. <code>JavaConnection</code> owns Java stream framing, compression, encryption, and phase changes. A RakNet-to-pipe adapter alone would therefore enter the wrong wire stack. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Client/UmpkClient.cs#L340">UmpkClient.cs:340</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Protocol.Java/Transport/IConnectionFactory.cs#L5">IConnectionFactory.cs:5</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Protocol.Java/Connection/JavaConnection.cs#L13">JavaConnection.cs:13</a></p>
+<p>Useful shared foundations include <code>ISessionScheduler</code>'s FIFO execution contract, <code>ITickSource</code>, logging, cancellation/resource ownership, geometry, and selected registry mechanics. The important registry invariant is installation before dependent decoding; Java even has a JoinGame registry-update exception outside configuration. Reuse that ordering guarantee without imposing Java's configuration phase on Bedrock. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Core/Hosting/ISessionScheduler.cs#L3">ISessionScheduler</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Protocol.Java/Core/PacketCodecContext.cs#L5">PacketCodecContext</a></p>
+<h3 id="java-and-bedrock-cannot-share-these-implementations-directly">Java and Bedrock cannot share these implementations directly</h3>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Verified UMPK contract</th>
+<th>Bedrock 2169 evidence and design consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lifecycle and identity</td>
+<td>Java handshake/login/configuration; session join uses <code>serverIdHash</code>; <code>GameProfile</code> and one access token.</td>
+<td>Network settings precede Login; certificate/multiplayer-token/client-data artifacts and a separate key exchange follow. Create Bedrock credentials and bootstrap states. Keep connected, authenticated, world-known, spawned, and ready distinct.</td>
+</tr>
+<tr>
+<td>Serialization and NBT</td>
+<td>Java <code>PacketReader</code> uses Java numeric/string encodings. <code>NbtWireFormat</code> contains three Java root forms; <code>NbtReader</code> is big-endian and <code>ModifiedUtf8</code> is Java-specific.</td>
+<td>Mixed endianness, unsigned variable integers, signed ZigZag, presence fields, network NBT, item little-endian NBT, and loose NBT sequences require explicit Bedrock codecs. Share the tag DOM and quota concepts where valid. <a href="https://github.com/MCCTeam/UMPK/tree/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Nbt">NBT sources</a></td>
+</tr>
+<tr>
+<td>Actors</td>
+<td><code>Entity.Id</code> is <code>int</code>, with UUID; <code>EntityStore</code> indexes both.</td>
+<td>Actor runtime IDs are generally unsigned 64-bit; unique IDs are signed 64-bit; only player identity adds UUID. Removal uses unique ID. Preserve both namespaces and their session lifetime. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Game/Entities/Entity.cs#L20">Entity.cs:20</a> · <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/proto.yml#L541">AddEntity schema</a></td>
+</tr>
+<tr>
+<td>Items and inventories</td>
+<td><code>ItemStack</code> carries Java data components; <code>InventoryState</code> has 46 player slots, window 0, a 15-bit state-ID ring, and click prediction.</td>
+<td>ItemV4, stack network IDs, full/dynamic container identity, correlated item-stack requests/responses, and embedded use actions need Bedrock models and reconciliation. Java click counters/slot numbers are not substitutes. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Client/State/InventoryState.cs#L8">InventoryState.cs:8</a> · <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/types.yml#L94">ItemV4</a></td>
+</tr>
+<tr>
+<td>World storage</td>
+<td><code>ChunkSection</code> has one block palette, 4³ biome cells and Java palette widths; <code>BitStorage</code> uses padded 64-bit words.</td>
+<td>Use a Bedrock subchunk assembler/store with storage layers, runtime palettes, block actors, request state, and explicit unknown terrain. The community packet schema leaves subchunk payload packing opaque. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Game/World/ChunkSection.cs#L6">ChunkSection</a> · <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/proto.yml#L1488">LevelChunk</a></td>
+</tr>
+<tr>
+<td>Movement and physics</td>
+<td><code>MovementReporter</code> emits Java input/position variants; <code>PhysicsEngineHolder</code> binds <code>PhysicsProfileFactory.FromJavaVersion</code>; <code>PlayerPhysics</code> uses Java-derived behavior.</td>
+<td>PlayerAuthInput couples input, prediction, ticks, and actions; corrections require history/replay. Share geometry and validated query interfaces, then build/prove Bedrock simulation. Never pass 2169 into a Java profile factory or assume retuned constants are sufficient. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Client/Navigation/PhysicsEngineHolder.cs#L84">PhysicsEngineHolder</a> · <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/proto.yml#L3060">PlayerAuthInput</a></td>
+</tr>
+<tr>
+<td>Capabilities and plugins</td>
+<td><code>ClientActionCapabilities</code> inspects Java <code>WireIndex</code>; <code>ClientPluginContext</code> exposes <code>UmpkClient</code> and Java packet handlers/custom payloads.</td>
+<td>Share supported semantic actions only through new narrow contracts. Existing plugins and Java command-tree/Brigadier adapters are not automatically portable; Bedrock has its own command, text, and form packets. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Client/ClientActionCapabilities.cs#L27">ClientActionCapabilities</a> · <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Umpk.Client/Plugins/ClientPluginContext.cs#L15">ClientPluginContext</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exact-version-data-needs-a-reconciliation-gate">Exact-version data needs a reconciliation gate</h3>
+<p>Verified: <code>data/dataPaths.json</code> resolves 1.26.45 to frozen <code>protocol.json</code>, but its YAML <code>proto</code> and <code>types</code> resolve to <code>bedrock/latest</code>. Blocks, block states, collision shapes and items come from 1.26.30; entities from 1.21.80; recipes from 1.19.10; windows from 1.16.201; materials/effects from Java <code>pc/1.17</code>. This is upstream data reuse, not proof of either correctness or error for 26.45. Record and validate each source independently. <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/dataPaths.json#L2977">dataPaths.json:2977</a></p>
+<p>The 2168 and 2169 compiled protocol files are byte-identical, with 429 type entries each. This does <strong>not</strong> establish staleness. PowerNukkitX constructs its 2169 codec from base 2168 and keeps a separate 2168 hotfix-4 codec for 26.44; its selection uses protocol number plus Login GameVersion. The independently inspected Cloudburst 2169 codec likewise extends base 2168. Treat release/build, packet dialect, network protocol and data/behavior profile as distinct identities. For this delivery, select only the explicit 1.26.45/2169 profile; future same-number dialects need evidence and deliberate selection rather than a fallback to the newest codec. <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/network/NetworkConstants.java#L18">PNX version selection</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/network/NetworkConstants.java#L82">PNX selector</a></p>
+<p>Mojang’s 2169 changes remove a nested <code>Line Gap Height</code> field from PrimitiveShapes text data and an <strong>extra</strong> optional tag around <code>RemoveScore::Objective Name</code>. The PrimitiveShapes packet remains. The supplied ShapeText already omits the removed field, and PowerNukkitX constructs the corresponding six-field text model. A single optional objective marker can remain after an extra nested marker is removed; the exact serializer comparison below resolves that distinction. Validation and skin-enum changes still need their own witnesses. <a href="https://mojang.github.io/bedrock-protocol-docs/changelog/legacy/entries/changelog-2169-08-18-26/">2169 changes</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/network/primitiveshape/TextShape.java#L68">PNX text model</a></p>
+<h3 id="what-the-new-server-and-proxy-sources-establish">What the new server and proxy sources establish</h3>
+<p>PowerNukkitX’s checked-in <code>src/main/resources/mappings/</code> contains three files: <code>blocks.json</code> (32,366 entries), <code>biomes.json</code> (65) and <code>level_sound_id_map.json</code> (564). Its block loader parses Java blockstate keys, normalizes Bedrock properties and substitutes air for unresolved nonexperimental mappings; reverse mapping can collapse several Java states. These are translation aids, not canonical lossless Bedrock state. Preserve unknown states in UMPK. Native block/item/biome palettes instead come from <code>org.powernukkitx:gamedata:r-26_u4-SNAPSHOT</code>; the checked-in mapping directory does not contain that complete dataset. <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/registry/mappings/JeBlockState.java#L18">Java-state parser</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/registry/mappings/populator/BlockRegistryPopulator.java#L54">Mapping loader</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/gradle/libs.versions.toml#L5">Dependencies</a></p>
+<p>PowerNukkitX directly implements useful network terrain bytes: its subchunk writer emits version 9, two storage layers and section Y; palettes use padded 32-bit little-endian words, followed by VarInt palette counts/values. It advertises block-network IDs as hashes and hashes little-endian NBT containing the full block name and sorted, typed state properties using FNV-1a/32. Block actors use the network NBT writer. Network and storage palette writers are separate. This establishes an implementation reference for the opaque minecraft-data chunk payload, not permission to hardcode two layers or copy storage-only shortcuts into a network decoder. Its singleton writer is incomplete, so V0 needs another byte witness. <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/level/format/ChunkSection.java#L147">Section writer</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/level/format/palette/Palette.java#L115">Palette writer</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/level/format/leveldb/LevelDBProvider.java#L325">Chunk body</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/src/main/java/org/powernukkitx/utils/HashUtils.java#L30">Hash bytes</a></p>
+<p>PowerNukkitX’s packet serializers mostly belong to <code>org.powernukkitx.protocol:bedrock-connection:3.0.0.Beta7-Debug-SNAPSHOT</code>, whose exact resolved artifact was not obtained. Its packet-model Java types therefore cannot settle field widths or optional markers. Geyser supplies an independent path to inspect Cloudburst serializers; do not describe that source as PowerNukkitX’s resolved dependency. Record origin, resolved artifact hash and license/notices for every imported source or dataset. PNX declares LGPL-3.0; its JSON mappings have no per-file provenance manifest. Referencing behavior does not require copying its implementation or silently changing its license. <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/gradle/libs.versions.toml#L5">Dependency declarations</a> · <a href="https://github.com/PowerNukkitX/PowerNukkitX/blob/f325c30eb75ae869f3f0652d464526de7c0c9877/LICENSE">PNX license</a></p>
+<h3 id="field-by-field-2169-reconciliation">Field-by-field 2169 reconciliation</h3>
+<p>Geyser registers <code>Bedrock_v2169.CODEC</code> for 26.45 and pins Cloudburst artifacts to <code>3.0.0.Beta13-20260824.114016-17</code>. The exact Maven source artifacts returned HTTP 403; the inspected Cloudburst commit precedes that build timestamp by 19 seconds. Its relationship to that binary is a plausible inference, <strong>not a proven artifact match</strong>. The following facts are verified against the identified source, whose v2169 codec explicitly selects the base v2168 serializers. They materially improve implementation guidance while leaving exact BDS acceptance separate. <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/core/src/main/java/org/geysermc/geyser/network/GameProtocol.java#L87">Geyser selection</a> · <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/gradle/libs.versions.toml#L16">Dependency pin</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2169/Bedrock_v2169.java#L7">2169 codec</a></p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Field / discrepancy ID</th>
+<th>Source-verified disposition</th>
+<th>Implementation consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D01 — base 2168, hotfix-4 and 2169</td>
+<td>2169 extends base 2168. Hotfix-4 has a separate SetScore override. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2169/Bedrock_v2169.java#L7">Codec selection</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/Bedrock_v2168_hotfix4.java#L7">Hotfix dialect</a></td>
+<td>Identical base schema files are consistent with these implementations. Model explicit dialect/profile identity; do not invent a blanket correction.</td>
+</tr>
+<tr>
+<td>D02 — RemoveScore objective</td>
+<td>Base/2169 has one optional-objective boolean; hotfix-4 adds a second boolean when present. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/SetScoreSerializer_v2168.java#L29">Base serializer</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/SetScoreSerializer_v2168_hotfix4.java#L23">Hotfix serializer</a></td>
+<td>The supplied optional field is corroborated. Removing the extra nested tag does not make the objective unconditional.</td>
+</tr>
+<tr>
+<td>D03 — PlayerAuthInput</td>
+<td>Presence boolean, VarUInt count, then signed ZigZag VarInt enum ordinals; tick uses unsigned VarLong. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/PlayerAuthInputSerializer_v2168.java#L30">Selected serializer</a></td>
+<td>Preserve the optional list and its order/presence, separately from later nested action-section flags. A legacy input bitmask would be wrong.</td>
+</tr>
+<tr>
+<td>D04 — ItemV4</td>
+<td>Network-stack form uses signed i16LE runtime ID and u16LE count, with context-specific additional IDs/NBT. Item-instance form instead uses signed VarInt IDs. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/BedrockCodecHelper_v2168.java#L271">Helper</a></td>
+<td>The surprising widths are corroborated. Generate separate item forms and bind shield/user-data context from item definitions.</td>
+</tr>
+<tr>
+<td>D05 — metadata and stack requests</td>
+<td>Metadata has an outer VarUInt discriminator plus u8 format; requests have outer VarUInt plus inner u8 action type. Request-slot stack network IDs use fixed i32LE. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/BedrockCodecHelper_v2168.java#L61">Metadata</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/BedrockCodecHelper_v2168.java#L798">Actions</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/BedrockCodecHelper_v2168.java#L640">Slot IDs</a></td>
+<td>Preserve duplicate-looking bytes and per-field ID encoding. Explicitly validate consistency where the field contract requires it; do not copy unchecked reads merely because a reference accepts them.</td>
+</tr>
+<tr>
+<td>D06 — MovePlayer</td>
+<td>Cloudburst uses unsigned VarLong for actor runtime ID, riding runtime ID and tick. The supplied data declares different signed/fixed-width actor-ID forms. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/MovePlayerSerializer_v2168.java#L14">Serializer</a></td>
+<td>A concrete conflict remains. Put these exact fields in a reviewed correction overlay with independent vectors/capture witnesses; never narrow IDs or copy an old codec unchanged.</td>
+</tr>
+<tr>
+<td>D07 — chunk envelope</td>
+<td>LevelChunk has optional-limit presence and an unconditional blob-count field. SubChunk entries carry independent optional payload/heightmaps/hash fields. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/LevelChunkSerializer_v2168.java#L15">LevelChunk</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v2168/serializer/SubChunkSerializer_v2168.java#L18">SubChunk</a></td>
+<td>The newer presence fields are corroborated. Avoid old count-sentinel layouts and cache-dependent omission of blob count. Body palette packing remains a distinct native codec.</td>
+</tr>
+<tr>
+<td>D08 — <code>varint128</code> prediction flags</td>
+<td>The selected <code>MovementPredictionSync</code> serializer encodes a separate unsigned large flag bitset. Cloudburst has 131 EntityFlag entries, including bits 128–130, so the profile occupies 19 seven-bit bytes even when all flags are zero. <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v975/serializer/MovementPredictionSyncSerializer_v975.java#L18">Packet serializer</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/codec/v766/BedrockCodecHelper_v766.java#L26">Bitset helper</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-codec/src/main/java/org/cloudburstmc/protocol/bedrock/data/entity/EntityFlag.java#L193">Flag enum</a></td>
+<td>The undeclared community primitive needs a bounded native mapping. <strong>A .NET UInt128 is too narrow.</strong> Record the 131-bit logical width separately from the encoded-byte limit and preserve unknown bits. Keep this bitset distinct from D03’s input list. The packet direction and three prediction-sync floats remain unresolved, so registration and reconciliation stay blocked pending exact 2169 traffic.</td>
+</tr>
+<tr>
+<td>D09 — validation and remaining primitives</td>
+<td>Skin enums, resource-response wire details, unknown StartGame values, prediction-sync semantics and singleton/other chunk forms still need targeted exact-version witnesses.</td>
+<td>Track each obligation’s dependency and status; do not stall unrelated transport, model or codec work, and do not advertise the dependent capability until its gate passes.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Geyser gives concrete state-boundary examples: per-session mapping/helper installation precedes StartGame encoding; EntityCache keeps separate Java IDs, Bedrock runtime IDs and UUID mappings; inventory responses preserve request IDs and check stack-network IDs. Its PlayerAuthInput translator processes embedded actions in input order before emitting a Java tick-end packet. These support separate UMPK stores and one action timeline. They do <strong>not</strong> supply native Bedrock rewind: corrections and collision handling serve a Java-authoritative downstream session. Geyser also overrides packet policy, including rejecting SubChunkRequest in its server-facing role. Neither its packet allowlist nor its Java fallbacks belong in a native BDS client. <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/core/src/main/java/org/geysermc/geyser/session/cache/EntityCache.java#L75">Entity namespaces</a> · <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/core/src/main/java/org/geysermc/geyser/translator/inventory/InventoryTranslator.java#L969">Inventory correlation</a> · <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/core/src/main/java/org/geysermc/geyser/translator/protocol/bedrock/entity/player/input/BedrockPlayerAuthInputTranslator.java#L75">Input ordering</a> · <a href="https://github.com/GeyserMC/Geyser/blob/d50a5ffbd8a6924ad52cf4c211600e8ca24c7c3d/core/src/main/java/org/geysermc/geyser/network/CodecProcessor.java#L311">Codec policy</a></p>
+<p>Geyser’s mapping gitlink is pinned, but the supplied checkout was uninitialized; only its pinned README/license were inspected. That README names Java 26.2 / Bedrock 1.26.30.5 generation. Its code license is MIT and Cloudburst’s is Apache-2.0; the mapping notice limits MIT to work its contributors can license. Keep code, extracted-data and per-session-registry provenance distinct. This study does not claim to have audited the full missing mapping payload. <a href="https://github.com/GeyserMC/mappings/blob/e2d4e91c1a8534a82162811163de2094b9882bd3/README.md">Mapping provenance</a></p>
+<h3 id="raknet-integration-and-native-aot">RakNet integration and Native AOT</h3>
+<p>Verified: <code>ArkMirage.RakNet</code> targets .NET 10, has no package references, and uses the MIT license. <code>Dialer.DialContext</code> implements client MTU discovery/open connection and the connected handshake. <code>Conn.Write(byte[])</code> defaults to reliable ordered delivery; <code>ReadPacket()</code> returns a complete reassembled message. The implementation uses RakNet protocol 11, a separate number from Bedrock 2169. Actual 26.45 BDS negotiation remains untested. <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/RakNet.csproj">RakNet project</a> · <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Dialer.cs#L139">Dialer.cs:139</a> · <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Conn.cs#L206">Conn.cs:206</a></p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Transport issue verified in source</th>
+<th>Required disposition before adoption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ElasticChan(4,4096)</code> actually blocks at four entries and never grows. The same receive path handles transport traffic.</td>
+<td>Fix queue/backpressure behavior below the adapter; prove overload behavior and continued ACK/control progress.</td>
+</tr>
+<tr>
+<td>Client <code>LimitsEnabled()</code> returns false, bypassing receive/ordering/split limits; fragment count drives allocation.</td>
+<td>Enforce byte/count/window/lifetime bounds before allocation and fragment assembly. A Bedrock packet-length limit is too late.</td>
+</tr>
+<tr>
+<td>Ordered channel is hardcoded to 0; only <code>ReliableOrdered</code> takes the ordering path; sequenced behavior is incomplete.</td>
+<td>Claim only proven delivery modes. Establish exact required channel/reliability behavior with target captures.</td>
+</tr>
+<tr>
+<td>Blocking reads lack caller cancellation; deadline APIs throw; receive/send paths suppress some failures; shutdown does not expose thread joins.</td>
+<td>Add awaitable completion, strict errors, cancellation and disposal ownership in upstream or an audited fork. A wrapper alone cannot fix hidden parser failures.</td>
+</tr>
+<tr>
+<td>Client uses receive and maintenance threads; DNS chooses its first result and default socket is IPv4.</td>
+<td>Prove bounded shutdown and target address families; measure many-client overhead before generalizing.</td>
+</tr>
+<tr>
+<td>Send counters wrap at 24 bits while receive windows/ordered queues use linear comparisons; ACK range parsing has inclusive-budget and tag-validation gaps.</td>
+<td>Add bounded modular sequence arithmetic, separate reliable-message deduplication, and strict ACK expansion tests across wrap.</td>
+</tr>
+<tr>
+<td>Dial/receive paths do not consistently bind responses to the expected endpoint; retry loops can survive exceptional exits.</td>
+<td>Validate peer and handshake fields, ignore unrelated-source datagrams without disrupting a valid peer, and cancel/await every owned retry loop.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidence: <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/ElasticChan.cs#L24">ElasticChan.cs:24</a>, <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Handler.cs#L20">Handler.cs:20</a>, <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Conn.cs#L398">Conn.cs:398</a>, <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Packet.cs#L91">Packet.cs:91</a>, <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Dialer.cs#L239">Dialer.cs:239</a>. RakNet maintenance timers own ACK/retry/keepalive; the session tick remains the sole locomotion clock. UDP has no TCP-style EOF: closure tests must check peer-observed disconnect/timeout and local socket/thread reclamation. Use monotonic elapsed time for retries, fragment expiry, inactivity and shutdown, keeping wire timestamps separate.</p>
+<p><strong>Fork strategy:</strong> the replacement clone is <code>MCCTeam/RakNet</code>, still at the exact previously inspected commit and tree. Use it to stage small generic fixes for upstream: lifecycle/completion, parser bounds, sequence windows, fragment accounting and nonblocking control progress. Keep wire widths and identifiers unchanged; bounds must not silently evict accepted reliable or unacknowledged messages. Add APIs where practical and inventory any breaking changes. These fixes are useful beyond Bedrock and are intended to preserve RakNet interoperability; upstream acceptance and actual compatibility still require review and independent-peer tests. Bedrock batching, crypto, login and game ticks remain above the adapter. See <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/Acknowledgement.cs#L93">ACK parser</a>, <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/DatagramWindow.cs#L21">datagram window</a> and <a href="https://github.com/MCCTeam/RakNet/blob/673b6fc737ee4273f05a7fbf2a99bc87311a1517/PacketQueue.cs#L21">ordered queue</a>.</p>
+<p><strong>Executed AOT result:</strong> an isolated <code>/tmp</code> test assembly compiled the unchanged complete RakNet source with <code>IsAotCompatible=true</code>; a test app rooted the whole assembly for trimming/AOT analysis. SDK 10.0.112, runtime/AOT packs 10.0.12, <code>linux-x64</code>: native publish passed with no IL/AOT diagnostics. The native executable passed IPv4 discovery, dial/accept, and a 5,000-byte fragmented reliable-ordered echo in both directions. Cookies were disabled. This supports AOT feasibility for this transport revision, not production readiness or whole-stack compatibility.</p>
+<p>Strict warnings-as-errors compilation failed on nine ordinary C# warnings (CS0114, CS8604, CS8618). Publication under upstream's ordinary-warning policy retained ILLink/ILC warnings as errors. Those C# warnings need correction for UMPK's contract. Shipping UMPK projects already set <code>IsAotCompatible=true</code>; retain generated registration and source-generated JSON. Future Bedrock crypto, compression, JWT/token handling and generated codecs each require rooted whole-stack publish/run tests per supported RID. <a href="https://github.com/MCCTeam/UMPK/blob/509694de2ad8ba4a0d550da2466a7fb148226d17/src/Directory.Build.props#L5">UMPK build policy</a> · <a href="https://devblogs.microsoft.com/dotnet/creating-aot-compatible-libraries/">Microsoft library AOT guidance</a></p>
+<h2 id="proposed-architecture">Proposed architecture</h2>
+<h3 id="package-and-ownership-boundaries">Package and ownership boundaries</h3>
+<p>Proposed names below describe responsibilities; none of these new packages or types has been implemented. Add four core sibling projects and a data-generation tool. Keep authentication and initial Bedrock physics in cohesive internal modules until separate consumers justify further packages.</p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Proposed component</th>
+<th>Owns</th>
+<th>Dependency direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Umpk.Transport.RakNet</code></td>
+<td>Audited RakNet adapter, owned messages, delivery contract, bounded I/O and terminal completion.</td>
+<td>Core infrastructure plus pinned RakNet; no Java or gameplay references.</td>
+</tr>
+<tr>
+<td><code>Umpk.Protocol.Bedrock</code></td>
+<td>Bedrock reader/writer, packet records, NBT wire adapters, header/batch transforms, descriptors, codec context and protocol obligations.</td>
+<td>Core, NBT DOM, proven Game value types; no dependency on Client or Data.Bedrock.</td>
+</tr>
+<tr>
+<td><code>Umpk.Data.Bedrock</code></td>
+<td>Generated immutable <code>BedrockVersion</code> descriptors, registry/default data and provenance manifest.</td>
+<td>Protocol.Bedrock; mirrors Data.Java's consumer-to-protocol direction.</td>
+</tr>
+<tr>
+<td><code>Umpk.Client.Bedrock</code></td>
+<td><code>BedrockClient</code>, bootstrap/readiness, actor/world state, inventory, movement history, semantic capabilities, composition.</td>
+<td>Protocol.Bedrock, Data.Bedrock, Transport.RakNet and validated shared foundations.</td>
+</tr>
+<tr>
+<td><code>tools/Umpk.BedrockDataGen</code></td>
+<td>Import/resolve/verify/diff/generate commands and custom-type validation.</td>
+<td>Build-time schema compiler; no ProtoDef interpreter in shipping code.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Keep <code>UmpkClient</code> and current builder/plugin interfaces as the Java compatibility surface. Initially expose <code>BedrockClient</code> separately. Extract a common observation/capability facade only when both implementations establish a useful contract; migrate Java internally without requiring consumer rewrites. Preserve existing Java package references and defaults, including <code>ServerEndpoint</code>'s 25565 default; give Bedrock an explicit endpoint/default port instead. Keep <code>Umpk.Server</code> and <code>Umpk.Proxy</code> reserved. Do not make adding Bedrock depend on a repository-wide client rename.</p>
+<figure class="diagram"><div class="fig-head">Diagram 1 of 4, rendered from the Mermaid source below</div><div aria-label="Scrollable diagram" class="fig-scroll" role="region" tabindex="0"><svg aria-labelledby="fig1t fig1d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" role="img" viewbox="0 0 800 430">
+<title id="fig1t">Runtime flow diagram</title>
+<desc id="fig1d">Host application connects to the existing Java stack over TCP and the proposed Bedrock stack over UDP. Both share core hosting contracts; only Bedrock uses the RakNet adapter and credential provider.</desc>
+<defs><marker id="a1" markerheight="7" markerwidth="7" orient="auto" refx="7" refy="4" viewbox="0 0 8 8"><path d="M0,0 L8,4 L0,8 z" fill="#16324F"></path></marker></defs>
+<text fill="#4A5B6C" font-size="11" letter-spacing="2" x="14" y="52">JAVA / TCP</text>
+<text fill="#2E6E68" font-size="11" letter-spacing="2" x="14" y="248">BEDROCK / UDP · PROPOSED</text>
+<rect fill="#fff" height="48" rx="6" stroke="#16324F" stroke-width="1.5" width="150" x="152" y="62"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="227" y="82">UmpkClient</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="227" y="98">existing Java</text>
+<rect fill="#fff" height="48" rx="6" stroke="#16324F" stroke-width="1.5" width="170" x="332" y="62"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="417" y="82">JavaConnection</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="417" y="98">Java codecs</text>
+<rect fill="#fff" height="48" rx="6" stroke="#16324F" stroke-width="1.5" width="150" x="532" y="62"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="607" y="82">Java server</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="607" y="98">TCP · port 25565</text>
+<rect fill="#EDF4F2" height="48" rx="6" stroke="#2E6E68" stroke-width="1.5" width="150" x="152" y="252"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="227" y="272">BedrockClient</text><text fill="#2E6E68" font-size="11" text-anchor="middle" x="227" y="288">proposed</text>
+<rect fill="#EDF4F2" height="48" rx="6" stroke="#2E6E68" stroke-width="1.5" width="150" x="332" y="252"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="407" y="272">Lifecycle + codecs</text><text fill="#2E6E68" font-size="11" text-anchor="middle" x="407" y="288">batch · crypto</text>
+<rect fill="#EDF4F2" height="48" rx="6" stroke="#2E6E68" stroke-width="1.5" width="120" x="512" y="252"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="572" y="272">RakNet adapter</text><text fill="#2E6E68" font-size="11" text-anchor="middle" x="572" y="288">owned messages</text>
+<rect fill="#EDF4F2" height="48" rx="6" stroke="#2E6E68" stroke-width="1.5" width="126" x="662" y="252"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="725" y="272">BDS 26.45</text><text fill="#2E6E68" font-size="11" text-anchor="middle" x="725" y="288">UDP · proto 2169</text>
+<rect fill="#16324F" height="48" rx="6" width="110" x="12" y="150"></rect><text fill="#fff" font-size="12" font-weight="600" text-anchor="middle" x="67" y="170">Host</text><text fill="#C9D4DD" font-size="11" text-anchor="middle" x="67" y="186">application</text>
+<rect fill="#fff" height="48" rx="6" stroke="#4A5B6C" stroke-dasharray="5 3" stroke-width="1.2" width="150" x="152" y="150"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="227" y="170">Shared</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="227" y="186">core hosting</text>
+<rect fill="#fff" height="48" rx="6" stroke="#4A5B6C" stroke-dasharray="5 3" stroke-width="1.2" width="150" x="332" y="150"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="407" y="170">Credentials</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="407" y="186">provider</text>
+<line marker-end="url(#a1)" stroke="#16324F" stroke-width="1.5" x1="122" x2="150" y1="174" y2="110"></line>
+<line marker-end="url(#a1)" stroke="#2E6E68" stroke-width="1.5" x1="122" x2="150" y1="184" y2="268"></line>
+<line marker-end="url(#a1)" stroke="#16324F" stroke-width="1.5" x1="302" x2="330" y1="86" y2="86"></line>
+<line marker-end="url(#a1)" stroke="#16324F" stroke-width="1.5" x1="502" x2="530" y1="86" y2="86"></line>
+<line marker-end="url(#a1)" stroke="#2E6E68" stroke-width="1.5" x1="302" x2="330" y1="276" y2="276"></line>
+<line marker-end="url(#a1)" stroke="#2E6E68" stroke-width="1.5" x1="482" x2="510" y1="276" y2="276"></line>
+<line marker-end="url(#a1)" stroke="#2E6E68" stroke-width="1.5" x1="632" x2="660" y1="276" y2="276"></line>
+<line marker-end="url(#a1)" stroke="#4A5B6C" stroke-width="1.2" x1="227" x2="227" y1="110" y2="148"></line>
+<line marker-end="url(#a1)" stroke="#2E6E68" stroke-width="1.2" x1="227" x2="227" y1="252" y2="200"></line>
+<line marker-end="url(#a1)" stroke="#4A5B6C" stroke-width="1.2" x1="260" x2="360" y1="252" y2="190"></line>
+<rect fill="#F4F6F7" height="62" rx="6" stroke="#4A5B6C" stroke-width="1" width="776" x="12" y="340"></rect>
+<text fill="#A34A24" font-size="11" font-weight="700" letter-spacing="1.5" x="26" y="362">NEW STACK BOUNDARY</text>
+<text fill="#22303F" font-size="12" x="26" y="380">The Bedrock client, lifecycle, codecs and RakNet adapter are proposed.</text>
+<text fill="#22303F" font-size="12" x="26" y="396">Both clients use validated shared foundations.</text>
+</svg></div><figcaption>Figure 1. Runtime flow: host, existing Java stack, and proposed Bedrock stack.</figcaption><details><summary>Exact Mermaid source (traceability)</summary><pre><code class="language-mermaid">flowchart LR
+    Host[Host application] --&gt; Java[Existing UmpkClient]
+    Host --&gt; Bedrock[Proposed BedrockClient]
+    Java --&gt; JavaWire[JavaConnection and Java codecs]
+    JavaWire --&gt; JavaServer[Java server over TCP]
+    Bedrock --&gt; BedrockWire[Bedrock lifecycle and codecs]
+    BedrockWire --&gt; RakNet[Owned RakNet message adapter]
+    RakNet --&gt; BDS[Bedrock 26.45 server over UDP]
+    Java --&gt; Shared[Core hosting and validated value contracts]
+    Bedrock --&gt; Shared
+    Bedrock --&gt; Credentials[Bedrock credential provider]</code></pre></details></figure>
+<figure class="diagram"><div class="fig-head">Diagram 2 of 4, rendered from the Mermaid source below</div><div aria-label="Scrollable diagram" class="fig-scroll" role="region" tabindex="0"><svg aria-labelledby="fig2t fig2d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" role="img" viewbox="0 0 760 420">
+<title id="fig2t">Dependency direction diagram</title>
+<desc id="fig2d">Generated Bedrock data feeds Protocol.Bedrock. Client.Bedrock composes data, protocol and transport. Protocol and transport rest on Core and NBT. The BedrockDataGen tool generates data and codecs at build time.</desc>
+<defs><marker id="a2" markerheight="7" markerwidth="7" orient="auto" refx="7" refy="4" viewbox="0 0 8 8"><path d="M0,0 L8,4 L0,8 z" fill="#16324F"></path></marker></defs>
+<rect fill="#fff" height="44" rx="6" stroke="#16324F" stroke-width="1.5" width="260" x="250" y="14"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="380" y="32">Data.Bedrock</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="48">generated descriptors</text>
+<rect fill="#fff" height="44" rx="6" stroke="#16324F" stroke-width="1.5" width="260" x="250" y="98"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="380" y="116">Protocol.Bedrock</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="132">codecs · context · obligations</text>
+<rect fill="#EDF4F2" height="44" rx="6" stroke="#2E6E68" stroke-width="1.5" width="240" x="80" y="182"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="200" y="200">Client.Bedrock</text><text fill="#2E6E68" font-size="11" text-anchor="middle" x="200" y="216">composition + state</text>
+<rect fill="#fff" height="44" rx="6" stroke="#16324F" stroke-width="1.5" width="240" x="440" y="182"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="560" y="200">Transport.RakNet</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="560" y="216">bounded I/O · completion</text>
+<rect fill="#fff" height="44" rx="6" stroke="#4A5B6C" stroke-width="1.2" width="240" x="80" y="266"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="200" y="284">Core + NBT DOM</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="200" y="300">foundation</text>
+<rect fill="#fff" height="44" rx="6" stroke="#4A5B6C" stroke-width="1.2" width="240" x="440" y="266"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="560" y="284">Game views + geometry</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="560" y="300">validated contracts</text>
+<rect fill="#F4F6F7" height="44" rx="6" stroke="#4A5B6C" stroke-dasharray="5 3" stroke-width="1.2" width="260" x="250" y="350"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="380" y="368">BedrockDataGen</text><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="384">build-time only</text>
+<line marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5" x1="380" x2="380" y1="58" y2="96"></line>
+<path d="M200,182 L200,76 L328,76 L328,60" fill="none" marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5"></path>
+<line marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5" x1="300" x2="300" y1="182" y2="144"></line>
+<line marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5" x1="322" x2="438" y1="204" y2="204"></line>
+<path d="M250,120 L60,120 L60,244 L195,244 L195,262" fill="none" marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5"></path>
+<path d="M560,226 L560,246 L300,246 L300,264" fill="none" marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5"></path>
+<path d="M280,226 L280,240 L540,240 L540,262" fill="none" marker-end="url(#a2)" stroke="#16324F" stroke-width="1.5"></path>
+<path d="M510,372 L710,372 L710,36 L512,36" fill="none" marker-end="url(#a2)" stroke="#4A5B6C" stroke-dasharray="4 3" stroke-width="1.2"></path>
+<path d="M510,384 L690,384 L690,120 L512,120" fill="none" marker-end="url(#a2)" stroke="#4A5B6C" stroke-dasharray="4 3" stroke-width="1.2"></path>
+<text fill="#4A5B6C" font-size="10" text-anchor="end" x="682" y="250">generates</text>
+</svg></div><figcaption>Figure 2. Dependency directions: generated data, protocol, transport, and client composition.</figcaption><details><summary>Exact Mermaid source (traceability)</summary><pre><code class="language-mermaid">flowchart TB
+    Data[Data.Bedrock generated descriptors] --&gt; Protocol[Protocol.Bedrock]
+    Client[Client.Bedrock composition and state] --&gt; Data
+    Client --&gt; Protocol
+    Client --&gt; Transport[Transport.RakNet]
+    Protocol --&gt; Foundation[Core and NBT DOM]
+    Transport --&gt; Foundation
+    Client --&gt; Views[Validated Game views and geometry]
+    Importer[BedrockDataGen] -. generates .-&gt; Data
+    Importer -. generates codecs .-&gt; Protocol</code></pre></details></figure>
+<p>The first diagram shows runtime flow; the second shows consumer-to-dependency arrows, with dotted generation arrows. Put a small message-connection contract in <code>Umpk.Core.Transport</code>, with no edition phases or RakNet types, and bind it at composition so protocol tests need no UDP. Ordinary send completion means acceptance into a bounded queue; expose terminal connection completion separately. It does not mean peer delivery or server application acceptance. Transfer outbound buffer ownership only on successful admission; retain caller ownership on rejection. The receiver owns and disposes each delivered message. Serialize writes through one connection-owned transform path, because compression activation and cipher counters depend on order.</p>
+<h3 id="detailed-implementation-map">Detailed implementation map</h3>
+<p>The following map is the working component contract for implementing agents. All <code>Bxx</code> components are proposed; the identifiers stay stable when class names change. Solid arrows carry runtime data or commands; dotted arrows carry build output, captured context or lifecycle control. The package diagram above remains the authority for project references. Update the Mermaid source, this boundary table and the implementation plan together when a boundary changes.</p>
+<figure class="diagram diagram-wide"><div class="fig-head">Diagram 3 of 4, rendered from the Mermaid source below</div><div class="zoom-toggle"><input id="zoom-fig3" type="checkbox"/><label for="zoom-fig3">Enlarge map</label><span class="zoom-hint">23 nodes, 45 arrows. Scroll in both directions; solid = runtime data, dotted = build output, context, or lifecycle control.</span></div><div aria-label="Scrollable detailed map: horizontal and vertical scroll" class="fig-scroll" role="region" tabindex="0"><svg aria-labelledby="fig3t fig3d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" role="img" viewbox="0.00 0.00 1910.00 2131.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title id="fig3t">Detailed implementation map: B01 to B23 component contract</title>
+<desc id="fig3d">Build-time generation (B01 to B03), RakNet transport (B04 to B05), Bedrock wire stack (B06 to B11), Bedrock session (B12 to B21), and shared foundations (B22 to B23). Solid arrows carry runtime data; dotted arrows carry build output, captured context, or lifecycle control. All 23 nodes and 45 directed edges from the Mermaid source are shown.</desc>
+<g class="graph" id="graph0" transform="scale(1 1) rotate(0) translate(28.8 2102.6)">
+<title>Bmap</title>
+<polygon fill="white" points="-28.8,28.8 -28.8,-2102.6 1881.3,-2102.6 1881.3,28.8 -28.8,28.8" stroke="none"></polygon>
+<g class="cluster" id="clust1">
+<title>cluster_BUILD</title>
+<path d="M1120,-1728.35C1120,-1728.35 1355,-1728.35 1355,-1728.35 1361,-1728.35 1367,-1734.35 1367,-1740.35 1367,-1740.35 1367,-2053.8 1367,-2053.8 1367,-2059.8 1361,-2065.8 1355,-2065.8 1355,-2065.8 1120,-2065.8 1120,-2065.8 1114,-2065.8 1108,-2059.8 1108,-2053.8 1108,-2053.8 1108,-1740.35 1108,-1740.35 1108,-1734.35 1114,-1728.35 1120,-1728.35" fill="#f4f6f7" stroke="#16324f" stroke-width="2"></path>
+<text fill="#16324f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="12.00" text-anchor="middle" x="1237.5" xml:space="preserve" y="-2050.4">Build time — pinned evidence and generation</text>
+</g>
+<g class="cluster" id="clust2">
+<title>cluster_TRANSPORT</title>
+<path d="M181,-338.6C181,-338.6 443,-338.6 443,-338.6 449,-338.6 455,-344.6 455,-350.6 455,-350.6 455,-574.95 455,-574.95 455,-580.95 449,-586.95 443,-586.95 443,-586.95 181,-586.95 181,-586.95 175,-586.95 169,-580.95 169,-574.95 169,-574.95 169,-350.6 169,-350.6 169,-344.6 175,-338.6 181,-338.6" fill="#edf4f2" stroke="#2e6e68" stroke-width="2"></path>
+<text fill="#16324f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="12.00" text-anchor="middle" x="312" xml:space="preserve" y="-571.55">Transport.RakNet — transport lifetime</text>
+</g>
+<g class="cluster" id="clust3">
+<title>cluster_WIRE</title>
+<path d="M1223,-8C1223,-8 1527,-8 1527,-8 1533,-8 1539,-14 1539,-20 1539,-20 1539,-1689.1 1539,-1689.1 1539,-1695.1 1533,-1701.1 1527,-1701.1 1527,-1701.1 1223,-1701.1 1223,-1701.1 1217,-1701.1 1211,-1695.1 1211,-1689.1 1211,-1689.1 1211,-20 1211,-20 1211,-14 1217,-8 1223,-8" fill="#ffffff" stroke="#16324f" stroke-width="2"></path>
+<text fill="#16324f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="12.00" text-anchor="middle" x="1375" xml:space="preserve" y="-1685.7">Protocol.Bedrock — one ordered connection owner</text>
+</g>
+<g class="cluster" id="clust4">
+<title>cluster_SESSION</title>
+<path d="M475,-471.1C475,-471.1 1125,-471.1 1125,-471.1 1131,-471.1 1137,-477.1 1137,-483.1 1137,-483.1 1137,-1534.35 1137,-1534.35 1137,-1540.35 1131,-1546.35 1125,-1546.35 1125,-1546.35 475,-1546.35 475,-1546.35 469,-1546.35 463,-1540.35 463,-1534.35 463,-1534.35 463,-483.1 463,-483.1 463,-477.1 469,-471.1 475,-471.1" fill="#fbfcfd" stroke="#2e6e68" stroke-width="2"></path>
+<text fill="#16324f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="12.00" text-anchor="middle" x="800" xml:space="preserve" y="-1530.95">Client.Bedrock — scheduler owns semantic state</text>
+</g>
+<g class="cluster" id="clust5">
+<title>cluster_SHARED</title>
+<path d="M20,-889.65C20,-889.65 287,-889.65 287,-889.65 293,-889.65 299,-895.65 299,-901.65 299,-901.65 299,-1689.1 299,-1689.1 299,-1695.1 293,-1701.1 287,-1701.1 287,-1701.1 20,-1701.1 20,-1701.1 14,-1701.1 8,-1695.1 8,-1689.1 8,-1689.1 8,-901.65 8,-901.65 8,-895.65 14,-889.65 20,-889.65" fill="#f4f6f7" stroke="#4a5b6c" stroke-width="2"></path>
+<text fill="#16324f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="12.00" text-anchor="middle" x="153.5" xml:space="preserve" y="-1685.7">Existing foundations — share only verified contracts</text>
+</g>
+<!-- B01 -->
+<g class="node" id="node1">
+<title>B01</title>
+<path d="M1318.6,-2027.55C1318.6,-2027.55 1155.4,-2027.55 1155.4,-2027.55 1149.4,-2027.55 1143.4,-2021.55 1143.4,-2015.55 1143.4,-2015.55 1143.4,-1978.35 1143.4,-1978.35 1143.4,-1972.35 1149.4,-1966.35 1155.4,-1966.35 1155.4,-1966.35 1318.6,-1966.35 1318.6,-1966.35 1324.6,-1966.35 1330.6,-1972.35 1330.6,-1978.35 1330.6,-1978.35 1330.6,-2015.55 1330.6,-2015.55 1330.6,-2021.55 1324.6,-2027.55 1318.6,-2027.55" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-2006.75">B01</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1993.25">Frozen 2169 inputs and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1979.75">correction ledger</text>
+</g>
+<!-- B02 -->
+<g class="node" id="node2">
+<title>B02</title>
+<path d="M1318.6,-1917.35C1318.6,-1917.35 1155.4,-1917.35 1155.4,-1917.35 1149.4,-1917.35 1143.4,-1911.35 1143.4,-1905.35 1143.4,-1905.35 1143.4,-1867.35 1143.4,-1867.35 1143.4,-1861.35 1149.4,-1855.35 1155.4,-1855.35 1155.4,-1855.35 1318.6,-1855.35 1318.6,-1855.35 1324.6,-1855.35 1330.6,-1861.35 1330.6,-1867.35 1330.6,-1867.35 1330.6,-1905.35 1330.6,-1905.35 1330.6,-1911.35 1324.6,-1917.35 1318.6,-1917.35" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1902.9">B02</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1889.4">BedrockDataGen</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1875.9">normalize verify diff</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1237" xml:space="preserve" y="-1862.4">generate</text>
+</g>
+<!-- B01&#45;&gt;B02 -->
+<g class="edge" id="edge1">
+<title>B01-&gt;B02</title>
+<path d="M1237,-1965.7C1237,-1954.03 1237,-1940.5 1237,-1928.01" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1239.98,-1928.28 1237,-1919.78 1234.03,-1928.28 1239.98,-1928.28" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B03 -->
+<g class="node" id="node3">
+<title>B03</title>
+<path d="M1308.6,-1806.35C1308.6,-1806.35 1145.4,-1806.35 1145.4,-1806.35 1139.4,-1806.35 1133.4,-1800.35 1133.4,-1794.35 1133.4,-1794.35 1133.4,-1756.35 1133.4,-1756.35 1133.4,-1750.35 1139.4,-1744.35 1145.4,-1744.35 1145.4,-1744.35 1308.6,-1744.35 1308.6,-1744.35 1314.6,-1744.35 1320.6,-1750.35 1320.6,-1756.35 1320.6,-1756.35 1320.6,-1794.35 1320.6,-1794.35 1320.6,-1800.35 1314.6,-1806.35 1308.6,-1806.35" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1227" xml:space="preserve" y="-1791.9">B03</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1227" xml:space="preserve" y="-1778.4">Data.Bedrock</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1227" xml:space="preserve" y="-1764.9">descriptors and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1227" xml:space="preserve" y="-1751.4">capability manifest</text>
+</g>
+<!-- B02&#45;&gt;B03 -->
+<g class="edge" id="edge2">
+<title>B02-&gt;B03</title>
+<path d="M1234.19,-1854.7C1233.11,-1842.99 1231.87,-1829.45 1230.73,-1816.96" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1233.71,-1816.92 1229.97,-1808.73 1227.78,-1817.47 1233.71,-1816.92" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B09 -->
+<g class="node" id="node9">
+<title>B09</title>
+<path d="M1482.6,-1662.85C1482.6,-1662.85 1319.4,-1662.85 1319.4,-1662.85 1313.4,-1662.85 1307.4,-1656.85 1307.4,-1650.85 1307.4,-1650.85 1307.4,-1612.85 1307.4,-1612.85 1307.4,-1606.85 1313.4,-1600.85 1319.4,-1600.85 1319.4,-1600.85 1482.6,-1600.85 1482.6,-1600.85 1488.6,-1600.85 1494.6,-1606.85 1494.6,-1612.85 1494.6,-1612.85 1494.6,-1650.85 1494.6,-1650.85 1494.6,-1656.85 1488.6,-1662.85 1482.6,-1662.85" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1401" xml:space="preserve" y="-1648.4">B09</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1401" xml:space="preserve" y="-1634.9">Generated packet</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1401" xml:space="preserve" y="-1621.4">codecs and native NBT</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1401" xml:space="preserve" y="-1607.9">primitives</text>
+</g>
+<!-- B02&#45;&gt;B09 -->
+<g class="edge" id="edge28">
+<title>B02-&gt;B09</title>
+<path d="M1288.28,-1854.67C1306.8,-1841.62 1326.66,-1825.07 1341,-1806.35 1371.21,-1766.92 1386.88,-1711.2 1394.51,-1673.63" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1397.39,-1674.39 1396.08,-1665.48 1391.55,-1673.26 1397.39,-1674.39" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1427.12" xml:space="preserve" y="-1777.57">generated records and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1427.12" xml:space="preserve" y="-1766.32">dispatch</text>
+</g>
+<!-- B03&#45;&gt;B09 -->
+<g class="edge" id="edge26">
+<title>B03-&gt;B09</title>
+<path d="M1249.37,-1743.71C1258.6,-1732.15 1269.86,-1719.34 1281.5,-1709.1 1298.17,-1694.44 1317.93,-1680.64 1336.53,-1668.92" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1337.94,-1671.55 1343.6,-1664.55 1334.8,-1666.49 1337.94,-1671.55" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1325.75" xml:space="preserve" y="-1711.32">static codec bindings</text>
+</g>
+<!-- B10 -->
+<g class="node" id="node10">
+<title>B10</title>
+<path d="M1402.6,-1231.85C1402.6,-1231.85 1239.4,-1231.85 1239.4,-1231.85 1233.4,-1231.85 1227.4,-1225.85 1227.4,-1219.85 1227.4,-1219.85 1227.4,-1181.85 1227.4,-1181.85 1227.4,-1175.85 1233.4,-1169.85 1239.4,-1169.85 1239.4,-1169.85 1402.6,-1169.85 1402.6,-1169.85 1408.6,-1169.85 1414.6,-1175.85 1414.6,-1181.85 1414.6,-1181.85 1414.6,-1219.85 1414.6,-1219.85 1414.6,-1225.85 1408.6,-1231.85 1402.6,-1231.85" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-1217.4">B10</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-1203.9">Immutable codec</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-1190.4">context and registry</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-1176.9">barrier</text>
+</g>
+<!-- B03&#45;&gt;B10 -->
+<g class="edge" id="edge27">
+<title>B03-&gt;B10</title>
+<path d="M1232.05,-1743.57C1247.87,-1647.26 1296.41,-1351.59 1314.3,-1242.68" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1317.22,-1243.25 1315.66,-1234.38 1311.35,-1242.28 1317.22,-1243.25" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1315.87" xml:space="preserve" y="-1479.32">validated default</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1315.87" xml:space="preserve" y="-1468.07">registries</text>
+</g>
+<!-- B04 -->
+<g class="node" id="node4">
+<title>B04</title>
+<path d="M393.6,-548.7C393.6,-548.7 230.4,-548.7 230.4,-548.7 224.4,-548.7 218.4,-542.7 218.4,-536.7 218.4,-536.7 218.4,-499.5 218.4,-499.5 218.4,-493.5 224.4,-487.5 230.4,-487.5 230.4,-487.5 393.6,-487.5 393.6,-487.5 399.6,-487.5 405.6,-493.5 405.6,-499.5 405.6,-499.5 405.6,-536.7 405.6,-536.7 405.6,-542.7 399.6,-548.7 393.6,-548.7" fill="#edf4f2" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="312" xml:space="preserve" y="-527.9">B04</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="312" xml:space="preserve" y="-514.4">UDP peer and corrected</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="312" xml:space="preserve" y="-500.9">RakNet fork</text>
+</g>
+<!-- B05 -->
+<g class="node" id="node5">
+<title>B05</title>
+<path d="M426.6,-416.6C426.6,-416.6 263.4,-416.6 263.4,-416.6 257.4,-416.6 251.4,-410.6 251.4,-404.6 251.4,-404.6 251.4,-366.6 251.4,-366.6 251.4,-360.6 257.4,-354.6 263.4,-354.6 263.4,-354.6 426.6,-354.6 426.6,-354.6 432.6,-354.6 438.6,-360.6 438.6,-366.6 438.6,-366.6 438.6,-404.6 438.6,-404.6 438.6,-410.6 432.6,-416.6 426.6,-416.6" fill="#edf4f2" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="345" xml:space="preserve" y="-402.15">B05</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="345" xml:space="preserve" y="-388.65">Owned message adapter</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="345" xml:space="preserve" y="-375.15">and terminal</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="345" xml:space="preserve" y="-361.65">completion</text>
+</g>
+<!-- B04&#45;&gt;B05 -->
+<g class="edge" id="edge3">
+<title>B04-&gt;B05</title>
+<path d="M239.63,-486.79C220.48,-474.23 208.03,-458.42 219.75,-440.6 225.67,-431.6 233.43,-424.1 242.21,-417.84" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="243.73,-420.4 249.25,-413.29 240.49,-415.41 243.73,-420.4" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="264.38" xml:space="preserve" y="-454.08">ordered reassembled</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="264.38" xml:space="preserve" y="-442.83">messages</text>
+</g>
+<!-- B05&#45;&gt;B04 -->
+<g class="edge" id="edge4">
+<title>B05-&gt;B04</title>
+<path d="M337.27,-417.16C332.77,-434.95 327.05,-457.6 322.18,-476.84" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="319.34,-475.96 320.14,-484.93 325.1,-477.41 319.34,-475.96" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="370.6" xml:space="preserve" y="-454.08">admitted outbound</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="370.6" xml:space="preserve" y="-442.83">messages</text>
+</g>
+<!-- B06 -->
+<g class="node" id="node6">
+<title>B06</title>
+<path d="M1408.6,-305.6C1408.6,-305.6 1245.4,-305.6 1245.4,-305.6 1239.4,-305.6 1233.4,-299.6 1233.4,-293.6 1233.4,-293.6 1233.4,-256.4 1233.4,-256.4 1233.4,-250.4 1239.4,-244.4 1245.4,-244.4 1245.4,-244.4 1408.6,-244.4 1408.6,-244.4 1414.6,-244.4 1420.6,-250.4 1420.6,-256.4 1420.6,-256.4 1420.6,-293.6 1420.6,-293.6 1420.6,-299.6 1414.6,-305.6 1408.6,-305.6" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1327" xml:space="preserve" y="-284.8">B06</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1327" xml:space="preserve" y="-271.3">Ingress budgets and FE</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1327" xml:space="preserve" y="-257.8">envelope</text>
+</g>
+<!-- B05&#45;&gt;B06 -->
+<g class="edge" id="edge29">
+<title>B05-&gt;B06</title>
+<path d="M439.16,-374.19C623.35,-353.82 1030.08,-308.84 1222.37,-287.57" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1222.69,-290.53 1230.81,-286.64 1222.04,-284.62 1222.69,-290.53" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B07 -->
+<g class="node" id="node7">
+<title>B07</title>
+<path d="M1426.6,-195.4C1426.6,-195.4 1263.4,-195.4 1263.4,-195.4 1257.4,-195.4 1251.4,-189.4 1251.4,-183.4 1251.4,-183.4 1251.4,-146.2 1251.4,-146.2 1251.4,-140.2 1257.4,-134.2 1263.4,-134.2 1263.4,-134.2 1426.6,-134.2 1426.6,-134.2 1432.6,-134.2 1438.6,-140.2 1438.6,-146.2 1438.6,-146.2 1438.6,-183.4 1438.6,-183.4 1438.6,-189.4 1432.6,-195.4 1426.6,-195.4" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1345" xml:space="preserve" y="-174.6">B07</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1345" xml:space="preserve" y="-161.1">Decrypt verify</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1345" xml:space="preserve" y="-147.6">checksum decompress</text>
+</g>
+<!-- B06&#45;&gt;B07 -->
+<g class="edge" id="edge5">
+<title>B06-&gt;B07</title>
+<path d="M1332.01,-243.86C1333.95,-232.23 1336.19,-218.76 1338.26,-206.31" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1341.17,-206.97 1339.63,-198.09 1335.3,-205.99 1341.17,-206.97" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B08 -->
+<g class="node" id="node8">
+<title>B08</title>
+<path d="M1489.6,-85.2C1489.6,-85.2 1326.4,-85.2 1326.4,-85.2 1320.4,-85.2 1314.4,-79.2 1314.4,-73.2 1314.4,-73.2 1314.4,-36 1314.4,-36 1314.4,-30 1320.4,-24 1326.4,-24 1326.4,-24 1489.6,-24 1489.6,-24 1495.6,-24 1501.6,-30 1501.6,-36 1501.6,-36 1501.6,-73.2 1501.6,-73.2 1501.6,-79.2 1495.6,-85.2 1489.6,-85.2" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1408" xml:space="preserve" y="-64.4">B08</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1408" xml:space="preserve" y="-50.9">Batch splitter and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1408" xml:space="preserve" y="-37.4">subclient envelope</text>
+</g>
+<!-- B07&#45;&gt;B08 -->
+<g class="edge" id="edge6">
+<title>B07-&gt;B08</title>
+<path d="M1362.55,-133.66C1369.52,-121.68 1377.64,-107.75 1385.07,-94.99" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1387.63,-96.5 1389.34,-87.65 1382.49,-93.5 1387.63,-96.5" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B08&#45;&gt;B09 -->
+<g class="edge" id="edge7">
+<title>B08-&gt;B09</title>
+<path d="M1441.89,-85.75C1460.57,-105.76 1480,-133.79 1480,-163.8 1480,-330.6 1480,-330.6 1480,-330.6 1480,-687.98 1522,-776.22 1522,-1133.6 1522,-1478.1 1522,-1478.1 1522,-1478.1 1522,-1522.05 1541.55,-1540.4 1517,-1576.85 1512.73,-1583.18 1507.52,-1588.79 1501.69,-1593.75" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1499.89,-1591.38 1494.96,-1598.92 1503.51,-1596.1 1499.89,-1591.38" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B09&#45;&gt;B10 -->
+<g class="edge" id="edge8">
+<title>B09-&gt;B10</title>
+<path d="M1395.31,-1600.34C1381.19,-1524.63 1344.54,-1328.11 1328.6,-1242.59" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1331.56,-1242.23 1327.07,-1234.42 1325.71,-1243.33 1331.56,-1242.23" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1409.92" xml:space="preserve" y="-1413.07">registry publication</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1409.92" xml:space="preserve" y="-1401.82">before next dependent</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1409.92" xml:space="preserve" y="-1390.57">packet</text>
+</g>
+<!-- B11 -->
+<g class="node" id="node11">
+<title>B11</title>
+<path d="M1402.6,-549.1C1402.6,-549.1 1239.4,-549.1 1239.4,-549.1 1233.4,-549.1 1227.4,-543.1 1227.4,-537.1 1227.4,-537.1 1227.4,-499.1 1227.4,-499.1 1227.4,-493.1 1233.4,-487.1 1239.4,-487.1 1239.4,-487.1 1402.6,-487.1 1402.6,-487.1 1408.6,-487.1 1414.6,-493.1 1414.6,-499.1 1414.6,-499.1 1414.6,-537.1 1414.6,-537.1 1414.6,-543.1 1408.6,-549.1 1402.6,-549.1" fill="white" stroke="#16324f" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-534.65">B11</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-521.15">Egress admission</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-507.65">encode batch compress</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1321" xml:space="preserve" y="-494.15">checksum encrypt</text>
+</g>
+<!-- B09&#45;&gt;B11 -->
+<g class="edge" id="edge10">
+<title>B09-&gt;B11</title>
+<path d="M1453.25,-1600.26C1461.52,-1593.46 1469.24,-1585.62 1475,-1576.85 1513.73,-1517.92 1502.17,-1492.18 1510,-1422.1 1520.71,-1326.19 1468.11,-1184.5 1463,-1169.85 1435.92,-1092.17 1381,-1086.17 1381,-1003.9 1381,-1003.9 1381,-1003.9 1381,-671.45 1381,-631 1362.47,-588.46 1346,-558.64" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1348.74,-557.44 1341.95,-551.52 1343.57,-560.38 1348.74,-557.44" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1470.04" xml:space="preserve" y="-1065.35">typed outbound records</text>
+</g>
+<!-- B15 -->
+<g class="node" id="node15">
+<title>B15</title>
+<path d="M654.6,-1507.7C654.6,-1507.7 491.4,-1507.7 491.4,-1507.7 485.4,-1507.7 479.4,-1501.7 479.4,-1495.7 479.4,-1495.7 479.4,-1458.5 479.4,-1458.5 479.4,-1452.5 485.4,-1446.5 491.4,-1446.5 491.4,-1446.5 654.6,-1446.5 654.6,-1446.5 660.6,-1446.5 666.6,-1452.5 666.6,-1458.5 666.6,-1458.5 666.6,-1495.7 666.6,-1495.7 666.6,-1501.7 660.6,-1507.7 654.6,-1507.7" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1486.9">B15</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1473.4">Ordered event dispatch</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1459.9">on session scheduler</text>
+</g>
+<!-- B09&#45;&gt;B15 -->
+<g class="edge" id="edge31">
+<title>B09-&gt;B15</title>
+<path d="M1306.86,-1615.31C1208.48,-1598.9 1049.71,-1571.9 913,-1546.35 833.77,-1531.54 744.42,-1513.56 677.21,-1499.77" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="677.89,-1496.87 668.96,-1498.07 676.69,-1502.7 677.89,-1496.87" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1117.32" xml:space="preserve" y="-1567.82">decoded events with</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1117.32" xml:space="preserve" y="-1556.57">captured context</text>
+</g>
+<!-- B10&#45;&gt;B09 -->
+<g class="edge" id="edge9">
+<title>B10-&gt;B09</title>
+<path d="M1383.07,-1232.51C1391.07,-1239.1 1398.15,-1246.85 1403,-1255.85 1411.46,-1271.55 1403.33,-1559.02 1403,-1576.85 1402.92,-1581.12 1402.81,-1585.59 1402.67,-1590.04" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1399.71,-1589.74 1402.39,-1598.33 1405.65,-1589.94 1399.71,-1589.74" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1457.21" xml:space="preserve" y="-1401.82">bound registry snapshot</text>
+</g>
+<!-- B17 -->
+<g class="node" id="node17">
+<title>B17</title>
+<path d="M654.6,-1099.35C654.6,-1099.35 491.4,-1099.35 491.4,-1099.35 485.4,-1099.35 479.4,-1093.35 479.4,-1087.35 479.4,-1087.35 479.4,-1050.15 479.4,-1050.15 479.4,-1044.15 485.4,-1038.15 491.4,-1038.15 491.4,-1038.15 654.6,-1038.15 654.6,-1038.15 660.6,-1038.15 666.6,-1044.15 666.6,-1050.15 666.6,-1050.15 666.6,-1087.35 666.6,-1087.35 666.6,-1093.35 660.6,-1099.35 654.6,-1099.35" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1078.55">B17</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1065.05">Chunk assembler layers</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="573" xml:space="preserve" y="-1051.55">and world generation</text>
+</g>
+<!-- B10&#45;&gt;B17 -->
+<g class="edge" id="edge38">
+<title>B10-&gt;B17</title>
+<path d="M1226.66,-1170.7C1225.44,-1170.41 1224.21,-1170.13 1223,-1169.85 1032.68,-1126.3 806.61,-1096.27 677.46,-1081.13" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="677.92,-1078.19 669.13,-1080.16 677.23,-1084.1 677.92,-1078.19" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1148.59" xml:space="preserve" y="-1136.82">immutable registry and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1148.59" xml:space="preserve" y="-1125.57">world identity</text>
+</g>
+<!-- B11&#45;&gt;B05 -->
+<g class="edge" id="edge30">
+<title>B11-&gt;B05</title>
+<path d="M1226.77,-489.37C1201.08,-482.58 1173.12,-475.9 1147,-471.1 899.15,-425.56 603.37,-402.29 449.57,-392.48" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="449.83,-389.52 441.16,-391.95 449.46,-395.45 449.83,-389.52" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B12 -->
+<g class="node" id="node12">
+<title>B12</title>
+<path d="M1108.6,-1508.1C1108.6,-1508.1 945.4,-1508.1 945.4,-1508.1 939.4,-1508.1 933.4,-1502.1 933.4,-1496.1 933.4,-1496.1 933.4,-1458.1 933.4,-1458.1 933.4,-1452.1 939.4,-1446.1 945.4,-1446.1 945.4,-1446.1 1108.6,-1446.1 1108.6,-1446.1 1114.6,-1446.1 1120.6,-1452.1 1120.6,-1458.1 1120.6,-1458.1 1120.6,-1496.1 1120.6,-1496.1 1120.6,-1502.1 1114.6,-1508.1 1108.6,-1508.1" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1027" xml:space="preserve" y="-1493.65">B12</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1027" xml:space="preserve" y="-1480.15">BedrockClient</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1027" xml:space="preserve" y="-1466.65">composition</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1027" xml:space="preserve" y="-1453.15">cancellation disposal</text>
+</g>
+<!-- B12&#45;&gt;B05 -->
+<g class="edge" id="edge45">
+<title>B12-&gt;B05</title>
+<path d="M1085.78,-1445.41C1119.31,-1428.16 1162.25,-1406.52 1201,-1388.35 1358.95,-1314.26 1463.34,-1376.42 1561,-1231.85 1604.64,-1167.25 1618.99,-543.62 1549,-471.1 1473.45,-392.82 728.07,-385.94 449.4,-386.13" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="449.75,-383.15 441.25,-386.14 449.76,-389.1 449.75,-383.15" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1646.82" xml:space="preserve" y="-938.88">connection lifetime and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1646.82" xml:space="preserve" y="-927.63">terminal failure</text>
+</g>
+<!-- B13 -->
+<g class="node" id="node13">
+<title>B13</title>
+<path d="M1083.6,-1364.35C1083.6,-1364.35 920.4,-1364.35 920.4,-1364.35 914.4,-1364.35 908.4,-1358.35 908.4,-1352.35 908.4,-1352.35 908.4,-1314.35 908.4,-1314.35 908.4,-1308.35 914.4,-1302.35 920.4,-1302.35 920.4,-1302.35 1083.6,-1302.35 1083.6,-1302.35 1089.6,-1302.35 1095.6,-1308.35 1095.6,-1314.35 1095.6,-1314.35 1095.6,-1352.35 1095.6,-1352.35 1095.6,-1358.35 1089.6,-1364.35 1083.6,-1364.35" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1002" xml:space="preserve" y="-1349.9">B13</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1002" xml:space="preserve" y="-1336.4">Bootstrap obligations</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1002" xml:space="preserve" y="-1322.9">and readiness state</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="1002" xml:space="preserve" y="-1309.4">machine</text>
+</g>
+<!-- B12&#45;&gt;B13 -->
+<g class="edge" id="edge11">
+<title>B12-&gt;B13</title>
+<path d="M1021.58,-1445.34C1017.96,-1424.82 1013.15,-1397.6 1009.21,-1375.25" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1012.16,-1374.84 1007.76,-1366.99 1006.3,-1375.87 1012.16,-1374.84" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B13&#45;&gt;B07 -->
+<g class="edge" id="edge32">
+<title>B13-&gt;B07</title>
+<path d="M1096.38,-1329.37C1254.37,-1322.49 1563.02,-1300.43 1644,-1231.85 1673.17,-1207.14 1755,-937.08 1755,-871.4 1755,-871.4 1755,-871.4 1755,-274 1755,-210.85 1570.88,-183.75 1449.41,-172.74" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1450.01,-169.81 1441.28,-172.02 1449.48,-175.73 1450.01,-169.81" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1803.75" xml:space="preserve" y="-740.93">transform transitions in</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1803.75" xml:space="preserve" y="-729.68">receive order</text>
+</g>
+<!-- B13&#45;&gt;B10 -->
+<g class="edge" id="edge34">
+<title>B13-&gt;B10</title>
+<path d="M1038.55,-1301.91C1059.36,-1286.02 1086.57,-1267.51 1113.5,-1255.85 1156.1,-1237.41 1172.54,-1243.47 1216.49,-1233.38" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1217.18,-1236.28 1224.72,-1231.36 1215.76,-1230.5 1217.18,-1236.28" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1153.25" xml:space="preserve" y="-1269.32">registry installation</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1153.25" xml:space="preserve" y="-1258.07">barrier</text>
+</g>
+<!-- B13&#45;&gt;B11 -->
+<g class="edge" id="edge33">
+<title>B13-&gt;B11</title>
+<path d="M1013.92,-1301.95C1063.02,-1176.78 1249.59,-701.15 1305.24,-559.28" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="1307.96,-560.48 1308.3,-551.48 1302.43,-558.31 1307.96,-560.48" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1223.63" xml:space="preserve" y="-938.88">transform transitions in</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1223.63" xml:space="preserve" y="-927.63">send order</text>
+</g>
+<!-- B13&#45;&gt;B11 -->
+<g class="edge" id="edge35">
+<title>B13-&gt;B11</title>
+<path d="M907.65,-1303.26C906.43,-1302.95 905.21,-1302.65 904,-1302.35 784.37,-1273.11 359,-1325 359,-1201.85 359,-1201.85 359,-1201.85 359,-1001.9 359,-938.43 327.93,-916.56 355,-859.15 419.86,-721.59 481.9,-707.27 619,-641.45 710.27,-597.63 741.44,-606.66 842,-594.95 909.35,-587.11 1080.54,-600.35 1147,-586.95 1181.42,-580.01 1217.86,-566.8 1248.45,-553.86" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1249.3,-556.73 1255.93,-550.64 1246.95,-551.27 1249.3,-556.73" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="395.93" xml:space="preserve" y="-933.25">required responses</text>
+</g>
+<!-- B14 -->
+<g class="node" id="node14">
+<title>B14</title>
+<path d="M881.6,-1508.1C881.6,-1508.1 718.4,-1508.1 718.4,-1508.1 712.4,-1508.1 706.4,-1502.1 706.4,-1496.1 706.4,-1496.1 706.4,-1458.1 706.4,-1458.1 706.4,-1452.1 712.4,-1446.1 718.4,-1446.1 718.4,-1446.1 881.6,-1446.1 881.6,-1446.1 887.6,-1446.1 893.6,-1452.1 893.6,-1458.1 893.6,-1458.1 893.6,-1496.1 893.6,-1496.1 893.6,-1502.1 887.6,-1508.1 881.6,-1508.1" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="800" xml:space="preserve" y="-1493.65">B14</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="800" xml:space="preserve" y="-1480.15">Credentials key</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="800" xml:space="preserve" y="-1466.65">exchange and resource</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="800" xml:space="preserve" y="-1453.15">policies</text>
+</g>
+<!-- B14&#45;&gt;B13 -->
+<g class="edge" id="edge12">
+<title>B14-&gt;B13</title>
+<path d="M894.14,-1464.12C922.9,-1456.29 952.56,-1443.37 974,-1422.1 986.6,-1409.6 993.53,-1391.45 997.35,-1374.9" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1000.22,-1375.71 998.96,-1366.79 994.39,-1374.55 1000.22,-1375.71" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B15&#45;&gt;B13 -->
+<g class="edge" id="edge13">
+<title>B15-&gt;B13</title>
+<path d="M667.33,-1467.3C751.77,-1458.29 868.46,-1442.7 910,-1422.1 933.71,-1410.35 955.38,-1390.36 971.73,-1372.43" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="973.69,-1374.7 977.1,-1366.37 969.24,-1370.76 973.69,-1374.7" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B16 -->
+<g class="node" id="node16">
+<title>B16</title>
+<path d="M923.6,-967.25C923.6,-967.25 760.4,-967.25 760.4,-967.25 754.4,-967.25 748.4,-961.25 748.4,-955.25 748.4,-955.25 748.4,-918.05 748.4,-918.05 748.4,-912.05 754.4,-906.05 760.4,-906.05 760.4,-906.05 923.6,-906.05 923.6,-906.05 929.6,-906.05 935.6,-912.05 935.6,-918.05 935.6,-918.05 935.6,-955.25 935.6,-955.25 935.6,-961.25 929.6,-967.25 923.6,-967.25" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="842" xml:space="preserve" y="-946.45">B16</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="842" xml:space="preserve" y="-932.95">Actor store runtime</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="842" xml:space="preserve" y="-919.45">and unique IDs</text>
+</g>
+<!-- B15&#45;&gt;B16 -->
+<g class="edge" id="edge14">
+<title>B15-&gt;B16</title>
+<path d="M667.38,-1462.9C715.82,-1454.05 767.79,-1440.6 783,-1422.1 807.81,-1391.92 788,-1373.41 788,-1334.35 788,-1334.35 788,-1334.35 788,-1067.75 788,-1035.41 802.41,-1001.76 816.35,-976.78" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="818.76,-978.55 820.45,-969.7 813.61,-975.57 818.76,-978.55" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B15&#45;&gt;B17 -->
+<g class="edge" id="edge15">
+<title>B15-&gt;B17</title>
+<path d="M573,-1445.89C573,-1373.81 573,-1191.7 573,-1110.23" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="575.98,-1110.35 573,-1101.85 570.03,-1110.35 575.98,-1110.35" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B18 -->
+<g class="node" id="node18">
+<title>B18</title>
+<path d="M919.6,-703.45C919.6,-703.45 756.4,-703.45 756.4,-703.45 750.4,-703.45 744.4,-697.45 744.4,-691.45 744.4,-691.45 744.4,-653.45 744.4,-653.45 744.4,-647.45 750.4,-641.45 756.4,-641.45 756.4,-641.45 919.6,-641.45 919.6,-641.45 925.6,-641.45 931.6,-647.45 931.6,-653.45 931.6,-653.45 931.6,-691.45 931.6,-691.45 931.6,-697.45 925.6,-703.45 919.6,-703.45" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="838" xml:space="preserve" y="-689">B18</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="838" xml:space="preserve" y="-675.5">Inventory authority</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="838" xml:space="preserve" y="-662">request tracker</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="838" xml:space="preserve" y="-648.5">predicted overlay</text>
+</g>
+<!-- B15&#45;&gt;B18 -->
+<g class="edge" id="edge16">
+<title>B15-&gt;B18</title>
+<path d="M667.32,-1468.88C740.27,-1461.43 833.49,-1447.27 862,-1422.1 974.87,-1322.44 935.76,-1247.06 965,-1099.35 983.12,-1007.84 985.08,-978.29 956,-889.65 937.94,-834.61 923.82,-824.76 896,-773.95 884.91,-753.69 872.12,-731.43 861.38,-713.01" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="863.98,-711.57 857.12,-705.74 858.85,-714.57 863.98,-711.57" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B19 -->
+<g class="node" id="node19">
+<title>B19</title>
+<path d="M696.6,-967.65C696.6,-967.65 533.4,-967.65 533.4,-967.65 527.4,-967.65 521.4,-961.65 521.4,-955.65 521.4,-955.65 521.4,-917.65 521.4,-917.65 521.4,-911.65 527.4,-905.65 533.4,-905.65 533.4,-905.65 696.6,-905.65 696.6,-905.65 702.6,-905.65 708.6,-911.65 708.6,-917.65 708.6,-917.65 708.6,-955.65 708.6,-955.65 708.6,-961.65 702.6,-967.65 696.6,-967.65" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="615" xml:space="preserve" y="-953.2">B19</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="615" xml:space="preserve" y="-939.7">Movement correction</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="615" xml:space="preserve" y="-926.2">and bounded replay</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="615" xml:space="preserve" y="-912.7">history</text>
+</g>
+<!-- B15&#45;&gt;B19 -->
+<g class="edge" id="edge17">
+<title>B15-&gt;B19</title>
+<path d="M667.09,-1452.24C681.1,-1444.76 693.88,-1434.96 703,-1422.1 725.6,-1390.24 708,-1373.41 708,-1334.35 708,-1334.35 708,-1334.35 708,-1067.75 708,-1033.85 720.51,-1020.67 703,-991.65 699.24,-985.43 694.47,-979.82 689.09,-974.79" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="691.33,-972.79 682.92,-969.55 687.48,-977.32 691.33,-972.79" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B20 -->
+<g class="node" id="node20">
+<title>B20</title>
+<path d="M761.6,-835.15C761.6,-835.15 598.4,-835.15 598.4,-835.15 592.4,-835.15 586.4,-829.15 586.4,-823.15 586.4,-823.15 586.4,-785.95 586.4,-785.95 586.4,-779.95 592.4,-773.95 598.4,-773.95 598.4,-773.95 761.6,-773.95 761.6,-773.95 767.6,-773.95 773.6,-779.95 773.6,-785.95 773.6,-785.95 773.6,-823.15 773.6,-823.15 773.6,-829.15 767.6,-835.15 761.6,-835.15" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="680" xml:space="preserve" y="-814.35">B20</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="680" xml:space="preserve" y="-800.85">Bedrock simulation and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="680" xml:space="preserve" y="-787.35">action coordinator</text>
+</g>
+<!-- B16&#45;&gt;B20 -->
+<g class="edge" id="edge43">
+<title>B16-&gt;B20</title>
+<path d="M814.97,-905.3C801.07,-890.54 783.42,-873.04 766,-859.15 758.26,-852.98 749.77,-846.94 741.23,-841.26" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="743.1,-838.92 734.36,-836.78 739.86,-843.91 743.1,-838.92" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="831.71" xml:space="preserve" y="-872.63">attributes and actor</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="831.71" xml:space="preserve" y="-861.38">state</text>
+</g>
+<!-- B21 -->
+<g class="node" id="node21">
+<title>B21</title>
+<path d="M693.6,-549.1C693.6,-549.1 530.4,-549.1 530.4,-549.1 524.4,-549.1 518.4,-543.1 518.4,-537.1 518.4,-537.1 518.4,-499.1 518.4,-499.1 518.4,-493.1 524.4,-487.1 530.4,-487.1 530.4,-487.1 693.6,-487.1 693.6,-487.1 699.6,-487.1 705.6,-493.1 705.6,-499.1 705.6,-499.1 705.6,-537.1 705.6,-537.1 705.6,-543.1 699.6,-549.1 693.6,-549.1" fill="white" stroke="#2e6e68" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="612" xml:space="preserve" y="-534.65">B21</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="612" xml:space="preserve" y="-521.15">Semantic observations</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="612" xml:space="preserve" y="-507.65">and capability checked</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="612" xml:space="preserve" y="-494.15">actions</text>
+</g>
+<!-- B16&#45;&gt;B21 -->
+<g class="edge" id="edge21">
+<title>B16-&gt;B21</title>
+<path d="M870.28,-905.39C875.5,-898.12 880.18,-890.02 883,-881.65 901.07,-827.95 893.01,-774.2 841,-727.45 801.52,-691.96 765.01,-737.16 724,-703.45 700.92,-684.48 712.45,-667.6 698,-641.45 681.78,-612.1 660.04,-581.23 642.48,-557.84" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="644.91,-556.12 637.4,-551.14 640.17,-559.71 644.91,-556.12" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B17&#45;&gt;B19 -->
+<g class="edge" id="edge44">
+<title>B17-&gt;B19</title>
+<path d="M582.74,-1037.58C588.48,-1019.81 595.81,-997.11 602.03,-977.83" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="604.78,-978.99 604.56,-969.98 599.12,-977.16 604.78,-978.99" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="633.64" xml:space="preserve" y="-1005.13">historical collision</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="633.64" xml:space="preserve" y="-993.88">snapshots</text>
+</g>
+<!-- B17&#45;&gt;B21 -->
+<g class="edge" id="edge22">
+<title>B17-&gt;B21</title>
+<path d="M543.68,-1037.69C527.69,-1019.15 509.47,-993.93 501,-967.65 490.37,-934.65 497.1,-924.1 501,-889.65 516.23,-755.25 523.07,-719 577,-594.95 582.1,-583.21 587.85,-570.54 593.19,-558.99" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="595.84,-560.34 596.73,-551.38 590.45,-557.83 595.84,-560.34" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B23 -->
+<g class="node" id="node23">
+<title>B23</title>
+<path d="M266.6,-967.65C266.6,-967.65 103.4,-967.65 103.4,-967.65 97.4,-967.65 91.4,-961.65 91.4,-955.65 91.4,-955.65 91.4,-917.65 91.4,-917.65 91.4,-911.65 97.4,-905.65 103.4,-905.65 103.4,-905.65 266.6,-905.65 266.6,-905.65 272.6,-905.65 278.6,-911.65 278.6,-917.65 278.6,-917.65 278.6,-955.65 278.6,-955.65 278.6,-961.65 272.6,-967.65 266.6,-967.65" fill="#f4f6f7" stroke="#4a5b6c" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="185" xml:space="preserve" y="-953.2">B23</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="185" xml:space="preserve" y="-939.7">Read only world</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="185" xml:space="preserve" y="-926.2">queries and route</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="185" xml:space="preserve" y="-912.7">search</text>
+</g>
+<!-- B17&#45;&gt;B23 -->
+<g class="edge" id="edge41">
+<title>B17-&gt;B23</title>
+<path d="M478.6,-1039.21C477.4,-1038.85 476.19,-1038.5 475,-1038.15 437.43,-1027.16 427.46,-1026.33 390.25,-1014.15 351.27,-1001.39 308.7,-985.8 272.48,-972.03" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="273.78,-969.34 264.77,-969.09 271.65,-974.9 273.78,-969.34" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="429.62" xml:space="preserve" y="-1005.13">known or unknown</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="429.62" xml:space="preserve" y="-993.88">collision data</text>
+</g>
+<!-- B18&#45;&gt;B11 -->
+<g class="edge" id="edge36">
+<title>B18-&gt;B11</title>
+<path d="M842.61,-641.02C846.81,-624.51 854.81,-605.38 870,-594.95 882.69,-586.24 1131.91,-590.01 1147,-586.95 1181.41,-579.96 1217.85,-566.74 1248.44,-553.82" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1249.29,-556.69 1255.93,-550.6 1246.94,-551.22 1249.29,-556.69" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="925.5" xml:space="preserve" y="-608.43">standalone requests when</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="925.5" xml:space="preserve" y="-597.18">permitted</text>
+</g>
+<!-- B18&#45;&gt;B21 -->
+<g class="edge" id="edge23">
+<title>B18-&gt;B21</title>
+<path d="M792.54,-640.8C755.99,-616.16 704.55,-581.49 665.92,-555.45" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="667.73,-553.08 659.02,-550.8 664.41,-558.02 667.73,-553.08" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B19&#45;&gt;B20 -->
+<g class="edge" id="edge18">
+<title>B19-&gt;B20</title>
+<path d="M570.71,-905.11C556.37,-891.38 546.5,-874.79 556.75,-859.15 562.21,-850.82 569.27,-843.78 577.26,-837.83" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="578.86,-840.33 584.25,-833.11 575.54,-835.4 578.86,-840.33" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="596.88" xml:space="preserve" y="-867">corrected tick state</text>
+</g>
+<!-- B19&#45;&gt;B21 -->
+<g class="edge" id="edge24">
+<title>B19-&gt;B21</title>
+<path d="M561.44,-904.86C554,-898.2 547.4,-890.45 543,-881.65 538.53,-872.71 542,-869.1 543,-859.15 554.01,-749.57 584.48,-623.07 601.01,-559.71" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="603.85,-560.61 603.13,-551.63 598.09,-559.1 603.85,-560.61" stroke="#16324f" stroke-width="1.3"></polygon>
+</g>
+<!-- B20&#45;&gt;B11 -->
+<g class="edge" id="edge37">
+<title>B20-&gt;B11</title>
+<path d="M774.24,-781.49C804.98,-773.07 838.92,-762.44 869,-749.95 908.05,-733.74 916.12,-725.82 952,-703.45 993.14,-677.8 1000.41,-666.77 1041.75,-641.45 1078.89,-618.71 1088.5,-613.28 1128,-594.95 1138.4,-590.12 1186.28,-571.31 1231.73,-553.62" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="1232.7,-556.44 1239.55,-550.59 1230.55,-550.89 1232.7,-556.44" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1084.88" xml:space="preserve" y="-674.68">PlayerAuthInput and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="1084.88" xml:space="preserve" y="-663.43">coupled actions</text>
+</g>
+<!-- B20&#45;&gt;B18 -->
+<g class="edge" id="edge20">
+<title>B20-&gt;B18</title>
+<path d="M716.65,-773.38C739.33,-754.69 768.64,-730.57 792.76,-710.7" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="794.54,-713.09 799.21,-705.39 790.76,-708.49 794.54,-713.09" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="813.83" xml:space="preserve" y="-740.93">tick coupled item and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="813.83" xml:space="preserve" y="-729.68">block actions</text>
+</g>
+<!-- B20&#45;&gt;B19 -->
+<g class="edge" id="edge19">
+<title>B20-&gt;B19</title>
+<path d="M665.59,-835.64C658.82,-849.66 650.58,-866.55 643,-881.65 640.69,-886.25 638.24,-891.06 635.8,-895.82" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="633.28,-894.21 632.03,-903.13 638.57,-896.94 633.28,-894.21" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="704.7" xml:space="preserve" y="-872.63">record applied input and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="704.7" xml:space="preserve" y="-861.38">outcome</text>
+</g>
+<!-- B21&#45;&gt;B20 -->
+<g class="edge" id="edge25">
+<title>B21-&gt;B20</title>
+<path d="M615.23,-549.82C619.53,-586.73 628.3,-650.33 642.5,-703.45 647.92,-723.72 655.87,-745.61 663.05,-763.74" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="660.27,-764.79 666.21,-771.56 665.79,-762.56 660.27,-764.79" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="667.25" xml:space="preserve" y="-669.05">host intents</text>
+</g>
+<!-- B22 -->
+<g class="node" id="node22">
+<title>B22</title>
+<path d="M234.6,-1662.85C234.6,-1662.85 71.4,-1662.85 71.4,-1662.85 65.4,-1662.85 59.4,-1656.85 59.4,-1650.85 59.4,-1650.85 59.4,-1612.85 59.4,-1612.85 59.4,-1606.85 65.4,-1600.85 71.4,-1600.85 71.4,-1600.85 234.6,-1600.85 234.6,-1600.85 240.6,-1600.85 246.6,-1606.85 246.6,-1612.85 246.6,-1612.85 246.6,-1650.85 246.6,-1650.85 246.6,-1656.85 240.6,-1662.85 234.6,-1662.85" fill="#f4f6f7" stroke="#4a5b6c" stroke-width="1.6"></path>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="153" xml:space="preserve" y="-1648.4">B22</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="153" xml:space="preserve" y="-1634.9">Core scheduler tick</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="153" xml:space="preserve" y="-1621.4">geometry logging and</text>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="11.00" text-anchor="middle" x="153" xml:space="preserve" y="-1607.9">quotas</text>
+</g>
+<!-- B22&#45;&gt;B15 -->
+<g class="edge" id="edge40">
+<title>B22-&gt;B15</title>
+<path d="M247.24,-1615.2C313.08,-1602.12 401.93,-1580.08 475,-1546.35 493.43,-1537.84 512.11,-1525.85 528.14,-1514.3" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="529.6,-1516.91 534.68,-1509.48 526.07,-1512.12 529.6,-1516.91" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="483.3" xml:space="preserve" y="-1562.2">FIFO execution</text>
+</g>
+<!-- B22&#45;&gt;B20 -->
+<g class="edge" id="edge39">
+<title>B22-&gt;B20</title>
+<path d="M107.2,-1600.24C72.23,-1572.84 30,-1529.17 30,-1478.1 30,-1478.1 30,-1478.1 30,-935.65 30,-825.74 391.88,-807.41 575.61,-805.2" fill="none" stroke="#4a5b6c" stroke-dasharray="5,2" stroke-width="1.3"></path>
+<polygon fill="#4a5b6c" points="575.4,-808.17 583.86,-805.11 575.33,-802.22 575.4,-808.17" stroke="#4a5b6c" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="76.5" xml:space="preserve" y="-1197.45">single gameplay clock</text>
+</g>
+<!-- B23&#45;&gt;B20 -->
+<g class="edge" id="edge42">
+<title>B23-&gt;B20</title>
+<path d="M263.19,-904.86C278.27,-899.43 294.03,-894.1 309,-889.65 397.91,-863.21 500.92,-840.47 575.81,-825.32" fill="none" stroke="#16324f" stroke-width="1.3"></path>
+<polygon fill="#16324f" points="576.05,-828.31 583.8,-823.72 574.88,-822.48 576.05,-828.31" stroke="#16324f" stroke-width="1.3"></polygon>
+<text fill="#22303f" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="9.50" text-anchor="middle" x="466.54" xml:space="preserve" y="-867">bounded route intents</text>
+</g>
+</g>
+</svg></div><figcaption>Figure 3. Detailed implementation map B01 to B23: build, transport, wire, session, and shared foundations. Solid arrows carry runtime data; dotted arrows carry build output, captured context, or lifecycle control.</figcaption><details><summary>Exact Mermaid source (traceability)</summary><pre><code class="language-mermaid">flowchart TB
+    subgraph BUILD[Build time - pinned evidence and generation]
+        B01[B01 Frozen 2169 inputs and correction ledger]
+        B02[B02 BedrockDataGen normalize verify diff generate]
+        B03[B03 Data.Bedrock descriptors and capability manifest]
+        B01 --&gt; B02
+        B02 --&gt; B03
+    end
+    subgraph TRANSPORT[Transport.RakNet - transport lifetime]
+        B04[B04 UDP peer and corrected RakNet fork]
+        B05[B05 Owned message adapter and terminal completion]
+        B04 --&gt;|ordered reassembled messages| B05
+        B05 --&gt;|admitted outbound messages| B04
+    end
+    subgraph WIRE[Protocol.Bedrock - one ordered connection owner]
+        B06[B06 Ingress budgets and FE envelope]
+        B07[B07 Decrypt verify checksum decompress]
+        B08[B08 Batch splitter and subclient envelope]
+        B09[B09 Generated packet codecs and native NBT primitives]
+        B10[B10 Immutable codec context and registry barrier]
+        B11[B11 Egress admission encode batch compress checksum encrypt]
+        B06 --&gt; B07
+        B07 --&gt; B08
+        B08 --&gt; B09
+        B09 --&gt;|registry publication before next dependent packet| B10
+        B10 --&gt;|bound registry snapshot| B09
+        B09 --&gt;|typed outbound records| B11
+    end
+    subgraph SESSION[Client.Bedrock - scheduler owns semantic state]
+        B12[B12 BedrockClient composition cancellation disposal]
+        B13[B13 Bootstrap obligations and readiness state machine]
+        B14[B14 Credentials key exchange and resource policies]
+        B15[B15 Ordered event dispatch on session scheduler]
+        B16[B16 Actor store runtime and unique IDs]
+        B17[B17 Chunk assembler layers and world generation]
+        B18[B18 Inventory authority request tracker predicted overlay]
+        B19[B19 Movement correction and bounded replay history]
+        B20[B20 Bedrock simulation and action coordinator]
+        B21[B21 Semantic observations and capability checked actions]
+        B12 --&gt; B13
+        B14 --&gt; B13
+        B15 --&gt; B13
+        B15 --&gt; B16
+        B15 --&gt; B17
+        B15 --&gt; B18
+        B15 --&gt; B19
+        B19 --&gt;|corrected tick state| B20
+        B20 --&gt;|record applied input and outcome| B19
+        B20 --&gt;|tick coupled item and block actions| B18
+        B16 --&gt; B21
+        B17 --&gt; B21
+        B18 --&gt; B21
+        B19 --&gt; B21
+        B21 --&gt;|host intents| B20
+    end
+    subgraph SHARED[Existing foundations - share only verified contracts]
+        B22[B22 Core scheduler tick geometry logging and quotas]
+        B23[B23 Read only world queries and route search]
+    end
+    B03 -. static codec bindings .-&gt; B09
+    B03 -. validated default registries .-&gt; B10
+    B02 -. generated records and dispatch .-&gt; B09
+    B05 --&gt; B06
+    B11 --&gt; B05
+    B09 --&gt;|decoded events with captured context| B15
+    B13 -. transform transitions in receive order .-&gt; B07
+    B13 -. transform transitions in send order .-&gt; B11
+    B13 -. registry installation barrier .-&gt; B10
+    B13 --&gt;|required responses| B11
+    B18 --&gt;|standalone requests when permitted| B11
+    B20 --&gt;|PlayerAuthInput and coupled actions| B11
+    B10 -. immutable registry and world identity .-&gt; B17
+    B22 -. single gameplay clock .-&gt; B20
+    B22 -. FIFO execution .-&gt; B15
+    B17 --&gt;|known or unknown collision data| B23
+    B23 --&gt;|bounded route intents| B20
+    B16 -. attributes and actor state .-&gt; B20
+    B17 -. historical collision snapshots .-&gt; B19
+    B12 -. connection lifetime and terminal failure .-&gt; B05</code></pre></details></figure>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Boundary</th>
+<th>Owner and implementer contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B01–B03: evidence to generated code</td>
+<td>DataGen owns the normalized schema, per-field evidence, correction preconditions, hashes and deterministic output. Runtime code consumes static descriptors; it never discovers codecs through reflection or resolves <code>latest</code>.</td>
+</tr>
+<tr>
+<td>B04–B05: transport to message connection</td>
+<td>RakNet owns ACK/retry/reassembly and monotonic transport deadlines. The adapter owns buffer transfer and terminal completion. Enforce fragment and queue bounds inside the fork before allocation; publish no RakNet types in shared contracts.</td>
+</tr>
+<tr>
+<td>B06–B11: bytes to records and back</td>
+<td>The connection owns transform state, counters, codec context and ordered writes. Admission reserves capacity before cipher state advances. Invalid transform state is terminal. A record encoder and decoder use the same bound version profile without exposing a version integer to gameplay code.</td>
+</tr>
+<tr>
+<td>B10/B13/B15: registry and lifecycle barrier</td>
+<td>Bootstrap specifies obligations; the connection publishes immutable decode context before the next dependent record, including within a batch. Scheduler commits semantic state in order. Barrier code must not await an event that requires the receive loop to advance.</td>
+</tr>
+<tr>
+<td>B16/B17: observations</td>
+<td>Actor IDs retain both namespaces. Chunk assembly captures registry identity, dimension and world generation; late work cannot mutate a replacement world. Expensive decoding uses bounded work queues and ordered commits if profiling justifies it.</td>
+</tr>
+<tr>
+<td>B18/B19/B20: one action timeline</td>
+<td>Inventory owns request correlation and authoritative reconciliation. Movement owns correction history; simulation consumes one session tick and reports applied input. The action coordinator serializes embedded inventory/block actions with that tick and prevents duplicate replay side effects.</td>
+</tr>
+<tr>
+<td>B21–B23: public and shared surface</td>
+<td>Hosts see immutable observations, supported commands and explicit unavailable data/capabilities. Pathfinding consumes validated world queries; Java movement execution and packet APIs remain edition-specific.</td>
+</tr>
+<tr>
+<td>B12: lifetime</td>
+<td>One composition root owns cancellation, readiness tasks, resource disposal and terminal failure propagation. Disconnect, respawn and dimension change have different scopes; each cancels only its owned pending work.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="bedrock-wire-stack-and-connection-flow">Bedrock wire stack and connection flow</h3>
+<p>Verified in two implementations declaring 1.26.45: a game-packet header is a VarUInt32 with a 10-bit packet ID and two 2-bit subclient fields. A batch concatenates VarUInt32 lengths and complete packet bytes. The RakNet application message has a clear <code>0xFE</code> prefix. Keep subclient fields in the envelope; initially reject unsupported nonzero routing rather than folding it into packet IDs. <a href="https://github.com/Sandertv/gophertunnel/blob/b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d/minecraft/protocol/packet/packet.go#L21">Gophertunnel header</a> · <a href="https://github.com/Sandertv/gophertunnel/blob/b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d/minecraft/protocol/packet/encoder.go#L54">Batch encoder</a></p>
+<p>After network settings, compression tags are <code>0x00</code> raw DEFLATE, <code>0x01</code> Snappy, and <code>0xFF</code> uncompressed. This is not Java's zlib-wrapped compression. Honor negotiated state/thresholds; if an algorithm is not implemented, reject it explicitly. Prismarine's encrypted path currently hardcodes DEFLATE and its Snappy paths throw; those are implementation limitations, not proof that the protocol lacks Snappy. <a href="https://github.com/PrismarineJS/bedrock-protocol/blob/05940d77bee67b96395c69afb57b92e32bea4148/src/transforms/framer.js#L14">Prismarine framer</a> · <a href="https://github.com/PrismarineJS/bedrock-protocol/blob/05940d77bee67b96395c69afb57b92e32bea4148/src/transforms/encryption.js#L16">Prismarine encryption</a></p>
+<p>Key exchange uses P-384 ECDH and <code>K = SHA256(salt || rawECDHSharedSecret)</code>. Modern encryption uses a continuous AES-256-CTR stream, starting at <code>K[0:12] || 00 00 00 02</code>, with separate state per direction. For each encrypted batch body <code>P</code> (compression tag plus compressed/plain batch), append <code>SHA256(LE64(batchCounter) || P || K)[0:8]</code>, then encrypt; exclude the clear <code>0xFE</code>. The batch counter is distinct from AES's block counter and from the gameplay tick. <a href="https://github.com/PrismarineJS/bedrock-protocol/blob/05940d77bee67b96395c69afb57b92e32bea4148/src/handshake/keyExchange.js#L24">Key exchange</a> · <a href="https://github.com/Sandertv/gophertunnel/blob/b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d/minecraft/protocol/packet/encoder.go#L54">CTR initialization</a> · <a href="https://github.com/Sandertv/gophertunnel/blob/b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d/minecraft/protocol/packet/encryption.go#L28">Checksum</a></p>
+<p>Prismarine calls Node's GCM cipher incrementally without GCM tags/finalization; gophertunnel expresses the corresponding CTR stream directly. Ordinary .NET <code>AesGcm</code> record encryption would produce the wrong wire format. Build a small explicitly stateful transform and prove it with independent multi-batch vectors, partial-block boundaries, corruption and replay/order cases. Receive order is <strong>decrypt → verify checksum → decompress → split → decode</strong>, with bounds at each allocation point. Checksum, decompression, framing and invalid transform-transition failures terminate the connection. Never retry advanced cipher state, reset counters mid-session, or fall back to plaintext. The server handshake JWT's self-declared key verifies signature/key binding, not independent trust in the server's identity. Cloudburst independently confirms checksum-before-encryption, but its receive checksum check defaults off; retain mandatory verification in UMPK. <a href="https://github.com/Sandertv/gophertunnel/blob/b8bd7357c24fcba3e32f940d1afb1d3b4e43b96d/minecraft/protocol/packet/decoder.go#L118">Decoder</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-connection/src/main/java/org/cloudburstmc/protocol/bedrock/netty/codec/encryption/BedrockEncryptionEncoder.java#L40">Cloudburst encoder</a> · <a href="https://github.com/CloudburstMC/Protocol/blob/db36d289968a1d07d6591f0d54426cc058b227c0/bedrock-connection/src/main/java/org/cloudburstmc/protocol/bedrock/netty/codec/encryption/BedrockEncryptionDecoder.java#L22">Conditional validation</a></p>
+<p>Bound queued and unacknowledged message bytes/counts and maximum queue age; reserve capacity before advancing encryption. ACK/retry processing must continue independently of application consumption. If receive saturation cannot be resolved within bounds, terminate rather than discard an encrypted batch and continue with desynchronized cipher state. Enforce cumulative compressed/expanded bytes, member counts, NBT depth/elements/string bytes, pending registry/chunk work and total retained session bytes, including before authentication. Stop decompression as it reaches its output budget.</p>
+<p>The Bedrock connection owns ordered transform/decode progression, including an awaited registry-installation barrier <strong>within a batch</strong>. Publish an immutable codec context before decoding a dependent packet. Keep world commits on the session scheduler; callbacks at the barrier must not await work that itself requires receive progression. Expensive chunk work may use a bounded worker queue only after required context is captured, with ordered commits and explicit byte/work limits. Verify tick latency under chunk bursts and slow consumers; do not start with unbounded parallel decoding.</p>
+<figure class="diagram"><div class="fig-head">Diagram 4 of 4, rendered from the Mermaid source below</div><div aria-label="Scrollable diagram" class="fig-scroll" role="region" tabindex="0"><svg aria-labelledby="fig4t fig4d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" role="img" viewbox="0 0 760 640">
+<title id="fig4t">Connection sequence diagram</title>
+<desc id="fig4d">Architectural message order from dial through network settings, login, encryption, bootstrap obligations, world data, spawn and local player initialization. Notes mark where compression, cipher state, registries and capabilities are installed.</desc>
+<defs><marker id="a4" markerheight="7" markerwidth="7" orient="auto" refx="7" refy="4" viewbox="0 0 8 8"><path d="M0,0 L8,4 L0,8 z" fill="#16324F"></path></marker></defs>
+<rect fill="#16324F" height="34" rx="6" width="130" x="60" y="12"></rect><text fill="#fff" font-size="12" font-weight="600" text-anchor="middle" x="125" y="33">BedrockClient</text>
+<rect fill="#fff" height="34" rx="6" stroke="#16324F" stroke-width="1.5" width="130" x="315" y="12"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="380" y="33">RakNet adapter</text>
+<rect fill="#EDF4F2" height="34" rx="6" stroke="#2E6E68" stroke-width="1.5" width="130" x="570" y="12"></rect><text fill="#16324F" font-size="12" font-weight="600" text-anchor="middle" x="635" y="33">BDS 26.45</text>
+<line stroke="#4A5B6C" stroke-width="1" x1="125" x2="125" y1="46" y2="610"></line>
+<line stroke="#4A5B6C" stroke-width="1" x1="380" x2="380" y1="46" y2="610"></line>
+<line stroke="#4A5B6C" stroke-width="1" x1="635" x2="635" y1="46" y2="610"></line>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-width="1.5" x1="125" x2="376" y1="70" y2="70"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="250" y="62">Dial, bounded cancellation</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-width="1.5" x1="384" x2="631" y1="104" y2="104"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="507" y="96">MTU + RakNet handshake</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-dasharray="5 3" stroke-width="1.2" x1="376" x2="129" y1="138" y2="138"></line><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="252" y="130">message connection ready</text>
+<line marker-end="url(#a4)" stroke="#2E6E68" stroke-width="1.5" x1="129" x2="631" y1="172" y2="172"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="380" y="164">RequestNetworkSettings · 2169</text>
+<line marker-end="url(#a4)" stroke="#2E6E68" stroke-dasharray="5 3" stroke-width="1.2" x1="631" x2="129" y1="206" y2="206"></line><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="198">NetworkSettings</text>
+<rect fill="#FFF7EC" height="30" rx="4" stroke="#A34A24" stroke-width="1" width="380" x="150" y="218"></rect><text fill="#6E3418" font-size="11" text-anchor="middle" x="340" y="237">Install negotiated compression in receive order</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-width="1.5" x1="129" x2="631" y1="272" y2="272"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="380" y="264">Login · identity envelope + client-data JWT</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-dasharray="5 3" stroke-width="1.2" x1="631" x2="129" y1="306" y2="306"></line><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="298">ServerToClientHandshake, when encrypted</text>
+<rect fill="#FFF7EC" height="30" rx="4" stroke="#A34A24" stroke-width="1" width="380" x="150" y="318"></rect><text fill="#6E3418" font-size="11" text-anchor="middle" x="340" y="337">Verify handshake, install cipher state</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-width="1.5" x1="129" x2="631" y1="372" y2="372"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="380" y="364">Encrypted ClientToServerHandshake</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-dasharray="5 3" stroke-width="1.2" x1="631" x2="129" y1="406" y2="406"></line><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="398">Resource-pack + bootstrap packets</text>
+<rect fill="#FFF7EC" height="30" rx="4" stroke="#A34A24" stroke-width="1" width="380" x="150" y="418"></rect><text fill="#6E3418" font-size="11" text-anchor="middle" x="340" y="437">Answer obligations, install session registries</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-dasharray="5 3" stroke-width="1.2" x1="631" x2="129" y1="472" y2="472"></line><text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="464">World data + spawn notifications</text>
+<line marker-end="url(#a4)" stroke="#16324F" stroke-width="1.5" x1="129" x2="631" y1="506" y2="506"></line><text fill="#16324F" font-size="11" text-anchor="middle" x="380" y="498">Required local-player initialization</text>
+<rect fill="#EDF4F2" height="30" rx="4" stroke="#2E6E68" stroke-width="1" width="380" x="150" y="518"></rect><text fill="#1F4A45" font-size="11" text-anchor="middle" x="340" y="537">Publish capabilities when prerequisites hold</text>
+<text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="580">Architectural order, not a universal total order for every bootstrap packet.</text>
+<text fill="#4A5B6C" font-size="11" text-anchor="middle" x="380" y="598">Transform changes apply between packets even when datagrams are queued.</text>
+</svg></div><figcaption>Figure 4. Connection sequence: dial, network settings, login, bootstrap, and spawn.</figcaption><details><summary>Exact Mermaid source (traceability)</summary><pre><code class="language-mermaid">sequenceDiagram
+    participant C as BedrockClient
+    participant T as RakNet adapter
+    participant S as Bedrock 26.45 server
+    C-&gt;&gt;T: Dial with bounded cancellation
+    T-&gt;&gt;S: MTU and RakNet connection handshake
+    T--&gt;&gt;C: Reliable message connection established
+    C-&gt;&gt;S: RequestNetworkSettings, protocol 2169
+    S--&gt;&gt;C: NetworkSettings
+    Note over C: Install negotiated compression in receive order
+    C-&gt;&gt;S: Login, identity envelope and client-data JWT
+    S--&gt;&gt;C: ServerToClientHandshake, when encryption applies
+    Note over C: Verify handshake and install cipher state
+    C-&gt;&gt;S: Encrypted ClientToServerHandshake
+    S--&gt;&gt;C: Resource-pack and bootstrap packets
+    Note over C: Respond to obligations and install session registries
+    S--&gt;&gt;C: World data and spawn notifications
+    C-&gt;&gt;S: Required local-player initialization
+    Note over C: Publish capabilities when their prerequisites hold</code></pre></details></figure>
+<p>This is an architectural sequence, not a claim of a universal total order for every bootstrap packet. <code>RequestNetworkSettings</code> precedes Login in the inspected implementation. Preserve transform changes between packets/batches even if multiple datagrams are already queued; do not decode queued bytes under a later state. <a href="https://github.com/PrismarineJS/bedrock-protocol/blob/05940d77bee67b96395c69afb57b92e32bea4148/src/client.js#L110">Prismarine client</a></p>
+<p>Use a Bedrock credential-provider contract that supplies identity/certificate material, multiplayer token and separately signed client-data JWT, with explicit offline/online modes and key ownership. Share HTTP/cache infrastructure only where appropriate. Java <code>ISessionAuthenticator.JoinAsync(serverIdHash, ...)</code> remains Java-specific. Require caller-selected auth mode and never downgrade online failure to offline automatically. Validate applicable issuer, audience, lifetime, algorithm/curve and signature/key binding for each token type; own ephemeral keys and cipher state per connection. Online token claims, refresh, trust anchors and account behavior require dedicated validation; an offline BDS join proves none of them. Generate JSON metadata for auth and skin payloads and keep secrets out of packet logs. <a href="https://github.com/PrismarineJS/bedrock-protocol/blob/05940d77bee67b96395c69afb57b92e32bea4148/src/client/auth.js#L87">Prismarine authentication</a></p>
+<p>Resource-pack responses are protocol obligations independent of downloading, accepting, caching or hash verification. Keep those actions independently opt-in. Required unsupported content must yield an explicit readiness/failure result. Install ItemRegistry/runtime IDs and custom block/palette context before item/chunk consumers run. StartGame alone does not imply a usable world; readiness should express which registries, local player state, terrain and initialization obligations are complete.</p>
+<h3 id="state-interaction-and-physics">State, interaction, and physics</h3>
+<p>Retain edition-specific backing stores. A shared entity handle should include family/session identity without narrowing Bedrock actor IDs into <code>int</code> or inventing UUIDs. A shared item view can expose name/count and supported properties while retaining Bedrock runtime/stack IDs and extras. A common world query should return known data or unknown availability; it must never treat an unreceived subchunk as air. Session registry identity, world generation and dimension changes must invalidate pending chunk/inventory work before stale responses can modify the new world.</p>
+<p>Use a Bedrock request tracker for full container addresses, authoritative snapshots, predicted overlays, request IDs and rejection. Derive shield-specific extra-data context from the session item registry. Keep catalog IDs, runtime item IDs, stack network IDs and recipe IDs distinct. Common operations such as use, drop or move a stack should advertise actual support; do not expose Java's <code>ClickAction</code> as a universal inventory language. <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/types.yml#L94">Item/container types</a> · <a href="https://github.com/milutinke/minecraft-data/blob/8ee2fbe890949fe6c2cf037cd50007ef50444931/data/bedrock/latest/types.yml#L1074">Request/response types</a></p>
+<p>A Bedrock movement controller owns bounded tick-indexed input/state history and applies relevant corrections before advancing simulation. Replay needs the movement-affecting actor/attribute updates and world state relevant to that history, not just a list of positions. Item/block actions carried with PlayerAuthInput must share its tick/ordering boundary. Bound history by retained bytes as well as ticks, cap referenced terrain versions and replay work, and expire outstanding chunk requests. If required historical state is unavailable, use an explicitly validated resynchronization path or terminate with a clear failure; never silently replay against current terrain. Teleports, respawn, dimension changes and history exhaustion need distinct recovery rules. Mojang's <a href="https://mojang.github.io/bedrock-protocol-docs/guides/player-movement-overview/">movement guide</a> supports this design; its <a href="https://mojang.github.io/bedrock-protocol-docs/guides/block-breaking-overview/">block-breaking guide</a> explains action coupling. Exact replay rules remain a 26.45 validation target.</p>
+<p>Reuse <code>IPhysicsWorldView</code>, geometry and route-search machinery only after checking their contracts. <code>PlayerPhysics</code>, Java collision data and Java path execution cannot be declared Bedrock-correct. Establish measured walking/jumping/collision/fluid behavior before enabling autonomous navigation; separately qualify vehicles and special movement. The dataset supplies shapes and descriptions, not a complete movement integrator. Cache-disabled terrain is a reasonable initial scope if 26.45 BDS accepts it. Later blob caching needs bounded storage, requested-ID correlation and XXHash64 verification. <a href="https://mojang.github.io/bedrock-protocol-docs/guides/client-cache-miss-response-packet-validation/">Mojang cache validation</a></p>
+<h3 id="version-organization-and-future-additions">Version organization and future additions</h3>
+<p>Use <code>data/bedrock/2169/</code> with a manifest mapping release <code>1.26.45</code> to game protocol 2169 and its explicit packet-dialect/data/behavior profile. Keep profile identity in codec bindings and cache keys so a future same-number hotfix need not distort an integer timeline. Pin each resolved input path, revision, hash and validation status. Import at build time; never read mutable <code>bedrock/latest</code> at runtime. Keep session-negotiated registries separate from bundled defaults and key shared caches by edition-qualified identity. B2J/J2B mappings can assist a deliberate translation feature but are not lossless shared-state models; neither PNX’s air substitution nor Geyser’s Java fallbacks belong in native Bedrock state.</p>
+<p>Produce a canonical normalized schema from immutable vendor inputs plus small reviewed correction overlays. Record exact evidence for every overlay, fail when an overlay no longer applies, and retire it only after reviewing the upstream replacement. Generate deterministically from that normalized input, never from manually edited generated output.</p>
+<p>Generate initially internal typed wire records, fixed registration tables and immutable descriptors; handwrite small native primitive/NBT/chunk adapters with byte-level tests. Maintain a per-packet manifest of wire availability, inbound/outbound implementation, required obligations and evidence. Schema presence is insufficient because deprecated packets remain. Unknown enums may be retained as raw values only where the exact field contract permits them; unknown lengths, malformed payloads and unsupported discriminants must not receive blanket leniency. Maintain stable semantic observations/actions by hand. Compatible codecs can share a wire record; incompatible layouts use distinct internal records/adapters without changing an existing public record on each release.</p>
+<p>For the first join milestone, generate only the explicitly required packet set and its transitive type dependencies; fail on dangling types or unsupported constructs inside that set. D08 now has a concrete large-bitset implementation reference: map the primitive explicitly, without substituting UInt128, and qualify prediction-sync semantics separately. Record excluded optional packets in the support manifest and expand it with each capability. An unexpected required obligation fails explicitly. Complete-profile generation must resolve the whole supported set.</p>
+<p>For the next Bedrock release: resolve its identity, pin inputs, diff packet IDs/layouts/validation and data/behavior axes independently, then reuse unchanged codec steps within the explicit supported catalog. Add new timeline steps only for demonstrated changes and profile strategies for semantic changes. A patch alias is allowed only after compatible artifacts/captures establish it. Do not fork an entire version directory of handwritten codecs or add scattered <code>if (protocol &gt;= ...)</code> checks throughout session/game code. Keep required join support, inventory, world decoding, and movement capability status separate from the mere presence of a protocol descriptor.</p>
+<h2 id="decisions">Decisions</h2>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Alternative considered</th>
+<th>Rationale and trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sibling Bedrock client and stack with incremental shared contracts.</td>
+<td>Generalize <code>UmpkClient</code>, Java phases and all Game models first.</td>
+<td>Preserves Java compatibility and avoids forcing Bedrock into Java semantics; accepts temporary duplication of orchestration.</td>
+</tr>
+<tr>
+<td>Internal replaceable RakNet message adapter over a pinned, corrected revision.</td>
+<td>Fake <code>IDuplexPipe</code> transport, or rewrite all RakNet immediately.</td>
+<td>Preserves message/delivery ownership and uses demonstrated code; requires upstream/fork maintenance and measured transport fixes.</td>
+</tr>
+<tr>
+<td>Generated Bedrock descriptors plus explicit native codecs.</td>
+<td>Runtime ProtoDef/reflection interpreter or copying every version.</td>
+<td>Fits UMPK AOT and boundary-testing patterns; increases build-time tooling and reconciliation work.</td>
+</tr>
+<tr>
+<td>Bedrock state/physics behind narrow shared views.</td>
+<td>Normalize everything into existing Entity/ItemStack/ChunkSection.</td>
+<td>Preserves actor identity, layers and transaction semantics; common API scope starts smaller.</td>
+</tr>
+<tr>
+<td>Gate features by evidence and prerequisites.</td>
+<td>Claim complete support once login works or all schema entries generate.</td>
+<td>Gives hosts reliable capability answers; requires per-subsystem conformance reporting.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="risks-and-open-questions">Risks and open questions</h2>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Unresolved question</th>
+<th>Proof required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P0</td>
+<td>Is the 2169 community schema correct at every required boundary?</td>
+<td>Close D06 MovePlayer and D08 large-bitset/native semantics, validation and remaining primitive witnesses; preserve the D01–D07 corroborated dialect/field distinctions. Capture exact bytes with decoded assertions and byte-identical re-encoding.</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>Can the supplied RakNet meet UMPK's failure and resource contracts?</td>
+<td>Fix lower-layer bounds/queue/errors; loss, reorder, duplication, sequence wrap, split abuse, timeout and closure tests against independent peers.</td>
+</tr>
+<tr>
+<td>P0</td>
+<td>Does the full login/crypto/bootstrap work with vanilla 26.45?</td>
+<td>Exact BDS build/hash, raw-ECDH and multi-batch crypto vectors, compression activation tests, offline and separately authorized online legs.</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Can a Bedrock simulation remain consistent with server correction?</td>
+<td>Measured movement/interaction traces, bounded rewind across collision/attribute changes, vehicles and history-exhaustion tests.</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Are inherited data, custom palettes and subchunk layers accurate?</td>
+<td>Resolve runtime registries and opaque payload packing; test custom dimensions/content, partial terrain, stale replies and known-air distinction.</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Are full inventory transactions correct?</td>
+<td>Correlated accept/reject traces, simultaneous requests, dynamic containers, crafting and embedded movement actions.</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Does Native AOT work for the entire shipping stack on supported platforms?</td>
+<td>Rooted full-stack publish and executable runs for required RIDs including crypto/compression/auth; no unreviewed IL warnings.</td>
+</tr>
+</tbody>
+</table></div>
+<p>When source comparisons leave a correctness question open, capture a controlled exact-build exchange, compare decoded values and state transitions, then use targeted disassembly/debugging of a user-provided matching BDS executable if needed. Such interoperability analysis is available; no binary has been inspected in this study. Keep executable/hash provenance and research traces outside Git, and record the behavioral conclusion and reproducible witness in the ledger. The implementation plan assigns these investigations to the affected capability rather than requiring the whole protocol to be solved in advance.</p>
+<h3 id="technical-debt-and-known-compromises">Technical debt and known compromises</h3>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Proposed compromise</th>
+<th>Why accept it initially</th>
+<th>Remediation and risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Separate client orchestration before extracting common hosting.</td>
+<td>Avoid destabilizing Java while Bedrock contracts emerge.</td>
+<td>Extract only demonstrated duplication after both lifecycle test suites exist; medium maintenance risk.</td>
+</tr>
+<tr>
+<td>One subclient, proven RakNet delivery modes, cache-disabled terrain.</td>
+<td>Bounds initial interoperability work.</td>
+<td>Explicit capability rejection and later independent acceptance tests; medium coverage risk.</td>
+</tr>
+<tr>
+<td>A maintained RakNet fork if upstream cannot land prerequisites promptly.</td>
+<td>Current source needs parser/lifecycle changes that a wrapper cannot supply.</td>
+<td>Track a minimal patch set and upstream it; medium ongoing cost.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="recommendations-and-implementation-sequence">Recommendations and implementation sequence</h2>
+<ol>
+<li><strong>Establish target evidence and local gates.</strong> Pin 1.26.45/2169 sources, enumerate required packets/native types and assign each discrepancy to its owning capability. Acquire exact BDS/capture evidence in isolated infrastructure as the relevant implementation becomes testable. Keep unrelated work moving; an unresolved field blocks only dependent decoding or the associated support claim. Exit with a support manifest that distinguishes implemented, verified, optional and unresolved behavior.</li>
+<li><strong>Qualify transport and transforms.</strong> Correct RakNet prerequisites, define ownership/completion, implement bounded batch/crypto/compression codecs, and pass native transport plus independent byte-vector tests. Keep one owner per maintenance timer and one gameplay tick.</li>
+<li><strong>Reach a truthful ready state.</strong> Add Bedrock credentials, network settings, login, resource obligations, runtime registries, spawn and local-player initialization. Verify reconnect/cancellation/disposal and distinguish offline from online acceptance.</li>
+<li><strong>Decode and expose world/actors.</strong> Implement runtime IDs, partial subchunks/layers, dimensions and immutable observations. Establish conservative collision queries before navigation.</li>
+<li><strong>Add interactive capability slices.</strong> Prove inventory request/rejection and tick-coupled movement/block actions, then measured physics and navigation. Each slice needs exact 26.45 traffic and malformed/cancellation tests.</li>
+<li><strong>Stabilize shared APIs and the next-version procedure.</strong> Preserve current Java public contracts; add new public API entries deliberately. Rehearse a schema diff without claiming another version. Run existing Java build/test-count/format/data/language/generated-output gates for future production changes, plus separate Bedrock conformance and per-RID AOT gates.</li>
+</ol>
+<p>The detailed <a href=".agent-state/plans/bedrock-26-45-implementation.plan.md">18-phase implementation plan</a> maps these recommendations to the B01–B23 diagram, source discrepancies, exclusive worker file ownership, validation commands and rollback. Its <a href=".agent-state/prps/active/bedrock-26-45-support.md">feature specification</a> supplies acceptance criteria. The plan now tracks implementation: phases 1–10 are complete, phases 11–12 remain in progress, and phases 13–18 remain open as of 11 October 2026.</p>
+<h2 id="review-and-validation-record">Review and validation record</h2>
+<p>The original proposal’s four adversarial review scopes produced 12 findings: all <strong>accepted and fixed in the proposal</strong>, none deferred or rejected. At the original proposal review, transport/runtime behavior was unimplemented; these dispositions describe design review rather than current implementation acceptance. Reviews used three concurrent workers, followed by the separate cost review.</p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Review scope</th>
+<th>Findings</th>
+<th>Design resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security</td>
+<td>3 medium</td>
+<td>Explicit auth mode/no downgrade, terminal transform failures, cumulative parser/resource budgets.</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>1 high, 2 medium, 1 low</td>
+<td>Admission before cipher advancement, outbound/replay/history budgets, bounded decode work, monotonic deadlines.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>4 medium</td>
+<td>Within-batch registry barrier, owned Core message contract, internal wire-record evolution, normalized schema with reviewed overlays.</td>
+</tr>
+<tr>
+<td>Cost and scope</td>
+<td>1 medium</td>
+<td>Required-packet/transitive-type generation first, expanding through an explicit support manifest.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The original three primary codebase investigations ran concurrently through OpenCode 1.18.30 using GO model <code>opencode-go/muse-spark-1.3-contributor</code> (Muse Spark 1.3), followed by focused source audits and supplemental protocol research. Unsupported model claims were rejected or qualified through source checks. Humanizer was applied to prose while preserving evidence labels and technical meaning. The HTML edition is generated through the same requested OpenCode model using the front-end design skill.</p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Workstream</th>
+<th>OpenCode session</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UMPK architecture</td>
+<td><code>ses_f659c6603ffe5EmW1W1YL0P14j</code></td>
+</tr>
+<tr>
+<td>UMPK game/physics/NBT follow-up</td>
+<td><code>ses_f659a348effegqsA0x57AFtqeI</code></td>
+</tr>
+<tr>
+<td>RakNet</td>
+<td><code>ses_f659c67f9ffem1L3rJgWa58YFC</code></td>
+</tr>
+<tr>
+<td>Exact Bedrock data and audit</td>
+<td><code>ses_f659c5053ffeF15zDVBNxxCnUd</code></td>
+</tr>
+<tr>
+<td>Supplemental connection/crypto</td>
+<td><code>ses_f6596161dffeHD3a4vpEk3S1wj</code></td>
+</tr>
+<tr>
+<td>Original HTML rendering and visual corrections</td>
+<td><code>ses_f6589bc19ffeb1r9v5d03US7Y3</code></td>
+</tr>
+<tr>
+<td>PowerNukkitX, mapping and chunk audit</td>
+<td><code>ses_f6565972effe2glOTvBYI9TCgh</code></td>
+</tr>
+<tr>
+<td>Geyser session/translation audit</td>
+<td><code>ses_f656567bdffetBf3Z7g9F708YQ</code></td>
+</tr>
+<tr>
+<td>Cloudburst selected serializer audit</td>
+<td><code>ses_f65609b17ffeZN4QJ8JiJfAwYn</code></td>
+</tr>
+<tr>
+<td>Replacement RakNet fork audit</td>
+<td><code>ses_f65656251ffe4cz96JGsGs1BlZ</code></td>
+</tr>
+<tr>
+<td>Updated HTML and detailed diagram</td>
+<td><code>ses_f656355a9ffe7c3ntvGzzEebNu</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The extension investigated PowerNukkitX, Geyser and the replacement RakNet fork concurrently, followed selected external serializers and directly audited the critical conclusions. The detailed map has 23 components and 45 directed edges, with editable Mermaid in both artifacts. HTML rendering uses the same GO model and front-end design skill; Humanizer polishing preserves evidence and field meanings. No new production code or gameplay tests were run for this extension.</p>
+<p>Reproducible command shape: <code>rtk proxy opencode run --model opencode-go/muse-spark-1.3-contributor --agent plan --format json --dir &lt;repository&gt; &lt;research prompt&gt;</code>. Detailed notes/raw output remain in <code>/tmp/umpk-bedrock-*</code>; they are research logs, not repository artifacts.</p>
+<p>Executed AOT commands (isolated probe; inherited <code>BASH_FUNC_*</code> entries removed for process compatibility):</p>
+<pre><code class="language-sh">rtk proxy dotnet publish /tmp/umpk-raknet-aot-probe-20260913/app/RakNetProbe.csproj -c Release -r linux-x64 --no-restore -p:TreatWarningsAsErrors=false -p:ILLinkTreatWarningsAsErrors=true -p:IlcTreatWarningsAsErrors=true
+rtk proxy timeout 15s /tmp/umpk-raknet-aot-probe-20260913/app/bin/Release/net10.0/linux-x64/publish/RakNetProbe
+</code></pre>
+<p>Earlier attempts included a network-restricted restore failure, a process-host failure, and a loopback harness timeout caused by using RakNet's internal ping identifier as application payload. The harness marker was corrected to <code>0xFE</code>; only the corrected run is a pass. No vanilla Bedrock server, authenticated game login, loss/reorder robustness test, or full UMPK Bedrock AOT build was executed. No production code changed, so UMPK build/test/format/data gates were not run for these documentation artifacts.</p>
+<div aria-label="Scrollable table" class="table-scroll" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minecraft-data/data/bedrock/1.26.45/protocol.json</code></td>
+<td><code>83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1</code></td>
+</tr>
+<tr>
+<td><code>minecraft-data/data/bedrock/1.26.45/version.json</code></td>
+<td><code>4abf57327908d3c1f197df9b3d6b3162c72148213651fe7cc1cd6db5de9b26e9</code></td>
+</tr>
+<tr>
+<td><code>minecraft-data/data/bedrock/latest/proto.yml</code></td>
+<td><code>ac646a84404ce472dd6e8cbbdcb9b79384a18bd7db6dc88e4214bd1777dc5ee5</code></td>
+</tr>
+<tr>
+<td><code>minecraft-data/data/bedrock/latest/types.yml</code></td>
+<td><code>bc6f09026453b467ca6cd1068fa08e4f824b5011fdd33ca848f10dd544c62cfe</code></td>
+</tr>
+<tr>
+<td>Native RakNet probe executable</td>
+<td><code>c25f2ce27d0d099e51c60fa564013dced8c45a26377bb76e37d5aed40bdfe64f</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Source links are pinned to inspected commits where practical. Mojang guides support system semantics and do not replace exact-version packet layouts.</p>
+</article>
+</div>
+<footer class="footer">Companion Markdown: <a href="BEDROCK-26.45-ARCHITECTURE.md">BEDROCK-26.45-ARCHITECTURE.md</a>. Diagrams above are rendered inline as SVG from the exact Mermaid sources kept in each figure. No external resources are loaded by this page.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+{
+  "id": "bedrock-1.26.45-2169",
+  "release": "1.26.45",
+  "protocolVersion": 2169,
+  "dialect": "base-2168",
+  "dataProfile": "minecraft-data-1.26.45-resolved",
+  "behaviorProfile": "base-2169",
+  "predictionFlagLogicalBits": 131,
+  "predictionFlagEncodedBytes": 19,
+  "predictionFlagMaxBytes": 32,
+  "importManifestSha256": "6411a1ce094e31bc174ef80d4ebe5856bc608d7a1ed46f42242eb59ee99d2d92",
+  "schemaSha256": "06065fd8018a5dcced822afb4f20449c939667223271473cabcf4975348b7a11",
+  "inputs": [
+    {
+      "key": "biomes",
+      "sourcePath": "data/bedrock/1.21.60/biomes.json",
+      "importedPath": "imported/biomes.json",
+      "sha256": "15c19c10a6920158d70524f7b775924d1ca6317e3683cdeb2fcf5374295ba6f9",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "blockCollisionShapes",
+      "sourcePath": "data/bedrock/1.26.30/blockCollisionShapes.json",
+      "importedPath": "imported/blockCollisionShapes.json",
+      "sha256": "72a7410456a1f5f556e8c91c07e1d1f61aea5d2fb555f2c0e33eba825247aa90",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "blockStates",
+      "sourcePath": "data/bedrock/1.26.30/blockStates.json",
+      "importedPath": "imported/blockStates.json",
+      "sha256": "c0a94f5a32597aff028918e152c76280c1823a7840fdf73cd98d7b44814ea041",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "blocks",
+      "sourcePath": "data/bedrock/1.26.30/blocks.json",
+      "importedPath": "imported/blocks.json",
+      "sha256": "12ff90b5094006b42d87ca7c296ed1bef0e1c2d6d67498aea85b6ece9408b494",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "dataPaths",
+      "sourcePath": "data/dataPaths.json",
+      "importedPath": "imported/dataPaths.json",
+      "sha256": "29cd724082acdde5410854b0d7774081d68cd704761bd04b75b62e8af5ecec41",
+      "role": "resolution-map"
+    },
+    {
+      "key": "entities",
+      "sourcePath": "data/bedrock/1.21.80/entities.json",
+      "importedPath": "imported/entities.json",
+      "sha256": "d40a594f788d90001baab41d478d377f67004f590c4011ace101b475fff3e098",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "items",
+      "sourcePath": "data/bedrock/1.26.30/items.json",
+      "importedPath": "imported/items.json",
+      "sha256": "495695bcd745708ce742f76b581c13f1f21f6e4140a5c19ebcc933766e28dfea",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "proto",
+      "sourcePath": "data/bedrock/latest/proto.yml",
+      "importedPath": "imported/proto.yml",
+      "sha256": "ac646a84404ce472dd6e8cbbdcb9b79384a18bd7db6dc88e4214bd1777dc5ee5",
+      "role": "annotated-packet-evidence"
+    },
+    {
+      "key": "protocol",
+      "sourcePath": "data/bedrock/1.26.45/protocol.json",
+      "importedPath": "imported/protocol.json",
+      "sha256": "83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1",
+      "role": "primary-packet-schema"
+    },
+    {
+      "key": "recipes",
+      "sourcePath": "data/bedrock/1.19.10/recipes.json",
+      "importedPath": "imported/recipes.json",
+      "sha256": "181a65aac131df15831097aa26dce26d0a75549c1df83e38fac388c6f28026c7",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "steve",
+      "sourcePath": "data/bedrock/1.21.70/steve.json",
+      "importedPath": "imported/steve.json",
+      "sha256": "00af8cf5cc99932f6e764796488d6ae27592ad0252da3d96fa1ebc7631541cf4",
+      "role": "resolved-category-input"
+    },
+    {
+      "key": "types",
+      "sourcePath": "data/bedrock/latest/types.yml",
+      "importedPath": "imported/types.yml",
+      "sha256": "bc6f09026453b467ca6cd1068fa08e4f824b5011fdd33ca848f10dd544c62cfe",
+      "role": "annotated-type-evidence"
+    },
+    {
+      "key": "version",
+      "sourcePath": "data/bedrock/1.26.45/version.json",
+      "importedPath": "imported/version.json",
+      "sha256": "4abf57327908d3c1f197df9b3d6b3162c72148213651fe7cc1cd6db5de9b26e9",
+      "role": "release-identity"
+    },
+    {
+      "key": "windows",
+      "sourcePath": "data/bedrock/1.16.201/windows.json",
+      "importedPath": "imported/windows.json",
+      "sha256": "788ff42696ee766050c564a807ac7101f9cef3ab72abcd186ef26a9f5049445a",
+      "role": "resolved-category-input"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "D01",
+      "status": "corroborated",
+      "disposition": "Select the base 2168 layout for protocol 2169 and exclude the hotfix-4 SetScore dialect.",
+      "sources": [
+        "minecraft-data protocol 2168/2169 byte identity",
+        "PowerNukkitX Bedrock_v2168 reuse",
+        "Geyser Bedrock_v2169 registration"
+      ]
+    },
+    {
+      "id": "D02",
+      "status": "corroborated",
+      "disposition": "Retain the base optional RemoveScore objective marker and exclude the hotfix-4 second marker.",
+      "sources": [
+        "Cloudburst base and hotfix-4 SetScore serializers",
+        "minecraft-data packet_set_score"
+      ]
+    },
+    {
+      "id": "D06",
+      "status": "resolved-layout-open-live-bytes",
+      "disposition": "Bind MovePlayer and SetEntityMotion with exact handwritten-vector field order, boolean teleport prefix, and unsigned 64-bit actor ID widths. The width follows Cloudburst v2168/v2169 serializers, gophertunnel ActorRuntimeID marshals, and the beyond-Int32 identity requirement; minecraft-data declares 32-bit varints whose bytes are identical for observed small IDs. No live BDS 19/40 bytes have been captured yet because idle players emit neither, so independent live-byte acceptance stays open for the movement phases. Candidate overlays stay recorded for future high-ID refinement.",
+      "sources": [
+        "handwritten exact round-trip vectors",
+        "gophertunnel move_player/set_actor_motion marshals",
+        "minecraft-data packet_move_player",
+        "Cloudburst MovePlayerSerializer_v2168"
+      ]
+    },
+    {
+      "id": "D08",
+      "status": "encoding-schema-verified",
+      "disposition": "Use a bounded native large bitset and keep gameplay meanings unresolved.",
+      "sources": [
+        "minecraft-data varint128 placeholder",
+        "Cloudburst 131 known entity flags"
+      ]
+    }
+  ]
+}

@@ -113,12 +113,13 @@ public sealed class ReconnectSupervisionTests
     }
 
     [Fact]
-    public async Task Backoff_WaitsTheConfiguredDelayBetweenAttempts()
+    public async Task Backoff_UsesTheConfiguredDelayBetweenAttempts()
     {
         FakeJavaServer server = FakeJavaServer.Create();
         var factory = new SequencedSessionFactory()
             .Then(SucceedThenDrop(server))
             .Then(Refuse());
+        var time = new RecordingTimeProvider();
 
         var policy = new ReconnectPolicy
         {
@@ -126,19 +127,41 @@ public sealed class ReconnectSupervisionTests
             InitialDelay = TimeSpan.FromMilliseconds(200),
             BackoffFactor = 1.0,
         };
-        var options = new ClientSupervisorOptions { ReconnectPolicy = new FixedReconnectPolicyProvider(policy) };
+        var options = new ClientSupervisorOptions
+        {
+            ReconnectPolicy = new FixedReconnectPolicyProvider(policy),
+            TimeProvider = time,
+        };
         await using var supervisor = new UmpkClientSupervisor(factory, options);
         using var cts = new CancellationTokenSource(Budget);
         CancellationToken ct = cts.Token;
 
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         await supervisor.StartAsync(Endpoint, ct);
         await supervisor.Completed.WaitAsync(Budget, ct);
-        stopwatch.Stop();
 
-        Assert.True(
-            stopwatch.Elapsed >= TimeSpan.FromMilliseconds(400),
-            $"Expected at least 400ms of backoff delay across two retries; measured {stopwatch.ElapsedMilliseconds}ms.");
+        Assert.Equal([TimeSpan.FromMilliseconds(200), TimeSpan.FromMilliseconds(200)], time.RequestedDelays);
+    }
+
+    private sealed class RecordingTimeProvider : TimeProvider
+    {
+        private readonly Lock _gate = new();
+        private readonly List<TimeSpan> _requestedDelays = [];
+
+        internal IReadOnlyList<TimeSpan> RequestedDelays
+        {
+            get
+            {
+                lock (_gate)
+                    return [.. _requestedDelays];
+            }
+        }
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            lock (_gate)
+                _requestedDelays.Add(dueTime);
+            return TimeProvider.System.CreateTimer(callback, state, dueTime, period);
+        }
     }
 
     [Fact]

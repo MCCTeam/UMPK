@@ -3,7 +3,9 @@ namespace Umpk;
 /// <summary>The Minecraft edition a version or connection belongs to.</summary>
 public enum GameEdition
 {
+    /// <summary>The Java Edition protocol family carried by <c>Umpk.Protocol.Java</c>.</summary>
     Java,
+    /// <summary>The Bedrock protocol family carried by the Bedrock transport, codec, and client projects.</summary>
     Bedrock,
 }
 

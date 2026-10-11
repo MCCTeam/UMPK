@@ -1,0 +1,17 @@
+{
+  "id": "move-player-source-entity-type-ambiguity",
+  "profiles": ["bedrock-1.26.45-2169"],
+  "protocolSha256": "83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1",
+  "typeName": "packet_move_player",
+  "fieldPath": "teleport",
+  "expectedNodeSha256": "0e56f8de463a9d97bb28201bcba11121cc149b7927fa6df144346f4638cf3e30",
+  "operation": "document-candidate",
+  "status": "candidate",
+  "maxBytes": null,
+  "fixedBitCount": null,
+  "evidence": [
+    "minecraft-data@8ee2fbe890949fe6c2cf037cd50007ef50444931:data/bedrock/latest/proto.yml:672",
+    "source retains a TODO questioning the LegacyEntityType integer representation",
+    "requires independent BDS vectors before codec binding"
+  ]
+}

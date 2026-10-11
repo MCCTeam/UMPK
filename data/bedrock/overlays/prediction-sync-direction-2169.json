@@ -1,0 +1,17 @@
+{
+  "id": "prediction-sync-direction",
+  "profiles": ["bedrock-1.26.45-2169"],
+  "protocolSha256": "83ce13dd473c0ee07bde75d21740ca852a1f432dffb5dd032253158082c382f1",
+  "typeName": "packet_client_movement_prediction_sync",
+  "fieldPath": "data_flags",
+  "expectedNodeSha256": "bf0ed4501bfae364f1c4f063bfd199181ddcfa9f9eb3ce0b505e121440c98914",
+  "operation": "document-direction",
+  "status": "candidate",
+  "maxBytes": null,
+  "fixedBitCount": null,
+  "evidence": [
+    "minecraft-data@8ee2fbe890949fe6c2cf037cd50007ef50444931:data/bedrock/latest/proto.yml:4383",
+    "source direction is commented as unknown while the support manifest proposes clientbound",
+    "requires a BDS direction witness before codec binding"
+  ]
+}

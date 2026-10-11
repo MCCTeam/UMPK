@@ -7,8 +7,8 @@ internal sealed class Dispatcher(IReadOnlyList<IApplier> appliers)
 
     public async ValueTask DispatchAsync(object packet, ApplierContext context, CancellationToken ct)
     {
-        foreach (IApplier applier in _appliers)
-            if (await applier.TryApplyAsync(packet, context, ct).ConfigureAwait(false))
+        for (int i = 0; i < _appliers.Count; i++)
+            if (await _appliers[i].TryApplyAsync(packet, context, ct).ConfigureAwait(false))
                 return;
 
     }

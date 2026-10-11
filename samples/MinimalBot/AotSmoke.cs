@@ -3,6 +3,8 @@ using System.Globalization;
 using Umpk;
 using Umpk.Auth;
 using Umpk.Client;
+using Umpk.Client.Events;
+using Umpk.Client.Plugins;
 using Umpk.Data.Java;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
@@ -83,16 +85,46 @@ internal static class AotSmoke
             return 1;
         }
 
+        var plugin = new FilterSmokePlugin();
         await using UmpkClient client = new UmpkClientBuilder()
             .UseVersion(version)
             .UseProfile(OfflineIdentity.ComputeProfile("AotSmoke"))
             .UseStaticRegistries(JavaGameData.Registries(protocol))
+            .AddPlugin(plugin)
             .Build();
 
         await client.ConnectAsync(endpoint, ct);
+        await plugin.Completed.WaitAsync(ct);
+        Console.WriteLine("verified native scheduler and subscription filters.");
         await client.Actions.Chat.SendChatAsync("aot-smoke", ct);
         Console.WriteLine($"joined {endpoint} on {version.Version.Name}.");
         await client.DisconnectAsync(CancellationToken.None);
         return 0;
+    }
+
+    private sealed class FilterSmokePlugin : IClientPlugin
+    {
+        private readonly TaskCompletionSource _completed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _ticks;
+
+        public string Id => "aot-filter-smoke";
+
+        public Task Completed => _completed.Task;
+
+        public void Attach(ClientPluginContext context)
+        {
+            using IDisposable removedTick = context.Scheduler.OnTick(static () => { });
+            context.Scheduler.OnTick(() => _ticks++);
+            context.Scheduler.Delay(2, () =>
+            {
+                if (_ticks >= 2)
+                    _completed.TrySetResult();
+                else
+                    _completed.TrySetException(new InvalidOperationException("Native scheduler changed callback order."));
+            });
+
+            using IDisposable removedHandler = context.Events.Subscribe<PacketReceived>(static _ => { });
+            context.Events.Subscribe<PacketReceived>(static _ => { });
+        }
     }
 }

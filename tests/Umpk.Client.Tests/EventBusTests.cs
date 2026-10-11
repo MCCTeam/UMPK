@@ -69,6 +69,26 @@ public sealed class EventBusTests
     }
 
     [Fact]
+    public async Task UnsubscribeDuringPublicationPreservesTheCurrentSnapshot()
+    {
+        EventBus bus = NewBus();
+        var order = new List<int>();
+        IDisposable? second = null;
+        using IDisposable first = bus.Subscribe<Ping>(_ =>
+        {
+            order.Add(1);
+            second!.Dispose();
+        });
+        second = bus.Subscribe<Ping>(_ => order.Add(2));
+        using IDisposable third = bus.Subscribe<Ping>(_ => order.Add(3));
+
+        await bus.PublishAsync(new Ping(0));
+        await bus.PublishAsync(new Ping(1));
+
+        Assert.Equal([1, 2, 3, 1, 3], order);
+    }
+
+    [Fact]
     public async Task Stream_DropOldest_DoesNotStall_AndReportsLag()
     {
         EventBus bus = NewBus();

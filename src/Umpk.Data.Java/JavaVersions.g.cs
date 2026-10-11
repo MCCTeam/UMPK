@@ -288,19 +288,64 @@ public static class JavaVersions
     private static IReadOnlyList<JavaVersion> BuildAll() =>
         new JavaVersion[] { V1_8, V1_9, V1_9_1, V1_9_2, V1_9_3, V1_10, V1_11, V1_11_1, V1_12, V1_12_1, V1_12_2, V1_13, V1_13_1, V1_13_2, V1_14, V1_14_1, V1_14_2, V1_14_3, V1_14_4, V1_15, V1_15_1, V1_15_2, V1_16, V1_16_1, V1_16_2, V1_16_3, V1_16_4, V1_17, V1_17_1, V1_18, V1_18_2, V1_19, V1_19_1, V1_19_3, V1_19_4, V1_20, V1_20_2, V1_20_3, V1_20_5, V1_21, V1_21_2, V1_21_4, V1_21_5, V1_21_6, V1_21_7, V1_21_9, V1_21_11, V26_1, V26_2, V26_3 };
 
-    /// <summary>Look up a version by protocol number. Walks All lazily.</summary>
+    /// <summary>Look up a version by protocol number. Initializes only the requested version.</summary>
     public static bool TryGetByProtocol(int protocol, out JavaVersion version)
     {
-        foreach (JavaVersion candidate in All)
+        version = protocol switch
         {
-            if (candidate.Version.Protocol == protocol)
-            {
-                version = candidate;
-                return true;
-            }
-        }
-        version = default!;
-        return false;
+            47 => V1_8,
+            107 => V1_9,
+            108 => V1_9_1,
+            109 => V1_9_2,
+            110 => V1_9_3,
+            210 => V1_10,
+            315 => V1_11,
+            316 => V1_11_1,
+            335 => V1_12,
+            338 => V1_12_1,
+            340 => V1_12_2,
+            393 => V1_13,
+            401 => V1_13_1,
+            404 => V1_13_2,
+            477 => V1_14,
+            480 => V1_14_1,
+            485 => V1_14_2,
+            490 => V1_14_3,
+            498 => V1_14_4,
+            573 => V1_15,
+            575 => V1_15_1,
+            578 => V1_15_2,
+            735 => V1_16,
+            736 => V1_16_1,
+            751 => V1_16_2,
+            753 => V1_16_3,
+            754 => V1_16_4,
+            755 => V1_17,
+            756 => V1_17_1,
+            757 => V1_18,
+            758 => V1_18_2,
+            759 => V1_19,
+            760 => V1_19_1,
+            761 => V1_19_3,
+            762 => V1_19_4,
+            763 => V1_20,
+            764 => V1_20_2,
+            765 => V1_20_3,
+            766 => V1_20_5,
+            767 => V1_21,
+            768 => V1_21_2,
+            769 => V1_21_4,
+            770 => V1_21_5,
+            771 => V1_21_6,
+            772 => V1_21_7,
+            773 => V1_21_9,
+            774 => V1_21_11,
+            775 => V26_1,
+            776 => V26_2,
+            777 => V26_3,
+            _ => default!,
+        };
+        return version is not null;
     }
 
     /// <summary>Look up a version by name ("1.21.5"). Resolves N:1 aliases ("1.20.3" and "1.20.4" both map to protocol 765) via the generated name table, which the single-name <c>JavaVersion.HasName</c> cannot express.</summary>

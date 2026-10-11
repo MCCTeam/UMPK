@@ -37,21 +37,17 @@ public static partial class JavaGameData
         if (table.IsEmpty)
             return null;
 
-        // Same packed shape as the item table: VarInt count, then that many length-prefixed UTF-8 names, positionally indexed by network id. Scanned rather than cached: a sound lookup happens once per sound packet a consumer actually cares about, not per tick.
+        // The generated table contains VarInt-length-prefixed UTF-8 names indexed by network id. Skip preceding byte strings so frequent sound packets allocate only the requested name, without retaining a decoded table.
         var reader = new PacketReader(table);
         int count = reader.ReadVarInt();
         if (soundId >= count)
             return null;
 
-        for (int id = 0; id < count; id++)
-        {
-            string name = reader.ReadString();
-            if (id == soundId)
-                return name.Length == 0 ? null : name;
+        for (int id = 0; id < soundId; id++)
+            reader.ReadByteArray();
 
-        }
-
-        return null;
+        string name = reader.ReadString();
+        return name.Length == 0 ? null : name;
     }
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IBlockShapeSource"/> for a protocol from the generated shape pool and its per-state reference table. This is what makes physics and pathfinding collide against real slab, stair, fence, wall, pane and carpet geometry instead of a unit cube. Safe to call repeatedly. An unsupported protocol is refused rather than answered from block flags alone, which would be a plausible-looking world model built on no data.</summary>

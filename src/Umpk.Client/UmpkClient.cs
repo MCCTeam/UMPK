@@ -30,6 +30,7 @@ public sealed class UmpkClient : IAsyncDisposable
     private readonly MovementLeaseManager _leases = new();
     private readonly CommandService<ClientCommandSource> _commands = new();
     private readonly WireIndex _wire;
+    private readonly int _customPayloadWireId;
 
     /// <summary>The play-phase plugin-message packet the server brand rides on before 1.20.2.</summary>
     private static readonly Identifier CustomPayloadChannelId = Identifier.Minecraft("custom_payload");
@@ -49,12 +50,21 @@ public sealed class UmpkClient : IAsyncDisposable
     private readonly MovementReadiness _movementReadiness = new();
     private readonly PluginChannelManager _channels;
     private readonly Commands.CommandCompletionService _commandCompletions;
+    private readonly Action<CommonWorldSetup> _worldSetup;
+    private readonly Action _pushPhysicsConditions;
+    private readonly Action _resyncPhysicsPosition;
+    private readonly Action _applyPhysicsVelocity;
+    private readonly Func<Identifier, ReadOnlyMemory<byte>, bool> _dispatchConfigurationChannel;
+    private readonly Action<DisconnectInfo> _recordDisconnect;
+    private readonly Func<CancellationToken, ValueTask> _enterConfiguration;
+    private readonly Func<CancellationToken, ValueTask> _announceChatSession;
 
     private readonly object _frameObserverGate = new();
 
     private JavaConnection? _connection;
     private Action<PacketObservation>? _frameObservers;
     private PacketSink? _sink;
+    private ApplierContext? _applierContext;
     private ChatSigningCoordinator? _chatSigning;
 
     // 0 until the join packet has run the deferred chat-signing setup, 1 afterwards. A one-shot per connection: a server that sends a second join packet on the same connection must not turn the connect-time announcement into a key rotation, which is what a second SendSessionUpdateAsync would be (its finally sets the coordinator's _pastConnect).
@@ -92,6 +102,7 @@ public sealed class UmpkClient : IAsyncDisposable
         _ = _eventBus.Subscribe<PositionCorrected>(_ => _spawned.TrySetResult(true));
 
         _wire = new WireIndex(settings.Version);
+        _customPayloadWireId = _wire.ClientboundPlay(CustomPayloadChannelId);
         _sendsTickEnd = _wire.CanSendPlay(PlayPackets.Serverbound.ClientTickEnd);
         _sink = null; // set on connect
         _services = new ClientSessionServices
@@ -136,6 +147,16 @@ public sealed class UmpkClient : IAsyncDisposable
         // Built here, in the constructor, so it is usable while the client is still Created: a channel registered before the dial is in place before the session's first inbound frame, which is the window IClientPlugin.Attach (post-play) structurally cannot cover.
         Channels = new ClientChannels(_channels, settings.Version);
         _commandCompletions = new Commands.CommandCompletionService(deferredSink);
+
+        // These capabilities belong to this client. Keep their delegates stable while each packet's context still reads the current connection and signing state.
+        _worldSetup = SetupWorld;
+        _pushPhysicsConditions = () => _physics?.PushConditions();
+        _resyncPhysicsPosition = () => _physics?.ResyncPosition();
+        _applyPhysicsVelocity = () => _physics?.ApplyVelocity();
+        _dispatchConfigurationChannel = _channels.DispatchConfiguration;
+        _recordDisconnect = RecordDisconnect;
+        _enterConfiguration = EnterConfigurationAsync;
+        _announceChatSession = SetUpChatSigningAsync;
 
         var chat = new ChatActions(
             deferredSink,
@@ -659,7 +680,38 @@ public sealed class UmpkClient : IAsyncDisposable
     {
         required |= packet is ClientboundLoginPacket or ClientboundRespawnPacket;
 
-        var ctx = new ApplierContext
+        ApplierContext ctx = GetApplierContext();
+
+        try
+        {
+            await _dispatcher.DispatchAsync(packet, ctx, ct).ConfigureAwait(false);
+            await _eventBus.PublishAsync(new PacketReceived(phase, wireId, packet, payloadLength)).ConfigureAwait(false);
+        }
+        catch (ConnectionClosedException)
+        {
+            // Configuration re-entry can end the transport; the receive loop owns reporting that teardown.
+            throw;
+        }
+        catch (Exception ex) when (!required)
+        {
+            _logger.LogError(ex, "Applier for {PacketType} threw.", packet.GetType().Name);
+        }
+    }
+
+    private ApplierContext GetApplierContext()
+    {
+        Func<CancellationToken, ValueTask>? announce = _chatSigning is null ? null : _announceChatSession;
+        if (_applierContext is { } current
+            && ReferenceEquals(current.Sink, _sink)
+            && ReferenceEquals(current.ChatVerifierResolver, _chatVerifiers)
+            && ReferenceEquals(current.LastSeenTracker, _chatSigning?.Tracker)
+            && ReferenceEquals(current.LegacyLastSeenCollector, _chatSigning?.LegacyCollector)
+            && ReferenceEquals(current.SignatureCache, _chatSignatureCache)
+            && ReferenceEquals(current.AnnounceChatSession, announce))
+            return current;
+
+        // Only session bindings can change. Replace the immutable snapshot so an awaited applier keeps its original capabilities.
+        return _applierContext = new ApplierContext
         {
             State = State,
             Events = _eventBus,
@@ -671,37 +723,22 @@ public sealed class UmpkClient : IAsyncDisposable
             Wire = _wire,
             EntityTypes = _entityTypes,
             MetadataKeys = _metadataKeys,
-            WorldSetup = SetupWorld,
-            PhysicsConditionsDirty = () => _physics?.PushConditions(),
-            PhysicsPositionDirty = () => _physics?.ResyncPosition(),
-            PhysicsVelocityDirty = () => _physics?.ApplyVelocity(),
+            WorldSetup = _worldSetup,
+            PhysicsConditionsDirty = _pushPhysicsConditions,
+            PhysicsPositionDirty = _resyncPhysicsPosition,
+            PhysicsVelocityDirty = _applyPhysicsVelocity,
             CommandCompletions = _commandCompletions,
             Sequences = _sequences,
-            DispatchConfigurationChannel = _channels.DispatchConfiguration,
+            DispatchConfigurationChannel = _dispatchConfigurationChannel,
             ChatVerifierResolver = _chatVerifiers,
             LastSeenTracker = _chatSigning?.Tracker,
-            RecordDisconnect = RecordDisconnect,
+            RecordDisconnect = _recordDisconnect,
             Cookies = Cookies,
             LegacyLastSeenCollector = _chatSigning?.LegacyCollector,
             SignatureCache = _chatSignatureCache,
-            EnterConfiguration = EnterConfigurationAsync,
-            AnnounceChatSession = _chatSigning is null ? null : SetUpChatSigningAsync,
+            EnterConfiguration = _enterConfiguration,
+            AnnounceChatSession = announce,
         };
-
-        try
-        {
-            await _dispatcher.DispatchAsync(packet, ctx, ct).ConfigureAwait(false);
-            await _eventBus.PublishAsync(new PacketReceived(phase, wireId, packet, payloadLength)).ConfigureAwait(false);
-        }
-        catch (ConnectionClosedException)
-        {
-            // Not an applier bug: this is the transport itself saying the session is over. It reaches here from the 1.20.2+ play-to-configuration re-entry (ClientboundStartConfigurationPacket's applier calls ApplierContext.EnterConfiguration, which runs JavaClientLogin.RunConfigurationPhaseAsync and throws this exception straight out of a configuration-phase kick). Swallowing it here, like a genuine applier fault, meant the receive loop's own catch (ConnectionClosedException) arm - the one that records DisconnectInfo and publishes Events.Disconnected - was never reached for that path, so a config-phase kick after play could leave the session silently hung instead of ended. Rethrowing lets it unwind to that arm exactly the way an initial-flow kick already does out of ConnectAsync.
-            throw;
-        }
-        catch (Exception ex) when (!required)
-        {
-            _logger.LogError(ex, "Applier for {PacketType} threw.", packet.GetType().Name);
-        }
     }
 
     /// <summary>Takes the live connection into the configuration phase and runs it until the server ends it, at which point the connection is back in play. Called by the <c>start_configuration</c> applier, on the session loop, AFTER it has acknowledged.</summary>
@@ -1032,13 +1069,17 @@ public sealed class UmpkClient : IAsyncDisposable
         if (State.Server.Brand is not null)
             return;
 
-        int customPayload = _wire.ClientboundPlay(CustomPayloadChannelId);
-        if (customPayload < 0 || obs.WireId != customPayload)
+        if (_customPayloadWireId < 0 || obs.WireId != _customPayloadWireId)
             return;
 
         if (!ServerBrandPayload.TryReadFromPlayFrame(obs.RawPayload, out string brand))
             return;
 
+        PostServerBrand(brand);
+    }
+
+    private void PostServerBrand(string brand)
+    {
         // Observed on the read loop; hop to the session loop so state mutation stays single-threaded.
         _scheduler.Post(() => State.Server.Brand ??= brand);
     }
@@ -1111,6 +1152,7 @@ public sealed class UmpkClient : IAsyncDisposable
         _chatSigning = null;
         _chatVerifiers = null;
         _chatSignatureCache = null;
+        _applierContext = null;
         _receiveTask = null;
         _tickTask = null;
         _movementReporter.Reset();

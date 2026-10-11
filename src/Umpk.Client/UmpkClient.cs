@@ -49,6 +49,14 @@ public sealed class UmpkClient : IAsyncDisposable
     private readonly MovementReadiness _movementReadiness = new();
     private readonly PluginChannelManager _channels;
     private readonly Commands.CommandCompletionService _commandCompletions;
+    private readonly Action<CommonWorldSetup> _worldSetup;
+    private readonly Action _pushPhysicsConditions;
+    private readonly Action _resyncPhysicsPosition;
+    private readonly Action _applyPhysicsVelocity;
+    private readonly Func<Identifier, ReadOnlyMemory<byte>, bool> _dispatchConfigurationChannel;
+    private readonly Action<DisconnectInfo> _recordDisconnect;
+    private readonly Func<CancellationToken, ValueTask> _enterConfiguration;
+    private readonly Func<CancellationToken, ValueTask> _announceChatSession;
 
     private readonly object _frameObserverGate = new();
 
@@ -136,6 +144,16 @@ public sealed class UmpkClient : IAsyncDisposable
         // Built here, in the constructor, so it is usable while the client is still Created: a channel registered before the dial is in place before the session's first inbound frame, which is the window IClientPlugin.Attach (post-play) structurally cannot cover.
         Channels = new ClientChannels(_channels, settings.Version);
         _commandCompletions = new Commands.CommandCompletionService(deferredSink);
+
+        // These capabilities belong to this client. Keep their delegates stable while each packet's context still reads the current connection and signing state.
+        _worldSetup = SetupWorld;
+        _pushPhysicsConditions = () => _physics?.PushConditions();
+        _resyncPhysicsPosition = () => _physics?.ResyncPosition();
+        _applyPhysicsVelocity = () => _physics?.ApplyVelocity();
+        _dispatchConfigurationChannel = _channels.DispatchConfiguration;
+        _recordDisconnect = RecordDisconnect;
+        _enterConfiguration = EnterConfigurationAsync;
+        _announceChatSession = SetUpChatSigningAsync;
 
         var chat = new ChatActions(
             deferredSink,
@@ -671,21 +689,21 @@ public sealed class UmpkClient : IAsyncDisposable
             Wire = _wire,
             EntityTypes = _entityTypes,
             MetadataKeys = _metadataKeys,
-            WorldSetup = SetupWorld,
-            PhysicsConditionsDirty = () => _physics?.PushConditions(),
-            PhysicsPositionDirty = () => _physics?.ResyncPosition(),
-            PhysicsVelocityDirty = () => _physics?.ApplyVelocity(),
+            WorldSetup = _worldSetup,
+            PhysicsConditionsDirty = _pushPhysicsConditions,
+            PhysicsPositionDirty = _resyncPhysicsPosition,
+            PhysicsVelocityDirty = _applyPhysicsVelocity,
             CommandCompletions = _commandCompletions,
             Sequences = _sequences,
-            DispatchConfigurationChannel = _channels.DispatchConfiguration,
+            DispatchConfigurationChannel = _dispatchConfigurationChannel,
             ChatVerifierResolver = _chatVerifiers,
             LastSeenTracker = _chatSigning?.Tracker,
-            RecordDisconnect = RecordDisconnect,
+            RecordDisconnect = _recordDisconnect,
             Cookies = Cookies,
             LegacyLastSeenCollector = _chatSigning?.LegacyCollector,
             SignatureCache = _chatSignatureCache,
-            EnterConfiguration = EnterConfigurationAsync,
-            AnnounceChatSession = _chatSigning is null ? null : SetUpChatSigningAsync,
+            EnterConfiguration = _enterConfiguration,
+            AnnounceChatSession = _chatSigning is null ? null : _announceChatSession,
         };
 
         try

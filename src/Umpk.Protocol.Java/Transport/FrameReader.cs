@@ -39,6 +39,9 @@ internal sealed class FrameReader(PipeReader reader, int maxFrameLength)
     /// <summary>Rents/returns pooled frame payload buffers.</summary>
     public static void ReturnFrame(byte[] buffer) => ArrayPool<byte>.Shared.Return(buffer);
 
+    /// <summary>Extracts a complete frame already present in the accumulation buffer without waiting for the transport. Buffer ownership and malformed-frame checks are the same as <see cref="ReadFrameAsync"/>.</summary>
+    internal bool TryReadBufferedFrame(out FramePayload payload) => TryExtractFrame(out payload);
+
     /// <summary>Reads the next frame. Returns the wire-format length-prefixed frame's inner content: the raw length-prefixed frame body (post-decrypt) is split into a payload span. When compression is enabled the compressed-format header is stripped. The returned payload's buffer must be returned via <see cref="ReturnFrame"/>. Returns null on clean end of stream.</summary>
     public async ValueTask<FramePayload?> ReadFrameAsync(CancellationToken ct)
     {

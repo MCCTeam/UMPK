@@ -477,6 +477,10 @@ public sealed class JavaConnection : IAsyncDisposable
 
     private async ValueTask<FramePayload?> ReadFrameWithTimeoutAsync(CancellationToken ct)
     {
+        // A complete buffered frame needs no transport wait, so it cannot hit the idle timeout. Keep the timeout owner on the path that can actually block.
+        if (_frameReader.TryReadBufferedFrame(out FramePayload buffered))
+            return buffered;
+
         TimeSpan idle = _options.ReadIdleTimeout;
         if (idle <= TimeSpan.Zero)
             return await _frameReader.ReadFrameAsync(ct).ConfigureAwait(false);

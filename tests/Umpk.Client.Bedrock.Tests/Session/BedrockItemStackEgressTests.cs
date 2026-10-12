@@ -851,6 +851,7 @@ public sealed class BedrockItemStackEgressTests
         await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(0, 0, true)), ct);
         await WaitUntilAsync(() => session.ItemStackTracker.PendingCount == 0, ct);
 
+        Assert.Equal(0, session.PendingItemStackReconciliationCount);
         Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
         Assert.Null(session.InventoryStore.GetSnapshot(PlayerContentAddress()));
 

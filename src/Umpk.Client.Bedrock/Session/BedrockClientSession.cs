@@ -1098,6 +1098,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     {
         lock (_gate)
         {
+            if (_disposed || _inventoryTornDown || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested)
+                throw new InvalidOperationException("The inventory request requires a live session.");
             if (!_snapshot.IsReady)
                 throw new InvalidOperationException("The inventory request requires a ready session.");
             if (_itemStackEgressRetired)
@@ -1403,7 +1405,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     {
         if (!_snapshot.IsReady)
             throw new InvalidOperationException("The player auth input requires a ready session.");
-        if (_lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
+        if (_disposed || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
             throw new InvalidOperationException("The player auth input requires a live session.");
         if (_initialLoadingRetired)
             throw new InvalidOperationException("Movement recovery after player-life or world retirement is not supported.");
@@ -1559,9 +1561,25 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new BedrockJoinTerminalException(new BedrockTermination(BedrockSessionEndReason.Timeout, BedrockSessionScope.Session, $"The join phase '{_phase}' timed out."));
 
         IBedrockBatchConsumer consumer;
+        bool disconnectObserved = false;
         lock (_gate)
             consumer = _snapshot.IsReady
-                ? new BedrockActorObservationConsumer(header => RecordInbound(header.PacketId), ApplyPostJoinObservation)
+                ? new BedrockActorObservationConsumer(header => RecordInbound(header.PacketId), (member, context) =>
+                {
+                    // Framing has already been validated; bodies after a valid disconnect have no further semantic application.
+                    if (disconnectObserved)
+                        return;
+                    if (member.Header.PacketId == 5)
+                    {
+                        if (Bedrock2169CodecRegistry.Decode(member, context) is not DisconnectPacket disconnect)
+                            throw new BedrockCodecException("The disconnect packet did not decode to its declared form.");
+                        batch.Add(new ObservedDisconnect(disconnect));
+                        disconnectObserved = true;
+                        return;
+                    }
+
+                    ApplyPostJoinObservation(member, context);
+                })
                 : new BedrockPacketDispatcher((packet, _) => batch.Add(packet), ObserveAdmittedPreReady);
 
         Task<bool> receiveTask = _connection.ReceiveAndDispatchAsync(consumer, _lifetime.Token).AsTask();
@@ -1597,7 +1615,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
 
     private async ValueTask ApplyInboundAsync(object packet, int remainingAfterCurrent)
     {
-        RecordInbound(InboundPacketId(packet));
+        if (packet is ObservedDisconnect observed)
+            packet = observed.Packet;
+        else
+            RecordInbound(InboundPacketId(packet));
         switch (packet)
         {
             case NetworkSettingsPacket networkSettings:
@@ -3517,6 +3538,9 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     {
         internal BedrockTermination Termination { get; } = termination;
     }
+
+    // A typed semantic obligation applied after Connection dispatch returns, whose actual header was already observed once.
+    private sealed record ObservedDisconnect(DisconnectPacket Packet);
 
     private abstract record TerrainWorkItem(int WorldGeneration);
 

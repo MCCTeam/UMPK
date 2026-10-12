@@ -676,6 +676,7 @@ public sealed class BedrockItemStackOwnershipTests
             throw new InvalidOperationException("The controlled transport did not deliver the inventory request.");
         }
         internal ValueTask SendAsync(int packetId, byte[] payload, CancellationToken ct) => peer.SendAsync(packetId, payload, ct);
+        internal ValueTask SendBatchAsync(IReadOnlyList<(int PacketId, byte[] Payload)> members, CancellationToken ct) => peer.SendBatchAsync(members, ct);
         internal ValueTask<(int PacketId, byte[] Payload)> ReceiveAsync(CancellationToken ct) => peer.ReceiveAsync(ct);
         internal async Task SendCloseAsync(CancellationToken ct)
         {

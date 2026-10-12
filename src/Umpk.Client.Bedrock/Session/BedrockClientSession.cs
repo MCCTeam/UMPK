@@ -33,6 +33,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private readonly BedrockItemStackRequestIdAllocator _itemStackRequestIds = new();
     private readonly Dictionary<int, BedrockItemStackReconciliation> _itemStackReconciliations = new();
     private readonly Dictionary<int, CancellationTokenSource> _itemStackAdmissions = new();
+    private int _activeItemStackSends;
+    private TaskCompletionSource? _itemStackSendsDrained;
     private readonly BedrockActionCoordinator _actionCoordinator = new();
     private readonly Dictionary<int, HashSet<BedrockContainerAddress>> _inventoryWindows = new();
     private int _unresolvedInventorySlots;
@@ -1035,62 +1037,69 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     /// <summary>Sends a request whose action ID and response tracker entry were already admitted, releasing both when the connection does not take ownership of the packet.</summary>
     internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null)
     {
-        byte[] payload;
-        try
+        CancellationTokenSource admissionCancellation;
+        lock (_gate)
         {
-            payload = BedrockItemStackCodecs.Encode(packet);
-        }
-        catch
-        {
-            ReleaseItemStackRequest(requestId, generation);
-            throw;
+            if (_disposed || _inventoryTornDown || _itemStackEgressRetired || generation != _itemStackTracker.Generation)
+            {
+                ReleaseItemStackRequest(requestId, generation);
+                throw new InvalidOperationException("The inventory request path is retired or its generation is stale.");
+            }
+            if (_itemStackAdmissions.ContainsKey(requestId))
+                throw new InvalidOperationException("The inventory request already has an active send.");
+            admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
+            _itemStackAdmissions.Add(requestId, admissionCancellation);
+            if (_activeItemStackSends++ == 0)
+                _itemStackSendsDrained = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         }
 
-        using var admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
         try
         {
+            byte[] payload = BedrockItemStackCodecs.Encode(packet);
             cancellationToken.ThrowIfCancellationRequested();
             if (before is { } retained)
             {
                 BedrockItemStackReconciliation reconciliation = BedrockItemStackReconciliation.Create(retained, packet, generation);
                 lock (_gate)
                 {
-                    if (_itemStackEgressRetired || generation != _itemStackTracker.Generation
+                    if (_itemStackEgressRetired || _inventoryTornDown || generation != _itemStackTracker.Generation
                         || !_inventory.MatchesSnapshot(retained, reconciliation.AffectedSlots, generation))
                         throw new InvalidOperationException("The retained inventory request became stale before sending.");
                     _itemStackReconciliations.Add(requestId, reconciliation);
-                    _itemStackAdmissions.Add(requestId, admissionCancellation);
                 }
             }
-        }
-        catch
-        {
-            ReleaseItemStackRequest(requestId, generation);
-            throw;
-        }
 
-        var member = new BedrockBatchMember(
-            new BedrockPacketHeader(147, new BedrockSubclientId(0), new BedrockSubclientId(0)),
-            payload);
-        MessageAdmissionResult admission;
-        try
-        {
-            admission = await _connection.SendBatchAsync([member], admissionCancellation.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException exception) when (_lifetime.Token.IsCancellationRequested)
-        {
-            ReleaseItemStackRequest(requestId, generation);
-            throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
-        }
-        catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
-        {
-            ReleaseItemStackRequest(requestId, generation);
-            throw new OperationCanceledException("The inventory request was cancelled before transport capacity was granted.", exception, cancellationToken);
-        }
-        catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
-        {
-            ReleaseItemStackRequest(requestId, generation);
-            throw new InvalidOperationException("The inventory request was retired before transport capacity was granted.", exception);
+            var member = new BedrockBatchMember(
+                new BedrockPacketHeader(147, new BedrockSubclientId(0), new BedrockSubclientId(0)),
+                payload);
+            MessageAdmissionResult admission;
+            try
+            {
+                admission = await _connection.SendBatchAsync([member], admissionCancellation.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception) when (_lifetime.Token.IsCancellationRequested)
+            {
+                throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
+            }
+            catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException("The inventory request was cancelled before transport capacity was granted.", exception, cancellationToken);
+            }
+            catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
+            {
+                throw new InvalidOperationException("The inventory request was retired before transport capacity was granted.", exception);
+            }
+
+            if (!admission.OwnershipTransferred)
+            {
+                lock (_gate)
+                    _rejectedSendAttempts++;
+                throw new InvalidOperationException($"The inventory request was rejected with {admission.Status}.");
+            }
+
+            RecordOutbound(147);
+            CaptureItemStackRequestPayload(payload);
+            return new BedrockItemStackSubmitResult(requestId, (byte[])payload.Clone());
         }
         catch
         {
@@ -1101,19 +1110,14 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         {
             lock (_gate)
                 _itemStackAdmissions.Remove(requestId);
-        }
-
-        if (!admission.OwnershipTransferred)
-        {
-            ReleaseItemStackRequest(requestId, generation);
+            admissionCancellation.Dispose();
+            // The send owns this count through result construction, accounting and its admission resource disposal, independently of response retention.
             lock (_gate)
-                _rejectedSendAttempts++;
-            throw new InvalidOperationException($"The inventory request was rejected with {admission.Status}.");
+            {
+                if (--_activeItemStackSends == 0)
+                    _itemStackSendsDrained!.TrySetResult();
+            }
         }
-
-        RecordOutbound(147);
-        CaptureItemStackRequestPayload(payload);
-        return new BedrockItemStackSubmitResult(requestId, (byte[])payload.Clone());
     }
 
     /// <summary>Encodes and sends one movement-only protocol-2169 player-auth-input packet through serialized egress and records its payload for evidence.</summary>
@@ -1258,6 +1262,11 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             return;
         _disposed = true;
         TryCompleteSession(new BedrockTermination(BedrockSessionEndReason.LocalDisconnect, BedrockSessionScope.Session, "The session was disposed."));
+        // Terminal retirement cancels capacity waiters; all granted inventory commits finish result accounting before owned teardown.
+        Task inventorySendsDrained;
+        lock (_gate)
+            inventorySendsDrained = _activeItemStackSends == 0 ? Task.CompletedTask : _itemStackSendsDrained!.Task;
+        await inventorySendsDrained.ConfigureAwait(false);
         // Waiting movement admissions are canceled first; a granted token-free commit finishes accounting before owned teardown.
         await _playerAuthInputEgress.WaitAsync().ConfigureAwait(false);
         _playerAuthInputEgress.Release();

@@ -9,6 +9,7 @@ internal sealed class BedrockFakePeer : IAsyncDisposable
     private readonly IMessageConnection _transport;
     private readonly BedrockConnection _connection;
     private readonly Queue<BedrockBatchMember> _inbound = new();
+    private readonly List<BedrockLoadingScreenPacket> _initialLoadingNotifications = [];
 
     private BedrockFakePeer(IMessageConnection transport, BedrockSessionCodecContext context)
     {
@@ -57,6 +58,16 @@ internal sealed class BedrockFakePeer : IAsyncDisposable
 
     internal async ValueTask<(int PacketId, byte[] Payload)> ReceiveAsync(CancellationToken cancellationToken = default)
     {
+        while (true)
+        {
+            (int packetId, byte[] payload) = await ReceiveIncludingLoadingAsync(cancellationToken).ConfigureAwait(false);
+            if (packetId != 312)
+                return (packetId, payload);
+        }
+    }
+
+    internal async ValueTask<(int PacketId, byte[] Payload)> ReceiveIncludingLoadingAsync(CancellationToken cancellationToken = default)
+    {
         if (_inbound.Count == 0)
         {
             var collector = new CollectingConsumer(_inbound);
@@ -66,6 +77,19 @@ internal sealed class BedrockFakePeer : IAsyncDisposable
         }
 
         BedrockBatchMember member = _inbound.Dequeue();
+        if (member.Header.PacketId == 312)
+        {
+            BedrockLoadingScreenPacket notification = BedrockLoadingScreenCodecs.Decode(member.Payload);
+            BedrockLoadingScreenType expected = _initialLoadingNotifications.Count switch
+            {
+                0 => BedrockLoadingScreenType.StartLoadingScreen,
+                1 => BedrockLoadingScreenType.EndLoadingScreen,
+                _ => throw new InvalidOperationException("The fake peer received a duplicate initial loading notification."),
+            };
+            if (notification.Type != expected || notification.LoadingScreenId.HasValue)
+                throw new InvalidOperationException("The fake peer received an invalid initial loading notification.");
+            _initialLoadingNotifications.Add(notification);
+        }
         return (member.Header.PacketId, member.Payload);
     }
 

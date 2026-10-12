@@ -126,6 +126,14 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private readonly HashSet<(int Dimension, int X, int Z)> _requestedTerrainColumns = [];
     private readonly HashSet<(int Dimension, int X, int Z)> _pendingTerrainColumns = [];
     private bool _readyFlushQueued;
+    // Initial headless completion uses the existing bootstrap predicates; it does not reproduce the native UI lifetime.
+    private bool _initialLoadingStarted;
+    private bool _initialLoadingEndTransferred;
+    private bool _initialLoadingComplete;
+    private bool _initialLoadingRetired;
+    private int _initialLoadingEpoch;
+    private BedrockSessionScope _initialLoadingRetirementScope;
+    private CancellationTokenSource? _initialLoadingAdmission;
     private int _terrainWorkDropped;
     private int _terrainStaleDropped;
     private int _terrainApplyRefused;
@@ -1132,6 +1140,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                     throw new InvalidOperationException("The player auth input requires a ready session.");
                 if (_lifetime.Termination.IsCompleted)
                     throw new InvalidOperationException("The player auth input requires a live session.");
+                if (_initialLoadingRetired)
+                    throw new InvalidOperationException("Movement recovery after player-life or world retirement is not supported.");
                 RequirePlayerAuthInputTick(input.Tick);
             }
 
@@ -1250,13 +1260,19 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         _lifetime.Dispose();
     }
 
-    private bool TryCompleteSession(BedrockTermination termination) =>
-        _lifetime.TryComplete(termination, () =>
+    private bool TryCompleteSession(BedrockTermination termination)
+    {
+        // Terminal ownership and initial readiness publication share the session gate.
+        lock (_gate)
         {
-            TeardownInventory();
-            lock (_gate)
+            return _lifetime.TryComplete(termination, () =>
+            {
+                RetireInitialLoading(BedrockSessionScope.Session);
+                TeardownInventory();
                 _snapshot = _snapshot with { Termination = termination };
-        });
+            });
+        }
+    }
 
     private async Task RunAsync()
     {
@@ -1354,6 +1370,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 _actors.SetLocalPlayer(start.EntityId, start.RuntimeEntityId);
                 ApplyStartGameTerrain(startTrailer);
                 CaptureStartGame(start);
+                await SendInitialLoadingAsync(BedrockLoadingScreenType.StartLoadingScreen).ConfigureAwait(false);
                 await EmitInitializationAsync(startEffects, remainingAfterCurrent).ConfigureAwait(false);
                 break;
             case BedrockItemRegistryPacket:
@@ -1458,6 +1475,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         }
 
         MaybeAcceptInitialization(InboundPacketId(packet));
+        await CompleteInitialHeadlessLoadingAsync().ConfigureAwait(false);
         RefreshSnapshot();
     }
 
@@ -1644,9 +1662,14 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         {
             if (effect.Kind == BedrockBootstrapEffectKind.SendLocalPlayerInitialized)
             {
-                await SendAsync(113, BedrockBootstrapCodecs.Encode(new SetLocalPlayerAsInitializedPacket(effect.RuntimeEntityId))).ConfigureAwait(false);
+                await SendInitialBootstrapAsync(113, BedrockBootstrapCodecs.Encode(new SetLocalPlayerAsInitializedPacket(effect.RuntimeEntityId))).ConfigureAwait(false);
                 lock (_gate)
+                {
+                    if (_initialLoadingRetired || _lifetime.Token.IsCancellationRequested)
+                        throw InitialLoadingRetired();
+                    RequireInitialLoadingDeadline();
                     _initializationSendSequence = _inboundSequence + remainingAfterCurrent;
+                }
             }
         }
     }
@@ -1968,6 +1991,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     // Respawn ends the player life: transient container and request work is dropped, item-stack egress retires until reconnect, and the world stays current.
     internal void HandleRespawn()
     {
+        RetireInitialLoading(BedrockSessionScope.PlayerLife);
         _actors.InvalidatePlayerLife();
         InvalidateInventoryTransient();
         RefreshSnapshot();
@@ -1976,6 +2000,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     // A world replacement retires actors, terrain, transient inventory work, and item-stack egress together so late packets cannot land in the next world.
     internal void HandleWorldReplacement()
     {
+        RetireInitialLoading(BedrockSessionScope.World);
         _actors.InvalidateWorld();
         _world.InvalidateWorld();
         lock (_gate)
@@ -2872,28 +2897,158 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         }
 
         lock (_gate)
-        {
             _bootstrap = transition.State;
-            if (transition.State.IsReady)
-                _lifetime.MarkReady();
-        }
-
-        bool queueReadyFlush = false;
-        lock (_gate)
-        {
-            if (transition.State.IsReady && !_readyFlushQueued)
-            {
-                _readyFlushQueued = true;
-                queueReadyFlush = true;
-            }
-        }
-
-        if (queueReadyFlush)
-            EnqueueTerrain(new ReadyFlushWorkItem());
 
         RefreshSnapshot();
         return transition.Effects;
     }
+
+    // End transfer completes the local headless bootstrap; it does not acknowledge remote protection clearing or input acceptance.
+    private async ValueTask CompleteInitialHeadlessLoadingAsync()
+    {
+        lock (_gate)
+        {
+            if (!_bootstrap.IsReady || _initialLoadingComplete)
+                return;
+        }
+
+        await SendInitialLoadingAsync(BedrockLoadingScreenType.EndLoadingScreen).ConfigureAwait(false);
+        lock (_gate)
+        {
+            if (_initialLoadingRetired || _lifetime.Token.IsCancellationRequested)
+                throw InitialLoadingRetired();
+            RequireInitialLoadingDeadline();
+            _initialLoadingComplete = true;
+            RefreshSnapshot();
+            _lifetime.MarkReady();
+            if (!_readyFlushQueued)
+            {
+                _readyFlushQueued = true;
+                EnqueueTerrain(new ReadyFlushWorkItem());
+            }
+        }
+    }
+
+    private ValueTask SendInitialLoadingAsync(BedrockLoadingScreenType type) =>
+        SendInitialBootstrapAsync(312, BedrockLoadingScreenCodecs.Encode(new BedrockLoadingScreenPacket(type, null)), type);
+
+    private async ValueTask SendInitialBootstrapAsync(int packetId, byte[] payload, BedrockLoadingScreenType? loadingType = null)
+    {
+        using var admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
+        int epoch;
+        lock (_gate)
+        {
+            if (_initialLoadingRetired || _lifetime.Token.IsCancellationRequested)
+                throw InitialLoadingRetired();
+            if (_initialLoadingAdmission is not null
+                || (loadingType == BedrockLoadingScreenType.StartLoadingScreen && _initialLoadingStarted)
+                || (loadingType == BedrockLoadingScreenType.EndLoadingScreen && (!_initialLoadingStarted || _initialLoadingEndTransferred))
+                || (loadingType is null && (!_initialLoadingStarted || _initialLoadingEndTransferred)))
+                throw new BedrockJoinTerminalException(new BedrockTermination(BedrockSessionEndReason.ProtocolFailure, BedrockSessionScope.Session, "The initial bootstrap send is outside its owned lifetime."));
+            RequireInitialLoadingDeadline();
+            epoch = _initialLoadingEpoch;
+            _initialLoadingAdmission = admissionCancellation;
+        }
+
+        var member = new BedrockBatchMember(
+            new BedrockPacketHeader(packetId, new BedrockSubclientId(0), new BedrockSubclientId(0)),
+            payload);
+        MessageAdmissionResult admission;
+        ITimer? deadlineTimer = null;
+        try
+        {
+            // Timeout publishes the terminal state without abandoning a token-free commit that already owns transport capacity.
+            TimeSpan remaining = _deadline - _settings.TimeProvider.GetUtcNow();
+            deadlineTimer = _settings.TimeProvider.CreateTimer(
+                static state =>
+                {
+                    var (session, pendingAdmission) = ((BedrockClientSession, CancellationTokenSource))state!;
+                    session.ExpireInitialLoading(pendingAdmission);
+                },
+                (this, admissionCancellation),
+                remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero,
+                Timeout.InfiniteTimeSpan);
+            admission = await _connection.SendBatchAsync([member], admissionCancellation.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (_lifetime.Token.IsCancellationRequested)
+        {
+            lock (_gate)
+                throw InitialLoadingRetired(exception);
+        }
+        catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
+        {
+            lock (_gate)
+                throw InitialLoadingRetired(exception);
+        }
+        finally
+        {
+            lock (_gate)
+                _initialLoadingAdmission = null;
+            deadlineTimer?.Dispose();
+        }
+
+        if (!admission.OwnershipTransferred)
+        {
+            lock (_gate)
+                _rejectedSendAttempts++;
+            throw new BedrockJoinTerminalException(new BedrockTermination(BedrockSessionEndReason.TransportFailure, BedrockSessionScope.Session, $"The initial bootstrap packet {packetId} was rejected with {admission.Status}."));
+        }
+
+        RecordOutbound(packetId);
+        lock (_gate)
+        {
+            // Transferred bytes remain committed even when a lifecycle transition won the race with the returned result.
+            if (loadingType == BedrockLoadingScreenType.StartLoadingScreen)
+                _initialLoadingStarted = true;
+            else if (loadingType == BedrockLoadingScreenType.EndLoadingScreen)
+                _initialLoadingEndTransferred = true;
+            if (epoch != _initialLoadingEpoch || _initialLoadingRetired || _lifetime.Token.IsCancellationRequested)
+                throw InitialLoadingRetired();
+            RequireInitialLoadingDeadline();
+        }
+    }
+
+    private void ExpireInitialLoading(CancellationTokenSource pendingAdmission)
+    {
+        lock (_gate)
+        {
+            if (!ReferenceEquals(_initialLoadingAdmission, pendingAdmission) || _initialLoadingComplete)
+                return;
+            if (_settings.TimeProvider.GetUtcNow() >= _deadline)
+                TryCompleteSession(InitialLoadingTimeout());
+        }
+    }
+
+    private void RequireInitialLoadingDeadline()
+    {
+        if (_settings.TimeProvider.GetUtcNow() < _deadline)
+            return;
+        TryCompleteSession(InitialLoadingTimeout());
+        throw InitialLoadingRetired();
+    }
+
+    private BedrockTermination InitialLoadingTimeout() =>
+        new(BedrockSessionEndReason.Timeout, BedrockSessionScope.Session, $"The join phase '{_phase}' timed out during its initial bootstrap send.");
+
+    private void RetireInitialLoading(BedrockSessionScope scope)
+    {
+        lock (_gate)
+        {
+            if (_initialLoadingRetired)
+                return;
+            _initialLoadingRetired = true;
+            _initialLoadingRetirementScope = scope;
+            _initialLoadingEpoch++;
+            _initialLoadingAdmission?.Cancel();
+        }
+    }
+
+    private BedrockJoinTerminalException InitialLoadingRetired(Exception? cause = null) =>
+        new(_snapshot.Termination ?? new BedrockTermination(
+            _lifetime.Token.IsCancellationRequested ? BedrockSessionEndReason.Cancelled : BedrockSessionEndReason.ProtocolFailure,
+            _initialLoadingRetired ? _initialLoadingRetirementScope : BedrockSessionScope.Session,
+            "The initial loading lifetime ended before readiness was published.",
+            cause));
 
     private async ValueTask SendAsync(int packetId, byte[] payload)
     {
@@ -3013,7 +3168,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 EntityRegistryAvailable = _bootstrap.EntityRegistryAvailable,
                 LocalPlayerInitializationSent = _bootstrap.LocalPlayerInitializationSent,
                 LocalPlayerInitializationAccepted = _bootstrap.LocalPlayerInitializationAccepted,
-                IsReady = _bootstrap.IsReady,
+                IsReady = _bootstrap.IsReady && _initialLoadingComplete,
                 ActorCount = _actors.ActorCount,
                 ActorWorldGeneration = _actors.WorldGeneration,
                 ActorObservationsAvailable = _bootstrap.EntityRegistryAvailable,

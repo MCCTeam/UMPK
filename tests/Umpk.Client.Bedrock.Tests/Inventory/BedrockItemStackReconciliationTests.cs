@@ -155,7 +155,7 @@ public sealed class BedrockItemStackReconciliationTests
 
         IReadOnlyList<BedrockInventoryReconciledSlot> updates = Place(Snapshot(Item(306, 5, 10), Air())).Reconcile(Response(malformed, Row(1, 1, 12)));
 
-        Assert.Equal(1, Assert.Single(updates).Slot);
+        Assert.Empty(updates);
     }
 
     [Fact]

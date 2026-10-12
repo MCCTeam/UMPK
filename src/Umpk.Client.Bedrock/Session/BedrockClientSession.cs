@@ -828,45 +828,66 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             return _inventoryWindows.TryGetValue(windowId, out HashSet<BedrockContainerAddress>? addresses) ? [.. addresses] : [];
     }
 
-    /// <summary>Validates one hotbar place against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Hotbar slots 0 through 8 are the current client support scope; the request remains claimed until its response or a failed send releases it.</remarks>
+    /// <summary>Validates the physical player endpoints and retained data shape before any request identity or transport ownership is allocated.</summary>
+    private BedrockInventorySnapshot GetPlayerInventoryRequestSnapshot(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot)
+    {
+        if (contentAddress.WindowId != 0 || contentAddress.ContainerId != 0 || contentAddress.DynamicContainerId.HasValue)
+            throw new InvalidOperationException("The inventory request address is not a supported player inventory container.");
+        if (!BedrockPlayerInventoryAddressing.TryGetRequestContainer(sourceSlot, out _)
+            || !BedrockPlayerInventoryAddressing.TryGetRequestContainer(destinationSlot, out _))
+            throw new InvalidOperationException("The inventory request slot is outside the supported player range.");
+        if (sourceSlot == destinationSlot)
+            throw new InvalidOperationException("The inventory request source and destination slots must differ.");
+        BedrockInventorySnapshot snapshot = _inventory.GetSnapshot(contentAddress)
+            ?? throw new InvalidOperationException("The inventory request targets a container without authoritative content.");
+        if (snapshot.Items.IsDefault
+            || (!snapshot.KnownSlots.IsDefault && snapshot.KnownSlots.Length != snapshot.Items.Length)
+            || (!snapshot.ResponseCorrections.IsDefault && snapshot.ResponseCorrections.Length != snapshot.Items.Length))
+            throw new InvalidOperationException("The inventory request has malformed authoritative data.");
+        if (!BedrockPlayerInventoryAddressing.IsSupportedPhysicalSlot(sourceSlot, snapshot.Items.Length)
+            || !BedrockPlayerInventoryAddressing.IsSupportedPhysicalSlot(destinationSlot, snapshot.Items.Length))
+            throw new InvalidOperationException("The inventory request slot is outside the authoritative container.");
+        if (!snapshot.IsSlotKnown(sourceSlot) || !snapshot.IsSlotKnown(destinationSlot))
+            throw new InvalidOperationException("The inventory request requires authoritative data for both affected slots.");
+        if (snapshot.Items[sourceSlot] is null || snapshot.Items[destinationSlot] is null)
+            throw new InvalidOperationException("The inventory request has malformed authoritative item data.");
+        // Both retained endpoint counts must fit the paired response bytes; this does not assert a game item maximum.
+        if (snapshot.Items[sourceSlot].Count > byte.MaxValue || snapshot.Items[destinationSlot].Count > byte.MaxValue)
+            throw new InvalidOperationException("The inventory request exceeds the supported response count range.");
+        return snapshot;
+    }
+
+    /// <summary>Validates one player inventory place against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
     internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryPlaceAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (contentAddress.WindowId != 0 || contentAddress.ContainerId != 0 || contentAddress.DynamicContainerId.HasValue)
-            throw new InvalidOperationException("The inventory request address is not a supported player inventory container.");
-        if (sourceSlot > BedrockItemStackEgress.MaxHotbarSlot || destinationSlot > BedrockItemStackEgress.MaxHotbarSlot)
-            throw new InvalidOperationException("The inventory request slot is outside the supported hotbar range.");
-        if (sourceSlot == destinationSlot)
-            throw new InvalidOperationException("The inventory request source and destination slots must differ.");
+        BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
         if (count == 0)
             throw new InvalidOperationException("The inventory request count must be positive.");
-        BedrockInventorySnapshot? snapshot = _inventory.GetSnapshot(contentAddress);
-        if (snapshot is null)
-            throw new InvalidOperationException("The inventory request targets a container without authoritative content.");
-        if (sourceSlot >= snapshot.Value.Items.Length || destinationSlot >= snapshot.Value.Items.Length)
-            throw new InvalidOperationException("The inventory request slot is outside the authoritative container.");
-        BedrockItemInstance sourceItem = snapshot.Value.Items[sourceSlot];
-        BedrockItemInstance destinationItem = snapshot.Value.Items[destinationSlot];
+        BedrockItemInstance sourceItem = snapshot.Items[sourceSlot];
+        BedrockItemInstance destinationItem = snapshot.Items[destinationSlot];
         if (sourceItem.NetworkId == 0 || sourceItem.Count == 0)
             throw new InvalidOperationException("The inventory request source slot is empty.");
-        if (!sourceItem.StackNetworkId.HasValue)
+        if (sourceItem.StackNetworkId is not > 0)
             throw new InvalidOperationException("The inventory request source slot has no authoritative stack identity.");
         if (count > sourceItem.Count)
             throw new InvalidOperationException("The inventory request count exceeds the authoritative source count.");
         int destinationStackId = 0;
         if (destinationItem.NetworkId != 0 || destinationItem.Count != 0)
         {
-            if (!snapshot.Value.HasCompatibleItemData(sourceSlot, destinationSlot))
+            if (destinationItem.NetworkId == 0 || destinationItem.Count == 0)
+                throw new InvalidOperationException("The inventory request destination has inconsistent item data.");
+            if ((int)destinationItem.Count + count > byte.MaxValue)
+                throw new InvalidOperationException("The inventory request merge exceeds the supported response count range.");
+            if (!snapshot.HasCompatibleItemData(sourceSlot, destinationSlot))
                 throw new InvalidOperationException("The inventory request destination slot holds a different item for this operation.");
-            if (!destinationItem.StackNetworkId.HasValue)
+            if (destinationItem.StackNetworkId is not > 0)
                 throw new InvalidOperationException("The inventory request destination slot has no authoritative stack identity.");
             destinationStackId = destinationItem.StackNetworkId.Value;
         }
 
-        if (!snapshot.Value.IsSlotKnown(sourceSlot) || !snapshot.Value.IsSlotKnown(destinationSlot))
-            throw new InvalidOperationException("The inventory request requires authoritative data for both affected slots.");
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot.Value, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -890,48 +911,40 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot.Value).ConfigureAwait(false);
+        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
     }
 
-    /// <summary>Validates one hotbar take against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Hotbar slots 0 through 8 are the current client support scope; the request remains claimed until its response or a failed send releases it.</remarks>
+    /// <summary>Validates one player inventory take against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
     internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryTakeAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (contentAddress.WindowId != 0 || contentAddress.ContainerId != 0 || contentAddress.DynamicContainerId.HasValue)
-            throw new InvalidOperationException("The inventory request address is not a supported player inventory container.");
-        if (sourceSlot > BedrockItemStackEgress.MaxHotbarSlot || destinationSlot > BedrockItemStackEgress.MaxHotbarSlot)
-            throw new InvalidOperationException("The inventory request slot is outside the supported hotbar range.");
-        if (sourceSlot == destinationSlot)
-            throw new InvalidOperationException("The inventory request source and destination slots must differ.");
+        BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
         if (count == 0)
             throw new InvalidOperationException("The inventory request count must be positive.");
-        BedrockInventorySnapshot? snapshot = _inventory.GetSnapshot(contentAddress);
-        if (snapshot is null)
-            throw new InvalidOperationException("The inventory request targets a container without authoritative content.");
-        if (sourceSlot >= snapshot.Value.Items.Length || destinationSlot >= snapshot.Value.Items.Length)
-            throw new InvalidOperationException("The inventory request slot is outside the authoritative container.");
-        BedrockItemInstance sourceItem = snapshot.Value.Items[sourceSlot];
-        BedrockItemInstance destinationItem = snapshot.Value.Items[destinationSlot];
+        BedrockItemInstance sourceItem = snapshot.Items[sourceSlot];
+        BedrockItemInstance destinationItem = snapshot.Items[destinationSlot];
         if (sourceItem.NetworkId == 0 || sourceItem.Count == 0)
             throw new InvalidOperationException("The inventory request source slot is empty.");
-        if (!sourceItem.StackNetworkId.HasValue)
+        if (sourceItem.StackNetworkId is not > 0)
             throw new InvalidOperationException("The inventory request source slot has no authoritative stack identity.");
         if (count > sourceItem.Count)
             throw new InvalidOperationException("The inventory request count exceeds the authoritative source count.");
         int destinationStackId = 0;
         if (destinationItem.NetworkId != 0 || destinationItem.Count != 0)
         {
-            if (!snapshot.Value.HasCompatibleItemData(sourceSlot, destinationSlot))
+            if (destinationItem.NetworkId == 0 || destinationItem.Count == 0)
+                throw new InvalidOperationException("The inventory request destination has inconsistent item data.");
+            if ((int)destinationItem.Count + count > byte.MaxValue)
+                throw new InvalidOperationException("The inventory request merge exceeds the supported response count range.");
+            if (!snapshot.HasCompatibleItemData(sourceSlot, destinationSlot))
                 throw new InvalidOperationException("The inventory request destination slot holds a different item for this operation.");
-            if (!destinationItem.StackNetworkId.HasValue)
+            if (destinationItem.StackNetworkId is not > 0)
                 throw new InvalidOperationException("The inventory request destination slot has no authoritative stack identity.");
             destinationStackId = destinationItem.StackNetworkId.Value;
         }
 
-        if (!snapshot.Value.IsSlotKnown(sourceSlot) || !snapshot.Value.IsSlotKnown(destinationSlot))
-            throw new InvalidOperationException("The inventory request requires authoritative data for both affected slots.");
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot.Value, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -955,39 +968,27 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot.Value).ConfigureAwait(false);
+        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
     }
 
-    /// <summary>Validates one hotbar swap against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Hotbar slots 0 through 8 are the current client support scope; the request remains claimed until its response or a failed send releases it.</remarks>
+    /// <summary>Validates one player inventory swap against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
     internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventorySwapAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (contentAddress.WindowId != 0 || contentAddress.ContainerId != 0 || contentAddress.DynamicContainerId.HasValue)
-            throw new InvalidOperationException("The inventory request address is not a supported player inventory container.");
-        if (sourceSlot > BedrockItemStackEgress.MaxHotbarSlot || destinationSlot > BedrockItemStackEgress.MaxHotbarSlot)
-            throw new InvalidOperationException("The inventory request slot is outside the supported hotbar range.");
-        if (sourceSlot == destinationSlot)
-            throw new InvalidOperationException("The inventory request source and destination slots must differ.");
-        BedrockInventorySnapshot? snapshot = _inventory.GetSnapshot(contentAddress);
-        if (snapshot is null)
-            throw new InvalidOperationException("The inventory request targets a container without authoritative content.");
-        if (sourceSlot >= snapshot.Value.Items.Length || destinationSlot >= snapshot.Value.Items.Length)
-            throw new InvalidOperationException("The inventory request slot is outside the authoritative container.");
-        BedrockItemInstance sourceItem = snapshot.Value.Items[sourceSlot];
-        BedrockItemInstance destinationItem = snapshot.Value.Items[destinationSlot];
+        BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
+        BedrockItemInstance sourceItem = snapshot.Items[sourceSlot];
+        BedrockItemInstance destinationItem = snapshot.Items[destinationSlot];
         if (sourceItem.NetworkId == 0 || sourceItem.Count == 0)
             throw new InvalidOperationException("The inventory request source slot is empty.");
-        if (!sourceItem.StackNetworkId.HasValue)
+        if (sourceItem.StackNetworkId is not > 0)
             throw new InvalidOperationException("The inventory request source slot has no authoritative stack identity.");
         if (destinationItem.NetworkId == 0 || destinationItem.Count == 0)
             throw new InvalidOperationException("The inventory request destination slot is empty for this operation.");
-        if (!destinationItem.StackNetworkId.HasValue)
+        if (destinationItem.StackNetworkId is not > 0)
             throw new InvalidOperationException("The inventory request destination slot has no authoritative stack identity.");
 
-        if (!snapshot.Value.IsSlotKnown(sourceSlot) || !snapshot.Value.IsSlotKnown(destinationSlot))
-            throw new InvalidOperationException("The inventory request requires authoritative data for both affected slots.");
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot.Value, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -1011,7 +1012,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot.Value).ConfigureAwait(false);
+        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
     }
 
     /// <summary>Retains and emits only a supplied observed oak-planks Take64 request against actual registry, catalog, normal screen and empty UI cursor owners.</summary>

@@ -6,15 +6,15 @@ namespace Umpk.Client.Bedrock.State.Inventory;
 internal readonly record struct BedrockItemStackSubmitResult(int RequestId, byte[] OutboundPayload);
 
 /// <summary>Builds the single-action protocol-2169 item-stack request for a client-owned negative request identifier.</summary>
-/// <remarks>Current client support is limited to hotbar slots 0 through 8 and the take, place, and swap actions. Creative and drop request builders remain disabled.</remarks>
+/// <remarks>Builder scope covers stable player physical slots 0 through 35 for take, place, and swap; Session admission and runtime acceptance remain independently qualified. Creative and drop request builders remain disabled.</remarks>
 internal static class BedrockItemStackEgress
 {
     /// <summary>Identifies the hotbar container in the protocol-2169 full container name for slots inside the supported hotbar range.</summary>
     internal const byte HotbarContainerId = 28;
-    /// <summary>Identifies the inventory container in the protocol-2169 full container name for slots outside the supported hotbar range.</summary>
+    /// <summary>Identifies the inventory container in the protocol-2169 full container name for supported player slots 9 through 35.</summary>
     internal const byte InventoryContainerId = 29;
     /// <summary>Bounds the supported hotbar slot window to slots 0 through 8 as client support policy rather than proven server acceptance.</summary>
-    internal const int MaxHotbarSlot = 8;
+    internal const int MaxHotbarSlot = BedrockPlayerInventoryAddressing.HotbarLastSlot;
     /// <summary>Carries the protocol-2169 legacy take identifier used by the single supported take shape.</summary>
     internal const byte SupportedLegacyTakeId = 0;
     /// <summary>Carries the protocol-2169 legacy place identifier used by the single supported place shape.</summary>
@@ -26,8 +26,13 @@ internal static class BedrockItemStackEgress
     /// <summary>Carries the single client-owned negative request identifier admitted while only one inventory request stays outstanding.</summary>
     internal const int ClientRequestId = -1;
 
-    /// <summary>Selects the protocol-2169 container identifier for a slot, returning the hotbar container inside the supported range and the inventory container outside it.</summary>
-    internal static byte ContainerForSlot(byte slot) => slot <= MaxHotbarSlot ? HotbarContainerId : InventoryContainerId;
+    /// <summary>Selects the qualified request namespace for a supported player physical slot without rebasing its index.</summary>
+    internal static byte ContainerForSlot(byte slot)
+    {
+        if (!BedrockPlayerInventoryAddressing.TryGetRequestContainer(slot, out BedrockFullContainerName name))
+            throw new InvalidOperationException($"The item stack slot {slot} is outside the supported player range.");
+        return name.ContainerId;
+    }
 
     /// <summary>Builds one single-action protocol-2169 place request after rejecting non-negative identifiers, out-of-range or equal slots, and zero counts.</summary>
     /// <remarks>The builder also checks the configured action budget before creating a request.</remarks>
@@ -35,10 +40,10 @@ internal static class BedrockItemStackEgress
     {
         if (requestId >= 0)
             throw new InvalidOperationException($"The item stack request identifier {requestId} is not client owned. Client requests use negative identifiers.");
-        if (sourceSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported hotbar range.");
-        if (destinationSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported hotbar range.");
+        if (sourceSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported player range.");
+        if (destinationSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported player range.");
         if (sourceSlot == destinationSlot)
             throw new InvalidOperationException("The item stack source and destination slots must differ.");
         if (count == 0)
@@ -58,10 +63,10 @@ internal static class BedrockItemStackEgress
     {
         if (requestId >= 0)
             throw new InvalidOperationException($"The item stack request identifier {requestId} is not client owned. Client requests use negative identifiers.");
-        if (sourceSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported hotbar range.");
-        if (destinationSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported hotbar range.");
+        if (sourceSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported player range.");
+        if (destinationSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported player range.");
         if (sourceSlot == destinationSlot)
             throw new InvalidOperationException("The item stack source and destination slots must differ.");
         if (count == 0)
@@ -80,10 +85,10 @@ internal static class BedrockItemStackEgress
     {
         if (requestId >= 0)
             throw new InvalidOperationException($"The item stack request identifier {requestId} is not client owned. Client requests use negative identifiers.");
-        if (sourceSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported hotbar range.");
-        if (destinationSlot > MaxHotbarSlot)
-            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported hotbar range.");
+        if (sourceSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack source slot {sourceSlot} is outside the supported player range.");
+        if (destinationSlot > BedrockPlayerInventoryAddressing.MaxPlayerSlot)
+            throw new InvalidOperationException($"The item stack destination slot {destinationSlot} is outside the supported player range.");
         if (sourceSlot == destinationSlot)
             throw new InvalidOperationException("The item stack source and destination slots must differ.");
 

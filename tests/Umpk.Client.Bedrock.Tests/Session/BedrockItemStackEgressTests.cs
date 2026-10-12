@@ -636,7 +636,7 @@ public sealed class BedrockItemStackEgressTests
         Assert.Throws<InvalidOperationException>(() => BedrockItemStackEgress.BuildTake(0, 0, 1, 1, 7, 0));
         Assert.Throws<InvalidOperationException>(() => BedrockItemStackEgress.BuildTake(-1, 0, 0, 1, 7, 0));
         Assert.Throws<InvalidOperationException>(() => BedrockItemStackEgress.BuildTake(-1, 0, 1, 0, 7, 0));
-        Assert.Throws<InvalidOperationException>(() => BedrockItemStackEgress.BuildTake(-1, 0, 9, 1, 7, 0));
+        Assert.Throws<InvalidOperationException>(() => BedrockItemStackEgress.BuildTake(-1, 0, 36, 1, 7, 0));
     }
 
     [Fact]
@@ -891,7 +891,7 @@ public sealed class BedrockItemStackEgressTests
     }
 
     [Fact]
-    public async Task SubmitRejectsNonHotbarSlots()
+    public async Task SubmitRejectsOutsidePlayerSlots()
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         CancellationToken ct = timeout.Token;
@@ -908,7 +908,7 @@ public sealed class BedrockItemStackEgressTests
         await peer.SendAsync(49, BedrockInventoryCodecs.Encode(PlayerContent(items)), ct);
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 9, 1, ct).AsTask());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 36, 1, ct).AsTask());
 
         Assert.Equal(0, session.ItemStackTracker.PendingCount);
         Assert.Equal(0, session.ActionCoordinator.ClaimedCount);

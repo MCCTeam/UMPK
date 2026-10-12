@@ -418,12 +418,18 @@ public sealed class BedrockCreativeCursorSessionTests
         items[7] = new(306, 3, 0, 11, 0, [1, 2]);
         await fixture.SendAsync(49, BedrockInventoryCodecs.Encode(new BedrockInventoryContentPacket(124, items, s_pool, Air())), ct);
         await WaitAsync(() => fixture.Session.InventoryStore.GetSnapshot(s_pool)!.Value.Items[7].Count == 3, ct);
+        BedrockInventorySnapshot newer = fixture.Session.InventoryStore.GetSnapshot(s_pool)!.Value;
         await RespondAsync(fixture, ct, -3, 0, Cursor());
         BedrockInventorySnapshot after = fixture.Session.InventoryStore.GetSnapshot(s_pool)!.Value;
         Assert.True(after.IsSlotKnown(0));
-        Assert.Equal(affectedChanged ? 1 : 64, after.Items[0].Count);
+        Assert.Equal(items[0].Count, after.Items[0].Count);
+        Assert.Equal(newer.Items[0], after.Items[0]);
+        Assert.Same(newer.AuthorityReceipts[0], after.AuthorityReceipts[0]);
+        Assert.Equal(newer.ResponseCorrections[0], after.ResponseCorrections[0]);
         Assert.True(after.IsSlotKnown(7));
         Assert.Equal(items[7], after.Items[7]);
+        Assert.Same(newer.AuthorityReceipts[7], after.AuthorityReceipts[7]);
+        Assert.Equal(newer.ResponseCorrections[7], after.ResponseCorrections[7]);
         Released(fixture);
     }
 

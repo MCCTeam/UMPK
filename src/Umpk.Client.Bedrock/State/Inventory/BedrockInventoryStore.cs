@@ -328,23 +328,27 @@ internal sealed class BedrockInventoryStore
             } : null;
     }
 
-    /// <summary>Checks that retained affected slots still describe usable current items before an operation is admitted.</summary>
+    /// <summary>Checks that retained affected slots still own the current authoritative receipts and usable items before an operation is admitted.</summary>
     internal bool MatchesSnapshot(BedrockInventorySnapshot before, IReadOnlyList<int> affectedSlots, int generation)
     {
         lock (_gate)
-            return generation == _generation && _containers.TryGetValue(before.Address, out Entry? entry)
-                && affectedSlots.All(slot => slot >= 0 && slot < entry.Items.Length && before.IsSlotKnown(slot)
-                    && entry.Known[slot] && entry.Items[slot].Equals(before.Items[slot]) && SameCorrection(entry, before, slot));
+            return generation == _generation && ValidTentativeBaseline(before) && _containers.TryGetValue(before.Address, out Entry? entry)
+                && affectedSlots.All(slot => MatchesAuthorityReceipt(entry, before, slot));
     }
 
-    /// <summary>Applies a correlated accepted response atomically, retaining unrelated slots and making incomplete or superseded affected data unavailable.</summary>
+    private static bool MatchesAuthorityReceipt(Entry entry, BedrockInventorySnapshot before, int slot) =>
+        slot >= 0 && slot < entry.Items.Length && slot < before.Items.Length && before.IsSlotKnown(slot)
+        && entry.Known[slot] && ReferenceEquals(entry.Receipts[slot], before.AuthorityReceipts[slot])
+        && entry.Items[slot].Equals(before.Items[slot]) && SameCorrection(entry, before, slot);
+
+    /// <summary>Applies a correlated accepted response atomically while the entire affected set owns its receipts, preserving newer authority and retiring only still-owned incomplete or superseded slots.</summary>
     internal void ApplyResponseUpdates(BedrockInventorySnapshot before, IReadOnlyList<BedrockInventoryReconciledSlot> updates, IReadOnlyList<int> affectedSlots, int generation)
     {
         ArgumentNullException.ThrowIfNull(updates);
         ArgumentNullException.ThrowIfNull(affectedSlots);
         lock (_gate)
         {
-            if (generation != _generation || !_containers.TryGetValue(before.Address, out Entry? entry))
+            if (generation != _generation || !ValidTentativeBaseline(before) || !_containers.TryGetValue(before.Address, out Entry? entry))
                 return;
             if (affectedSlots.Any(slot => slot < 0 || slot >= entry.Items.Length || slot >= before.Items.Length)
                 || affectedSlots.Distinct().Count() != affectedSlots.Count
@@ -356,18 +360,22 @@ internal sealed class BedrockInventoryStore
             if (affectedSlots.Any(slot => entry.Tentative[slot].HasValue))
                 return;
 
-            bool changed = affectedSlots.Any(slot => !before.IsSlotKnown(slot) || !entry.Known[slot] || !SameCorrection(entry, before, slot)
-                || (!entry.Items[slot].Equals(before.Items[slot]) && !updates.Any(update => update.Slot == slot && entry.Items[slot].Equals(update.Item))));
+            bool unchanged = affectedSlots.All(slot => MatchesAuthorityReceipt(entry, before, slot));
             BedrockItemInstance[] items = [.. entry.Items];
             bool[] known = [.. entry.Known];
             BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
+            object[] receipts = [.. entry.Receipts];
+            object publication = new();
             foreach (int slot in affectedSlots)
             {
+                if (!ReferenceEquals(entry.Receipts[slot], before.AuthorityReceipts[slot]))
+                    continue;
                 known[slot] = false;
                 corrections[slot] = null;
+                receipts[slot] = publication;
             }
 
-            if (!changed)
+            if (unchanged)
             {
                 foreach (BedrockInventoryReconciledSlot update in updates)
                 {
@@ -377,10 +385,6 @@ internal sealed class BedrockInventoryStore
                 }
             }
 
-            object[] receipts = [.. entry.Receipts];
-            object publication = new();
-            foreach (int slot in affectedSlots)
-                receipts[slot] = publication;
             _containers[before.Address] = new Entry(items, entry.Storage, known, corrections, receipts, [.. entry.Tentative]);
         }
     }

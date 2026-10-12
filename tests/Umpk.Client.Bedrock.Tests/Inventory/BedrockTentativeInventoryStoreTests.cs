@@ -249,7 +249,7 @@ public sealed class BedrockTentativeInventoryStoreTests
         store.ApplySlot(Slot(0, Item(64, 1)), s_player, store.Generation);
         var replacement = Read(store);
         Assert.NotSame(before.AuthorityReceipts[0], replacement.AuthorityReceipts[0]);
-        Assert.True(store.MatchesSnapshot(before, [0], store.Generation));
+        Assert.False(store.MatchesSnapshot(before, [0], store.Generation));
         Assert.False(store.TryPublishTentativeSlot(before, 0, Remainder(), -4, store.Generation));
         AssertUnchanged(store, replacement);
         store.ApplySlot(Slot(0, Item(9, 1)), s_player, store.Generation);

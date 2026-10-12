@@ -232,7 +232,7 @@ public sealed class BedrockItemStackReconciliationTests
         BedrockInventorySnapshot initial = Snapshot(Item(306, 5, 10), Air());
         var store = new BedrockInventoryStore();
         store.ApplyContent(new BedrockInventoryContentPacket(0, initial.Items, initial.Address, initial.StorageItem), 1);
-        store.ApplyResponseUpdates(initial, [], [unavailableSlot], 1);
+        store.ApplyResponseUpdates(store.GetSnapshot(initial.Address)!.Value, [], [unavailableSlot], 1);
         BedrockInventorySnapshot unavailable = store.GetSnapshot(initial.Address)!.Value;
         var packet = BedrockItemStackEgress.BuildPlace(-3, 0, 1, 1, 10, 0);
 

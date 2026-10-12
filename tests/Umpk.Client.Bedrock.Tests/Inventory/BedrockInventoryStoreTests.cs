@@ -149,14 +149,18 @@ public sealed class BedrockInventoryStoreTests
         store.ApplyContent(new BedrockInventoryContentPacket(0, [StoneItem(5), AirItem()], address, AirItem()), 1);
         BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
         store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, StoneItem(9)), address, 1);
+        BedrockInventorySnapshot newer = store.GetSnapshot(address)!.Value;
         var row = new BedrockItemStackResponseSlot(0, 0, 4, 2, string.Empty, string.Empty, 0);
 
         store.ApplyResponseUpdates(before, [new(0, new(1, 4, 0, 2, 1, []), row)], [0, 1], 1);
 
         BedrockInventorySnapshot after = store.GetSnapshot(address)!.Value;
         Assert.Equal(9, after.Items[0].Count);
-        Assert.False(after.IsSlotKnown(0));
+        Assert.True(after.IsSlotKnown(0));
+        Assert.Same(newer.AuthorityReceipts[0], after.AuthorityReceipts[0]);
+        Assert.Equal(newer.ResponseCorrections[0], after.ResponseCorrections[0]);
         Assert.False(after.IsSlotKnown(1));
+        Assert.NotSame(before.AuthorityReceipts[1], after.AuthorityReceipts[1]);
     }
 
     [Fact]
@@ -189,6 +193,7 @@ public sealed class BedrockInventoryStoreTests
     {
         (BedrockInventoryStore store, BedrockInventorySnapshot before) = CorrectedPair();
         store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, before.Items[0]), before.Address, 1);
+        BedrockInventorySnapshot newer = store.GetSnapshot(before.Address)!.Value;
         var first = new BedrockItemStackResponseSlot(0, 0, 3, 2, "named", "filtered", 17);
         var second = new BedrockItemStackResponseSlot(1, 1, 4, 3, "named", "filtered", 17);
 
@@ -197,8 +202,12 @@ public sealed class BedrockInventoryStoreTests
         BedrockInventorySnapshot after = store.GetSnapshot(before.Address)!.Value;
         Assert.Equal(4, after.Items[0].Count);
         Assert.Equal(3, after.Items[1].Count);
-        Assert.False(after.IsSlotKnown(0));
+        Assert.True(after.IsSlotKnown(0));
+        Assert.Same(newer.AuthorityReceipts[0], after.AuthorityReceipts[0]);
+        Assert.Null(after.ResponseCorrections[0]);
         Assert.False(after.IsSlotKnown(1));
+        Assert.NotSame(before.AuthorityReceipts[1], after.AuthorityReceipts[1]);
+        Assert.Null(after.ResponseCorrections[1]);
     }
 
     private static (BedrockInventoryStore Store, BedrockInventorySnapshot Before) CorrectedPair()

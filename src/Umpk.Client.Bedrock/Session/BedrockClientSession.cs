@@ -1303,6 +1303,12 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             }
             if (_itemStackAdmissions.ContainsKey(requestId))
                 throw new InvalidOperationException("The inventory request already has an active send.");
+            // Raw requests have no retained affected-slot qualification, so any unavailable retained slot blocks admission.
+            if (before is null && creative is null && cursorPlace is null && !_inventory.CanAdmitRawItemStackRequest(generation))
+            {
+                ReleaseItemStackRequest(requestId, generation);
+                throw new InvalidOperationException("The raw inventory request requires all retained slots to be authoritative.");
+            }
             admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
             _itemStackAdmissions.Add(requestId, admissionCancellation);
             BeginInventorySend();

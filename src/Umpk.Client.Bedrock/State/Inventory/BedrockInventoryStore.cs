@@ -210,6 +210,25 @@ internal sealed class BedrockInventoryStore
         }
     }
 
+    /// <summary>Checks current retained slot availability before an unqualified raw request is admitted; it does not qualify the packet contents.</summary>
+    internal bool CanAdmitRawItemStackRequest(int generation)
+    {
+        lock (_gate)
+        {
+            if (generation != _generation)
+                return false;
+            foreach (Entry entry in _containers.Values)
+            {
+                foreach (bool known in entry.Known)
+                {
+                    if (!known)
+                        return false;
+                }
+            }
+            return true;
+        }
+    }
+
     /// <summary>Replaces the authoritative content of one container under the current generation and ignores packets from a superseded generation.</summary>
     internal void ApplyContent(BedrockInventoryContentPacket packet, int generation)
     {

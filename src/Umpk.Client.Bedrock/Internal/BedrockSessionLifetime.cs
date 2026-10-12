@@ -16,14 +16,12 @@ internal sealed class BedrockSessionLifetime : IDisposable
 
     internal Task Ready => _ready.Task;
 
-    internal bool TryComplete(BedrockTermination termination)
+    internal bool TryComplete(BedrockTermination termination, Action? beforeCompletion = null)
     {
         ArgumentNullException.ThrowIfNull(termination);
         if (Interlocked.CompareExchange(ref _terminal, 1, 0) != 0)
             return false;
 
-        _termination.TrySetResult(termination);
-        _ready.TrySetCanceled();
         try
         {
             _owned.Cancel();
@@ -32,6 +30,9 @@ internal sealed class BedrockSessionLifetime : IDisposable
         {
         }
 
+        beforeCompletion?.Invoke();
+        _termination.TrySetResult(termination);
+        _ready.TrySetCanceled();
         return true;
     }
 

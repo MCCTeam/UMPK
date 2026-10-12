@@ -97,4 +97,120 @@ public sealed class BedrockInventoryStoreTests
         Assert.Equal(1, store.GetSnapshot(fixedAddress)!.Value.Items[0].Count);
         Assert.Equal(2, store.GetSnapshot(dynamicAddress)!.Value.Items[0].Count);
     }
+    [Fact]
+    public void AcceptedResponseUpdatesKnownItemsAndPreservesCorrections()
+    {
+        var store = new BedrockInventoryStore();
+        var address = new BedrockContainerAddress(0, 0, null);
+        var original = new BedrockItemInstance(306, 5, 7, 2, 9, [1, 2]);
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [original, AirItem(), StoneItem(8)], address, AirItem()), 1);
+        BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
+        var sourceRow = new BedrockItemStackResponseSlot(0, 0, 4, 2, "name", "filtered", 17);
+        var destinationRow = new BedrockItemStackResponseSlot(1, 1, 1, 3, string.Empty, string.Empty, 0);
+
+        store.ApplyResponseUpdates(before,
+            [new(0, new(306, 4, 7, 2, 9, [1, 2]), sourceRow), new(1, new(306, 1, 7, 3, 9, [1, 2]), destinationRow)], [0, 1], 1);
+
+        BedrockInventorySnapshot after = store.GetSnapshot(address)!.Value;
+        Assert.Equal(4, after.Items[0].Count);
+        Assert.Equal(3, after.Items[1].StackNetworkId);
+        Assert.Equal(7u, after.Items[1].MetadataValue);
+        Assert.Equal(sourceRow, after.ResponseCorrections[0]);
+        Assert.True(after.IsSlotKnown(0));
+        Assert.True(after.IsSlotKnown(1));
+        Assert.True(after.IsSlotKnown(2));
+        Assert.Equal(8, after.Items[2].Count);
+    }
+
+    [Fact]
+    public void MissingAffectedResponseBecomesUnavailableUntilAuthoritativeSlotArrives()
+    {
+        var store = new BedrockInventoryStore();
+        var address = new BedrockContainerAddress(0, 0, null);
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [StoneItem(5), AirItem(), StoneItem(8)], address, AirItem()), 1);
+        BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
+        var row = new BedrockItemStackResponseSlot(1, 1, 1, 3, string.Empty, string.Empty, 0);
+
+        store.ApplyResponseUpdates(before, [new(1, new(1, 1, 0, 3, 1, []), row)], [0, 1], 1);
+
+        BedrockInventorySnapshot after = store.GetSnapshot(address)!.Value;
+        Assert.False(after.IsSlotKnown(0));
+        Assert.True(after.IsSlotKnown(1));
+        Assert.True(after.IsSlotKnown(2));
+        store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, StoneItem(4)), address, 1);
+        Assert.True(store.GetSnapshot(address)!.Value.IsSlotKnown(0));
+    }
+
+    [Fact]
+    public void ResponseDoesNotOverwriteAnInterveningAuthoritativeItem()
+    {
+        var store = new BedrockInventoryStore();
+        var address = new BedrockContainerAddress(0, 0, null);
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [StoneItem(5), AirItem()], address, AirItem()), 1);
+        BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
+        store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, StoneItem(9)), address, 1);
+        var row = new BedrockItemStackResponseSlot(0, 0, 4, 2, string.Empty, string.Empty, 0);
+
+        store.ApplyResponseUpdates(before, [new(0, new(1, 4, 0, 2, 1, []), row)], [0, 1], 1);
+
+        BedrockInventorySnapshot after = store.GetSnapshot(address)!.Value;
+        Assert.Equal(9, after.Items[0].Count);
+        Assert.False(after.IsSlotKnown(0));
+        Assert.False(after.IsSlotKnown(1));
+    }
+
+    [Fact]
+    public void ResponseFromPreviousGenerationCannotChangeCurrentContent()
+    {
+        var store = new BedrockInventoryStore();
+        var address = new BedrockContainerAddress(0, 0, null);
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [StoneItem(5), AirItem()], address, AirItem()), 1);
+        BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
+        store.Invalidate();
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [StoneItem(9), AirItem()], address, AirItem()), 2);
+
+        store.ApplyResponseUpdates(before, [], [0, 1], 1);
+
+        Assert.Equal(9, store.GetSnapshot(address)!.Value.Items[0].Count);
+        Assert.True(store.GetSnapshot(address)!.Value.IsSlotKnown(0));
+    }
+
+    [Fact]
+    public void AdmissionDetectsAnInterveningCorrectionReplacement()
+    {
+        (BedrockInventoryStore store, BedrockInventorySnapshot before) = CorrectedPair();
+        store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, before.Items[0]), before.Address, 1);
+
+        Assert.False(store.MatchesSnapshot(before, [0, 1], 1));
+    }
+
+    [Fact]
+    public void ResponseDoesNotRestoreSupersededCorrectionState()
+    {
+        (BedrockInventoryStore store, BedrockInventorySnapshot before) = CorrectedPair();
+        store.ApplySlot(new BedrockInventorySlotPacket(0, 0, null, null, before.Items[0]), before.Address, 1);
+        var first = new BedrockItemStackResponseSlot(0, 0, 3, 2, "named", "filtered", 17);
+        var second = new BedrockItemStackResponseSlot(1, 1, 4, 3, "named", "filtered", 17);
+
+        store.ApplyResponseUpdates(before, [new(0, new(306, 3, 0, 2, 0, []), first), new(1, new(306, 4, 0, 3, 0, []), second)], [0, 1], 1);
+
+        BedrockInventorySnapshot after = store.GetSnapshot(before.Address)!.Value;
+        Assert.Equal(4, after.Items[0].Count);
+        Assert.Equal(3, after.Items[1].Count);
+        Assert.False(after.IsSlotKnown(0));
+        Assert.False(after.IsSlotKnown(1));
+    }
+
+    private static (BedrockInventoryStore Store, BedrockInventorySnapshot Before) CorrectedPair()
+    {
+        var store = new BedrockInventoryStore();
+        var address = new BedrockContainerAddress(0, 0, null);
+        store.ApplyContent(new BedrockInventoryContentPacket(0, [new(306, 5, 0, 2, 0, []), new(306, 2, 0, 3, 0, [])], address, AirItem()), 1);
+        BedrockInventorySnapshot before = store.GetSnapshot(address)!.Value;
+        var first = new BedrockItemStackResponseSlot(0, 0, 4, 2, "named", "filtered", 17);
+        var second = new BedrockItemStackResponseSlot(1, 1, 3, 3, "named", "filtered", 17);
+        store.ApplyResponseUpdates(before, [new(0, new(306, 4, 0, 2, 0, []), first), new(1, new(306, 3, 0, 3, 0, []), second)], [0, 1], 1);
+        return (store, store.GetSnapshot(address)!.Value);
+    }
+
 }

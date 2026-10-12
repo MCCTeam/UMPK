@@ -1,0 +1,545 @@
+using System.Net;
+using Umpk.Client.Bedrock.Authentication;
+using Umpk.Client.Bedrock.Policies;
+using Umpk.Client.Bedrock.State.Inventory;
+using Umpk.Nbt;
+using Umpk.Protocol.Bedrock;
+using Umpk.TestKit.Transport;
+using Umpk.Transport;
+using Xunit;
+
+namespace Umpk.Client.Bedrock.Session;
+
+public sealed class BedrockItemStackOwnershipTests
+{
+    private static readonly BedrockContainerAddress s_inventoryAddress = new(0, 0, null);
+    private static BedrockItemInstance Air() => new(0, 0, 0, null, 0, []);
+
+    [Fact]
+    public async Task CallerCancellationBeforeReservationGrantReleasesRetainedStateAndDoesNotReuseId()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        using var caller = new CancellationTokenSource();
+        SendGate gate = fixture.Transport.HoldNextReservation();
+        int commitsBefore = fixture.Transport.CommittedCount;
+        Task<BedrockItemStackSubmitResult> submit = fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, caller.Token).AsTask();
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            AssertPending(fixture.Session, -3);
+            await caller.CancelAsync();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => submit.WaitAsync(TimeSpan.FromSeconds(1), ct));
+
+            AssertReleased(fixture.Session);
+            Assert.Equal(commitsBefore, fixture.Transport.CommittedCount);
+            Assert.False(fixture.Session.Completion.IsCompleted);
+        }
+        finally
+        {
+            gate.Allow();
+            try
+            {
+                await submit.WaitAsync(TimeSpan.FromSeconds(5), ct);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        BedrockItemStackSubmitResult retry = await fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct);
+        Assert.Equal(-5, retry.RequestId);
+        Assert.Equal(-5, (await fixture.ReceiveRequestAsync(ct)).RequestId);
+        AssertPending(fixture.Session, retry.RequestId);
+        await fixture.RejectAsync(retry.RequestId, ct);
+        AssertReleased(fixture.Session);
+    }
+
+    [Fact]
+    public async Task RespawnBeforeReservationGrantRetiresRequestWithoutCommitting()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        SendGate gate = fixture.Transport.HoldNextReservation();
+        int commitsBefore = fixture.Transport.CommittedCount;
+        Task<BedrockItemStackSubmitResult> submit = fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct).AsTask();
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            AssertPending(fixture.Session, -3);
+            fixture.Session.HandleRespawn();
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => submit.WaitAsync(TimeSpan.FromSeconds(1), ct));
+
+            AssertReleased(fixture.Session);
+            Assert.Equal(commitsBefore, fixture.Transport.CommittedCount);
+            await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct).AsTask());
+            Assert.False(fixture.Session.Completion.IsCompleted);
+        }
+        finally
+        {
+            gate.Allow();
+            try
+            {
+                await submit.WaitAsync(TimeSpan.FromSeconds(5), ct);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+    }
+
+    [Fact]
+    public async Task ReservationRefusalReleasesRetainedStateAndDoesNotReuseId()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        int commitsBefore = fixture.Transport.CommittedCount;
+        fixture.Transport.RefuseNextReservation();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct).AsTask());
+
+        AssertReleased(fixture.Session);
+        Assert.Equal(commitsBefore, fixture.Transport.CommittedCount);
+        Assert.False(fixture.Session.Completion.IsCompleted);
+        BedrockItemStackSubmitResult retry = await fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct);
+        Assert.Equal(-5, retry.RequestId);
+        Assert.Equal(-5, (await fixture.ReceiveRequestAsync(ct)).RequestId);
+        await fixture.RejectAsync(retry.RequestId, ct);
+        AssertReleased(fixture.Session);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CallerCancellationAfterTransferRetainsRequestUntilTerminalResponse(bool accepted)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        using var caller = new CancellationTokenSource();
+        SendGate gate = fixture.Transport.HoldNextTransferResult();
+        int commitsBefore = fixture.Transport.CommittedCount;
+        Task<BedrockItemStackSubmitResult> submit = fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, caller.Token).AsTask();
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            BedrockItemStackRequest request = await fixture.ReceiveRequestAsync(ct);
+            Assert.Equal(-3, request.RequestId);
+            Assert.Equal(commitsBefore + 1, fixture.Transport.CommittedCount);
+            await caller.CancelAsync();
+
+            Assert.False(submit.IsCompleted);
+            AssertPending(fixture.Session, request.RequestId);
+            gate.Allow();
+            BedrockItemStackSubmitResult result = await submit.WaitAsync(TimeSpan.FromSeconds(5), ct);
+            Assert.Equal(request.RequestId, result.RequestId);
+            AssertPending(fixture.Session, request.RequestId);
+
+            if (accepted)
+                await fixture.AcceptAsync(request.RequestId, ct);
+            else
+                await fixture.RejectAsync(request.RequestId, ct);
+
+            AssertReleased(fixture.Session);
+            Assert.Equal(accepted ? 1 : 0, fixture.Session.ItemStackTracker.AcceptedCount);
+            Assert.Equal(accepted ? 0 : 1, fixture.Session.ItemStackTracker.RejectedCount);
+            BedrockInventorySnapshot snapshot = fixture.Session.InventoryStore.GetSnapshot(s_inventoryAddress)!.Value;
+            Assert.True(snapshot.IsSlotKnown(0));
+            Assert.True(snapshot.IsSlotKnown(1));
+            Assert.Equal(accepted ? 4 : 5, snapshot.Items[0].Count);
+            Assert.Equal(accepted ? 306 : 0, snapshot.Items[1].NetworkId);
+            Assert.False(fixture.Session.Completion.IsCompleted);
+        }
+        finally
+        {
+            gate.Allow();
+            await submit.WaitAsync(TimeSpan.FromSeconds(5), ct);
+        }
+    }
+
+    [Fact]
+    public async Task DisconnectBeforeReservationGrantCancelsLifetimeAndClearsRetainedState()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        SendGate gate = fixture.Transport.HoldNextReservation();
+        int commitsBefore = fixture.Transport.CommittedCount;
+        Task<BedrockItemStackSubmitResult> submit = fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct).AsTask();
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            AssertPending(fixture.Session, -3);
+
+            await fixture.Session.DisconnectAsync(ct);
+            await Assert.ThrowsAsync<BedrockSessionException>(() => submit.WaitAsync(TimeSpan.FromSeconds(5), ct));
+
+            AssertReleased(fixture.Session);
+            Assert.Equal(commitsBefore, fixture.Transport.CommittedCount);
+            Assert.True(fixture.Session.Completion.IsCompleted);
+        }
+        finally
+        {
+            gate.Allow();
+            try
+            {
+                await submit.WaitAsync(TimeSpan.FromSeconds(5), ct);
+            }
+            catch (BedrockSessionException)
+            {
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TeardownWithTransferredPendingRequestClearsRetainedState(bool transportFault)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using OwnershipSession fixture = await OwnershipSession.CreateAsync(ct);
+        BedrockItemStackSubmitResult submit = await fixture.Session.SubmitInventoryPlaceAsync(s_inventoryAddress, 0, 1, 1, ct);
+        Assert.Equal(-3, submit.RequestId);
+        Assert.Equal(submit.RequestId, (await fixture.ReceiveRequestAsync(ct)).RequestId);
+        AssertPending(fixture.Session, submit.RequestId);
+
+        if (transportFault)
+        {
+            fixture.Transport.Abort(MessageConnectionTermination.ProtocolFailure(new IOException("Controlled inventory transport fault.")));
+            await fixture.Session.Completion.WaitAsync(ct);
+        }
+        else
+        {
+            await fixture.Session.DisconnectAsync(ct);
+        }
+
+        AssertReleased(fixture.Session);
+        Assert.True(fixture.Session.Completion.IsCompleted);
+        Assert.Equal(0, fixture.Session.InventoryStore.ContainerCount);
+    }
+
+    private static void AssertPending(BedrockClientSession session, int requestId)
+    {
+        Assert.Equal(1, session.ItemStackTracker.PendingCount);
+        Assert.Equal(1, session.ActionCoordinator.ClaimedCount);
+        Assert.True(session.ActionCoordinator.IsClaimed(requestId));
+        Assert.Equal(1, session.PendingItemStackReconciliationCount);
+    }
+
+    private static void AssertReleased(BedrockClientSession session)
+    {
+        Assert.Equal(0, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
+        Assert.Equal(0, session.PendingItemStackReconciliationCount);
+    }
+
+    private sealed class SendGate(bool afterTransfer = false)
+    {
+        private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource _allowed = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        internal bool AfterTransfer { get; } = afterTransfer;
+        internal Task Entered => _entered.Task;
+        internal void Allow() => _allowed.TrySetResult();
+        internal async ValueTask WaitAsync(CancellationToken cancellationToken)
+        {
+            _entered.TrySetResult();
+            await _allowed.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private sealed class GatedTransport : IMessageConnection, IMessageSendReservationProvider
+    {
+        private readonly IMessageConnection _inner;
+        private readonly IMessageSendReservationProvider _reservations;
+        private SendGate? _nextGate;
+        private SendGate? _activeGate;
+        private int _refuseNextReservation;
+        private int _committedCount;
+        internal int CommittedCount => Volatile.Read(ref _committedCount);
+        public Task<MessageConnectionTermination> Completion => _inner.Completion;
+        internal GatedTransport(IMessageConnection inner)
+        {
+            _inner = inner;
+            _reservations = Assert.IsAssignableFrom<IMessageSendReservationProvider>(inner);
+        }
+        internal SendGate HoldNextReservation() => HoldNext(afterTransfer: false);
+        internal SendGate HoldNextTransferResult() => HoldNext(afterTransfer: true);
+        private SendGate HoldNext(bool afterTransfer)
+        {
+            var gate = new SendGate(afterTransfer);
+            if (Interlocked.CompareExchange(ref _nextGate, gate, null) is not null)
+                throw new InvalidOperationException("A controlled reservation is already armed.");
+            return gate;
+        }
+        internal void RefuseNextReservation()
+        {
+            if (Interlocked.Exchange(ref _refuseNextReservation, 1) != 0)
+                throw new InvalidOperationException("A controlled refusal is already armed.");
+        }
+        internal void ReleaseGates()
+        {
+            _nextGate?.Allow();
+            _activeGate?.Allow();
+        }
+        public async ValueTask<MessageSendReservationResult> ReserveSendAsync(int messageLength, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (Interlocked.Exchange(ref _refuseNextReservation, 0) != 0)
+                return MessageSendReservationResult.CapacityExceeded;
+            SendGate? gate = Interlocked.Exchange(ref _nextGate, null);
+            _activeGate = gate;
+            try
+            {
+                if (gate is { AfterTransfer: false })
+                    await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                MessageSendReservationResult result = await _reservations.ReserveSendAsync(messageLength, cancellationToken).ConfigureAwait(false);
+                if (!result.IsReserved)
+                {
+                    _activeGate = null;
+                    return result;
+                }
+                if (gate is not { AfterTransfer: true })
+                    _activeGate = null;
+                return MessageSendReservationResult.Accepted(new CountingReservation(this, result.Reservation!, gate is { AfterTransfer: true } ? gate : null));
+            }
+            catch
+            {
+                _activeGate = null;
+                throw;
+            }
+        }
+        public ValueTask<OwnedMessage?> ReceiveAsync(CancellationToken cancellationToken = default) => _inner.ReceiveAsync(cancellationToken);
+        public ValueTask<MessageAdmissionResult> SendAsync(OwnedMessage message, CancellationToken cancellationToken = default) => _inner.SendAsync(message, cancellationToken);
+        public ValueTask CloseAsync(TimeSpan drainTimeout, CancellationToken cancellationToken = default) => _inner.CloseAsync(drainTimeout, cancellationToken);
+        public void Abort(MessageConnectionTermination termination) => _inner.Abort(termination);
+        public async ValueTask DisposeAsync()
+        {
+            ReleaseGates();
+            await _inner.DisposeAsync().ConfigureAwait(false);
+        }
+        private sealed class CountingReservation(GatedTransport owner, IMessageSendReservation innerReservation, SendGate? transferGate) : IMessageSendReservation
+        {
+            public int MessageLength => innerReservation.MessageLength;
+            public async ValueTask<MessageAdmissionResult> CommitAsync(OwnedMessage message)
+            {
+                try
+                {
+                    MessageAdmissionResult admission = await innerReservation.CommitAsync(message).ConfigureAwait(false);
+                    if (admission.OwnershipTransferred)
+                    {
+                        Interlocked.Increment(ref owner._committedCount);
+                        if (transferGate is not null)
+                            await transferGate.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+                    }
+                    return admission;
+                }
+                finally
+                {
+                    owner._activeGate = null;
+                }
+            }
+            public void Dispose() => innerReservation.Dispose();
+        }
+    }
+
+    private sealed class OwnershipSession(TestMessageConnectionPair pair, BedrockFakePeer peer, GatedTransport transport, BedrockClient client, BedrockClientSession session) : IAsyncDisposable
+    {
+        internal BedrockClientSession Session { get; } = session;
+        internal GatedTransport Transport { get; } = transport;
+        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct)
+        {
+            TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
+            var transport = new GatedTransport(pair.First);
+            BedrockFakePeer peer = BedrockFakePeer.Create(pair.Second);
+            var client = new BedrockClient(new BedrockClientSettings
+            {
+                Host = "127.0.0.1",
+                Port = 19132,
+                CredentialProvider = new OfflineBedrockCredentialProvider("OwnershipTest", Guid.NewGuid()),
+                ResourcePackPolicy = new BedrockResourcePackPolicy(BedrockResourcePackPolicyOptions.DeclineDownloads),
+            }, (endpoint, _) =>
+            {
+                Assert.Equal(IPAddress.Loopback, endpoint.Address);
+                return ValueTask.FromResult<IMessageConnection>(transport);
+            });
+            BedrockClientSession session = await client.ConnectAsync(ct);
+            var fixture = new OwnershipSession(pair, peer, transport, client, session);
+            try
+            {
+                await CompleteJoinAsync(peer, session, ct);
+                BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
+                items[0] = new BedrockItemInstance(306, 5, 0, 7, 0, []);
+                await peer.SendAsync(49, BedrockInventoryCodecs.Encode(new BedrockInventoryContentPacket(0, items, s_inventoryAddress, Air())), ct);
+                await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(s_inventoryAddress) is not null, ct);
+                return fixture;
+            }
+            catch
+            {
+                await fixture.DisposeAsync();
+                throw;
+            }
+        }
+        internal async Task<BedrockItemStackRequest> ReceiveRequestAsync(CancellationToken ct)
+        {
+            for (int attempt = 0; attempt < 16; attempt++)
+            {
+                (int packetId, byte[] payload) = await peer.ReceiveAsync(ct);
+                if (packetId == 147)
+                    return Assert.Single(BedrockItemStackCodecs.DecodeRequest(payload).Requests);
+            }
+            throw new InvalidOperationException("The controlled transport did not deliver the inventory request.");
+        }
+        internal async Task RejectAsync(int requestId, CancellationToken ct)
+        {
+            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(59, requestId, false, [])])), ct);
+            await WaitUntilAsync(() => Session.PendingItemStackReconciliationCount == 0, ct);
+        }
+        internal async Task AcceptAsync(int requestId, CancellationToken ct)
+        {
+            var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null),
+            [
+                new BedrockItemStackResponseSlot(0, 0, 4, 7, string.Empty, string.Empty, 0),
+                new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0),
+            ]);
+            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, requestId, true, [container])])), ct);
+            await WaitUntilAsync(() => Session.PendingItemStackReconciliationCount == 0, ct);
+        }
+        public async ValueTask DisposeAsync()
+        {
+            Transport.ReleaseGates();
+            Transport.Abort(MessageConnectionTermination.Aborted());
+            await Session.DisposeAsync();
+            await client.DisposeAsync();
+            await peer.DisposeAsync();
+            await pair.DisposeAsync();
+        }
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition, CancellationToken ct)
+    {
+        while (!condition())
+            await Task.Delay(10, ct);
+    }
+
+    private static async Task CompleteJoinAsync(BedrockFakePeer peer, BedrockClientSession session, CancellationToken ct)
+    {
+        Assert.Equal(193, (await peer.ReceiveAsync(ct)).PacketId);
+        await peer.SendAsync(143, BedrockBootstrapCodecs.Encode(new NetworkSettingsPacket(1, BedrockCompressionAlgorithm.Deflate, false, 0, 0f)), ct);
+        await peer.EnableCompressionAsync(new BedrockCompressionSettings(1, BedrockCompressionAlgorithm.Deflate), ct);
+        Assert.Equal(1, (await peer.ReceiveAsync(ct)).PacketId);
+        await peer.SendAsync(2, BedrockBootstrapCodecs.Encode(new PlayStatusPacket(PlayStatusCode.LoginSuccess)), ct);
+        await peer.SendAsync(6, BedrockJoinCodecs.Encode(new ResourcePacksInfoPacket(false, false, false, false, Guid.Empty, string.Empty, [])), ct);
+        Assert.Equal(8, (await peer.ReceiveAsync(ct)).PacketId);
+        Assert.Equal(129, (await peer.ReceiveAsync(ct)).PacketId);
+        Assert.Equal(69, (await peer.ReceiveAsync(ct)).PacketId);
+        await peer.SendAsync(7, BedrockJoinCodecs.Encode(new ResourcePackStackPacket(false, [], string.Empty, [], false, false)), ct);
+        Assert.Equal(8, (await peer.ReceiveAsync(ct)).PacketId);
+        var pig = new NbtCompound();
+        pig.PutString("id", "minecraft:pig");
+        var identifiers = new NbtCompound();
+        identifiers.Put("idlist", new NbtList(NbtTagType.Compound) { pig });
+        await peer.SendBatchAsync([
+            (162, BedrockItemRegistryCodec.Encode(new BedrockItemRegistryPacket([new BedrockItemState("minecraft:diamond", 306, false, 2, new NbtCompound())]))),
+            (119, BedrockJoinCodecs.Encode(new AvailableEntityIdentifiersPacket(identifiers))),
+            (122, BedrockJoinCodecs.Encode(new BiomeDefinitionListPacket(2U, [1, 2, 3]))),
+            (11, BedrockJoinCodecs.Encode(new StartGamePacket(456L, 789UL, BedrockStartGameTrailerCodecs.EncodeTrailer(JoinTrailer())))),
+        ], ct);
+        await peer.SendAsync(2, BedrockBootstrapCodecs.Encode(new PlayStatusPacket(PlayStatusCode.PlayerSpawn)), ct);
+        Assert.Equal(113, (await peer.ReceiveAsync(ct)).PacketId);
+        byte[] terrain = new byte[26];
+        terrain[0] = 1;
+        Array.Fill(terrain, (byte)0xff, 2, 23);
+        await peer.SendAsync(58, BedrockWorldCodecs.Encode(new LevelChunkPacket(0, 0, 0, 0, null, false, [], terrain)), ct);
+        await session.WaitUntilReadyAsync(ct);
+    }
+
+    private static BedrockStartGameTrailer JoinTrailer() =>
+        new(
+            1,
+            new BedrockVector3(0.5f, 70f, 0.5f),
+            0f,
+            0f,
+            99UL,
+            0,
+            "minecraft:plains",
+            0,
+            1,
+            0,
+            false,
+            1,
+            new BedrockStartGamePosition(0, 70, 0),
+            false,
+            0,
+            false,
+            false,
+            0,
+            0U,
+            false,
+            string.Empty,
+            0f,
+            0f,
+            false,
+            true,
+            false,
+            0U,
+            0U,
+            false,
+            false,
+            [],
+            [],
+            false,
+            false,
+            false,
+            1,
+            4,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            "*",
+            16,
+            16,
+            false,
+            string.Empty,
+            string.Empty,
+            false,
+            0,
+            false,
+            0,
+            false,
+            "test-level",
+            "test-world",
+            "00000000-0000-0000-0000-000000000000",
+            false,
+            0,
+            false,
+            0L,
+            0,
+            [],
+            "correlation",
+            false,
+            "engine",
+            new NbtCompound(),
+            0UL,
+            Guid.Empty,
+            false,
+            false,
+            false,
+            null,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty);
+}

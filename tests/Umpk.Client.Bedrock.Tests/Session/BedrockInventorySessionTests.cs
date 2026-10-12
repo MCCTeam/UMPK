@@ -259,7 +259,10 @@ public sealed class BedrockInventorySessionTests
 
         BedrockTermination termination = await session.Completion.WaitAsync(TimeSpan.FromSeconds(10), ct);
         Assert.Equal(BedrockSessionEndReason.ProtocolFailure, termination.Reason);
-        Assert.Equal(8, session.GetInventoryWindowAddresses(0).Count);
+        Assert.Empty(session.GetInventoryWindowAddresses(0));
+        Assert.Equal(0, session.InventoryStore.ContainerCount);
+        Assert.Equal(0, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.PendingItemStackReconciliationCount);
         Assert.DoesNotContain(ninth, session.GetInventoryWindowAddresses(0));
     }
 

@@ -132,7 +132,9 @@ public sealed class BedrockItemStackSessionTests
 
         Assert.Equal(BedrockSessionEndReason.ProtocolFailure, termination.Reason);
         Assert.Equal(0, session.ItemStackTracker.AcceptedCount - (BedrockItemStackRequestTracker.MaxBaselineEntries - 1));
-        Assert.Equal(2, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
+        Assert.Equal(0, session.PendingItemStackReconciliationCount);
         Assert.Null(session.ItemStackTracker.GetBaseline(200, null, 1));
         Assert.Null(session.ItemStackTracker.GetBaseline(201, null, 2));
     }

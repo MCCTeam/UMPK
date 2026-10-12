@@ -7,6 +7,8 @@ namespace Umpk.Bedrock.IntegrationTests;
 internal sealed class BedrockServerHarness : IAsyncDisposable
 {
     internal const string SourceDistribution = "/opt/minecraft-bedrock-server";
+    internal const string SourceDistributionEnvironmentVariable = "UMPK_BDS_SOURCE_DIR";
+    internal const string EvidenceRootEnvironmentVariable = "UMPK_BDS_EVIDENCE_ROOT";
     internal const string ExpectedExecutableSha256 = "297ce10bee4b1e7486ac8fb22be51dbfa151e69d76dfd88c84da524cb6ffefce";
     internal const string ExpectedSourceSha256 = "8ba803f23d681816495c7ac83bdba4b9cd7165a3bee5aedd18fa0c8c3d408ec2";
     internal const string DebuggerExecutable = "/usr/bin/gdb";
@@ -28,6 +30,12 @@ internal sealed class BedrockServerHarness : IAsyncDisposable
 
     internal string EvidenceDirectory { get; private set; } = string.Empty;
 
+    /// <summary>Gets the absolute source path captured when this harness was constructed.</summary>
+    internal string SelectedSourceDistribution { get; }
+
+    /// <summary>Gets the evidence parent captured when this harness was constructed; each run retains its own child directory.</summary>
+    internal string EvidenceRootDirectory { get; }
+
     internal int Port { get; private set; }
 
     internal int IPv6Port { get; private set; }
@@ -46,9 +54,9 @@ internal sealed class BedrockServerHarness : IAsyncDisposable
 
     internal string EffectiveLanVisibility => _lanVisibility ? "true" : "false";
 
-    /// <summary>Initializes the harness, where a null debugger file keeps the direct BDS launch bit-for-bit and an absolute GDB script path opts one isolated run into the debugger child.</summary>
+    /// <summary>Initializes the harness and captures optional absolute source/evidence environment paths; an absolute GDB script path opts one isolated run into the debugger child.</summary>
     /// <remarks><para>The script receives the evidence directory and inferior PID marker path through environment variables, writes the inferior PID as decimal text to the marker file, and auto-continues its breakpoints because batch mode has no prompt while piped stdin still reaches the inferior.</para></remarks>
-    internal BedrockServerHarness(bool strictMovement = false, bool creativeMode = false, bool lanVisibility = false, string? debuggerCommandFile = null)
+    internal BedrockServerHarness(bool strictMovement = false, bool creativeMode = false, bool lanVisibility = false, string? debuggerCommandFile = null, Func<string, string?>? environmentVariableReader = null)
     {
         _strictMovement = strictMovement;
         _creativeMode = creativeMode;
@@ -56,6 +64,10 @@ internal sealed class BedrockServerHarness : IAsyncDisposable
         if (debuggerCommandFile is not null && !Path.IsPathFullyQualified(debuggerCommandFile))
             throw new ArgumentException("The debugger command file must be an absolute path when provided.", nameof(debuggerCommandFile));
         _debuggerCommandFile = debuggerCommandFile;
+        Func<string, string?> readEnvironment = environmentVariableReader ?? Environment.GetEnvironmentVariable;
+        SelectedSourceDistribution = ResolvePathOverride(readEnvironment(SourceDistributionEnvironmentVariable), SourceDistribution, SourceDistributionEnvironmentVariable);
+        EvidenceRootDirectory = ResolvePathOverride(readEnvironment(EvidenceRootEnvironmentVariable), Path.Combine(Path.GetTempPath(), "umpk-bedrock-live-join"), EvidenceRootEnvironmentVariable);
+        ValidateEvidenceRoot(EvidenceRootDirectory, SelectedSourceDistribution);
     }
 
     /// <summary>Gets the owned launcher PID, which is the GDB PID in debugger mode and the BDS PID otherwise.</summary>
@@ -87,24 +99,111 @@ internal sealed class BedrockServerHarness : IAsyncDisposable
 
     internal static void EnsureLinuxDistribution()
     {
+        string source = ResolvePathOverride(Environment.GetEnvironmentVariable(SourceDistributionEnvironmentVariable), SourceDistribution, SourceDistributionEnvironmentVariable);
+        EnsureLinuxDistribution(source);
+    }
+
+    private static void EnsureLinuxDistribution(string source)
+    {
         if (!OperatingSystem.IsLinux())
             throw new InvalidOperationException("The Bedrock live leg requires the Linux BDS executable.");
-        if (!File.Exists(Path.Combine(SourceDistribution, "bedrock_server")))
-            throw new FileNotFoundException($"The BDS distribution was not found at {SourceDistribution}.");
+        if (!File.Exists(Path.Combine(source, "bedrock_server")))
+            throw new FileNotFoundException($"The BDS distribution was not found at {source}.");
+    }
+
+    private static string ResolvePathOverride(string? value, string fallback, string variable)
+    {
+        if (value is null)
+            return fallback;
+        if (string.IsNullOrWhiteSpace(value) || !Path.IsPathFullyQualified(value))
+            throw new ArgumentException($"{variable} must be an absolute directory path when provided.", variable);
+        return Path.TrimEndingDirectorySeparator(Path.GetFullPath(value));
+    }
+
+    private static void ValidateEvidenceRoot(string evidenceRoot, string source)
+    {
+        if (IsWithinDirectory(evidenceRoot, source))
+            throw new ArgumentException($"{EvidenceRootEnvironmentVariable} must remain outside the source distribution.", EvidenceRootEnvironmentVariable);
+        for (DirectoryInfo? parent = new(AppContext.BaseDirectory); parent is not null; parent = parent.Parent)
+        {
+            if (HasGitCheckoutMarker(parent.FullName))
+            {
+                if (IsWithinDirectory(evidenceRoot, parent.FullName))
+                    throw new ArgumentException($"{EvidenceRootEnvironmentVariable} must remain outside the harness Git checkout.", EvidenceRootEnvironmentVariable);
+                break;
+            }
+        }
+    }
+
+    internal static bool HasGitCheckoutMarker(string directory)
+    {
+        string marker = Path.Combine(directory, ".git");
+        string gitDirectory;
+        if (Directory.Exists(marker))
+        {
+            gitDirectory = marker;
+        }
+        else
+        {
+            if (!File.Exists(marker))
+                return false;
+            string gitFile = File.ReadAllText(marker).Trim();
+            if (!gitFile.StartsWith("gitdir: ", StringComparison.Ordinal))
+                return false;
+            string target = gitFile[8..].Trim();
+            if (target.Length == 0)
+                return false;
+            gitDirectory = Path.GetFullPath(target, directory);
+        }
+
+        string headPath = Path.Combine(gitDirectory, "HEAD");
+        if (!File.Exists(headPath))
+            return false;
+        string head = File.ReadAllText(headPath).Trim();
+        bool validHead = head.StartsWith("ref: refs/", StringComparison.Ordinal) && head.Length > "ref: refs/".Length && !head[5..].Any(static character => char.IsWhiteSpace(character));
+        if (!validHead)
+            validHead = (head.Length is 40 or 64) && head.All(static character => char.IsAsciiHexDigit(character));
+        if (!validHead)
+            return false;
+
+        string commonDirectory = gitDirectory;
+        string commonDirectoryFile = Path.Combine(gitDirectory, "commondir");
+        if (File.Exists(commonDirectoryFile))
+        {
+            string commonTarget = File.ReadAllText(commonDirectoryFile).Trim();
+            if (commonTarget.Length == 0)
+                return false;
+            commonDirectory = Path.GetFullPath(commonTarget, gitDirectory);
+        }
+        return Directory.Exists(Path.Combine(commonDirectory, "objects")) && Directory.Exists(Path.Combine(commonDirectory, "refs"));
+    }
+
+    private static bool IsWithinDirectory(string path, string directory)
+    {
+        string relative = Path.GetRelativePath(directory, path);
+        return relative == "." || (!Path.IsPathRooted(relative) && relative != ".." && !relative.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal));
     }
 
     internal async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        string executable = Path.Combine(SourceDistribution, "bedrock_server");
+        string executable = Path.Combine(SelectedSourceDistribution, "bedrock_server");
         ExecutableSha256 = Convert.ToHexString(SHA256.HashData(await File.ReadAllBytesAsync(executable, cancellationToken).ConfigureAwait(false))).ToLowerInvariant();
         if (!string.Equals(ExecutableSha256, ExpectedExecutableSha256, StringComparison.Ordinal))
             throw new InvalidOperationException($"The BDS executable hash {ExecutableSha256} does not match the pinned 1.26.45.1 identity.");
+        EnsureLinuxDistribution(SelectedSourceDistribution);
 
         string runId = Guid.NewGuid().ToString("N")[..12];
         RunDirectory = Path.Combine(Path.GetTempPath(), $"umpk-bds-{runId}");
-        EvidenceDirectory = Path.Combine(Path.GetTempPath(), "umpk-bedrock-live-join", runId);
-        Directory.CreateDirectory(EvidenceDirectory);
-        await CopyDistributionAsync(SourceDistribution, RunDirectory, cancellationToken).ConfigureAwait(false);
+        EvidenceDirectory = Path.Combine(EvidenceRootDirectory, runId);
+        if (OperatingSystem.IsLinux())
+            Directory.CreateDirectory(EvidenceDirectory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        else
+            Directory.CreateDirectory(EvidenceDirectory);
+        await CopyDistributionAsync(SelectedSourceDistribution, RunDirectory, cancellationToken).ConfigureAwait(false);
+        string copiedExecutable = Path.Combine(RunDirectory, "bedrock_server");
+        string copiedSha256 = Convert.ToHexString(SHA256.HashData(await File.ReadAllBytesAsync(copiedExecutable, cancellationToken).ConfigureAwait(false))).ToLowerInvariant();
+        if (!string.Equals(copiedSha256, ExpectedExecutableSha256, StringComparison.Ordinal))
+            throw new InvalidOperationException($"The copied BDS executable hash {copiedSha256} does not match the pinned 1.26.45.1 identity.");
 
         (Port, IPv6Port) = AllocatePorts();
         ConfigSha256 = WriteServerProperties(runId);
@@ -337,16 +436,41 @@ internal sealed class BedrockServerHarness : IAsyncDisposable
         }
     }
 
-    private static async Task CopyDistributionAsync(string source, string destination, CancellationToken cancellationToken)
+    internal static async Task CopyDistributionAsync(string source, string destination, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         Directory.CreateDirectory(destination);
-        using var copy = Process.Start(new ProcessStartInfo("cp", $"-a \"{source}/.\" \"{destination}/\"")
+        using var copy = Process.Start(BuildDistributionCopyStartInfo(source, destination)) ?? throw new InvalidOperationException("The BDS distribution copy failed to start.");
+        try
         {
-            UseShellExecute = false,
-        }) ?? throw new InvalidOperationException("The BDS distribution copy failed to start.");
-        await copy.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+            await copy.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                if (!copy.HasExited)
+                    copy.Kill(entireProcessTree: true);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            using var cleanupTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            await copy.WaitForExitAsync(cleanupTimeout.Token).ConfigureAwait(false);
+            throw;
+        }
         if (copy.ExitCode != 0)
             throw new InvalidOperationException($"The BDS distribution copy exited with code {copy.ExitCode}.");
+    }
+
+    internal static ProcessStartInfo BuildDistributionCopyStartInfo(string source, string destination)
+    {
+        var startInfo = new ProcessStartInfo("cp") { UseShellExecute = false };
+        startInfo.ArgumentList.Add("-a");
+        startInfo.ArgumentList.Add("--");
+        startInfo.ArgumentList.Add(Path.Combine(source, "."));
+        startInfo.ArgumentList.Add(destination);
+        return startInfo;
     }
 
     private static (int Port, int IPv6Port) AllocatePorts()

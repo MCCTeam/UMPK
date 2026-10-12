@@ -69,6 +69,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult submit = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
+        Assert.Equal(-3, submit.RequestId);
         Assert.True(session.ActionCoordinator.IsClaimed(submit.RequestId));
         Assert.Equal(1, session.ItemStackTracker.PendingCount);
 
@@ -100,6 +101,131 @@ public sealed class BedrockItemStackEgressTests
 
         Assert.Equal(0, session.ItemStackTracker.PendingCount);
         Assert.Equal(1, session.ItemStackTracker.GetBaseline(28, null, 1)!.Value.Count);
+        BedrockInventorySnapshot snapshot = session.InventoryStore.GetSnapshot(PlayerContentAddress())!.Value;
+        Assert.False(snapshot.IsSlotKnown(0));
+        Assert.True(snapshot.IsSlotKnown(1));
+        Assert.Equal(306, snapshot.Items[1].NetworkId);
+        Assert.Equal(1, snapshot.Items[1].Count);
+        Assert.Equal(9, snapshot.Items[1].StackNetworkId);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 2, 1, ct).AsTask());
+        Assert.Equal(0, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
+        Assert.False(session.Completion.IsCompleted);
+    }
+
+    [Fact]
+    public async Task AcceptedPlaceReconcilesFullInventoryWithoutContentRefresh()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
+        await using BedrockFakePeer peer = BedrockFakePeer.Create(pair.Second);
+        await using BedrockClient client = CreateClient(pair);
+        await using BedrockClientSession session = await client.ConnectAsync(ct);
+        await CompleteJoinAsync(peer, session, ct);
+
+        BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
+        items[0] = Diamond(5, 2);
+        await peer.SendAsync(49, BedrockInventoryCodecs.Encode(PlayerContent(items)), ct);
+        await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
+
+        BedrockItemStackSubmitResult first = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
+        Assert.Equal(-3, first.RequestId);
+        _ = await ReceiveUntilPacketAsync(peer, 147, ct);
+        var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null),
+        [
+            new BedrockItemStackResponseSlot(0, 0, 4, 2, string.Empty, string.Empty, 0),
+            new BedrockItemStackResponseSlot(1, 1, 1, 3, string.Empty, string.Empty, 0),
+        ]);
+        await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket(
+            [new BedrockItemStackResponse(0, first.RequestId, true, [container])])), ct);
+        await WaitUntilAsync(() => !session.ActionCoordinator.IsClaimed(first.RequestId), ct);
+
+        BedrockInventorySnapshot snapshot = session.InventoryStore.GetSnapshot(PlayerContentAddress())!.Value;
+        Assert.Equal(4, snapshot.Items[0].Count);
+        Assert.Equal(306, snapshot.Items[1].NetworkId);
+        Assert.Equal(1, snapshot.Items[1].Count);
+        Assert.Equal(3, snapshot.Items[1].StackNetworkId);
+
+        BedrockItemStackSubmitResult second = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 1, 2, 1, ct);
+        Assert.Equal(-5, second.RequestId);
+        (int packetId, byte[] payload) = await ReceiveUntilPacketAsync(peer, 147, ct);
+        Assert.Equal(147, packetId);
+        Assert.Equal(payload, second.OutboundPayload);
+        BedrockPlacePayload place = Assert.IsType<BedrockPlacePayload>(BedrockItemStackCodecs.DecodeRequest(payload).Requests[0].Actions[0].Payload);
+        Assert.Equal(3, place.Source.StackId);
+        Assert.False(session.Completion.IsCompleted);
+    }
+
+    [Fact]
+    public async Task DelayedFirstResponseCannotCompleteOrMutateSecondRequest()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
+        await using BedrockFakePeer peer = BedrockFakePeer.Create(pair.Second);
+        await using BedrockClient client = CreateClient(pair);
+        await using BedrockClientSession session = await client.ConnectAsync(ct);
+        await CompleteJoinAsync(peer, session, ct);
+
+        BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
+        items[0] = Diamond(5, 7);
+        await peer.SendAsync(49, BedrockInventoryCodecs.Encode(PlayerContent(items)), ct);
+        await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
+
+        BedrockItemStackSubmitResult first = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
+        Assert.Equal(-3, first.RequestId);
+        (_, byte[] firstPayload) = await ReceiveUntilPacketAsync(peer, 147, ct);
+        Assert.Equal(first.RequestId, BedrockItemStackCodecs.DecodeRequest(firstPayload).Requests[0].RequestId);
+        var firstContainer = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null),
+        [
+            new BedrockItemStackResponseSlot(0, 0, 4, 7, string.Empty, string.Empty, 0),
+            new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0),
+        ]);
+        byte[] firstResponse = BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, first.RequestId, true, [firstContainer])]));
+        await peer.SendAsync(148, firstResponse, ct);
+        await WaitUntilAsync(() => !session.ActionCoordinator.IsClaimed(first.RequestId), ct);
+
+        BedrockItemStackSubmitResult second = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 1, 2, 1, ct);
+        Assert.Equal(-5, second.RequestId);
+        (_, byte[] secondPayload) = await ReceiveUntilPacketAsync(peer, 147, ct);
+        Assert.Equal(second.RequestId, BedrockItemStackCodecs.DecodeRequest(secondPayload).Requests[0].RequestId);
+
+        await peer.SendAsync(148, firstResponse, ct);
+        await WaitUntilAsync(() => session.ItemStackTracker.DuplicateCount == 1, ct);
+
+        Assert.Equal(1, session.ItemStackTracker.AcceptedCount);
+        Assert.Equal(1, session.ItemStackTracker.PendingCount);
+        Assert.Equal(1, session.ActionCoordinator.ClaimedCount);
+        Assert.True(session.ActionCoordinator.IsClaimed(second.RequestId));
+        BedrockInventorySnapshot afterDuplicate = session.InventoryStore.GetSnapshot(PlayerContentAddress())!.Value;
+        Assert.True(afterDuplicate.IsSlotKnown(0));
+        Assert.True(afterDuplicate.IsSlotKnown(1));
+        Assert.True(afterDuplicate.IsSlotKnown(2));
+        Assert.Equal(4, afterDuplicate.Items[0].Count);
+        Assert.Equal(7, afterDuplicate.Items[0].StackNetworkId);
+        Assert.Equal(1, afterDuplicate.Items[1].Count);
+        Assert.Equal(9, afterDuplicate.Items[1].StackNetworkId);
+        Assert.Equal(0, afterDuplicate.Items[2].NetworkId);
+
+        var secondContainer = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null),
+        [
+            new BedrockItemStackResponseSlot(1, 1, 0, 0, string.Empty, string.Empty, 0),
+            new BedrockItemStackResponseSlot(2, 2, 1, 10, string.Empty, string.Empty, 0),
+        ]);
+        await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, second.RequestId, true, [secondContainer])])), ct);
+        await WaitUntilAsync(() => !session.ActionCoordinator.IsClaimed(second.RequestId), ct);
+
+        Assert.Equal(2, session.ItemStackTracker.AcceptedCount);
+        Assert.Equal(0, session.ItemStackTracker.PendingCount);
+        Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
+        BedrockInventorySnapshot afterSecond = session.InventoryStore.GetSnapshot(PlayerContentAddress())!.Value;
+        Assert.True(afterSecond.IsSlotKnown(1));
+        Assert.Equal(Air(), afterSecond.Items[1]);
+        Assert.True(afterSecond.IsSlotKnown(2));
+        Assert.Equal(306, afterSecond.Items[2].NetworkId);
+        Assert.Equal(1, afterSecond.Items[2].Count);
+        Assert.Equal(10, afterSecond.Items[2].StackNetworkId);
         Assert.False(session.Completion.IsCompleted);
     }
 
@@ -191,9 +317,9 @@ public sealed class BedrockItemStackEgressTests
         Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
 
         BedrockItemStackSubmitResult retry = await session.SubmitInventoryTakeAsync(PlayerContentAddress(), 0, 1, 1, ct);
-        Assert.Equal(-1, retry.RequestId);
+        Assert.Equal(-3, retry.RequestId);
         Assert.Equal(1, session.ItemStackTracker.PendingCount);
-        Assert.True(session.ActionCoordinator.IsClaimed(-1));
+        Assert.True(session.ActionCoordinator.IsClaimed(retry.RequestId));
     }
 
     [Fact]
@@ -719,7 +845,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult first = await session.SubmitInventorySwapAsync(PlayerContentAddress(), 0, 1, ct);
-        Assert.Equal(-1, first.RequestId);
+        Assert.Equal(-3, first.RequestId);
         _ = await ReceiveUntilPacketAsync(peer, 147, ct);
 
         await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(0, 0, true)), ct);
@@ -806,7 +932,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult first = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-        Assert.Equal(-1, first.RequestId);
+        Assert.Equal(-3, first.RequestId);
         _ = await ReceiveUntilPacketAsync(peer, 147, ct);
 
         await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(0, 0, true)), ct);
@@ -849,7 +975,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult first = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-        Assert.Equal(-1, first.RequestId);
+        Assert.Equal(-3, first.RequestId);
         _ = await ReceiveUntilPacketAsync(peer, 147, ct);
 
         var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
@@ -863,7 +989,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult second = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 2, 1, ct);
-        Assert.Equal(-1, second.RequestId);
+        Assert.Equal(-5, second.RequestId);
         (int packetId, byte[] payload) = await ReceiveUntilPacketAsync(peer, 147, ct);
         Assert.Equal(147, packetId);
         Assert.Equal(payload, second.OutboundPayload);
@@ -890,7 +1016,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         BedrockItemStackSubmitResult first = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-        Assert.Equal(-1, first.RequestId);
+        Assert.Equal(-3, first.RequestId);
         Assert.Equal(1, session.ItemStackTracker.PendingCount);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 2, 3, 1, ct).AsTask());
@@ -905,7 +1031,7 @@ public sealed class BedrockItemStackEgressTests
         await WaitUntilAsync(() => !session.ActionCoordinator.IsClaimed(first.RequestId), ct);
 
         BedrockItemStackSubmitResult second = await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 2, 3, 1, ct);
-        Assert.Equal(-1, second.RequestId);
+        Assert.Equal(-5, second.RequestId);
         Assert.NotEqual(first.OutboundPayload, second.OutboundPayload);
         Assert.Equal(1, session.ItemStackTracker.PendingCount);
     }

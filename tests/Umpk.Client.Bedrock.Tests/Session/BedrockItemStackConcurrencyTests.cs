@@ -1,6 +1,7 @@
 using System.Net;
 using Umpk.Client.Bedrock.Authentication;
 using Umpk.Client.Bedrock.Policies;
+using Umpk.Client.Bedrock.State.Inventory;
 using Umpk.Protocol.Bedrock;
 using Umpk.TestKit.Transport;
 using Umpk.Transport;
@@ -46,17 +47,16 @@ public sealed class BedrockItemStackConcurrencyTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         using var barrier = new Barrier(2);
-        Task<bool> submitTask = Task.Run(async () =>
+        Task<BedrockItemStackSubmitResult?> submitTask = Task.Run<BedrockItemStackSubmitResult?>(async () =>
         {
             barrier.SignalAndWait(ct);
             try
             {
-                await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-                return true;
+                return await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
             }
             catch (InvalidOperationException)
             {
-                return false;
+                return null;
             }
         }, ct);
         Task boundaryTask = Task.Run(() =>
@@ -66,13 +66,18 @@ public sealed class BedrockItemStackConcurrencyTests
         }, ct);
 
         await Task.WhenAll(submitTask, boundaryTask).WaitAsync(ct);
+        BedrockItemStackSubmitResult? submitted = await submitTask.WaitAsync(ct);
 
         Assert.Equal(0, session.ItemStackTracker.PendingCount);
         await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct).AsTask());
 
-        var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
-        await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, -1, true, [container])])), ct);
-        await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+        if (submitted is { } submit)
+        {
+            Assert.Equal(-3, submit.RequestId);
+            var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
+            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, submit.RequestId, true, [container])])), ct);
+            await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+        }
 
         Assert.Equal(0, session.ItemStackTracker.AcceptedCount);
         Assert.Null(session.ItemStackTracker.GetBaseline(28, null, 1));
@@ -94,17 +99,16 @@ public sealed class BedrockItemStackConcurrencyTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         using var barrier = new Barrier(2);
-        Task<bool> submitTask = Task.Run(async () =>
+        Task<BedrockItemStackSubmitResult?> submitTask = Task.Run<BedrockItemStackSubmitResult?>(async () =>
         {
             barrier.SignalAndWait(ct);
             try
             {
-                await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-                return true;
+                return await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
             }
             catch (InvalidOperationException)
             {
-                return false;
+                return null;
             }
         }, ct);
         Task boundaryTask = Task.Run(() =>
@@ -114,13 +118,18 @@ public sealed class BedrockItemStackConcurrencyTests
         }, ct);
 
         await Task.WhenAll(submitTask, boundaryTask).WaitAsync(ct);
+        BedrockItemStackSubmitResult? submitted = await submitTask.WaitAsync(ct);
 
         Assert.Equal(0, session.ItemStackTracker.PendingCount);
         await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct).AsTask());
 
-        var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
-        await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, -1, true, [container])])), ct);
-        await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+        if (submitted is { } submit)
+        {
+            Assert.Equal(-3, submit.RequestId);
+            var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
+            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, submit.RequestId, true, [container])])), ct);
+            await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+        }
 
         Assert.Equal(0, session.ItemStackTracker.AcceptedCount);
         Assert.Null(session.ItemStackTracker.GetBaseline(28, null, 1));
@@ -142,17 +151,16 @@ public sealed class BedrockItemStackConcurrencyTests
         await WaitUntilAsync(() => session.InventoryStore.GetSnapshot(PlayerContentAddress()) is not null, ct);
 
         using var barrier = new Barrier(2);
-        Task<bool> submitTask = Task.Run(async () =>
+        Task<BedrockItemStackSubmitResult?> submitTask = Task.Run<BedrockItemStackSubmitResult?>(async () =>
         {
             barrier.SignalAndWait(ct);
             try
             {
-                await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
-                return true;
+                return await session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct);
             }
             catch (InvalidOperationException)
             {
-                return false;
+                return null;
             }
         }, ct);
         Task closeTask = Task.Run(async () =>
@@ -163,23 +171,29 @@ public sealed class BedrockItemStackConcurrencyTests
         }, ct);
 
         await Task.WhenAll(submitTask, closeTask).WaitAsync(ct);
+        BedrockItemStackSubmitResult? submitted = await submitTask.WaitAsync(ct);
 
         if (session.ItemStackTracker.PendingCount == 0)
         {
             await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 1, 1, ct).AsTask());
-            var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
-            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, -1, true, [container])])), ct);
-            await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+            if (submitted is { } submit)
+            {
+                Assert.Equal(-3, submit.RequestId);
+                var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
+                await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, submit.RequestId, true, [container])])), ct);
+                await WaitUntilAsync(() => session.ItemStackTracker.UnknownCount == 1, ct);
+            }
             Assert.Equal(0, session.ItemStackTracker.AcceptedCount);
             Assert.Null(session.ItemStackTracker.GetBaseline(28, null, 1));
         }
         else
         {
-            Assert.True(await submitTask.WaitAsync(ct));
+            BedrockItemStackSubmitResult submit = Assert.IsType<BedrockItemStackSubmitResult>(submitted);
+            Assert.Equal(-3, submit.RequestId);
             Assert.Equal(1, session.ItemStackTracker.PendingCount);
             await Assert.ThrowsAsync<InvalidOperationException>(() => session.SubmitInventoryPlaceAsync(PlayerContentAddress(), 0, 2, 1, ct).AsTask());
             var container = new BedrockItemStackResponseContainer(new BedrockFullContainerName(28, null), [new BedrockItemStackResponseSlot(1, 1, 1, 9, string.Empty, string.Empty, 0)]);
-            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, -1, true, [container])])), ct);
+            await peer.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([new BedrockItemStackResponse(0, submit.RequestId, true, [container])])), ct);
             await WaitUntilAsync(() => session.ItemStackTracker.AcceptedCount == 1, ct);
             Assert.Equal(1, session.ItemStackTracker.GetBaseline(28, null, 1)!.Value.Count);
         }

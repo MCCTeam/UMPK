@@ -4,7 +4,39 @@ using Umpk.Protocol.Bedrock;
 namespace Umpk.Client.Bedrock.State.Inventory;
 
 /// <summary>Carries one authoritative point-in-time copy of a container with its items and storage item.</summary>
-internal readonly record struct BedrockInventorySnapshot(BedrockContainerAddress Address, ImmutableArray<BedrockItemInstance> Items, BedrockItemInstance StorageItem);
+internal readonly record struct BedrockInventorySnapshot(BedrockContainerAddress Address, ImmutableArray<BedrockItemInstance> Items, BedrockItemInstance StorageItem)
+{
+    /// <summary>Gets which slots have usable authoritative item data; a default mask describes an entirely known retained snapshot.</summary>
+    internal ImmutableArray<bool> KnownSlots { get; init; }
+
+    /// <summary>Gets the latest response corrections separately from opaque item data whose encoding has not been reconstructed.</summary>
+    internal ImmutableArray<BedrockItemStackResponseSlot?> ResponseCorrections { get; init; }
+
+    internal bool IsSlotKnown(int slot) => slot >= 0 && slot < Items.Length && (KnownSlots.IsDefault || KnownSlots[slot]);
+
+    /// <summary>Qualifies identical retained item data only when both correction states are absent or carry matching semantic fields.</summary>
+    internal bool HasCompatibleItemData(int source, int destination)
+    {
+        if (!IsSlotKnown(source) || !IsSlotKnown(destination)
+            || (!ResponseCorrections.IsDefault && (source >= ResponseCorrections.Length || destination >= ResponseCorrections.Length)))
+            return false;
+
+        BedrockItemInstance first = Items[source];
+        BedrockItemInstance second = Items[destination];
+        if (first.NetworkId != second.NetworkId || first.MetadataValue != second.MetadataValue
+            || first.BlockRuntimeId != second.BlockRuntimeId || !first.ExtraData.AsSpan().SequenceEqual(second.ExtraData))
+            return false;
+
+        BedrockItemStackResponseSlot? firstCorrection = ResponseCorrections.IsDefault ? null : ResponseCorrections[source];
+        BedrockItemStackResponseSlot? secondCorrection = ResponseCorrections.IsDefault ? null : ResponseCorrections[destination];
+        if (firstCorrection is null || secondCorrection is null)
+            return firstCorrection is null && secondCorrection is null;
+
+        return string.Equals(firstCorrection.CustomName, secondCorrection.CustomName, StringComparison.Ordinal)
+            && string.Equals(firstCorrection.FilteredCustomName, secondCorrection.FilteredCustomName, StringComparison.Ordinal)
+            && firstCorrection.DurabilityCorrection == secondCorrection.DurabilityCorrection;
+    }
+}
 
 /// <summary>Holds the authoritative server-sent container content that every inventory submit validates against before building its request.</summary>
 /// <remarks>Content and slot applies are generation-gated client support policy: stale generations are ignored, unknown containers and over-limit content are rejected, and only the stable player inventory survives a transient invalidation.</remarks>
@@ -73,7 +105,11 @@ internal sealed class BedrockInventoryStore
             BedrockItemInstance[] items = [.. entry.Items];
             items[packet.Slot] = packet.Item;
             BedrockItemInstance storage = packet.StorageItem ?? entry.Storage;
-            _containers[effective] = new Entry(items, storage);
+            bool[] known = [.. entry.Known];
+            BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
+            known[packet.Slot] = true;
+            corrections[packet.Slot] = null;
+            _containers[effective] = new Entry(items, storage, known, corrections);
         }
     }
 
@@ -99,7 +135,60 @@ internal sealed class BedrockInventoryStore
     internal BedrockInventorySnapshot? GetSnapshot(BedrockContainerAddress address)
     {
         lock (_gate)
-            return _containers.TryGetValue(address, out Entry? entry) ? new BedrockInventorySnapshot(address, [.. entry.Items], entry.Storage) : null;
+            return _containers.TryGetValue(address, out Entry? entry) ? new BedrockInventorySnapshot(address, [.. entry.Items], entry.Storage)
+            {
+                KnownSlots = [.. entry.Known],
+                ResponseCorrections = [.. entry.Corrections],
+            } : null;
+    }
+
+    /// <summary>Checks that retained affected slots still describe usable current items before an operation is admitted.</summary>
+    internal bool MatchesSnapshot(BedrockInventorySnapshot before, IReadOnlyList<int> affectedSlots, int generation)
+    {
+        lock (_gate)
+            return generation == _generation && _containers.TryGetValue(before.Address, out Entry? entry)
+                && affectedSlots.All(slot => slot >= 0 && slot < entry.Items.Length && before.IsSlotKnown(slot)
+                    && entry.Known[slot] && entry.Items[slot].Equals(before.Items[slot]) && SameCorrection(entry, before, slot));
+    }
+
+    /// <summary>Applies a correlated accepted response atomically, retaining unrelated slots and making incomplete or superseded affected data unavailable.</summary>
+    internal void ApplyResponseUpdates(BedrockInventorySnapshot before, IReadOnlyList<BedrockInventoryReconciledSlot> updates, IReadOnlyList<int> affectedSlots, int generation)
+    {
+        ArgumentNullException.ThrowIfNull(updates);
+        ArgumentNullException.ThrowIfNull(affectedSlots);
+        lock (_gate)
+        {
+            if (generation != _generation || !_containers.TryGetValue(before.Address, out Entry? entry))
+                return;
+            if (affectedSlots.Any(slot => slot < 0 || slot >= entry.Items.Length || slot >= before.Items.Length)
+                || affectedSlots.Distinct().Count() != affectedSlots.Count
+                || updates.Any(update => !affectedSlots.Contains(update.Slot))
+                || updates.Select(update => update.Slot).Distinct().Count() != updates.Count)
+                throw new InvalidOperationException("The response updates do not identify distinct retained inventory slots.");
+
+            bool changed = affectedSlots.Any(slot => !before.IsSlotKnown(slot) || !entry.Known[slot] || !SameCorrection(entry, before, slot)
+                || (!entry.Items[slot].Equals(before.Items[slot]) && !updates.Any(update => update.Slot == slot && entry.Items[slot].Equals(update.Item))));
+            BedrockItemInstance[] items = [.. entry.Items];
+            bool[] known = [.. entry.Known];
+            BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
+            foreach (int slot in affectedSlots)
+            {
+                known[slot] = false;
+                corrections[slot] = null;
+            }
+
+            if (!changed)
+            {
+                foreach (BedrockInventoryReconciledSlot update in updates)
+                {
+                    items[update.Slot] = update.Item;
+                    known[update.Slot] = true;
+                    corrections[update.Slot] = update.Response;
+                }
+            }
+
+            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections);
+        }
     }
 
     /// <summary>Drops every stored container and advances the generation after a lifecycle boundary.</summary>
@@ -131,13 +220,20 @@ internal sealed class BedrockInventoryStore
         }
     }
 
+    private static bool SameCorrection(Entry entry, BedrockInventorySnapshot before, int slot) =>
+        Equals(entry.Corrections[slot], before.ResponseCorrections.IsDefault ? null : before.ResponseCorrections[slot]);
+
     private static bool IsStablePlayerAddress(BedrockContainerAddress address) =>
         address.WindowId == 0 && !address.DynamicContainerId.HasValue;
 
-    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage)
+    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage, bool[]? known = null, BedrockItemStackResponseSlot?[]? corrections = null)
     {
         internal BedrockItemInstance[] Items { get; } = items;
 
         internal BedrockItemInstance Storage { get; } = storage;
+
+        internal bool[] Known { get; } = known ?? Enumerable.Repeat(true, items.Length).ToArray();
+
+        internal BedrockItemStackResponseSlot?[] Corrections { get; } = corrections ?? new BedrockItemStackResponseSlot?[items.Length];
     }
 }

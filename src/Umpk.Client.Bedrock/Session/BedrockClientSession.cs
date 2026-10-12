@@ -1024,6 +1024,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         BedrockCreativeCursorReconciliation retained;
         lock (_gate)
         {
+            RequireNoObservedOakDropSend();
             if (!_snapshot.IsReady || _disposed || _inventoryTornDown || _itemStackEgressRetired)
                 throw new InvalidOperationException("The observed creative cursor request requires a live ready inventory path.");
             if (_itemStackTracker.PendingCount != 0 || _inventory.Generation != _itemStackTracker.Generation)
@@ -1067,6 +1068,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         BedrockCursorPlaceReconciliation retained;
         lock (_gate)
         {
+            RequireNoObservedOakDropSend();
             if (!_snapshot.IsReady || !_initialLoadingComplete || _initialLoadingRetired || _disposed || _inventoryTornDown || _itemStackEgressRetired
                 || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _activeInventorySends != 0)
                 throw new InvalidOperationException("The cursor transfer requires a live ready inventory path without an older active send.");
@@ -1119,6 +1121,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     // Called under the Session gate. Retirement removes ownership before cancellation can finish a send inline.
     private void RetireCreativeCursorQualification()
     {
+        RetireObservedOakDropOwner();
         RetireCursorPlaceRequests();
         if (_cursorPlacePathActivated)
         {
@@ -1228,6 +1231,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     {
         lock (_gate)
         {
+            RequireNoObservedOakDropSend();
             if (_disposed || _inventoryTornDown || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested)
                 throw new InvalidOperationException("The inventory request requires a live session.");
             if (!_snapshot.IsReady)
@@ -1268,6 +1272,191 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         }
     }
 
+    private bool _observedOakDropOpportunityConsumed;
+    private ObservedOakDropSend? _observedOakDropSend;
+    private ObservedOakDropReceiptOwner? _observedOakDropReceiptOwner;
+    private sealed record ObservedOakDropReceiptOwner(BedrockContainerAddress Address, object AuthorityReceipt, int Generation, BedrockCreativeCursorOwnership Ownership);
+
+    private sealed class ObservedOakDropSend(BedrockObservedOakDropPlan plan, BedrockCreativeCursorOwnership ownership, int initialEpoch, ulong runtimeId, int actorWorld, CancellationTokenSource cancellation)
+    {
+        internal BedrockObservedOakDropPlan Plan { get; } = plan;
+        internal BedrockCreativeCursorOwnership Ownership { get; } = ownership;
+        internal int InitialEpoch { get; } = initialEpoch;
+        internal ulong RuntimeId { get; } = runtimeId;
+        internal int ActorWorld { get; } = actorWorld;
+        internal CancellationTokenSource Cancellation { get; } = cancellation;
+        internal bool Eligible { get; set; } = true;
+        internal BedrockTermination? TerminalRetirement { get; set; }
+    }
+
+    internal bool ObservedOakDropSendActive { get { lock (_gate) return _observedOakDropSend is not null; } }
+    internal bool ObservedOakDropPredictionEligible { get { lock (_gate) return _observedOakDropSend is { Eligible: true }; } }
+    internal bool ObservedOakDropReceiptRetained { get { lock (_gate) return _observedOakDropReceiptOwner is not null; } }
+
+    /// <summary>Sends only the reviewed first legacy minus-four oak Drop-one and reports transfer independently of server acceptance.</summary>
+    internal async ValueTask<BedrockObservedOakDropSubmitResult> SubmitObservedOakDropOneAsync(BedrockCreativeEntry entry, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        cancellationToken.ThrowIfCancellationRequested();
+        ObservedOakDropSend send;
+        lock (_gate)
+        {
+            if (_disposed || _inventoryTornDown || _itemStackEgressRetired || _initialLoadingRetired
+                || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested
+                || !_snapshot.IsReady || !_initialLoadingComplete || !_initialLoadingStarted || !_initialLoadingEndTransferred
+                || _snapshot.LocalRuntimeEntityId == 0)
+                throw new InvalidOperationException("The fixed oak Drop requires the live initial ready player life and world.");
+            if (_observedOakDropSend is not null || _activeInventorySends != 0 || _normalInventoryOpenAdmission is not null
+                || _itemStackTracker.PendingCount != 0 || _itemStackReconciliations.Count != 0
+                || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0
+                || _actionCoordinator.ClaimedCount != 0 || _inventory.Generation != _itemStackTracker.Generation)
+                throw new InvalidOperationException("The fixed oak Drop requires current inventory ownership without an older active operation.");
+            if (_observedOakDropOpportunityConsumed)
+                throw new InvalidOperationException("The fixed oak Drop opportunity is consumed until reconnect.");
+            BedrockCreativeCursorOwnership ownership = GetCreativeCursorOwnership()
+                ?? throw new InvalidOperationException("The fixed oak Drop registry, catalog or actual normal screen is unqualified.");
+            BedrockItemState[] definitions = _creativeInitialItems!.Items.Where(item => item.RuntimeId == entry.Item.NetworkId).ToArray();
+            if (definitions.Length != 1)
+                throw new InvalidOperationException("The fixed oak Drop entry requires one actual item definition.");
+            BedrockInventorySnapshot before = _inventory.GetSnapshot(new(0, 0, null))
+                ?? throw new InvalidOperationException("The fixed oak Drop actual player source is absent.");
+            BedrockObservedOakDropPlan plan = BedrockObservedOakDropPlan.Create(before, entry, definitions[0], ownership);
+            if (!plan.IsSourceCurrent(before, _inventory.Generation))
+                throw new InvalidOperationException("The fixed oak Drop source receipt changed before admission.");
+            cancellationToken.ThrowIfCancellationRequested();
+            CancellationTokenSource cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token, _playerAuthInputAdmissionLifetime.Token);
+            if (!_actionCoordinator.TryClaim(-4, BedrockActionEmission.Standalone))
+            {
+                cancellation.Dispose();
+                throw new InvalidOperationException("The fixed oak Drop identity is already owned.");
+            }
+            send = new(plan, ownership, _initialLoadingEpoch, _snapshot.LocalRuntimeEntityId, _actors.WorldGeneration, cancellation);
+            _observedOakDropOpportunityConsumed = true;
+            _observedOakDropSend = send;
+            BeginInventorySend();
+        }
+
+        try
+        {
+            byte[] payload = BedrockInventoryTransactionCodecs.Encode(send.Plan.Packet);
+            lock (_gate)
+            {
+                BedrockInventorySnapshot? source = _inventory.GetSnapshot(send.Plan.Address);
+                if (!IsObservedOakDropOwnerCurrent(send) || source is not { } current
+                    || !send.Plan.IsSourceCurrent(current, _inventory.Generation))
+                {
+                    RetireObservedOakDropSend();
+                    throw new InvalidOperationException("The fixed oak Drop source or owner retired before output admission.");
+                }
+            }
+
+            var member = new BedrockBatchMember(new BedrockPacketHeader(30, new BedrockSubclientId(0), new BedrockSubclientId(0)), payload);
+            MessageAdmissionResult admission;
+            try
+            {
+                admission = await _connection.SendBatchAsync([member], send.Cancellation.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException exception) when (_lifetime.Token.IsCancellationRequested || send.TerminalRetirement is not null)
+            {
+                throw new BedrockSessionException(send.TerminalRetirement
+                    ?? new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
+            }
+            catch (OperationCanceledException exception) when (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException("The fixed oak Drop was cancelled before transport capacity was granted.", exception, cancellationToken);
+            }
+            catch (OperationCanceledException exception) when (send.Cancellation.IsCancellationRequested)
+            {
+                throw new InvalidOperationException("The fixed oak Drop owner or source retired before transport capacity was granted.", exception);
+            }
+            if (!admission.OwnershipTransferred)
+            {
+                lock (_gate) _rejectedSendAttempts++;
+                throw new InvalidOperationException($"The fixed oak Drop was rejected with {admission.Status}.");
+            }
+
+            // No post-grant cancellation check: actual transfer owns accounting and its returned payload through the shared drain.
+            RecordOutbound(30);
+            lock (_gate)
+            {
+                BedrockObservedOakDropDisposition disposition;
+                BedrockInventorySnapshot? source = _inventory.GetSnapshot(send.Plan.Address);
+                // A newer real receipt wins even when an owner boundary also occurred. Absent data is owner retirement, not supersession.
+                if (source is { } current && current.AuthorityReceipts.Length > 0
+                    && !ReferenceEquals(current.AuthorityReceipts[0], send.Plan.AuthorityReceipt))
+                    disposition = BedrockObservedOakDropDisposition.TransferredButSuperseded;
+                else if (IsObservedOakDropOwnerCurrent(send) && source is { } beforePublication
+                    && send.Plan.IsSourceCurrent(beforePublication, _inventory.Generation)
+                    && _inventory.TryPublishTentativeSlot(send.Plan.Before, 0, send.Plan.TentativeRemainder, -4, send.Plan.Generation))
+                {
+                    _observedOakDropReceiptOwner = new(send.Plan.Address, send.Plan.AuthorityReceipt, send.Plan.Generation, send.Ownership);
+                    disposition = BedrockObservedOakDropDisposition.TransferredWithTentativeRemainder;
+                }
+                else
+                {
+                    // Only this actual transferred plan may invalidate unchanged carried-forward authority under the current generation.
+                    _inventory.TryMarkTransferredRetiredPlayerSlotUnavailable(send.Plan.Before, 0, _inventory.Generation);
+                    disposition = BedrockObservedOakDropDisposition.TransferredButOwnerRetired;
+                }
+                return new(payload, send.Plan.Generation, send.Plan.Address, send.Plan.AuthorityReceipt, disposition);
+            }
+        }
+        finally
+        {
+            lock (_gate)
+            {
+                // Owner retirement also holds this gate, so it cannot cancel the holder after its CTS is disposed.
+                send.Cancellation.Dispose();
+                if (ReferenceEquals(_observedOakDropSend, send))
+                {
+                    _observedOakDropSend = null;
+                    _actionCoordinator.Release(-4);
+                }
+                EndInventorySend();
+            }
+        }
+    }
+
+    // Called only under the Session gate; retirement changes eligibility before CTS cancellation can resume a waiter inline.
+    private void RetireObservedOakDropSend(bool cancelSend = true)
+    {
+        if (_observedOakDropSend is not { } send || !send.Eligible)
+            return;
+        send.Eligible = false;
+        if (cancelSend)
+            send.Cancellation.Cancel();
+    }
+
+    private void RetireObservedOakDropOwner(BedrockTermination? terminal = null, bool cancelSend = true)
+    {
+        if (terminal is not null && _observedOakDropSend is { } send)
+            send.TerminalRetirement ??= terminal;
+        ObservedOakDropReceiptOwner? owner = _observedOakDropReceiptOwner;
+        _observedOakDropReceiptOwner = null;
+        if (owner is not null)
+            _inventory.TryRetireTentativeSlot(owner.Address, 0, owner.AuthorityReceipt, _inventory.Generation);
+        RetireObservedOakDropSend(cancelSend);
+    }
+
+    // Actual affected 49/50 replaces the receipt before this call; getters and responses cannot retire this owner.
+    private void RetireObservedOakDropSource()
+    {
+        _observedOakDropReceiptOwner = null;
+        RetireObservedOakDropSend();
+    }
+
+    private bool IsObservedOakDropOwnerCurrent(ObservedOakDropSend send) =>
+        ReferenceEquals(_observedOakDropSend, send) && send.Eligible && !_disposed && !_inventoryTornDown && !_itemStackEgressRetired
+        && !_initialLoadingRetired && !_lifetime.Token.IsCancellationRequested && !_lifetime.Termination.IsCompleted
+        && _initialLoadingEpoch == send.InitialEpoch && _snapshot.LocalRuntimeEntityId == send.RuntimeId
+        && _actors.WorldGeneration == send.ActorWorld && GetCreativeCursorOwnership() is { } current && send.Plan.IsCurrent(current);
+
+    private void RequireNoObservedOakDropSend()
+    {
+        if (_observedOakDropSend is not null)
+            throw new InvalidOperationException("Inventory submissions are unavailable while the fixed oak Drop send is active.");
+    }
+
     // Caller and lifecycle cancellation affect capacity waits; a granted transport reservation commits without a cancellation point.
     private void CancelItemStackAdmissions()
     {
@@ -1282,6 +1471,22 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         CancellationTokenSource admissionCancellation;
         lock (_gate)
         {
+            if (_observedOakDropSend is { } activeDrop)
+            {
+                // A duplicate active raw sender keeps its incumbent registration; a numeric collision must not release Drop's claim.
+                if (_itemStackAdmissions.ContainsKey(requestId))
+                    throw new InvalidOperationException("The inventory request already has an active send.");
+                if (requestId == activeDrop.Plan.LegacyRequestId)
+                {
+                    _itemStackTracker.TryCancel(requestId, generation);
+                    _itemStackReconciliations.Remove(requestId);
+                    _creativeCursorReconciliations.Remove(requestId);
+                    _cursorPlaceReconciliations.Remove(requestId);
+                }
+                else
+                    ReleaseItemStackRequest(requestId, generation);
+                RequireNoObservedOakDropSend();
+            }
             if (_disposed || _inventoryTornDown || _itemStackEgressRetired || generation != _itemStackTracker.Generation)
             {
                 ReleaseItemStackRequest(requestId, generation);
@@ -1400,6 +1605,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         ulong runtimeId;
         lock (_gate)
         {
+            RequireNoObservedOakDropSend();
             if (_disposed || _inventoryTornDown || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _initialLoadingRetired)
                 throw new InvalidOperationException("The normal inventory opening requires a live initial player life and world.");
             if (!_snapshot.IsReady || !_initialLoadingComplete || !_initialLoadingStarted || !_initialLoadingEndTransferred)
@@ -1648,11 +1854,15 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         // Terminal ownership and initial readiness publication share the session gate.
         lock (_gate)
         {
-            return _lifetime.TryComplete(termination, () =>
+            return _lifetime.TryComplete(termination, beforeCompletion: () =>
             {
                 RetireInitialLoading(BedrockSessionScope.Session);
                 TeardownInventory();
                 _snapshot = _snapshot with { Termination = termination };
+            }, beforeCancellation: () =>
+            {
+                // The lifetime CAS already chose this exact winner. Its following linked token cancellation retires capacity waiters.
+                RetireObservedOakDropOwner(termination, cancelSend: false);
             });
         }
     }
@@ -2144,6 +2354,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             {
                 NoteInventoryWindow(packet.Container);
                 _inventory.ApplyContent(packet, _inventory.Generation);
+                if (packet.Container == new BedrockContainerAddress(0, 0, null))
+                    RetireObservedOakDropSource();
                 if (packet.Container == s_creativeCursorPool)
                 {
                     _creativeCursorBaselineQualified = packet.Items.Length == 54 && packet.Items[0].Equals(new BedrockItemInstance(0, 0, 0, null, 0, []));
@@ -2205,6 +2417,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             lock (_gate)
             {
                 _inventory.ApplySlot(packet, address.Value, _inventory.Generation);
+                if ((packet.Container ?? address.Value) == new BedrockContainerAddress(0, 0, null) && packet.Slot == 0)
+                    RetireObservedOakDropSource();
                 if ((packet.Container ?? address.Value) == s_creativeCursorPool)
                     RetireChangedCreativeCursorRequests();
                 if ((packet.Container ?? address.Value) == s_creativeCursorPool || (packet.Container ?? address.Value) == new BedrockContainerAddress(0, 0, null))
@@ -2272,6 +2486,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             bool known = _containerWindows.TryClose(packet.WindowId, _containerWindows.Generation);
             _inventoryWindows.Remove(packet.WindowId);
             _inventory.RemoveWindow(packet.WindowId);
+            if (packet.WindowId == 0)
+                RetireObservedOakDropOwner();
             bool droppedPending = _itemStackTracker.PendingCount > 0;
             if (_creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0)
                 RetireCreativeCursorQualification();
@@ -3553,6 +3769,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 return;
             _initialLoadingRetired = true;
             _initialLoadingRetirementScope = scope;
+            RetireObservedOakDropOwner();
             _playerAuthInputAdmissionLifetime.Cancel();
             _initialLoadingEpoch++;
             _initialLoadingAdmission?.Cancel();

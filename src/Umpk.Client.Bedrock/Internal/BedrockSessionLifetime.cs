@@ -16,12 +16,14 @@ internal sealed class BedrockSessionLifetime : IDisposable
 
     internal Task Ready => _ready.Task;
 
-    internal bool TryComplete(BedrockTermination termination, Action? beforeCompletion = null)
+    internal bool TryComplete(BedrockTermination termination, Action? beforeCompletion = null, Action? beforeCancellation = null)
     {
         ArgumentNullException.ThrowIfNull(termination);
         if (Interlocked.CompareExchange(ref _terminal, 1, 0) != 0)
             return false;
 
+        // Only the existing CAS winner prepares owned resources before its token can resume callbacks inline.
+        beforeCancellation?.Invoke();
         try
         {
             _owned.Cancel();

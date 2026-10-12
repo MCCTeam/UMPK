@@ -105,6 +105,29 @@ internal sealed class BedrockInventoryStore
         }
     }
 
+    /// <summary>Makes only an unchanged known player source unavailable after its caller confirms a transferred operation retired, preserving data and receipts without an overlay.</summary>
+    /// <remarks>The caller must prove its own transfer and retirement under the Session gate. The supplied generation is the current Store generation, including when the exact source receipt survived a transient boundary. Existing overlays require TryRetireTentativeSlot separately.</remarks>
+    internal bool TryMarkTransferredRetiredPlayerSlotUnavailable(BedrockInventorySnapshot before, int slot, int currentGeneration)
+    {
+        lock (_gate)
+        {
+            if (slot != 0 || currentGeneration != _generation || before.Address != new BedrockContainerAddress(0, 0, null)
+                || !ValidTentativeBaseline(before) || !_containers.TryGetValue(before.Address, out Entry? entry)
+                || !MatchesTentativeReceipt(entry, before, slot, allowTentative: false)
+                || entry.Tentative[slot].HasValue)
+                return false;
+
+            BedrockItemInstance authority = entry.Items[slot];
+            if (authority.NetworkId == 0 || authority.Count == 0 || authority.StackNetworkId is not > 0)
+                return false;
+
+            bool[] known = [.. entry.Known];
+            known[slot] = false;
+            _containers[before.Address] = new Entry([.. entry.Items], entry.Storage, known, [.. entry.Corrections], [.. entry.Receipts], [.. entry.Tentative]);
+            return true;
+        }
+    }
+
     /// <summary>Publishes supplied correlated authority rows through exact affected receipt guards; missing rows remain unavailable.</summary>
     internal bool TryApplyTentativeAuthorityUpdates(BedrockInventorySnapshot before, IReadOnlyList<BedrockInventoryReconciledSlot> updates, IReadOnlyList<int> affectedSlots, int generation)
     {

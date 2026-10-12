@@ -45,6 +45,142 @@ internal readonly record struct BedrockInventorySnapshot(BedrockContainerAddress
 /// <remarks>Content and slot applies are generation-gated client support policy: stale generations are ignored, unknown containers and over-limit content are rejected, and only the stable player inventory survives a transient invalidation.</remarks>
 internal sealed class BedrockInventoryStore
 {
+    /// <summary>Publishes separately retained tentative data only while one exact authoritative slot receipt remains current.</summary>
+    internal bool TryPublishTentativeSlot(BedrockInventorySnapshot before, int slot, BedrockItemInstance tentativeItem, int legacyRequestId, int generation)
+    {
+        ArgumentNullException.ThrowIfNull(tentativeItem);
+        lock (_gate)
+        {
+            if (generation != _generation || legacyRequestId > -4 || (legacyRequestId & 1) != 0
+                || !ValidTentativeBaseline(before) || !_containers.TryGetValue(before.Address, out Entry? entry)
+                || !MatchesTentativeReceipt(entry, before, slot, allowTentative: false)
+                || entry.Tentative[slot].HasValue)
+                return false;
+
+            BedrockItemInstance authority = entry.Items[slot];
+            if (authority.NetworkId == 0 || authority.Count == 0 || authority.StackNetworkId is not > 0
+                || !ValidTentativeItem(authority, tentativeItem))
+                return false;
+
+            BedrockItemInstance[] items = [.. entry.Items];
+            items[slot] = CloneItem(authority);
+            bool[] known = [.. entry.Known];
+            known[slot] = false;
+            BedrockTentativeInventorySnapshot?[] tentative = [.. entry.Tentative];
+            tentative[slot] = new(before.Address, slot, generation, legacyRequestId, entry.Receipts[slot], CloneItem(authority), CloneItem(tentativeItem), entry.Corrections[slot]);
+            _containers[before.Address] = new Entry(items, entry.Storage, known, [.. entry.Corrections], [.. entry.Receipts], tentative);
+            return true;
+        }
+    }
+
+    /// <summary>Returns a deep-owned copy of the separately tentative slot, never a usable authoritative source.</summary>
+    internal BedrockTentativeInventorySnapshot? GetTentativeSnapshot(BedrockContainerAddress address, int slot)
+    {
+        lock (_gate)
+        {
+            if (!_containers.TryGetValue(address, out Entry? entry) || slot < 0 || slot >= entry.Items.Length
+                || entry.Tentative[slot] is not { } tentative)
+                return null;
+
+            return tentative with { AuthorityItem = CloneItem(tentative.AuthorityItem), TentativeItem = CloneItem(tentative.TentativeItem) };
+        }
+    }
+
+    /// <summary>Retires only the exact retained tentative receipt while leaving last authority unavailable until a genuine correction.</summary>
+    internal bool TryRetireTentativeSlot(BedrockContainerAddress address, int slot, object authorityReceipt, int generation)
+    {
+        ArgumentNullException.ThrowIfNull(authorityReceipt);
+        lock (_gate)
+        {
+            if (generation != _generation || !_containers.TryGetValue(address, out Entry? entry)
+                || slot < 0 || slot >= entry.Items.Length || entry.Tentative[slot] is not { } tentative
+                || !ReferenceEquals(tentative.AuthorityReceipt, authorityReceipt)
+                || !ReferenceEquals(entry.Receipts[slot], authorityReceipt))
+                return false;
+
+            BedrockTentativeInventorySnapshot?[] remaining = [.. entry.Tentative];
+            remaining[slot] = null;
+            _containers[address] = new Entry([.. entry.Items], entry.Storage, [.. entry.Known], [.. entry.Corrections], [.. entry.Receipts], remaining);
+            return true;
+        }
+    }
+
+    /// <summary>Publishes supplied correlated authority rows through exact affected receipt guards; missing rows remain unavailable.</summary>
+    internal bool TryApplyTentativeAuthorityUpdates(BedrockInventorySnapshot before, IReadOnlyList<BedrockInventoryReconciledSlot> updates, IReadOnlyList<int> affectedSlots, int generation)
+    {
+        ArgumentNullException.ThrowIfNull(updates);
+        ArgumentNullException.ThrowIfNull(affectedSlots);
+        lock (_gate)
+        {
+            if (generation != _generation || !ValidTentativeBaseline(before)
+                || !_containers.TryGetValue(before.Address, out Entry? entry)
+                || affectedSlots.Count == 0 || updates.Count == 0
+                || affectedSlots.Distinct().Count() != affectedSlots.Count
+                || !affectedSlots.All(slot => MatchesTentativeReceipt(entry, before, slot, allowTentative: true))
+                || !affectedSlots.Any(slot => entry.Tentative[slot].HasValue)
+                || updates.Select(update => update.Slot).Distinct().Count() != updates.Count
+                || updates.Any(update => !affectedSlots.Contains(update.Slot) || !ValidAuthorityUpdate(update)))
+                return false;
+
+            BedrockItemInstance[] items = [.. entry.Items];
+            bool[] known = [.. entry.Known];
+            BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
+            object[] receipts = [.. entry.Receipts];
+            BedrockTentativeInventorySnapshot?[] tentative = [.. entry.Tentative];
+            foreach (int slot in affectedSlots)
+                known[slot] = false;
+            object publication = new();
+            foreach (BedrockInventoryReconciledSlot update in updates)
+            {
+                items[update.Slot] = CloneItem(update.Item);
+                known[update.Slot] = true;
+                corrections[update.Slot] = update.Response;
+                receipts[update.Slot] = publication;
+                tentative[update.Slot] = null;
+            }
+
+            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections, receipts, tentative);
+            return true;
+        }
+    }
+
+    private static bool ValidTentativeBaseline(BedrockInventorySnapshot before) =>
+        !before.Items.IsDefault && before.Items.Length is > 0 and <= MaxSlotsPerContainer
+        && before.Items.All(item => item is not null)
+        && !before.AuthorityReceipts.IsDefault && before.AuthorityReceipts.Length == before.Items.Length
+        && before.AuthorityReceipts.All(receipt => receipt is not null)
+        && (before.KnownSlots.IsDefault || before.KnownSlots.Length == before.Items.Length)
+        && (before.ResponseCorrections.IsDefault || before.ResponseCorrections.Length == before.Items.Length);
+
+    private static bool MatchesTentativeReceipt(Entry entry, BedrockInventorySnapshot before, int slot, bool allowTentative) =>
+        before.Items.Length == entry.Items.Length && slot >= 0 && slot < entry.Items.Length && before.IsSlotKnown(slot)
+        && ReferenceEquals(entry.Receipts[slot], before.AuthorityReceipts[slot])
+        && entry.Items[slot].Equals(before.Items[slot]) && SameCorrection(entry, before, slot)
+        && (entry.Known[slot] || (allowTentative && entry.Tentative[slot] is { } tentative
+            && ReferenceEquals(tentative.AuthorityReceipt, before.AuthorityReceipts[slot])
+            && tentative.AuthorityItem.Equals(before.Items[slot])
+            && Equals(tentative.AuthorityCorrection, before.ResponseCorrections.IsDefault ? null : before.ResponseCorrections[slot])));
+
+    private static bool ValidTentativeItem(BedrockItemInstance authority, BedrockItemInstance tentative) =>
+        IsCanonicalAir(tentative) || (tentative.StackNetworkId is null && tentative.Count is > 0
+            && tentative.Count < authority.Count && tentative.NetworkId == authority.NetworkId
+            && tentative.MetadataValue == authority.MetadataValue && tentative.BlockRuntimeId == authority.BlockRuntimeId
+            && tentative.ExtraData.AsSpan().SequenceEqual(authority.ExtraData));
+
+    private static bool ValidAuthorityUpdate(BedrockInventoryReconciledSlot update) =>
+        update.Item is not null && update.Response is not null && update.Response.Slot == update.Slot
+        && update.Response.HotbarSlot == update.Slot && update.Item.Count == update.Response.Count
+        && (IsCanonicalAir(update.Item) ? update.Response.StackId == 0
+            : update.Item.NetworkId != 0 && update.Item.Count > 0 && update.Item.StackNetworkId is > 0
+                && update.Item.StackNetworkId == update.Response.StackId);
+
+    private static bool IsCanonicalAir(BedrockItemInstance item) =>
+        item.NetworkId == 0 && item.Count == 0 && item.MetadataValue == 0 && item.StackNetworkId is null
+        && item.BlockRuntimeId == 0 && item.ExtraData.Length == 0;
+
+    private static BedrockItemInstance CloneItem(BedrockItemInstance item) =>
+        new(item.NetworkId, item.Count, item.MetadataValue, item.StackNetworkId, item.BlockRuntimeId, item.ExtraData);
+
     /// <summary>Bounds how many containers the store holds before further authoritative content is rejected.</summary>
     internal const int MaxContainers = 64;
     /// <summary>Bounds how many slots one authoritative content packet may carry before it is rejected.</summary>
@@ -114,7 +250,9 @@ internal sealed class BedrockInventoryStore
             corrections[packet.Slot] = null;
             object[] receipts = [.. entry.Receipts];
             receipts[packet.Slot] = new object();
-            _containers[effective] = new Entry(items, storage, known, corrections, receipts);
+            BedrockTentativeInventorySnapshot?[] tentative = [.. entry.Tentative];
+            tentative[packet.Slot] = null;
+            _containers[effective] = new Entry(items, storage, known, corrections, receipts, tentative);
         }
     }
 
@@ -140,7 +278,7 @@ internal sealed class BedrockInventoryStore
     internal BedrockInventorySnapshot? GetSnapshot(BedrockContainerAddress address)
     {
         lock (_gate)
-            return _containers.TryGetValue(address, out Entry? entry) ? new BedrockInventorySnapshot(address, [.. entry.Items], entry.Storage)
+            return _containers.TryGetValue(address, out Entry? entry) ? new BedrockInventorySnapshot(address, [.. entry.Items.Select(CloneItem)], CloneItem(entry.Storage))
             {
                 KnownSlots = [.. entry.Known],
                 ResponseCorrections = [.. entry.Corrections],
@@ -172,6 +310,10 @@ internal sealed class BedrockInventoryStore
                 || updates.Select(update => update.Slot).Distinct().Count() != updates.Count)
                 throw new InvalidOperationException("The response updates do not identify distinct retained inventory slots.");
 
+            // Tentative authority requires the explicit receipt guard; generic accepted-response handling must not bypass it.
+            if (affectedSlots.Any(slot => entry.Tentative[slot].HasValue))
+                return;
+
             bool changed = affectedSlots.Any(slot => !before.IsSlotKnown(slot) || !entry.Known[slot] || !SameCorrection(entry, before, slot)
                 || (!entry.Items[slot].Equals(before.Items[slot]) && !updates.Any(update => update.Slot == slot && entry.Items[slot].Equals(update.Item))));
             BedrockItemInstance[] items = [.. entry.Items];
@@ -197,7 +339,7 @@ internal sealed class BedrockInventoryStore
             object publication = new();
             foreach (int slot in affectedSlots)
                 receipts[slot] = publication;
-            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections, receipts);
+            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections, receipts, [.. entry.Tentative]);
         }
     }
 
@@ -268,7 +410,9 @@ internal sealed class BedrockInventoryStore
         if (updates.Count == 1)
             items[0] = updates[0].Item;
         receipts[0] = publication;
-        return new Entry(items, entry.Storage, known, corrections, receipts);
+        BedrockTentativeInventorySnapshot?[] tentative = [.. entry.Tentative];
+        tentative[0] = null;
+        return new Entry(items, entry.Storage, known, corrections, receipts, tentative);
     }
 
     /// <summary>Drops every stored container and advances the generation after a lifecycle boundary.</summary>
@@ -296,6 +440,11 @@ internal sealed class BedrockInventoryStore
 
             foreach (BedrockContainerAddress address in doomed)
                 _containers.Remove(address);
+            foreach ((BedrockContainerAddress address, Entry entry) in _containers.ToArray())
+            {
+                if (entry.Tentative.Any(tentative => tentative.HasValue))
+                    _containers[address] = new Entry([.. entry.Items], entry.Storage, [.. entry.Known], [.. entry.Corrections], [.. entry.Receipts]);
+            }
             _generation++;
         }
     }
@@ -306,7 +455,7 @@ internal sealed class BedrockInventoryStore
     private static bool IsStablePlayerAddress(BedrockContainerAddress address) =>
         address.WindowId == 0 && !address.DynamicContainerId.HasValue;
 
-    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage, bool[]? known = null, BedrockItemStackResponseSlot?[]? corrections = null, object[]? receipts = null)
+    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage, bool[]? known = null, BedrockItemStackResponseSlot?[]? corrections = null, object[]? receipts = null, BedrockTentativeInventorySnapshot?[]? tentative = null)
     {
         internal BedrockItemInstance[] Items { get; } = items;
 
@@ -317,5 +466,10 @@ internal sealed class BedrockInventoryStore
         internal BedrockItemStackResponseSlot?[] Corrections { get; } = corrections ?? new BedrockItemStackResponseSlot?[items.Length];
 
         internal object[] Receipts { get; } = receipts ?? Enumerable.Repeat(new object(), items.Length).ToArray();
+
+        internal BedrockTentativeInventorySnapshot?[] Tentative { get; } = tentative ?? new BedrockTentativeInventorySnapshot?[items.Length];
     }
 }
+
+/// <summary>Separates a tentative remainder and typed even legacy identity from the last server item, correction and managed receipt.</summary>
+internal readonly record struct BedrockTentativeInventorySnapshot(BedrockContainerAddress Address, int Slot, int Generation, int LegacyRequestId, object AuthorityReceipt, BedrockItemInstance AuthorityItem, BedrockItemInstance TentativeItem, BedrockItemStackResponseSlot? AuthorityCorrection);

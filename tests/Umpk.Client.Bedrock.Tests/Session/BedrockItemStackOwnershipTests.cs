@@ -630,7 +630,7 @@ public sealed class BedrockItemStackOwnershipTests
     {
         internal BedrockClientSession Session { get; } = session;
         internal GatedTransport Transport { get; } = transport;
-        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null, Func<BedrockClientSession, CancellationToken, Task>? beforeJoin = null)
+        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null, Func<BedrockClientSession, CancellationToken, Task>? beforeJoin = null, IReadOnlyList<(int PacketId, byte[] Payload)>? preReadyInventory = null, Func<BedrockClientSession, CancellationToken, Task>? beforeReady = null)
         {
             TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
             var transport = new GatedTransport(pair.First);
@@ -652,7 +652,7 @@ public sealed class BedrockItemStackOwnershipTests
             {
                 if (beforeJoin is not null)
                     await beforeJoin(session, ct);
-                await CompleteJoinAsync(peer, session, ct, registries);
+                await CompleteJoinAsync(peer, session, ct, registries, preReadyInventory, beforeReady);
                 BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
                 items[0] = new BedrockItemInstance(306, 5, 0, 7, 0, []);
                 await peer.SendAsync(49, BedrockInventoryCodecs.Encode(new BedrockInventoryContentPacket(0, items, s_inventoryAddress, Air())), ct);
@@ -714,7 +714,7 @@ public sealed class BedrockItemStackOwnershipTests
             await Task.Delay(10, ct);
     }
 
-    private static async Task CompleteJoinAsync(BedrockFakePeer peer, BedrockClientSession session, CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries)
+    private static async Task CompleteJoinAsync(BedrockFakePeer peer, BedrockClientSession session, CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries, IReadOnlyList<(int PacketId, byte[] Payload)>? preReadyInventory, Func<BedrockClientSession, CancellationToken, Task>? beforeReady)
     {
         Assert.Equal(193, (await peer.ReceiveAsync(ct)).PacketId);
         await peer.SendAsync(143, BedrockBootstrapCodecs.Encode(new NetworkSettingsPacket(1, BedrockCompressionAlgorithm.Deflate, false, 0, 0f)), ct);
@@ -738,9 +738,22 @@ public sealed class BedrockItemStackOwnershipTests
         bootstrap.Add((119, BedrockJoinCodecs.Encode(new AvailableEntityIdentifiersPacket(identifiers))));
         bootstrap.Add((122, BedrockJoinCodecs.Encode(new BiomeDefinitionListPacket(2U, [1, 2, 3]))));
         bootstrap.Add((11, BedrockJoinCodecs.Encode(new StartGamePacket(456L, 789UL, BedrockStartGameTrailerCodecs.EncodeTrailer(JoinTrailer())))));
+        if (preReadyInventory is not null)
+        {
+            if (preReadyInventory.Count > 2)
+                throw new ArgumentException("The controlled bootstrap accepts at most two inventory members.", nameof(preReadyInventory));
+            foreach ((int packetId, byte[] payload) in preReadyInventory)
+            {
+                if (packetId is not (49 or 50))
+                    throw new ArgumentException("The controlled bootstrap inventory member must be content49 or slot50.", nameof(preReadyInventory));
+                bootstrap.Add((packetId, payload));
+            }
+        }
         await peer.SendBatchAsync(bootstrap, ct);
         await peer.SendAsync(2, BedrockBootstrapCodecs.Encode(new PlayStatusPacket(PlayStatusCode.PlayerSpawn)), ct);
         Assert.Equal(113, (await peer.ReceiveAsync(ct)).PacketId);
+        if (beforeReady is not null)
+            await beforeReady(session, ct);
         byte[] terrain = new byte[26];
         terrain[0] = 1;
         Array.Fill(terrain, (byte)0xff, 2, 23);

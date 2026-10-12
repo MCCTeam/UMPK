@@ -2215,6 +2215,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         }
         if (member.Header.PacketId == 48)
             CaptureHotbarPayload(member.Payload);
+        if (member.Header.PacketId == 49)
+            CaptureInventoryContentPayload(member.Payload);
+        if (member.Header.PacketId == 50)
+            CaptureInventorySlotPayload(member.Payload);
         if (member.Header.PacketId == 145)
             CaptureCreativeContentPayload(member.Payload);
         if (member.Header.PacketId == 30)

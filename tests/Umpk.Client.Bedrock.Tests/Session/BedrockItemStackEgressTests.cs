@@ -531,7 +531,7 @@ public sealed class BedrockItemStackEgressTests
         Assert.Equal(1, session.ItemStackTracker.PendingCount);
 
         await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(0, 0, true)), ct);
-        await WaitUntilAsync(() => session.ItemStackTracker.PendingCount == 0, ct);
+        await WaitUntilAsync(() => session.PendingItemStackReconciliationCount == 0 && session.ItemStackTracker.PendingCount == 0 && session.ActionCoordinator.ClaimedCount == 0, ct);
 
         Assert.Equal(0, session.ActionCoordinator.ClaimedCount);
         Assert.True(session.ItemStackTracker.Generation != 1 || session.ItemStackTracker.PendingCount == 0);

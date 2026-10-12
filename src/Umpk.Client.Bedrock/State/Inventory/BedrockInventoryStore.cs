@@ -9,6 +9,9 @@ internal readonly record struct BedrockInventorySnapshot(BedrockContainerAddress
     /// <summary>Gets which slots have usable authoritative item data; a default mask describes an entirely known retained snapshot.</summary>
     internal ImmutableArray<bool> KnownSlots { get; init; }
 
+    /// <summary>Identifies the managed authority publication for each slot without representing a native epoch.</summary>
+    internal ImmutableArray<object> AuthorityReceipts { get; init; }
+
     /// <summary>Gets the latest response corrections separately from opaque item data whose encoding has not been reconstructed.</summary>
     internal ImmutableArray<BedrockItemStackResponseSlot?> ResponseCorrections { get; init; }
 
@@ -109,7 +112,9 @@ internal sealed class BedrockInventoryStore
             BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
             known[packet.Slot] = true;
             corrections[packet.Slot] = null;
-            _containers[effective] = new Entry(items, storage, known, corrections);
+            object[] receipts = [.. entry.Receipts];
+            receipts[packet.Slot] = new object();
+            _containers[effective] = new Entry(items, storage, known, corrections, receipts);
         }
     }
 
@@ -139,6 +144,7 @@ internal sealed class BedrockInventoryStore
             {
                 KnownSlots = [.. entry.Known],
                 ResponseCorrections = [.. entry.Corrections],
+                AuthorityReceipts = [.. entry.Receipts],
             } : null;
     }
 
@@ -187,8 +193,82 @@ internal sealed class BedrockInventoryStore
                 }
             }
 
-            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections);
+            object[] receipts = [.. entry.Receipts];
+            object publication = new();
+            foreach (int slot in affectedSlots)
+                receipts[slot] = publication;
+            _containers[before.Address] = new Entry(items, entry.Storage, known, corrections, receipts);
         }
+    }
+
+    /// <summary>Qualifies both retained slot-zero receipts and data under one Store lock.</summary>
+    internal bool MatchesCursorPlaceSnapshots(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, int generation)
+    {
+        lock (_gate)
+            return generation == _generation && ValidCursorPlaceAddresses(cursor, player) && MatchesReceipt(cursor) && MatchesReceipt(player);
+    }
+
+    /// <summary>Publishes the two current transfer outcomes together, preserving all newer authority when either baseline is superseded.</summary>
+    internal bool TryApplyCursorPlaceResponse(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, IReadOnlyList<BedrockInventoryReconciledSlot> cursorUpdates, IReadOnlyList<BedrockInventoryReconciledSlot> playerUpdates, int generation)
+    {
+        ArgumentNullException.ThrowIfNull(cursorUpdates);
+        ArgumentNullException.ThrowIfNull(playerUpdates);
+        lock (_gate)
+        {
+            if (cursorUpdates.Count > 1 || playerUpdates.Count > 1 || cursorUpdates.Any(update => update.Slot != 0) || playerUpdates.Any(update => update.Slot != 0))
+                throw new InvalidOperationException("The cursor transfer updates must identify only the two retained slot-zero keys.");
+            if (generation != _generation || !ValidCursorPlaceAddresses(cursor, player) || !MatchesReceipt(cursor) || !MatchesReceipt(player))
+                return false;
+            object publication = new();
+            Entry cursorResult = PrepareSlotZero(_containers[cursor.Address], cursorUpdates, publication);
+            Entry playerResult = PrepareSlotZero(_containers[player.Address], playerUpdates, publication);
+            _containers[cursor.Address] = cursorResult;
+            _containers[player.Address] = playerResult;
+            return true;
+        }
+    }
+
+    /// <summary>Retires only still-owned affected slots; an actual replacement receipt always retains its known data.</summary>
+    internal void InvalidateCursorPlaceSlots(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, int generation)
+    {
+        lock (_gate)
+        {
+            if (generation != _generation || !ValidCursorPlaceAddresses(cursor, player))
+                return;
+            object publication = new();
+            if (MatchesReceipt(cursor))
+                _containers[cursor.Address] = PrepareSlotZero(_containers[cursor.Address], [], publication);
+            if (MatchesReceipt(player))
+                _containers[player.Address] = PrepareSlotZero(_containers[player.Address], [], publication);
+        }
+    }
+
+    private static bool ValidCursorPlaceAddresses(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player) =>
+        cursor.Address == new BedrockContainerAddress(124, 0, null) && player.Address == new BedrockContainerAddress(0, 0, null)
+        && !cursor.Items.IsDefault && !player.Items.IsDefault
+        && cursor.Items.Length == 54 && player.Items.Length is > 0 and <= MaxSlotsPerContainer;
+
+    private bool MatchesReceipt(BedrockInventorySnapshot before) =>
+        !before.Items.IsDefault && before.Items.Length > 0
+        && !before.AuthorityReceipts.IsDefault && before.AuthorityReceipts.Length == before.Items.Length
+        && (before.KnownSlots.IsDefault || before.KnownSlots.Length == before.Items.Length)
+        && (before.ResponseCorrections.IsDefault || before.ResponseCorrections.Length == before.Items.Length) && before.IsSlotKnown(0)
+        && _containers.TryGetValue(before.Address, out Entry? entry) && entry.Items.Length > 0 && entry.Known[0]
+        && ReferenceEquals(entry.Receipts[0], before.AuthorityReceipts[0])
+        && entry.Items[0].Equals(before.Items[0]) && SameCorrection(entry, before, 0);
+
+    private static Entry PrepareSlotZero(Entry entry, IReadOnlyList<BedrockInventoryReconciledSlot> updates, object publication)
+    {
+        BedrockItemInstance[] items = [.. entry.Items];
+        bool[] known = [.. entry.Known];
+        BedrockItemStackResponseSlot?[] corrections = [.. entry.Corrections];
+        object[] receipts = [.. entry.Receipts];
+        known[0] = updates.Count == 1;
+        corrections[0] = updates.Count == 1 ? updates[0].Response : null;
+        if (updates.Count == 1)
+            items[0] = updates[0].Item;
+        receipts[0] = publication;
+        return new Entry(items, entry.Storage, known, corrections, receipts);
     }
 
     /// <summary>Drops every stored container and advances the generation after a lifecycle boundary.</summary>
@@ -226,7 +306,7 @@ internal sealed class BedrockInventoryStore
     private static bool IsStablePlayerAddress(BedrockContainerAddress address) =>
         address.WindowId == 0 && !address.DynamicContainerId.HasValue;
 
-    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage, bool[]? known = null, BedrockItemStackResponseSlot?[]? corrections = null)
+    private sealed class Entry(BedrockItemInstance[] items, BedrockItemInstance storage, bool[]? known = null, BedrockItemStackResponseSlot?[]? corrections = null, object[]? receipts = null)
     {
         internal BedrockItemInstance[] Items { get; } = items;
 
@@ -235,5 +315,7 @@ internal sealed class BedrockInventoryStore
         internal bool[] Known { get; } = known ?? Enumerable.Repeat(true, items.Length).ToArray();
 
         internal BedrockItemStackResponseSlot?[] Corrections { get; } = corrections ?? new BedrockItemStackResponseSlot?[items.Length];
+
+        internal object[] Receipts { get; } = receipts ?? Enumerable.Repeat(new object(), items.Length).ToArray();
     }
 }

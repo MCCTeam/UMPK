@@ -36,6 +36,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private readonly Dictionary<int, BedrockItemStackReconciliation> _itemStackReconciliations = new();
     private readonly Dictionary<int, CancellationTokenSource> _itemStackAdmissions = new();
     private readonly Dictionary<int, BedrockCreativeCursorReconciliation> _creativeCursorReconciliations = new();
+    private readonly Dictionary<int, BedrockCursorPlaceReconciliation> _cursorPlaceReconciliations = new();
+    private bool _cursorPlacePathActivated;
+    private bool _cursorPlaceFreshAuthorityRequired;
+    private CursorPlaceSourceQualification? _cursorPlaceSourceQualification;
+    private object? _cursorPlaceProtectedReceipt;
+    private sealed record CursorPlaceSourceQualification(BedrockCreativeCursorOwnership Ownership, object Receipt);
+
     private static readonly BedrockContainerAddress s_creativeCursorPool = new(124, 0, null);
     private BedrockItemRegistryPacket? _creativeInitialItems;
     private BedrockRegistrySnapshot? _creativeRegistryOwner;
@@ -802,7 +809,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         get
         {
             lock (_gate)
-                return _itemStackReconciliations.Count + _creativeCursorReconciliations.Count;
+                return _itemStackReconciliations.Count + _creativeCursorReconciliations.Count + _cursorPlaceReconciliations.Count;
         }
     }
 
@@ -1051,6 +1058,55 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         return await SendItemStackRequestAsync(retained.Packet, retained.RequestId, retained.Generation, cancellationToken, creative: retained).ConfigureAwait(false);
     }
 
+    /// <summary>Retains only the supplied observed oak cursor Place64 into empty hotbar slot zero under two real container owners.</summary>
+    internal async ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorPlaceAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(observedRequest);
+        cancellationToken.ThrowIfCancellationRequested();
+        BedrockCursorPlaceReconciliation retained;
+        lock (_gate)
+        {
+            if (!_snapshot.IsReady || !_initialLoadingComplete || _initialLoadingRetired || _disposed || _inventoryTornDown || _itemStackEgressRetired
+                || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _activeInventorySends != 0)
+                throw new InvalidOperationException("The cursor transfer requires a live ready inventory path without an older active send.");
+            if (_itemStackTracker.PendingCount != 0 || _inventory.Generation != _itemStackTracker.Generation)
+                throw new InvalidOperationException("The cursor transfer requires the current inventory generation and no outstanding request.");
+            BedrockCreativeCursorOwnership ownership = GetCreativeCursorOwnership()
+                ?? throw new InvalidOperationException("The actual cursor transfer owners are unqualified.");
+            BedrockItemState[] matching = _creativeInitialItems!.Items.Where(item => item.RuntimeId == entry.Item.NetworkId).ToArray();
+            if (matching.Length != 1)
+                throw new InvalidOperationException("The cursor transfer entry has no unique actual registry definition.");
+            BedrockInventorySnapshot cursor = _inventory.GetSnapshot(s_creativeCursorPool)
+                ?? throw new InvalidOperationException("The actual cursor pool is unavailable.");
+            BedrockInventorySnapshot player = _inventory.GetSnapshot(new(0, 0, null))
+                ?? throw new InvalidOperationException("The actual player inventory is unavailable.");
+            retained = BedrockCursorPlaceReconciliation.Create(cursor, player, entry, matching[0], observedRequest, ownership);
+            if (!_inventory.MatchesCursorPlaceSnapshots(cursor, player, ownership.InventoryGeneration))
+                throw new InvalidOperationException("The affected cursor transfer baselines changed before admission.");
+            if (_cursorPlacePathActivated && (_cursorPlaceFreshAuthorityRequired || _cursorPlaceSourceQualification is not { } qualification
+                || !SameCursorPlaceOwnership(qualification.Ownership, ownership) || !ReferenceEquals(qualification.Receipt, cursor.AuthorityReceipts[0])))
+                throw new InvalidOperationException("The cursor transfer requires a fresh authoritative receipt belonging to the current owners.");
+            if (!_itemStackRequestIds.TryAllocate(out int requestId))
+                throw new InvalidOperationException("The inventory request identity range is exhausted until reconnect.");
+            if (requestId != retained.RequestId)
+                throw new InvalidOperationException("The supplied cursor transfer does not match the next allocated identity; its allocated value remains retired.");
+            if (!_actionCoordinator.TryClaim(requestId, BedrockActionEmission.Standalone))
+                throw new InvalidOperationException("The cursor transfer action is already claimed.");
+            if (!_itemStackTracker.TryRegister(requestId, ownership.InventoryGeneration))
+            {
+                _actionCoordinator.Release(requestId);
+                throw new InvalidOperationException("The cursor transfer request could not be registered.");
+            }
+            _cursorPlaceReconciliations.Add(requestId, retained);
+            // Only successful transfer registration activates this separate qualification path.
+            _cursorPlacePathActivated = true;
+            _cursorPlaceFreshAuthorityRequired = false;
+            _cursorPlaceSourceQualification = new(ownership, cursor.AuthorityReceipts[0]);
+        }
+        return await SendItemStackRequestAsync(retained.Packet, retained.RequestId, retained.Generation, cancellationToken, cursorPlace: retained).ConfigureAwait(false);
+    }
+
     private BedrockCreativeCursorOwnership? GetCreativeCursorOwnership()
     {
         if (_creativeRegistryRetired || _creativeRegistryPublicationPending || _creativeInitialItems is null || _creativeRegistryOwner is null
@@ -1063,9 +1119,17 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     // Called under the Session gate. Retirement removes ownership before cancellation can finish a send inline.
     private void RetireCreativeCursorQualification()
     {
+        RetireCursorPlaceRequests();
+        if (_cursorPlacePathActivated)
+        {
+            _cursorPlaceSourceQualification = null;
+            _cursorPlaceFreshAuthorityRequired = true;
+        }
         _creativeCursorBaselineQualified = false;
         BedrockInventorySnapshot? before = _inventory.GetSnapshot(s_creativeCursorPool);
-        if (before is { } cursor && cursor.Items.Length > 0)
+        if (before is { } cursor && cursor.Items.Length > 0
+            && !(_cursorPlacePathActivated && cursor.IsSlotKnown(0) && !cursor.AuthorityReceipts.IsDefault
+                && ReferenceEquals(cursor.AuthorityReceipts[0], _cursorPlaceProtectedReceipt)))
             _inventory.ApplyResponseUpdates(cursor, [], [0], _inventory.Generation);
         foreach ((int requestId, BedrockCreativeCursorReconciliation retained) in _creativeCursorReconciliations.ToArray())
         {
@@ -1090,6 +1154,72 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             if (_itemStackAdmissions.TryGetValue(requestId, out CancellationTokenSource? admission))
                 admission.Cancel();
         }
+    }
+
+    private void RetireCursorPlaceRequests()
+    {
+        foreach ((int requestId, BedrockCursorPlaceReconciliation retained) in _cursorPlaceReconciliations.ToArray())
+            RetireCursorPlaceRequest(requestId, retained);
+    }
+
+    private void RetireChangedCursorPlaceRequests()
+    {
+        foreach ((int requestId, BedrockCursorPlaceReconciliation retained) in _cursorPlaceReconciliations.ToArray())
+        {
+            if (!_inventory.MatchesCursorPlaceSnapshots(retained.CursorBefore, retained.PlayerBefore, retained.Generation))
+                RetireCursorPlaceRequest(requestId, retained);
+        }
+    }
+
+    private void RetireCursorPlaceRequest(int requestId, BedrockCursorPlaceReconciliation retained)
+    {
+        _cursorPlaceReconciliations.Remove(requestId);
+        _inventory.InvalidateCursorPlaceSlots(retained.CursorBefore, retained.PlayerBefore, retained.Generation);
+        _cursorPlaceSourceQualification = null;
+        _cursorPlaceFreshAuthorityRequired = true;
+        _itemStackTracker.TryCancel(requestId, retained.Generation);
+        _actionCoordinator.Release(requestId);
+        if (_itemStackAdmissions.TryGetValue(requestId, out CancellationTokenSource? admission))
+            admission.Cancel();
+    }
+
+    // Called only by actual affected inbound publications, never by a getter or a preserved-known-data check.
+    private void RefreshCursorPlaceSourceQualification(bool protectReceipt)
+    {
+        if (!_cursorPlacePathActivated)
+            return;
+        BedrockInventorySnapshot? snapshot = _inventory.GetSnapshot(s_creativeCursorPool);
+        if (snapshot is not { } cursor || !cursor.IsSlotKnown(0) || cursor.AuthorityReceipts.IsDefault)
+        {
+            _cursorPlaceSourceQualification = null;
+            _cursorPlaceFreshAuthorityRequired = true;
+            _cursorPlaceProtectedReceipt = null;
+            return;
+        }
+        if (protectReceipt)
+            _cursorPlaceProtectedReceipt = cursor.AuthorityReceipts[0];
+        if (GetCreativeCursorOwnership() is { } ownership)
+        {
+            _cursorPlaceSourceQualification = new(ownership, cursor.AuthorityReceipts[0]);
+            _cursorPlaceFreshAuthorityRequired = false;
+        }
+        else
+        {
+            _cursorPlaceSourceQualification = null;
+            _cursorPlaceFreshAuthorityRequired = true;
+        }
+    }
+
+    private static bool SameCursorPlaceOwnership(BedrockCreativeCursorOwnership first, BedrockCreativeCursorOwnership second) =>
+        first.InventoryGeneration == second.InventoryGeneration && ReferenceEquals(first.Registry, second.Registry)
+        && ReferenceEquals(first.Catalog, second.Catalog) && first.Screen == second.Screen && ReferenceEquals(first.ScreenLifetime, second.ScreenLifetime);
+
+    private void ClearCursorPlaceQualification()
+    {
+        _cursorPlacePathActivated = false;
+        _cursorPlaceSourceQualification = null;
+        _cursorPlaceProtectedReceipt = null;
+        _cursorPlaceFreshAuthorityRequired = false;
     }
 
     /// <summary>Binds the retirement flag, coordinator claim, and tracker registration under the session gate and returns the never-reused odd negative identifier with its admitted generation.</summary>
@@ -1131,6 +1261,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         {
             _itemStackReconciliations.Remove(requestId);
             _creativeCursorReconciliations.Remove(requestId);
+            _cursorPlaceReconciliations.Remove(requestId);
             _itemStackAdmissions.Remove(requestId);
             _itemStackTracker.TryCancel(requestId, generation);
             _actionCoordinator.Release(requestId);
@@ -1146,7 +1277,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Sends a request whose action ID and response tracker entry were already admitted, releasing both when the connection does not take ownership of the packet.</summary>
-    internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null, BedrockCreativeCursorReconciliation? creative = null)
+    internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null, BedrockCreativeCursorReconciliation? creative = null, BedrockCursorPlaceReconciliation? cursorPlace = null)
     {
         CancellationTokenSource admissionCancellation;
         lock (_gate)
@@ -1162,6 +1293,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             {
                 ReleaseItemStackRequest(requestId, generation);
                 throw new InvalidOperationException("The retained creative cursor ownership changed before sending.");
+            }
+            if (cursorPlace is not null && (!_cursorPlaceReconciliations.TryGetValue(requestId, out BedrockCursorPlaceReconciliation? registeredPlace)
+                || !ReferenceEquals(registeredPlace, cursorPlace) || GetCreativeCursorOwnership() is not { } placeOwner || !cursorPlace.IsCurrent(placeOwner)
+                || !_inventory.MatchesCursorPlaceSnapshots(cursorPlace.CursorBefore, cursorPlace.PlayerBefore, generation)))
+            {
+                ReleaseItemStackRequest(requestId, generation);
+                throw new InvalidOperationException("The cursor transfer ownership changed before sending.");
             }
             if (_itemStackAdmissions.ContainsKey(requestId))
                 throw new InvalidOperationException("The inventory request already has an active send.");
@@ -2005,6 +2143,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                     _creativeCursorBaselineQualified = packet.Items.Length == 54 && packet.Items[0].Equals(new BedrockItemInstance(0, 0, 0, null, 0, []));
                     RetireChangedCreativeCursorRequests();
                 }
+                if (packet.Container == s_creativeCursorPool || packet.Container == new BedrockContainerAddress(0, 0, null))
+                    RetireChangedCursorPlaceRequests();
+                if (packet.Container == s_creativeCursorPool)
+                    RefreshCursorPlaceSourceQualification(protectReceipt: true);
             }
         }
         catch (InvalidOperationException exception)
@@ -2059,6 +2201,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 _inventory.ApplySlot(packet, address.Value, _inventory.Generation);
                 if ((packet.Container ?? address.Value) == s_creativeCursorPool)
                     RetireChangedCreativeCursorRequests();
+                if ((packet.Container ?? address.Value) == s_creativeCursorPool || (packet.Container ?? address.Value) == new BedrockContainerAddress(0, 0, null))
+                    RetireChangedCursorPlaceRequests();
+                if ((packet.Container ?? address.Value) == s_creativeCursorPool && packet.Slot == 0)
+                    RefreshCursorPlaceSourceQualification(protectReceipt: true);
             }
         }
         catch (InvalidOperationException exception)
@@ -2121,7 +2267,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _inventoryWindows.Remove(packet.WindowId);
             _inventory.RemoveWindow(packet.WindowId);
             bool droppedPending = _itemStackTracker.PendingCount > 0;
-            if (_creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0)
+            if (_creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0)
                 RetireCreativeCursorQualification();
             if (_creativeScreen?.WindowId == packet.WindowId)
             {
@@ -2202,7 +2348,18 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                     {
                         BedrockCreativeCursorReconciliationResult result = creative.Reconcile(response, current);
                         if (result.IsEligible && creative.IsCurrent(current))
+                        {
                             _inventory.ApplyResponseUpdates(creative.Before, result.Updates, creative.AffectedSlots, creative.Generation);
+                            RefreshCursorPlaceSourceQualification(protectReceipt: false);
+                        }
+                    }
+                    if (_cursorPlaceReconciliations.Remove(response.RequestId, out BedrockCursorPlaceReconciliation? place)
+                        && outcomes[index] == BedrockItemStackResponseOutcome.Accepted && GetCreativeCursorOwnership() is { } placeOwner)
+                    {
+                        BedrockCursorPlaceReconciliationResult result = place.Reconcile(response, placeOwner);
+                        if (result.IsEligible && place.IsCurrent(placeOwner)
+                            && _inventory.TryApplyCursorPlaceResponse(place.CursorBefore, place.PlayerBefore, result.CursorUpdates, result.PlayerUpdates, place.Generation))
+                            RefreshCursorPlaceSourceQualification(protectReceipt: true);
                     }
                     _actionCoordinator.Release(response.RequestId);
                 }
@@ -2364,6 +2521,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             RetireCreativeCursorQualification();
             _creativeScreen = null;
             _creativeScreenLifetime = null;
+            ClearCursorPlaceQualification();
             _inventory.InvalidateTransient();
             _containerWindows.Invalidate();
             _itemStackTracker.Invalidate();
@@ -2395,6 +2553,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _creativeContentObservations = 0;
             _lastInventoryTransaction = null;
             _inventoryTransactionObservations = 0;
+            ClearCursorPlaceQualification();
             _inventory.Invalidate();
             _containerWindows.Invalidate();
             _itemStackTracker.Invalidate();

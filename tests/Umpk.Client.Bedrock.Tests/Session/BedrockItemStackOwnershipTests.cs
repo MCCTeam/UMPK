@@ -630,7 +630,7 @@ public sealed class BedrockItemStackOwnershipTests
     {
         internal BedrockClientSession Session { get; } = session;
         internal GatedTransport Transport { get; } = transport;
-        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null)
+        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null, Func<BedrockClientSession, CancellationToken, Task>? beforeJoin = null)
         {
             TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
             var transport = new GatedTransport(pair.First);
@@ -650,6 +650,8 @@ public sealed class BedrockItemStackOwnershipTests
             var fixture = new OwnershipSession(pair, peer, transport, client, session);
             try
             {
+                if (beforeJoin is not null)
+                    await beforeJoin(session, ct);
                 await CompleteJoinAsync(peer, session, ct, registries);
                 BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
                 items[0] = new BedrockItemInstance(306, 5, 0, 7, 0, []);
@@ -674,6 +676,7 @@ public sealed class BedrockItemStackOwnershipTests
             throw new InvalidOperationException("The controlled transport did not deliver the inventory request.");
         }
         internal ValueTask SendAsync(int packetId, byte[] payload, CancellationToken ct) => peer.SendAsync(packetId, payload, ct);
+        internal ValueTask<(int PacketId, byte[] Payload)> ReceiveAsync(CancellationToken ct) => peer.ReceiveAsync(ct);
         internal async Task SendCloseAsync(CancellationToken ct)
         {
             await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(1, 0, true)), ct);

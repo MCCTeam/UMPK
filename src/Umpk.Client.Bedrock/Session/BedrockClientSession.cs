@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections.Immutable;
 using System.Threading.Channels;
 using Umpk.Client.Bedrock.Actions;
@@ -44,8 +45,9 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private object? _creativeScreenLifetime;
     private bool _creativeScreenObserved;
     private bool _creativeCursorBaselineQualified;
-    private int _activeItemStackSends;
-    private TaskCompletionSource? _itemStackSendsDrained;
+    private CancellationTokenSource? _normalInventoryOpenAdmission;
+    private int _activeInventorySends;
+    private TaskCompletionSource? _inventorySendsDrained;
     private readonly BedrockActionCoordinator _actionCoordinator = new();
     private readonly Dictionary<int, HashSet<BedrockContainerAddress>> _inventoryWindows = new();
     private int _unresolvedInventorySlots;
@@ -782,6 +784,16 @@ internal sealed class BedrockClientSession : IAsyncDisposable
 
     internal BedrockItemStackRequestTracker ItemStackTracker => _itemStackTracker;
 
+    /// <summary>Reads immutable published item names and entity identities; this is decoded registry state, not retained raw registry traffic.</summary>
+    internal BedrockRegistrySnapshot PublishedRegistries
+    {
+        get
+        {
+            lock (_gate)
+                return _connection.Context.Registries;
+        }
+    }
+
     internal BedrockActionCoordinator ActionCoordinator => _actionCoordinator;
 
     /// <summary>Gets the bounded retained operation count for session ownership diagnostics.</summary>
@@ -1153,8 +1165,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 throw new InvalidOperationException("The inventory request already has an active send.");
             admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
             _itemStackAdmissions.Add(requestId, admissionCancellation);
-            if (_activeItemStackSends++ == 0)
-                _itemStackSendsDrained = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            BeginInventorySend();
         }
 
         try
@@ -1216,12 +1227,97 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 _itemStackAdmissions.Remove(requestId);
             admissionCancellation.Dispose();
             // The send owns this count through result construction, accounting and its admission resource disposal, independently of response retention.
+            EndInventorySend();
+        }
+    }
+
+    // Called under the Session gate. Response retention is independent of the transport/result lifetime.
+    private void BeginInventorySend()
+    {
+        if (_activeInventorySends++ == 0)
+            _inventorySendsDrained = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    private void EndInventorySend()
+    {
+        lock (_gate)
+        {
+            if (--_activeInventorySends == 0)
+                _inventorySendsDrained!.TrySetResult();
+        }
+    }
+
+    /// <summary>Transfers the qualified normal-self inventory interaction and returns its actual target and payload, independently of any server screen event.</summary>
+    internal async ValueTask<(ulong TargetRuntimeId, byte[] OutboundPayload)> SubmitNormalInventoryOpenAsync(CancellationToken cancellationToken = default)
+    {
+        CancellationTokenSource admissionCancellation;
+        ulong runtimeId;
+        lock (_gate)
+        {
+            if (_disposed || _inventoryTornDown || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _initialLoadingRetired)
+                throw new InvalidOperationException("The normal inventory opening requires a live initial player life and world.");
+            if (!_snapshot.IsReady || !_initialLoadingComplete || !_initialLoadingStarted || !_initialLoadingEndTransferred)
+                throw new InvalidOperationException("The normal inventory opening requires completed headless readiness.");
+            runtimeId = _snapshot.LocalRuntimeEntityId;
+            if (runtimeId == 0)
+                throw new InvalidOperationException("The normal inventory opening requires the current own runtime identity.");
+            if (_normalInventoryOpenAdmission is not null)
+                throw new InvalidOperationException("Only one normal inventory opening send may be active.");
+            cancellationToken.ThrowIfCancellationRequested();
+            admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token, _playerAuthInputAdmissionLifetime.Token);
+            _normalInventoryOpenAdmission = admissionCancellation;
+            BeginInventorySend();
+        }
+
+        try
+        {
+            var output = new ArrayBufferWriter<byte>();
+            var writer = new BedrockWriter(output);
+            writer.WriteByte(6);
+            writer.WriteUInt64VarInt(runtimeId);
+            writer.WriteBoolean(false);
+            byte[] payload = output.WrittenSpan.ToArray();
+            var member = new BedrockBatchMember(new BedrockPacketHeader(33, new BedrockSubclientId(0), new BedrockSubclientId(0)), payload);
+            MessageAdmissionResult admission = await _connection.SendBatchAsync([member], admissionCancellation.Token).ConfigureAwait(false);
+            if (!admission.OwnershipTransferred)
+            {
+                lock (_gate)
+                    _rejectedSendAttempts++;
+                throw new InvalidOperationException($"The normal inventory opening was rejected with {admission.Status}.");
+            }
+
+            // A granted token-free commit owns this result; no late screen or life event is reconstructed here.
+            RecordOutbound(33);
+            return (runtimeId, (byte[])payload.Clone());
+        }
+        catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
+        {
             lock (_gate)
             {
-                if (--_activeItemStackSends == 0)
-                    _itemStackSendsDrained!.TrySetResult();
+                if (_lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
+                    throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
+                if (cancellationToken.IsCancellationRequested)
+                    throw new OperationCanceledException("The normal inventory opening was cancelled before transport capacity was granted.", exception, cancellationToken);
+                throw new InvalidOperationException("The normal inventory opening was retired before transport capacity was granted.", exception);
             }
         }
+        finally
+        {
+            lock (_gate)
+            {
+                if (ReferenceEquals(_normalInventoryOpenAdmission, admissionCancellation))
+                    _normalInventoryOpenAdmission = null;
+            }
+            admissionCancellation.Dispose();
+            EndInventorySend();
+        }
+    }
+
+    // Called under the Session gate. The active send retains the singleton until its own finally, even after grant.
+    private void CancelNormalInventoryOpenAdmission()
+    {
+        CancellationTokenSource? admission = _normalInventoryOpenAdmission;
+        admission?.Cancel();
     }
 
     /// <summary>Encodes and sends one movement-only protocol-2169 player-auth-input packet through serialized egress and records its payload for evidence.</summary>
@@ -1366,10 +1462,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             return;
         _disposed = true;
         TryCompleteSession(new BedrockTermination(BedrockSessionEndReason.LocalDisconnect, BedrockSessionScope.Session, "The session was disposed."));
-        // Terminal retirement cancels capacity waiters; all granted inventory commits finish result accounting before owned teardown.
+        // Terminal retirement cancels capacity waiters; all granted inventory requests and opening interactions finish accounting before owned teardown.
         Task inventorySendsDrained;
         lock (_gate)
-            inventorySendsDrained = _activeItemStackSends == 0 ? Task.CompletedTask : _itemStackSendsDrained!.Task;
+            inventorySendsDrained = _activeInventorySends == 0 ? Task.CompletedTask : _inventorySendsDrained!.Task;
         await inventorySendsDrained.ConfigureAwait(false);
         // Waiting movement admissions are canceled first; a granted token-free commit finishes accounting before owned teardown.
         await _playerAuthInputEgress.WaitAsync().ConfigureAwait(false);
@@ -1989,6 +2085,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _creativeScreen = normal ? new(packet.WindowId, packet.WindowType, packet.X, packet.Y, packet.Z, packet.EntityUniqueId) : null;
             _creativeScreenLifetime = normal ? new object() : null;
             _containerWindows.NoteOpen(packet, _containerWindows.Generation);
+            CancelNormalInventoryOpenAdmission();
         }
         RefreshSnapshot();
     }
@@ -2018,6 +2115,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 _itemStackEgressRetired = true;
             if (!known)
                 _duplicateContainerCloses++;
+            CancelNormalInventoryOpenAdmission();
         }
 
         RefreshSnapshot();

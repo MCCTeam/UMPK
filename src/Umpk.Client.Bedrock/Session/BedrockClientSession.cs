@@ -76,6 +76,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private int _playerAuthInputSends;
     // The egress semaphore is never disposed because late callers may still wait on it after teardown.
     private readonly SemaphoreSlim _playerAuthInputEgress = new(1, 1);
+    private readonly CancellationTokenSource _playerAuthInputAdmissionLifetime = new();
     private readonly List<BedrockInventoryContentPacket> _capturedInventoryContents = [];
     private readonly List<BedrockInventorySlotPacket> _capturedInventorySlots = [];
     private readonly List<byte[]> _capturedInventoryContentPayloads = [];
@@ -1131,54 +1132,77 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException($"The player auth input is not a supported movement-only packet: {exception.Message}.", exception);
         }
 
-        await _playerAuthInputEgress.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
+        CancellationTokenSource admissionCancellation;
+        lock (_gate)
         {
-            lock (_gate)
-            {
-                if (!_snapshot.IsReady)
-                    throw new InvalidOperationException("The player auth input requires a ready session.");
-                if (_lifetime.Termination.IsCompleted)
-                    throw new InvalidOperationException("The player auth input requires a live session.");
-                if (_initialLoadingRetired)
-                    throw new InvalidOperationException("Movement recovery after player-life or world retirement is not supported.");
-                RequirePlayerAuthInputTick(input.Tick);
-            }
+            RequirePlayerAuthInputSession();
+            admissionCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _playerAuthInputAdmissionLifetime.Token);
+        }
 
-            var member = new BedrockBatchMember(
-                new BedrockPacketHeader(144, new BedrockSubclientId(0), new BedrockSubclientId(0)),
-                payload);
-            MessageAdmissionResult admission;
+        using (admissionCancellation)
+        {
+            bool enteredEgress = false;
             try
             {
-                admission = await _connection.SendBatchAsync([member], _lifetime.Token).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException exception) when (_lifetime.Token.IsCancellationRequested)
-            {
-                throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
-            }
+                await _playerAuthInputEgress.WaitAsync(admissionCancellation.Token).ConfigureAwait(false);
+                enteredEgress = true;
+                lock (_gate)
+                {
+                    admissionCancellation.Token.ThrowIfCancellationRequested();
+                    RequirePlayerAuthInputSession();
+                    RequirePlayerAuthInputTick(input.Tick);
+                }
 
-            if (!admission.OwnershipTransferred)
+                var member = new BedrockBatchMember(
+                    new BedrockPacketHeader(144, new BedrockSubclientId(0), new BedrockSubclientId(0)),
+                    payload);
+                // Cancellation ends at the transport reservation grant; its token-free commit owns the eventual result.
+                MessageAdmissionResult admission = await _connection.SendBatchAsync([member], admissionCancellation.Token).ConfigureAwait(false);
+                if (!admission.OwnershipTransferred)
+                {
+                    lock (_gate)
+                        _rejectedSendAttempts++;
+                    throw new InvalidOperationException($"The player auth input was rejected with {admission.Status}.");
+                }
+
+                RecordOutbound(144);
+                lock (_gate)
+                {
+                    _hasSentPlayerAuthInput = true;
+                    _lastPlayerAuthInputTick = input.Tick;
+                    _playerAuthInputSends++;
+                }
+
+                return new BedrockPlayerAuthInputSubmitResult(input.Tick, (byte[])payload.Clone());
+            }
+            catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
             {
                 lock (_gate)
-                    _rejectedSendAttempts++;
-                throw new InvalidOperationException($"The player auth input was rejected with {admission.Status}.");
+                {
+                    // Cancellation callbacks can resume inline before the lifetime completion task is published.
+                    if (_lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
+                        throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
+                    if (cancellationToken.IsCancellationRequested)
+                        throw new OperationCanceledException("The player auth input was cancelled before transport capacity was granted.", exception, cancellationToken);
+                    throw new InvalidOperationException("The player auth input was retired before transport capacity was granted.", exception);
+                }
             }
-
-            RecordOutbound(144);
-            lock (_gate)
+            finally
             {
-                _hasSentPlayerAuthInput = true;
-                _lastPlayerAuthInputTick = input.Tick;
-                _playerAuthInputSends++;
+                if (enteredEgress)
+                    _playerAuthInputEgress.Release();
             }
+        }
+    }
 
-            return new BedrockPlayerAuthInputSubmitResult(input.Tick, (byte[])payload.Clone());
-        }
-        finally
-        {
-            _playerAuthInputEgress.Release();
-        }
+    private void RequirePlayerAuthInputSession()
+    {
+        if (!_snapshot.IsReady)
+            throw new InvalidOperationException("The player auth input requires a ready session.");
+        if (_lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
+            throw new InvalidOperationException("The player auth input requires a live session.");
+        if (_initialLoadingRetired)
+            throw new InvalidOperationException("Movement recovery after player-life or world retirement is not supported.");
     }
 
     /// <summary>Requires each protocol-2169 auth-input tick to exceed the previous one with an explicit wrap from ulong.MaxValue to zero, where the first send establishes the baseline.</summary>
@@ -1234,6 +1258,9 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             return;
         _disposed = true;
         TryCompleteSession(new BedrockTermination(BedrockSessionEndReason.LocalDisconnect, BedrockSessionScope.Session, "The session was disposed."));
+        // Waiting movement admissions are canceled first; a granted token-free commit finishes accounting before owned teardown.
+        await _playerAuthInputEgress.WaitAsync().ConfigureAwait(false);
+        _playerAuthInputEgress.Release();
         _transport.Abort(MessageConnectionTermination.Cancelled());
         _terrainWork.Writer.TryComplete();
         try
@@ -1257,6 +1284,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         await _transport.DisposeAsync().ConfigureAwait(false);
         await _connection.DisposeAsync().ConfigureAwait(false);
         _key.Dispose();
+        _playerAuthInputAdmissionLifetime.Dispose();
         _lifetime.Dispose();
     }
 
@@ -3038,6 +3066,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 return;
             _initialLoadingRetired = true;
             _initialLoadingRetirementScope = scope;
+            _playerAuthInputAdmissionLifetime.Cancel();
             _initialLoadingEpoch++;
             _initialLoadingAdmission?.Cancel();
         }

@@ -9,6 +9,7 @@ using Umpk.Client.Bedrock.Policies;
 using Umpk.Client.Bedrock.State.Actors;
 using Umpk.Client.Bedrock.State.Inventory;
 using Umpk.Client.Bedrock.State.World;
+using Umpk.Nbt;
 using Umpk.Protocol.Bedrock;
 using Umpk.Transport;
 
@@ -33,6 +34,16 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private readonly BedrockItemStackRequestIdAllocator _itemStackRequestIds = new();
     private readonly Dictionary<int, BedrockItemStackReconciliation> _itemStackReconciliations = new();
     private readonly Dictionary<int, CancellationTokenSource> _itemStackAdmissions = new();
+    private readonly Dictionary<int, BedrockCreativeCursorReconciliation> _creativeCursorReconciliations = new();
+    private static readonly BedrockContainerAddress s_creativeCursorPool = new(124, 0, null);
+    private BedrockItemRegistryPacket? _creativeInitialItems;
+    private BedrockRegistrySnapshot? _creativeRegistryOwner;
+    private bool _creativeRegistryPublicationPending;
+    private bool _creativeRegistryRetired;
+    private BedrockOpenContainer? _creativeScreen;
+    private object? _creativeScreenLifetime;
+    private bool _creativeScreenObserved;
+    private bool _creativeCursorBaselineQualified;
     private int _activeItemStackSends;
     private TaskCompletionSource? _itemStackSendsDrained;
     private readonly BedrockActionCoordinator _actionCoordinator = new();
@@ -779,7 +790,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         get
         {
             lock (_gate)
-                return _itemStackReconciliations.Count;
+                return _itemStackReconciliations.Count + _creativeCursorReconciliations.Count;
         }
     }
 
@@ -984,6 +995,91 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot.Value).ConfigureAwait(false);
     }
 
+    /// <summary>Retains and emits only a supplied observed oak-planks Take64 request against actual registry, catalog, normal screen and empty UI cursor owners.</summary>
+    /// <remarks>This internal witness path does not build a request or qualify a generic creative maximum-stack policy.</remarks>
+    internal async ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorRequestAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(observedRequest);
+        cancellationToken.ThrowIfCancellationRequested();
+        BedrockCreativeCursorReconciliation retained;
+        lock (_gate)
+        {
+            if (!_snapshot.IsReady || _disposed || _inventoryTornDown || _itemStackEgressRetired)
+                throw new InvalidOperationException("The observed creative cursor request requires a live ready inventory path.");
+            if (_itemStackTracker.PendingCount != 0 || _inventory.Generation != _itemStackTracker.Generation)
+                throw new InvalidOperationException("The observed creative cursor request requires the current inventory generation and no outstanding request.");
+            BedrockCreativeCursorOwnership ownership = GetCreativeCursorOwnership()
+                ?? throw new InvalidOperationException("The creative registry, catalog, or normal inventory screen is unqualified.");
+            BedrockItemState[] matching = _creativeInitialItems!.Items.Where(item => item.RuntimeId == entry.Item.NetworkId).ToArray();
+            if (matching.Length != 1 || matching[0].Name != "minecraft:oak_planks" || matching[0].ComponentBased || matching[0].Version != 2
+                || matching[0].Components is not NbtCompound { IsEmpty: true } || entry.Item.MetadataValue != 0
+                || entry.Item.ExtraData.Length != 10 || entry.Item.ExtraData.Any(static value => value != 0))
+                throw new InvalidOperationException("Only the supplied observed vanilla oak-planks definition and item representation are qualified.");
+            BedrockInventorySnapshot before = _inventory.GetSnapshot(s_creativeCursorPool)
+                ?? throw new InvalidOperationException("The actual UI cursor pool is unavailable.");
+            if (!_creativeCursorBaselineQualified)
+                throw new InvalidOperationException("The creative cursor requires a fresh authoritative UI content baseline after owner retirement.");
+            retained = BedrockCreativeCursorReconciliation.Create(before, entry, matching[0], observedRequest, ownership);
+            if (!_inventory.MatchesSnapshot(before, retained.AffectedSlots, ownership.InventoryGeneration))
+                throw new InvalidOperationException("The creative cursor baseline changed before admission.");
+            if (!_itemStackRequestIds.TryAllocate(out int requestId))
+                throw new InvalidOperationException("The inventory request identity range is exhausted until reconnect.");
+            if (requestId != retained.RequestId)
+                throw new InvalidOperationException("The supplied creative request does not match the next allocated identity; its allocated value remains retired.");
+            if (!_actionCoordinator.TryClaim(requestId, BedrockActionEmission.Standalone))
+                throw new InvalidOperationException("The creative action is already claimed.");
+            if (!_itemStackTracker.TryRegister(requestId, ownership.InventoryGeneration))
+            {
+                _actionCoordinator.Release(requestId);
+                throw new InvalidOperationException("The creative request could not be registered.");
+            }
+            _creativeCursorReconciliations.Add(requestId, retained);
+        }
+        return await SendItemStackRequestAsync(retained.Packet, retained.RequestId, retained.Generation, cancellationToken, creative: retained).ConfigureAwait(false);
+    }
+
+    private BedrockCreativeCursorOwnership? GetCreativeCursorOwnership()
+    {
+        if (_creativeRegistryRetired || _creativeRegistryPublicationPending || _creativeInitialItems is null || _creativeRegistryOwner is null
+            || !ReferenceEquals(_creativeRegistryOwner, _connection.Context.Registries) || _lastCreativeContent is null
+            || _creativeScreen is not { } screen || _creativeScreenLifetime is null)
+            return null;
+        return new(_inventory.Generation, _creativeRegistryOwner, _lastCreativeContent, screen, _creativeScreenLifetime);
+    }
+
+    // Called under the Session gate. Retirement removes ownership before cancellation can finish a send inline.
+    private void RetireCreativeCursorQualification()
+    {
+        _creativeCursorBaselineQualified = false;
+        BedrockInventorySnapshot? before = _inventory.GetSnapshot(s_creativeCursorPool);
+        if (before is { } cursor && cursor.Items.Length > 0)
+            _inventory.ApplyResponseUpdates(cursor, [], [0], _inventory.Generation);
+        foreach ((int requestId, BedrockCreativeCursorReconciliation retained) in _creativeCursorReconciliations.ToArray())
+        {
+            _creativeCursorReconciliations.Remove(requestId);
+            _itemStackTracker.TryCancel(requestId, retained.Generation);
+            _actionCoordinator.Release(requestId);
+            if (_itemStackAdmissions.TryGetValue(requestId, out CancellationTokenSource? admission))
+                admission.Cancel();
+        }
+    }
+
+    // Actual replacement data stays known; only the operation built from a different affected cursor baseline is retired.
+    private void RetireChangedCreativeCursorRequests()
+    {
+        foreach ((int requestId, BedrockCreativeCursorReconciliation retained) in _creativeCursorReconciliations.ToArray())
+        {
+            if (_inventory.MatchesSnapshot(retained.Before, retained.AffectedSlots, retained.Generation))
+                continue;
+            _creativeCursorReconciliations.Remove(requestId);
+            _itemStackTracker.TryCancel(requestId, retained.Generation);
+            _actionCoordinator.Release(requestId);
+            if (_itemStackAdmissions.TryGetValue(requestId, out CancellationTokenSource? admission))
+                admission.Cancel();
+        }
+    }
+
     /// <summary>Binds the retirement flag, coordinator claim, and tracker registration under the session gate and returns the never-reused odd negative identifier with its admitted generation.</summary>
     /// <remarks>The shared session gate prevents a lifecycle or close boundary from slipping between those checks, and only one inventory request stays outstanding while issued identifiers are never reused.</remarks>
     private (int RequestId, int Generation) TryAdmitItemStackRequest(BedrockInventorySnapshot before, byte sourceSlot, byte destinationSlot)
@@ -1020,6 +1116,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         lock (_gate)
         {
             _itemStackReconciliations.Remove(requestId);
+            _creativeCursorReconciliations.Remove(requestId);
             _itemStackAdmissions.Remove(requestId);
             _itemStackTracker.TryCancel(requestId, generation);
             _actionCoordinator.Release(requestId);
@@ -1035,7 +1132,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Sends a request whose action ID and response tracker entry were already admitted, releasing both when the connection does not take ownership of the packet.</summary>
-    internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null)
+    internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null, BedrockCreativeCursorReconciliation? creative = null)
     {
         CancellationTokenSource admissionCancellation;
         lock (_gate)
@@ -1044,6 +1141,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             {
                 ReleaseItemStackRequest(requestId, generation);
                 throw new InvalidOperationException("The inventory request path is retired or its generation is stale.");
+            }
+            if (creative is not null && (!_creativeCursorReconciliations.TryGetValue(requestId, out BedrockCreativeCursorReconciliation? registered)
+                || !ReferenceEquals(registered, creative) || GetCreativeCursorOwnership() is not { } ownership || !creative.IsCurrent(ownership)
+                || !_inventory.MatchesSnapshot(creative.Before, creative.AffectedSlots, generation)))
+            {
+                ReleaseItemStackRequest(requestId, generation);
+                throw new InvalidOperationException("The retained creative cursor ownership changed before sending.");
             }
             if (_itemStackAdmissions.ContainsKey(requestId))
                 throw new InvalidOperationException("The inventory request already has an active send.");
@@ -1367,7 +1471,27 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         Task<bool> receiveTask = _connection.ReceiveAndDispatchAsync(consumer, _lifetime.Token).AsTask();
         try
         {
-            return await receiveTask.WaitAsync(remaining, timeProvider).ConfigureAwait(false);
+            bool received = await receiveTask.WaitAsync(remaining, timeProvider).ConfigureAwait(false);
+            if (consumer is BedrockPacketDispatcher)
+            {
+                lock (_gate)
+                {
+                    BedrockItemRegistryPacket? actual = batch.OfType<BedrockItemRegistryPacket>().LastOrDefault();
+                    if (_snapshot.IsReady && actual is not null)
+                    {
+                        _creativeRegistryRetired = true;
+                        RetireCreativeCursorQualification();
+                    }
+                    else if (!_snapshot.IsReady)
+                    {
+                        _creativeInitialItems = actual ?? _creativeInitialItems;
+                        // Connection has completed every publication in this batch; the callback's pre-publication context cannot supply this owner.
+                        _creativeRegistryOwner = _connection.Context.Registries;
+                    }
+                    _creativeRegistryPublicationPending = false;
+                }
+            }
+            return received;
         }
         catch (TimeoutException exception)
         {
@@ -1759,6 +1883,11 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             {
                 NoteInventoryWindow(packet.Container);
                 _inventory.ApplyContent(packet, _inventory.Generation);
+                if (packet.Container == s_creativeCursorPool)
+                {
+                    _creativeCursorBaselineQualified = packet.Items.Length == 54 && packet.Items[0].Equals(new BedrockItemInstance(0, 0, 0, null, 0, []));
+                    RetireChangedCreativeCursorRequests();
+                }
             }
         }
         catch (InvalidOperationException exception)
@@ -1809,7 +1938,11 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             }
 
             lock (_gate)
+            {
                 _inventory.ApplySlot(packet, address.Value, _inventory.Generation);
+                if ((packet.Container ?? address.Value) == s_creativeCursorPool)
+                    RetireChangedCreativeCursorRequests();
+            }
         }
         catch (InvalidOperationException exception)
         {
@@ -1847,7 +1980,16 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private void ApplyContainerOpen(BedrockContainerOpenPacket packet)
     {
         CaptureContainerOpen(packet);
-        _containerWindows.NoteOpen(packet, _containerWindows.Generation);
+        lock (_gate)
+        {
+            bool normal = packet.WindowType == -1 && packet.WindowId is >= 1 and <= 99;
+            if (_creativeScreenObserved || !normal)
+                RetireCreativeCursorQualification();
+            _creativeScreenObserved = true;
+            _creativeScreen = normal ? new(packet.WindowId, packet.WindowType, packet.X, packet.Y, packet.Z, packet.EntityUniqueId) : null;
+            _creativeScreenLifetime = normal ? new object() : null;
+            _containerWindows.NoteOpen(packet, _containerWindows.Generation);
+        }
         RefreshSnapshot();
     }
 
@@ -1861,6 +2003,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _inventoryWindows.Remove(packet.WindowId);
             _inventory.RemoveWindow(packet.WindowId);
             bool droppedPending = _itemStackTracker.PendingCount > 0;
+            if (_creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0)
+                RetireCreativeCursorQualification();
+            if (_creativeScreen?.WindowId == packet.WindowId)
+            {
+                _creativeScreen = null;
+                _creativeScreenLifetime = null;
+            }
             _itemStackTracker.ClearPending();
             CancelItemStackAdmissions();
             _itemStackReconciliations.Clear();
@@ -1891,6 +2040,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         ArgumentNullException.ThrowIfNull(packet);
         lock (_gate)
         {
+            if (_lastCreativeContent is not null && !ReferenceEquals(_lastCreativeContent, packet))
+                RetireCreativeCursorQualification();
             _lastCreativeContent = packet;
             _creativeContentObservations++;
         }
@@ -1927,6 +2078,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                     if (_itemStackReconciliations.Remove(response.RequestId, out BedrockItemStackReconciliation? retained)
                         && outcomes[index] == BedrockItemStackResponseOutcome.Accepted)
                         _inventory.ApplyResponseUpdates(retained.Before, retained.Reconcile(response), retained.AffectedSlots, retained.Generation);
+                    if (_creativeCursorReconciliations.Remove(response.RequestId, out BedrockCreativeCursorReconciliation? creative)
+                        && outcomes[index] == BedrockItemStackResponseOutcome.Accepted && GetCreativeCursorOwnership() is { } current)
+                    {
+                        BedrockCreativeCursorReconciliationResult result = creative.Reconcile(response, current);
+                        if (result.IsEligible && creative.IsCurrent(current))
+                            _inventory.ApplyResponseUpdates(creative.Before, result.Updates, creative.AffectedSlots, creative.Generation);
+                    }
                     _actionCoordinator.Release(response.RequestId);
                 }
             }
@@ -1945,6 +2103,18 @@ internal sealed class BedrockClientSession : IAsyncDisposable
 
     private void ObserveAdmittedPreReady(BedrockBatchMember member)
     {
+        if (member.Header.PacketId == 162)
+        {
+            lock (_gate)
+            {
+                _creativeRegistryPublicationPending = true;
+                if (_snapshot.IsReady)
+                {
+                    _creativeRegistryRetired = true;
+                    RetireCreativeCursorQualification();
+                }
+            }
+        }
         if (member.Header.PacketId == 48)
             CaptureHotbarPayload(member.Payload);
         if (member.Header.PacketId == 145)
@@ -2068,6 +2238,9 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             foreach (int windowId in doomedWindows)
                 _inventoryWindows.Remove(windowId);
             _itemStackEgressRetired = true;
+            RetireCreativeCursorQualification();
+            _creativeScreen = null;
+            _creativeScreenLifetime = null;
             _inventory.InvalidateTransient();
             _containerWindows.Invalidate();
             _itemStackTracker.Invalidate();
@@ -2084,6 +2257,12 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             if (_inventoryTornDown)
                 return;
             _inventoryTornDown = true;
+            RetireCreativeCursorQualification();
+            _creativeScreen = null;
+            _creativeScreenLifetime = null;
+            _creativeInitialItems = null;
+            _creativeRegistryOwner = null;
+            _creativeRegistryRetired = true;
             _inventoryWindows.Clear();
             _unresolvedInventorySlots = 0;
             _duplicateContainerCloses = 0;
@@ -2104,6 +2283,17 @@ internal sealed class BedrockClientSession : IAsyncDisposable
 
     private void ApplyPostJoinObservation(BedrockBatchMember member, BedrockSessionCodecContext context)
     {
+        if (member.Header.PacketId == 162)
+        {
+            _ = BedrockItemRegistryCodec.Decode(member.Payload, context.Limits);
+            lock (_gate)
+            {
+                // The post-Ready consumer does not publish replacement registry owners; qualification therefore remains retired until reconnect.
+                _creativeRegistryRetired = true;
+                RetireCreativeCursorQualification();
+            }
+            return;
+        }
         if (member.Header.PacketId == 21)
         {
             CaptureUpdateBlockPayload(member.Payload);

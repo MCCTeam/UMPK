@@ -496,7 +496,7 @@ public sealed class BedrockItemStackOwnershipTests
         Assert.Equal(0, session.PendingItemStackReconciliationCount);
     }
 
-    private sealed class SendGate(bool afterTransfer = false, bool afterGrant = false, bool inlineCancellation = false)
+    internal sealed class SendGate(bool afterTransfer = false, bool afterGrant = false, bool inlineCancellation = false)
     {
         private readonly TaskCompletionSource _entered = new(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource _allowed = new(inlineCancellation ? TaskCreationOptions.None : TaskCreationOptions.RunContinuationsAsynchronously);
@@ -517,7 +517,7 @@ public sealed class BedrockItemStackOwnershipTests
         }
     }
 
-    private sealed class GatedTransport : IMessageConnection, IMessageSendReservationProvider
+    internal sealed class GatedTransport : IMessageConnection, IMessageSendReservationProvider
     {
         private readonly IMessageConnection _inner;
         private readonly IMessageSendReservationProvider _reservations;
@@ -626,11 +626,11 @@ public sealed class BedrockItemStackOwnershipTests
         }
     }
 
-    private sealed class OwnershipSession(TestMessageConnectionPair pair, BedrockFakePeer peer, GatedTransport transport, BedrockClient client, BedrockClientSession session) : IAsyncDisposable
+    internal sealed class OwnershipSession(TestMessageConnectionPair pair, BedrockFakePeer peer, GatedTransport transport, BedrockClient client, BedrockClientSession session) : IAsyncDisposable
     {
         internal BedrockClientSession Session { get; } = session;
         internal GatedTransport Transport { get; } = transport;
-        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct)
+        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null)
         {
             TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
             var transport = new GatedTransport(pair.First);
@@ -650,7 +650,7 @@ public sealed class BedrockItemStackOwnershipTests
             var fixture = new OwnershipSession(pair, peer, transport, client, session);
             try
             {
-                await CompleteJoinAsync(peer, session, ct);
+                await CompleteJoinAsync(peer, session, ct, registries);
                 BedrockItemInstance[] items = Enumerable.Repeat(Air(), 36).ToArray();
                 items[0] = new BedrockItemInstance(306, 5, 0, 7, 0, []);
                 await peer.SendAsync(49, BedrockInventoryCodecs.Encode(new BedrockInventoryContentPacket(0, items, s_inventoryAddress, Air())), ct);
@@ -673,6 +673,7 @@ public sealed class BedrockItemStackOwnershipTests
             }
             throw new InvalidOperationException("The controlled transport did not deliver the inventory request.");
         }
+        internal ValueTask SendAsync(int packetId, byte[] payload, CancellationToken ct) => peer.SendAsync(packetId, payload, ct);
         internal async Task SendCloseAsync(CancellationToken ct)
         {
             await peer.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(1, 0, true)), ct);
@@ -710,7 +711,7 @@ public sealed class BedrockItemStackOwnershipTests
             await Task.Delay(10, ct);
     }
 
-    private static async Task CompleteJoinAsync(BedrockFakePeer peer, BedrockClientSession session, CancellationToken ct)
+    private static async Task CompleteJoinAsync(BedrockFakePeer peer, BedrockClientSession session, CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries)
     {
         Assert.Equal(193, (await peer.ReceiveAsync(ct)).PacketId);
         await peer.SendAsync(143, BedrockBootstrapCodecs.Encode(new NetworkSettingsPacket(1, BedrockCompressionAlgorithm.Deflate, false, 0, 0f)), ct);
@@ -727,12 +728,14 @@ public sealed class BedrockItemStackOwnershipTests
         pig.PutString("id", "minecraft:pig");
         var identifiers = new NbtCompound();
         identifiers.Put("idlist", new NbtList(NbtTagType.Compound) { pig });
-        await peer.SendBatchAsync([
-            (162, BedrockItemRegistryCodec.Encode(new BedrockItemRegistryPacket([new BedrockItemState("minecraft:diamond", 306, false, 2, new NbtCompound())]))),
-            (119, BedrockJoinCodecs.Encode(new AvailableEntityIdentifiersPacket(identifiers))),
-            (122, BedrockJoinCodecs.Encode(new BiomeDefinitionListPacket(2U, [1, 2, 3]))),
-            (11, BedrockJoinCodecs.Encode(new StartGamePacket(456L, 789UL, BedrockStartGameTrailerCodecs.EncodeTrailer(JoinTrailer())))),
-        ], ct);
+        registries ??= [new BedrockItemRegistryPacket([new BedrockItemState("minecraft:diamond", 306, false, 2, new NbtCompound())])];
+        var bootstrap = new List<(int PacketId, byte[] Payload)>();
+        foreach (BedrockItemRegistryPacket registry in registries)
+            bootstrap.Add((162, BedrockItemRegistryCodec.Encode(registry)));
+        bootstrap.Add((119, BedrockJoinCodecs.Encode(new AvailableEntityIdentifiersPacket(identifiers))));
+        bootstrap.Add((122, BedrockJoinCodecs.Encode(new BiomeDefinitionListPacket(2U, [1, 2, 3]))));
+        bootstrap.Add((11, BedrockJoinCodecs.Encode(new StartGamePacket(456L, 789UL, BedrockStartGameTrailerCodecs.EncodeTrailer(JoinTrailer())))));
+        await peer.SendBatchAsync(bootstrap, ct);
         await peer.SendAsync(2, BedrockBootstrapCodecs.Encode(new PlayStatusPacket(PlayStatusCode.PlayerSpawn)), ct);
         Assert.Equal(113, (await peer.ReceiveAsync(ct)).PacketId);
         byte[] terrain = new byte[26];

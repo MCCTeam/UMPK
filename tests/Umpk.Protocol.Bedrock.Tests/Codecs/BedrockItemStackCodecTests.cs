@@ -111,7 +111,7 @@ public sealed class BedrockItemStackCodecTests
                     new BedrockItemStackAction(
                         BedrockItemStackActionType.CraftRecipeAuto,
                         11,
-                        new BedrockCraftRecipeAutoPayload(46, 1, [new BedrockRecipeIngredient(BedrockRecipeIngredientKind.ItemTag, 3, null, null, null, null, "minecraft:planks")])),
+                        new BedrockCraftRecipeAutoPayload(46, 1, [new BedrockRecipeIngredient(BedrockRecipeIngredientKind.ItemTag, 3, null, null, null, null, "minecraft:planks", 3)])),
                     new BedrockItemStackAction(BedrockItemStackActionType.CraftCreative, 12, new BedrockCraftCreativePayload(7, 1)),
                     new BedrockItemStackAction(BedrockItemStackActionType.Optional, 13, new BedrockOptionalPayload(8, -1)),
                     new BedrockItemStackAction(BedrockItemStackActionType.CraftGrindstoneRequest, 14, new BedrockCraftGrindstoneRequestPayload(9, 1, 2)),

@@ -117,6 +117,12 @@ internal sealed class BedrockRecipeIngredient : IEquatable<BedrockRecipeIngredie
         Tag = tag;
     }
 
+    internal BedrockRecipeIngredient(BedrockRecipeIngredientKind kind, byte legacyType, string? name, int? metadata, string? expression, short? version, string? tag, ushort count)
+        : this(kind, legacyType, name, metadata, expression, version, tag)
+    {
+        Count = count;
+    }
+
     internal BedrockRecipeIngredientKind Kind { get; }
 
     internal byte LegacyType { get; }
@@ -131,6 +137,9 @@ internal sealed class BedrockRecipeIngredient : IEquatable<BedrockRecipeIngredie
 
     internal string? Tag { get; }
 
+    // The legacy constructor leaves the required wire count unknown; encoding must not invent a default.
+    internal ushort? Count { get; }
+
     public bool Equals(BedrockRecipeIngredient? other) =>
         other is not null
         && Kind == other.Kind
@@ -139,11 +148,12 @@ internal sealed class BedrockRecipeIngredient : IEquatable<BedrockRecipeIngredie
         && Metadata == other.Metadata
         && Expression == other.Expression
         && Version == other.Version
-        && Tag == other.Tag;
+        && Tag == other.Tag
+        && Count == other.Count;
 
     public override bool Equals(object? obj) => Equals(obj as BedrockRecipeIngredient);
 
-    public override int GetHashCode() => HashCode.Combine((int)Kind, LegacyType, Name, Tag);
+    public override int GetHashCode() => HashCode.Combine((int)Kind, LegacyType, Name, Tag, Count);
 }
 
 internal enum BedrockResultDescriptorKind
@@ -684,6 +694,7 @@ internal static class BedrockItemStackCodecs
 
     private static void WriteIngredient(BedrockWriter writer, BedrockRecipeIngredient ingredient)
     {
+        ushort count = ingredient.Count ?? throw new BedrockCodecException("The recipe ingredient count is missing.");
         writer.WriteUInt32VarInt(checked((uint)ingredient.Kind));
         writer.WriteByte(ingredient.LegacyType);
         switch (ingredient.Kind)
@@ -704,6 +715,7 @@ internal static class BedrockItemStackCodecs
             default:
                 throw new BedrockCodecException($"The recipe ingredient kind {(int)ingredient.Kind} is not supported.");
         }
+        writer.WriteUInt16LittleEndian(count);
     }
 
     private static BedrockRecipeIngredient ReadIngredient(ref BedrockReader reader)
@@ -715,16 +727,16 @@ internal static class BedrockItemStackCodecs
         switch ((BedrockRecipeIngredientKind)kind)
         {
             case BedrockRecipeIngredientKind.Invalid:
-                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Invalid, legacyType, null, null, null, null, null);
+                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Invalid, legacyType, null, null, null, null, null, reader.ReadUInt16LittleEndian());
             case BedrockRecipeIngredientKind.Name:
-                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Name, legacyType, reader.ReadString(), reader.ReadZigZag32(), null, null, null);
+                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Name, legacyType, reader.ReadString(), reader.ReadZigZag32(), null, null, null, reader.ReadUInt16LittleEndian());
             case BedrockRecipeIngredientKind.Molang:
                 {
                     string expression = reader.ReadString();
-                    return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Molang, legacyType, null, null, expression, reader.ReadInt16LittleEndian(), null);
+                    return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.Molang, legacyType, null, null, expression, reader.ReadInt16LittleEndian(), null, reader.ReadUInt16LittleEndian());
                 }
             case BedrockRecipeIngredientKind.ItemTag:
-                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.ItemTag, legacyType, null, null, null, null, reader.ReadString());
+                return new BedrockRecipeIngredient(BedrockRecipeIngredientKind.ItemTag, legacyType, null, null, null, null, reader.ReadString(), reader.ReadUInt16LittleEndian());
             default:
                 throw new BedrockCodecException($"The recipe ingredient kind {kind} is not supported.");
         }

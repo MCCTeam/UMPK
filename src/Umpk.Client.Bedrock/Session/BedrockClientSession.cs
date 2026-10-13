@@ -103,6 +103,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     private readonly List<BedrockInventorySlotPacket> _capturedInventorySlots = [];
     private readonly List<byte[]> _capturedInventoryContentPayloads = [];
     private readonly List<byte[]> _capturedInventorySlotPayloads = [];
+    private readonly List<byte[]> _capturedNormalInventoryOpenPayloads = [];
     private readonly List<BedrockContainerOpenPacket> _capturedContainerOpens = [];
     private readonly List<BedrockContainerClosePacket> _capturedContainerCloses = [];
     private readonly List<BedrockPlayerHotbarPacket> _capturedHotbars = [];
@@ -316,6 +317,16 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         {
             lock (_gate)
                 return _capturedCreativeContentPayloads.Select(static payload => (byte[])payload.Clone()).ToArray();
+        }
+    }
+
+    /// <summary>Gets bounded defensive copies of actual successful normal inventory opening payloads when inventory capture is enabled.</summary>
+    internal IReadOnlyList<byte[]> CapturedNormalInventoryOpenPayloads
+    {
+        get
+        {
+            lock (_gate)
+                return _capturedNormalInventoryOpenPayloads.Select(static payload => (byte[])payload.Clone()).ToArray();
         }
     }
 
@@ -829,6 +840,246 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Validates the physical player endpoints and retained data shape before any request identity or transport ownership is allocated.</summary>
+    // Per-instance test barrier; normal production sessions leave it unset.
+    internal Action? BeforeOrdinaryMainInventoryRetention { get; set; }
+
+    private OrdinaryNormalInventoryOwner? _ordinaryNormalInventoryOwner;
+    private OrdinaryMainInventoryOperation? _ordinaryMainInventoryOperation;
+    private bool _ordinaryRegistryRetired;
+    private static readonly TimeSpan s_ordinaryInventoryOpeningTimeout = TimeSpan.FromSeconds(15);
+
+    private sealed record OrdinaryInventoryContext(BedrockRegistrySnapshot Registry, int InventoryGeneration, int TrackerGeneration, int WindowGeneration, int WorldGeneration, int ActorGeneration, long InitialEpoch, ulong SelfRuntimeId);
+    private sealed record OrdinaryNormalInventoryOwner(BedrockOpenContainer Window, object ScreenLifetime, OrdinaryInventoryContext Context);
+    private enum OrdinaryInventoryRetirement { None, Caller, Deadline, Boundary }
+    private sealed class OrdinaryMainInventoryOperation(OrdinaryInventoryContext context, CancellationToken caller)
+    {
+        internal OrdinaryInventoryContext Context { get; } = context;
+        internal CancellationToken Caller { get; } = caller;
+        internal CancellationTokenSource Cancellation { get; } = new();
+        internal TaskCompletionSource WindowReady { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        internal bool Eligible { get; set; } = true;
+        internal bool Opening { get; set; } = true;
+        internal bool OpenInterruptedByNormalWindow { get; set; }
+        internal OrdinaryInventoryRetirement Retirement { get; set; }
+        internal OrdinaryNormalInventoryOwner? BoundOwner { get; set; }
+        internal int? RequestId { get; set; }
+    }
+    private sealed class NormalInventoryOpenInterruptedException(Exception inner) : Exception("A real current normal window retired the ungranted owned opener.", inner);
+
+    // These stamps are sampled only under the Session gate. A window getter cannot mint normal ownership.
+    private OrdinaryInventoryContext CurrentOrdinaryInventoryContext() => new(PublishedRegistries, _inventory.Generation, _itemStackTracker.Generation, _containerWindows.Generation, _world.WorldGeneration, _actors.WorldGeneration, _initialLoadingEpoch, _snapshot.LocalRuntimeEntityId);
+    private bool IsOrdinaryInventoryContextCurrent(OrdinaryInventoryContext context) => !_disposed && !_inventoryTornDown && !_itemStackEgressRetired
+        && !_ordinaryRegistryRetired && !_initialLoadingRetired && !_lifetime.Termination.IsCompleted && !_lifetime.Token.IsCancellationRequested
+        && _snapshot.IsReady && _initialLoadingComplete && _initialLoadingStarted && _initialLoadingEndTransferred
+        && context.SelfRuntimeId != 0 && context.Registry.Generation > 0
+        && ReferenceEquals(context.Registry, PublishedRegistries) && context.InventoryGeneration == _inventory.Generation
+        && context.TrackerGeneration == _itemStackTracker.Generation && context.InventoryGeneration == context.TrackerGeneration
+        && context.WindowGeneration == _containerWindows.Generation && context.WorldGeneration == _world.WorldGeneration
+        && context.ActorGeneration == _actors.WorldGeneration && context.InitialEpoch == _initialLoadingEpoch && context.SelfRuntimeId == _snapshot.LocalRuntimeEntityId;
+
+    private OrdinaryNormalInventoryOwner? GetCurrentOrdinaryNormalOwner() => _ordinaryNormalInventoryOwner is { } owner
+        && IsOrdinaryInventoryContextCurrent(owner.Context) && ReferenceEquals(owner.ScreenLifetime, _creativeScreenLifetime)
+        && _containerWindows.GetWindow(owner.Window.WindowId) == owner.Window ? owner : null;
+
+    private bool IsOrdinaryMainInventoryOwnerCurrent(OrdinaryMainInventoryOperation operation) => ReferenceEquals(_ordinaryMainInventoryOperation, operation)
+        && operation.Eligible && IsOrdinaryInventoryContextCurrent(operation.Context)
+        && operation.BoundOwner is { } bound && ReferenceEquals(bound, GetCurrentOrdinaryNormalOwner());
+
+    private void RequireNoOrdinaryMainInventoryOperation(OrdinaryMainInventoryOperation? operation = null)
+    {
+        if (_ordinaryMainInventoryOperation is { } active && !ReferenceEquals(active, operation))
+            throw new InvalidOperationException("An ordinary main inventory workflow already owns inventory submission.");
+    }
+    private void RequireOrdinaryMainInventoryOwner(OrdinaryMainInventoryOperation? operation)
+    {
+        RequireNoOrdinaryMainInventoryOperation(operation);
+        if (operation is not null && !IsOrdinaryMainInventoryOwnerCurrent(operation))
+            ThrowOrdinaryMainInventoryRetirement(operation);
+    }
+    private void ThrowOrdinaryMainInventoryRetirement(OrdinaryMainInventoryOperation operation, Exception? cause = null)
+    {
+        if (_disposed || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
+            throw new BedrockSessionException(_snapshot.Termination ?? new(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, cause));
+        if (operation.Retirement == OrdinaryInventoryRetirement.Deadline)
+            throw new TimeoutException("The current normal inventory window was not confirmed within the opening deadline; the opening may already have transferred.", cause);
+        if (operation.Caller.IsCancellationRequested)
+            throw new OperationCanceledException("The ordinary main inventory workflow was cancelled before transport capacity was granted.", cause, operation.Caller);
+        throw new InvalidOperationException("The ordinary main inventory workflow was retired before transport capacity was granted.", cause);
+    }
+
+    private void CancelOrdinaryMainInventoryOperation(OrdinaryMainInventoryOperation operation, OrdinaryInventoryRetirement reason)
+    {
+        lock (_gate)
+        {
+            if (!ReferenceEquals(_ordinaryMainInventoryOperation, operation) || !operation.Eligible || (reason == OrdinaryInventoryRetirement.Deadline && !operation.Opening))
+                return;
+            // Eligibility is retired before cancellation can resume an inline transport continuation.
+            operation.Eligible = false;
+            operation.Retirement = reason;
+            operation.Cancellation.Cancel();
+        }
+    }
+    private void RetireOrdinaryMainInventoryOperation()
+    {
+        _ordinaryNormalInventoryOwner = null;
+        if (_ordinaryMainInventoryOperation is { } operation)
+            CancelOrdinaryMainInventoryOperation(operation, OrdinaryInventoryRetirement.Boundary);
+    }
+
+    private void PublishOrdinaryNormalOwner(BedrockContainerOpenPacket packet)
+    {
+        _ordinaryNormalInventoryOwner = null;
+        OrdinaryInventoryContext context = CurrentOrdinaryInventoryContext();
+        if (packet.WindowType == -1 && packet.WindowId is >= 1 and <= 99 && packet.EntityUniqueId == -1
+            && _creativeScreenLifetime is { } screen && IsOrdinaryInventoryContextCurrent(context)
+            && _containerWindows.GetWindow(packet.WindowId) is { } registered)
+            _ordinaryNormalInventoryOwner = new(registered, screen, context);
+        if (_ordinaryMainInventoryOperation is not { } operation)
+            return;
+        if (!operation.Eligible)
+            return;
+        if (operation.BoundOwner is not null || GetCurrentOrdinaryNormalOwner() is null || !IsOrdinaryInventoryContextCurrent(operation.Context))
+            CancelOrdinaryMainInventoryOperation(operation, OrdinaryInventoryRetirement.Boundary);
+        else
+        {
+            operation.OpenInterruptedByNormalWindow = true;
+            operation.WindowReady.TrySetResult();
+        }
+    }
+
+    private BedrockInventorySnapshot ValidateOrdinaryInventoryOperation(BedrockItemStackActionType type, BedrockContainerAddress address, byte source, byte destination, byte count)
+    {
+        BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(address, source, destination);
+        BedrockItemInstance first = snapshot.Items[source], second = snapshot.Items[destination];
+        if (first.NetworkId == 0 || first.Count == 0 || first.StackNetworkId is not > 0)
+            throw new InvalidOperationException("The inventory request source requires a nonempty authoritative stack identity.");
+        if (type == BedrockItemStackActionType.Swap)
+        {
+            if (second.NetworkId == 0 || second.Count == 0 || second.StackNetworkId is not > 0)
+                throw new InvalidOperationException("The inventory swap destination requires a nonempty authoritative stack identity.");
+        }
+        else
+        {
+            if (count == 0 || count > first.Count)
+                throw new InvalidOperationException("The inventory request count must fit the authoritative source.");
+            if (second.NetworkId != 0 || second.Count != 0)
+            {
+                if (second.NetworkId == 0 || second.Count == 0 || second.StackNetworkId is not > 0)
+                    throw new InvalidOperationException("The inventory destination requires consistent authoritative stack identity.");
+                if ((int)second.Count + count > byte.MaxValue || !snapshot.HasCompatibleItemData(source, destination))
+                    throw new InvalidOperationException("The inventory destination item or response count is unsupported.");
+            }
+        }
+        return snapshot;
+    }
+
+    private ValueTask<BedrockItemStackSubmitResult> SendOrdinaryInventoryOperationAsync(BedrockItemStackActionType type, BedrockContainerAddress address, byte source, byte destination, byte count, CancellationToken cancellationToken, OrdinaryMainInventoryOperation? operation) => type switch
+    {
+        BedrockItemStackActionType.Take => SubmitInventoryTakeCoreAsync(address, source, destination, count, cancellationToken, operation),
+        BedrockItemStackActionType.Place => SubmitInventoryPlaceCoreAsync(address, source, destination, count, cancellationToken, operation),
+        BedrockItemStackActionType.Swap => SubmitInventorySwapCoreAsync(address, source, destination, cancellationToken, operation),
+        _ => throw new InvalidOperationException("The ordinary inventory operation is unsupported."),
+    };
+
+    private async ValueTask<BedrockItemStackSubmitResult> SubmitOrdinaryInventoryAsync(BedrockItemStackActionType type, BedrockContainerAddress address, byte source, byte destination, byte count, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (source <= 8 && destination <= 8)
+            return await SendOrdinaryInventoryOperationAsync(type, address, source, destination, count, cancellationToken, null).ConfigureAwait(false);
+        OrdinaryMainInventoryOperation operation;
+        lock (_gate)
+        {
+            RequireNoObservedOakDropSend();
+            RequireNoOrdinaryMainInventoryOperation();
+            _ = ValidateOrdinaryInventoryOperation(type, address, source, destination, count);
+            OrdinaryInventoryContext context = CurrentOrdinaryInventoryContext();
+            if (!IsOrdinaryInventoryContextCurrent(context))
+                throw new InvalidOperationException("The ordinary main inventory workflow requires the current ready player life and registry.");
+            if (_activeInventorySends != 0 || _normalInventoryOpenAdmission is not null || _itemStackTracker.PendingCount != 0
+                || _itemStackReconciliations.Count != 0 || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0 || _actionCoordinator.ClaimedCount != 0)
+                throw new InvalidOperationException("The ordinary main inventory workflow requires inventory ownership without an older operation.");
+            cancellationToken.ThrowIfCancellationRequested();
+            operation = new(context, cancellationToken) { BoundOwner = GetCurrentOrdinaryNormalOwner() };
+            operation.Opening = operation.BoundOwner is null;
+            _ordinaryMainInventoryOperation = operation;
+            BeginInventorySend();
+        }
+        CancellationTokenRegistration callerRegistration = default;
+        ITimer? deadline = null;
+        try
+        {
+            callerRegistration = cancellationToken.Register(() => CancelOrdinaryMainInventoryOperation(operation, OrdinaryInventoryRetirement.Caller));
+            if (operation.Opening)
+            {
+                deadline = _settings.TimeProvider.CreateTimer(_ => CancelOrdinaryMainInventoryOperation(operation, OrdinaryInventoryRetirement.Deadline), null, s_ordinaryInventoryOpeningTimeout, Timeout.InfiniteTimeSpan);
+                try
+                {
+                    _ = await SubmitNormalInventoryOpenCoreAsync(operation.Cancellation.Token, operation).ConfigureAwait(false);
+                }
+                catch (NormalInventoryOpenInterruptedException)
+                {
+                    // Only a typed real-window interruption permits continuation without a transferred33.
+                    lock (_gate)
+                    {
+                        if (!operation.Eligible || GetCurrentOrdinaryNormalOwner() is null)
+                            ThrowOrdinaryMainInventoryRetirement(operation);
+                    }
+                }
+                await operation.WindowReady.Task.WaitAsync(operation.Cancellation.Token).ConfigureAwait(false);
+            }
+            lock (_gate)
+            {
+                if (!operation.Eligible || !IsOrdinaryInventoryContextCurrent(operation.Context))
+                    ThrowOrdinaryMainInventoryRetirement(operation);
+                operation.BoundOwner = GetCurrentOrdinaryNormalOwner();
+                if (operation.BoundOwner is null)
+                    throw new InvalidOperationException("The actual current normal inventory window is unconfirmed.");
+                operation.Opening = false;
+                _ = ValidateOrdinaryInventoryOperation(type, address, source, destination, count);
+            }
+            deadline?.Dispose();
+            deadline = null;
+            // Re-sample the current receipt/identity in the existing builder, then admit under the same Session gate.
+            return await SendOrdinaryInventoryOperationAsync(type, address, source, destination, count, operation.Cancellation.Token, operation).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException exception) when (operation.Cancellation.IsCancellationRequested)
+        {
+            lock (_gate)
+                ThrowOrdinaryMainInventoryRetirement(operation, exception);
+            throw;
+        }
+        finally
+        {
+            deadline?.Dispose();
+            callerRegistration.Dispose();
+            lock (_gate)
+            {
+                operation.Eligible = false;
+                if (ReferenceEquals(_ordinaryMainInventoryOperation, operation))
+                    _ordinaryMainInventoryOperation = null;
+            }
+            operation.Cancellation.Dispose();
+            EndInventorySend();
+        }
+    }
+
+    private static bool HasOrdinaryPlayerMainEndpoint(BedrockItemStackRequestPacket packet)
+    {
+        static bool Main(BedrockStackRequestSlot slot) => slot.Container.DynamicContainerId is null
+            && slot.Container.ContainerId is 28 or 29 && slot.Slot is >= 9 and <= 35;
+        foreach (BedrockItemStackRequest request in packet.Requests)
+        {
+            foreach (BedrockItemStackAction action in request.Actions)
+            {
+                if (action.Payload is BedrockTakePayload take && (Main(take.Source) || Main(take.Destination))
+                    || action.Payload is BedrockPlacePayload place && (Main(place.Source) || Main(place.Destination))
+                    || action.Payload is BedrockSwapPayload swap && (Main(swap.Source) || Main(swap.Destination)))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     private BedrockInventorySnapshot GetPlayerInventoryRequestSnapshot(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot)
     {
         if (contentAddress.WindowId != 0 || contentAddress.ContainerId != 0 || contentAddress.DynamicContainerId.HasValue)
@@ -858,8 +1109,11 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Validates one player inventory place against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
-    internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryPlaceAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known. Main endpoints reuse a current actual normal window or transfer one opening and wait up to 15 managed seconds for its actual normal event; caller and lifecycle cancellation retire that wait. Slot authority is sampled again after opening. The returned result means transferred147, while accepted148 and its receipt-guarded publication remain separate. Response-byte representability is a support boundary; unknown item capacity remains server-decided.</remarks>
+    internal ValueTask<BedrockItemStackSubmitResult> SubmitInventoryPlaceAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
+        => SubmitOrdinaryInventoryAsync(BedrockItemStackActionType.Place, contentAddress, sourceSlot, destinationSlot, count, cancellationToken);
+
+    private async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryPlaceCoreAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken, OrdinaryMainInventoryOperation? operation)
     {
         cancellationToken.ThrowIfCancellationRequested();
         BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
@@ -887,7 +1141,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             destinationStackId = destinationItem.StackNetworkId.Value;
         }
 
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot, operation);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -911,12 +1165,15 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
+        return await SendItemStackRequestCoreAsync(packet, requestId, generation, cancellationToken, snapshot, null, null, operation).ConfigureAwait(false);
     }
 
     /// <summary>Validates one player inventory take against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
-    internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryTakeAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known. Main endpoints reuse a current actual normal window or transfer one opening and wait up to 15 managed seconds for its actual normal event; caller and lifecycle cancellation retire that wait. Slot authority is sampled again after opening. The returned result means transferred147, while accepted148 and its receipt-guarded publication remain separate. Response-byte representability is a support boundary; unknown item capacity remains server-decided.</remarks>
+    internal ValueTask<BedrockItemStackSubmitResult> SubmitInventoryTakeAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken = default)
+        => SubmitOrdinaryInventoryAsync(BedrockItemStackActionType.Take, contentAddress, sourceSlot, destinationSlot, count, cancellationToken);
+
+    private async ValueTask<BedrockItemStackSubmitResult> SubmitInventoryTakeCoreAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, byte count, CancellationToken cancellationToken, OrdinaryMainInventoryOperation? operation)
     {
         cancellationToken.ThrowIfCancellationRequested();
         BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
@@ -944,7 +1201,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             destinationStackId = destinationItem.StackNetworkId.Value;
         }
 
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot, operation);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -968,12 +1225,15 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
+        return await SendItemStackRequestCoreAsync(packet, requestId, generation, cancellationToken, snapshot, null, null, operation).ConfigureAwait(false);
     }
 
     /// <summary>Validates one player inventory swap against authoritative content, admits the single outstanding client request, and sends the protocol-2169 packet.</summary>
-    /// <remarks>Physical player slots 0 through 35 are supported when present and known; response-byte representability is a support boundary, while unknown item capacity remains server-decided. The request remains claimed until its response or a failed send releases it.</remarks>
-    internal async ValueTask<BedrockItemStackSubmitResult> SubmitInventorySwapAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, CancellationToken cancellationToken = default)
+    /// <remarks>Physical player slots 0 through 35 are supported when present and known. Main endpoints reuse a current actual normal window or transfer one opening and wait up to 15 managed seconds for its actual normal event; caller and lifecycle cancellation retire that wait. Slot authority is sampled again after opening. The returned result means transferred147, while accepted148 and its receipt-guarded publication remain separate. Response-byte representability is a support boundary; unknown item capacity remains server-decided.</remarks>
+    internal ValueTask<BedrockItemStackSubmitResult> SubmitInventorySwapAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, CancellationToken cancellationToken = default)
+        => SubmitOrdinaryInventoryAsync(BedrockItemStackActionType.Swap, contentAddress, sourceSlot, destinationSlot, 0, cancellationToken);
+
+    private async ValueTask<BedrockItemStackSubmitResult> SubmitInventorySwapCoreAsync(BedrockContainerAddress contentAddress, byte sourceSlot, byte destinationSlot, CancellationToken cancellationToken, OrdinaryMainInventoryOperation? operation)
     {
         cancellationToken.ThrowIfCancellationRequested();
         BedrockInventorySnapshot snapshot = GetPlayerInventoryRequestSnapshot(contentAddress, sourceSlot, destinationSlot);
@@ -988,7 +1248,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         if (destinationItem.StackNetworkId is not > 0)
             throw new InvalidOperationException("The inventory request destination slot has no authoritative stack identity.");
 
-        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot);
+        (int requestId, int generation) = TryAdmitItemStackRequest(snapshot, sourceSlot, destinationSlot, operation);
 
         BedrockItemStackRequestPacket packet;
         try
@@ -1012,7 +1272,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             throw new InvalidOperationException("The inventory request path is retired after a lifecycle boundary until reconnect.");
         }
 
-        return await SendItemStackRequestAsync(packet, requestId, generation, cancellationToken, snapshot).ConfigureAwait(false);
+        return await SendItemStackRequestCoreAsync(packet, requestId, generation, cancellationToken, snapshot, null, null, operation).ConfigureAwait(false);
     }
 
     /// <summary>Retains and emits only a supplied observed oak-planks Take64 request against actual registry, catalog, normal screen and empty UI cursor owners.</summary>
@@ -1025,6 +1285,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         BedrockCreativeCursorReconciliation retained;
         lock (_gate)
         {
+            RequireNoOrdinaryMainInventoryOperation();
             RequireNoObservedOakDropSend();
             if (!_snapshot.IsReady || _disposed || _inventoryTornDown || _itemStackEgressRetired)
                 throw new InvalidOperationException("The observed creative cursor request requires a live ready inventory path.");
@@ -1069,6 +1330,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         BedrockCursorPlaceReconciliation retained;
         lock (_gate)
         {
+            RequireNoOrdinaryMainInventoryOperation();
             RequireNoObservedOakDropSend();
             if (!_snapshot.IsReady || !_initialLoadingComplete || _initialLoadingRetired || _disposed || _inventoryTornDown || _itemStackEgressRetired
                 || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _activeInventorySends != 0)
@@ -1228,11 +1490,12 @@ internal sealed class BedrockClientSession : IAsyncDisposable
 
     /// <summary>Binds the retirement flag, coordinator claim, and tracker registration under the session gate and returns the never-reused odd negative identifier with its admitted generation.</summary>
     /// <remarks>The shared session gate prevents a lifecycle or close boundary from slipping between those checks, and only one inventory request stays outstanding while issued identifiers are never reused.</remarks>
-    private (int RequestId, int Generation) TryAdmitItemStackRequest(BedrockInventorySnapshot before, byte sourceSlot, byte destinationSlot)
+    private (int RequestId, int Generation) TryAdmitItemStackRequest(BedrockInventorySnapshot before, byte sourceSlot, byte destinationSlot, OrdinaryMainInventoryOperation? operation = null)
     {
         lock (_gate)
         {
             RequireNoObservedOakDropSend();
+            RequireOrdinaryMainInventoryOwner(operation);
             if (_disposed || _inventoryTornDown || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested)
                 throw new InvalidOperationException("The inventory request requires a live session.");
             if (!_snapshot.IsReady)
@@ -1256,6 +1519,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 throw new InvalidOperationException($"The inventory request {requestId} could not be registered. Only one inventory request stays outstanding.");
             }
 
+            if (operation is not null)
+                operation.RequestId = requestId;
             return (requestId, generation);
         }
     }
@@ -1302,6 +1567,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         ObservedOakDropSend send;
         lock (_gate)
         {
+            RequireNoOrdinaryMainInventoryOperation();
             if (_disposed || _inventoryTornDown || _itemStackEgressRetired || _initialLoadingRetired
                 || _lifetime.Termination.IsCompleted || _lifetime.Token.IsCancellationRequested
                 || !_snapshot.IsReady || !_initialLoadingComplete || !_initialLoadingStarted || !_initialLoadingEndTransferred
@@ -1467,11 +1733,52 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Sends a request whose action ID and response tracker entry were already admitted, releasing both when the connection does not take ownership of the packet.</summary>
-    internal async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null, BedrockCreativeCursorReconciliation? creative = null, BedrockCursorPlaceReconciliation? cursorPlace = null)
+    internal ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before = null, BedrockCreativeCursorReconciliation? creative = null, BedrockCursorPlaceReconciliation? cursorPlace = null)
+        => SendItemStackRequestCoreAsync(packet, requestId, generation, cancellationToken, before, creative, cursorPlace, null);
+
+    private async ValueTask<BedrockItemStackSubmitResult> SendItemStackRequestCoreAsync(BedrockItemStackRequestPacket packet, int requestId, int generation, CancellationToken cancellationToken, BedrockInventorySnapshot? before, BedrockCreativeCursorReconciliation? creative, BedrockCursorPlaceReconciliation? cursorPlace, OrdinaryMainInventoryOperation? operation)
     {
         CancellationTokenSource admissionCancellation;
         lock (_gate)
         {
+            // A duplicate numeric sender cannot release its incumbent's registration or claim.
+            if (_itemStackAdmissions.ContainsKey(requestId))
+                throw new InvalidOperationException("The inventory request already has an active send.");
+            if (_itemStackReconciliations.ContainsKey(requestId)
+                || (_creativeCursorReconciliations.TryGetValue(requestId, out BedrockCreativeCursorReconciliation? retainedCreative) && !ReferenceEquals(retainedCreative, creative))
+                || (_cursorPlaceReconciliations.TryGetValue(requestId, out BedrockCursorPlaceReconciliation? retainedCursor) && !ReferenceEquals(retainedCursor, cursorPlace)))
+                throw new InvalidOperationException("The inventory request already has an owned send or response retention.");
+            if (_ordinaryMainInventoryOperation is { } activeOperation && !ReferenceEquals(activeOperation, operation))
+            {
+                // This pre-admission refusal owns no registration; the raw caller retains its own claim.
+                throw new InvalidOperationException("An ordinary main inventory workflow already owns inventory submission.");
+            }
+            if (operation is not null && !IsOrdinaryMainInventoryOwnerCurrent(operation))
+            {
+                ReleaseItemStackRequest(requestId, generation);
+                ThrowOrdinaryMainInventoryRetirement(operation);
+            }
+            if (operation is null && creative is null && cursorPlace is null && HasOrdinaryPlayerMainEndpoint(packet))
+            {
+                if (before is { } unqualified)
+                {
+                    // Preserve the existing malformed-retained-input cleanup contract after protecting every incumbent.
+                    try
+                    {
+                        BedrockItemStackReconciliation validation = BedrockItemStackReconciliation.Create(unqualified, packet, generation);
+                        if (!_inventory.MatchesSnapshot(unqualified, validation.AffectedSlots, generation))
+                            throw new InvalidOperationException("The retained inventory request became stale before sending.");
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        ReleaseItemStackRequest(requestId, generation);
+                        throw;
+                    }
+                }
+                // A valid before snapshot proves content, not a private workflow or actual current normal window.
+                throw new InvalidOperationException("Player main inventory requests require the owned Take, Place or Swap workflow.");
+            }
+
             if (_observedOakDropSend is { } activeDrop)
             {
                 // A duplicate active raw sender keeps its incumbent registration; a numeric collision must not release Drop's claim.
@@ -1527,8 +1834,12 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             if (before is { } retained)
             {
                 BedrockItemStackReconciliation reconciliation = BedrockItemStackReconciliation.Create(retained, packet, generation);
+                if (operation is not null)
+                    BeforeOrdinaryMainInventoryRetention?.Invoke();
                 lock (_gate)
                 {
+                    if (operation is not null && !IsOrdinaryMainInventoryOwnerCurrent(operation))
+                        ThrowOrdinaryMainInventoryRetirement(operation);
                     if (_itemStackEgressRetired || _inventoryTornDown || generation != _itemStackTracker.Generation
                         || !_inventory.MatchesSnapshot(retained, reconciliation.AffectedSlots, generation))
                         throw new InvalidOperationException("The retained inventory request became stale before sending.");
@@ -1600,13 +1911,17 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     }
 
     /// <summary>Transfers the qualified normal-self inventory interaction and returns its actual target and payload, independently of any server screen event.</summary>
-    internal async ValueTask<(ulong TargetRuntimeId, byte[] OutboundPayload)> SubmitNormalInventoryOpenAsync(CancellationToken cancellationToken = default)
+    internal ValueTask<(ulong TargetRuntimeId, byte[] OutboundPayload)> SubmitNormalInventoryOpenAsync(CancellationToken cancellationToken = default)
+        => SubmitNormalInventoryOpenCoreAsync(cancellationToken, null);
+
+    private async ValueTask<(ulong TargetRuntimeId, byte[] OutboundPayload)> SubmitNormalInventoryOpenCoreAsync(CancellationToken cancellationToken, OrdinaryMainInventoryOperation? operation)
     {
         CancellationTokenSource admissionCancellation;
         ulong runtimeId;
         lock (_gate)
         {
             RequireNoObservedOakDropSend();
+            RequireNoOrdinaryMainInventoryOperation(operation);
             if (_disposed || _inventoryTornDown || _lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || _initialLoadingRetired)
                 throw new InvalidOperationException("The normal inventory opening requires a live initial player life and world.");
             if (!_snapshot.IsReady || !_initialLoadingComplete || !_initialLoadingStarted || !_initialLoadingEndTransferred)
@@ -1640,7 +1955,13 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             }
 
             // A granted token-free commit owns this result; no late screen or life event is reconstructed here.
-            RecordOutbound(33);
+            lock (_gate)
+            {
+                RecordOutbound(33);
+                if (_inventoryCaptureEnabled && payload.Length <= MaximumCapturedInventoryPayloadBytes
+                    && _capturedNormalInventoryOpenPayloads.Count < MaximumCapturedInventoryPackets)
+                    _capturedNormalInventoryOpenPayloads.Add((byte[])payload.Clone());
+            }
             return (runtimeId, (byte[])payload.Clone());
         }
         catch (OperationCanceledException exception) when (admissionCancellation.IsCancellationRequested)
@@ -1649,6 +1970,10 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             {
                 if (_lifetime.Token.IsCancellationRequested || _lifetime.Termination.IsCompleted || (_initialLoadingRetired && _initialLoadingRetirementScope == BedrockSessionScope.Session))
                     throw new BedrockSessionException(new BedrockTermination(BedrockSessionEndReason.Cancelled, BedrockSessionScope.Session, null, exception));
+                if (operation is not null && !operation.Eligible)
+                    ThrowOrdinaryMainInventoryRetirement(operation, exception);
+                if (operation is not null && operation.OpenInterruptedByNormalWindow && GetCurrentOrdinaryNormalOwner() is not null)
+                    throw new NormalInventoryOpenInterruptedException(exception);
                 if (cancellationToken.IsCancellationRequested)
                     throw new OperationCanceledException("The normal inventory opening was cancelled before transport capacity was granted.", exception, cancellationToken);
                 throw new InvalidOperationException("The normal inventory opening was retired before transport capacity was granted.", exception);
@@ -2473,6 +2798,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _creativeScreen = normal ? new(packet.WindowId, packet.WindowType, packet.X, packet.Y, packet.Z, packet.EntityUniqueId) : null;
             _creativeScreenLifetime = normal ? new object() : null;
             _containerWindows.NoteOpen(packet, _containerWindows.Generation);
+            PublishOrdinaryNormalOwner(packet);
             CancelNormalInventoryOpenAdmission();
         }
         RefreshSnapshot();
@@ -2484,25 +2810,27 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         // Close binds pending detection, pending clear, coordinator retirement, and egress retirement under the session gate so a concurrent submit cannot slip between them.
         lock (_gate)
         {
+            bool droppedPending = _itemStackTracker.PendingCount > 0;
+            if (droppedPending)
+                _itemStackEgressRetired = true;
             bool known = _containerWindows.TryClose(packet.WindowId, _containerWindows.Generation);
             _inventoryWindows.Remove(packet.WindowId);
             _inventory.RemoveWindow(packet.WindowId);
             if (packet.WindowId == 0)
                 RetireObservedOakDropOwner();
-            bool droppedPending = _itemStackTracker.PendingCount > 0;
-            if (_creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0)
-                RetireCreativeCursorQualification();
+            bool retireCreative = _creativeScreen?.WindowId == packet.WindowId || _creativeCursorReconciliations.Count != 0 || _cursorPlaceReconciliations.Count != 0;
             if (_creativeScreen?.WindowId == packet.WindowId)
             {
                 _creativeScreen = null;
                 _creativeScreenLifetime = null;
             }
+            RetireOrdinaryMainInventoryOperation();
+            if (retireCreative)
+                RetireCreativeCursorQualification();
             _itemStackTracker.ClearPending();
             CancelItemStackAdmissions();
             _itemStackReconciliations.Clear();
             _actionCoordinator.Invalidate();
-            if (droppedPending)
-                _itemStackEgressRetired = true;
             if (!known)
                 _duplicateContainerCloses++;
             CancelNormalInventoryOpenAdmission();
@@ -2730,6 +3058,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         // Lifecycle retirement holds the session gate across window retention, egress retirement, and every component invalidation so admission cannot interleave.
         lock (_gate)
         {
+            RetireOrdinaryMainInventoryOperation();
             List<int> doomedWindows = [];
             foreach ((int windowId, HashSet<BedrockContainerAddress> addresses) in _inventoryWindows)
             {
@@ -2758,6 +3087,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
     {
         lock (_gate)
         {
+            RetireOrdinaryMainInventoryOperation();
             if (_inventoryTornDown)
                 return;
             _inventoryTornDown = true;
@@ -2794,6 +3124,8 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             lock (_gate)
             {
                 // The post-Ready consumer does not publish replacement registry owners; qualification therefore remains retired until reconnect.
+                _ordinaryRegistryRetired = true;
+                RetireOrdinaryMainInventoryOperation();
                 _creativeRegistryRetired = true;
                 RetireCreativeCursorQualification();
             }
@@ -3771,6 +4103,7 @@ internal sealed class BedrockClientSession : IAsyncDisposable
             _initialLoadingRetired = true;
             _initialLoadingRetirementScope = scope;
             RetireObservedOakDropOwner();
+            RetireOrdinaryMainInventoryOperation();
             _playerAuthInputAdmissionLifetime.Cancel();
             _initialLoadingEpoch++;
             _initialLoadingAdmission?.Cancel();

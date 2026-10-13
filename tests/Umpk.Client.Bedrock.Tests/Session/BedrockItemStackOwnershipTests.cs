@@ -630,13 +630,14 @@ public sealed class BedrockItemStackOwnershipTests
     {
         internal BedrockClientSession Session { get; } = session;
         internal GatedTransport Transport { get; } = transport;
-        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null, Func<BedrockClientSession, CancellationToken, Task>? beforeJoin = null, IReadOnlyList<(int PacketId, byte[] Payload)>? preReadyInventory = null, Func<BedrockClientSession, CancellationToken, Task>? beforeReady = null)
+        internal static async Task<OwnershipSession> CreateAsync(CancellationToken ct, IReadOnlyList<BedrockItemRegistryPacket>? registries = null, Func<BedrockClientSession, CancellationToken, Task>? beforeJoin = null, IReadOnlyList<(int PacketId, byte[] Payload)>? preReadyInventory = null, Func<BedrockClientSession, CancellationToken, Task>? beforeReady = null, TimeProvider? timeProvider = null)
         {
             TestMessageConnectionPair pair = BedrockFakePeer.CreatePair();
             var transport = new GatedTransport(pair.First);
             BedrockFakePeer peer = BedrockFakePeer.Create(pair.Second);
             var client = new BedrockClient(new BedrockClientSettings
             {
+                TimeProvider = timeProvider ?? TimeProvider.System,
                 Host = "127.0.0.1",
                 Port = 19132,
                 CredentialProvider = new OfflineBedrockCredentialProvider("OwnershipTest", Guid.NewGuid()),

@@ -31,6 +31,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         if (destinationCount != 0)
             items[destination] = Item(destinationCount, 9, opaque: [0x11, 0x22]);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         BedrockInventorySnapshot before = Read(fixture);
         int contentCount = fixture.Session.WireTranscript.Count(row => row.PacketId == 49);
 
@@ -82,6 +83,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         items[source] = Item(sourceCount, 7, opaque: [1]);
         items[destination] = Item(destinationCount, 9, 1, opaque: [2]);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         BedrockInventorySnapshot before = Read(fixture);
 
         BedrockItemStackSubmitResult submit = await Submit(fixture, "swap", source, destination, 0, ct);
@@ -187,6 +189,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         items[8] = Item(5);
         items[9] = Item(3, 9);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         BedrockItemStackSubmitResult first = await Submit(fixture, "take", 8, 9, 1, ct);
         _ = await ReceiveRequestAsync(fixture, ct);
         var response = new BedrockItemStackResponsePacket([new(0, first.RequestId, true, [new(new(28, null), [new(8, 8, 4, 410, string.Empty, string.Empty, 0)])])]);
@@ -250,6 +253,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         items[9] = Item(5);
         items[35] = operation == "swap" ? Item(3, 9, 1) : Air();
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         BedrockInventorySnapshot before = Read(fixture);
         SendGate gate = fixture.Transport.HoldNextReservation();
         Task<BedrockItemStackSubmitResult> pending = Submit(fixture, operation, 9, 35, 1, ct);
@@ -288,6 +292,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         BedrockItemInstance[] items = EmptyItems(36);
         items[35] = Item(5);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         using var caller = CancellationTokenSource.CreateLinkedTokenSource(ct);
         SendGate gate = fixture.Transport.HoldNextReservation();
         int commits = fixture.Transport.CommittedCount;
@@ -322,6 +327,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         BedrockItemInstance[] items = EmptyItems(36);
         items[9] = Item(5);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         using var caller = CancellationTokenSource.CreateLinkedTokenSource(ct);
         SendGate gate = fixture.Transport.HoldNextTransferResult();
         Task<BedrockItemStackSubmitResult> pending = Submit(fixture, "place", 9, 35, 1, caller.Token);
@@ -353,6 +359,7 @@ public sealed class BedrockFullPlayerEgressSessionTests
         BedrockItemInstance[] items = EmptyItems(36);
         items[9] = Item(5);
         await PublishAsync(fixture, items, ct);
+        await OpenMainAsync(fixture, ct);
         SendGate gate = fixture.Transport.HoldNextGrantedCommit();
         int commits = fixture.Transport.CommittedCount;
         Task<BedrockItemStackSubmitResult> pending = Submit(fixture, "place", 9, 35, 1, ct);
@@ -417,6 +424,12 @@ public sealed class BedrockFullPlayerEgressSessionTests
 
     private static BedrockItemInstance[] EmptyItems(int capacity) => Enumerable.Repeat(Air(), capacity).ToArray();
     private static BedrockInventorySnapshot Read(OwnershipSession fixture) => fixture.Session.InventoryStore.GetSnapshot(s_address)!.Value;
+
+    private static async Task OpenMainAsync(OwnershipSession fixture, CancellationToken ct)
+    {
+        await fixture.SendAsync(46, BedrockInventoryCodecs.Encode(new BedrockContainerOpenPacket(3, -1, 0, 0, 0, -1)), ct);
+        await WaitUntilAsync(() => fixture.Session.ContainerWindows.GetWindow(3) is { WindowType: -1, EntityUniqueId: -1 }, ct);
+    }
 
     private static async Task PublishAsync(OwnershipSession fixture, BedrockItemInstance[] items, CancellationToken ct)
     {

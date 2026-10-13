@@ -147,6 +147,51 @@ internal static class BedrockNativeGroundArithmetic
         return BedrockNativeArithmeticResult<BedrockNativeFloat2>.FromValue(new(x, z));
     }
 
+    /// <summary>Computes selected native travel-speed bits from explicit resolved finite base speed and effective Ground factor.</summary>
+    /// <remarks>The caller resolves the actual terrain/variant/SoulSpeed/global/zero-substitution branch first. Each operation rounds separately; this performs no terrain lookup, row publication, clock conversion or profile activation.</remarks>
+    internal static BedrockNativeArithmeticResult<float> ComputeGroundSelectedSpeed(float? baseSpeed, float? resolvedEffectiveFriction)
+    {
+        if (baseSpeed is not { } speed || resolvedEffectiveFriction is not { } friction)
+        {
+            return BedrockNativeArithmeticResult<float>.Refused(BedrockNativeArithmeticDisposition.MissingNativeInputs);
+        }
+
+        ValidateFinite(speed, nameof(baseSpeed));
+        ValidateFinite(friction, nameof(resolvedEffectiveFriction));
+        if (!IsRepresentable(speed) || !IsRepresentable(friction)
+            || !TryDivide(BitConverter.Int32BitsToSingle(0x3f0bc6a9), friction, out float quotient)
+            || !TryMultiply(quotient, quotient, out float squared)
+            || !TryMultiply(squared, quotient, out float cubed)
+            || !TryMultiply(speed, cubed, out float selected))
+        {
+            return BedrockNativeArithmeticResult<float>.Refused(BedrockNativeArithmeticDisposition.UnrepresentableFiniteSubset);
+        }
+
+        return BedrockNativeArithmeticResult<float>.FromValue(selected);
+    }
+
+    /// <summary>Adds current native SV delta to existing MoveRequest XYZ in source X, Y, Z order.</summary>
+    /// <remarks>Delta is an increment per admitted native dispatch, not blocks per second. Existing contributions remain; the caller owns row association, original-delta retention, saved-position and other request side effects.</remarks>
+    internal static BedrockNativeArithmeticResult<BedrockNativeFloat3> AccumulateMoveRequestXYZ(BedrockNativeFloat3? currentDelta, BedrockNativeFloat3? existingRequest)
+    {
+        if (currentDelta is not { } delta || existingRequest is not { } request)
+        {
+            return BedrockNativeArithmeticResult<BedrockNativeFloat3>.Refused(BedrockNativeArithmeticDisposition.MissingNativeInputs);
+        }
+
+        ValidateFinite(delta, nameof(currentDelta));
+        ValidateFinite(request, nameof(existingRequest));
+        if (!IsRepresentable(delta) || !IsRepresentable(request)
+            || !TryAdd(delta.X, request.X, out float x)
+            || !TryAdd(delta.Y, request.Y, out float y)
+            || !TryAdd(delta.Z, request.Z, out float z))
+        {
+            return BedrockNativeArithmeticResult<BedrockNativeFloat3>.Refused(BedrockNativeArithmeticDisposition.UnrepresentableFiniteSubset);
+        }
+
+        return BedrockNativeArithmeticResult<BedrockNativeFloat3>.FromValue(new(x, y, z));
+    }
+
     private static void ValidateFinite(BedrockNativeFloat3 value, string parameter)
     {
         ValidateFinite(value.X, parameter);

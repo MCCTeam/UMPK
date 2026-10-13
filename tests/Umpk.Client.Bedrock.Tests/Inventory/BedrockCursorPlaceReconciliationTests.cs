@@ -30,9 +30,24 @@ public sealed class BedrockCursorPlaceReconciliationTests
     internal static BedrockItemStackRequestPacket Packet(int id = -5, byte count = 64, byte source = 59, byte destination = 28, byte sourceSlot = 0, byte destinationSlot = 0, int sourceId = 88, int destinationId = 0, int cause = -1, byte legacy = 1) => new([new(id,
         [new(BedrockItemStackActionType.Place, legacy, new BedrockPlacePayload(count, new(new(source, null), sourceSlot, sourceId), new(new(destination, null), destinationSlot, destinationId)))], [], cause)]);
     internal static BedrockCursorPlaceReconciliation Create(Input input) => BedrockCursorPlaceReconciliation.Create(input.Cursor, input.Player, input.Entry, input.Item, input.Packet, input.Ownership);
+    internal static BedrockCursorPlaceReconciliation CreateAmount(Input input) => BedrockCursorPlaceReconciliation.CreateExplicitAmount(input.Cursor, input.Player, input.Entry, input.Item, input.Packet, input.Ownership);
     internal static BedrockItemStackResponseSlot Row(byte count, int? id, string name = "named") => new(0, 0, count, id, name, "filtered", 9);
     internal static BedrockItemStackResponse Response(BedrockItemStackResponseSlot? cursor = null, BedrockItemStackResponseSlot? player = null, int id = -5, byte status = 0) => new(status, id, true,
         [new(new(59, null), [cursor ?? Row(0, 88)]), new(new(28, null), [player ?? Row(64, 88)])]);
+
+    [Fact]
+    public void ExplicitAmountFactoryReconcilesOneWithAuthoritativeRemainder()
+    {
+        Input input = Valid() with { Packet = Packet(count: 1) };
+        BedrockCursorPlaceReconciliation operation = CreateAmount(input);
+        var result = operation.Reconcile(Response(Row(63, 99, "cursor"), Row(1, 100, "player")), input.Ownership);
+        Assert.True(result.IsEligible);
+        Assert.Equal(Oak(63, 99), Assert.Single(result.CursorUpdates).Item);
+        Assert.Equal(Oak(1, 100), Assert.Single(result.PlayerUpdates).Item);
+        Assert.Equal(Row(63, 99, "cursor"), Assert.Single(result.CursorUpdates).Response);
+        Assert.Equal(Row(1, 100, "player"), Assert.Single(result.PlayerUpdates).Response);
+        Assert.Equal(input.Packet.Requests[0], operation.Packet.Requests[0]);
+    }
 
     [Fact]
     public void AcceptedRowsMaterializeBothKnownTypesAndPreserveCorrections()
@@ -197,6 +212,58 @@ public sealed class BedrockCursorPlaceReconciliationTests
             _ => input.Ownership with { Screen = input.Ownership.Screen with { WindowType = 0 } },
         };
         Assert.Throws<InvalidOperationException>(() => Create(input with { Ownership = owner }));
+    }
+
+    [Theory]
+    [InlineData(1, 1)]
+    [InlineData(63, 1)]
+    [InlineData(63, 63)]
+    [InlineData(65, 1)]
+    [InlineData(255, 255)]
+    [InlineData(256, 1)]
+    public void ExplicitAmountUsesCurrentSourceCountWithoutGuessingCapacity(ushort sourceCount, byte amount)
+    {
+        Input input = Valid();
+        input.Store.ApplySlot(new(124, 0, Pool, null, Oak(sourceCount)), Pool, 1);
+        input = input with { Cursor = input.Store.GetSnapshot(Pool)!.Value, Packet = Packet(count: amount) };
+        BedrockCursorPlaceReconciliation operation = CreateAmount(input);
+        byte remainder = checked((byte)(sourceCount - amount));
+        var result = operation.Reconcile(Response(Row(remainder, remainder == 0 ? null : 99), Row(amount, 100)), input.Ownership);
+        Assert.Equal(remainder == 0 ? Air() : Oak(remainder, 99), Assert.Single(result.CursorUpdates).Item);
+        Assert.Equal(Oak(amount, 100), Assert.Single(result.PlayerUpdates).Item);
+    }
+
+    [Theory]
+    [InlineData(64, 0)]
+    [InlineData(64, 65)]
+    [InlineData(0, 1)]
+    [InlineData(63, 64)]
+    public void ExplicitAmountRejectsZeroAndAmountsAboveCurrentSource(ushort sourceCount, byte amount)
+    {
+        Input input = Valid();
+        input.Store.ApplySlot(new(124, 0, Pool, null, Oak(sourceCount)), Pool, 1);
+        input = input with { Cursor = input.Store.GetSnapshot(Pool)!.Value, Packet = Packet(count: amount) };
+        Assert.Throws<InvalidOperationException>(() => CreateAmount(input));
+    }
+
+    [Fact]
+    public void ExplicitAmountKeepsQualifiedResponseCountsAuthoritative()
+    {
+        Input input = Valid() with { Packet = Packet(count: 4) };
+        var result = CreateAmount(input).Reconcile(Response(Row(62, 99), Row(2, 100)), input.Ownership);
+        Assert.Equal(Oak(62, 99), Assert.Single(result.CursorUpdates).Item);
+        Assert.Equal(Oak(2, 100), Assert.Single(result.PlayerUpdates).Item);
+    }
+
+    [Fact]
+    public void ExplicitAmountKeepsFixedItemAndSlotOwnershipRestrictions()
+    {
+        Input input = Valid() with { Packet = Packet(count: 1) };
+        Assert.Throws<InvalidOperationException>(() => CreateAmount(input with { Packet = Packet(count: 1, destinationSlot: 1) }));
+        Assert.Throws<InvalidOperationException>(() => CreateAmount(input with { Item = input.Item with { ComponentBased = true } }));
+        Assert.Throws<InvalidOperationException>(() => CreateAmount(input with { Entry = new(input.Entry.EntryId, input.Entry.Item, 0) }));
+        var operation = CreateAmount(input);
+        Assert.False(operation.Reconcile(Response(Row(63, 99), Row(1, 100)), input.Ownership with { ScreenLifetime = new object() }).IsEligible);
     }
 
 }

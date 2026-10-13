@@ -7,7 +7,7 @@ namespace Umpk.Client.Bedrock.State.Inventory;
 /// <summary>Separates stale responses from current accepted rows whose data may still be unavailable.</summary>
 internal readonly record struct BedrockCursorPlaceReconciliationResult(bool IsEligible, ImmutableArray<BedrockInventoryReconciledSlot> CursorUpdates, ImmutableArray<BedrockInventoryReconciledSlot> PlayerUpdates);
 
-/// <summary>Retains the observed Place64 from actual cursor slot zero to empty hotbar slot zero and their separate Store owners.</summary>
+/// <summary>Retains a fixed observed or explicit-amount cursor Place between the two qualified slot-zero Store owners.</summary>
 internal sealed class BedrockCursorPlaceReconciliation
 {
     private readonly BedrockInventorySnapshot _cursor;
@@ -31,8 +31,15 @@ internal sealed class BedrockCursorPlaceReconciliation
     internal int RequestId => _packet.Requests[0].RequestId;
     internal int Generation => _ownership.InventoryGeneration;
 
+    /// <summary>Retains the supplied positive amount up to the actual known cursor count without inferring a maximum item capacity.</summary>
+    internal static BedrockCursorPlaceReconciliation CreateExplicitAmount(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, BedrockCreativeEntry entry, BedrockItemState item, BedrockItemStackRequestPacket packet, BedrockCreativeCursorOwnership ownership) =>
+        CreateCore(cursor, player, entry, item, packet, ownership, explicitAmount: true);
+
     /// <summary>Validates the fixed observed subset without inferring a generic maximum stack or a logical container from a screen window.</summary>
-    internal static BedrockCursorPlaceReconciliation Create(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, BedrockCreativeEntry entry, BedrockItemState item, BedrockItemStackRequestPacket packet, BedrockCreativeCursorOwnership ownership)
+    internal static BedrockCursorPlaceReconciliation Create(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, BedrockCreativeEntry entry, BedrockItemState item, BedrockItemStackRequestPacket packet, BedrockCreativeCursorOwnership ownership) =>
+        CreateCore(cursor, player, entry, item, packet, ownership, explicitAmount: false);
+
+    private static BedrockCursorPlaceReconciliation CreateCore(BedrockInventorySnapshot cursor, BedrockInventorySnapshot player, BedrockCreativeEntry entry, BedrockItemState item, BedrockItemStackRequestPacket packet, BedrockCreativeCursorOwnership ownership, bool explicitAmount)
     {
         ArgumentNullException.ThrowIfNull(entry);
         ArgumentNullException.ThrowIfNull(item);
@@ -50,18 +57,22 @@ internal sealed class BedrockCursorPlaceReconciliation
             || !ownership.Catalog.Entries.Any(candidate => ReferenceEquals(candidate, entry))
             || entry.Item.NetworkId is 0 or < short.MinValue or > short.MaxValue || entry.Item.Count != 1 || entry.Item.MetadataValue != 0
             || entry.Item.BlockRuntimeId < 0 || entry.Item.ExtraData.Length != 10 || entry.Item.ExtraData.Any(static value => value != 0)
-            || source.NetworkId != entry.Item.NetworkId || source.Count != 64 || source.StackNetworkId is not > 0 || source.MetadataValue != 0
+            || source.NetworkId != entry.Item.NetworkId || (source.Count == 0 || (!explicitAmount && source.Count != 64)) || source.StackNetworkId is not > 0 || source.MetadataValue != 0
             || source.BlockRuntimeId != checked((uint)entry.Item.BlockRuntimeId) || !source.ExtraData.AsSpan().SequenceEqual(entry.Item.ExtraData)
             || !player.Items[0].Equals(Air()))
-            throw new InvalidOperationException("Only the known vanilla oak cursor64 and empty hotbar-zero representation are qualified.");
+            throw new InvalidOperationException(explicitAmount
+                ? "Only the known vanilla oak cursor and empty hotbar-zero representation are qualified."
+                : "Only the known vanilla oak cursor64 and empty hotbar-zero representation are qualified.");
         if (packet.Requests.Length != 1)
             throw new InvalidOperationException("The cursor transfer retains exactly one request.");
         BedrockItemStackRequest request = packet.Requests[0];
         if (request.RequestId >= 0 || (request.RequestId & 1) == 0 || request.Cause != -1 || !request.CustomNames.IsEmpty || request.Actions.Length != 1
             || request.Actions[0] is not { Type: BedrockItemStackActionType.Place, LegacyTypeId: 1, Payload: BedrockPlacePayload place }
-            || place.Count != 64 || place.Source != new BedrockStackRequestSlot(new(59, null), 0, source.StackNetworkId.Value)
+            || (explicitAmount ? place.Count == 0 || place.Count > source.Count : place.Count != 64) || place.Source != new BedrockStackRequestSlot(new(59, null), 0, source.StackNetworkId.Value)
             || place.Destination != new BedrockStackRequestSlot(new(28, null), 0, 0))
-            throw new InvalidOperationException("The supplied request is outside the observed cursor Place64 shape.");
+            throw new InvalidOperationException(explicitAmount
+                ? "The supplied request is outside the qualified explicit cursor Place amount shape."
+                : "The supplied request is outside the observed cursor Place64 shape.");
         return new(cursor, player, packet, ownership);
     }
 

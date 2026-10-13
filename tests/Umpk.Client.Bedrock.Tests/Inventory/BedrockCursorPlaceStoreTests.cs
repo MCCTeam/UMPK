@@ -9,6 +9,26 @@ public sealed class BedrockCursorPlaceStoreTests
     private static BedrockInventoryReconciledSlot Update(byte count, int? id) => new(0, count == 0 ? Cases.Air() : Cases.Oak(count, id!.Value), Cases.Row(count, id));
 
     [Fact]
+    public void ActualPartialPairSharesFreshReceiptAndPreservesUntouchedAuthority()
+    {
+        var input = Cases.Valid();
+        Assert.True(input.Store.TryApplyCursorPlaceResponse(input.Cursor, input.Player, [Update(63, 99)], [Update(1, 100)], 1));
+        BedrockInventorySnapshot cursor = input.Store.GetSnapshot(Cases.Pool)!.Value;
+        BedrockInventorySnapshot player = input.Store.GetSnapshot(Cases.Player)!.Value;
+        Assert.Equal(Cases.Oak(63, 99), cursor.Items[0]);
+        Assert.Equal(Cases.Oak(1, 100), player.Items[0]);
+        Assert.Equal(Cases.Row(63, 99), cursor.ResponseCorrections[0]);
+        Assert.Equal(Cases.Row(1, 100), player.ResponseCorrections[0]);
+        Assert.Same(cursor.AuthorityReceipts[0], player.AuthorityReceipts[0]);
+        Assert.NotSame(input.Cursor.AuthorityReceipts[0], cursor.AuthorityReceipts[0]);
+        Assert.NotSame(input.Player.AuthorityReceipts[0], player.AuthorityReceipts[0]);
+        Assert.Same(input.Cursor.AuthorityReceipts[1], cursor.AuthorityReceipts[1]);
+        Assert.Same(input.Player.AuthorityReceipts[1], player.AuthorityReceipts[1]);
+        Assert.Equal(input.Cursor.Items.Skip(1).ToArray(), cursor.Items.Skip(1).ToArray());
+        Assert.Equal(input.Player.Items.Skip(1).ToArray(), player.Items.Skip(1).ToArray());
+    }
+
+    [Fact]
     public void CurrentPairCommitsBothAndPreservesStorageAndSiblings()
     {
         var input = Cases.Valid();

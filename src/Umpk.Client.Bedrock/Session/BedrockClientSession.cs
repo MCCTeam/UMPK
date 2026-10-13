@@ -1321,8 +1321,15 @@ internal sealed class BedrockClientSession : IAsyncDisposable
         return await SendItemStackRequestAsync(retained.Packet, retained.RequestId, retained.Generation, cancellationToken, creative: retained).ConfigureAwait(false);
     }
 
+    /// <summary>Retains a supplied explicit positive oak cursor Place amount into empty hotbar slot zero under the actual owners.</summary>
+    internal ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorPlaceAmountAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, CancellationToken cancellationToken = default) =>
+        SubmitObservedCreativeCursorPlaceCoreAsync(entry, observedRequest, explicitAmount: true, cancellationToken);
+
     /// <summary>Retains only the supplied observed oak cursor Place64 into empty hotbar slot zero under two real container owners.</summary>
-    internal async ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorPlaceAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, CancellationToken cancellationToken = default)
+    internal ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorPlaceAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, CancellationToken cancellationToken = default) =>
+        SubmitObservedCreativeCursorPlaceCoreAsync(entry, observedRequest, explicitAmount: false, cancellationToken);
+
+    private async ValueTask<BedrockItemStackSubmitResult> SubmitObservedCreativeCursorPlaceCoreAsync(BedrockCreativeEntry entry, BedrockItemStackRequestPacket observedRequest, bool explicitAmount, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(entry);
         ArgumentNullException.ThrowIfNull(observedRequest);
@@ -1346,7 +1353,9 @@ internal sealed class BedrockClientSession : IAsyncDisposable
                 ?? throw new InvalidOperationException("The actual cursor pool is unavailable.");
             BedrockInventorySnapshot player = _inventory.GetSnapshot(new(0, 0, null))
                 ?? throw new InvalidOperationException("The actual player inventory is unavailable.");
-            retained = BedrockCursorPlaceReconciliation.Create(cursor, player, entry, matching[0], observedRequest, ownership);
+            retained = explicitAmount
+                ? BedrockCursorPlaceReconciliation.CreateExplicitAmount(cursor, player, entry, matching[0], observedRequest, ownership)
+                : BedrockCursorPlaceReconciliation.Create(cursor, player, entry, matching[0], observedRequest, ownership);
             if (!_inventory.MatchesCursorPlaceSnapshots(cursor, player, ownership.InventoryGeneration))
                 throw new InvalidOperationException("The affected cursor transfer baselines changed before admission.");
             if (_cursorPlacePathActivated && (_cursorPlaceFreshAuthorityRequired || _cursorPlaceSourceQualification is not { } qualification

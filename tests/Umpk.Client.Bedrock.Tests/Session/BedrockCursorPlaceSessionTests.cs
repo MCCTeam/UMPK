@@ -64,11 +64,314 @@ public sealed class BedrockCursorPlaceSessionTests
     }
 
     private static Task<BedrockItemStackSubmitResult> Submit(Fixture fixture, CancellationToken ct, BedrockItemStackRequestPacket? packet = null) => fixture.Session.SubmitObservedCreativeCursorPlaceAsync(fixture.Session.LastCreativeContent!.Entries[0], packet ?? Cases.Packet(), ct).AsTask();
+    private static Task<BedrockItemStackSubmitResult> SubmitAmount(Fixture fixture, CancellationToken ct, BedrockItemStackRequestPacket? packet = null) => fixture.Session.SubmitObservedCreativeCursorPlaceAmountAsync(fixture.Session.LastCreativeContent!.Entries[0], packet ?? Cases.Packet(count: 1), ct).AsTask();
     private static async Task RespondAsync(Fixture fixture, CancellationToken ct, BedrockItemStackResponse? response = null)
     {
         long prior = fixture.Session.ItemStackTracker.AcceptedCount + fixture.Session.ItemStackTracker.RejectedCount + fixture.Session.ItemStackTracker.UnknownCount;
         await fixture.SendAsync(148, BedrockItemStackCodecs.Encode(new BedrockItemStackResponsePacket([response ?? Cases.Response()])), ct);
         await WaitAsync(() => fixture.Session.PendingItemStackReconciliationCount == 0 && fixture.Session.ItemStackTracker.AcceptedCount + fixture.Session.ItemStackTracker.RejectedCount + fixture.Session.ItemStackTracker.UnknownCount > prior && Released(fixture), ct);
+    }
+
+    [Fact]
+    public async Task ExplicitAmountOnePublishesCurrentIdsCorrectionsAndSharedReceipt()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        BedrockInventorySnapshot cursorBefore = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        BedrockInventorySnapshot playerBefore = fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value;
+        int contents = fixture.Session.WireTranscript.Count(row => row.Direction == BedrockWireDirection.Inbound && row.PacketId == 49);
+        BedrockItemStackRequestPacket packet = Cases.Packet(count: 1);
+        BedrockItemStackSubmitResult sent = await SubmitAmount(fixture, ct, packet);
+        Assert.Equal(-5, sent.RequestId);
+        Assert.Equal(packet.Requests[0], await fixture.ReceiveRequestAsync(ct));
+        Assert.Equal(BedrockItemStackCodecs.Encode(packet), sent.OutboundPayload);
+        await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99, "cursor"), Cases.Row(1, 100, "player")));
+        BedrockInventorySnapshot cursor = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        BedrockInventorySnapshot player = fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value;
+        Assert.Equal(Cases.Oak(63, 99), cursor.Items[0]);
+        Assert.Equal(Cases.Oak(1, 100), player.Items[0]);
+        Assert.True(cursor.IsSlotKnown(0));
+        Assert.True(player.IsSlotKnown(0));
+        Assert.Equal(Cases.Row(63, 99, "cursor"), cursor.ResponseCorrections[0]);
+        Assert.Equal(Cases.Row(1, 100, "player"), player.ResponseCorrections[0]);
+        Assert.Same(cursor.AuthorityReceipts[0], player.AuthorityReceipts[0]);
+        Assert.NotSame(cursorBefore.AuthorityReceipts[0], cursor.AuthorityReceipts[0]);
+        Assert.NotSame(playerBefore.AuthorityReceipts[0], player.AuthorityReceipts[0]);
+        Assert.Equal(cursorBefore.Items.Skip(1).ToArray(), cursor.Items.Skip(1).ToArray());
+        Assert.Equal(playerBefore.Items.Skip(1).ToArray(), player.Items.Skip(1).ToArray());
+        Assert.Equal(cursorBefore.StorageItem, cursor.StorageItem);
+        Assert.Equal(playerBefore.StorageItem, player.StorageItem);
+        Assert.Equal(contents, fixture.Session.WireTranscript.Count(row => row.Direction == BedrockWireDirection.Inbound && row.PacketId == 49));
+        Assert.Equal(2, fixture.Session.ItemStackTracker.AcceptedCount);
+        Assert.True(Released(fixture));
+    }
+
+    private static async Task EmptyPlayerSlotAsync(Fixture fixture, CancellationToken ct)
+    {
+        object receipt = fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value.AuthorityReceipts[0];
+        await fixture.SendAsync(50, BedrockInventoryCodecs.Encode(new BedrockInventorySlotPacket(0, 0, Cases.Player, null, Cases.Air())), ct);
+        await WaitAsync(() =>
+        {
+            _ = fixture.Session.PendingItemStackReconciliationCount;
+            return fixture.Session.InventoryStore.GetSnapshot(Cases.Player) is { } player && player.IsSlotKnown(0) && player.Items[0].Equals(Cases.Air()) && !ReferenceEquals(receipt, player.AuthorityReceipts[0]);
+        }, ct);
+    }
+
+    [Fact]
+    public async Task ExplicitAmountReusesActualRemainderReceiptAndCurrentIdWithoutCursorRefresh()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        await SubmitAmount(fixture, ct);
+        await fixture.ReceiveRequestAsync(ct);
+        await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99), Cases.Row(1, 100)));
+        BedrockInventorySnapshot remainder = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        int contents = fixture.Session.WireTranscript.Count(row => row.Direction == BedrockWireDirection.Inbound && row.PacketId == 49);
+        await EmptyPlayerSlotAsync(fixture, ct);
+        Assert.Equal(Cases.Oak(63, 99), remainder.Items[0]);
+        Assert.Same(remainder.AuthorityReceipts[0], fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.AuthorityReceipts[0]);
+        int commits = fixture.Transport.CommittedCount;
+        await Assert.ThrowsAsync<InvalidOperationException>(() => Submit(fixture, ct, Cases.Packet(id: -7, sourceId: 99)));
+        Assert.Equal(commits, fixture.Transport.CommittedCount);
+        BedrockItemStackRequestPacket next = Cases.Packet(id: -7, count: 1, sourceId: 99);
+        Assert.Equal(-7, (await SubmitAmount(fixture, ct, next)).RequestId);
+        Assert.Equal(next.Requests[0], await fixture.ReceiveRequestAsync(ct));
+        await RespondAsync(fixture, ct, Cases.Response(Cases.Row(62, 101), Cases.Row(1, 102), id: -7));
+        BedrockInventorySnapshot cursor = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        BedrockInventorySnapshot player = fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value;
+        Assert.Equal(Cases.Oak(62, 101), cursor.Items[0]);
+        Assert.Equal(Cases.Oak(1, 102), player.Items[0]);
+        Assert.NotSame(remainder.AuthorityReceipts[0], cursor.AuthorityReceipts[0]);
+        Assert.Same(cursor.AuthorityReceipts[0], player.AuthorityReceipts[0]);
+        Assert.Equal(contents, fixture.Session.WireTranscript.Count(row => row.Direction == BedrockWireDirection.Inbound && row.PacketId == 49));
+        Assert.True(Released(fixture));
+    }
+
+    [Fact]
+    public async Task ExplicitAmountBlocksNewAllocationWhileAcceptedTransferResultIsHeld()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        var gate = fixture.Transport.HoldNextTransferResult();
+        Task<BedrockItemStackSubmitResult> first = SubmitAmount(fixture, ct);
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            Assert.Equal(-5, (await fixture.ReceiveRequestAsync(ct)).RequestId);
+            await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99), Cases.Row(1, 100)));
+            await EmptyPlayerSlotAsync(fixture, ct);
+            Assert.True(Released(fixture));
+            Assert.False(first.IsCompleted);
+            int commits = fixture.Transport.CommittedCount;
+            BedrockItemStackRequestPacket next = Cases.Packet(id: -7, count: 1, sourceId: 99);
+            await Assert.ThrowsAsync<InvalidOperationException>(() => SubmitAmount(fixture, ct, next));
+            Assert.Equal(commits, fixture.Transport.CommittedCount);
+            gate.Allow();
+            Assert.Equal(-5, (await first.WaitAsync(ct)).RequestId);
+            Assert.Equal(-7, (await SubmitAmount(fixture, ct, next)).RequestId);
+            Assert.Equal(next.Requests[0], await fixture.ReceiveRequestAsync(ct));
+            await RespondAsync(fixture, ct, Cases.Response(Cases.Row(62, 101), Cases.Row(1, 102), id: -7));
+        }
+        finally
+        {
+            gate.Allow();
+            await first.WaitAsync(ct);
+        }
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(65)]
+    public async Task ExplicitAmountInvalidCountDoesNotAllocateOrEmit(byte amount)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        await using Fixture fixture = await CreateAsync(timeout.Token);
+        int commits = fixture.Transport.CommittedCount;
+        await Assert.ThrowsAsync<InvalidOperationException>(() => SubmitAmount(fixture, timeout.Token, Cases.Packet(count: amount)));
+        Assert.Equal(commits, fixture.Transport.CommittedCount);
+        Assert.True(Released(fixture));
+        Assert.Equal(-5, (await SubmitAmount(fixture, timeout.Token)).RequestId);
+        Assert.Equal(-5, (await fixture.ReceiveRequestAsync(timeout.Token)).RequestId);
+    }
+
+    [Theory]
+    [InlineData("valid")]
+    [InlineData("before")]
+    [InlineData("packet")]
+    public async Task ExplicitAmountPendingOwnerSurvivesRawDuplicateValidation(string malformed)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        BedrockInventorySnapshot before = fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value;
+        await SubmitAmount(fixture, ct);
+        await fixture.ReceiveRequestAsync(ct);
+        BedrockItemStackRequestPacket packet = malformed == "packet" ? new([]) : Cases.Packet(count: 1);
+        BedrockInventorySnapshot supplied = malformed == "before" ? before with { KnownSlots = [] } : before;
+        int commits = fixture.Transport.CommittedCount;
+        await Assert.ThrowsAsync<InvalidOperationException>(() => fixture.Session.SendItemStackRequestAsync(packet, -5, fixture.Session.ItemStackTracker.Generation, ct, supplied).AsTask());
+        Assert.Equal(1, fixture.Session.PendingItemStackReconciliationCount);
+        Assert.Equal(1, fixture.Session.ItemStackTracker.PendingCount);
+        Assert.Equal(1, fixture.Session.ActionCoordinator.ClaimedCount);
+        Assert.Equal(commits, fixture.Transport.CommittedCount);
+        await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99), Cases.Row(1, 100)));
+        Assert.Equal(Cases.Oak(63, 99), fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.Items[0]);
+        Assert.Equal(Cases.Oak(1, 100), fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value.Items[0]);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ExplicitAmountNewerSameValueSourceAuthoritySurvivesOldResponse(bool aba)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        await SubmitAmount(fixture, ct);
+        await fixture.ReceiveRequestAsync(ct);
+        BedrockInventorySnapshot before = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        if (aba) await ContentAsync(fixture, Cases.Pool, before.Items.SetItem(0, Cases.Oak(63, 99)).ToArray(), ct);
+        await ContentAsync(fixture, Cases.Pool, before.Items.ToArray(), ct);
+        BedrockInventorySnapshot fresh = fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value;
+        Assert.NotSame(before.AuthorityReceipts[0], fresh.AuthorityReceipts[0]);
+        await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99), Cases.Row(1, 100)));
+        Assert.Equal(Cases.Oak(), fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.Items[0]);
+        Assert.Same(fresh.AuthorityReceipts[0], fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.AuthorityReceipts[0]);
+        Assert.False(fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value.IsSlotKnown(0));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ExplicitAmountCallerCancellationRespectsActualGrant(bool granted)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        using var caller = new CancellationTokenSource();
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        var gate = granted ? fixture.Transport.HoldNextGrantedCommit() : fixture.Transport.HoldNextReservation();
+        Task<BedrockItemStackSubmitResult> submit = SubmitAmount(fixture, caller.Token);
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            caller.Cancel();
+            if (granted)
+            {
+                gate.Allow();
+                Assert.Equal(-5, (await submit.WaitAsync(ct)).RequestId);
+                await fixture.ReceiveRequestAsync(ct);
+                await RespondAsync(fixture, ct, Cases.Response(Cases.Row(63, 99), Cases.Row(1, 100)));
+                Assert.Equal(Cases.Oak(63, 99), fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.Items[0]);
+            }
+            else
+            {
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => submit.WaitAsync(ct));
+                Assert.True(Released(fixture));
+                Assert.Equal(Cases.Oak(), fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.Items[0]);
+                gate.Allow();
+                Assert.Equal(-7, (await SubmitAmount(fixture, ct, Cases.Packet(id: -7, count: 1))).RequestId);
+            }
+        }
+        finally
+        {
+            gate.Allow();
+            try { await submit.WaitAsync(ct); } catch (OperationCanceledException) { }
+        }
+    }
+
+    [Theory]
+    [InlineData("missing")]
+    [InlineData("conflict")]
+    [InlineData("foreign")]
+    [InlineData("identity")]
+    public async Task ExplicitAmountUnqualifiedCursorResponseCannotPromoteReusableSource(string change)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        await SubmitAmount(fixture, ct);
+        await fixture.ReceiveRequestAsync(ct);
+        BedrockItemStackResponseContainer player = new(new(28, null), [Cases.Row(1, 100)]);
+        BedrockItemStackResponseContainer cursor = new(new(59, null), [Cases.Row(63, 99)]);
+        BedrockItemStackResponse response = change switch
+        {
+            "missing" => new(0, -5, true, [player]),
+            "conflict" => new(0, -5, true, [cursor, new(new(59, null), [Cases.Row(62, 98)]), player]),
+            "foreign" => new(0, -5, true, [new(new(59, 1), [Cases.Row(63, 99)]), player]),
+            _ => new(0, -5, true, [new(new(59, null), [Cases.Row(63, 0)]), player]),
+        };
+        await RespondAsync(fixture, ct, response);
+        Assert.False(fixture.Session.InventoryStore.GetSnapshot(Cases.Pool)!.Value.IsSlotKnown(0));
+        await EmptyPlayerSlotAsync(fixture, ct);
+        int commits = fixture.Transport.CommittedCount;
+        await Assert.ThrowsAsync<InvalidOperationException>(() => SubmitAmount(fixture, ct, Cases.Packet(id: -7, count: 1, sourceId: 99)));
+        Assert.Equal(commits, fixture.Transport.CommittedCount);
+        Assert.True(Released(fixture));
+    }
+
+    [Theory]
+    [InlineData("close")]
+    [InlineData("catalog")]
+    [InlineData("world")]
+    [InlineData("life")]
+    public async Task ExplicitAmountOwnerRetirementBeforeGrantCancelsWithoutEmission(string boundary)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        var gate = fixture.Transport.HoldNextReservation();
+        int commits = fixture.Transport.CommittedCount;
+        Task<BedrockItemStackSubmitResult> submit = SubmitAmount(fixture, ct);
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            if (boundary == "close") await fixture.SendAsync(47, BedrockInventoryCodecs.Encode(new BedrockContainerClosePacket(2, -1, true)), ct);
+            else if (boundary == "catalog") await fixture.SendAsync(145, BedrockCreativeContentCodecs.Encode(new BedrockCreativeContentPacket([], [new(17, new(5, 1, 0, 77, new byte[10]), 0)])), ct);
+            else if (boundary == "world") fixture.Session.HandleWorldReplacement();
+            else fixture.Session.HandleRespawn();
+            await Assert.ThrowsAsync<InvalidOperationException>(() => submit.WaitAsync(ct));
+            Assert.Equal(commits, fixture.Transport.CommittedCount);
+            Assert.True(Released(fixture));
+            Assert.False(fixture.Session.InventoryStore.GetSnapshot(Cases.Player)!.Value.IsSlotKnown(0));
+        }
+        finally
+        {
+            gate.Allow();
+            try { await submit.WaitAsync(ct); } catch (InvalidOperationException) { }
+        }
+    }
+
+    [Fact]
+    public async Task ExplicitAmountDisposeDrainsHeldGrantedResultAndRetiresPendingResponse()
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = timeout.Token;
+        await using Fixture fixture = await CreateAsync(ct);
+        var gate = fixture.Transport.HoldNextTransferResult();
+        Task<BedrockItemStackSubmitResult> submit = SubmitAmount(fixture, ct);
+        Task? dispose = null;
+        try
+        {
+            await gate.Entered.WaitAsync(ct);
+            await fixture.ReceiveRequestAsync(ct);
+            dispose = fixture.Session.DisposeAsync().AsTask();
+            Assert.False(dispose.IsCompleted);
+            Assert.False(fixture.Transport.DisposeEntered.Task.IsCompleted);
+            gate.Allow();
+            Assert.Equal(-5, (await submit.WaitAsync(ct)).RequestId);
+            await dispose.WaitAsync(ct);
+            Assert.True(fixture.Transport.DisposeEntered.Task.IsCompleted);
+            Assert.True(Released(fixture));
+        }
+        finally
+        {
+            gate.Allow();
+            await submit.WaitAsync(ct);
+            if (dispose is not null) await dispose.WaitAsync(ct);
+        }
     }
 
     [Fact]

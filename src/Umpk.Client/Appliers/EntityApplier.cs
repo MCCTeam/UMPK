@@ -83,8 +83,8 @@ internal sealed class EntityApplier : IApplier
                         rotEntity.Position = profile.Decode(context.State.PacketBases.Get(rotEntity), 0, 0, 0);
                         context.State.PacketBases.Set(rotEntity, rotEntity.Position);
                     }
-                    rotEntity.Yaw = rot.Yaw;
-                    rotEntity.Pitch = rot.Pitch;
+                    rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
+                    rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
                     rotEntity.OnGround = rot.OnGround;
                     if (rotEntity.Position != previous)
                         await context.PublishAsync(new EntityMoved(rot.EntityId)).ConfigureAwait(false);
@@ -96,8 +96,8 @@ internal sealed class EntityApplier : IApplier
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
                     prEntity.Position = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
-                    prEntity.Yaw = posRot.Yaw;
-                    prEntity.Pitch = posRot.Pitch;
+                    prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
+                    prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
                     prEntity.OnGround = posRot.OnGround;
                     await context.PublishAsync(new EntityMoved(posRot.EntityId)).ConfigureAwait(false);
                 }
@@ -273,6 +273,9 @@ internal sealed class EntityApplier : IApplier
         context.State.PacketBases.Set(entity, position);
         return position;
     }
+
+    // 1.8.9-client-decompiled gv.java and 26.3-client-decompiled ClientboundMoveEntityPacket.java expose signed angles; PacketReader.ReadAngle intentionally exposes unsigned degrees.
+    private static float SignedPacketAngle(float angle) => angle >= 180.0F ? angle - 360.0F : angle;
 
     private static readonly Identifier PlayerType = Identifier.Minecraft("player");
     private static readonly Identifier ExperienceOrbType = Identifier.Minecraft("experience_orb");

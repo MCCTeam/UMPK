@@ -138,13 +138,23 @@ public static partial class JavaGameData
             var flatReader = new PacketReader(flat);
             int flatCount = flatReader.ReadVarInt();
             IBlockMiningSource mining = BlockMiningData(protocol);
+            FrozenDictionary<Identifier, IReadOnlyDictionary<DataComponentType, object>> attacks = ReadItemAttackDefaults(protocol);
             for (int id = 0; id < flatCount; id++)
             {
                 string name = flatReader.ReadString();
                 Identifier key = Identifier.Parse(name);
                 ItemDefinition definition = new();
+                Dictionary<DataComponentType, object>? components = null;
                 if (mining.TryGetDefaultTool(key, out var tool) && tool is not null)
-                    definition = definition with { DefaultComponents = new Dictionary<DataComponentType, object> { [DataComponents.Tool] = tool }.ToFrozenDictionary() };
+                    components = new Dictionary<DataComponentType, object> { [DataComponents.Tool] = tool };
+                if (attacks.TryGetValue(key, out var attack))
+                {
+                    components ??= [];
+                    foreach ((DataComponentType type, object value) in attack)
+                        components.Add(type, value);
+                }
+                if (components is not null)
+                    definition = definition with { DefaultComponents = components.ToFrozenDictionary() };
                 items.Add(id, key, definition);
             }
             return items.Build();

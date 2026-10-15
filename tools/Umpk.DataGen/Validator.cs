@@ -75,6 +75,7 @@ internal static partial class Validator
             ValidateShapeRefs(version, legacy, problems);
             ValidateBlockPush(version, legacy, problems);
             ValidateBlockMining(version, problems);
+            ItemAttackTable.Load(version)?.Validate(version, problems);
             InteractionTable.Load(version)?.Validate(version, problems);
             EntityObstructionTable.Load(version)?.Validate(version, problems);
             TargetingTable.Load(version)?.Validate(version, problems);

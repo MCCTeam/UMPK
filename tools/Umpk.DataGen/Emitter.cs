@@ -277,6 +277,11 @@ internal sealed partial class Emitter
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockPush => SharedTables.{pushMember};");
         string miningMember = InternBlockMining(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockMining => SharedTables.{miningMember};");
+        if (ItemAttackTable.Load(version) is { } attack)
+        {
+            string attackMember = InternItemAttackDefaults(version, attack);
+            sb.AppendLine($"    public static ReadOnlySpan<byte> ItemAttackDefaults => SharedTables.{attackMember};");
+        }
         string interactionsMember = InternBlockInteractions(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.{interactionsMember};");
         string targetingMember = InternBlockTargeting(version);
@@ -596,6 +601,46 @@ internal sealed partial class Emitter
         return InternBlob("blockmining", version.Protocol, stream.ToArray());
     }
 
+    private string InternItemAttackDefaults(VersionData version, ItemAttackTable table)
+    {
+        using MemoryStream stream = new();
+        void Name(string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            WriteVarInt(stream, bytes.Length);
+            stream.Write(bytes);
+        }
+        void Sound(string? name)
+        {
+            stream.WriteByte(name is null ? (byte)0 : (byte)1);
+            if (name is not null)
+                WriteVarInt(stream, version.Registries["minecraft:sound_event"].Single(entry => entry.Name == name).Id);
+        }
+        WriteVarInt(stream, 1);
+        var rows = table.Items.Where(row => row.Value.Piercing is not null || row.Value.Charge is not null).OrderBy(row => row.Key, StringComparer.Ordinal).ToArray();
+        WriteVarInt(stream, rows.Length);
+        Span<byte> chargeBytes = stackalloc byte[4];
+        foreach ((string item, DefaultAttack value) in rows)
+        {
+            Name(item);
+            stream.WriteByte(value.Piercing is null ? (byte)0 : (byte)1);
+            if (value.Piercing is { } piercing)
+            {
+                stream.WriteByte(piercing.Knockback ? (byte)1 : (byte)0);
+                stream.WriteByte(piercing.Dismounts ? (byte)1 : (byte)0);
+                Sound(piercing.Sound);
+                Sound(piercing.HitSound);
+            }
+            stream.WriteByte(value.Charge is null ? (byte)0 : (byte)1);
+            if (value.Charge is { } charge)
+            {
+                BinaryPrimitives.WriteSingleBigEndian(chargeBytes, charge);
+                stream.Write(chargeBytes);
+            }
+        }
+        return InternBlob("itemattack", version.Protocol, stream.ToArray());
+    }
+
     /// <summary>Vanilla <c>PushReaction</c>'s own declaration order.</summary>
     private static int ReactionOrdinal(string name) => name switch
     {
@@ -824,6 +869,7 @@ internal sealed partial class Emitter
         "blockattrs" => "BlockAttributes",
         "blockpush" => "BlockPush",
         "blockmining" => "BlockMining",
+        "itemattack" => "ItemAttackDefaults",
         "blockinteractions" => "BlockInteractions",
         "blocktargeting" => "BlockTargeting",
         "enchantments" => "Enchantments",

@@ -922,4 +922,13 @@ public static partial class JavaGameData
         340 => global::Umpk.Data.Java.V340.Descriptor.LegacyItemDefs,
         _ => default,
     };
+
+    private static ReadOnlySpan<byte> ItemAttackDefaults(int protocol) => protocol switch
+    {
+        774 => global::Umpk.Data.Java.V774.Descriptor.ItemAttackDefaults,
+        775 => global::Umpk.Data.Java.V775.Descriptor.ItemAttackDefaults,
+        776 => global::Umpk.Data.Java.V776.Descriptor.ItemAttackDefaults,
+        777 => global::Umpk.Data.Java.V777.Descriptor.ItemAttackDefaults,
+        _ => default,
+    };
 }

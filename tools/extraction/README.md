@@ -115,6 +115,17 @@ python3 tools/extraction/extract_remote_player_fixture.py --official /home/anon/
 
 Use `--versions <release> ...` for a focused measurement. The fixture extractor requires the complete mapped release set, successful reports, exact hashes, equal protocol aliases and the previously verified position-controller profile for each release. Eight scenarios record 12 ticks each: linear, repeated and changed targets, velocity updates and retargeting, wrapped rotation, synchronized crouching and a stationary control. The sanity verifier checks completeness and controls; managed replay compares every recorded position, rotation, box, target, active state and velocity by exact numeric bits. The native measurements establish three position steps through 26.2 and two in 26.3, with immediate velocity updates through 1.19.3 and three-step velocity interpolation from 1.19.4. Network update intervals alone do not establish these durations. `VanillaEntityVelocity` and the existing position model remain caller-driven components pending runtime integration.
 
+## Native item attack defaults
+
+`measure_item_attack.py` measures the native piercing component's data, hash and wire codecs, plus piercing and minimum-charge defaults for every registered item from 1.21.11 through 26.3. It checks official artifact hashes, preserved client class bytes and native class origins. Set `MINECRAFT_OFFICIAL_ROOT` for another artifact location. The optional release arguments after the fresh output directory select a smaller measurement run.
+
+```bash
+python3 tools/extraction/measure_item_attack.py /absolute/fresh-item-attack-run
+python3 tools/extraction/extract_item_attack.py --measurements /absolute/fresh-item-attack-run --data data/java --out data/java
+```
+
+The extractor verifies the maintained helper hash and report hashes, reads protocol identifiers from the verified client jars, requires every registered item and rejects differing protocol aliases. Canonical nulls mean measured component absence. Generated prototypes preserve the native sound holders and minimum charge while allowing stack patches to remove or override them. These measurements do not execute input handling or establish attack-charge tick order.
+
 ## Validation
 
 ```bash

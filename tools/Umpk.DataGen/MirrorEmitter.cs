@@ -441,6 +441,13 @@ internal sealed partial class Emitter
 
         sb.AppendLine("        _ => default,");
         sb.AppendLine("    };");
+        sb.AppendLine();
+        sb.AppendLine("    private static ReadOnlySpan<byte> ItemAttackDefaults(int protocol) => protocol switch");
+        sb.AppendLine("    {");
+        foreach (VersionData version in versions.Where(version => ItemAttackTable.Load(version) is not null))
+            sb.AppendLine(CultureInfo.InvariantCulture, $"        {version.Protocol} => global::Umpk.Data.Java.V{version.Protocol}.Descriptor.ItemAttackDefaults,");
+        sb.AppendLine("        _ => default,");
+        sb.AppendLine("    };");
         sb.AppendLine("}");
 
         Add("JavaGameData.Dispatch.g.cs", sb.ToString());

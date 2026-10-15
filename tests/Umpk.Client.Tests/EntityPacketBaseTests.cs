@@ -38,7 +38,7 @@ public sealed class EntityPacketBaseTests
         entity.Position = Visual;
         await harness.ApplyAsync(BoundDescriptorCodec.RoundTrip(protocol, "move_entity_rot", new ClientboundMoveEntityRotPacket(42, 90, 45, true)));
 
-        Assert.Equal(protocol < 751 ? Spawn : Visual, entity.Position);
+        Assert.Equal(protocol < 573 ? Spawn : Visual, entity.Position);
         Assert.Equal(90, entity.Yaw);
         await MoveAsync(harness, protocol);
         Assert.Equal(new Vec3d(10.5, 65, -3), entity.Position);

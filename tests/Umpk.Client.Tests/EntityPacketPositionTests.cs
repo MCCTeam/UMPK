@@ -87,7 +87,11 @@ public sealed class EntityPacketPositionTests
 
     [Theory]
     [InlineData(498, 1.099853515625, 65.199951171875, -2.300048828125)]
-    [InlineData(736, 1.099853515625, 65.199951171875, -2.300048828125)]
+    [InlineData(573, 1.1, 65.2, -2.3)]
+    [InlineData(575, 1.1, 65.2, -2.3)]
+    [InlineData(578, 1.1, 65.2, -2.3)]
+    [InlineData(735, 1.1, 65.2, -2.3)]
+    [InlineData(736, 1.1, 65.2, -2.3)]
     [InlineData(751, 1.1, 65.2, -2.3)]
     [InlineData(761, 1.1, 65.2, -2.3)]
     [InlineData(777, 1.1, 65.2, -2.3)]

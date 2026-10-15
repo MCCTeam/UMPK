@@ -6,8 +6,9 @@ namespace Umpk.Client.Internal;
 /// <summary>Native packet-coordinate decoding, independent of visual interpolation and entity dimensions.</summary>
 internal readonly record struct EntityPacketPosition(int UnitsPerBlock, bool PreserveStationaryAxes, bool RoundToNearest, bool RotationUsesPacketBase, bool TeleportResetsPacketBase)
 {
+    // 1.14.4-client-decompiled net/minecraft/client/multiplayer/ClientPacketListener.java:672 updates the cache on every move packet; 1.15-client-decompiled net/minecraft/client/multiplayer/ClientPacketListener.java:677 gates those updates on hasPosition.
     public static EntityPacketPosition ForProtocol(int protocol)
-        => new(protocol < 107 ? 32 : 4096, protocol >= 751, protocol >= 761, protocol < 751, protocol < 768);
+        => new(protocol < 107 ? 32 : 4096, protocol >= 751, protocol >= 761, protocol < 573, protocol < 768);
 
     public Vec3d Decode(Vec3d position, int x, int y, int z)
         => new(DecodeAxis(position.X, x), DecodeAxis(position.Y, y), DecodeAxis(position.Z, z));

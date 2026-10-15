@@ -12,6 +12,7 @@
     <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityTeleport.native.json" />
     <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
     <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />

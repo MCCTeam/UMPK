@@ -106,11 +106,23 @@ internal sealed class EntityApplier : IApplier
                 {
                     // A modern relative teleport changes displayed state; the independent base is replaced by entity_position_sync instead.
                     _ = context.State.PacketBases.Get(tpEntity);
-                    tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
+                    if (teleport.ModernValues is { } change)
+                    {
+                        var source = new PositionMoveRotation(tpEntity.Position, tpEntity.Velocity, tpEntity.Yaw, tpEntity.Pitch);
+                        PositionMoveRotation destination = EntityTeleportProfile.ForProtocol(context.Version.Version.Protocol).Resolve(source, change, teleport.Relatives);
+                        tpEntity.Position = destination.Position;
+                        tpEntity.Velocity = destination.DeltaMovement;
+                        tpEntity.Yaw = destination.YRot;
+                        tpEntity.Pitch = destination.XRot;
+                    }
+                    else
+                    {
+                        tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
+                        tpEntity.Yaw = teleport.Yaw;
+                        tpEntity.Pitch = teleport.Pitch;
+                    }
                     if (EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).TeleportResetsPacketBase)
                         context.State.PacketBases.Set(tpEntity, tpEntity.Position);
-                    tpEntity.Yaw = teleport.Yaw;
-                    tpEntity.Pitch = teleport.Pitch;
                     tpEntity.OnGround = teleport.OnGround;
                     await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
                 }
@@ -122,7 +134,6 @@ internal sealed class EntityApplier : IApplier
                 {
                     context.State.PacketBases.Set(syncEntity, sync.Values.Position);
                     syncEntity.Position = sync.Values.Position;
-                    syncEntity.Velocity = sync.Values.DeltaMovement;
                     syncEntity.Yaw = sync.Values.YRot;
                     syncEntity.Pitch = sync.Values.XRot;
                     syncEntity.OnGround = sync.OnGround;

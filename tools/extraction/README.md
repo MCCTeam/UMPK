@@ -81,6 +81,17 @@ python3 tools/extraction/audit_entity_packet_bases.py --official /home/anon/Proj
 python3 -m unittest discover -s tools/extraction -p test_audit_entity_packet_bases.py
 ```
 
+## Modern teleport measurements
+
+`EntityTeleportDump.java` executes the official client's `PositionMoveRotation.calculateAbsolute` for every combination of the nine relative flags and eight input pairs. The maintained driver checks official artifact hashes, unchanged client class bytes, native class origins, complete finite output and equal protocol aliases before emitting a deduplicated replay fixture.
+
+```bash
+python3 tools/extraction/measure_entity_teleport.py --official /home/anon/Projects/MinecraftOfficial --measurements /tmp/entity-teleport-measurements --out /tmp/EntityTeleport.native.json
+python3 -m unittest discover -s tools/extraction -p test_measure_entity_teleport.py
+```
+
+The default matrix covers every available stable modern release from 1.21.2 through 26.3, including aliases from the official artifact catalogue. `--versions` selects a smaller explicit matrix. Each measurement includes the native sine-table hash and source hashes for position transforms, relative flags, vector rotation, math, entities and the client listener. Position-sync source must retain velocity. These measurements establish transform arithmetic; they do not execute the listener, select an entity's current or interpolation-target state, or implement vehicle authority.
+
 ## Validation
 
 ```bash

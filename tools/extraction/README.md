@@ -103,6 +103,18 @@ python3 -m unittest discover -s tools/extraction -p test_extract_entity_motion.p
 
 The owned survival-player row remains marked `client_player_measured: false`; it does not establish the actual remote-client player role. The extractor rejects relabeling that actor as a native player factory. Review the proposed files and obtain the dataset approval required by AGENTS.md before integrating them through DataGen and generated accessors. A constructor/controller catalogue does not establish full entity ticks, dynamic geometry or world physics.
 
+## Native remote-player measurements
+
+`measure_remote_player.py` constructs an owned subtype of the actual native `RemotePlayer`, overrides only survival game-mode queries and invokes the unchanged native `aiStep`. Its controlled client-level adapter supplies empty peer queries, collision-free answers and relative tick speed one. The player constructor runs normally; the owned world is allocated without executing its constructor. On 26.3 the driver explicitly advances the native interpolation handler before `aiStep`. This is a controlled phase measurement, not a complete entity or world tick or a packet-listener test.
+
+```bash
+python3 tools/extraction/measure_remote_player.py --official /home/anon/Projects/MinecraftOfficial --measurements /absolute/fresh-native-remote-player-run
+python3 tools/extraction/verify_remote_player.py /absolute/fresh-native-remote-player-run/26.3/remote-ai.json
+python3 tools/extraction/extract_remote_player_fixture.py --official /home/anon/Projects/MinecraftOfficial --measurements /absolute/fresh-native-remote-player-run --out /tmp/RemotePlayer.native.json
+```
+
+Use `--versions <release> ...` for a focused measurement. The fixture extractor requires the complete mapped release set, successful reports, exact hashes, equal protocol aliases and the previously verified position-controller profile for each release. Eight scenarios record 12 ticks each: linear, repeated and changed targets, velocity updates and retargeting, wrapped rotation, synchronized crouching and a stationary control. The sanity verifier checks completeness and controls; managed replay compares every recorded position, rotation, box, target, active state and velocity by exact numeric bits. The native measurements establish three position steps through 26.2 and two in 26.3, with immediate velocity updates through 1.19.3 and three-step velocity interpolation from 1.19.4. Network update intervals alone do not establish these durations. `VanillaEntityVelocity` and the existing position model remain caller-driven components pending runtime integration.
+
 ## Validation
 
 ```bash

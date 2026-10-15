@@ -194,7 +194,7 @@ public sealed partial class InteractionActions
         if (_blockProfile.CanBreakInstantly(_services.Self))
             return 1.0F;
         if (hardness.Hardness < 0)
-            throw new MiningUnavailableException("The target has unbreakable vanilla hardness.");
+            return 0.0F;
         if (_blockProfile.ItemToolComponents)
         {
             // Component-era stacks carry measured defaults plus their server patch. No effective Tool component means ordinary hand speed, including when the patch explicitly removed a pickaxe's default Tool.

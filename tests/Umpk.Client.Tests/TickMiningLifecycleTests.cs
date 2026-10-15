@@ -4,6 +4,7 @@ using Umpk.Client.Internal;
 using Umpk.Data.Java;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
+using Umpk.Game.Players;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
 using Umpk.Hosting;
@@ -16,6 +17,88 @@ namespace Umpk.Client.Tests;
 
 public sealed class TickMiningLifecycleTests
 {
+    public static IEnumerable<object[]> Protocols => JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Order().Select(protocol => new object[] { protocol });
+
+    [Theory]
+    [MemberData(nameof(Protocols))]
+    public async Task CreativeUnbreakableAttacksStillSendStartAndOneSwing(int protocol)
+    {
+        await using var fixture = new Fixture(protocol);
+        fixture.SetBlock("bedrock");
+        fixture.State.Self.GameMode = GameMode.Creative;
+        fixture.State.Self.InstantBuild = true;
+        using var caller = new CancellationTokenSource();
+        Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North, caller.Token);
+        try
+        {
+            await fixture.TickAsync();
+            await mining.WaitAsync(TimeSpan.FromSeconds(5));
+
+            Assert.Equal(2, fixture.Packets.Count);
+            ServerboundPlayerActionPacket start = Assert.IsType<ServerboundPlayerActionPacket>(fixture.Packets[protocol == 47 ? 1 : 0]);
+            Assert.Equal(0, start.Action);
+            Assert.Equal(Fixture.Target, start.Position);
+            object animation = fixture.Packets[protocol == 47 ? 0 : 1];
+            if (protocol == 777)
+                Assert.IsType<ServerboundPunchPacket>(animation);
+            else
+                Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(animation).Hand);
+        }
+        finally
+        {
+            caller.Cancel();
+            if (!mining.IsCompleted)
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(Protocols))]
+    public async Task UnbreakableBlocksKeepSwingingUntilTheHeldAttackIsReleased(int protocol)
+    {
+        await using var fixture = new Fixture(protocol);
+        fixture.SetBlock("bedrock");
+        using var caller = new CancellationTokenSource();
+        Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North, caller.Token);
+        try
+        {
+            for (int tick = 0; tick < 6; tick++)
+                await fixture.TickAsync();
+
+            Assert.False(mining.IsCompleted);
+            ServerboundPlayerActionPacket start = Assert.Single(fixture.Packets.OfType<ServerboundPlayerActionPacket>());
+            Assert.Equal(0, start.Action);
+            Assert.Equal(Fixture.Target, start.Position);
+            Assert.Equal(7, fixture.Packets.Count(packet => packet is ServerboundPunchPacket or ServerboundSwingPacket));
+            foreach (object animation in fixture.Packets.Where(packet => packet is ServerboundPunchPacket or ServerboundSwingPacket))
+            {
+                if (protocol == 777)
+                    Assert.IsType<ServerboundPunchPacket>(animation);
+                else
+                    Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(animation).Hand);
+            }
+            Assert.Same(start, fixture.Packets[protocol == 47 ? 1 : 0]);
+            Assert.Equal(Identifier.Minecraft("bedrock"), fixture.State.World.GetBlock(Fixture.Target).Block.Id);
+
+            caller.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
+
+            ServerboundPlayerActionPacket abort = Assert.IsType<ServerboundPlayerActionPacket>(fixture.Packets[^1]);
+            Assert.Equal(protocol == 777 ? 2 : 1, abort.Action);
+            Assert.Equal((byte)Direction.Down, abort.Direction);
+            Assert.Equal(2, fixture.Packets.OfType<ServerboundPlayerActionPacket>().Count());
+            int count = fixture.Packets.Count;
+            await fixture.TickAsync();
+            Assert.Equal(count, fixture.Packets.Count);
+        }
+        finally
+        {
+            caller.Cancel();
+            if (!mining.IsCompleted)
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
+        }
+    }
+
     [Fact]
     public async Task RemovingTheDefaultToolComponentUsesBareHandMining()
     {
@@ -254,11 +337,13 @@ public sealed class TickMiningLifecycleTests
         public ClientState State { get; } = new(new ClientFeatures().Normalized());
         public InteractionActions Actions { get; }
         public List<object> Packets { get; } = [];
+        private readonly int _protocol;
 
-        public Fixture()
+        public Fixture(int protocol = 777)
         {
-            Assert.True(JavaVersions.TryGetByProtocol(777, out var version));
-            State.Registries = JavaGameData.Registries(777);
+            _protocol = protocol;
+            Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
+            State.Registries = JavaGameData.Registries(protocol);
             State.RegistryTags.Install([new TagRegistry(RegistryIds.Block,
                 [new TagEntry(Identifier.Minecraft("mineable/pickaxe"), [1])])]);
             InstallWorld();
@@ -280,11 +365,17 @@ public sealed class TickMiningLifecycleTests
         public void InstallWorld()
         {
             var world = new Umpk.Game.World.World(
-                WorldFactory.CreateDimension(new CommonWorldSetup("minecraft:overworld", 0), registries: null, 777),
-                new RegistryBlockDataSource(State.Registries!.Blocks, isLegacy: false), WorldFactory.EmptyBiomes());
+                WorldFactory.CreateDimension(new CommonWorldSetup("minecraft:overworld", 0), registries: null, _protocol),
+                new RegistryBlockDataSource(State.Registries!.Blocks, isLegacy: _protocol < 393), WorldFactory.EmptyBiomes());
             Assert.True(State.Registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
             world.SetBlockStateId(Target, stone.DefaultStateId);
             State.InstallWorld(world);
+        }
+
+        public void SetBlock(string name)
+        {
+            Assert.True(State.Registries!.Blocks.TryGetValue(Identifier.Minecraft(name), out BlockDefinition? block));
+            State.World.SetBlockStateId(Target, block.DefaultStateId);
         }
 
         public void Hold(string name, ToolComponent? tool = null, bool removeTool = false)

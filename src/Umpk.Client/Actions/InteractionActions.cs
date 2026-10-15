@@ -35,7 +35,7 @@ public sealed partial class InteractionActions
         _blockProfile = BlockInteractionProfile.ForProtocol(services.Version.Version.Protocol);
     }
 
-    /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Caller cancellation releases an active attack with ABORT.</summary>
+    /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Unbreakable blocks keep the attack held until cancellation or a server update removes the target. Caller cancellation releases an active attack with ABORT.</summary>
     public async Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
     {
         if (_services.Scheduler.IsCurrent)

@@ -8,6 +8,7 @@ internal enum VanillaInterpolationProfile
     LegacyDoubleRotation,
     LegacyFloatRotation,
     LinearStep,
+    ClampedLinearStep,
     HandlerOffsetBox,
     Handler,
     DeduplicatingHandler,
@@ -53,12 +54,41 @@ internal sealed class VanillaEntityInterpolation
     private Pose Current => new(Position, Yaw, Pitch);
     private bool UsesHandler => _profile >= VanillaInterpolationProfile.HandlerOffsetBox;
 
+    private bool ClampsPitch => _profile >= VanillaInterpolationProfile.ClampedLinearStep;
+
+    public static VanillaEntityInterpolation CreateRemotePlayer(int protocol, Vec3d position, float yaw, float pitch, float width, float height)
+    {
+        VanillaInterpolationProfile profile = protocol switch
+        {
+            <= 754 => VanillaInterpolationProfile.LegacyDoubleRotation,
+            <= 763 => VanillaInterpolationProfile.LegacyFloatRotation,
+            <= 767 => VanillaInterpolationProfile.LinearStep,
+            <= 769 => VanillaInterpolationProfile.ClampedLinearStep,
+            770 => VanillaInterpolationProfile.HandlerOffsetBox,
+            <= 772 => VanillaInterpolationProfile.Handler,
+            <= 776 => VanillaInterpolationProfile.DeduplicatingHandler,
+            _ => VanillaInterpolationProfile.Stepped,
+        };
+        var controller = new VanillaEntityInterpolation(profile, position, 0, 0, width, height, protocol >= 777 ? 2 : 3);
+        controller.SetCurrentRotation(yaw, pitch);
+        return controller;
+    }
+
     public void SetPosition(Vec3d position) => _bounds = _bounds.AtPosition(position);
 
     public void SetRotation(float yaw, float pitch)
     {
         Yaw = yaw % 360.0F;
-        Pitch = pitch % 360.0F;
+        Pitch = ClampsPitch ? Math.Clamp(pitch % 360.0F, -90.0F, 90.0F) : pitch % 360.0F;
+    }
+
+    // Native direct setters preserve yaw outside one turn; setXRot starts wrapping and clamping pitch in 1.21.2.
+    public void SetCurrentRotation(float yaw, float pitch)
+    {
+        if (float.IsFinite(yaw))
+            Yaw = yaw;
+        if (float.IsFinite(pitch))
+            Pitch = ClampsPitch ? Math.Clamp(pitch % 360.0F, -90.0F, 90.0F) : pitch;
     }
 
     public void RefreshDimensions(float width, float height, bool recenter)
@@ -89,8 +119,7 @@ internal sealed class VanillaEntityInterpolation
         {
             SetPosition(target.Position);
             // Native snapTo assigns these angles directly; setRot applies the remainder only during interpolation.
-            Yaw = target.Yaw;
-            Pitch = target.Pitch;
+            SetCurrentRotation(target.Yaw, target.Pitch);
             Cancel();
             return;
         }
@@ -189,7 +218,7 @@ internal sealed class VanillaEntityInterpolation
     {
         Vec3d position;
         float yaw, pitch;
-        if (_profile == VanillaInterpolationProfile.LinearStep)
+        if (_profile is VanillaInterpolationProfile.LinearStep or VanillaInterpolationProfile.ClampedLinearStep)
         {
             double alpha = 1.0 / _remaining;
             position = Lerp(alpha, Position, _target.Position);

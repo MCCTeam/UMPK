@@ -1,12 +1,34 @@
+using Umpk.Client.Actions;
 using Umpk.Geometry;
 using Umpk.Protocol.Java.Packets;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>Native modern teleport target arithmetic, independent of controller and packet-base ownership.</summary>
-internal readonly record struct EntityTeleportProfile(bool ClampPitchBeforeRotation, bool WideTrigIndex)
+/// <summary>Native modern teleport arithmetic and current/target transitions. Packet-coordinate bases remain separately owned.</summary>
+internal readonly record struct EntityTeleportProfile(bool ClampPitchBeforeRotation, bool WideTrigIndex, bool UsesPendingRotation)
 {
-    public static EntityTeleportProfile ForProtocol(int protocol) => new(protocol >= 770, protocol >= 774);
+    public static EntityTeleportProfile ForProtocol(int protocol) => new(protocol >= 770, protocol >= 774, protocol >= 770);
+
+    public PositionMoveRotation GetSource(VanillaEntityInterpolation position, Vec3d knownMovement)
+        => new(position.TargetPosition, knownMovement, UsesPendingRotation ? position.TargetYaw : position.Yaw, UsesPendingRotation ? position.TargetPitch : position.Pitch);
+
+    // The caller supplies native known movement and tick/authority eligibility. Direct setters preserve pending position and velocity controllers.
+    public bool Apply(VanillaEntityInterpolation position, VanillaEntityVelocity movement, Vec3d knownMovement, PositionMoveRotation change, int flags, bool interpolate)
+    {
+        PositionMoveRotation source = GetSource(position, knownMovement);
+        PositionMoveRotation destination = Resolve(source, change, flags);
+        bool tooFar = source.Position.Subtract(destination.Position).LengthSqr() > 4096.0;
+        bool interpolated = interpolate && !tooFar;
+        if (interpolated)
+            position.SetTarget(destination.Position, destination.YRot, destination.XRot);
+        else
+        {
+            position.SetPosition(destination.Position);
+            position.SetCurrentRotation(destination.YRot, destination.XRot);
+        }
+        movement.SetCurrent(destination.DeltaMovement);
+        return interpolated;
+    }
 
     public PositionMoveRotation Resolve(PositionMoveRotation source, PositionMoveRotation change, int flags)
     {

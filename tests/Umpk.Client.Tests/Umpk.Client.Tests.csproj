@@ -13,6 +13,7 @@
     <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />
     <EmbeddedResource Include="Fixtures/EntityTeleport.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityTeleportController.native.json" />
     <EmbeddedResource Include="Fixtures/RemotePlayer.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyRemotePlayer.native.json" />
     <EmbeddedResource Include="Fixtures/AttackCharge.native.json" />

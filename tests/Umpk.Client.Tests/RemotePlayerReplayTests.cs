@@ -55,7 +55,8 @@ public sealed class RemotePlayerReplayTests
         foreach (JsonElement index in release.GetProperty("cases").EnumerateArray())
         {
             JsonElement native = document.RootElement.GetProperty("cases")[index.GetInt32()];
-            var position = LegacyController(native, VanillaInterpolationProfile.LegacyDoubleRotation);
+            JsonElement initial = native.GetProperty("initial");
+            var position = VanillaEntityInterpolation.CreateRemotePlayer(release.GetProperty("protocol").GetInt32(), Vector(initial.GetProperty("position")), initial.GetProperty("rotation")[0].GetSingle(), initial.GetProperty("rotation")[1].GetSingle(), 0.6F, 1.8F);
             var velocity = new VanillaEntityVelocity(0);
             Assert.Equal(12, native.GetProperty("ticks").GetArrayLength());
             foreach (JsonElement tick in native.GetProperty("ticks").EnumerateArray())
@@ -153,7 +154,7 @@ public sealed class RemotePlayerReplayTests
         {
             JsonElement native = document.RootElement.GetProperty("cases")[index.GetInt32()];
             string name = native.GetProperty("name").GetString()!;
-            var position = new VanillaEntityInterpolation(profile, new Vec3d(1.5, 64, 1.5), name == "wrap_rotation" ? 170 : 0, 0, 0.6F, 1.8F, release.GetProperty("position_steps").GetInt32());
+            var position = VanillaEntityInterpolation.CreateRemotePlayer(release.GetProperty("protocol").GetInt32(), new Vec3d(1.5, 64, 1.5), name == "wrap_rotation" ? 170 : 0, 0, 0.6F, 1.8F);
             foreach (JsonElement tick in native.GetProperty("ticks").EnumerateArray())
             {
                 foreach (JsonElement operation in tick.GetProperty("operations").EnumerateArray())

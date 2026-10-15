@@ -299,7 +299,17 @@ public sealed record DyeColorValueComponent(string Color);
 
 /// <summary>The charge fraction an attack needs before it counts as fully charged (<c>minecraft:minimum_attack_charge</c>, 1.21.11+).</summary>
 /// <param name="Value">The minimum charge.</param>
-public sealed record MinimumAttackChargeComponent(float Value);
+public sealed record MinimumAttackChargeComponent(float Value)
+{
+    /// <inheritdoc/>
+    public bool Equals(MinimumAttackChargeComponent? other) => other is not null && ValueBits(Value) == ValueBits(other.Value);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => ValueBits(Value);
+
+    // The native Float component distinguishes signed zero and treats every NaN payload as equal.
+    private static int ValueBits(float value) => float.IsNaN(value) ? 0x7FC00000 : BitConverter.SingleToInt32Bits(value);
+}
 
 /// <summary>An extra cost added to a villager trade (<c>minecraft:additional_trade_cost</c>, 26.2).</summary>
 /// <param name="Value">The added cost.</param>

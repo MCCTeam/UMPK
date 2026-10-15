@@ -17,6 +17,98 @@ public sealed class RemotePlayerReplayTests
         }
     }
 
+    public static IEnumerable<object[]> LegacyReleases
+    {
+        get
+        {
+            using JsonDocument document = ReadNative("LegacyRemotePlayer");
+            foreach (JsonElement row in document.RootElement.GetProperty("releases").EnumerateArray())
+                yield return [row.GetProperty("version").GetString()!];
+        }
+    }
+
+    [Fact]
+    public void LegacyMeasurementsCoverEveryPreMappingRelease()
+    {
+        using JsonDocument catalogue = ReadNative("EntityPacketPosition");
+        using JsonDocument legacy = ReadNative("LegacyRemotePlayer");
+        string[] expected = catalogue.RootElement.GetProperty("releases").EnumerateArray()
+            .Where(row => row.GetProperty("protocol").GetInt32() < 498)
+            .Select(row => row.GetProperty("version").GetString()!).Order(StringComparer.Ordinal).ToArray();
+        string[] measured = legacy.RootElement.GetProperty("releases").EnumerateArray()
+            .Select(row => row.GetProperty("version").GetString()!).Order(StringComparer.Ordinal).ToArray();
+
+        Assert.Equal(31, expected.Length);
+        Assert.Equal(expected, measured);
+    }
+
+    [Theory]
+    [MemberData(nameof(LegacyReleases))]
+    public void LegacyPositionVelocityAndBoundsMatchActualRemotePlayer(string version)
+    {
+        using JsonDocument document = ReadNative("LegacyRemotePlayer");
+        JsonElement release = Release(document, version);
+        Assert.Equal("LegacyDoubleRotation", release.GetProperty("position_profile").GetString());
+        Assert.Equal(3, release.GetProperty("position_steps").GetInt32());
+        Assert.Equal(0, release.GetProperty("velocity_steps").GetInt32());
+        Assert.Equal(9, release.GetProperty("cases").GetArrayLength());
+        foreach (JsonElement index in release.GetProperty("cases").EnumerateArray())
+        {
+            JsonElement native = document.RootElement.GetProperty("cases")[index.GetInt32()];
+            var position = LegacyController(native, VanillaInterpolationProfile.LegacyDoubleRotation);
+            var velocity = new VanillaEntityVelocity(0);
+            Assert.Equal(12, native.GetProperty("ticks").GetArrayLength());
+            foreach (JsonElement tick in native.GetProperty("ticks").EnumerateArray())
+            {
+                foreach (JsonElement operation in tick.GetProperty("operations").EnumerateArray())
+                {
+                    switch (operation.GetProperty("kind").GetString())
+                    {
+                        case "target":
+                            position.SetTarget(Vector(operation.GetProperty("position")), operation.GetProperty("rotation")[0].GetSingle(), operation.GetProperty("rotation")[1].GetSingle());
+                            break;
+                        case "velocity":
+                            velocity.Observe(Vector(operation.GetProperty("value")));
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unknown legacy native input");
+                    }
+                }
+                AssertState(position, tick.GetProperty("before"));
+                position.Tick(_ => true);
+                velocity.Tick();
+                AssertState(position, tick.GetProperty("after"));
+                AssertVector(Vector(tick.GetProperty("velocity")), velocity.Value);
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData("rotation_precision", "LegacyFloatRotation")]
+    [InlineData("position_precision", "LinearStep")]
+    public void LegacyPrecisionWitnessesRejectDifferentArithmetic(string name, string alternative)
+    {
+        using JsonDocument document = ReadNative("LegacyRemotePlayer");
+        JsonElement native = document.RootElement.GetProperty("cases").EnumerateArray().First(row => row.GetProperty("name").GetString() == name);
+        var position = LegacyController(native, Enum.Parse<VanillaInterpolationProfile>(alternative));
+        JsonElement tick = native.GetProperty("ticks")[0], target = tick.GetProperty("operations")[0];
+        position.SetTarget(Vector(target.GetProperty("position")), target.GetProperty("rotation")[0].GetSingle(), target.GetProperty("rotation")[1].GetSingle());
+
+        position.Tick(_ => true);
+
+        JsonElement expected = tick.GetProperty("after");
+        if (name == "rotation_precision")
+            Assert.NotEqual(BitConverter.SingleToInt32Bits(expected.GetProperty("rotation")[0].GetSingle()), BitConverter.SingleToInt32Bits(position.Yaw));
+        else
+            Assert.NotEqual(BitConverter.DoubleToInt64Bits(expected.GetProperty("position")[0].GetDouble()), BitConverter.DoubleToInt64Bits(position.Position.X));
+    }
+
+    private static VanillaEntityInterpolation LegacyController(JsonElement native, VanillaInterpolationProfile profile)
+    {
+        JsonElement initial = native.GetProperty("initial");
+        return new VanillaEntityInterpolation(profile, Vector(initial.GetProperty("position")), initial.GetProperty("rotation")[0].GetSingle(), initial.GetProperty("rotation")[1].GetSingle(), 0.6F, 1.8F, 3);
+    }
+
     [Theory]
     [MemberData(nameof(Releases))]
     public void VelocityPhasesMatchActualRemotePlayer(string version)
@@ -96,9 +188,9 @@ public sealed class RemotePlayerReplayTests
         AssertVector(target, velocity.Value);
     }
 
-    private static JsonDocument ReadNative()
+    private static JsonDocument ReadNative(string fixture = "RemotePlayer")
     {
-        using Stream stream = typeof(RemotePlayerReplayTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.RemotePlayer.native.json")!;
+        using Stream stream = typeof(RemotePlayerReplayTests).Assembly.GetManifestResourceStream($"Umpk.Client.Tests.Fixtures.{fixture}.native.json")!;
         return JsonDocument.Parse(stream);
     }
 

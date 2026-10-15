@@ -20,6 +20,101 @@ namespace Umpk.Client.Tests;
 public sealed class AttackInputTickPipelineTests
 {
     [Theory]
+    [InlineData(774, false)]
+    [InlineData(775, false)]
+    [InlineData(776, false)]
+    [InlineData(777, false)]
+    [InlineData(774, true)]
+    [InlineData(775, true)]
+    [InlineData(776, true)]
+    [InlineData(777, true)]
+    public async Task JoinResetsTheDestroyDelayWhileRespawnRetainsIt(int protocol, bool join)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, physics: false);
+        await JoinAsync(client, server, version, "stone", ct);
+        BlockPos target = new(1, 65, 1);
+        await client.InvokeAsync(current =>
+        {
+            Assert.True(current.State.Registries!.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
+            current.State.World.SetBlockStateId(target, stone.DefaultStateId);
+            return true;
+        }, ct);
+        using var first = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        Task completed = client.Actions.Interaction.DigBlockAsync(target, Direction.North, first.Token);
+        try
+        {
+            await client.InvokeAsync(_ => true, ct);
+            ServerboundPlayerActionPacket? stop = null;
+            for (int i = 0; i < 200 && stop is null; i++)
+            {
+                await ticks.FireAsync(ct);
+                stop = (await ReadActionsThroughTickEndAsync(server, version, ct)).SingleOrDefault(packet => packet.Action == (protocol == 777 ? 3 : 2));
+            }
+            Assert.NotNull(stop);
+            Assert.NotNull(stop.Sequence);
+            await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, new ClientboundBlockChangedAckPacket(stop.Sequence.Value), ct);
+            await completed.WaitAsync(ct);
+
+            if (join)
+            {
+                await ScriptedServer.DriveThroughConfigurationReentryAsync(server, version, ct);
+                await ApplyJoinAndPrepareAsync(client, server, version, "stone", ct);
+            }
+            else
+            {
+                var respawned = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                using IDisposable subscription = client.Events.Subscribe<Respawned>(_ => respawned.TrySetResult());
+                var spawn = new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, -1, false, false, null, 0, 63);
+                await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, new ClientboundRespawnPacket(spawn, 0, null), ct);
+                await respawned.Task.WaitAsync(ct);
+                await PreparePlayerAsync(client, server, version, "stone", ct);
+            }
+            await client.InvokeAsync(current =>
+            {
+                Assert.True(current.State.Registries!.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
+                current.State.World.SetBlockStateId(target, stone.DefaultStateId);
+                return true;
+            }, ct);
+
+            using var second = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            Task held = client.Actions.Interaction.DigBlockAsync(target, Direction.North, second.Token);
+            try
+            {
+                await client.InvokeAsync(_ => true, ct);
+                int elapsed = 0;
+                stop = null;
+                for (; elapsed < 200 && stop is null; elapsed++)
+                {
+                    await ticks.FireAsync(ct);
+                    stop = (await ReadActionsThroughTickEndAsync(server, version, ct)).SingleOrDefault(packet => packet.Action == (protocol == 777 ? 3 : 2));
+                }
+                Assert.NotNull(stop);
+                Assert.Equal(join ? 151 : 156, elapsed);
+                Assert.NotNull(stop.Sequence);
+                await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, new ClientboundBlockChangedAckPacket(stop.Sequence.Value), ct);
+                await held.WaitAsync(ct);
+            }
+            finally
+            {
+                second.Cancel();
+                if (!held.IsCompleted)
+                    await Assert.ThrowsAnyAsync<OperationCanceledException>(() => held.WaitAsync(ct));
+            }
+        }
+        finally
+        {
+            first.Cancel();
+            if (!completed.IsCompleted)
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => completed.WaitAsync(ct));
+        }
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task SessionPlayerPhaseChargesTheNextClickWithOrWithoutPhysics(bool physics)
@@ -130,12 +225,23 @@ public sealed class AttackInputTickPipelineTests
     {
         await Task.WhenAll(client.ConnectAsync(new ServerEndpoint("test", 25565), ct), ScriptedServer.DriveToPlayAsync(server, version, ct));
 
+        await ApplyJoinAndPrepareAsync(client, server, version, item, ct);
+    }
+
+    private static async Task ApplyJoinAndPrepareAsync(UmpkClient client, FakeJavaServer server, JavaVersion version, string item, CancellationToken ct)
+    {
         var joined = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using IDisposable joinSubscription = client.Events.Subscribe<JoinedGame>(_ => joined.TrySetResult());
         var spawn = new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, -1, false, false, null, 0, 63);
         await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play,
             new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, spawn, false, false, null), ct);
         await joined.Task.WaitAsync(ct);
+
+        await PreparePlayerAsync(client, server, version, item, ct);
+    }
+
+    private static async Task PreparePlayerAsync(UmpkClient client, FakeJavaServer server, JavaVersion version, string item, CancellationToken ct)
+    {
         var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using IDisposable positionSubscription = client.Events.Subscribe<PositionCorrected>(_ => corrected.TrySetResult());
         var position = new Vec3d(2.5, 65, 2.5);

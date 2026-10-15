@@ -16,6 +16,7 @@ public sealed partial class InteractionActions
     private MiningRequest? _mining;
     private MiningTarget? _destroyTarget;
     private readonly VanillaAttackCharge _attackCharge = new();
+    private long? _interactionLifetime;
     private int _destroyDelay;
 
     private sealed class MiningRequest(BlockPos position, Direction face, double? viewDistance, long playerLifetime, CancellationToken cancellation)
@@ -228,6 +229,12 @@ public sealed partial class InteractionActions
 
     private void SynchronizeMiningOwner()
     {
+        if (_interactionLifetime != _services.State.InteractionLifetime)
+        {
+            _interactionLifetime = _services.State.InteractionLifetime;
+            _destroyDelay = 0;
+            _destroyTarget = null;
+        }
         _attackCharge.Synchronize(_services.State.PlayerLifetime);
         if (_destroyTarget is { } target
             && (target.PlayerLifetime != _services.State.PlayerLifetime || !target.World.TryGetTarget(out World? world) || !ReferenceEquals(world, _services.State.WorldOrNull)))

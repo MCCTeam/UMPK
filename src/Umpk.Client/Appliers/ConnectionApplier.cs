@@ -276,6 +276,7 @@ internal sealed class ConnectionApplier : IApplier
             DimensionTypeName = join.SpawnInfo.DimensionTypeName,
             InlineType = join.DimensionTypeNbt,
         });
+        context.State.AdvanceInteractionLifetime();
         context.State.AdvancePlayerLifetime();
 
         // World construction is the required, failure-prone part of a join. Complete it before making the player observable as spawned or resetting join-owned state, so an unusable required custom dimension terminates the session without leaving a half-applied player/world transition.

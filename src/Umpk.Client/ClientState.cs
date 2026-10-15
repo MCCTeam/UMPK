@@ -121,6 +121,11 @@ public sealed class ClientState
 
     internal void AdvancePlayerLifetime() => PlayerLifetime++;
 
+    /// <summary>The native game-mode controller is created on join and retained across respawn.</summary>
+    internal long InteractionLifetime { get; private set; }
+
+    internal void AdvanceInteractionLifetime() => InteractionLifetime++;
+
     internal void InstallWorld(World world) => InstallWorld(world.Dimension.DimensionName, world);
 
     internal void InstallWorld(Identifier dimension, World? world)

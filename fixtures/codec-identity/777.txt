@@ -104,7 +104,7 @@ Play Clientbound 0x35 minecraft:merchant_offers MakeMerchantOffers(Table777) rea
 Play Clientbound 0x36 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV26_3 read:8 shape:varint,varint,varint*(varint,short,short,short)
 Play Clientbound 0x37 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV26_3 read:10 shape:varint,varint,varint*(varint,short,short,short),angle,angle
 Play Clientbound 0x38 minecraft:move_minecart_along_track marker n/a shape:opaque
-Play Clientbound 0x39 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRot read:4 shape:opaque
+Play Clientbound 0x39 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRotV26_3 read:4 shape:varint,bool,angle,angle
 Play Clientbound 0x3A minecraft:move_vehicle marker n/a shape:opaque
 Play Clientbound 0x3B minecraft:open_book UiMiscCodecs.OpenBookV1_14 read:1 shape:opaque
 Play Clientbound 0x3C minecraft:open_screen ContainerCodecs.OpenScreenModern fault:ComponentFormatException shape:opaque

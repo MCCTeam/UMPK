@@ -117,7 +117,7 @@ Play Clientbound 0x35 minecraft:merchant_offers MakeMerchantOffers(Table777) src
     reject:P776(UnmodeledItemComponentException)
 Play Clientbound 0x36 minecraft:move_entity_pos EntityMoveCodecs.MoveEntityPosV26_3 src:none
 Play Clientbound 0x37 minecraft:move_entity_pos_rot EntityMoveCodecs.MoveEntityPosRotV26_3 src:none
-Play Clientbound 0x39 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRot src:none
+Play Clientbound 0x39 minecraft:move_entity_rot EntityMoveCodecs.MoveEntityRotV26_3 src:none
 Play Clientbound 0x3B minecraft:open_book UiMiscCodecs.OpenBookV1_14 src:none
 Play Clientbound 0x3C minecraft:open_screen ContainerCodecs.OpenScreenModern src:none
 Play Clientbound 0x3D minecraft:open_sign_editor UiMiscCodecs.OpenSignEditorV1_14 src:none

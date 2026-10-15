@@ -135,7 +135,7 @@ Play          Clientbound minecraft:mount_screen_open                      774- 
 Play          Clientbound minecraft:move_entity                            107-754 marker
 Play          Clientbound minecraft:move_entity_pos                        47 EntityMoveCodecs.MoveEntityPosV1_8 via:minecraft:move_entity_position | 107-776 EntityMoveCodecs.MoveEntityPosV1_9 | 777- EntityMoveCodecs.MoveEntityPosV26_3
 Play          Clientbound minecraft:move_entity_pos_rot                    47 EntityMoveCodecs.MoveEntityPosRotV1_8 via:minecraft:move_entity_position_rotation | 107-776 EntityMoveCodecs.MoveEntityPosRotV1_9 | 777- EntityMoveCodecs.MoveEntityPosRotV26_3
-Play          Clientbound minecraft:move_entity_rot                        47 EntityMoveCodecs.MoveEntityRot via:minecraft:move_entity_rotation | 107- EntityMoveCodecs.MoveEntityRot
+Play          Clientbound minecraft:move_entity_rot                        47 EntityMoveCodecs.MoveEntityRot via:minecraft:move_entity_rotation | 107-776 EntityMoveCodecs.MoveEntityRot | 777- EntityMoveCodecs.MoveEntityRotV26_3
 Play          Clientbound minecraft:move_minecart_along_track              768- marker
 Play          Clientbound minecraft:move_vehicle                           107- marker
 Play          Clientbound minecraft:open_book                              477- UiMiscCodecs.OpenBookV1_14

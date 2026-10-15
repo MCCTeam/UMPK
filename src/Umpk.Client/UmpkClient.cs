@@ -897,6 +897,10 @@ public sealed class UmpkClient : IAsyncDisposable
         // Native Player.tick advances attack strength after input and movement simulation, before LocalPlayer publishes its movement. Player loading gates this phase; disabling physics does not disable the player's charge counter.
         Actions.Interaction.TickAttackChargeOnLoop(readiness.MovementEligible);
 
+        // Modern remote players remain ticking outside loaded terrain. Their native motion phase uses this same session clock even when local physics is disabled.
+        if (State.WorldDimension is not null)
+            State.EntityMotion.Tick(State.EntitiesOrNull);
+
         if (_settings.Features.Physics && readiness.MovementEligible)
         {
             // Native 26.3 publishes the player after block entities; earlier clients publish during the entity phase.

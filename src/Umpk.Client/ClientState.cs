@@ -115,6 +115,8 @@ public sealed class ClientState
 
     internal Internal.EntityPacketBases PacketBases { get; } = new();
 
+    internal Internal.EntityMotionState EntityMotion { get; } = new();
+
     internal Identifier? WorldDimension => _worldDimension;
 
     internal long PlayerLifetime { get; private set; }
@@ -134,6 +136,7 @@ public sealed class ClientState
         _worldDimension = dimension;
         _entities?.Clear();
         PacketBases.Clear();
+        EntityMotion.Clear();
     }
 
     internal void ResetForRespawn(World world) => InstallWorld(world);
@@ -158,6 +161,7 @@ public sealed class ClientState
         AdvancePlayerLifetime();
         _entities?.Clear();
         PacketBases.Clear();
+        EntityMotion.Clear();
         Scoreboard.Clear();
         Maps.Clear();
 
@@ -187,6 +191,7 @@ public sealed class ClientState
         Server.ResetForSessionEnd();
         RegistryTags.Clear();
         PacketBases.Clear();
+        EntityMotion.Clear();
 
         // The chat-signing counters describe ONE connection's profile key: the coordinator that owns them is built per connect and per negotiated version. Leaving them behind lets a 1.19.3 session that rotated once reconnect to a 1.19.2 server and report ProfileKeyRotationSupported == false beside ProfileKeyRotations == 1, plus a refresh instant belonging to a key this session never held.
         Chat.ResetProfileKeyState();

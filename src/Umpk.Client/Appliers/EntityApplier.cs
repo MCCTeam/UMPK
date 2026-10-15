@@ -54,7 +54,10 @@ internal sealed class EntityApplier : IApplier
                 foreach (int id in remove.EntityIds)
                 {
                     if (store.Remove(id) is { } removed)
+                    {
                         context.State.PacketBases.Remove(removed);
+                        context.State.EntityMotion.Remove(removed);
+                    }
                     await context.PublishAsync(new EntityRemoved(id)).ConfigureAwait(false);
                 }
 
@@ -153,7 +156,7 @@ internal sealed class EntityApplier : IApplier
                 Vec3d motionVelocity = ReadVelocity(motion);
                 if (!TryApplySelfVelocity(context, motion.EntityId, motionVelocity)
                     && store.TryGet(motion.EntityId, out Entity? motionEntity) && motionEntity is not null)
-                    motionEntity.Velocity = motionVelocity;
+                    context.State.EntityMotion.ObserveVelocity(motionEntity, motionVelocity);
 
                 return true;
 
@@ -209,7 +212,11 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundTakeItemEntityPacket pickup:
-                store.Remove(pickup.ItemEntityId);
+                if (store.Remove(pickup.ItemEntityId) is { } pickedUp)
+                {
+                    context.State.PacketBases.Remove(pickedUp);
+                    context.State.EntityMotion.Remove(pickedUp);
+                }
                 await context.PublishAsync(new ItemPickedUp(pickup.ItemEntityId, pickup.CollectorEntityId, pickup.Amount ?? 0)).ConfigureAwait(false);
                 return true;
 
@@ -241,7 +248,7 @@ internal sealed class EntityApplier : IApplier
     /// <remarks>
     /// <para>Wire form. Through protocol 772 the value is three shorts of <c>value * 8000</c>, clamped server-side to +/-3.9 before encoding. Spawn and motion packets use identical arithmetic, so the client applies no clamp of its own. From 1.21.9 (protocol 773) the three shorts are replaced by the low-precision quantized block, and the bound codec parks it in <c>ModernVelocityRaw</c> with the shorts left at literal zero.</para>
     /// <para>One era omits the field: on 1.8 the three shorts are written ONLY when <c>data &gt; 0</c>, so the codec leaves them at zero otherwise and this returns the zero vector, which is what the vanilla client does too. <c>add_player</c>, <c>add_experience_orb</c> and <c>add_painting</c> carry no velocity at all.</para>
-    /// <para>From 1.21.5 every spawned type applies the wire velocity directly. Earlier clients applied it in selected entity types. UMPK applies it uniformly because its entities do not re-derive motion; <see cref="Entity.Velocity"/> is a tracked report of what the server last said for every type.</para>
+    /// <para>From 1.21.5 every spawned type applies the wire velocity directly. Earlier clients applied it in selected entity types. Remote players use their native spawn policy below; other types currently retain the decoded wire report pending their controller integration.</para>
     /// </remarks>
     private static Vec3d SpawnVelocity(short velocityX, short velocityY, short velocityZ, byte[]? modernVelocityRaw)
         => modernVelocityRaw is { } raw
@@ -317,12 +324,15 @@ internal sealed class EntityApplier : IApplier
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata);
+        if (isPlayer)
+            context.State.EntityMotion.RegisterRemotePlayer(entity, context.Version.Version.Protocol);
         context.State.PacketBases.Set(entity, entity.Position);
 
         // Native client insertion discards the previous entity with this id before installing the new instance.
         if (store.Remove(entityId) is { } previous)
         {
             context.State.PacketBases.Remove(previous);
+            context.State.EntityMotion.Remove(previous);
             await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
         }
         store.Add(entity);

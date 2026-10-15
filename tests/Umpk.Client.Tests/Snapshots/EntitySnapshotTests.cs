@@ -269,6 +269,36 @@ public sealed class EntitySnapshotTests
         Assert.Null(hit);
     }
 
+    [Fact]
+    public async Task RaycastView_UsesTheActualMainHandItemForLightOutline()
+    {
+        using var cts = new CancellationTokenSource(Budget);
+        CancellationToken ct = cts.Token;
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = BuildConnectableClient(server);
+        await JoinAsync(client, server, ct);
+        var position = new BlockPos(0, 65, 0);
+        await client.InvokeAsync(c =>
+        {
+            c.State.World.SetBlockStateId(position, DefaultStateId("minecraft:light"));
+            return true;
+        }, ct);
+        await TeleportAsync(client, server, new Vec3d(0.5, 64, -2), yaw: 0, pitch: 0, ct);
+        Assert.Null(await client.Snapshots.RaycastViewAsync(maxDistance: 4.5, ct: ct));
+        await client.InvokeAsync(c =>
+        {
+            c.State.Inventory.SetSlot(0, 36, new ItemStack(Registries.Items[Identifier.Minecraft("light")], 1));
+            return true;
+        }, ct);
+
+        BlockHitResult? hit = await client.Snapshots.RaycastViewAsync(maxDistance: 4.5, ct: ct);
+
+        Assert.NotNull(hit);
+        Assert.Equal(position, hit.Value.BlockPos);
+        Assert.Equal(Direction.North, hit.Value.Face);
+        Assert.Equal(0, hit.Value.Point.Z);
+    }
+
     // helpers
 
     private static UmpkClient BuildIdleClient() => new UmpkClientBuilder()

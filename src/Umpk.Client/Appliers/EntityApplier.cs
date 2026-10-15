@@ -30,14 +30,14 @@ internal sealed class EntityApplier : IApplier
             case ClientboundAddMobPacket mob:
                 Vec3d mobVelocity = SpawnVelocity(mob.VelocityX, mob.VelocityY, mob.VelocityZ, modernVelocityRaw: null);
                 await SpawnAsync(store, context, mob.EntityId, mob.Uuid, mob.TypeId, EntitySpawnSpace.Living,
-                    mob.X, mob.Y, mob.Z, mob.Yaw, mob.Pitch, mob.HeadPitch, mobVelocity).ConfigureAwait(false);
+                    mob.X, mob.Y, mob.Z, mob.Yaw, mob.Pitch, mob.HeadPitch, mobVelocity, mob.Metadata).ConfigureAwait(false);
                 TryApplySelfVelocity(context, mob.EntityId, mobVelocity);
                 return true;
 
             // add_player and add_experience_orb carry no type id: the packet identity is the type, so the type is resolved by key rather than by a made-up id. None of these three frames carries a velocity on any protocol, so they spawn at rest and the velocity parameter is left at its default.
             case ClientboundAddPlayerPacket player:
                 await SpawnKeyedAsync(store, context, player.EntityId, player.Uuid, PlayerType,
-                    player.X, player.Y, player.Z, player.Yaw, player.Pitch, player.Yaw).ConfigureAwait(false);
+                    player.X, player.Y, player.Z, player.Yaw, player.Pitch, player.Yaw, player.Metadata).ConfigureAwait(false);
                 return true;
 
             case ClientboundAddExperienceOrbPacket orb:
@@ -53,7 +53,8 @@ internal sealed class EntityApplier : IApplier
             case ClientboundRemoveEntitiesPacket remove:
                 foreach (int id in remove.EntityIds)
                 {
-                    store.Remove(id);
+                    if (store.Remove(id) is { } removed)
+                        context.State.PacketBases.Remove(removed);
                     await context.PublishAsync(new EntityRemoved(id)).ConfigureAwait(false);
                 }
 
@@ -62,9 +63,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosPacket move:
                 if (store.TryGet(move.EntityId, out Entity? posEntity) && posEntity is not null)
                 {
-                    // 26.3 may carry stepped deltas: apply every step cumulatively, not just the mirrored first one.
-                    (double dx, double dy, double dz) = SumSteps(move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
-                    posEntity.Position = posEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
+                    posEntity.Position = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
                     posEntity.OnGround = move.OnGround;
                     await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
                 }
@@ -74,9 +73,18 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityRotPacket rot:
                 if (store.TryGet(rot.EntityId, out Entity? rotEntity) && rotEntity is not null)
                 {
+                    Vec3d previous = rotEntity.Position;
+                    EntityPacketPosition profile = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol);
+                    if (profile.RotationUsesPacketBase)
+                    {
+                        rotEntity.Position = profile.Decode(context.State.PacketBases.Get(rotEntity), 0, 0, 0);
+                        context.State.PacketBases.Set(rotEntity, rotEntity.Position);
+                    }
                     rotEntity.Yaw = rot.Yaw;
                     rotEntity.Pitch = rot.Pitch;
                     rotEntity.OnGround = rot.OnGround;
+                    if (rotEntity.Position != previous)
+                        await context.PublishAsync(new EntityMoved(rot.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -84,8 +92,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosRotPacket posRot:
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
-                    (double dx, double dy, double dz) = SumSteps(posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
-                    prEntity.Position = prEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
+                    prEntity.Position = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
                     prEntity.Yaw = posRot.Yaw;
                     prEntity.Pitch = posRot.Pitch;
                     prEntity.OnGround = posRot.OnGround;
@@ -97,7 +104,11 @@ internal sealed class EntityApplier : IApplier
             case ClientboundTeleportEntityPacket teleport:
                 if (store.TryGet(teleport.EntityId, out Entity? tpEntity) && tpEntity is not null)
                 {
+                    // A modern relative teleport changes displayed state; the independent base is replaced by entity_position_sync instead.
+                    _ = context.State.PacketBases.Get(tpEntity);
                     tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
+                    if (EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).TeleportResetsPacketBase)
+                        context.State.PacketBases.Set(tpEntity, tpEntity.Position);
                     tpEntity.Yaw = teleport.Yaw;
                     tpEntity.Pitch = teleport.Pitch;
                     tpEntity.OnGround = teleport.OnGround;
@@ -109,6 +120,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundEntityPositionSyncPacket sync:
                 if (store.TryGet(sync.EntityId, out Entity? syncEntity) && syncEntity is not null)
                 {
+                    context.State.PacketBases.Set(syncEntity, sync.Values.Position);
                     syncEntity.Position = sync.Values.Position;
                     syncEntity.Velocity = sync.Values.DeltaMovement;
                     syncEntity.Yaw = sync.Values.YRot;
@@ -138,10 +150,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundSetEntityDataPacket metadata:
                 if (store.TryGet(metadata.EntityId, out Entity? metadataEntity) && metadataEntity is not null)
                 {
-                    foreach (EntityDataEntry entry in metadata.Metadata.Entries)
-                        metadataEntity.Metadata.Set(entry.Index, entry.Value);
-
-                    ProjectSemanticMetadata(metadataEntity);
+                    ApplyMetadata(metadataEntity, metadata.Metadata);
                     await context.PublishAsync(new EntityMetadataChanged(metadata.EntityId)).ConfigureAwait(false);
                 }
 
@@ -217,24 +226,6 @@ internal sealed class EntityApplier : IApplier
     private static Vec3d ReadVelocity(ClientboundSetEntityMotionPacket motion)
         => SpawnVelocity(motion.VelocityX, motion.VelocityY, motion.VelocityZ, motion.ModernVelocityRaw);
 
-    /// <summary>Sums a 26.3+ stepped relative move into raw wire deltas. An empty step list falls back to the legacy single-delta fields, so pre-26.3 packets and zero-step frames take the same path.</summary>
-    private static (double Dx, double Dy, double Dz) SumSteps(
-        IReadOnlyList<EntityMoveStep> steps, short deltaX, short deltaY, short deltaZ)
-    {
-        if (steps.Count == 0)
-            return (deltaX, deltaY, deltaZ);
-
-        long dx = 0, dy = 0, dz = 0;
-        foreach (EntityMoveStep step in steps)
-        {
-            dx += step.DeltaX;
-            dy += step.DeltaY;
-            dz += step.DeltaZ;
-        }
-
-        return (dx, dy, dz);
-    }
-
     /// <summary>The velocity a spawn frame (<c>add_entity</c> / <c>add_mob</c>) or a <c>set_entity_motion</c> frame carries, in blocks per tick. One decode for both, so the two paths cannot drift apart.</summary>
     /// <remarks>
     /// <para>Wire form. Through protocol 772 the value is three shorts of <c>value * 8000</c>, clamped server-side to +/-3.9 before encoding. Spawn and motion packets use identical arithmetic, so the client applies no clamp of its own. From 1.21.9 (protocol 773) the three shorts are replaced by the low-precision quantized block, and the bound codec parks it in <c>ModernVelocityRaw</c> with the shorts left at literal zero.</para>
@@ -258,36 +249,43 @@ internal sealed class EntityApplier : IApplier
         return true;
     }
 
+    private static Vec3d DecodeRelative(Entity entity, ApplierContext context, IReadOnlyList<EntityMoveStep> steps, short x, short y, short z)
+    {
+        Vec3d position = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).Decode(context.State.PacketBases.Get(entity), steps, x, y, z);
+        context.State.PacketBases.Set(entity, position);
+        return position;
+    }
+
     private static readonly Identifier PlayerType = Identifier.Minecraft("player");
     private static readonly Identifier ExperienceOrbType = Identifier.Minecraft("experience_orb");
     private static readonly Identifier PaintingType = Identifier.Minecraft("painting");
 
     private static ValueTask SpawnAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid, int typeId, EntitySpawnSpace space,
-        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity)
+        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity, EntityMetadataList? initialMetadata = null)
     {
         RegistryEntry<EntityTypeDefinition> type =
             context.EntityTypes.Resolve(context.State.Registries, typeId < 0 ? 0 : typeId, space);
 
         // From 1.20.2 add_player is gone and players arrive here, on the generic spawn path, carrying the player entity type. That is the only signal available, so the profile hook keys on it.
         return AddAsync(store, context, entityId, uuid, type, x, y, z, yaw, pitch, headYaw, velocity,
-            isPlayer: type.Id == PlayerType);
+            isPlayer: type.Id == PlayerType, initialMetadata);
     }
 
     private static ValueTask SpawnKeyedAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid, Identifier typeKey,
-        double x, double y, double z, float yaw, float pitch, float headYaw) =>
+        double x, double y, double z, float yaw, float pitch, float headYaw, EntityMetadataList? initialMetadata = null) =>
         AddAsync(store, context, entityId, uuid,
             context.EntityTypes.ResolveByKey(context.State.Registries, typeKey),
             x, y, z, yaw, pitch, headYaw, Vec3d.Zero,
             // The packet identity IS the type here, so a player spawn stays a player spawn even when the era's registry has no player key and the type degrades to the unknown placeholder.
-            isPlayer: typeKey == PlayerType);
+            isPlayer: typeKey == PlayerType, initialMetadata);
 
     private static async ValueTask AddAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid,
         RegistryEntry<EntityTypeDefinition> type,
         double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity,
-        bool isPlayer)
+        bool isPlayer, EntityMetadataList? initialMetadata)
     {
         // The key source is what makes the typed metadata properties readable at all: Entity builds its metadata store around it, and an entity constructed without one answers false to every tier-2 lookup no matter how complete the raw store is.
         //
@@ -305,8 +303,26 @@ internal sealed class EntityApplier : IApplier
         if (isPlayer && context.State.TabList.TryGet(uuid, out TabListEntry? tabEntry))
             entity.PlayerProfile = tabEntry.Profile;
 
+        // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
+        if (initialMetadata is not null)
+            ApplyMetadata(entity, initialMetadata);
+        context.State.PacketBases.Set(entity, entity.Position);
+
+        // Native client insertion discards the previous entity with this id before installing the new instance.
+        if (store.Remove(entityId) is { } previous)
+        {
+            context.State.PacketBases.Remove(previous);
+            await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
+        }
         store.Add(entity);
         await context.PublishAsync(new EntitySpawned(entityId, entity)).ConfigureAwait(false);
+    }
+
+    private static void ApplyMetadata(Entity entity, EntityMetadataList metadata)
+    {
+        foreach (EntityDataEntry entry in metadata.Entries)
+            entity.Metadata.Set(entry.Index, entry.Value);
+        ProjectSemanticMetadata(entity);
     }
 
     /// <summary>Projects the semantic metadata keys onto the typed <see cref="Entity"/> properties (tier 2). The raw store keeps every index; this is what a consumer that asks for the custom name actually reads.</summary>

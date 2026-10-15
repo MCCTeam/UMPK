@@ -136,10 +136,9 @@ internal sealed class SelfApplier : IApplier
         // Re-seed the physics engine at the absolute position resolved above (never at the raw packet fields, which may be relative offsets). The engine steps from its own position and syncs the result back into SelfState every tick, so without this the teleport survives less than one tick and the client reports the engine's stale position instead of the server's. The resolved velocity rides along, so a teleport that hands the client momentum keeps it.
         context.PhysicsPositionDirty();
 
+        bool acceptCarriesDestination = pos.TeleportId.HasValue && AcceptCarriesDestination(context.Wire);
         if (pos.TeleportId is { } teleportId)
         {
-            bool acceptCarriesDestination = AcceptCarriesDestination(context.Wire);
-
             // The confirmation shape is era-bound: 26.3 echoes the resolved destination after the id, while older eras carry the id alone. The outbound codec capability selects the matching packet model without branching on a protocol number.
             if (context.Wire.CanSendPlay(EntityPackets.Serverbound.AcceptTeleportation))
             {
@@ -151,20 +150,14 @@ internal sealed class SelfApplier : IApplier
                     ct).ConfigureAwait(false);
             }
 
-            // No position echo where the bound accept already carried the destination: the server applies the teleport from the accept itself, and a second position packet in the same tick trips its per-tick double-position disconnect. Older eras keep the echo because their id-only accept carries no coordinates.
-            if (!acceptCarriesDestination)
-                await context.Sink.SendAsync(
-                        new ServerboundMovePlayerPosRotPacket(
-                            x,
-                            y,
-                            z,
-                            yaw,
-                            pitch,
-                            OnGround: false,
-                            HorizontalCollision: false),
-                        ct)
-                    .ConfigureAwait(false);
         }
+
+        // 1.8 has no teleport id but still echoes the resolved position and rotation (bcy.handlePlayerPosLook in the vanilla client). Later id-only accepts also need the echo. Only a destination-carrying accept replaces it.
+        if (!acceptCarriesDestination)
+            await context.Sink.SendAsync(
+                    new ServerboundMovePlayerPosRotPacket(x, y, z, yaw, pitch, OnGround: false, HorizontalCollision: false),
+                    ct)
+                .ConfigureAwait(false);
 
         await context.PublishAsync(new PositionCorrected(self.Position, yaw, pitch)).ConfigureAwait(false);
     }

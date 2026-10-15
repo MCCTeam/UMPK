@@ -219,7 +219,9 @@ public sealed class ClientSnapshots
 
         // The negotiated protocol's own generated shape tables (real slab/stair/fence/wall/pane/carpet geometry per protocol), resolved from the live session rather than one fixed dataset.
         IBlockShapeSource shapes = JavaGameData.BlockShapes(client.Session.Version.Version.Protocol);
-        BlockHitResult hit = Raycast.CastBlock(client.State.World, eye, end, includeFluids, shapes);
+        ItemStack held = client.State.Features.Inventory ? PlayerInventorySnapshot.ResolveHeldItem(client.State.Inventory.PlayerSlots, self.HeldSlot) : ItemStack.Empty;
+        Identifier heldId = held.IsEmpty ? Identifier.Minecraft("air") : held.Item.Id;
+        BlockHitResult hit = Raycast.CastBlockWithContext(client.State.World, eye, end, includeFluids, shapes, heldId);
         return hit.Hit ? hit : null;
     }
 }

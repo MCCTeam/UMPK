@@ -104,6 +104,30 @@ public sealed class PhysicsWorldRebuildTests
         }
     }
 
+    [Fact]
+    public async Task SameDimensionRespawnResetsPlayerPhysicsWhileRetainingTheWorld()
+    {
+        (ApplierHarness harness, PhysicsEngineHolder holder, IAsyncDisposable loop) = await StartAsync();
+        await using (loop)
+        {
+            AddFloor(harness.State.World, floorY: 0);
+            SeedAt(harness, holder, Spawn);
+            Tick(holder, 5);
+            Assert.True(holder.EngineState!.Value.FallDistance > 0);
+            var world = harness.State.World;
+
+            await harness.ApplyAsync(new ClientboundRespawnPacket(
+                new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, 0, false, false, null, 0, 63), 0, null));
+            harness.State.Self.Velocity = Vec3d.Zero;
+            holder.EnsureEngine();
+
+            Assert.Same(world, harness.State.World);
+            Assert.Equal(harness.State.Self.Position, holder.EngineState!.Value.Position);
+            Assert.Equal(Vec3d.Zero, holder.EngineState.Value.Velocity);
+            Assert.Equal(0, holder.EngineState.Value.FallDistance);
+        }
+    }
+
     private static void SeedAt(ApplierHarness harness, PhysicsEngineHolder holder, Vec3d position)
     {
         harness.State.Self.Position = position;

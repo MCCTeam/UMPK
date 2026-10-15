@@ -106,6 +106,9 @@ internal sealed class ApplierContext
 /// </remarks>
 internal readonly record struct CommonWorldSetup(string DimensionName, int DimensionTypeId)
 {
+    /// <summary>A respawn can retain its existing world when the dimension is unchanged; a join always starts a new world lifetime.</summary>
+    public bool IsRespawn { get; init; }
+
     /// <summary>The dimension-type resource key, when the era sends one (735/736, 759-765).</summary>
     public string? DimensionTypeName { get; init; }
 

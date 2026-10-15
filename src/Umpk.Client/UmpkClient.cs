@@ -116,6 +116,7 @@ public sealed class UmpkClient : IAsyncDisposable
             Scheduler = _scheduler,
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
+            ReadPhysicsState = () => _physics?.EngineState,
             Events = _eventBus,
         };
 
@@ -786,32 +787,14 @@ public sealed class UmpkClient : IAsyncDisposable
     /// <summary>Creates and installs the world only after the current dimension can be resolved from the finalized session registries. Callers compute this before mutating prior join/respawn state, so a required modern dimension failure cannot leave a partially replaced world behind.</summary>
     private void SetupWorld(CommonWorldSetup setup)
     {
+        WorldFactory.InstallWorld(State, setup, _settings.Version.Version.Protocol);
         if (!_settings.Features.Terrain)
             return;
 
-        Game.Registries.RegistryAccess? registries = State.Registries;
-        Game.Registries.Registry<Game.Registries.BlockDefinition>? blocks = registries?.Blocks;
-
-        // Pre-flattening versions key block states as (id << 4) | meta, which is the identity TryDecodeLegacy exposes; the flattening at 1.13 replaced it with a flat state index and there is no such pair to recover after it.
-        bool legacyStates = _settings.Version.Version.Protocol < FirstFlattenedProtocol;
-        var blockData = blocks is not null
-            ? (Game.Blocks.IBlockDataSource)new RegistryBlockDataSource(blocks, legacyStates)
-            : new RegistryBlockDataSource(EmptyBlockRegistry(), legacyStates);
-
-        Game.World.DimensionState dimension = WorldFactory.CreateDimension(
-            setup, registries, _settings.Version.Version.Protocol);
-        Game.Registries.Registry<Game.Registries.BiomeDefinition> biomes = WorldFactory.EmptyBiomes();
-        var world = new Game.World.World(dimension, blockData, biomes);
-        State.InstallWorld(world);
+        // A retained level still receives a new local player, whose movement readiness must be rebuilt.
         _movementReadiness.Reset();
         _physics?.EnsureEngine();
     }
-
-    /// <summary>The first protocol whose block states are a flat index rather than <c>(id &lt;&lt; 4) | meta</c> (1.13, the flattening). Below it the legacy id/meta pair is a real identity a consumer can read.</summary>
-    private const int FirstFlattenedProtocol = 393;
-
-    private static Game.Registries.Registry<Game.Registries.BlockDefinition> EmptyBlockRegistry()
-        => WorldFactory.EmptyBlocks();
 
     private async Task TickLoopAsync(JavaConnection connection, CancellationTokenSource sessionCts)
     {
@@ -859,6 +842,9 @@ public sealed class UmpkClient : IAsyncDisposable
     {
         // The session's own tick clock, advanced first so everything below dates against the tick it is running in. It is not gated on any feature - only the physics block further down is - because what it dates (today, effect apply stamps) is written by appliers that run whatever the feature set is.
         State.AdvanceSessionTick();
+
+        // Held block input runs on the same clock as locomotion, before the movement report. A request never waits for a future tick or a server acknowledgment inside this loop.
+        await Actions.Interaction.TickMiningOnLoopAsync(ct).ConfigureAwait(false);
 
         // A server that stops ticking stops broadcasting game time, so the tick-rate estimate can only expire on our own clock. Without this a paused server (1.21.2+ pause-when-empty) or a hung one would keep reporting the last rate it managed forever.
         State.Server.ExpireStaleTickRate(TimeProvider.System.GetTimestamp(), TimeProvider.System);

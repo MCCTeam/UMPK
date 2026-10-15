@@ -33,6 +33,9 @@ internal sealed class ClientSessionServices
     public Func<CancellationToken?> CurrentSessionCancellation { get; init; } =
         static () => CancellationToken.None;
 
+    /// <summary>The existing physics owner's current pose and eye-water observation. Hand-built action harnesses can supply their own snapshot.</summary>
+    public Func<Umpk.Physics.PhysicsState?> ReadPhysicsState { get; init; } = static () => null;
+
     /// <summary>Which version-optional actions this session can actually perform. Derived from <see cref="Wire"/> rather than injected so every construction site (including the test harnesses that build services by hand) gets the same answers the live client gives.</summary>
     public ClientActionCapabilities Capabilities =>
         _capabilities ??= new ClientActionCapabilities(Wire, Version.Version.Protocol, CurrentPhase);

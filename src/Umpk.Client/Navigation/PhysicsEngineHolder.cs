@@ -23,6 +23,7 @@ internal sealed class PhysicsEngineHolder
     private PlayerPhysics? _engine;
     private WorldPhysicsView? _view;
     private Umpk.Game.World.World? _installedWorld;
+    private long _installedPlayerLifetime;
     private readonly MovingPistonTracker _pistons;
 
     /// <summary>The held key record requested by the controller on the most recent physical tick.</summary>
@@ -92,25 +93,28 @@ internal sealed class PhysicsEngineHolder
             Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(services.Version.Version.Protocol));
     }
 
-    /// <summary>Ensures the engine exists once the world is available, and rebuilds it whenever a DIFFERENT world has been installed; resets it at the current position either way.</summary>
-    /// <remarks>The guard is world IDENTITY, not "is there an engine". <c>WorldPhysicsView</c> closes over the world instance it was built from, so a respawn or dimension change (which calls <c>ClientState.InstallWorld</c> with a brand new <c>World</c>) would otherwise leave the engine colliding against the world the session left behind: solid where the new dimension is air and air where it is solid. This runs on the idle tick and on both navigation paths, so it stays a null check plus a reference comparison in the steady state.</remarks>
+    /// <summary>Ensures the engine exists once the world is available, and rebuilds it when the world or local player lifetime changes.</summary>
+    /// <remarks>The collision view belongs to the level, while the physics engine belongs to its local player. A same-dimension respawn retains the level and replaces the player. Steady-state calls preserve accumulated physics.</remarks>
     public void EnsureEngine()
     {
         Umpk.Game.World.World? world = _services.State.WorldOrNull;
         if (world is null)
             return;
 
-        if (_engine is not null && ReferenceEquals(_installedWorld, world))
+        bool sameWorld = ReferenceEquals(_installedWorld, world);
+        if (_engine is not null && sameWorld && _installedPlayerLifetime == _services.State.PlayerLifetime)
             return;
 
         _installedWorld = world;
+        _installedPlayerLifetime = _services.State.PlayerLifetime;
         _holdClimbable = false;
         _holdAgainstCurrent = null;
         LastRequestedInput = MovementInput.None;
         LastAppliedInput = MovementInput.None;
 
-        // A respawn or dimension change replaces the world; a piston that was mid-extension in the world the session left behind must not keep pushing in the new one.
-        _pistons.Clear();
+        // Moving pistons belong to the level and survive a same-dimension player replacement.
+        if (!sameWorld)
+            _pistons.Clear();
         _view = new WorldPhysicsView(world, _shapes);
         _engine = new PlayerPhysics(_view, _profile);
         SelfState self = _services.State.Self;

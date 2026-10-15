@@ -25,10 +25,10 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_ReportsBroken_WhenThePositionReadsAirAfterwards()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
         fixture.OnFinish = () => fixture.World.SetBlockStateId(Target, fixture.AirStateId);
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(200));
 
         Assert.Equal(DigOutcome.Broken, outcome);
@@ -37,10 +37,10 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_ReportsNotBroken_WhenTheServerResendsTheSamePositionAndTheBlockStands()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
         fixture.OnFinish = () => fixture.PublishBlockChanged(Target);
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(200));
 
         Assert.Equal(DigOutcome.NotBroken, outcome);
@@ -49,9 +49,9 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_ReportsUnconfirmed_WhenNothingComesBackInsideTheWindow()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(150));
 
         Assert.Equal(DigOutcome.Unconfirmed, outcome);
@@ -60,10 +60,10 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_ReportsUnconfirmed_WhenTheColumnUnloadsUnderIt()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
         fixture.OnFinish = () => fixture.World.UnloadColumn(ChunkPos.Containing(Target));
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(150));
 
         // Not loaded must NOT read as air: the column being gone is a "do not know", not a "it broke".
@@ -74,10 +74,10 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_ArmsTheBlockChangedSubscriptionBeforeTheSend()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
         fixture.OnStart = () => fixture.PublishBlockChanged(Target);
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(200));
 
         Assert.Equal(DigOutcome.NotBroken, outcome);
@@ -86,11 +86,11 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_IgnoresABlockChangedAtADifferentPosition()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8);
         var elsewhere = new BlockPos(Target.X + 5, Target.Y, Target.Z);
         fixture.OnFinish = () => fixture.PublishBlockChanged(elsewhere);
 
-        DigOutcome outcome = await fixture.Actions.DigBlockVerifiedAsync(
+        DigOutcome outcome = await fixture.DigVerifiedAsync(
             Target, confirmationWindow: TimeSpan.FromMilliseconds(150));
 
         Assert.Equal(DigOutcome.Unconfirmed, outcome);
@@ -99,36 +99,38 @@ public sealed class DigConfirmationTests
     [Fact]
     public async Task Dig_WithoutAnEventBus_RefusesRatherThanGuessing()
     {
-        Fixture fixture = Fixture.Build(JavaVersions.V1_8, withEvents: false);
+        await using Fixture fixture = Fixture.Build(JavaVersions.V1_8, withEvents: false);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
-            () => fixture.Actions.DigBlockVerifiedAsync(Target, confirmationWindow: TimeSpan.FromMilliseconds(150)));
+            () => fixture.DigVerifiedAsync(Target, confirmationWindow: TimeSpan.FromMilliseconds(150)));
     }
 
-    /// <summary>The wire behaviour of a verified dig must be identical to the unverified one: start, swing, finish. Protocol 47 (no action sequence), 763 (post-1.19 sequence, pre-configuration-reentry) and 776 (the current head) cover the era split in <c>InteractionActions.NextSequence</c>/<c>HasSequences</c>.</summary>
+    /// <summary>A verified dig preserves the initial vanilla ordering: 1.8 swings before START; later clients send START before the swing. STOP precedes the final continuation swing.</summary>
     [Theory]
     [InlineData(47)]
     [InlineData(763)]
     [InlineData(776)]
-    public async Task Dig_StillSendsTheStartSwingFinishTriple(int protocol)
+    public async Task Dig_PreservesTheEraSpecificInitialSwingOrder(int protocol)
     {
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion? version));
-        Fixture fixture = Fixture.Build(version!);
+        await using Fixture fixture = Fixture.Build(version!);
         fixture.OnFinish = () => fixture.World.SetBlockStateId(Target, fixture.AirStateId);
 
-        await fixture.Actions.DigBlockVerifiedAsync(Target, confirmationWindow: TimeSpan.FromMilliseconds(200));
+        await fixture.DigVerifiedAsync(Target, confirmationWindow: TimeSpan.FromMilliseconds(200));
 
-        Assert.Collection(
-            fixture.Sink.Packets,
-            p => Assert.Equal(0, Assert.IsType<ServerboundPlayerActionPacket>(p).Action),
-            p => Assert.IsType<ServerboundSwingPacket>(p),
-            p => Assert.Equal(2, Assert.IsType<ServerboundPlayerActionPacket>(p).Action));
+        object[] packets = fixture.Sink.Packets.ToArray();
+        Assert.IsType<ServerboundSwingPacket>(packets[protocol == 47 ? 0 : 1]);
+        Assert.Equal(0, Assert.IsType<ServerboundPlayerActionPacket>(packets[protocol == 47 ? 1 : 0]).Action);
+        Assert.Equal(2, Assert.IsType<ServerboundPlayerActionPacket>(packets[^2]).Action);
+        Assert.IsType<ServerboundSwingPacket>(packets[^1]);
+        Assert.Equal(152, packets.Count(packet => packet is ServerboundSwingPacket));
     }
 
     /// <summary>A hand-built harness (no live <c>UmpkClient</c>, so <see cref="ClientSessionServices.Events"/> stays whatever the test wires) plus a fake sink that can react to a packet as it is sent, so the arm-before-send ordering and the "the server resent this exact position" path are both observable without a live server.</summary>
-    private sealed class Fixture
+    private sealed class Fixture : IAsyncDisposable
     {
         private readonly EventBus? _events;
+        private ISessionScheduler _scheduler = null!;
 
         private Fixture(ClientState state, EventBus? events, int airStateId)
         {
@@ -136,6 +138,20 @@ public sealed class DigConfirmationTests
             _events = events;
             AirStateId = airStateId;
         }
+
+        public async Task<DigOutcome> DigVerifiedAsync(BlockPos position, Direction face = Direction.Up, TimeSpan? confirmationWindow = null, CancellationToken ct = default)
+        {
+            Task<DigOutcome> result = Actions.DigBlockVerifiedAsync(position, face, confirmationWindow, ct);
+            for (int tick = 0; tick < 151 && !result.IsCompleted; tick++)
+                await _scheduler.InvokeAsync(async () =>
+                {
+                    State.AdvanceSessionTick();
+                    await Actions.TickMiningOnLoopAsync(ct);
+                }, ct);
+            return await result.WaitAsync(TimeSpan.FromSeconds(5), ct);
+        }
+
+        public ValueTask DisposeAsync() => _scheduler.DisposeAsync();
 
         public InteractionActions Actions { get; private set; } = null!;
 
@@ -193,6 +209,7 @@ public sealed class DigConfirmationTests
             var fixture = new Fixture(state, events, air.DefaultStateId);
             var sink = new FakeSink(sequences, fixture);
             fixture.Sink = sink;
+            fixture._scheduler = services.Scheduler;
             fixture.Actions = new InteractionActions(sink, services, sequences);
             return fixture;
         }

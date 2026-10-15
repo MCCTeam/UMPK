@@ -6,6 +6,12 @@
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/PlacementCollision.native.json" />
+    <EmbeddedResource Include="Fixtures/SpawnMetadata.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityPacketPosition.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />
     <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
     <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />

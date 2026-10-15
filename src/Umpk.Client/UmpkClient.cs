@@ -117,6 +117,7 @@ public sealed class UmpkClient : IAsyncDisposable
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
             ReadPhysicsState = () => _physics?.EngineState,
+            ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false),
             Events = _eventBus,
         };
 

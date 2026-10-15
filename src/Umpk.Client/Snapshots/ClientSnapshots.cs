@@ -204,7 +204,7 @@ public sealed class ClientSnapshots
         return new BlockSnapshot(position, state, loaded);
     }
 
-    private static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids)
+    internal static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids)
     {
         if (!client.State.HasWorld || client.Session is null)
             return null;

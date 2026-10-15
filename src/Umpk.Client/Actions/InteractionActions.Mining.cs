@@ -16,10 +16,12 @@ public sealed partial class InteractionActions
     private MiningRequest? _mining;
     private int _destroyDelay;
 
-    private sealed class MiningRequest(BlockPos position, Direction face, long playerLifetime, CancellationToken cancellation)
+    private sealed class MiningRequest(BlockPos position, Direction face, double? viewDistance, long playerLifetime, CancellationToken cancellation)
     {
         public BlockPos Position { get; } = position;
-        public Direction Face { get; } = face;
+        public Direction Face { get; set; } = face;
+        public Direction DestroyDirection { get; set; } = face;
+        public double? ViewDistance { get; } = viewDistance;
         public long PlayerLifetime { get; } = playerLifetime;
         public CancellationToken Cancellation { get; } = cancellation;
         public TaskCompletionSource<int?> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -31,12 +33,18 @@ public sealed partial class InteractionActions
 
     private sealed class MiningUnavailableException(string message) : InvalidOperationException(message);
 
-    private MiningRequest QueueMining(BlockPos position, Direction face, CancellationToken ct)
+    private MiningRequest QueueMining(BlockPos position, Direction face, double? viewDistance, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
         if (_mining is not null)
             throw new InvalidOperationException("A block attack is already active. Cancel it before starting another.");
-        return _mining = new MiningRequest(position, face, _services.State.PlayerLifetime, ct);
+        if (viewDistance is double distance)
+        {
+            if (_services.ReadBlockHit(distance) is not { Hit: true } hit || hit.BlockPos != position)
+                throw new OperationCanceledException("The requested block is no longer in view.", new CancellationToken(true));
+            face = hit.Face;
+        }
+        return _mining = new MiningRequest(position, face, viewDistance, _services.State.PlayerLifetime, ct);
     }
 
     internal async ValueTask TickMiningOnLoopAsync(CancellationToken ct)
@@ -61,6 +69,16 @@ public sealed partial class InteractionActions
             request.World = world;
             if (_services.Self.GameMode is GameMode.Spectator or GameMode.Adventure)
                 throw new MiningUnavailableException("This game mode requires an allowed block interaction before mining.");
+
+            if (request.ViewDistance is double distance)
+            {
+                if (_services.ReadBlockHit(distance) is not { Hit: true } hit || hit.BlockPos != request.Position)
+                {
+                    await ReleaseMiningOnLoopAsync(request, ct).ConfigureAwait(false);
+                    return;
+                }
+                request.Face = hit.Face;
+            }
 
             BlockState block = world.GetBlock(request.Position);
             if (!block.IsValid)
@@ -118,6 +136,11 @@ public sealed partial class InteractionActions
                 await _sink.SendAsync(new ServerboundPlayerActionPacket(_blockProfile.StopDestroyAction, request.Position, (byte)request.Face, finished), ct).ConfigureAwait(false);
                 _destroyDelay = 5;
             }
+            else if (_blockProfile.HasDestroyDirectionAction && request.DestroyDirection != request.Face)
+            {
+                request.DestroyDirection = request.Face;
+                await _sink.SendAsync(new ServerboundPlayerActionPacket(1, request.Position, (byte)request.Face, 0), ct).ConfigureAwait(false);
+            }
             await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
             if (request.Progress >= 1.0F)
                 CompleteMining(request, finished);
@@ -144,6 +167,7 @@ public sealed partial class InteractionActions
         await _sink.SendAsync(new ServerboundPlayerActionPacket(0, request.Position, (byte)request.Face, sequence), ct).ConfigureAwait(false);
         request.Started = true;
         request.Item = item;
+        request.DestroyDirection = request.Face;
         if (!initialAttack || !_blockProfile.InitialSwingBeforeStart)
             await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
         if (_blockProfile.CanBreakInstantly(_services.Self) || progress >= 1.0F)

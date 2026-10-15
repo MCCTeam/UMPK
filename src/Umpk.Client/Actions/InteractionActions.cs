@@ -3,6 +3,7 @@ using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.Snapshots;
 using Umpk.Game.Items;
+using Umpk.Game.Players;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
@@ -36,7 +37,21 @@ public sealed partial class InteractionActions
     }
 
     /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Unbreakable blocks keep the attack held until cancellation or a server update removes the target. Caller cancellation releases an active attack with ABORT.</summary>
-    public async Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
+    public Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
+        => DigBlockCoreAsync(position, face, viewDistance: null, ct);
+
+    /// <summary>Mines one block while it remains under the current block view ray. Leaving that block releases the attack and cancels the operation. The session tick owns view checks, progress and animations.</summary>
+    /// <param name="position">The single block to mine; another block under the view never replaces it.</param>
+    /// <param name="maxDistance">The maximum block view distance. Must be positive and finite.</param>
+    /// <param name="ct">Releases the held attack when canceled.</param>
+    public Task DigBlockInViewAsync(BlockPos position, double maxDistance = PlayerReach.SurvivalBlockReach, CancellationToken ct = default)
+    {
+        if (!(maxDistance > 0) || !double.IsFinite(maxDistance))
+            throw new ArgumentOutOfRangeException(nameof(maxDistance));
+        return DigBlockCoreAsync(position, Direction.Up, maxDistance, ct);
+    }
+
+    private async Task DigBlockCoreAsync(BlockPos position, Direction face, double? viewDistance, CancellationToken ct)
     {
         if (_services.Scheduler.IsCurrent)
             throw new InvalidOperationException("A held block attack must be awaited outside the session loop so ticks can advance.");
@@ -44,7 +59,7 @@ public sealed partial class InteractionActions
             ?? throw new InvalidOperationException("The client is not connected.");
         using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
         MiningRequest request = await _services.Scheduler.InvokeAsync(
-            () => QueueMining(position, face, lifetime.Token), lifetime.Token).ConfigureAwait(false);
+            () => QueueMining(position, face, viewDistance, lifetime.Token), lifetime.Token).ConfigureAwait(false);
         try
         {
             int? sequence = await request.Completion.Task.WaitAsync(lifetime.Token).ConfigureAwait(false);
@@ -81,8 +96,23 @@ public sealed partial class InteractionActions
     /// <param name="confirmationWindow">How long to wait for a settled answer before reporting <see cref="DigOutcome.Unconfirmed"/>; defaults to <see cref="DefaultDigConfirmationWindow"/>.</param>
     /// <param name="ct">Cancels the send and the wait.</param>
     /// <exception cref="InvalidOperationException"><see cref="ClientSessionServices.Events"/> is null on this session. A poll-only read cannot tell an observed refusal (the server re-asserting the block) from silence, so this refuses rather than degrading to a guess.</exception>
-    public async Task<DigOutcome> DigBlockVerifiedAsync(
+    public Task<DigOutcome> DigBlockVerifiedAsync(
         BlockPos position, Direction face = Direction.Up, TimeSpan? confirmationWindow = null, CancellationToken ct = default)
+        => DigBlockVerifiedCoreAsync(position, face, viewDistance: null, confirmationWindow, ct);
+
+    /// <summary>Mines one block under the current block view ray and then verifies the server's block state. Leaving the requested block releases the attack and cancels the operation.</summary>
+    /// <param name="position">The single block to mine.</param>
+    /// <param name="maxDistance">The maximum block view distance. Must be positive and finite.</param>
+    /// <param name="confirmationWindow">The server confirmation window, or the default when null.</param>
+    /// <param name="ct">Releases the held attack and cancels confirmation.</param>
+    public Task<DigOutcome> DigBlockInViewVerifiedAsync(BlockPos position, double maxDistance = PlayerReach.SurvivalBlockReach, TimeSpan? confirmationWindow = null, CancellationToken ct = default)
+    {
+        if (!(maxDistance > 0) || !double.IsFinite(maxDistance))
+            throw new ArgumentOutOfRangeException(nameof(maxDistance));
+        return DigBlockVerifiedCoreAsync(position, Direction.Up, maxDistance, confirmationWindow, ct);
+    }
+
+    private async Task<DigOutcome> DigBlockVerifiedCoreAsync(BlockPos position, Direction face, double? viewDistance, TimeSpan? confirmationWindow, CancellationToken ct)
     {
         EventBus events = _services.Events
             ?? throw new InvalidOperationException(
@@ -99,7 +129,7 @@ public sealed partial class InteractionActions
 
         });
 
-        await DigBlockAsync(position, face, ct).ConfigureAwait(false);
+        await DigBlockCoreAsync(position, face, viewDistance, ct).ConfigureAwait(false);
 
         long deadline = Environment.TickCount64 + (long)window.TotalMilliseconds;
         while (true)

@@ -329,7 +329,7 @@ public sealed class TickMiningLifecycleTests
         Assert.Equal(3, fixture.Packets.Count);
     }
 
-    private sealed class Fixture : IAsyncDisposable
+    internal sealed class Fixture : IAsyncDisposable
     {
         public static readonly BlockPos Target = new(1, 64, 1);
         private readonly ChannelSessionScheduler _scheduler = new();
@@ -337,6 +337,7 @@ public sealed class TickMiningLifecycleTests
         public ClientState State { get; } = new(new ClientFeatures().Normalized());
         public InteractionActions Actions { get; }
         public List<object> Packets { get; } = [];
+        public Umpk.Game.World.BlockHitResult? ViewHit { get; set; } = Umpk.Game.World.BlockHitResult.FromHit(Target, Direction.North, Target.Center, 2);
         private readonly int _protocol;
 
         public Fixture(int protocol = 777)
@@ -358,6 +359,7 @@ public sealed class TickMiningLifecycleTests
                 Logger = NullLogger.Instance,
                 Scheduler = _scheduler,
                 CurrentSessionCancellation = () => Session.Token,
+                ReadBlockHit = _ => ViewHit,
             };
             Actions = new InteractionActions(new Sink(Packets, sequences), services, sequences);
         }

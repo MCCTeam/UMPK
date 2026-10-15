@@ -1,4 +1,19 @@
 #nullable enable
+Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockRayClipModel.LegacyBox = 0 -> Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockRayClipModel.LegacyBoxList = 3 -> Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockRayClipModel.VoxelForwardInside = 1 -> Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockRayClipModel.VoxelOppositeInside = 2 -> Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockTargetingShape.ClipModel.get -> Umpk.Game.Registries.BlockRayClipModel
+Umpk.Game.Registries.BlockTargetingShape.ClipModel.init -> void
+Umpk.Game.World.BlockHitResult.InsideBlock.get -> bool
+static Umpk.Game.World.BlockHitResult.FromHit(Umpk.Geometry.BlockPos blockPos, Umpk.Geometry.Direction face, Umpk.Geometry.Vec3d point, double distance, bool insideBlock) -> Umpk.Game.World.BlockHitResult
+static Umpk.Game.World.Raycast.CastBlockWithContext(Umpk.Game.World.World! world, Umpk.Geometry.Vec3d start, Umpk.Geometry.Vec3d end, bool includeFluids, Umpk.Game.Registries.IBlockShapeSource? shapes, Umpk.Identifier heldItem) -> Umpk.Game.World.BlockHitResult
+Umpk.Game.Registries.ItemDefinition.DefaultComponents.get -> System.Collections.Generic.IReadOnlyDictionary<Umpk.Game.Items.DataComponentType!, object!>!
+Umpk.Game.Registries.ItemDefinition.DefaultComponents.init -> void
+Umpk.Game.Registries.IBlockMiningSource.TryGetDefaultTool(Umpk.Identifier item, out Umpk.Game.Items.Components.ToolComponent? tool) -> bool
+Umpk.Game.Items.Components.ToolComponent.CanDestroyBlocksInCreative.get -> bool
+Umpk.Game.Items.Components.ToolComponent.CanDestroyBlocksInCreative.init -> void
 Umpk.Game.Blocks.BlockDataSourceExtensions
 Umpk.Game.Blocks.BlockFlags
 Umpk.Game.Blocks.BlockFlags.Air = 1 -> Umpk.Game.Blocks.BlockFlags
@@ -3132,3 +3147,93 @@ virtual Umpk.Game.Inventory.ClickAction.PrintMembers(System.Text.StringBuilder! 
 ~override Umpk.Game.Registries.BlockPushInfo.ToString() -> string
 ~override Umpk.Game.World.LightLevels.Equals(object obj) -> bool
 ~override Umpk.Game.World.LightLevels.ToString() -> string
+Umpk.Game.Registries.BlockMiningInfo
+Umpk.Game.Registries.BlockMiningInfo.BlockMiningInfo() -> void
+Umpk.Game.Registries.BlockMiningInfo.BlockMiningInfo(float Hardness, bool RequiresCorrectTool) -> void
+Umpk.Game.Registries.BlockMiningInfo.Deconstruct(out float Hardness, out bool RequiresCorrectTool) -> void
+Umpk.Game.Registries.BlockMiningInfo.Equals(Umpk.Game.Registries.BlockMiningInfo other) -> bool
+Umpk.Game.Registries.BlockMiningInfo.Hardness.get -> float
+Umpk.Game.Registries.BlockMiningInfo.Hardness.init -> void
+Umpk.Game.Registries.BlockMiningInfo.RequiresCorrectTool.get -> bool
+Umpk.Game.Registries.BlockMiningInfo.RequiresCorrectTool.init -> void
+Umpk.Game.Registries.IBlockMiningSource
+Umpk.Game.Registries.IBlockMiningSource.HasData.get -> bool
+Umpk.Game.Registries.IBlockMiningSource.TryGetBlock(Umpk.Identifier block, out Umpk.Game.Registries.BlockMiningInfo info) -> bool
+Umpk.Game.Registries.IBlockMiningSource.TryGetTool(Umpk.Identifier item, Umpk.Identifier block, out Umpk.Game.Registries.ToolMiningInfo info) -> bool
+Umpk.Game.Registries.ToolMiningInfo
+Umpk.Game.Registries.ToolMiningInfo.CorrectForDrops.get -> bool
+Umpk.Game.Registries.ToolMiningInfo.CorrectForDrops.init -> void
+Umpk.Game.Registries.ToolMiningInfo.Deconstruct(out float Speed, out bool CorrectForDrops) -> void
+Umpk.Game.Registries.ToolMiningInfo.Equals(Umpk.Game.Registries.ToolMiningInfo other) -> bool
+Umpk.Game.Registries.ToolMiningInfo.Speed.get -> float
+Umpk.Game.Registries.ToolMiningInfo.Speed.init -> void
+Umpk.Game.Registries.ToolMiningInfo.ToolMiningInfo() -> void
+Umpk.Game.Registries.ToolMiningInfo.ToolMiningInfo(float Speed, bool CorrectForDrops) -> void
+override Umpk.Game.Registries.BlockMiningInfo.GetHashCode() -> int
+override Umpk.Game.Registries.ToolMiningInfo.GetHashCode() -> int
+static Umpk.Game.Registries.BlockMiningInfo.operator !=(Umpk.Game.Registries.BlockMiningInfo left, Umpk.Game.Registries.BlockMiningInfo right) -> bool
+static Umpk.Game.Registries.BlockMiningInfo.operator ==(Umpk.Game.Registries.BlockMiningInfo left, Umpk.Game.Registries.BlockMiningInfo right) -> bool
+static Umpk.Game.Registries.ToolMiningInfo.operator !=(Umpk.Game.Registries.ToolMiningInfo left, Umpk.Game.Registries.ToolMiningInfo right) -> bool
+static Umpk.Game.Registries.ToolMiningInfo.operator ==(Umpk.Game.Registries.ToolMiningInfo left, Umpk.Game.Registries.ToolMiningInfo right) -> bool
+~override Umpk.Game.Registries.BlockMiningInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.BlockMiningInfo.ToString() -> string
+~override Umpk.Game.Registries.ToolMiningInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.ToolMiningInfo.ToString() -> string
+Umpk.Game.Registries.BlockTargetingShape
+Umpk.Game.Registries.BlockTargetingShape.BlockTargetingShape() -> void
+Umpk.Game.Registries.BlockTargetingShape.BlockTargetingShape(System.ReadOnlyMemory<Umpk.Geometry.Aabb> Outline, Umpk.Geometry.Vec3d OutlineOffset, System.ReadOnlyMemory<Umpk.Geometry.Aabb> Interaction, Umpk.Geometry.Vec3d InteractionOffset) -> void
+Umpk.Game.Registries.BlockTargetingShape.Deconstruct(out System.ReadOnlyMemory<Umpk.Geometry.Aabb> Outline, out Umpk.Geometry.Vec3d OutlineOffset, out System.ReadOnlyMemory<Umpk.Geometry.Aabb> Interaction, out Umpk.Geometry.Vec3d InteractionOffset) -> void
+Umpk.Game.Registries.BlockTargetingShape.Equals(Umpk.Game.Registries.BlockTargetingShape other) -> bool
+Umpk.Game.Registries.BlockTargetingShape.Interaction.get -> System.ReadOnlyMemory<Umpk.Geometry.Aabb>
+Umpk.Game.Registries.BlockTargetingShape.Interaction.init -> void
+Umpk.Game.Registries.BlockTargetingShape.InteractionOffset.get -> Umpk.Geometry.Vec3d
+Umpk.Game.Registries.BlockTargetingShape.InteractionOffset.init -> void
+Umpk.Game.Registries.BlockTargetingShape.Outline.get -> System.ReadOnlyMemory<Umpk.Geometry.Aabb>
+Umpk.Game.Registries.BlockTargetingShape.Outline.init -> void
+Umpk.Game.Registries.BlockTargetingShape.OutlineOffset.get -> Umpk.Geometry.Vec3d
+Umpk.Game.Registries.BlockTargetingShape.OutlineOffset.init -> void
+Umpk.Game.Registries.IBlockTargetingSource
+Umpk.Game.Registries.IBlockTargetingSource.TryGetTargetingShape(Umpk.Game.World.World! world, Umpk.Geometry.BlockPos position, Umpk.Identifier heldItem, out Umpk.Game.Registries.BlockTargetingShape shape) -> bool
+override Umpk.Game.Registries.BlockTargetingShape.GetHashCode() -> int
+static Umpk.Game.Registries.BlockTargetingShape.operator !=(Umpk.Game.Registries.BlockTargetingShape left, Umpk.Game.Registries.BlockTargetingShape right) -> bool
+static Umpk.Game.Registries.BlockTargetingShape.operator ==(Umpk.Game.Registries.BlockTargetingShape left, Umpk.Game.Registries.BlockTargetingShape right) -> bool
+~override Umpk.Game.Registries.BlockTargetingShape.Equals(object obj) -> bool
+~override Umpk.Game.Registries.BlockTargetingShape.ToString() -> string
+Umpk.Game.Registries.BlockInteractionInfo
+Umpk.Game.Registries.BlockInteractionInfo.BlockInteractionInfo() -> void
+Umpk.Game.Registries.BlockInteractionInfo.BlockInteractionInfo(bool PassiveUse, bool NeverReplaceable) -> void
+Umpk.Game.Registries.BlockInteractionInfo.Deconstruct(out bool PassiveUse, out bool NeverReplaceable) -> void
+Umpk.Game.Registries.BlockInteractionInfo.Equals(Umpk.Game.Registries.BlockInteractionInfo other) -> bool
+override Umpk.Game.Registries.BlockInteractionInfo.GetHashCode() -> int
+~override Umpk.Game.Registries.BlockInteractionInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.BlockInteractionInfo.ToString() -> string
+Umpk.Game.Registries.BlockInteractionInfo.PassiveUse.get -> bool
+Umpk.Game.Registries.BlockInteractionInfo.PassiveUse.init -> void
+Umpk.Game.Registries.BlockInteractionInfo.NeverReplaceable.get -> bool
+Umpk.Game.Registries.BlockInteractionInfo.NeverReplaceable.init -> void
+static Umpk.Game.Registries.BlockInteractionInfo.operator ==(Umpk.Game.Registries.BlockInteractionInfo left, Umpk.Game.Registries.BlockInteractionInfo right) -> bool
+static Umpk.Game.Registries.BlockInteractionInfo.operator !=(Umpk.Game.Registries.BlockInteractionInfo left, Umpk.Game.Registries.BlockInteractionInfo right) -> bool
+Umpk.Game.Registries.ItemUseOnInfo
+Umpk.Game.Registries.ItemUseOnInfo.ItemUseOnInfo() -> void
+Umpk.Game.Registries.ItemUseOnInfo.ItemUseOnInfo(Umpk.Game.Registries.ItemUseOnKind Kind, Umpk.Identifier? PlacedBlock) -> void
+Umpk.Game.Registries.ItemUseOnInfo.Deconstruct(out Umpk.Game.Registries.ItemUseOnKind Kind, out Umpk.Identifier? PlacedBlock) -> void
+Umpk.Game.Registries.ItemUseOnInfo.Equals(Umpk.Game.Registries.ItemUseOnInfo other) -> bool
+override Umpk.Game.Registries.ItemUseOnInfo.GetHashCode() -> int
+~override Umpk.Game.Registries.ItemUseOnInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.ItemUseOnInfo.ToString() -> string
+Umpk.Game.Registries.ItemUseOnInfo.Kind.get -> Umpk.Game.Registries.ItemUseOnKind
+Umpk.Game.Registries.ItemUseOnInfo.Kind.init -> void
+Umpk.Game.Registries.ItemUseOnInfo.PlacedBlock.get -> Umpk.Identifier?
+Umpk.Game.Registries.ItemUseOnInfo.PlacedBlock.init -> void
+static Umpk.Game.Registries.ItemUseOnInfo.operator ==(Umpk.Game.Registries.ItemUseOnInfo left, Umpk.Game.Registries.ItemUseOnInfo right) -> bool
+static Umpk.Game.Registries.ItemUseOnInfo.operator !=(Umpk.Game.Registries.ItemUseOnInfo left, Umpk.Game.Registries.ItemUseOnInfo right) -> bool
+Umpk.Game.Registries.ItemUseOnKind
+Umpk.Game.Registries.ItemUseOnKind.Unknown = 0 -> Umpk.Game.Registries.ItemUseOnKind
+Umpk.Game.Registries.ItemUseOnKind.Pass = 1 -> Umpk.Game.Registries.ItemUseOnKind
+Umpk.Game.Registries.ItemUseOnKind.SimpleCubePlacement = 2 -> Umpk.Game.Registries.ItemUseOnKind
+Umpk.Game.Registries.IBlockInteractionSource
+Umpk.Game.Registries.IBlockInteractionSource.HasData.get -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetBlock(Umpk.Identifier block, out Umpk.Game.Registries.BlockInteractionInfo info) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetItem(Umpk.Identifier item, out Umpk.Game.Registries.ItemUseOnInfo info) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.IsAlwaysNonObstructingEntity(Umpk.Identifier entityType) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetFixedEntityDimensions(Umpk.Identifier entityType, out float width, out float height) -> bool

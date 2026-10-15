@@ -7,7 +7,24 @@
    "minecraft-data pc/1.11/items.json (+ air=0; base registrations only)"
   ],
   "kind": "extracted",
-  "note": "legacy pre-flattening items: composite key (item_id << 16) | damage. Exactly ONE row per item id, named with the era's own registry key and damage 0. minecraft-data carries a 'variations' list per item; it is deliberately NOT expanded into per-damage identifiers, because those identifiers do not exist on these servers. This builder used to emit them as '<name>_<damage>' (dye_5, coal_1, fish_2, flower_pot_9, skull_3, golden_apple_1), which is the same defect protocol 47 had with 1.13-flattened names: vanilla 1.12.2 names purple dye {item: minecraft:dye, data: 5} in its own assets/minecraft/recipes/purple_dye.json, and red wool {item: minecraft:wool, data: 14} in red_wool.json, so 'minecraft:dye_5' is a name the target server cannot round-trip through its own commands. The damage short is carried by ItemStackCodecs.ResolveLegacyItem as a damage component off the base composite and re-encodes byte-for-byte, so nothing is lost."
+  "note": "legacy pre-flattening items: composite key (item_id << 16) | damage. Exactly ONE row per item id, named with the era's own registry key and damage 0. minecraft-data carries a 'variations' list per item; it is deliberately NOT expanded into per-damage identifiers, because those identifiers do not exist on these servers. This builder used to emit them as '<name>_<damage>' (dye_5, coal_1, fish_2, flower_pot_9, skull_3, golden_apple_1), which is the same defect protocol 47 had with 1.13-flattened names: vanilla 1.12.2 names purple dye {item: minecraft:dye, data: 5} in its own assets/minecraft/recipes/purple_dye.json, and red wool {item: minecraft:wool, data: 14} in red_wool.json, so 'minecraft:dye_5' is a name the target server cannot round-trip through its own commands. The damage short is carried by ItemStackCodecs.ResolveLegacyItem as a damage component off the base composite and re-encodes byte-for-byte, so nothing is lost.",
+  "vanilla_corrections": {
+   "version": "1.11.2",
+   "server_sha256": "dec47d36b429fd05076b90b1f42c2a25138bc39204aa51b9674ef2a98d64d88a",
+   "source": "1.11.2-decompiled/afh.java",
+   "source_sha256": "b3c4fb7d1a5d944d1b6fa98f1d458b3c6eac639d129621a19e8f514250c6e3ab",
+   "rows": [
+    {
+     "id": 449,
+     "name": "totem_of_undying"
+    },
+    {
+     "id": 452,
+     "name": "iron_nugget"
+    }
+   ],
+   "note": "Native registration IDs and names verified against this release; preserves existing provenance for the remaining rows."
+  }
  },
  "identity": "legacy-composite",
  "identity_formula": "(item_id << 16) | damage",
@@ -2278,13 +2295,19 @@
    "composite_key": 29425664,
    "item_id": 449,
    "damage": 0,
-   "name": "totem"
+   "name": "totem_of_undying"
   },
   {
    "composite_key": 29491200,
    "item_id": 450,
    "damage": 0,
    "name": "shulker_shell"
+  },
+  {
+   "composite_key": 29622272,
+   "item_id": 452,
+   "damage": 0,
+   "name": "iron_nugget"
   },
   {
    "composite_key": 147849216,

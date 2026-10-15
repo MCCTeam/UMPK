@@ -275,6 +275,12 @@ internal sealed partial class Emitter
         // The per-block piston facts. Emitted for every protocol so the accessor is uniform, but EMPTY wherever the dataset carries no measurement: the reader turns an empty table into "no data", and the client then models only the piston's own head and base.
         string pushMember = InternBlockPush(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockPush => SharedTables.{pushMember};");
+        string miningMember = InternBlockMining(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockMining => SharedTables.{miningMember};");
+        string interactionsMember = InternBlockInteractions(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.{interactionsMember};");
+        string targetingMember = InternBlockTargeting(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.{targetingMember};");
 
         // The two identity registries the client resolves wire holder ids against. Emitted for every protocol so the accessor is uniform, and EMPTY wherever the dataset carries no entries for that registry, which the reader treats as unresolvable.
         string enchantmentsMember = InternRegistryDefs(version, "minecraft:enchantment", "enchantments");
@@ -501,6 +507,93 @@ internal sealed partial class Emitter
         }
 
         return InternBlob("blockpush", version.Protocol, ms.ToArray());
+    }
+
+    /// <summary>Mining table: schema marker, named block facts, known item names, then sparse tool rules indexed by those names. Float values retain the vanilla single-precision representation.</summary>
+    private string InternBlockMining(VersionData version)
+    {
+        using MemoryStream stream = new();
+        MiningTable? mining = MiningTable.Load(version);
+        if (mining is null)
+        {
+            WriteVarInt(stream, 0);
+            return InternBlob("blockmining", version.Protocol, stream.ToArray());
+        }
+
+        void WriteName(string name)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(name);
+            WriteVarInt(stream, bytes.Length);
+            stream.Write(bytes);
+        }
+        void WriteRow(MiningRow row)
+        {
+            Span<byte> bytes = stackalloc byte[4];
+            BinaryPrimitives.WriteSingleBigEndian(bytes, row.Value);
+            stream.Write(bytes);
+            stream.WriteByte(row.Flag ? (byte)1 : (byte)0);
+        }
+
+        IReadOnlyDictionary<string, DefaultMiningTool?>? defaults = DefaultMiningTools.Load(version);
+        WriteVarInt(stream, defaults is null ? 1 : 2);
+        string[] blocks = [.. mining.Blocks.Keys.Order(StringComparer.Ordinal)];
+        Dictionary<string, int> blockIndices = [];
+        WriteVarInt(stream, blocks.Length);
+        for (int index = 0; index < blocks.Length; index++)
+        {
+            blockIndices.Add(blocks[index], index);
+            WriteName(blocks[index]);
+            WriteRow(mining.Blocks[blocks[index]]);
+        }
+        string[] items = [.. version.Items.Select(item => item.Name).Distinct().Order(StringComparer.Ordinal)];
+        Dictionary<string, int> itemIndices = [];
+        WriteVarInt(stream, items.Length);
+        for (int index = 0; index < items.Length; index++)
+        {
+            itemIndices.Add(items[index], index);
+            WriteName(items[index]);
+        }
+        WriteVarInt(stream, mining.Tools.Count);
+        foreach ((string item, IReadOnlyDictionary<string, MiningRow> rules) in mining.Tools.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            WriteVarInt(stream, itemIndices[item]);
+            WriteVarInt(stream, rules.Count);
+            foreach ((string block, MiningRow row) in rules.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                WriteVarInt(stream, blockIndices[block]);
+                WriteRow(row);
+            }
+        }
+        if (defaults is not null)
+        {
+            WriteVarInt(stream, defaults.Count(pair => pair.Value is not null));
+            foreach ((string item, DefaultMiningTool? tool) in defaults.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                if (tool is null)
+                    continue;
+                WriteVarInt(stream, itemIndices[item]);
+                WriteRow(new MiningRow(tool.Speed, tool.Creative));
+                WriteVarInt(stream, tool.Damage);
+                WriteVarInt(stream, tool.Rules.Count);
+                foreach (DefaultMiningRule rule in tool.Rules)
+                {
+                    stream.WriteByte(rule.Tag is null ? (byte)0 : (byte)1);
+                    if (rule.Tag is { } tag)
+                        WriteName(tag);
+                    else
+                    {
+                        WriteVarInt(stream, rule.Blocks.Count);
+                        foreach (string block in rule.Blocks)
+                            WriteVarInt(stream, blockIndices[block]);
+                    }
+                    stream.WriteByte(rule.Speed is null ? (byte)0 : (byte)1);
+                    if (rule.Speed is { } speed)
+                        WriteRow(new MiningRow(speed, false));
+                    stream.WriteByte(rule.Correct is null ? (byte)0 : rule.Correct.Value ? (byte)2 : (byte)1);
+                }
+            }
+        }
+        return InternBlob("blockmining", version.Protocol, stream.ToArray());
     }
 
     /// <summary>Vanilla <c>PushReaction</c>'s own declaration order.</summary>
@@ -730,6 +823,9 @@ internal sealed partial class Emitter
         "shaperefs" => "BlockShapeReferences",
         "blockattrs" => "BlockAttributes",
         "blockpush" => "BlockPush",
+        "blockmining" => "BlockMining",
+        "blockinteractions" => "BlockInteractions",
+        "blocktargeting" => "BlockTargeting",
         "enchantments" => "Enchantments",
         "mobeffects" => "MobEffects",
         "attributes" => "Attributes",

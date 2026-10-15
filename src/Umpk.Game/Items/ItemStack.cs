@@ -21,7 +21,7 @@ public sealed class ItemStack : IEquatable<ItemStack>, Umpk.Game.Entities.IMetad
     /// <summary>Creates a stack.</summary>
     /// <param name="item">The item registry handle.</param>
     /// <param name="count">The stack count.</param>
-    /// <param name="components">The component map, or null for an empty map.</param>
+    /// <param name="components">The component map, or null for the item's measured default components with no patch.</param>
     /// <exception cref="ArgumentException"><paramref name="item"/> is an unbound handle.</exception>
     public ItemStack(RegistryEntry<ItemDefinition> item, int count, DataComponentMap? components = null)
     {
@@ -30,7 +30,7 @@ public sealed class ItemStack : IEquatable<ItemStack>, Umpk.Game.Entities.IMetad
 
         Item = item;
         Count = count;
-        Components = components ?? DataComponentMap.Empty;
+        Components = components ?? (item.Value.DefaultComponents.Count == 0 ? DataComponentMap.Empty : DataComponentMap.FromPrototype(item.Value.DefaultComponents));
     }
 
     /// <summary>The item registry handle. An unbound handle indicates the empty stack.</summary>

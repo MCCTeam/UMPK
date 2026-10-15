@@ -5,6 +5,7 @@ Umpk.Data.Java.JavaGameData
 Umpk.Data.Java.JavaVersions
 const Umpk.Data.Java.JavaGameData.LegacyItemBridgeEra = "V1_8" -> string!
 static Umpk.Data.Java.JavaGameData.BlockPushData(int protocol) -> Umpk.Game.Registries.IBlockPushSource!
+static Umpk.Data.Java.JavaGameData.BlockMiningData(int protocol) -> Umpk.Game.Registries.IBlockMiningSource!
 static Umpk.Data.Java.JavaGameData.BlockShapes(int protocol) -> Umpk.Game.Registries.IBlockShapeSource!
 static Umpk.Data.Java.JavaGameData.EntityMetadataKeys(int protocol) -> Umpk.Game.Entities.IMetadataKeySource!
 static Umpk.Data.Java.JavaGameData.LegacyItemBridgeSource.get -> Umpk.Game.Items.ILegacyItemBridgeSource!
@@ -86,3 +87,4 @@ static Umpk.Data.Java.JavaVersions.V1_9_4.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V26_1.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V26_2.get -> Umpk.Protocol.Java.JavaVersion!
 static Umpk.Data.Java.JavaVersions.V26_3.get -> Umpk.Protocol.Java.JavaVersion!
+static Umpk.Data.Java.JavaGameData.BlockInteractionData(int protocol) -> Umpk.Game.Registries.IBlockInteractionSource!

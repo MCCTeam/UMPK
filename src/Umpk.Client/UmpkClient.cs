@@ -899,6 +899,11 @@ public sealed class UmpkClient : IAsyncDisposable
 
         if (_settings.Features.Physics && readiness.MovementEligible)
         {
+            // Native 26.3 publishes the player after block entities; earlier clients publish during the entity phase.
+            bool reportsAfterBlockEntities = _movementReporter.ReportsAfterBlockEntities;
+            if (reportsAfterBlockEntities)
+                _physics?.TickPistons();
+
             if (controlsSelf && _sink is not null && _physics?.EngineState is { } engineState)
             {
                 // SelfState is the integration boundary: explicit rotation and a lease owner's raw position updates intentionally do not mutate the physics engine. Collision and actual sprint remain engine-owned; the server-visible pose comes from tracked self state.
@@ -917,8 +922,8 @@ public sealed class UmpkClient : IAsyncDisposable
                     .ConfigureAwait(false);
             }
 
-            // Vanilla's client ticks block entities AFTER ticking entities, and local-player tick is where sendPosition happens. So a piston push lands on the wire on the NEXT tick, and this call sits after the send to keep that order rather than to beat it.
-            _physics?.TickPistons();
+            if (!reportsAfterBlockEntities)
+                _physics?.TickPistons();
 
         }
 

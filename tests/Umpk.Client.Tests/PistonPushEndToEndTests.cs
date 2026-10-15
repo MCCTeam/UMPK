@@ -38,6 +38,91 @@ public sealed class PistonPushEndToEndTests
     /// <summary>UMPK's player half-width is a halved DOUBLE where vanilla halves a FLOAT.</summary>
     private const double BoxWidthTolerance = 1.5e-8;
 
+    [Theory]
+    [InlineData(770, false)]
+    [InlineData(770, true)]
+    [InlineData(774, false)]
+    [InlineData(774, true)]
+    [InlineData(775, false)]
+    [InlineData(775, true)]
+    [InlineData(776, false)]
+    [InlineData(776, true)]
+    [InlineData(777, false)]
+    [InlineData(777, true)]
+    public async Task PistonDisplacementReachesTheWireInItsNativePlayerPhase(int protocol, bool blockEvent)
+    {
+        using var budget = new CancellationTokenSource(Budget);
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ManualTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = Client(server, ticks, version);
+        var frames = new ConcurrentQueue<InboundFrame>();
+        await JoinAsync(client, server, frames, ct, version);
+        var piston = new BlockPos(4, 64, 8);
+        await BuildFixtureAsync(client, piston, ct);
+        var start = new Vec3d(piston.X + 1.5, 64, piston.Z + 0.5);
+        await TeleportAsync(client, server, start, ct, version);
+        await SettleAsync(client, ticks, ct);
+        for (int tick = 0; tick < ticks.TickCount; tick++)
+            await ReadTickPositionsAsync(frames, version, ct);
+
+        int corrections = 0;
+        using IDisposable subscription = client.Events.Subscribe<PositionCorrected>(_ => Interlocked.Increment(ref corrections));
+        if (blockEvent)
+            await SendBlockEventAsync(client, server, piston, 0, ct, version);
+
+        double[] displacements = [0, 0.31000001192092896, VanillaFullPush, VanillaFullPush];
+        double lastReported = start.X;
+        for (int tick = 1; tick <= 3; tick++)
+        {
+            await ticks.FireAsync(ct);
+            List<Vec3d> reported = await ReadTickPositionsAsync(frames, version, ct);
+            Assert.InRange(reported.Count, 0, 1);
+            if (reported.Count == 1)
+                lastReported = reported[0].X;
+
+            int visibleStep = protocol == 777 ? tick : tick - 1;
+            Assert.Equal(start.X + (blockEvent ? displacements[visibleStep] : 0), lastReported, BoxWidthTolerance);
+            Assert.Equal(start.X + (blockEvent ? displacements[tick] : 0), client.State.Self.Position.X, BoxWidthTolerance);
+        }
+        Assert.Equal(0, corrections);
+    }
+
+    private static async Task<List<Vec3d>> ReadTickPositionsAsync(ConcurrentQueue<InboundFrame> frames, JavaVersion version, CancellationToken ct)
+    {
+        var wire = new Internal.WireIndex(version);
+        int tickEnd = wire.ServerboundPlay(PlayPackets.Serverbound.ClientTickEnd.Id);
+        int position = wire.ServerboundPlay(EntityPackets.Serverbound.MovePlayerPos.Id);
+        int positionRotation = wire.ServerboundPlay(EntityPackets.Serverbound.MovePlayerPosRot.Id);
+        PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Serverbound);
+        List<Vec3d> positions = [];
+        while (true)
+        {
+            if (!frames.TryDequeue(out InboundFrame frame))
+            {
+                await Task.Delay(1, ct);
+                continue;
+            }
+            if (frame.WireId == tickEnd)
+                return positions;
+            if (frame.WireId != position && frame.WireId != positionRotation)
+                continue;
+            Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            object decoded = codec.Decode(frame.Payload, PacketCodecContext.Registryless);
+            var encoded = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(encoded);
+            codec.Encode(ref writer, decoded, PacketCodecContext.Registryless);
+            Assert.Equal(frame.Payload.ToArray(), encoded.WrittenSpan.ToArray());
+            positions.Add(decoded switch
+            {
+                ServerboundMovePlayerPosPacket value => new Vec3d(value.X, value.Y, value.Z),
+                ServerboundMovePlayerPosRotPacket value => new Vec3d(value.X, value.Y, value.Z),
+                _ => throw new InvalidOperationException("Unexpected movement packet"),
+            });
+        }
+    }
+
     /// <summary>The measured fixture: an east-facing piston, the player in the block it extends into, and a single <c>block_event</c>. Two ticks later the player must be 0.81 blocks further east, having been told nothing else by anybody.</summary>
     [Fact]
     public async Task ABlockEventAloneMovesThePlayerTheFullVanillaPush()
@@ -339,9 +424,9 @@ public sealed class PistonPushEndToEndTests
 
     /// <summary>Sends a <c>block_event</c> with action and facing fields, using EAST = 5, and waits for the client to have APPLIED it. Waiting on the client's own <see cref="BlockEventOccurred"/> rather than on a delay is what keeps the following ticks deterministic: the frame and the tick are two independent queues onto one session loop.</summary>
     private static async Task SendBlockEventAsync(
-        UmpkClient client, FakeJavaServer server, BlockPos position, int action, CancellationToken ct)
+        UmpkClient client, FakeJavaServer server, BlockPos position, int action, CancellationToken ct, JavaVersion? version = null)
     {
-        Registry<BlockDefinition> blocks = JavaGameData.Registries(Protocol).Blocks;
+        Registry<BlockDefinition> blocks = JavaGameData.Registries((version ?? Version).Version.Protocol).Blocks;
         Assert.True(blocks.TryGet(Identifier.Minecraft("piston"), out RegistryEntry<BlockDefinition> entry));
 
         var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -349,7 +434,7 @@ public sealed class PistonPushEndToEndTests
         await SendAsync(
             server,
             new ClientboundBlockEventPacket(position, (byte)action, (byte)Direction.East, entry.NetworkId),
-            ct);
+            ct, version);
         await applied.Task.WaitAsync(Budget, ct);
     }
 
@@ -407,22 +492,23 @@ public sealed class PistonPushEndToEndTests
     }
 
     private static async Task JoinAsync(
-        UmpkClient client, FakeJavaServer server, ConcurrentQueue<InboundFrame> frames, CancellationToken ct)
+        UmpkClient client, FakeJavaServer server, ConcurrentQueue<InboundFrame> frames, CancellationToken ct, JavaVersion? version = null)
     {
+        version ??= Version;
         Task connect = client.ConnectAsync(new ServerEndpoint("test", 25565), ct);
 
         await server.NextFrameAsync(ct); // handshake
         server.ServerConnection.SetPhase(ProtocolPhase.Login);
         await server.NextFrameAsync(ct); // hello
         await SendAsync(server, ProtocolPhase.Login,
-            new ClientboundLoginFinishedPacket(Guid.NewGuid(), "Tester", [], null), ct);
+            new ClientboundLoginFinishedPacket(Guid.NewGuid(), "Tester", [], null), ct, version);
         await server.NextFrameAsync(ct); // login_acknowledged
         server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
         await server.NextFrameAsync(ct); // client_information
-        await SendAsync(server, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct);
+        await SendAsync(server, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct, version);
         await server.NextFrameAsync(ct); // finish_configuration
         server.ServerConnection.SetPhase(ProtocolPhase.Play);
-        await Umpk.Client.Tests.Support.ScriptedServer.SendPlayReadinessFrameAsync(server, Version.Protocol, ct);
+        await Umpk.Client.Tests.Support.ScriptedServer.SendPlayReadinessFrameAsync(server, version.Protocol, ct);
         await connect.WaitAsync(Budget, ct);
 
         _ = Task.Run(async () =>
@@ -447,27 +533,27 @@ public sealed class PistonPushEndToEndTests
         await SendAsync(server, ProtocolPhase.Play, new ClientboundLoginPacket(
             PlayerId: 1, Hardcore: false, Dimensions: ["minecraft:overworld"], MaxPlayers: 20,
             ViewDistance: 8, SimulationDistance: 8, ReducedDebugInfo: false, ShowDeathScreen: true,
-            DoLimitedCrafting: false, SpawnInfo: spawn, OnlineMode: false, EnforcesSecureChat: false, Legacy: null), ct);
+            DoLimitedCrafting: false, SpawnInfo: spawn, OnlineMode: false, EnforcesSecureChat: false, Legacy: null), ct, version);
         await joined.Task.WaitAsync(Budget, ct);
     }
 
     private static async Task TeleportAsync(
-        UmpkClient client, FakeJavaServer server, Vec3d target, CancellationToken ct)
+        UmpkClient client, FakeJavaServer server, Vec3d target, CancellationToken ct, JavaVersion? version = null)
     {
         var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using IDisposable subscription = client.Events.Subscribe<PositionCorrected>(_ => corrected.TrySetResult());
         await SendAsync(server, ProtocolPhase.Play, new ClientboundPlayerPositionPacket(
             target.X, target.Y, target.Z, 0f, 0f, RelativeFlags: 0, TeleportId: 1,
-            ModernValues: new PositionMoveRotation(target, Vec3d.Zero, 0f, 0f)), ct);
+            ModernValues: new PositionMoveRotation(target, Vec3d.Zero, 0f, 0f)), ct, version);
         await corrected.Task.WaitAsync(Budget, ct);
     }
 
-    private static UmpkClient Client(FakeJavaServer server, ITickSource ticks) =>
+    private static UmpkClient Client(FakeJavaServer server, ITickSource ticks, JavaVersion? version = null) =>
         new UmpkClientBuilder()
-            .UseVersion(Version)
+            .UseVersion(version ?? Version)
             .UseProfile(new GameProfile(Guid.NewGuid(), "Tester"))
             .UseConnectionFactory(new PipeConnectionFactory(server.ClientPipe))
-            .UseStaticRegistries(JavaGameData.Registries(Protocol))
+            .UseStaticRegistries(JavaGameData.Registries((version ?? Version).Version.Protocol))
             .UseTickSource(ticks)
             .ConfigureFeatures(f =>
             {
@@ -486,15 +572,15 @@ public sealed class PistonPushEndToEndTests
         }
     }
 
-    private static Task SendAsync<TPacket>(FakeJavaServer server, TPacket packet, CancellationToken ct)
+    private static Task SendAsync<TPacket>(FakeJavaServer server, TPacket packet, CancellationToken ct, JavaVersion? version = null)
         where TPacket : class, IPacket
-        => SendAsync(server, ProtocolPhase.Play, packet, ct);
+        => SendAsync(server, ProtocolPhase.Play, packet, ct, version);
 
     private static async Task SendAsync<TPacket>(
-        FakeJavaServer server, ProtocolPhase phase, TPacket packet, CancellationToken ct)
+        FakeJavaServer server, ProtocolPhase phase, TPacket packet, CancellationToken ct, JavaVersion? version = null)
         where TPacket : class, IPacket
     {
-        ProtocolDescriptor descriptor = Version.Protocol;
+        ProtocolDescriptor descriptor = (version ?? Version).Protocol;
         Assert.True(descriptor.TryGetRegistry(phase, PacketFlow.Clientbound, out PhaseRegistry registry));
         foreach ((int wireId, PacketType type) in registry.Packets)
         {

@@ -412,7 +412,7 @@ internal sealed class PhysicsEngineHolder
         _pistons.OnBlockEvent(position, action, param);
 
     /// <summary>Ticks the live moving pistons and publishes any displacement into self state.</summary>
-    /// <remarks>Called after the tick's movement send because entity movement precedes block-entity piston motion. Putting it before the send would report the push one tick earlier than vanilla does, which is a divergence even though it would look like an improvement against a server that is racing the same two ticks.</remarks>
+    /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>
     public void TickPistons()
     {
         if (_engine is null || _pistons.ActiveCount == 0)

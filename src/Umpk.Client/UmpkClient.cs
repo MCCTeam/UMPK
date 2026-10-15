@@ -729,6 +729,7 @@ public sealed class UmpkClient : IAsyncDisposable
             PhysicsConditionsDirty = _pushPhysicsConditions,
             PhysicsPositionDirty = _resyncPhysicsPosition,
             PhysicsVelocityDirty = _applyPhysicsVelocity,
+            StopBlockDestruction = Actions.Interaction.StopDestroyBlockOnLoopAsync,
             CommandCompletions = _commandCompletions,
             Sequences = _sequences,
             DispatchConfigurationChannel = _dispatchConfigurationChannel,
@@ -872,12 +873,12 @@ public sealed class UmpkClient : IAsyncDisposable
                     "player_loaded")
                 .ConfigureAwait(false);
 
+        bool controlsSelf = State.Self.CameraEntityId is null;
         if (_settings.Features.Physics && readiness.MovementEligible)
         {
             // Breath runs before the movement step and regardless of the lease, so it reads the water state the previous tick's movement left behind; and it ticks on every tick the player is alive, not only the ones where nothing else is steering. The server's own value overwrites this one whenever a set_entity_data for the local player arrives, on this same loop.
             _physics?.TickAirSupply();
 
-            bool controlsSelf = State.Self.CameraEntityId is null;
             bool movementFree = _leases.CurrentOwner is null;
             if (controlsSelf && _physics is { } physics)
             {
@@ -891,6 +892,13 @@ public sealed class UmpkClient : IAsyncDisposable
                     physics.TickIdle();
             }
 
+        }
+
+        // Native Player.tick advances attack strength after input and movement simulation, before LocalPlayer publishes its movement. Player loading gates this phase; disabling physics does not disable the player's charge counter.
+        Actions.Interaction.TickAttackChargeOnLoop(readiness.MovementEligible);
+
+        if (_settings.Features.Physics && readiness.MovementEligible)
+        {
             if (controlsSelf && _sink is not null && _physics?.EngineState is { } engineState)
             {
                 // SelfState is the integration boundary: explicit rotation and a lease owner's raw position updates intentionally do not mutate the physics engine. Collision and actual sprint remain engine-owned; the server-visible pose comes from tracked self state.

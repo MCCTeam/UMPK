@@ -44,6 +44,9 @@ internal sealed class ApplierContext
     /// <summary>Invoked after a server-applied VELOCITY has been written to self state (<c>set_entity_motion</c> addressed at the local player's own entity id), so the physics engine picks it up on the next tick. Distinct from <see cref="PhysicsPositionDirty"/> on purpose: that one resets the engine the way a spawn or a teleport does, clearing fall distance, ground state, pose and collision flags, while a server velocity update changes only delta movement. Without this seam the velocity lives in a field the engine never reads and the next tick overwrites it, which is why a knockback moved the client not at all.</summary>
     public required Action PhysicsVelocityDirty { get; init; }
 
+    /// <summary>Stops the live client's game-mode block destruction after a teleport when the native profile requires it. State-only applier harnesses have no active interaction owner.</summary>
+    public Func<CancellationToken, ValueTask> StopBlockDestruction { get; init; } = static _ => ValueTask.CompletedTask;
+
     /// <summary>The server tab-complete correlator; resolves pending completion requests.</summary>
     public required Umpk.Client.Commands.CommandCompletionService CommandCompletions { get; init; }
 

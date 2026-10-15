@@ -29,9 +29,11 @@ internal static class ScriptedServer
         .Build();
 
     /// <summary>Drives handshake, login and configuration through to the start of play.</summary>
-    public static async Task DriveToPlayAsync(FakeJavaServer server, CancellationToken ct)
+    public static Task DriveToPlayAsync(FakeJavaServer server, CancellationToken ct) => DriveToPlayAsync(server, Version, ct);
+
+    public static async Task DriveToPlayAsync(FakeJavaServer server, JavaVersion version, CancellationToken ct)
     {
-        ProtocolDescriptor descriptor = Version.Protocol;
+        ProtocolDescriptor descriptor = version.Protocol;
         await server.NextFrameAsync(ct); // handshake
         server.ServerConnection.SetPhase(ProtocolPhase.Login);
         await server.NextFrameAsync(ct); // hello

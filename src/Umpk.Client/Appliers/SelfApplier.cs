@@ -1,3 +1,4 @@
+using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.State;
@@ -163,6 +164,9 @@ internal sealed class SelfApplier : IApplier
                     new ServerboundMovePlayerPosRotPacket(x, y, z, yaw, pitch, OnGround: false, HorizontalCollision: false),
                     ct)
                 .ConfigureAwait(false);
+
+        if (BlockInteractionProfile.ForProtocol(context.Version.Version.Protocol).TeleportStopsDestroying)
+            await context.StopBlockDestruction(ct).ConfigureAwait(false);
 
         await context.PublishAsync(new PositionCorrected(self.Position, yaw, pitch)).ConfigureAwait(false);
     }

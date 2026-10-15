@@ -397,10 +397,13 @@ public sealed class TickMiningLifecycleTests
             return ValueTask.CompletedTask;
         }, CancellationToken.None);
 
+        public Task StopDestroyAsync() => _scheduler.InvokeAsync(() => Actions.StopDestroyBlockOnLoopAsync(Session.Token), CancellationToken.None);
+
         public Task TickAsync() => _scheduler.InvokeAsync(async () =>
         {
             State.AdvanceSessionTick();
             await Actions.TickMiningOnLoopAsync(Session.Token);
+            Actions.TickAttackChargeOnLoop(playerTicking: true);
         }, CancellationToken.None);
 
         public async ValueTask DisposeAsync()

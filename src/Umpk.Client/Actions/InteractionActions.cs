@@ -36,7 +36,7 @@ public sealed partial class InteractionActions
         _blockProfile = BlockInteractionProfile.ForProtocol(services.Version.Version.Protocol);
     }
 
-    /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Unbreakable blocks keep the attack held until cancellation or a server update removes the target. Caller cancellation releases an active attack with ABORT.</summary>
+    /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Unbreakable blocks keep the attack held until cancellation or server removal. A piercing item uses its charged attack and suppresses ordinary held mining. Cancellation releases the input; a suspended destroy operation stops when ordinary release handling resumes.</summary>
     public Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
         => DigBlockCoreAsync(position, face, viewDistance: null, ct);
 
@@ -382,17 +382,22 @@ public sealed partial class InteractionActions
 
     /// <summary>Attacks an entity (uses the 26.1+ dedicated attack packet where available).</summary>
     public Task AttackEntityAsync(int entityId, CancellationToken ct = default)
-    {
-        int attackId = _services.Wire.ServerboundPlay(Identifier.Minecraft("attack"));
-        if (attackId >= 0)
-            return _sink.SendAsync(new ServerboundAttackPacket(entityId), ct).AsTask();
-
-        // Legacy: interact with action = attack, no hand.
-        return _sink.SendAsync(
-            new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
-                UsingSecondaryAction: _services.Self.Sneaking),
-            ct).AsTask();
-    }
+        => _services.Scheduler.InvokeAsync(async () =>
+        {
+            int attackId = _services.Wire.ServerboundPlay(Identifier.Minecraft("attack"));
+            if (attackId >= 0)
+                await _sink.SendAsync(new ServerboundAttackPacket(entityId), ct).ConfigureAwait(false);
+            else
+            {
+                // Legacy: interact with action = attack, no hand.
+                await _sink.SendAsync(
+                    new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
+                        UsingSecondaryAction: _services.Self.Sneaking),
+                    ct).ConfigureAwait(false);
+            }
+            _attackCharge.Synchronize(_services.State.PlayerLifetime);
+            _attackCharge.Reset();
+        }, ct);
 
     /// <summary>Interacts with an entity (right-click).</summary>
     public Task InteractEntityAsync(int entityId, Hand hand = Hand.Main, CancellationToken ct = default)

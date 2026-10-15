@@ -63,6 +63,24 @@ The fold step rejects a block when its states disagree instead of collapsing sta
 
 When jar-driven extraction is unavailable, `shape_extractor.py` maps the report's block-state ordering onto the repository-local bootstrap asset and marks the result with `curated-shape-bootstrap` provenance. This fallback does not invent data for unresolved blocks.
 
+## Entity and world lifetime source audit
+
+From the repository root, audit the official client trees for same-dimension respawn retention and duplicate-ID entity replacement:
+
+```bash
+python3 tools/extraction/audit_entity_lifecycle.py --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-lifecycle-source.json
+python3 -m unittest discover -s tools/extraction -p test_audit_entity_lifecycle.py
+```
+
+The auditor checks each official client jar's SHA-1, records jar and source SHA-256 hashes, and includes the resolved method evidence. It resolves both mapped and obfuscated releases and includes stable aliases from the official interaction catalogue. Missing or ambiguous source patterns fail the audit. This is source evidence; it does not execute a native world or replace live lifecycle tests.
+
+`audit_entity_packet_bases.py` separately audits relative-coordinate storage, rotation-only handling, classic teleport cache replacement and modern position-sync ownership. Its legacy bindings include static cache setters resolved from the actual call site.
+
+```bash
+python3 tools/extraction/audit_entity_packet_bases.py --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-packet-bases-source.json
+python3 -m unittest discover -s tools/extraction -p test_audit_entity_packet_bases.py
+```
+
 ## Validation
 
 ```bash

@@ -92,6 +92,17 @@ python3 -m unittest discover -s tools/extraction -p test_measure_entity_teleport
 
 The default matrix covers every available stable modern release from 1.21.2 through 26.3, including aliases from the official artifact catalogue. `--versions` selects a smaller explicit matrix. Each measurement includes the native sine-table hash and source hashes for position transforms, relative flags, vector rotation, math, entities and the client listener. Position-sync source must retain velocity. These measurements establish transform arithmetic; they do not execute the listener, select an entity's current or interpolation-target state, or implement vehicle authority.
 
+## Entity motion catalogue proposals
+
+`extract_entity_motion.py` folds a complete native interpolation factory catalogue into a fresh external proposal directory. It verifies raw measurement hashes, release coverage, registry coverage and equal protocol aliases. It preserves native controller owners, factory roles and measured network update intervals without inventing missing legacy intervals. A network update interval is not automatically the controller's interpolation length.
+
+```bash
+python3 tools/extraction/extract_entity_motion.py --measurements /absolute/native-interpolation-run --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-motion-proposal
+python3 -m unittest discover -s tools/extraction -p test_extract_entity_motion.py
+```
+
+The owned survival-player row remains marked `client_player_measured: false`; it does not establish the actual remote-client player role. The extractor rejects relabeling that actor as a native player factory. Review the proposed files and obtain the dataset approval required by AGENTS.md before integrating them through DataGen and generated accessors. A constructor/controller catalogue does not establish full entity ticks, dynamic geometry or world physics.
+
 ## Validation
 
 ```bash

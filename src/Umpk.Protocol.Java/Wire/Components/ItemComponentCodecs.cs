@@ -337,7 +337,7 @@ internal static partial class ItemComponentCodecs
     /// <summary><c>minecraft:dye</c> (776 only): a VarInt dye-color id.</summary>
     public static ItemComponentCodec Dye { get; } = MakeDyeColor(DataComponents.Dye);
 
-    /// <summary><c>minecraft:minimum_attack_charge</c> (776): one float.</summary>
+    /// <summary><c>minecraft:minimum_attack_charge</c> (774+): one float.</summary>
     public static ItemComponentCodec MinimumAttackCharge { get; } = new FloatCodec(
         DataComponents.MinimumAttackCharge,
         static f => new MinimumAttackChargeComponent(f),

@@ -234,6 +234,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.WrittenBookContent,
             ItemComponentCodecs.Trim,
             ItemComponentCodecs.Tool,
+            ItemComponentCodecs.PiercingWeapon,
             layout.AttributeDisplay ? ItemComponentCodecs.AttributeModifiersV26_2 : ItemComponentCodecs.AttributeModifiersV1_21_5,
 
             // Fixed-shape components shared by protocols 770 and 776.

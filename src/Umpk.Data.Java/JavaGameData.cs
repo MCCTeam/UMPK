@@ -96,12 +96,33 @@ public static partial class JavaGameData
             // minecraft:attribute joins registry identity with the DefaultValue/MinValue/MaxValue that AttributeInstance consumes. Empty on 47-578, which carry no attribute registry and do not need one (their update_attributes names attributes by string). See BuildAttributes.
             .Add(BuildAttributes(protocol));
 
+        Registry<object> sounds = BuildSoundNames(protocol);
+        if (sounds.Count > 0)
+            builder.Add(sounds);
+
         // Pre-1.14 versions resolve add_entity (SpawnObject) against a SECOND, disjoint id space. The registry is only added when the era actually has one, so its presence IS the split-id-space signal that RegistryAccess.HasSplitEntityIdSpaces reports and the entity applier routes on.
         Registry<EntityTypeDefinition> objectTypes = BuildLegacyObjectTypes(protocol);
         if (objectTypes.Count > 0)
             builder.Add(objectTypes);
 
         return RegistryAccess.FromSnapshot(builder.Build());
+    }
+
+    // Sound-holder component hashes use registry names rather than wire ids. These entries expose only the measured identity table; sound definitions remain outside this registry's contract.
+    private static Registry<object> BuildSoundNames(int protocol)
+    {
+        ReadOnlySpan<byte> table = SoundNames(protocol);
+        var reader = new PacketReader(table);
+        int count = table.IsEmpty ? 0 : reader.ReadVarInt();
+        var builder = new RegistryBuilder<object>(Identifier.Minecraft("sound_event"), count);
+        object identity = new();
+        for (int id = 0; id < count; id++)
+        {
+            string name = reader.ReadString();
+            if (name.Length > 0)
+                builder.Add(id, Identifier.Parse(name), identity);
+        }
+        return builder.Build();
     }
 
     /// <summary>Builds the item registry for either era, keyed by the era's own wire id. Flattened protocols (1.13+) read the packed item-name table and key entries by flat index. Pre-flattening protocols read the packed legacy table (VarInt count; per item: string name, VarInt composite key) and key entries by the <c>(item_id &lt;&lt; 16) | damage</c> composite the 1.8 slot codec resolves, which is what makes inventory work on 1.8-1.12.2. Duplicate composites or identifiers keep the first occurrence: legacy datasets fold a few damage variants (1.8 potions) onto one name, and those variants still resolve through the codec's base-composite fallback with the damage carried as a component.</summary>

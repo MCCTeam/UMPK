@@ -3239,3 +3239,22 @@ Umpk.Game.Registries.IBlockInteractionSource.TryGetBlock(Umpk.Identifier block, 
 Umpk.Game.Registries.IBlockInteractionSource.TryGetItem(Umpk.Identifier item, out Umpk.Game.Registries.ItemUseOnInfo info) -> bool
 Umpk.Game.Registries.IBlockInteractionSource.IsAlwaysNonObstructingEntity(Umpk.Identifier entityType) -> bool
 Umpk.Game.Registries.IBlockInteractionSource.TryGetFixedEntityDimensions(Umpk.Identifier entityType, out float width, out float height) -> bool
+Umpk.Game.Items.Components.PiercingWeaponComponent
+Umpk.Game.Items.Components.PiercingWeaponComponent.<Clone>$() -> Umpk.Game.Items.Components.PiercingWeaponComponent!
+Umpk.Game.Items.Components.PiercingWeaponComponent.Deconstruct(out bool DealsKnockback, out bool Dismounts, out Umpk.Game.Items.Components.SoundEventRef? Sound, out Umpk.Game.Items.Components.SoundEventRef? HitSound) -> void
+Umpk.Game.Items.Components.PiercingWeaponComponent.Equals(Umpk.Game.Items.Components.PiercingWeaponComponent? other) -> bool
+Umpk.Game.Items.Components.PiercingWeaponComponent.PiercingWeaponComponent(bool DealsKnockback = true, bool Dismounts = false, Umpk.Game.Items.Components.SoundEventRef? Sound = null, Umpk.Game.Items.Components.SoundEventRef? HitSound = null) -> void
+Umpk.Game.Items.Components.PiercingWeaponComponent.DealsKnockback.get -> bool
+Umpk.Game.Items.Components.PiercingWeaponComponent.DealsKnockback.init -> void
+Umpk.Game.Items.Components.PiercingWeaponComponent.Dismounts.get -> bool
+Umpk.Game.Items.Components.PiercingWeaponComponent.Dismounts.init -> void
+Umpk.Game.Items.Components.PiercingWeaponComponent.Sound.get -> Umpk.Game.Items.Components.SoundEventRef?
+Umpk.Game.Items.Components.PiercingWeaponComponent.Sound.init -> void
+Umpk.Game.Items.Components.PiercingWeaponComponent.HitSound.get -> Umpk.Game.Items.Components.SoundEventRef?
+Umpk.Game.Items.Components.PiercingWeaponComponent.HitSound.init -> void
+static Umpk.Game.Items.Components.PiercingWeaponComponent.operator !=(Umpk.Game.Items.Components.PiercingWeaponComponent? left, Umpk.Game.Items.Components.PiercingWeaponComponent? right) -> bool
+static Umpk.Game.Items.Components.PiercingWeaponComponent.operator ==(Umpk.Game.Items.Components.PiercingWeaponComponent? left, Umpk.Game.Items.Components.PiercingWeaponComponent? right) -> bool
+static Umpk.Game.Items.DataComponents.PiercingWeapon.get -> Umpk.Game.Items.DataComponentType<Umpk.Game.Items.Components.PiercingWeaponComponent!>!
+override Umpk.Game.Items.Components.PiercingWeaponComponent.Equals(object? obj) -> bool
+override Umpk.Game.Items.Components.PiercingWeaponComponent.GetHashCode() -> int
+override Umpk.Game.Items.Components.PiercingWeaponComponent.ToString() -> string!

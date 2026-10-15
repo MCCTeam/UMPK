@@ -297,7 +297,7 @@ public sealed record UnitMarkerComponent
 /// <param name="Color">The vanilla dye-color name (white .. black).</param>
 public sealed record DyeColorValueComponent(string Color);
 
-/// <summary>The charge fraction an attack needs before it counts as fully charged (<c>minecraft:minimum_attack_charge</c>, 26.2).</summary>
+/// <summary>The charge fraction an attack needs before it counts as fully charged (<c>minecraft:minimum_attack_charge</c>, 1.21.11+).</summary>
 /// <param name="Value">The minimum charge.</param>
 public sealed record MinimumAttackChargeComponent(float Value);
 

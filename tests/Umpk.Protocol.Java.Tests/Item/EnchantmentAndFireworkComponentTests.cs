@@ -594,10 +594,10 @@ public class EnchantmentAndFireworkComponentTests
     [InlineData(771, 96, 24)]
     [InlineData(772, 96, 24)]
     [InlineData(773, 96, 24)]
-    [InlineData(774, 104, 31)]
-    [InlineData(775, 110, 35)]
-    [InlineData(776, 111, 35)]
-    [InlineData(777, 122, 47)]
+    [InlineData(774, 104, 30)]
+    [InlineData(775, 110, 34)]
+    [InlineData(776, 111, 34)]
+    [InlineData(777, 122, 46)]
     public void WireLayoutTable_DeclaresAndTypesTheseManyComponents(int protocol, int declared, int untyped)
     {
         ItemComponentTable table = TableFor(protocol);

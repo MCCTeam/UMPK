@@ -24,8 +24,9 @@ public sealed class RegistrationMarkerCountInvariantTests
 
         // Totals stay stable at 111, 236, and 256; the implemented/marker split is the invariant.
         Assert.Equal((103, 8), (i47, m47));
-        Assert.Equal((205, 31), (i770, m770));
-        Assert.Equal((213, 43), (i776, m776));
+        // Play update_tags now has a codec in both modern gate protocols.
+        Assert.Equal((206, 30), (i770, m770));
+        Assert.Equal((214, 42), (i776, m776));
     }
 
     private static (int Implemented, int Markers) Count(JavaVersion version)

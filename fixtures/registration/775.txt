@@ -180,7 +180,7 @@ Play Clientbound 0x82 minecraft:update_advancements codec
 Play Clientbound 0x83 minecraft:update_attributes codec
 Play Clientbound 0x84 minecraft:update_mob_effect codec
 Play Clientbound 0x85 minecraft:update_recipes codec
-Play Clientbound 0x86 minecraft:update_tags marker
+Play Clientbound 0x86 minecraft:update_tags codec
 Play Clientbound 0x87 minecraft:projectile_power marker
 Play Clientbound 0x88 minecraft:custom_report_details codec
 Play Clientbound 0x89 minecraft:server_links codec

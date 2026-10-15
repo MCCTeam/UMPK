@@ -1,7 +1,7 @@
 {
-  "implementedBindings": 7172,
-  "exercisedBindings": 1769,
-  "coveredFamilies": 68,
+  "implementedBindings": 7428,
+  "exercisedBindings": 1794,
+  "coveredFamilies": 69,
   "budgets": [
     {
       "protocol": 775,
@@ -794,6 +794,18 @@
       "bodyBytes": 3360,
       "measuredBytesPerFrame": 3408,
       "budgetBytesPerFrame": 3579
+    },
+    {
+      "protocol": 763,
+      "phase": "Play",
+      "flow": "Clientbound",
+      "packet": "minecraft:update_tags",
+      "capture": "chunk-join.umpkcap",
+      "frame": 9,
+      "wireId": 110,
+      "bodyBytes": 19385,
+      "measuredBytesPerFrame": 120768,
+      "budgetBytesPerFrame": 126807
     },
     {
       "protocol": 47,

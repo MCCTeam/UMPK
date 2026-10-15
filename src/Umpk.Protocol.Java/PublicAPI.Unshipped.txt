@@ -7898,3 +7898,17 @@ const Umpk.Protocol.Java.Capture.UmpkCapFormat.FrameCountOffset = 19 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.HeaderLength = 23 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.RecordPrefixLength = 26 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.Version = 1 -> int
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket!
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.ClientboundUpdateTagsPacket(System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>! Registries) -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>! Registries) -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Registries.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>!
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Registries.init -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.UpdateTags -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket!>!

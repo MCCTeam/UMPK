@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 17 of 149 implemented bindings (corpus 5, synth 12)
+# witnessed 17 of 150 implemented bindings (corpus 5, synth 12)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -52,10 +52,10 @@ Play Clientbound 0x0D minecraft:command_suggestions CommandSuggestionCodecs.Comm
 Play Clientbound 0x0E minecraft:commands CommandTreeCodecs.V1_19_3 src:synth w:59 ok Commands{Tree=CommandTreeData{Nodes=[6:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0,H h=79913307
     reject:P759(Argument=FD591A02) reject:P762(Argument=FA3A15B4)
 Play Clientbound 0x0F minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
-Play Clientbound 0x10 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_17_1 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=3,CustomName=null,Dama h=F4812A5F
+Play Clientbound 0x10 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_17_1 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=3,CustomName=null,Dama h=82CDE2DE
     reject:P477(ProtocolViolationException) reject:P764(Id=AAF89CB0)
 Play Clientbound 0x11 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
-Play Clientbound 0x12 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_17_1 src:synth w:9 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=3A7BEDFB
+Play Clientbound 0x12 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_17_1 src:synth w:9 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=D088FE82
     reject:P477(NbtFormatException) reject:P764(Path='mangrove_fence_gate')
 Play Clientbound 0x13 minecraft:cooldown UiMiscCodecs.CooldownV1_9 src:none
 Play Clientbound 0x14 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 src:none
@@ -145,6 +145,7 @@ Play Clientbound 0x65 minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x66 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
 Play Clientbound 0x68 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 src:none
 Play Clientbound 0x69 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Clientbound 0x6A minecraft:update_tags WorldTagCodecs.TagsV1_17 src:none
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
 Play Serverbound 0x03 minecraft:chat_ack ChatCodecs.ChatAckV1_19_3 src:none
 Play Serverbound 0x04 minecraft:chat_command ChatCommandCodecs.SignedV1_19_3 src:none
@@ -179,7 +180,7 @@ Play Serverbound 0x25 minecraft:seen_advancements AdvancementCodecs.SeenAdvancem
 Play Serverbound 0x26 minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
 Play Serverbound 0x28 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x29 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
-Play Serverbound 0x2B minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_14 src:synth w:7 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=CFE2195D
+Play Serverbound 0x2B minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_14 src:synth w:7 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=C2F0363D
     reject:P404(Path='sign') reject:P764(Path='light_gray_concrete')
 Play Serverbound 0x2E minecraft:sign_update UiMiscCodecs.SignUpdateV1_14 src:none
 Play Serverbound 0x2F minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none

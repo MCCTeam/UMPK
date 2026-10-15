@@ -251,53 +251,59 @@ internal static class EntityCodecShared
     /// <param name="era">The era's component interaction dialect: legacy through 769, modern from 770.</param>
     /// <param name="items">The era's item-stack wire representation.</param>
     /// <param name="particles">The era's particle decode inputs, or null to capture particles verbatim.</param>
+    /// <param name="poses">The native pose-id profile, or null for the 1.20.5 standing-fallback profile.</param>
     /// <returns>The codec.</returns>
     internal static PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataModern(
         ModernMetadataTable table,
         ComponentWireEra era,
         MetadataItemEra items,
-        MetadataParticleEra? particles = null) =>
+        MetadataParticleEra? particles = null,
+        MetadataPoseEra? poses = null) =>
         PacketCodec<ClientboundSetEntityDataPacket>.Of(
             (ref PacketWriter w, ClientboundSetEntityDataPacket p, PacketCodecContext ctx) =>
             {
                 w.WriteVarInt(p.EntityId);
                 EntityMetadataCodec.WriteModern(
                     ref w, p.Metadata, table, NbtWireFormat.JavaRootTagOrString, era,
-                    particles: particles, items: items, context: ctx);
+                    particles: particles, items: items, context: ctx, poses: poses ?? MetadataPoseEra.V1_20_5);
             },
             (ref PacketReader r, PacketCodecContext ctx) =>
             {
                 int id = r.ReadVarInt();
                 var meta = EntityMetadataCodec.ReadModern(
                     ref r, table, NbtWireFormat.JavaRootTagOrString, era,
-                    particles: particles, items: items, context: ctx);
+                    particles: particles, items: items, context: ctx, poses: poses ?? MetadataPoseEra.V1_20_5);
                 return new ClientboundSetEntityDataPacket(id, meta);
             },
             WireShape.Of(
                 "varint,metadata",
-                $"{table.ShapeToken},{era},{items.Form},particles={particles?.Icons.ShapeToken ?? "none"}"));
+                $"{table.ShapeToken},{era},{items.Form},particles={particles?.Icons.ShapeToken ?? "none"},{(poses ?? MetadataPoseEra.V1_20_5).ShapeToken}"));
 
     /// <summary>A set_entity_data codec whose COMPONENT/OPTIONAL_COMPONENT values are JSON strings rather than network NBT.</summary>
     /// <param name="table">The era's serializer-id table.</param>
     /// <param name="items">The era's item-stack wire representation.</param>
     /// <param name="blockPos">The BLOCK_POS packing layout for the era.</param>
     /// <param name="nbt">The root framing for COMPOUND_TAG values. Defaults to the pre-1.20.2 named root. 1.20.2 (protocol 764) is a hybrid era: network NBT already lost its root name there, but chat components were still JSON strings until 1.20.3, so 764 passes <see cref="NbtWireFormat.JavaUnnamedRoot"/> alongside <c>componentJson: true</c>.</param>
+    /// <param name="poses">The native pose-id profile, or null for the 1.14 enum order.</param>
     internal static PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataComponentJson(
         ModernMetadataTable table,
         MetadataItemEra items,
         BlockPosLayout blockPos = BlockPosLayout.Packed114,
-        NbtWireFormat nbt = NbtWireFormat.JavaNamedRoot) =>
+        NbtWireFormat nbt = NbtWireFormat.JavaNamedRoot,
+        MetadataPoseEra? poses = null) =>
         PacketCodec<ClientboundSetEntityDataPacket>.Of(
             (ref PacketWriter w, ClientboundSetEntityDataPacket p, PacketCodecContext ctx) =>
             {
                 w.WriteVarInt(p.EntityId);
-                EntityMetadataCodec.WriteModern(ref w, p.Metadata, table, nbt, ComponentWireEra.Legacy, componentJson: true, blockPos: blockPos, items: items, context: ctx);
+                EntityMetadataCodec.WriteModern(ref w, p.Metadata, table, nbt, ComponentWireEra.Legacy, componentJson: true, blockPos: blockPos, items: items, context: ctx, poses: poses ?? MetadataPoseEra.V1_14);
             },
             (ref PacketReader r, PacketCodecContext ctx) =>
             {
                 int id = r.ReadVarInt();
-                var meta = EntityMetadataCodec.ReadModern(ref r, table, nbt, ComponentWireEra.Legacy, componentJson: true, blockPos: blockPos, items: items, context: ctx);
+                var meta = EntityMetadataCodec.ReadModern(ref r, table, nbt, ComponentWireEra.Legacy, componentJson: true, blockPos: blockPos, items: items, context: ctx, poses: poses ?? MetadataPoseEra.V1_14);
                 return new ClientboundSetEntityDataPacket(id, meta);
             },
-            WireShape.Of("varint,metadata", $"{table.ShapeToken},json,{items.Form},{blockPos},{nbt}"));
+            WireShape.Of("varint,metadata", $"{table.ShapeToken},json,{items.Form},{blockPos},{nbt}{PoseShapeSuffix(poses ?? MetadataPoseEra.V1_14)}"));
+
+    private static string PoseShapeSuffix(MetadataPoseEra poses) => poses.IsEmpty ? "" : "," + poses.ShapeToken;
 }

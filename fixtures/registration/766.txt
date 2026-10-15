@@ -159,7 +159,7 @@ Play Clientbound 0x74 minecraft:update_advancements codec
 Play Clientbound 0x75 minecraft:update_attributes codec
 Play Clientbound 0x76 minecraft:update_mob_effect codec
 Play Clientbound 0x77 minecraft:update_recipes codec
-Play Clientbound 0x78 minecraft:update_tags marker
+Play Clientbound 0x78 minecraft:update_tags codec
 Play Clientbound 0x79 minecraft:projectile_power marker
 Play Serverbound 0x00 minecraft:accept_teleportation codec
 Play Serverbound 0x01 minecraft:block_entity_tag_query marker

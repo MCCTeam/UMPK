@@ -577,6 +577,8 @@ public class EnchantmentAndFireworkComponentTests
 
     // The size of the remaining class, pinned so it can only shrink knowingly.
 
+    // The native pre-1.21.5 Tool codec removes one untyped component from each 766-769 table. Its byte witnesses are in ItemComponentPayloadCodecTests.
+
     /// <summary>How many components each era DECLARES versus how many UMPK types. Every untyped one is a packet-dropper the moment it appears on a compact patch, so this number is the real blast radius and it belongs in the suite rather than in a report that goes stale. Measured by walking each table's wire ids until <see cref="ProtocolViolationException"/> and counting the ids with no codec.</summary>
     /// <remarks>
     /// Typing <c>enchantments</c>, <c>stored_enchantments</c>, <c>fireworks</c> and <c>firework_explosion</c> moved these from 18/19/25/25/40/40/40/47/51/51. Typing <c>pot_decorations</c> on <c>BuildPreV1_21_5</c> then moved 766/767/768/769 down by one more each (14/15/21/21 -&gt; 13/14/20/20).
@@ -584,10 +586,10 @@ public class EnchantmentAndFireworkComponentTests
     /// <para>What is still untyped is now dominated by 1.21.5+ additions no normal session needs to decode (<c>weapon</c>, <c>blocks_attacks</c>, the mob <c>*/variant</c> family, <c>break_sound</c>), plus <c>can_break</c>/<c>can_place_on</c> on 770+, and on 766-769 the six components whose pre-1.21.5 wire shape genuinely differs (<c>attribute_modifiers</c>, <c>dyed_color</c>, <c>potion_contents</c>, <c>trim</c>, <c>tool</c>, and on 766/767 <c>food</c>). A drop in a number here without a corresponding new codec means the table lost entries, which is the opposite of progress.</para>
     /// </remarks>
     [Theory]
-    [InlineData(766, 56, 6)]
-    [InlineData(767, 57, 6)]
-    [InlineData(768, 67, 5)]
-    [InlineData(769, 67, 5)]
+    [InlineData(766, 56, 5)]
+    [InlineData(767, 57, 5)]
+    [InlineData(768, 67, 4)]
+    [InlineData(769, 67, 4)]
     [InlineData(770, 96, 24)]
     [InlineData(771, 96, 24)]
     [InlineData(772, 96, 24)]

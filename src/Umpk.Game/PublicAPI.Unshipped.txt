@@ -385,6 +385,7 @@ Umpk.Game.Entities.MetadataValue.AsOptionalVarInt() -> int?
 Umpk.Game.Entities.MetadataValue.AsParticle() -> object!
 Umpk.Game.Entities.MetadataValue.AsParticles() -> System.Collections.Generic.IReadOnlyList<object!>!
 Umpk.Game.Entities.MetadataValue.AsPose() -> Umpk.Game.Entities.EntityPose
+Umpk.Game.Entities.MetadataValue.AsPoseWireId() -> int?
 Umpk.Game.Entities.MetadataValue.AsPosition() -> Umpk.Geometry.BlockPos
 Umpk.Game.Entities.MetadataValue.AsQuaternion() -> Umpk.Game.Entities.Quaternion
 Umpk.Game.Entities.MetadataValue.AsResolvableProfile() -> Umpk.Game.Entities.ResolvableProfile!
@@ -2687,6 +2688,7 @@ static Umpk.Game.Entities.MetadataValue.OptionalVarInt(int? value) -> Umpk.Game.
 static Umpk.Game.Entities.MetadataValue.Particle(object! particle) -> Umpk.Game.Entities.MetadataValue
 static Umpk.Game.Entities.MetadataValue.Particles(System.Collections.Generic.IReadOnlyList<object!>! particles) -> Umpk.Game.Entities.MetadataValue
 static Umpk.Game.Entities.MetadataValue.Pose(Umpk.Game.Entities.EntityPose value) -> Umpk.Game.Entities.MetadataValue
+static Umpk.Game.Entities.MetadataValue.PoseWithWireId(Umpk.Game.Entities.EntityPose value, int wireId) -> Umpk.Game.Entities.MetadataValue
 static Umpk.Game.Entities.MetadataValue.Position(Umpk.Geometry.BlockPos value) -> Umpk.Game.Entities.MetadataValue
 static Umpk.Game.Entities.MetadataValue.Quaternion(Umpk.Game.Entities.Quaternion value) -> Umpk.Game.Entities.MetadataValue
 static Umpk.Game.Entities.MetadataValue.ResolvableProfile(Umpk.Game.Entities.ResolvableProfile! profile) -> Umpk.Game.Entities.MetadataValue

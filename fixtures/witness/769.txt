@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 18 of 206 implemented bindings (corpus 5, synth 13)
+# witnessed 18 of 207 implemented bindings (corpus 5, synth 13)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -82,11 +82,11 @@ Play Clientbound 0x10 minecraft:command_suggestions CommandSuggestionCodecs.Comm
 Play Clientbound 0x11 minecraft:commands CommandTreeCodecs.V1_20_5 src:synth w:59 ok Commands{Tree=CommandTreeData{Nodes=[6:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0,H h=86247555
     reject:P765(ProtocolViolationException) reject:P770(Argument=B338F731)
 Play Clientbound 0x12 minecraft:container_close ContainerCodecs.ContainerCloseClientModern src:none
-Play Clientbound 0x13 minecraft:container_set_content MakeContainerSetContent(Table769) src:synth w:143 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=f h=7DFA1F19
-    reject:P768(Id=022C84BB) reject:P770(ProtocolViolationException)
+Play Clientbound 0x13 minecraft:container_set_content MakeContainerSetContent(Table769) src:synth w:143 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=f h=58EAFFD2
+    reject:P768(2:0E85B93B) reject:P770(ProtocolViolationException)
 Play Clientbound 0x14 minecraft:container_set_data ContainerCodecs.ContainerSetDataModern src:none
-Play Clientbound 0x15 minecraft:container_set_slot MakeContainerSetSlot(Table769) src:synth w:51 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataCompon h=C3D4657E
-    reject:P768(Path='netherite_hoe') reject:P770(ProtocolViolationException)
+Play Clientbound 0x15 minecraft:container_set_slot MakeContainerSetSlot(Table769) src:synth w:51 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[2:DataCompon h=5F1FF67B
+    reject:P768(Value=969330D8) reject:P770(ProtocolViolationException)
 Play Clientbound 0x16 minecraft:cookie_request PlayCommonCodecs.CookieRequest src:none
 Play Clientbound 0x17 minecraft:cooldown UiMiscCodecs.CooldownV1_21_2 src:none
 Play Clientbound 0x18 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 src:none
@@ -150,8 +150,8 @@ Play Clientbound 0x56 minecraft:set_border_warning_distance WorldBorderCodecs.Se
 Play Clientbound 0x57 minecraft:set_camera EntityStateCodecs.SetCamera src:none
 Play Clientbound 0x58 minecraft:set_chunk_cache_center WorldStateCodecs.SetChunkCacheCenterV1_14 src:none
 Play Clientbound 0x59 minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunkCacheRadiusV1_14 src:none
-Play Clientbound 0x5A minecraft:set_cursor_item MakeSetCursorItem(Table769) src:synth w:47 ok SetCursorItem{Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=false,Type=279 h=409DAC31
-    reject:P768(Path='netherite_hoe') reject:P770(ProtocolViolationException)
+Play Clientbound 0x5A minecraft:set_cursor_item MakeSetCursorItem(Table769) src:synth w:47 ok SetCursorItem{Item=ItemStack{Book=null,Components=[2:DataComponentEntry{IsRemoval=false,Type=CA5 h=D6B209D8
+    reject:P768(Value=969330D8) reject:P770(ProtocolViolationException)
 Play Clientbound 0x5B minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_17 src:corpus@755 w:12 ok SetDefaultSpawnPosition{Angle=0,Dimension=null,Pitch=0,Position=BlockPos{BottomCenter='(-159.500 h=61D7B6B7
     reject:P735(read:8) reject:P773(ProtocolViolationException)
 Play Clientbound 0x5C minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_20_2 src:none
@@ -166,8 +166,8 @@ Play Clientbound 0x62 minecraft:set_health EntityStateCodecs.SetHealth src:none
 Play Clientbound 0x63 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_21_4 src:none
 Play Clientbound 0x64 minecraft:set_objective ScoreboardCodecs.SetObjectiveV1_20_3 src:none
 Play Clientbound 0x65 minecraft:set_passengers EntityStateCodecs.SetPassengers src:none
-Play Clientbound 0x66 minecraft:set_player_inventory MakeSetPlayerInventory(Table769) src:synth w:48 ok SetPlayerInventory{Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=false,Typ h=A631819D
-    reject:P768(Path='netherite_hoe') reject:P770(ProtocolViolationException)
+Play Clientbound 0x66 minecraft:set_player_inventory MakeSetPlayerInventory(Table769) src:synth w:48 ok SetPlayerInventory{Item=ItemStack{Book=null,Components=[2:DataComponentEntry{IsRemoval=false,Typ h=55543447
+    reject:P768(Value=969330D8) reject:P770(ProtocolViolationException)
 Play Clientbound 0x67 minecraft:set_player_team ScoreboardCodecs.SetPlayerTeamV1_20_3 src:synth w:193 ok SetPlayerTeam{Method=Add,Name='witnesses',Parameters=TeamParameters{CollisionRule=PushOwnTeam,Co h=0D356D0B
     reject:P477(ComponentFormatException) reject:P770(NbtFormatException)
 Play Clientbound 0x68 minecraft:set_score ScoreboardCodecs.SetScoreV1_20_3 src:none
@@ -191,6 +191,7 @@ Play Clientbound 0x7B minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x7C minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 src:none
 Play Clientbound 0x7D minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 src:none
 Play Clientbound 0x7E minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Clientbound 0x7F minecraft:update_tags WorldTagCodecs.TagsV1_17 src:none
 Play Clientbound 0x81 minecraft:custom_report_details ChatDisplayCodecs.CustomReportDetailsV1_21 src:none
 Play Clientbound 0x82 minecraft:server_links UiMiscCodecs.ServerLinksV1_21 src:none
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
@@ -237,8 +238,8 @@ Play Serverbound 0x30 minecraft:seen_advancements AdvancementCodecs.SeenAdvancem
 Play Serverbound 0x31 minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
 Play Serverbound 0x33 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x34 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
-Play Serverbound 0x36 minecraft:set_creative_mode_slot MakeCreativeSlot(Table769) src:synth w:50 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsR h=45502F8B
-    reject:P768(Path='netherite_hoe') reject:P770(ProtocolViolationException)
+Play Serverbound 0x36 minecraft:set_creative_mode_slot MakeCreativeSlot(Table769) src:synth w:50 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[2:DataComponentEntry{IsR h=653E608F
+    reject:P768(Value=969330D8) reject:P770(ProtocolViolationException)
 Play Serverbound 0x39 minecraft:sign_update UiMiscCodecs.SignUpdateV1_20 src:none
 Play Serverbound 0x3A minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none
 Play Serverbound 0x3B minecraft:teleport_to_entity EntityServerboundCodecs.TeleportToEntity src:none

@@ -204,7 +204,10 @@ internal static partial class ItemComponentCodecs
     public static ItemComponentCodec Trim { get; } = new TrimCodecImpl();
 
     /// <summary><c>minecraft:tool</c> (rules opaque, mining speed, damage-per-block, creative flag).</summary>
-    public static ItemComponentCodec Tool { get; } = new ToolCodecImpl();
+    public static ItemComponentCodec Tool { get; } = new ToolCodecImpl(hasCreativeFlag: true);
+
+    /// <summary><c>minecraft:tool</c> on 766-769: rules, mining speed and damage-per-block, with no creative flag.</summary>
+    public static ItemComponentCodec ToolLegacy { get; } = new ToolCodecImpl(hasCreativeFlag: false);
 
     /// <summary><c>minecraft:attribute_modifiers</c> for the 1.21.5 shape (no display field).</summary>
     public static ItemComponentCodec AttributeModifiersV1_21_5 { get; } = new AttributeModifiersCodecImpl(hasDisplay: false);
@@ -1466,7 +1469,7 @@ internal static partial class ItemComponentCodecs
                 : 0;
     }
 
-    private sealed class ToolCodecImpl() : ItemComponentCodec(DataComponents.Tool)
+    private sealed class ToolCodecImpl(bool hasCreativeFlag) : ItemComponentCodec(DataComponents.Tool)
     {
         public override object Decode(ref PacketReader reader, PacketCodecContext context)
         {
@@ -1477,8 +1480,8 @@ internal static partial class ItemComponentCodecs
 
             float defaultMiningSpeed = reader.ReadFloat();
             int damagePerBlock = reader.ReadVarInt();
-            _ = reader.ReadBool(); // canDestroyBlocksInCreative; not modeled, consumed to stay frame-exact.
-            return new ToolComponent(defaultMiningSpeed, damagePerBlock, rules);
+            bool canDestroy = !hasCreativeFlag || reader.ReadBool();
+            return new ToolComponent(defaultMiningSpeed, damagePerBlock, rules) { CanDestroyBlocksInCreative = canDestroy };
         }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
@@ -1490,20 +1493,55 @@ internal static partial class ItemComponentCodecs
 
             writer.WriteFloat(tool.DefaultMiningSpeed);
             writer.WriteVarInt(tool.DamagePerBlock);
-            writer.WriteBool(true); // canDestroyBlocksInCreative default (vanilla true); round-trips a fixed value.
+            if (hasCreativeFlag)
+                writer.WriteBool(tool.CanDestroyBlocksInCreative);
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
             var tool = (ToolComponent)value;
-            var entries = new List<(int, int)>();
+            int[] rules = new int[tool.Rules.Count];
+            for (int index = 0; index < rules.Length; index++)
+                rules[index] = HashRule(ops, tool.Rules[index], context);
+            // Tool.CODEC requires the rules field even for an empty list. Optional defaults are omitted independently.
+            var entries = new List<(int, int)> { (ops.String("rules"), ops.List(rules)) };
             if (tool.DefaultMiningSpeed != 1.0f)
                 entries.Add((ops.String("default_mining_speed"), ops.Float(tool.DefaultMiningSpeed)));
 
             if (tool.DamagePerBlock != 1)
                 entries.Add((ops.String("damage_per_block"), ops.Int(tool.DamagePerBlock)));
 
+            if (hasCreativeFlag && !tool.CanDestroyBlocksInCreative)
+                entries.Add((ops.String("can_destroy_blocks_in_creative"), ops.Boolean(false)));
+
             return ops.Map(entries);
+        }
+
+        private static int HashRule(in HashOps ops, NbtCompound rule, PacketCodecContext context)
+        {
+            var entries = new List<(int, int)> { (ops.String("blocks"), HashBlocks(ops, rule.GetList("blocks"), context)) };
+            if (rule.TryGet("speed", out NbtFloat? speed))
+                entries.Add((ops.String("speed"), ops.Float(speed.Value)));
+            if (rule.TryGet("correct_for_drops", out NbtByte? correct))
+                entries.Add((ops.String("correct_for_drops"), ops.Boolean(correct.Value != 0)));
+            return ops.Map(entries);
+        }
+
+        private static int HashBlocks(in HashOps ops, NbtList? blocks, PacketCodecContext context)
+        {
+            if (blocks is { ElementType: NbtTagType.String, Count: > 0 })
+                return ops.String("#" + ((NbtString)blocks[0]).Value);
+            int count = blocks?.Count ?? 0;
+            int[] values = new int[count];
+            for (int index = 0; index < count; index++)
+            {
+                int networkId = ((NbtInt)blocks![index]).Value;
+                if (!context.Registries.Blocks.TryGetKey(networkId, out Identifier id))
+                    throw new ProtocolViolationException("Tool rule refers to an unknown block holder.");
+                values[index] = ops.String(id.ToString());
+            }
+            // RegistryCodecs.homogeneousList uses the compact single-element form in Tool.Rule.CODEC.
+            return count == 1 ? values[0] : ops.List(values);
         }
 
         // A rule is a holder-set of blocks (VarInt tag-or-count form), an optional float speed, and an optional bool correctForDrops. It is retained opaquely as an NBT compound with those members so the wire round-trips without a block registry dependency.

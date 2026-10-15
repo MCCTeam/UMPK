@@ -175,9 +175,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_sign", MarkerReason.KnownGap, Between(47, 109),
             "The 1.8 through 1.9.2 clientbound sign contents packet, dropped by vanilla in favour of block entity data. Unbound on all four protocols that carry it, so sign text does not reach a consumer there. Distinct from the serverbound minecraft:sign_update entry below, which is a different argument."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_tags", MarkerReason.KnownGap, From(393),
-            "The registry tag sets for blocks, items, fluids and entities. Unbound on every protocol that carries it, and nothing in UMPK models tags, so a consumer cannot ask whether a block is in minecraft:logs."),
-
         // Play, serverbound
         new(ProtocolPhase.Play, PacketFlow.Serverbound, "block_entity_tag_query", MarkerReason.KnownGap, From(393),
             "The operator-only block NBT query request. Its reply minecraft:tag_query is unbound too, so the round trip is wholly unimplemented rather than half wired, which is the better of the two states to be in."),

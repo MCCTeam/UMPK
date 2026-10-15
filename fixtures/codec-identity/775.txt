@@ -29,7 +29,7 @@ Configuration Clientbound 0x09 minecraft:resource_pack_push ConfigurationCodecs.
 Configuration Clientbound 0x0A minecraft:store_cookie ConfigurationCodecs.StoreCookie fault:FormatException shape:opaque
 Configuration Clientbound 0x0B minecraft:transfer ConfigurationCodecs.Transfer read:2 shape:string,varint
 Configuration Clientbound 0x0C minecraft:update_enabled_features ConfigurationCodecs.UpdateEnabledFeatures read:1 shape:opaque
-Configuration Clientbound 0x0D minecraft:update_tags ConfigurationCodecs.UpdateTags read:1 shape:opaque
+Configuration Clientbound 0x0D minecraft:update_tags ConfigurationCodecs.UpdateTags read:1 shape:list(registry,list(tag,list(varint)))
 Configuration Clientbound 0x0E minecraft:select_known_packs ConfigurationCodecs.SelectPacksClient read:1 shape:opaque
 Configuration Clientbound 0x0F minecraft:custom_report_details ConfigurationCodecs.CustomReportDetails read:1 shape:opaque
 Configuration Clientbound 0x10 minecraft:server_links ConfigurationCodecs.ServerLinksV1_21_5 read:1 shape:varint*server_link|nbt/modern
@@ -145,7 +145,7 @@ Play Clientbound 0x5F minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunk
 Play Clientbound 0x60 minecraft:set_cursor_item MakeSetCursorItem(Table775) read:1 shape:stack|components/8ef00e5f
 Play Clientbound 0x61 minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_21_9 read:17 shape:opaque
 Play Clientbound 0x62 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_20_2 read:2 shape:opaque
-Play Clientbound 0x63 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV26_1 fault:ProtocolViolationException shape:varint,metadata|metadata/d121417b,Modern,countfirst/components/8ef00e5f,particles=components/8ef00e5f
+Play Clientbound 0x63 minecraft:set_entity_data EntityDataCodecs.SetEntityDataV26_1 fault:ProtocolViolationException shape:varint,metadata|metadata/d121417b,Modern,countfirst/components/8ef00e5f,particles=components/8ef00e5f,poses/168de248
 Play Clientbound 0x64 minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_9 read:8 shape:opaque
 Play Clientbound 0x65 minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotionV1_21_9 read:2 shape:opaque
 Play Clientbound 0x66 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_16 read:256 shape:opaque
@@ -180,7 +180,7 @@ Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x83 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 read:2 shape:opaque
 Play Clientbound 0x84 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 read:5 shape:opaque
 Play Clientbound 0x85 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern read:256 shape:opaque
-Play Clientbound 0x86 minecraft:update_tags marker n/a shape:opaque
+Play Clientbound 0x86 minecraft:update_tags WorldTagCodecs.TagsV1_17 read:1 shape:list(registry,list(tag,list(varint)))
 Play Clientbound 0x87 minecraft:projectile_power marker n/a shape:opaque
 Play Clientbound 0x88 minecraft:custom_report_details ChatDisplayCodecs.CustomReportDetailsV1_21 read:1 shape:opaque
 Play Clientbound 0x89 minecraft:server_links UiMiscCodecs.ServerLinksV1_21_5 read:1 shape:varint*server_link|nbt/modern

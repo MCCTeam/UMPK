@@ -9,7 +9,8 @@ internal sealed partial class Emitter
     {
         using MemoryStream stream = new();
         CollisionGridTable? table = CollisionGridTable.Load(version);
-        WriteVarInt(stream, table is null ? 0 : 1);
+        CollisionGridTable? offsets = CollisionGridTable.LoadOffsets(version);
+        WriteVarInt(stream, table is null ? 0 : offsets is null ? 1 : 2);
         if (table is not null)
         {
             void Number(double value)
@@ -18,10 +19,33 @@ internal sealed partial class Emitter
                 BinaryPrimitives.WriteDoubleBigEndian(bytes, value);
                 stream.Write(bytes);
             }
-            WriteVarInt(stream, table.Groups.Count);
-            foreach (CollisionGridRow group in table.Groups)
+            List<CollisionGridRow> groups = [.. table.Groups];
+            Dictionary<string, int> states = new(table.States);
+            if (offsets is not null)
+            {
+                int first = groups.Count;
+                groups.AddRange(offsets.Groups);
+                foreach ((string state, int group) in offsets.States)
+                    states[state] = first + group;
+                HashSet<int> used = [.. states.Values];
+                Dictionary<int, int> remap = [];
+                List<CollisionGridRow> retained = [];
+                for (int index = 0; index < groups.Count; index++)
+                    if (used.Contains(index))
+                    {
+                        remap[index] = retained.Count;
+                        retained.Add(groups[index]);
+                    }
+                groups = retained;
+                foreach (string state in states.Keys.ToArray())
+                    states[state] = remap[states[state]];
+            }
+            WriteVarInt(stream, groups.Count);
+            foreach (CollisionGridRow group in groups)
             {
                 stream.WriteByte(group.Canonical ? (byte)1 : (byte)0);
+                if (offsets is not null)
+                    Number(group.MaxHorizontalOffset);
                 foreach (double[] axis in group.Planes)
                 {
                     WriteVarInt(stream, axis.Length);
@@ -38,7 +62,7 @@ internal sealed partial class Emitter
             }
             WriteVarInt(stream, table.StateCount);
             for (int state = 0; state < table.StateCount; state++)
-                WriteVarInt(stream, table.States[state.ToString(CultureInfo.InvariantCulture)]);
+                WriteVarInt(stream, states[state.ToString(CultureInfo.InvariantCulture)]);
         }
         return InternBlob("blockcollisiongrids", version.Protocol, stream.ToArray());
     }

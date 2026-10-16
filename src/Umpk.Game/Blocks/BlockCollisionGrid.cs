@@ -3,7 +3,7 @@ using Umpk.Geometry;
 namespace Umpk.Game.Blocks;
 
 /// <summary>An immutable block-local voxel grid, including inactive and coincident coordinate planes. Occupied cells use <c>(x * ySize + y) * zSize + z</c> order.</summary>
-/// <remarks>The canonical full-block flag records the native shape's identity. Equal bounding boxes do not establish that identity. Coordinate offsets belong to the shape provider; callers must not normalize an already shifted grid by subtracting a floating-point offset.</remarks>
+/// <remarks>The canonical full-block flag records the native shape's identity. Equal bounding boxes do not establish that identity. Evaluate any measured position offset with <see cref="OffsetAt"/> and apply it before the world position; never normalize a shifted grid by subtracting a floating-point offset.</remarks>
 public sealed class BlockCollisionGrid
 {
     private readonly double[] _x, _y, _z;
@@ -12,7 +12,14 @@ public sealed class BlockCollisionGrid
 
     /// <summary>Copies exact native coordinates, sorted unique occupied cells, and the shape's bounding-box decomposition.</summary>
     public BlockCollisionGrid(ReadOnlySpan<double> xCoordinates, ReadOnlySpan<double> yCoordinates, ReadOnlySpan<double> zCoordinates, ReadOnlySpan<int> occupiedCells, ReadOnlySpan<Aabb> boxes, bool canonicalFullBlock = false)
+        : this(xCoordinates, yCoordinates, zCoordinates, occupiedCells, boxes, canonicalFullBlock, 0)
     {
+    }
+
+    private BlockCollisionGrid(ReadOnlySpan<double> xCoordinates, ReadOnlySpan<double> yCoordinates, ReadOnlySpan<double> zCoordinates, ReadOnlySpan<int> occupiedCells, ReadOnlySpan<Aabb> boxes, bool canonicalFullBlock, double maxHorizontalOffset)
+    {
+        if (!double.IsFinite(maxHorizontalOffset) || maxHorizontalOffset < 0 || (canonicalFullBlock && maxHorizontalOffset != 0))
+            throw new ArgumentOutOfRangeException(nameof(maxHorizontalOffset));
         ValidateCoordinates(xCoordinates, nameof(xCoordinates));
         ValidateCoordinates(yCoordinates, nameof(yCoordinates));
         ValidateCoordinates(zCoordinates, nameof(zCoordinates));
@@ -41,6 +48,7 @@ public sealed class BlockCollisionGrid
         _cells = occupiedCells.ToArray();
         _boxes = boxes.ToArray();
         CanonicalFullBlock = canonicalFullBlock;
+        MaxHorizontalOffset = maxHorizontalOffset;
     }
 
     /// <summary>The exact X coordinate planes, including inactive planes.</summary>
@@ -60,6 +68,29 @@ public sealed class BlockCollisionGrid
 
     /// <summary>Whether the original native shape was the canonical full-block singleton.</summary>
     public bool CanonicalFullBlock { get; }
+
+    /// <summary>The measured horizontal offset limit, or zero for a grid with no position offset.</summary>
+    public double MaxHorizontalOffset { get; }
+
+    /// <summary>Copies original coordinate delegates and a positive native horizontal offset limit. A translated shape does not have canonical full-block identity.</summary>
+    public static BlockCollisionGrid CreateWithHorizontalOffset(ReadOnlySpan<double> xCoordinates, ReadOnlySpan<double> yCoordinates, ReadOnlySpan<double> zCoordinates, ReadOnlySpan<int> occupiedCells, ReadOnlySpan<Aabb> boxes, double maxHorizontalOffset)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxHorizontalOffset);
+        return new BlockCollisionGrid(xCoordinates, yCoordinates, zCoordinates, occupiedCells, boxes, false, maxHorizontalOffset);
+    }
+
+    /// <summary>Evaluates the native horizontal position offset. The seed ignores Y and retains the game's integer wrapping and float division.</summary>
+    /// <remarks>1.14.4-client-decompiled net/minecraft/world/level/block/Block.java and 26.3-client-decompiled net/minecraft/world/level/block/state/BlockBehaviour.java define the position hash and quarter-block offset range.</remarks>
+    public Vec3d OffsetAt(BlockPos position)
+    {
+        if (MaxHorizontalOffset == 0)
+            return Vec3d.Zero;
+        long seed = unchecked((long)(position.X * 3129871) ^ (long)position.Z * 116129781L);
+        seed = unchecked(seed * seed * 42317861L + seed * 11L) >> 16;
+        double x = Math.Clamp(((float)(seed & 15L) / 15.0F - .5) * .5, -MaxHorizontalOffset, MaxHorizontalOffset);
+        double z = Math.Clamp(((float)((seed >> 8) & 15L) / 15.0F - .5) * .5, -MaxHorizontalOffset, MaxHorizontalOffset);
+        return new Vec3d(x, 0, z);
+    }
 
     private static bool IsUnitAxis(ReadOnlySpan<double> coordinates) => coordinates.Length == 2 && coordinates[0] == 0 && coordinates[1] == 1;
 

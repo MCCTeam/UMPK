@@ -28,5 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="../Umpk.Physics.Tests/Fixtures/BlockCollisionGrid.native.json" Link="Fixtures/BlockCollisionGrid.native.json" />
+    <EmbeddedResource Include="Fixtures/OffsetCollision.native.json" />
   </ItemGroup>
 </Project>

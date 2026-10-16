@@ -4,6 +4,7 @@ These programs parse the official `server_mappings.txt` and reach Minecraft type
 
 - `ShapeDump.java` dumps per-state collision AABBs (the rest of this README).
 - `CollisionGridDump.java` preserves exact default collision grids, occupied cells and the native full-block singleton identity. Use it when voxel intersection needs information that an AABB decomposition omits.
+- `CollisionOffsetDump.java` extracts the original coordinate delegates and horizontal offset limits for colliding position-offset states, then reconstructs native shapes at seven positions.
 - `PushDump.java` dumps the four per-state values `PistonBaseBlock.isPushable` and `PistonStructureResolver.resolve` read: `getPistonPushReaction()`, `getDestroySpeed()`, `hasBlockEntity()` / `Block.isEntityBlock()`, and `isAir()`. `tools/extraction/extract_push_reactions.py` folds its output into `data/java/<protocol>/block-push.json`. The mapping parser is duplicated between the two on purpose: both are standalone single-file programs compiled and run by hand, and nothing in the gate would catch a refactor of the verified one.
 - `MiningDump.java` reuses `PushDump`'s mapping resolver to measure every state's hardness and tool requirement, and every default item stack's mining speed and harvest capability. It binds the artifact's own vanilla block tags before measuring tools, including wool and leaves for early shears. Later jars also require initialization of delayed default item components. `tools/extraction/extract_mining.py` checks the complete state and item sets against the canonical dataset and refuses to collapse state-dependent answers.
 - `EntityTeleportDump.java` reuses the same resolver to execute modern native position, rotation and velocity transforms. Compile it with `PushDump.java` and `MiningDump.java`; `measure_entity_teleport.py` supplies the isolated client classpath and verifies artifact, class-byte and class-origin evidence. All nine relative flags are measured in every combination. No entity or world is constructed by this dumper.
@@ -25,9 +26,25 @@ These are default shapes measured with `EmptyBlockGetter` and `BlockPos.ZERO`. D
 
 Use Java 11 for older jars when required, or the existing logging shim with a recent JVM as described under mining measurements. The standalone extractor does not need a client/world adapter or a live server.
 
-The canonical `data/java/<protocol>/block-collision-grids.json` tables add `state_count` and artifact provenance to this schema. DataGen validates registry coverage, coordinate/cell/box consistency and singleton identity, then emits pooled binary grids and state references. `JavaGameData.BlockShapes` exposes the optional `IBlockCollisionGridSource` capability, and the client selects the source-backed query era once per session. The 32 measured protocols currently supply default grids; offset and entity-context families retain their existing contextual path until their native variants are extracted. The standalone extractor still writes only a raw external dump.
+The canonical `data/java/<protocol>/block-collision-grids.json` tables add `state_count` and artifact provenance to this schema. DataGen validates registry coverage, coordinate/cell/box consistency and singleton identity, then emits pooled binary grids and state references. `JavaGameData.BlockShapes` exposes the optional `IBlockCollisionGridSource` capability, and the client selects the source-backed query era once per session. The 32 measured protocols supply default grids and the position-offset supplement below. Entity-context substitutions still use their existing contextual path. The standalone extractors write raw external dumps.
 
 DataGen emits collision-grid blobs into `SharedCollisionGrids.g.cs`, which shares the partial `SharedTables` type with the existing table source. This keeps both generated files below GitHub's 100 MiB file limit.
+
+## Position-offset collision grids
+
+Compile `CollisionOffsetDump.java` with `PushDump.java` and `MiningDump.java`. Use the same exact-artifact mappings, unsigned classpath and Java/logging setup as the default-grid extractor. Keep the working directory and output outside Git.
+
+```bash
+javac --release 11 -d /tmp/umpk-collision-offset-classes tools/extraction/shape-extractor/PushDump.java tools/extraction/shape-extractor/MiningDump.java tools/extraction/shape-extractor/CollisionOffsetDump.java
+java -Xmx1G -cp /tmp/umpk-collision-offset-classes:/tmp/vanilla-cp CollisionOffsetDump none /tmp/collision-offsets-26.3.json
+python3 tools/extraction/verify_collision_grids.py /tmp/collision-offsets-26.3.json --offsets
+```
+
+The schema-1 supplement records the full registry's `state_count` and sparse state references. Each occupied group retains its native planes, cells, boxes and positive `max_horizontal_offset`. The extractor enumerates the native registry rather than a fixed family list: measured colliding offsets include bamboo, pointed dripstone and, from 26.2, sulfur spikes. It reads the original top `OffsetDoubleList.delegate`, preserving any nested constant transform. Do not recover a delegate by subtracting its floating-point displacement. Use the explicit `getCollisionShape(world, position, CollisionContext.empty())` overload; 1.14.4's shorter overload can return the origin-cached shape.
+
+Before publishing output, the extractor reconstructs every selected shape at seven positions, including large positive and negative coordinates. It refuses unsupported vertical offsets and existing output files. Native getters provide the horizontal limits when available; older releases use their source-derived quarter-block bound. Preserve artifact hashes, source evidence, class origins and failed attempts with each measurement. These checks establish the measured empty-context position model; dynamic block entities and other entity-context variants need separate evidence.
+
+Canonical `block-collision-offsets.json` files supplement the default tables. DataGen validates their sparse references and overlays them into packed schema 2, retaining schema 1 for tables without a supplement. `BlockCollisionGrid.OffsetAt` evaluates the native wrapped position hash and float division. Apply coordinates as `(base + shapeOffset) + blockPosition`; changing the addition order changes collision answers near large coordinates. The live collision adapter uses this model for exact voxel queries and collected AABBs. Planning snapshots and native axis clipping still need separate validation.
 
 ## Mining measurements
 

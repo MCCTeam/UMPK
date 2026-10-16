@@ -10,6 +10,7 @@ internal sealed class JavaBlockCollisionGrids
 {
     private readonly BlockCollisionGrid[] _groups;
     private readonly int[] _states;
+    internal bool HasOffsetData { get; }
 
     internal JavaBlockCollisionGrids(ReadOnlySpan<byte> bytes)
     {
@@ -20,9 +21,11 @@ internal sealed class JavaBlockCollisionGrids
             return;
         }
         var reader = new PacketReader(bytes);
-        if (reader.ReadVarInt() != 1)
+        int schema = reader.ReadVarInt();
+        if (schema is not (1 or 2))
             throw new ProtocolViolationException("Unsupported generated collision-grid schema.");
-        _groups = new BlockCollisionGrid[Count(ref reader, 5)];
+        HasOffsetData = schema == 2;
+        _groups = new BlockCollisionGrid[Count(ref reader, schema == 2 ? 13 : 5)];
         if (_groups.Length == 0)
             throw new ProtocolViolationException("A measured collision-grid table must contain a shape group.");
         for (int index = 0; index < _groups.Length; index++)
@@ -30,6 +33,9 @@ internal sealed class JavaBlockCollisionGrids
             byte canonical = reader.ReadByte();
             if (canonical > 1)
                 throw new ProtocolViolationException("Invalid generated collision-grid identity.");
+            double horizontal = schema == 2 ? reader.ReadDouble() : 0;
+            if (!double.IsFinite(horizontal) || horizontal < 0 || (canonical != 0 && horizontal != 0))
+                throw new ProtocolViolationException("Invalid generated collision-grid position offset.");
             double[] x = Coordinates(ref reader), y = Coordinates(ref reader), z = Coordinates(ref reader);
             int[] cells = new int[Count(ref reader, 1)];
             for (int cell = 0; cell < cells.Length; cell++)
@@ -45,7 +51,9 @@ internal sealed class JavaBlockCollisionGrids
             }
             try
             {
-                _groups[index] = new BlockCollisionGrid(x, y, z, cells, boxes, canonical == 1);
+                _groups[index] = horizontal == 0
+                    ? new BlockCollisionGrid(x, y, z, cells, boxes, canonical == 1)
+                    : BlockCollisionGrid.CreateWithHorizontalOffset(x, y, z, cells, boxes, horizontal);
             }
             catch (ArgumentException error)
             {

@@ -83,8 +83,10 @@ internal sealed class JavaBlockShapes : IBlockTargetingSource, IBlockCollisionGr
     {
         if (state.IsDefault || state.IsAir || state.IsFluid)
             return null;
-        // EmptyBlockGetter/BlockPos.ZERO does not establish these contextual or position-offset grids. Keep their existing context path until native variants and unshifted coordinate delegates are extracted.
-        if (!state.IsSolid && (state.IsScaffolding || state.IsPowderSnow || state.Block.Id.Path is "bamboo" or "pointed_dripstone"))
+        // The native offset supplement supplies original coordinate delegates. Entity-context substitutions still use the existing context path.
+        if (!state.IsSolid && (state.IsScaffolding || state.IsPowderSnow))
+            return null;
+        if (!_grids.HasOffsetData && !state.IsSolid && state.Block.Id.Path is "bamboo" or "pointed_dripstone" or "sulfur_spike")
             return null;
         return _grids.Get(state.StateId);
     }

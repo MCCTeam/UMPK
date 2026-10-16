@@ -1,11 +1,11 @@
 {
   "Umpk.Auth.Tests.dll": 148,
-  "Umpk.Client.Tests.dll": 6228,
+  "Umpk.Client.Tests.dll": 6236,
   "Umpk.Commands.Tests.dll": 85,
   "Umpk.Core.Tests.dll": 144,
   "Umpk.Data.Java.Tests.dll": 1712,
   "Umpk.Data.Lang.Tests.dll": 80,
-  "Umpk.DataGen.Tests.dll": 136,
+  "Umpk.DataGen.Tests.dll": 144,
   "Umpk.Game.Tests.dll": 951,
   "Umpk.IntegrationTests.dll": 48,
   "Umpk.Nbt.Tests.dll": 118,

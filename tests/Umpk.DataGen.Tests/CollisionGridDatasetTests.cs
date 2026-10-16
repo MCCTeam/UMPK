@@ -6,6 +6,49 @@ namespace Umpk.DataGen.Tests;
 public sealed class CollisionGridDatasetTests
 {
     [Fact]
+    public void MeasuredOffsetGridsReplaceTheirOriginOnlyReferences()
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-grids.json"), Measurement().ToJsonString());
+        File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-offsets.json"), OffsetMeasurement().ToJsonString());
+        Dataset data = DatasetLoader.Load(builder.Root);
+        Assert.Empty(Validator.Validate(data));
+        Assert.Matches("BlockCollisionGridsV770 => new byte\\[\\] \\{ 0x02,", new Emitter(data).Emit()["SharedCollisionGrids.g.cs"].Text);
+    }
+
+    [Theory]
+    [InlineData("base")]
+    [InlineData("count")]
+    [InlineData("reference")]
+    [InlineData("state")]
+    [InlineData("offset")]
+    [InlineData("canonical")]
+    [InlineData("empty")]
+    public void InvalidOffsetSupplementIsRejected(string defect)
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        if (defect != "base")
+            File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-grids.json"), Measurement().ToJsonString());
+        JsonObject offset = OffsetMeasurement();
+        switch (defect)
+        {
+            case "count": offset["state_count"] = 3; break;
+            case "reference": offset["states"]!["1"] = 1; break;
+            case "state": offset["states"]!.AsObject().Remove("1"); offset["states"]!["2"] = 0; break;
+            case "offset": offset["groups"]![0]!["max_horizontal_offset"] = -1; break;
+            case "canonical": offset["groups"]![0]!["canonical_full_block"] = true; break;
+            case "empty": offset["groups"]![0]!["cells"]!.AsArray().Clear(); offset["groups"]![0]!["boxes"]!.AsArray().Clear(); break;
+        }
+        File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-offsets.json"), offset.ToJsonString());
+        Assert.Contains(Validator.Validate(DatasetLoader.Load(builder.Root)), problem => problem.Contains("block-collision-offsets.json", StringComparison.Ordinal));
+    }
+
+    private static JsonObject OffsetMeasurement() => JsonNode.Parse("""
+        {"_provenance":{"kind":"extracted"},"schema":1,"state_count":2,"cell_order":"(x * y_size + y) * z_size + z","states":{"1":0},"groups":[
+         {"canonical_full_block":false,"max_horizontal_offset":0.25,"planes":[[0,1],[0,1],[0,1]],"cells":[0],"boxes":[[0,0,0,1,1,1]]}]}
+        """)!.AsObject();
+
+    [Fact]
     public void CollisionGridBlobsUseTheirOwnGeneratedSourceFile()
     {
         using DatasetBuilder builder = DatasetBuilder.ValidBaseline();

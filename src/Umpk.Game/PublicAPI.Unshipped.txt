@@ -3287,3 +3287,6 @@ Umpk.Game.Blocks.BlockCollisionGrid.Boxes.get -> System.ReadOnlySpan<Umpk.Geomet
 Umpk.Game.Blocks.BlockCollisionGrid.CanonicalFullBlock.get -> bool
 Umpk.Game.Registries.IBlockCollisionGridSource
 Umpk.Game.Registries.IBlockCollisionGridSource.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
+static Umpk.Game.Blocks.BlockCollisionGrid.CreateWithHorizontalOffset(System.ReadOnlySpan<double> xCoordinates, System.ReadOnlySpan<double> yCoordinates, System.ReadOnlySpan<double> zCoordinates, System.ReadOnlySpan<int> occupiedCells, System.ReadOnlySpan<Umpk.Geometry.Aabb> boxes, double maxHorizontalOffset) -> Umpk.Game.Blocks.BlockCollisionGrid!
+Umpk.Game.Blocks.BlockCollisionGrid.MaxHorizontalOffset.get -> double
+Umpk.Game.Blocks.BlockCollisionGrid.OffsetAt(Umpk.Geometry.BlockPos position) -> Umpk.Geometry.Vec3d

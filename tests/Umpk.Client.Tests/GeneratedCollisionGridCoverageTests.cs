@@ -21,6 +21,8 @@ public sealed class GeneratedCollisionGridCoverageTests
         foreach (string path in Directory.EnumerateFiles(root, "block-collision-grids.json", SearchOption.AllDirectories))
         {
             using JsonDocument document = JsonDocument.Parse(File.ReadAllBytes(path));
+            string offsetsPath = Path.Combine(Path.GetDirectoryName(path)!, "block-collision-offsets.json");
+            using JsonDocument? offsets = File.Exists(offsetsPath) ? JsonDocument.Parse(File.ReadAllBytes(offsetsPath)) : null;
             JsonElement table = document.RootElement;
             int protocol = int.Parse(Path.GetFileName(Path.GetDirectoryName(path))!, CultureInfo.InvariantCulture);
             Registry<BlockDefinition> blocks = JavaGameData.Registries(protocol).Blocks;
@@ -35,13 +37,17 @@ public sealed class GeneratedCollisionGridCoverageTests
                     Assert.True(state.IsAir || state.IsFluid || state.Block.Id.Path is "scaffolding" or "powder_snow" or "bamboo" or "pointed_dripstone", $"Unexplained grid gap at {protocol}/{reference.Name}");
                     continue;
                 }
-                JsonElement native = table.GetProperty("groups")[reference.Value.GetInt32()];
+                bool hasOffset = offsets is not null && offsets.RootElement.GetProperty("states").TryGetProperty(reference.Name, out _);
+                JsonElement native = hasOffset
+                    ? offsets!.RootElement.GetProperty("groups")[offsets.RootElement.GetProperty("states").GetProperty(reference.Name).GetInt32()]
+                    : table.GetProperty("groups")[reference.Value.GetInt32()];
                 double[][] axes = [.. native.GetProperty("planes").EnumerateArray().Select(axis => axis.EnumerateArray().Select(value => value.GetDouble()).ToArray())];
                 Assert.Equal(axes[0], grid.XCoordinates.ToArray());
                 Assert.Equal(axes[1], grid.YCoordinates.ToArray());
                 Assert.Equal(axes[2], grid.ZCoordinates.ToArray());
                 Assert.Equal(native.GetProperty("cells").EnumerateArray().Select(value => value.GetInt32()), grid.OccupiedCells.ToArray());
                 Assert.Equal(native.GetProperty("canonical_full_block").GetBoolean(), grid.CanonicalFullBlock);
+                Assert.Equal(hasOffset ? native.GetProperty("max_horizontal_offset").GetDouble() : 0, grid.MaxHorizontalOffset);
                 Assert.Equal(native.GetProperty("boxes").EnumerateArray().Select(box => new Aabb(box[0].GetDouble(), box[1].GetDouble(), box[2].GetDouble(), box[3].GetDouble(), box[4].GetDouble(), box[5].GetDouble())), grid.Boxes.ToArray());
                 checkedStates++;
             }
@@ -66,13 +72,17 @@ public sealed class GeneratedCollisionGridCoverageTests
     [InlineData("powder_snow")]
     [InlineData("bamboo")]
     [InlineData("pointed_dripstone")]
-    public void DefaultSnapshotDoesNotOverridePositionAndEntityContext(string path)
+    public void SourceSeparatesPositionModelsFromUnmeasuredEntityContext(string path)
     {
         Registry<BlockDefinition> blocks = JavaGameData.Registries(777).Blocks;
         var data = new RegistryBlockDataSource(blocks, isLegacy: false);
         Assert.True(blocks.TryGetValue(Identifier.Minecraft(path), out BlockDefinition? block));
         var source = Assert.IsAssignableFrom<IBlockCollisionGridSource>(JavaGameData.BlockShapes(777));
-        Assert.Null(source.GetCollisionGrid(new BlockState(data, block.DefaultStateId)));
+        BlockCollisionGrid? grid = source.GetCollisionGrid(new BlockState(data, block.DefaultStateId));
+        if (path is "bamboo" or "pointed_dripstone")
+            Assert.True(grid is { MaxHorizontalOffset: > 0 });
+        else
+            Assert.Null(grid);
     }
 
 }

@@ -24,6 +24,32 @@ def top_slab() -> dict:
 
 
 class CollisionGridVerificationTests(unittest.TestCase):
+    def test_accepts_sparse_offset_grids_without_changing_native_geometry(self) -> None:
+        data = top_slab()
+        data["state_count"] = 8
+        data["states"] = {"7": 0}
+        data["groups"][0]["max_horizontal_offset"] = 0.25
+        before = copy.deepcopy(data)
+        verify(data, offsets=True)
+        self.assertEqual(before, data)
+
+    def test_rejects_offset_grid_references_outside_the_native_registry(self) -> None:
+        data = top_slab()
+        data["state_count"] = 2
+        data["states"] = {"2": 0}
+        data["groups"][0]["max_horizontal_offset"] = 0.25
+        with self.assertRaisesRegex(ValueError, "state"):
+            verify(data, offsets=True)
+
+    def test_requires_a_finite_positive_offset_limit(self) -> None:
+        for value in (None, 0, -1, float("inf"), True):
+            with self.subTest(value=value):
+                data = top_slab()
+                data["state_count"] = 1
+                data["groups"][0]["max_horizontal_offset"] = value
+                with self.assertRaisesRegex(ValueError, "offset"):
+                    verify(data, offsets=True)
+
     def test_rejects_cells_that_disagree_with_the_native_box_volume(self) -> None:
         data = top_slab()
         data["groups"][0]["cells"] = [0]

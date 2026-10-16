@@ -10,7 +10,7 @@ def number(value: object) -> bool:
     return type(value) in (int, float) and math.isfinite(value)
 
 
-def verify(document: object) -> None:
+def verify(document: object, *, offsets: bool = False) -> None:
     if not isinstance(document, dict) or type(document.get("schema")) is not int or document["schema"] != 1:
         raise ValueError("expected collision-grid schema 1")
     if document.get("cell_order") != "(x * y_size + y) * z_size + z":
@@ -19,7 +19,14 @@ def verify(document: object) -> None:
     groups = document.get("groups")
     if not isinstance(states, dict) or not states or not isinstance(groups, list) or not groups:
         raise ValueError("the state registry and shape groups must be nonempty")
-    if set(states) != {str(index) for index in range(len(states))}:
+    if offsets:
+        count = document.get("state_count")
+        if type(count) is not int or count <= 0 or any(
+            not isinstance(key, str) or not key.isascii() or not key.isdecimal()
+            or str(int(key)) != key or not 0 <= int(key) < count for key in states
+        ):
+            raise ValueError("offset state ids must be canonical decimal keys within the native registry")
+    elif set(states) != {str(index) for index in range(len(states))}:
         raise ValueError("state ids must be contiguous canonical decimal keys starting at zero")
     if any(type(group) is not int or group < 0 or group >= len(groups) for group in states.values()):
         raise ValueError("a state refers to an absent shape group")
@@ -28,6 +35,10 @@ def verify(document: object) -> None:
     for index, group in enumerate(groups):
         if not isinstance(group, dict) or type(group.get("canonical_full_block")) is not bool:
             raise ValueError(f"group {index}: canonical full-block identity must be boolean")
+        if offsets:
+            limit = group.get("max_horizontal_offset")
+            if not number(limit) or limit <= 0 or group["canonical_full_block"] or not group.get("cells"):
+                raise ValueError(f"group {index}: offset grids require occupied cells, positive finite offset limits and noncanonical identity")
         if not isinstance(group.get("planes"), list) or len(group["planes"]) != 3:
             raise ValueError(f"group {index}: expected three coordinate-plane lists")
         planes = group["planes"]
@@ -76,10 +87,11 @@ def verify(document: object) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dump", type=Path)
+    parser.add_argument("--offsets", action="store_true", help="check a sparse registry supplement with native position-offset grids")
     args = parser.parse_args()
     try:
         document = json.loads(args.dump.read_text(encoding="utf-8"))
-        verify(document)
+        verify(document, offsets=args.offsets)
     except (OSError, ValueError) as error:
         parser.error(str(error))
     print(f"Verified {len(document['states'])} states in {len(document['groups'])} collision-grid groups")

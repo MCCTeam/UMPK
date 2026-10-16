@@ -130,10 +130,11 @@ internal static class CollisionResolver
 
                     if (world.CollisionQueryEra != BlockCollisionQueryEra.BoundingBoxes && world.GetCollisionGrid(block) is { } grid)
                     {
-                        if (VoxelCollisionQuery.Intersects(grid, new BlockPos(bx, by, bz), searchBox, world.CollisionQueryEra))
+                        Vec3d offset = grid.OffsetAt(new BlockPos(bx, by, bz));
+                        if (VoxelCollisionQuery.Intersects(grid, new BlockPos(bx, by, bz), searchBox, world.CollisionQueryEra, offset))
                         {
                             foreach (Aabb box in grid.Boxes)
-                                result.Add(box.Move(bx, by, bz));
+                                result.Add(box.Move(offset).Move(bx, by, bz));
                             if (stopAfterFirst)
                                 return;
                         }
@@ -150,7 +151,7 @@ internal static class CollisionResolver
 
                     for (int s = 0; s < shapes.Length; s++)
                     {
-                        Aabb worldShape = shapes[s].Move(bx + shapeOffset.X, by, bz + shapeOffset.Z);
+                        Aabb worldShape = shapes[s].Move(shapeOffset).Move(bx, by, bz);
                         if (worldShape.Intersects(searchBox))
                         {
                             result.Add(worldShape);

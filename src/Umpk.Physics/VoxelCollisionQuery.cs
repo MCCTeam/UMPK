@@ -10,7 +10,7 @@ internal static class VoxelCollisionQuery
 {
     private const double Epsilon = PhysicsConstants.CollisionEpsilon;
 
-    internal static bool Intersects(BlockCollisionGrid grid, BlockPos position, in Aabb query, BlockCollisionQueryEra era)
+    internal static bool Intersects(BlockCollisionGrid grid, BlockPos position, in Aabb query, BlockCollisionQueryEra era, Vec3d shapeOffset)
     {
         if (grid.OccupiedCells.IsEmpty)
             return false;
@@ -60,9 +60,9 @@ internal static class VoxelCollisionQuery
         try
         {
             bool queryFirst = era == BlockCollisionQueryEra.QueryFirst;
-            MarkAxis(grid.XCoordinates, position.X, queryCoordinates[..sizes[0]], low[0], high[0], queryFirst, matches[..nx]);
-            MarkAxis(grid.YCoordinates, position.Y, queryCoordinates.Slice(9, sizes[1]), low[1], high[1], queryFirst, matches.Slice(nx, ny));
-            MarkAxis(grid.ZCoordinates, position.Z, queryCoordinates.Slice(18, sizes[2]), low[2], high[2], queryFirst, matches.Slice(nx + ny, nz));
+            MarkAxis(grid.XCoordinates, shapeOffset.X, position.X, queryCoordinates[..sizes[0]], low[0], high[0], queryFirst, matches[..nx]);
+            MarkAxis(grid.YCoordinates, shapeOffset.Y, position.Y, queryCoordinates.Slice(9, sizes[1]), low[1], high[1], queryFirst, matches.Slice(nx, ny));
+            MarkAxis(grid.ZCoordinates, shapeOffset.Z, position.Z, queryCoordinates.Slice(18, sizes[2]), low[2], high[2], queryFirst, matches.Slice(nx + ny, nz));
             foreach (int cell in grid.OccupiedCells)
             {
                 int z = cell % nz, xy = cell / nz, y = xy % ny, x = xy / ny;
@@ -94,11 +94,11 @@ internal static class VoxelCollisionQuery
         return -1;
     }
 
-    private static void MarkAxis(ReadOnlySpan<double> block, double offset, ReadOnlySpan<double> query, int low, int high, bool queryFirst, Span<byte> matches)
+    private static void MarkAxis(ReadOnlySpan<double> block, double shapeOffset, double offset, ReadOnlySpan<double> query, int low, int high, bool queryFirst, Span<byte> matches)
     {
         bool identical = block.Length == query.Length;
         for (int index = 0; identical && index < block.Length; index++)
-            identical = BitConverter.DoubleToInt64Bits(block[index] + offset) == BitConverter.DoubleToInt64Bits(query[index]);
+            identical = BitConverter.DoubleToInt64Bits(block[index] + shapeOffset + offset) == BitConverter.DoubleToInt64Bits(query[index]);
         if (identical)
         {
             for (int index = low; index < high; index++)
@@ -113,8 +113,8 @@ internal static class VoxelCollisionQuery
         {
             bool blockDone = b >= block.Length, queryDone = q >= query.Length;
             bool chooseBlock = queryFirst
-                ? blockDone ? false : queryDone || !(query[q] < block[b] + offset + Epsilon)
-                : !blockDone && (queryDone || block[b] + offset < query[q] + Epsilon);
+                ? blockDone ? false : queryDone || !(query[q] < block[b] + shapeOffset + offset + Epsilon)
+                : !blockDone && (queryDone || block[b] + shapeOffset + offset < query[q] + Epsilon);
             if (chooseBlock)
             {
                 b++;
@@ -127,7 +127,7 @@ internal static class VoxelCollisionQuery
                 if (b == 0 || blockDone)
                     continue;
             }
-            double coordinate = chooseBlock ? block[b - 1] + offset : query[q - 1];
+            double coordinate = chooseBlock ? block[b - 1] + shapeOffset + offset : query[q - 1];
             if (!(last >= coordinate - Epsilon))
             {
                 if (pendingBlock >= 0 && pendingBlock < matches.Length && pendingQuery >= low && pendingQuery < high)

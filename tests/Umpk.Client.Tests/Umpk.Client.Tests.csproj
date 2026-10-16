@@ -21,6 +21,7 @@
     <EmbeddedResource Include="Fixtures/LegacyTeleportInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/MappedPlayerInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/AttackCharge.native.json" />
+    <EmbeddedResource Include="Fixtures/PistonPublication.native.json" />
     <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
     <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />

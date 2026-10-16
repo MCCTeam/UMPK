@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Data.Java;
@@ -18,10 +19,9 @@ using Xunit;
 
 namespace Umpk.Client.Tests;
 
-/// <summary>The piston push, driven through a real <see cref="UmpkClient"/> over a real <see cref="JavaConnection"/> against a server that sends the block event and then NOTHING ELSE.</summary>
+/// <summary>Checks client-owned piston movement through <see cref="UmpkClient"/> and <see cref="JavaConnection"/> with a scripted peer that sends no movement corrections.</summary>
 /// <remarks>
-/// <para>THIS IS THE WITNESS THE LIVE ROW DOES NOT HAVE, and it is the whole point of the file. On a real server the push runs as a block-entity tick on BOTH sides and no packet carries the displacement, so a client that models nothing still ends up at the right coordinate whenever the server's own correct-and-snap loop gets there first: <c>handleMovePlayer</c> sees the overlap, fires <c>isEntityCollidingWithAnythingNew</c> and teleports, and <c>handleAcceptTeleportPacket</c>'s <c>absSnapTo</c> hands the result back. Reading the server's copy of the player therefore cannot tell "the client modelled the push" from "the server shoved the client", which is exactly why the live row records SKIP on the full push rather than PASS.</para>
-/// <para>Here the server is scripted, so the ONLY frame it sends after the setup is the block event. There is no correction to inherit: the tests assert zero <see cref="PositionCorrected"/> in the window, which is the client's own apply-side count of clientbound <c>player_position</c> packets. Any displacement is the client's, and the client then puts it on the WIRE, which the last assertion decodes.</para>
+/// <para>Vanilla servers also move players during piston ticks and can correct an incomplete client simulation. These tests isolate the client: one block event must produce the displacement and outgoing movement without a <see cref="PositionCorrected"/> event. The native fixture compares original 26.2 and 26.3 player and piston phases, including packet bytes and ground flags.</para>
 /// </remarks>
 public sealed class PistonPushEndToEndTests
 {
@@ -35,8 +35,94 @@ public sealed class PistonPushEndToEndTests
     /// <summary>Vanilla's full two-tick piston push (see <c>Umpk.Physics.Tests.PistonTests</c>).</summary>
     private const double VanillaFullPush = 0.81000001192092896;
 
-    /// <summary>UMPK's player half-width is a halved DOUBLE where vanilla halves a FLOAT.</summary>
+    /// <summary>Tolerance retained by the older displacement-only fixtures; native packet comparisons use exact values.</summary>
     private const double BoxWidthTolerance = 1.5e-8;
+
+    [Theory]
+    [InlineData(776, false)]
+    [InlineData(776, true)]
+    [InlineData(777, false)]
+    [InlineData(777, true)]
+    public async Task PistonStatesAndMovementBytesMatchNativePlayerPhases(int protocol, bool blockEvent)
+    {
+        using Stream stream = typeof(PistonPushEndToEndTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.PistonPublication.native.json")!;
+        using JsonDocument document = JsonDocument.Parse(stream);
+        JsonElement native = document.RootElement.GetProperty("cases").EnumerateArray().Single(row => row.GetProperty("protocol").GetInt32() == protocol && row.GetProperty("block_event").GetBoolean() == blockEvent);
+        using var budget = new CancellationTokenSource(Budget);
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ManualTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = Client(server, ticks, version);
+        var frames = new ConcurrentQueue<InboundFrame>();
+        await JoinAsync(client, server, frames, ct, version);
+        var piston = new BlockPos(4, 100, 8);
+        await BuildFixtureAsync(client, piston, ct);
+        await TeleportAsync(client, server, new Vec3d(5.5, 100, 8.5), ct, version);
+        await SettleAsync(client, ticks, ct);
+        for (int tick = 0; tick < ticks.TickCount; tick++)
+            await ReadTickMovementAsync(frames, version, ct);
+
+        int corrections = 0;
+        using IDisposable subscription = client.Events.Subscribe<PositionCorrected>(_ => Interlocked.Increment(ref corrections));
+        if (blockEvent)
+            await SendBlockEventAsync(client, server, piston, 0, ct, version);
+
+        foreach (JsonElement step in native.GetProperty("states").EnumerateArray())
+        {
+            await ticks.FireAsync(ct);
+            List<(Identifier Id, byte[] Payload)> observed = await ReadTickMovementAsync(frames, version, ct);
+            JsonElement[] expected = [.. native.GetProperty("packets").EnumerateArray().Where(row => row.GetProperty("tick").GetInt32() == step.GetProperty("tick").GetInt32())];
+            Assert.Equal(expected.Length, observed.Count);
+            for (int index = 0; index < expected.Length; index++)
+            {
+                Assert.Equal(NativeMovementId(expected[index].GetProperty("type").GetString()!), observed[index].Id);
+                Assert.Equal(Convert.FromHexString(expected[index].GetProperty("payload").GetString()!), observed[index].Payload);
+            }
+
+            JsonElement position = step.GetProperty("after_piston");
+            Assert.Equal(new Vec3d(position[0].GetDouble(), position[1].GetDouble(), position[2].GetDouble()), client.State.Self.Position);
+            Assert.Equal(step.GetProperty("on_ground").GetBoolean(), client.State.Self.OnGround);
+        }
+        Assert.Equal(0, corrections);
+    }
+
+    private static Identifier NativeMovementId(string nativeType) => nativeType switch
+    {
+        "net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$Pos" => EntityPackets.Serverbound.MovePlayerPos.Id,
+        "net.minecraft.network.protocol.game.ServerboundMovePlayerPacket$StatusOnly" => EntityPackets.Serverbound.MovePlayerStatusOnly.Id,
+        "net.minecraft.network.protocol.game.ServerboundClientTickEndPacket" => PlayPackets.Serverbound.ClientTickEnd.Id,
+        _ => throw new InvalidOperationException($"Unexpected native movement packet: {nativeType}"),
+    };
+
+    private static async Task<List<(Identifier Id, byte[] Payload)>> ReadTickMovementAsync(ConcurrentQueue<InboundFrame> frames, JavaVersion version, CancellationToken ct)
+    {
+        PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Serverbound);
+        List<(Identifier Id, byte[] Payload)> packets = [];
+        while (true)
+        {
+            if (!frames.TryDequeue(out InboundFrame frame))
+            {
+                await Task.Delay(1, ct);
+                continue;
+            }
+            Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            Identifier id = codec.Type.Id;
+            bool tickEnd = id == PlayPackets.Serverbound.ClientTickEnd.Id;
+            if (!tickEnd && !id.ToString().StartsWith("minecraft:move_player_", StringComparison.Ordinal))
+                continue;
+
+            object decoded = codec.Decode(frame.Payload, PacketCodecContext.Registryless);
+            var encoded = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(encoded);
+            codec.Encode(ref writer, decoded, PacketCodecContext.Registryless);
+            byte[] payload = frame.Payload.ToArray();
+            Assert.Equal(payload, encoded.WrittenSpan.ToArray());
+            packets.Add((id, payload));
+            if (tickEnd)
+                return packets;
+        }
+    }
 
     [Theory]
     [InlineData(770, false)]
@@ -405,7 +491,7 @@ public sealed class PistonPushEndToEndTests
                 c.State.World.LoadColumn(new ChunkPos(piston.X >> 4, piston.Z >> 4));
                 for (int x = piston.X - 2; x <= piston.X + 6; x++)
                     for (int z = piston.Z - 2; z <= piston.Z + 2; z++)
-                        c.State.World.SetBlockStateId(new BlockPos(x, 63, z), stone);
+                        c.State.World.SetBlockStateId(new BlockPos(x, piston.Y - 1, z), stone);
 
                 c.State.World.SetBlockStateId(piston, pistonState);
                 return 0;

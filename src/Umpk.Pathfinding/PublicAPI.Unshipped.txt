@@ -1017,3 +1017,6 @@ Umpk.Pathfinding.Core.PathfinderCapabilities.DepthStriderLevel.get -> int
 static Umpk.Pathfinding.Core.ActionCosts.WadeCurrentCostMultiplier(Umpk.Geometry.Vec3d flow, Umpk.Geometry.Vec3d moveDirection, int depthStriderLevel) -> double
 Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.get -> int
 Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.init -> void
+Umpk.Pathfinding.PlanningWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Pathfinding.PlanningWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
+Umpk.Pathfinding.PlanningWorldView.WithCollisionQueryEra(Umpk.Physics.BlockCollisionQueryEra collisionEra) -> Umpk.Pathfinding.PlanningWorldView!

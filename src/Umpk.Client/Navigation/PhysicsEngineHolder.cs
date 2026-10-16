@@ -444,7 +444,7 @@ internal sealed class PhysicsEngineHolder
         if (world.GetColumn(cell) is null)
             return true;
 
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2).WithCollisionQueryEra(_view.CollisionQueryEra);
         var ctx = new CalculationContext(
             planning,
             options,
@@ -470,7 +470,7 @@ internal sealed class PhysicsEngineHolder
 
         BlockPos start = BlockPos.Containing(_services.State.Self.Position);
         BlockPos goalHint = ApproximateGoal(goal, start);
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24).WithCollisionQueryEra(_view.CollisionQueryEra);
 
         // The player half of the snapshot, read here for the same reason the region and the air supply are: everything the off-loop search may price has to be observed once, on the loop.
         Umpk.Pathfinding.Core.PathfinderCapabilities capabilities = CapabilityCapture.From(

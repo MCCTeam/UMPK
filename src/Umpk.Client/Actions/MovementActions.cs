@@ -1,6 +1,7 @@
 using Umpk.Client.Internal;
 using Umpk.Client.Movement;
 using Umpk.Client.State;
+using Umpk.Game.Players;
 using Umpk.Geometry;
 using Umpk.Physics;
 using Umpk.Protocol.Java;
@@ -53,7 +54,7 @@ public sealed class MovementActions
     /// <summary>Rotates the player to face a world position and sends the rotation.</summary>
     public async Task LookAtAsync(Vec3d target, CancellationToken ct = default)
     {
-        Vec3d eye = Self.Position.Add(0, 1.62, 0);
+        Vec3d eye = PlayerReach.EyePosition(Self.Position);
         Vec3d delta = target.Subtract(eye);
         double horizontal = Math.Sqrt(delta.X * delta.X + delta.Z * delta.Z);
         float yaw = (float)(Math.Atan2(-delta.X, delta.Z) * 180.0 / Math.PI);

@@ -150,6 +150,8 @@ Umpk.Physics.PhysicsState.Pitch.get -> float
 Umpk.Physics.PhysicsState.Pitch.init -> void
 Umpk.Physics.PhysicsState.Pose.get -> Umpk.Game.Entities.EntityPose
 Umpk.Physics.PhysicsState.Pose.init -> void
+Umpk.Physics.PhysicsState.PoseDimensions.get -> Umpk.Physics.PoseDimensionsEra?
+Umpk.Physics.PhysicsState.PoseDimensions.init -> void
 Umpk.Physics.PhysicsState.Position.get -> Umpk.Geometry.Vec3d
 Umpk.Physics.PhysicsState.Position.init -> void
 Umpk.Physics.PhysicsState.Velocity.get -> Umpk.Geometry.Vec3d
@@ -172,6 +174,7 @@ Umpk.Physics.PlayerPhysics.State.get -> Umpk.Physics.PhysicsState
 Umpk.Physics.PlayerPhysics.Step(in Umpk.Physics.MovementInput input) -> Umpk.Physics.StepResult
 Umpk.Physics.PoseDimensionsEra
 Umpk.Physics.PoseDimensionsEra.ModernCrawl = 1 -> Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PoseDimensionsEra.LegacyStanding = 2 -> Umpk.Physics.PoseDimensionsEra
 Umpk.Physics.PoseDimensionsEra.PreCrawl = 0 -> Umpk.Physics.PoseDimensionsEra
 Umpk.Physics.PositionSendCadence
 Umpk.Physics.PositionSendCadence.DirtyChecked = 1 -> Umpk.Physics.PositionSendCadence
@@ -253,15 +256,16 @@ const Umpk.Physics.PhysicsConstants.LavaShallowDamping = 0.5 -> double
 const Umpk.Physics.PhysicsConstants.LavaShallowVerticalDamping = 0.8 -> double
 const Umpk.Physics.PhysicsConstants.LavaSpeed = 0.02 -> float
 const Umpk.Physics.PhysicsConstants.LegacyWaterSink = 0.02 -> double
-const Umpk.Physics.PhysicsConstants.PlayerCrouchEyeHeight = 1.27 -> double
-const Umpk.Physics.PhysicsConstants.PlayerCrouchHeightLegacy = 1.65 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchEyeHeight = 1.2699999809265137 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchEyeHeightLegacy = 1.5399999618530273 -> double
+const Umpk.Physics.PhysicsConstants.PlayerCrouchHeightLegacy = 1.649999976158142 -> double
 const Umpk.Physics.PhysicsConstants.PlayerCrouchHeightModern = 1.5 -> double
 const Umpk.Physics.PhysicsConstants.PlayerHorizontalVelocityThresholdSqr = 9E-06 -> double
-const Umpk.Physics.PhysicsConstants.PlayerStandingEyeHeight = 1.62 -> double
-const Umpk.Physics.PhysicsConstants.PlayerStandingHeight = 1.8 -> double
-const Umpk.Physics.PhysicsConstants.PlayerSwimEyeHeight = 0.4 -> double
-const Umpk.Physics.PhysicsConstants.PlayerSwimHeight = 0.6 -> double
-const Umpk.Physics.PhysicsConstants.PlayerWidth = 0.6 -> double
+const Umpk.Physics.PhysicsConstants.PlayerStandingEyeHeight = 1.6200000047683716 -> double
+const Umpk.Physics.PhysicsConstants.PlayerStandingHeight = 1.7999999523162842 -> double
+const Umpk.Physics.PhysicsConstants.PlayerSwimEyeHeight = 0.4000000059604645 -> double
+const Umpk.Physics.PhysicsConstants.PlayerSwimHeight = 0.6000000238418579 -> double
+const Umpk.Physics.PhysicsConstants.PlayerWidth = 0.6000000238418579 -> double
 const Umpk.Physics.PhysicsConstants.SlowFallingCap = 0.01 -> double
 const Umpk.Physics.PhysicsConstants.SprintJumpHorizontalBoost = 0.2 -> double
 const Umpk.Physics.PhysicsConstants.SprintSpeedModifier = 0.30000001192092896 -> double
@@ -335,3 +339,4 @@ Umpk.Physics.BlockCollisionQueryEra.Modern = 3 -> Umpk.Physics.BlockCollisionQue
 Umpk.Physics.IPhysicsWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollisionQueryEra
 Umpk.Physics.IPhysicsWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
 static Umpk.Physics.PhysicsProfile.BlockCollisionQueryForProtocol(int protocol) -> Umpk.Physics.BlockCollisionQueryEra
+static Umpk.Physics.PhysicsProfile.PoseDimensionsForProtocol(int protocol) -> Umpk.Physics.PoseDimensionsEra

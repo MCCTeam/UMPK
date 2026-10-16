@@ -33,6 +33,9 @@ public readonly record struct PhysicsState
     /// <summary>The current pose (standing/crouching/swimming/fall-flying).</summary>
     public EntityPose Pose { get; init; }
 
+    /// <summary>The pose-dimension era for eye-height resolution. Null selects the modern default.</summary>
+    public PoseDimensionsEra? PoseDimensions { get; init; }
+
     /// <summary>The bounding box for the current position and pose.</summary>
     public Aabb BoundingBox { get; init; }
 
@@ -62,10 +65,5 @@ public readonly record struct PhysicsState
     public Vec3d EyePosition => new(Position.X, Position.Y + EyeHeight, Position.Z);
 
     /// <summary>The eye height for the current pose.</summary>
-    public double EyeHeight => Pose switch
-    {
-        EntityPose.Crouching => PhysicsConstants.PlayerCrouchEyeHeight,
-        EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => PhysicsConstants.PlayerSwimEyeHeight,
-        _ => PhysicsConstants.PlayerStandingEyeHeight,
-    };
+    public double EyeHeight => PhysicsProfile.EyeHeightForPose(Pose, PoseDimensions ?? PoseDimensionsEra.ModernCrawl);
 }

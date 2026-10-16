@@ -687,13 +687,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _ => _profile.StandingHeight,
     };
 
-    // Vanilla Avatar.POSES eye heights per pose (standing 1.62, crouching 1.27, swim/glide 0.4).
-    private double EyeHeightForPose(EntityPose pose) => pose switch
-    {
-        EntityPose.Crouching => PhysicsConstants.PlayerCrouchEyeHeight,
-        EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => PhysicsConstants.PlayerSwimEyeHeight,
-        _ => PhysicsConstants.PlayerStandingEyeHeight,
-    };
+    private double EyeHeightForPose(EntityPose pose) => PhysicsProfile.EyeHeightForPose(pose, _profile.PoseDimensions);
 
     private double Height => HeightForPose(_pose);
 
@@ -1561,6 +1555,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         VerticalCollision = _verticalCollision,
         FallDistance = _fallDistance,
         Pose = _pose,
+        PoseDimensions = _profile.PoseDimensions == PoseDimensionsEra.ModernCrawl ? null : _profile.PoseDimensions,
         BoundingBox = BoundingBox,
         InWater = _inWater,
         IsUnderWater = _isUnderWater,

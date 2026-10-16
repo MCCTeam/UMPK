@@ -72,7 +72,7 @@ Play Clientbound 0x37 minecraft:resource_pack ResourcePackCodecs.LegacyResourceP
 Play Clientbound 0x38 minecraft:respawn WorldStateCodecs.RespawnV1_8 read:7 shape:opaque
 Play Clientbound 0x39 minecraft:rotate_head EntityMoveCodecs.RotateHead read:2 shape:opaque
 Play Clientbound 0x3A minecraft:select_advancements_tab AdvancementCodecs.SelectAdvancementsTabV1_12 read:1 shape:opaque
-Play Clientbound 0x3B minecraft:set_border marker n/a shape:opaque
+Play Clientbound 0x3B minecraft:set_border WorldBorderCodecs.SetBorderV1_9 read:9 shape:opaque
 Play Clientbound 0x3C minecraft:set_camera EntityStateCodecs.SetCamera read:1 shape:opaque
 Play Clientbound 0x3D minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 read:1 via:minecraft:set_carried_item shape:opaque
 Play Clientbound 0x3E minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 read:2 shape:opaque

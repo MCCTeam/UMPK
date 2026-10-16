@@ -1,8 +1,10 @@
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Data.Java;
+using Umpk.Game.World;
 using Umpk.Geometry;
 using Umpk.Nbt;
+using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
 
 namespace Umpk.Client.Appliers;
@@ -81,40 +83,43 @@ internal sealed class WorldApplier : IApplier
                 await context.PublishAsync(new TimeChanged(time.GameTime, time.DayTime)).ConfigureAwait(false);
                 return true;
 
+            case ClientboundWorldBorderPacket border:
+                ApplyCombinedBorder(world, context, border.Action, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.PortalTeleportBoundary, border.WarningTime, border.WarningBlocks);
+                await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
+                return true;
+
+            case ClientboundSetBorderPacket border:
+                ApplyCombinedBorder(world, context, border.Action, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.PortalTeleportBoundary, border.WarningTime, border.WarningBlocks);
+                await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
+                return true;
+
             case ClientboundInitializeBorderPacket border:
-                world.SetBorder(new Game.World.WorldBorderState(
-                    border.CenterX, border.CenterZ, border.OldSize, border.NewSize,
-                    border.LerpTime, border.WarningBlocks, border.WarningTime));
+                world.SetBorder(InitializeBorder(context, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.NewAbsoluteMaxSize, border.WarningTime, border.WarningBlocks));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderCenterPacket center:
-                UpdateBorder(world, center, static (b, p) => new Game.World.WorldBorderState(
-                    p.CenterX, p.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithCenter(center.CenterX, center.CenterZ));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderSizePacket size:
-                UpdateBorder(world, size, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, p.Size, p.Size, 0, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithSize(size.Size));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderLerpSizePacket lerp:
-                UpdateBorder(world, lerp, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, p.OldSize, p.NewSize, p.LerpTime, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(StartBorderLerp(world.Border, context, lerp.OldSize, lerp.NewSize, lerp.LerpTime));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDelayPacket warnDelay:
-                UpdateBorder(world, warnDelay, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, p.WarningDelay));
+                world.SetBorder(world.Border.WithWarnings(world.Border.WarningBlocks, warnDelay.WarningDelay));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDistancePacket warnDist:
-                UpdateBorder(world, warnDist, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, p.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithWarnings(warnDist.WarningBlocks, world.Border.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
@@ -234,6 +239,24 @@ internal sealed class WorldApplier : IApplier
         }
     }
 
-    private static void UpdateBorder<TPacket>(Game.World.World world, TPacket packet, Func<Game.World.WorldBorderState, TPacket, Game.World.WorldBorderState> update)
-        => world.SetBorder(update(world.Border, packet));
+    private static WorldBorderState InitializeBorder(ApplierContext context, double centerX, double centerZ, double oldSize, double newSize, long duration, int absoluteMaxSize, int warningTime, int warningBlocks) =>
+        new(centerX, centerZ, duration > 0 ? oldSize : newSize, newSize, duration, warningBlocks, warningTime, absoluteMaxSize, WorldBorderState.InterpolationClockForProtocol(context.Version.Version.Protocol), context.Time);
+
+    private static WorldBorderState StartBorderLerp(WorldBorderState border, ApplierContext context, double oldSize, double newSize, long duration) =>
+        new(border.CenterX, border.CenterZ, oldSize, newSize, duration, border.WarningBlocks, border.WarningTimeSeconds, border.AbsoluteMaxSize, WorldBorderState.InterpolationClockForProtocol(context.Version.Version.Protocol), context.Time);
+
+    private static void ApplyCombinedBorder(Game.World.World world, ApplierContext context, WorldBorderAction action, double centerX, double centerZ, double oldSize, double newSize, long duration, int absoluteMaxSize, int warningTime, int warningBlocks)
+    {
+        WorldBorderState border = world.Border;
+        world.SetBorder(action switch
+        {
+            WorldBorderAction.SetSize => border.WithSize(newSize),
+            WorldBorderAction.LerpSize => StartBorderLerp(border, context, oldSize, newSize, duration),
+            WorldBorderAction.SetCenter => border.WithCenter(centerX, centerZ),
+            WorldBorderAction.Initialize => InitializeBorder(context, centerX, centerZ, oldSize, newSize, duration, absoluteMaxSize, warningTime, warningBlocks),
+            WorldBorderAction.SetWarningTime => border.WithWarnings(border.WarningBlocks, warningTime),
+            WorldBorderAction.SetWarningBlocks => border.WithWarnings(warningBlocks, border.WarningTimeSeconds),
+            _ => throw new ProtocolViolationException($"Unknown world-border action {action}."),
+        });
+    }
 }

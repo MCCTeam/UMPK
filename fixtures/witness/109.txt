@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 14 of 108 implemented bindings (corpus 7, synth 7)
+# witnessed 14 of 109 implemented bindings (corpus 7, synth 7)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -87,6 +87,7 @@ Play Clientbound 0x32 minecraft:resource_pack ResourcePackCodecs.LegacyResourceP
 Play Clientbound 0x33 minecraft:respawn WorldStateCodecs.RespawnV1_8 src:synth w:11 ok Respawn{DataToKeep=0,DimensionTypeNbt=null,Legacy=LegacyRespawnFields{Difficulty=2,Dimension=-1, h=4178736B
     reject:P477(read:7)
 Play Clientbound 0x34 minecraft:rotate_head EntityMoveCodecs.RotateHead src:none
+Play Clientbound 0x35 minecraft:set_border WorldBorderCodecs.SetBorderV1_9 src:none
 Play Clientbound 0x36 minecraft:set_camera EntityStateCodecs.SetCamera src:none
 Play Clientbound 0x37 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 src:none
 Play Clientbound 0x38 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 src:none

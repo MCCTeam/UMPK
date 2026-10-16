@@ -7912,3 +7912,34 @@ override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.ToString() -> st
 static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
 static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
 static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.UpdateTags -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket!>!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Action.get -> Umpk.Protocol.Java.Packets.WorldBorderAction
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Action.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterX.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterX.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterZ.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterZ.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.ClientboundSetBorderPacket(Umpk.Protocol.Java.Packets.WorldBorderAction Action, double CenterX, double CenterZ, double OldSize, double NewSize, long LerpTime, int PortalTeleportBoundary, int WarningTime, int WarningBlocks) -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Deconstruct(out Umpk.Protocol.Java.Packets.WorldBorderAction Action, out double CenterX, out double CenterZ, out double OldSize, out double NewSize, out long LerpTime, out int PortalTeleportBoundary, out int WarningTime, out int WarningBlocks) -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.LerpTime.get -> long
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.LerpTime.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.NewSize.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.NewSize.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.OldSize.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.OldSize.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.PortalTeleportBoundary.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.PortalTeleportBoundary.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningBlocks.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningBlocks.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningTime.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningTime.init -> void
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? left, Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? left, Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.SetBorder -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldBorderCodecs.SetBorderV1_9 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!>!

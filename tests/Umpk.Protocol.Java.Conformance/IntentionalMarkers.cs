@@ -139,9 +139,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "projectile_power", MarkerReason.KnownGap, From(766),
             "The 1.20.5 fireball acceleration update. Unbound on the whole band, so a tracked projectile's acceleration is never corrected from the server."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "set_border", MarkerReason.KnownGap, Between(107, 754),
-            "The pre-1.17 combined world-border packet, split at 1.17 into the set_border family that IS bound. So the border is tracked from 755 up and invisible on 107 through 754."),
-
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "set_compression", MarkerReason.KnownGap, Only(47),
             "The 1.8-only play-phase set-compression frame; 1.9 moved compression negotiation entirely into login. Unbound, so a 1.8 server that changes the threshold mid-play desyncs the stream. Rare in practice because servers set it during login, where the packet IS bound."),
 

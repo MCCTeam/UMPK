@@ -3258,3 +3258,21 @@ static Umpk.Game.Items.DataComponents.PiercingWeapon.get -> Umpk.Game.Items.Data
 override Umpk.Game.Items.Components.PiercingWeaponComponent.Equals(object? obj) -> bool
 override Umpk.Game.Items.Components.PiercingWeaponComponent.GetHashCode() -> int
 override Umpk.Game.Items.Components.PiercingWeaponComponent.ToString() -> string!
+Umpk.Game.World.WorldBorderInterpolationClock
+Umpk.Game.World.WorldBorderInterpolationClock.Milliseconds = 0 -> Umpk.Game.World.WorldBorderInterpolationClock
+Umpk.Game.World.WorldBorderInterpolationClock.WorldTicks = 1 -> Umpk.Game.World.WorldBorderInterpolationClock
+static Umpk.Game.World.WorldBorderState.InterpolationClockForProtocol(int protocol) -> Umpk.Game.World.WorldBorderInterpolationClock
+Umpk.Game.World.WorldBorderState.WorldBorderState(double centerX, double centerZ, double size, double targetSize, long lerpDuration, int warningBlocks, double warningTimeSeconds, int absoluteMaxSize, Umpk.Game.World.WorldBorderInterpolationClock interpolationClock, System.TimeProvider! timeProvider) -> void
+Umpk.Game.World.WorldBorderState.AbsoluteMaxSize.get -> int
+Umpk.Game.World.WorldBorderState.InterpolationClock.get -> Umpk.Game.World.WorldBorderInterpolationClock
+Umpk.Game.World.WorldBorderState.LerpRemainingTime.get -> long
+Umpk.Game.World.WorldBorderState.MinX.get -> double
+Umpk.Game.World.WorldBorderState.MaxX.get -> double
+Umpk.Game.World.WorldBorderState.MinZ.get -> double
+Umpk.Game.World.WorldBorderState.MaxZ.get -> double
+Umpk.Game.World.WorldBorderState.WithCenter(double centerX, double centerZ) -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.World.WorldBorderState.WithWarnings(int warningBlocks, double warningTimeSeconds) -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.World.WorldBorderState.WithAbsoluteMaxSize(int absoluteMaxSize) -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.World.WorldBorderState.WithSize(double size) -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.World.WorldBorderState.WithLerp(double oldSize, double newSize, long duration) -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.World.WorldBorderState.AdvanceTick() -> Umpk.Game.World.WorldBorderState!

@@ -178,7 +178,7 @@ Play          Clientbound minecraft:select_advancements_tab                335- 
 Play          Clientbound minecraft:server_data                            759 ChatDisplayCodecs.ServerDataV1_19 | 760 ChatDisplayCodecs.ServerDataV1_19_1 | 761 ChatDisplayCodecs.ServerDataV1_19_3 | 762-764 ChatDisplayCodecs.ServerDataV1_19_4 | 765 ChatDisplayCodecs.ServerDataV1_20_3 | 766-769 ChatDisplayCodecs.ServerDataV1_20_5 | 770- ChatDisplayCodecs.ServerDataV1_21_5
 Play          Clientbound minecraft:server_links                           767-769 UiMiscCodecs.ServerLinksV1_21 | 770- UiMiscCodecs.ServerLinksV1_21_5
 Play          Clientbound minecraft:set_action_bar_text                    755-764 TitleCodecs.SetActionBarTextV1_17 | 765-769 TitleCodecs.SetActionBarTextV1_20_3 | 770- TitleCodecs.SetActionBarTextV1_21_5
-Play          Clientbound minecraft:set_border                             107-754 marker
+Play          Clientbound minecraft:set_border                             107-754 WorldBorderCodecs.SetBorderV1_9
 Play          Clientbound minecraft:set_border_center                      755- WorldBorderCodecs.SetBorderCenterV1_17
 Play          Clientbound minecraft:set_border_lerp_size                   755- WorldBorderCodecs.SetBorderLerpSizeV1_17
 Play          Clientbound minecraft:set_border_size                        755- WorldBorderCodecs.SetBorderSizeV1_17

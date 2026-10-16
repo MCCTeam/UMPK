@@ -74,7 +74,7 @@ Play Clientbound 0x39 minecraft:respawn codec
 Play Clientbound 0x3A minecraft:rotate_head codec
 Play Clientbound 0x3B minecraft:section_blocks_update codec
 Play Clientbound 0x3C minecraft:select_advancements_tab codec
-Play Clientbound 0x3D minecraft:set_border marker
+Play Clientbound 0x3D minecraft:set_border codec
 Play Clientbound 0x3E minecraft:set_camera codec
 Play Clientbound 0x3F minecraft:set_held_slot codec
 Play Clientbound 0x40 minecraft:set_chunk_cache_center codec

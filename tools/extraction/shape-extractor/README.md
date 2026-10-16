@@ -3,9 +3,27 @@
 These programs parse the official `server_mappings.txt` and reach Minecraft types by reflection, so an unmodified obfuscated server jar can be driven with no remap, ASM or compile-time game dependency. Unobfuscated jars use the same accessors directly.
 
 - `ShapeDump.java` dumps per-state collision AABBs (the rest of this README).
+- `CollisionGridDump.java` preserves exact default collision grids, occupied cells and the native full-block singleton identity. Use it when voxel intersection needs information that an AABB decomposition omits.
 - `PushDump.java` dumps the four per-state values `PistonBaseBlock.isPushable` and `PistonStructureResolver.resolve` read: `getPistonPushReaction()`, `getDestroySpeed()`, `hasBlockEntity()` / `Block.isEntityBlock()`, and `isAir()`. `tools/extraction/extract_push_reactions.py` folds its output into `data/java/<protocol>/block-push.json`. The mapping parser is duplicated between the two on purpose: both are standalone single-file programs compiled and run by hand, and nothing in the gate would catch a refactor of the verified one.
 - `MiningDump.java` reuses `PushDump`'s mapping resolver to measure every state's hardness and tool requirement, and every default item stack's mining speed and harvest capability. It binds the artifact's own vanilla block tags before measuring tools, including wool and leaves for early shears. Later jars also require initialization of delayed default item components. `tools/extraction/extract_mining.py` checks the complete state and item sets against the canonical dataset and refuses to collapse state-dependent answers.
 - `EntityTeleportDump.java` reuses the same resolver to execute modern native position, rotation and velocity transforms. Compile it with `PushDump.java` and `MiningDump.java`; `measure_entity_teleport.py` supplies the isolated client classpath and verifies artifact, class-byte and class-origin evidence. All nine relative flags are measured in every combination. No entity or world is constructed by this dumper.
+
+## Exact default collision grids
+
+Compile `CollisionGridDump.java` with `PushDump.java` and `MiningDump.java`. Use the isolated unsigned classpath described below and the mappings for that exact client or server artifact; pass `none` for unobfuscated jars. Run Java from a temporary working directory so vanilla bootstrap logs stay outside Git.
+
+```bash
+javac --release 11 -d /tmp/umpk-collision-grid-classes tools/extraction/shape-extractor/PushDump.java tools/extraction/shape-extractor/MiningDump.java tools/extraction/shape-extractor/CollisionGridDump.java
+java -Xmx1G -cp /tmp/umpk-collision-grid-classes:/tmp/vanilla-cp CollisionGridDump none /tmp/collision-grids-26.3.json
+python3 tools/extraction/verify_collision_grids.py /tmp/collision-grids-26.3.json
+python3 -m unittest discover -s tools/extraction -p test_verify_collision_grids.py
+```
+
+The schema-1 dump maps each native state id to a deduplicated group. Each group records the three coordinate-plane lists, occupied cell indices in `(x * y_size + y) * z_size + z` order, exact AABBs and whether the original shape is `Shapes.block()`. Coordinates retain their native doubles. The verifier checks complete state references, ordered finite planes, cell indices, box alignment and matching occupied volume. Legacy wall shapes can retain occupied cells with coincident planes and zero geometric width; the dump preserves those cells. The extractor refuses an existing output and publishes the JSON only after every native state succeeds.
+
+These are default shapes measured with `EmptyBlockGetter` and `BlockPos.ZERO`. Dynamic block entities, neighbor state, entity collision context and position offsets still need their own inputs. Matching box volumes does not establish matching voxel intersections: retained grid planes can change epsilon comparisons. A full unit box also does not, by itself, prove the native singleton identity. Keep raw dumps outside Git and record artifact hashes and class origins before using them as evidence. This extractor does not modify canonical datasets or install runtime behavior.
+
+Use Java 11 for older jars when required, or the existing logging shim with a recent JVM as described under mining measurements. The standalone extractor does not need a client/world adapter or a live server.
 
 ## Mining measurements
 

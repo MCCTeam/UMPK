@@ -877,7 +877,7 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>Re-seeds the engine position AND velocity after a server teleport. Called from the player-position apply path with self state already holding the absolute post-teleport position, rotation and delta movement. Creates the engine first when the world is available but no engine exists yet, so a teleport that lands before the first tick seeds the engine at the server's position rather than at the origin.</summary>
-    /// <remarks><see cref="PlayerPhysics.Reset(Vec3d, float, float)"/> zeroes the velocity (it models a spawn), so the resolved delta movement is pushed back afterwards. Position correction preserves the server-reported velocity on every protocol.</remarks>
+    /// <remarks>The existing player's pose, fall, contact, environment, and input state survive a correction. A new world or player lifetime starts fresh through <see cref="EnsureEngine"/>.</remarks>
     public void ResyncPosition()
     {
         EnsureEngine();
@@ -888,14 +888,13 @@ internal sealed class PhysicsEngineHolder
         // A server teleport ends any hold: the player is no longer where it was holding station.
         _holdClimbable = false;
         _holdAgainstCurrent = null;
-        _engine.Reset(self.Position, self.Yaw, self.Pitch);
-        _engine.SetVelocity(self.Velocity);
+        _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
     }
 
     /// <summary>Pushes the tracked self velocity into the engine and changes nothing else. Called from the <c>set_entity_motion</c> apply path once a server-applied velocity (knockback, explosion, piston, bounce) has landed in self state.</summary>
     /// <remarks>
-    /// This is deliberately NOT <see cref="ResyncPosition"/>. That models a teleport and calls <see cref="PlayerPhysics.Reset(Vec3d, float, float)"/>, which clears fall distance, ground state, pose, the collision flags and the water/lava sensing. A server velocity packet changes only velocity, so a knockback must not reset the fall the player was already in.
+    /// A velocity push preserves the existing position, pose, fall, contact, environment, and input state.
     /// <para>The velocity does not need to be re-read here on the next tick: <see cref="PlayerPhysics.Step"/> consumes and updates the engine's own velocity field, and <see cref="SyncSelf"/> publishes the result back. Creating the engine first matters for a velocity that arrives before the first tick; <see cref="EnsureEngine"/> seeds it from the same self state.</para>
     /// </remarks>
     public void ApplyVelocity()

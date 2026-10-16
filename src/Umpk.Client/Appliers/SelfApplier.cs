@@ -158,7 +158,7 @@ internal sealed class SelfApplier : IApplier
 
         }
 
-        // 1.8 has no teleport id but still echoes the resolved position and rotation (bcy.handlePlayerPosLook in the vanilla client). Later id-only accepts also need the echo. Only a destination-carrying accept replaces it.
+        // 1.8 has no teleport id but still echoes the resolved position and rotation (cee.a(ii) in the vanilla client). Later id-only accepts also need the echo. Only a destination-carrying accept replaces it.
         if (!acceptCarriesDestination)
             await context.Sink.SendAsync(
                     new ServerboundMovePlayerPosRotPacket(x, y, z, yaw, pitch, OnGround: false, HorizontalCollision: false),

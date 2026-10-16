@@ -23,6 +23,9 @@ public sealed class PoseTargetingPipelineTests
     [InlineData("1.8", 47, false, true)]
     [InlineData("1.13.2", 404, false, true)]
     [InlineData("1.14.4", 498, false, true)]
+    [InlineData("1.14.4", 498, true, true)]
+    [InlineData("1.21.2", 768, false, true)]
+    [InlineData("1.21.2", 768, true, true)]
     [InlineData("26.3", 777, false, true)]
     [InlineData("26.3", 777, true, true)]
     [InlineData("26.3", 777, false, false)]
@@ -98,6 +101,38 @@ public sealed class PoseTargetingPipelineTests
         Assert.Equal(new BlockPos(8, crawl ? 64 : 65, 11), hit.Value.BlockPos);
         Assert.Equal(expectedEye.Y, hit.Value.Point.Y);
         Assert.Equal(Direction.North, hit.Value.Face);
+
+        var destination = new Vec3d(10.5, 64, 8.5);
+        var destinationTarget = new BlockPos(10, crawl ? 64 : 65, 11);
+        await client.InvokeAsync(current =>
+        {
+            int stone = current.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId;
+            for (int x = 10; x <= 11; x++)
+                for (int z = 7; z <= 11; z++)
+                    current.State.World.SetBlockStateId(new BlockPos(x, 63, z), stone);
+            current.State.World.SetBlockStateId(destinationTarget, stone);
+            if (crawl)
+                current.State.World.SetBlockStateId(new BlockPos(10, 65, 8), stone);
+            return true;
+        }, ct);
+        var moved = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable movedSubscription = client.Events.Subscribe<PositionCorrected>(_ => moved.TrySetResult());
+        long correctionTick = await client.InvokeAsync(current => current.State.SessionTick, ct);
+        await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play,
+            new ClientboundPlayerPositionPacket(destination.X, destination.Y, destination.Z, 0, 0, 0, 2,
+                new PositionMoveRotation(destination, Vec3d.Zero, 0, 0)), ct);
+        await moved.Task.WaitAsync(ct);
+
+        SelfSnapshot afterCorrection = await client.Snapshots.SelfAsync(ct);
+        Assert.Equal(correctionTick, await client.InvokeAsync(current => current.State.SessionTick, ct));
+        Assert.Equal(destination, afterCorrection.Position);
+        Assert.Equal(expectedHeight, afterCorrection.EyeHeight);
+        Assert.Equal(expectedEye, observed.EyePosition);
+        BlockHitResult? afterHit = await client.Snapshots.RaycastViewAsync(4.5, ct: ct);
+        Assert.NotNull(afterHit);
+        Assert.Equal(destinationTarget, afterHit.Value.BlockPos);
+        Assert.Equal(destination.Y + expectedHeight, afterHit.Value.Point.Y);
+        Assert.Equal(Direction.North, afterHit.Value.Face);
     }
 
     [Theory]

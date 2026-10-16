@@ -80,7 +80,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
     /// <summary>The conditions last pushed by the host.</summary>
     public PhysicsConditions Conditions => _conditions;
 
-    /// <summary>Full reset to a spawn or teleport position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
+    /// <summary>Starts fresh player physics at a spawn position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
     public void Reset(Vec3d position, float yaw, float pitch)
     {
         _position = position;
@@ -112,6 +112,15 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _wasGliding = false;
         _bouncedThisTick = false;
         _lastLandingFallDistance = 0;
+    }
+
+    /// <summary>Applies a server-resolved position, rotation, and velocity while preserving the existing player's pose, fall, contact, environment, and input state.</summary>
+    public void ApplyPositionCorrection(Vec3d position, float yaw, float pitch, Vec3d velocity)
+    {
+        _position = position;
+        _yaw = yaw;
+        _pitch = pitch;
+        _velocity = velocity;
     }
 
     /// <summary>Pushes host-computed game conditions (abilities, effects, resolved attributes, equipment). Call whenever they change; the engine never pulls them.</summary>
@@ -152,7 +161,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _pitch = pitch;
     }
 
-    /// <summary>Overwrites the current velocity. The host calls this after a server teleport that carries momentum the player is to keep. <see cref="Reset(Vec3d, float, float)"/> zeroes the velocity because it models a spawn; a teleport that hands the client momentum re-seeds it here.</summary>
+    /// <summary>Overwrites the current velocity without changing position or other player state.</summary>
     public void SetVelocity(Vec3d velocity) => _velocity = velocity;
 
     // Piston push

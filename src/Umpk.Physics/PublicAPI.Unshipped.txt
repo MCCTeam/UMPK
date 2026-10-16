@@ -164,6 +164,7 @@ Umpk.Physics.PlayerPhysics
 Umpk.Physics.PlayerPhysics.BeginPistonTick() -> void
 Umpk.Physics.PlayerPhysics.Conditions.get -> Umpk.Physics.PhysicsConditions
 Umpk.Physics.PlayerPhysics.PlayerPhysics(Umpk.Physics.IPhysicsWorldView! world, Umpk.Physics.PhysicsProfile! profile) -> void
+Umpk.Physics.PlayerPhysics.ApplyPositionCorrection(Umpk.Geometry.Vec3d position, float yaw, float pitch, Umpk.Geometry.Vec3d velocity) -> void
 Umpk.Physics.PlayerPhysics.Profile.get -> Umpk.Physics.PhysicsProfile!
 Umpk.Physics.PlayerPhysics.Profile.set -> void
 Umpk.Physics.PlayerPhysics.Reset(Umpk.Geometry.Vec3d position, float yaw, float pitch) -> void

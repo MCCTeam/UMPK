@@ -128,6 +128,18 @@ internal static class CollisionResolver
                 {
                     BlockState block = world.GetBlock(new BlockPos(bx, by, bz));
 
+                    if (world.CollisionQueryEra != BlockCollisionQueryEra.BoundingBoxes && world.GetCollisionGrid(block) is { } grid)
+                    {
+                        if (VoxelCollisionQuery.Intersects(grid, new BlockPos(bx, by, bz), searchBox, world.CollisionQueryEra))
+                        {
+                            foreach (Aabb box in grid.Boxes)
+                                result.Add(box.Move(bx, by, bz));
+                            if (stopAfterFirst)
+                                return;
+                        }
+                        continue;
+                    }
+
                     // The two context-dependent shapes in the game, chained. Each is a no-op for the other's block and for every other block, and each bails on a flag read before it ever touches a registry path; the order between them is therefore free.
                     ReadOnlySpan<Aabb> shapes = ScaffoldingCollision.ShapesFor(
                         block, world.GetCollisionShapes(block), by, entityBottom, body.Descending);

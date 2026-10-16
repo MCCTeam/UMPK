@@ -51,6 +51,15 @@ public enum PositionSendCadence
 /// </summary>
 public sealed record PhysicsProfile
 {
+    /// <summary>Selects native query rules for the measured 1.14.4-and-later default grids. Older protocols retain bounding-box queries while their grid extraction remains incomplete.</summary>
+    public static BlockCollisionQueryEra BlockCollisionQueryForProtocol(int protocol) => protocol switch
+    {
+        < 498 => BlockCollisionQueryEra.BoundingBoxes,
+        < 735 => BlockCollisionQueryEra.QueryFirst,
+        < 755 => BlockCollisionQueryEra.BlockFirst,
+        _ => BlockCollisionQueryEra.Modern,
+    };
+
     /// <summary>The fluid-movement era (depth-strider blend only).</summary>
     public required FluidMovementEra FluidMovement { get; init; }
 

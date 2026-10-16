@@ -327,3 +327,11 @@ Umpk.Physics.BlockShapeOffset
 static Umpk.Physics.BlockShapeOffset.For(Umpk.Game.Blocks.BlockState state, Umpk.Geometry.BlockPos pos) -> Umpk.Geometry.Vec3d
 static Umpk.Physics.BlockShapeOffset.HasOffset(Umpk.Game.Blocks.BlockState state) -> bool
 static Umpk.Physics.PlayerPhysics.WaterHeightForStance(Umpk.Physics.IPhysicsWorldView! world, int x, double feetPlaneY, int z) -> double
+Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.BlockCollisionQueryEra.BoundingBoxes = 0 -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.BlockCollisionQueryEra.QueryFirst = 1 -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.BlockCollisionQueryEra.BlockFirst = 2 -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.BlockCollisionQueryEra.Modern = 3 -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.IPhysicsWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.IPhysicsWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
+static Umpk.Physics.PhysicsProfile.BlockCollisionQueryForProtocol(int protocol) -> Umpk.Physics.BlockCollisionQueryEra

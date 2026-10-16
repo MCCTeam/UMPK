@@ -3277,3 +3277,13 @@ Umpk.Game.World.WorldBorderState.WithAbsoluteMaxSize(int absoluteMaxSize) -> Ump
 Umpk.Game.World.WorldBorderState.WithSize(double size) -> Umpk.Game.World.WorldBorderState!
 Umpk.Game.World.WorldBorderState.WithLerp(double oldSize, double newSize, long duration) -> Umpk.Game.World.WorldBorderState!
 Umpk.Game.World.WorldBorderState.AdvanceTick() -> Umpk.Game.World.WorldBorderState!
+Umpk.Game.Blocks.BlockCollisionGrid
+Umpk.Game.Blocks.BlockCollisionGrid.BlockCollisionGrid(System.ReadOnlySpan<double> xCoordinates, System.ReadOnlySpan<double> yCoordinates, System.ReadOnlySpan<double> zCoordinates, System.ReadOnlySpan<int> occupiedCells, System.ReadOnlySpan<Umpk.Geometry.Aabb> boxes, bool canonicalFullBlock = false) -> void
+Umpk.Game.Blocks.BlockCollisionGrid.XCoordinates.get -> System.ReadOnlySpan<double>
+Umpk.Game.Blocks.BlockCollisionGrid.YCoordinates.get -> System.ReadOnlySpan<double>
+Umpk.Game.Blocks.BlockCollisionGrid.ZCoordinates.get -> System.ReadOnlySpan<double>
+Umpk.Game.Blocks.BlockCollisionGrid.OccupiedCells.get -> System.ReadOnlySpan<int>
+Umpk.Game.Blocks.BlockCollisionGrid.Boxes.get -> System.ReadOnlySpan<Umpk.Geometry.Aabb>
+Umpk.Game.Blocks.BlockCollisionGrid.CanonicalFullBlock.get -> bool
+Umpk.Game.Registries.IBlockCollisionGridSource
+Umpk.Game.Registries.IBlockCollisionGridSource.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?

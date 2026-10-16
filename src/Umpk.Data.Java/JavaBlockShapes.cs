@@ -30,7 +30,7 @@ namespace Umpk.Data.Java;
 /// <para>Block flags and collision shapes intentionally diverge for one legacy case. Flags are a different table and are still derived per BLOCK id from the meta-0 shape table; <c>CollisionRefs</c> returns a single-element list on legacy datasets. On the ten bands that carry a fence gate, an open gate answers no collision boxes here while <c>BlockState.BlocksMotion</c> still reports true, and <c>Umpk.Pathfinding</c>'s <c>Moves/MoveHelper.IsPassable</c> ends in <c>return !state.BlocksMotion;</c>, reading that flag rather than these boxes: physics walks through the open gate, while the planner still refuses to route through it. This is conservative: the planner declines a valid route instead of attempting an invalid one. Correcting the divergence requires changing legacy flag derivation outside this type.</para>
 /// <para>All supported bands carry a separate artifact-derived targeting table. Contextual lookups resolve coordinate offsets, held-item variants, interaction-shape face overrides and measured legacy door-neighbor rules. Other legacy neighbor and block-entity variants remain pending and use their measured empty-world selection boxes. The state-only outline methods use an empty holding and neighbor context at the origin.</para>
 /// </remarks>
-internal sealed class JavaBlockShapes : IBlockTargetingSource
+internal sealed class JavaBlockShapes : IBlockTargetingSource, IBlockCollisionGridSource
 {
     /// <summary>Vanilla's pre-flattening state packing is <c>(blockId &lt;&lt; 4) | meta</c>.</summary>
     private const int LegacyMetaBits = 4;
@@ -52,12 +52,14 @@ internal sealed class JavaBlockShapes : IBlockTargetingSource
     /// <summary>True when <see cref="_refs"/> is indexed by block network id rather than state id.</summary>
     private readonly bool _byBlockId;
     private readonly JavaBlockTargeting _targeting;
+    private readonly JavaBlockCollisionGrids _grids;
 
-    internal JavaBlockShapes(ReadOnlySpan<byte> pool, ReadOnlySpan<byte> refs, ReadOnlySpan<byte> targeting = default)
+    internal JavaBlockShapes(ReadOnlySpan<byte> pool, ReadOnlySpan<byte> refs, ReadOnlySpan<byte> targeting = default, ReadOnlySpan<byte> collisionGrids = default)
     {
         (_boxes, _offsets) = ReadPool(pool);
         (_refs, _byBlockId) = ReadRefs(refs);
         _targeting = targeting.IsEmpty ? JavaBlockTargeting.Create([0]) : JavaBlockTargeting.Create(targeting);
+        _grids = new JavaBlockCollisionGrids(collisionGrids);
 
         int covered = 0;
         foreach (int value in _refs)
@@ -75,6 +77,17 @@ internal sealed class JavaBlockShapes : IBlockTargetingSource
 
     /// <summary>Test seam: true when the dataset names a shape for this state rather than falling back.</summary>
     internal bool Covers(int stateId) => Lookup(stateId) >= 0;
+
+    /// <inheritdoc/>
+    public BlockCollisionGrid? GetCollisionGrid(BlockState state)
+    {
+        if (state.IsDefault || state.IsAir || state.IsFluid)
+            return null;
+        // EmptyBlockGetter/BlockPos.ZERO does not establish these contextual or position-offset grids. Keep their existing context path until native variants and unshifted coordinate delegates are extracted.
+        if (!state.IsSolid && (state.IsScaffolding || state.IsPowderSnow || state.Block.Id.Path is "bamboo" or "pointed_dripstone"))
+            return null;
+        return _grids.Get(state.StateId);
+    }
 
     /// <inheritdoc/>
     public ReadOnlySpan<Aabb> GetCollisionShapes(BlockState state)

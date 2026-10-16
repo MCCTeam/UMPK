@@ -904,6 +904,44 @@ public static partial class JavaGameData
         777 => global::Umpk.Data.Java.V777.Descriptor.AttributeDefs,
         _ => throw Unsupported(protocol, "attribute-definition"),
     };
+    /// <summary>Exact collision grids for measured protocols. An absent table retains the source's existing bounding-box path.</summary>
+    private static ReadOnlySpan<byte> BlockCollisionGrids(int protocol) => protocol switch
+    {
+        498 => global::Umpk.Data.Java.V498.Descriptor.BlockCollisionGrids,
+        573 => global::Umpk.Data.Java.V573.Descriptor.BlockCollisionGrids,
+        575 => global::Umpk.Data.Java.V575.Descriptor.BlockCollisionGrids,
+        578 => global::Umpk.Data.Java.V578.Descriptor.BlockCollisionGrids,
+        735 => global::Umpk.Data.Java.V735.Descriptor.BlockCollisionGrids,
+        736 => global::Umpk.Data.Java.V736.Descriptor.BlockCollisionGrids,
+        751 => global::Umpk.Data.Java.V751.Descriptor.BlockCollisionGrids,
+        753 => global::Umpk.Data.Java.V753.Descriptor.BlockCollisionGrids,
+        754 => global::Umpk.Data.Java.V754.Descriptor.BlockCollisionGrids,
+        755 => global::Umpk.Data.Java.V755.Descriptor.BlockCollisionGrids,
+        756 => global::Umpk.Data.Java.V756.Descriptor.BlockCollisionGrids,
+        757 => global::Umpk.Data.Java.V757.Descriptor.BlockCollisionGrids,
+        758 => global::Umpk.Data.Java.V758.Descriptor.BlockCollisionGrids,
+        759 => global::Umpk.Data.Java.V759.Descriptor.BlockCollisionGrids,
+        760 => global::Umpk.Data.Java.V760.Descriptor.BlockCollisionGrids,
+        761 => global::Umpk.Data.Java.V761.Descriptor.BlockCollisionGrids,
+        762 => global::Umpk.Data.Java.V762.Descriptor.BlockCollisionGrids,
+        763 => global::Umpk.Data.Java.V763.Descriptor.BlockCollisionGrids,
+        764 => global::Umpk.Data.Java.V764.Descriptor.BlockCollisionGrids,
+        765 => global::Umpk.Data.Java.V765.Descriptor.BlockCollisionGrids,
+        766 => global::Umpk.Data.Java.V766.Descriptor.BlockCollisionGrids,
+        767 => global::Umpk.Data.Java.V767.Descriptor.BlockCollisionGrids,
+        768 => global::Umpk.Data.Java.V768.Descriptor.BlockCollisionGrids,
+        769 => global::Umpk.Data.Java.V769.Descriptor.BlockCollisionGrids,
+        770 => global::Umpk.Data.Java.V770.Descriptor.BlockCollisionGrids,
+        771 => global::Umpk.Data.Java.V771.Descriptor.BlockCollisionGrids,
+        772 => global::Umpk.Data.Java.V772.Descriptor.BlockCollisionGrids,
+        773 => global::Umpk.Data.Java.V773.Descriptor.BlockCollisionGrids,
+        774 => global::Umpk.Data.Java.V774.Descriptor.BlockCollisionGrids,
+        775 => global::Umpk.Data.Java.V775.Descriptor.BlockCollisionGrids,
+        776 => global::Umpk.Data.Java.V776.Descriptor.BlockCollisionGrids,
+        777 => global::Umpk.Data.Java.V777.Descriptor.BlockCollisionGrids,
+        _ => default,
+    };
+
 
     /// <summary>The packed legacy composite item table for a pre-flattening protocol, or an empty span for the flattened protocols (which have no such table) and for unsupported protocols.</summary>
     /// <remarks>The one table here that answers rather than refuses, because the generated descriptors carry a <c>LegacyItemDefs</c> member only for the pre-flattening versions: an empty span IS the answer for a flattened protocol, and a full switch over every protocol would not compile.</remarks>

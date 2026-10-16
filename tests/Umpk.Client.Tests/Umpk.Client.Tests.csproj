@@ -26,4 +26,7 @@
     <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../Umpk.Physics.Tests/Fixtures/BlockCollisionGrid.native.json" Link="Fixtures/BlockCollisionGrid.native.json" />
+  </ItemGroup>
 </Project>

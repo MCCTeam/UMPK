@@ -55,7 +55,7 @@ public static partial class JavaGameData
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IBlockShapeSource"/> for a protocol from the generated shape pool and its per-state reference table. This is what makes physics and pathfinding collide against real slab, stair, fence, wall, pane and carpet geometry instead of a unit cube. Safe to call repeatedly. An unsupported protocol is refused rather than answered from block flags alone, which would be a plausible-looking world model built on no data.</summary>
     public static IBlockShapeSource BlockShapes(int protocol) =>
-        ShapeCache.GetOrAdd(protocol, static p => new JavaBlockShapes(CollisionShapes(p), BlockShapeRefs(p), BlockTargeting(p)));
+        ShapeCache.GetOrAdd(protocol, static p => new JavaBlockShapes(CollisionShapes(p), BlockShapeRefs(p), BlockTargeting(p), BlockCollisionGrids(p)));
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IBlockPushSource"/> for a protocol: the piston push reaction, unbreakability and block-entity status of every block. Safe to call repeatedly; an unsupported protocol is refused. A protocol the dataset carries no measurement for yields a source whose <see cref="IBlockPushSource.HasData"/> is false, which a caller must read as "unknown" and not as "normal".</summary>
     public static IBlockPushSource BlockPushData(int protocol) =>

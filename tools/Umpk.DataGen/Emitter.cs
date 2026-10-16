@@ -267,6 +267,11 @@ internal sealed partial class Emitter
         // The pool above is inert on its own: this is the table that maps a block state (flattened bands) or a block network id (pre-flattening bands) onto a pool index. Emitted for every protocol so the accessor is uniform.
         string shapeRefsMember = InternShapeRefs(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.{shapeRefsMember};");
+        if (CollisionGridTable.Load(version) is not null)
+        {
+            string collisionGridsMember = InternBlockCollisionGrids(version);
+            sb.AppendLine($"    public static ReadOnlySpan<byte> BlockCollisionGrids => SharedTables.{collisionGridsMember};");
+        }
 
         // The per-block attribute table: physics scalars, per-state semantic flags, and block-state property names with their value domains where the resolver could prove them.
         string attrsMember = InternBlockAttrs(version, _dataset.Shared.BlockAttributes);
@@ -872,6 +877,7 @@ internal sealed partial class Emitter
         "itemattack" => "ItemAttackDefaults",
         "blockinteractions" => "BlockInteractions",
         "blocktargeting" => "BlockTargeting",
+        "blockcollisiongrids" => "BlockCollisionGrids",
         "enchantments" => "Enchantments",
         "mobeffects" => "MobEffects",
         "attributes" => "Attributes",
@@ -883,24 +889,33 @@ internal sealed partial class Emitter
 
     private void EmitSharedTables()
     {
+        EmitSharedTableFile("SharedTables.g.cs", collisionGrids: false);
+        if (_blobs.Keys.Concat(_aliases.Keys).Any(IsCollisionGridMember))
+            EmitSharedTableFile("SharedCollisionGrids.g.cs", collisionGrids: true);
+    }
+
+    private static bool IsCollisionGridMember(string member) => member.StartsWith("BlockCollisionGrids", StringComparison.Ordinal);
+
+    private void EmitSharedTableFile(string path, bool collisionGrids)
+    {
         StringBuilder sb = new();
         Header(sb, "Umpk.Data.Java");
         sb.AppendLine("namespace Umpk.Data.Java;");
         sb.AppendLine();
         sb.AppendLine("/// <summary>Content-deduplicated binary tables. Each member is a ReadOnlySpan&lt;byte&gt; over an embedded blob; identical tables of one semantic kind across versions collapse to the member named for their earliest owning protocol. Identical bytes used by different semantic kinds retain readable alias members but share one embedded blob. Index structs over these blobs live in Umpk.Data.Java.</summary>");
-        sb.AppendLine("internal static class SharedTables");
+        sb.AppendLine("internal static partial class SharedTables");
         sb.AppendLine("{");
-        foreach ((string member, byte[] blob) in _blobs.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach ((string member, byte[] blob) in _blobs.Where(pair => IsCollisionGridMember(pair.Key) == collisionGrids).OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             sb.Append($"    public static ReadOnlySpan<byte> {member} => new byte[] {{ ");
             sb.Append(string.Join(", ", blob.Select(b => "0x" + b.ToString("X2", CultureInfo.InvariantCulture))));
             sb.AppendLine(" };");
         }
-        foreach ((string member, string canonical) in _aliases.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach ((string member, string canonical) in _aliases.Where(pair => IsCollisionGridMember(pair.Key) == collisionGrids).OrderBy(kv => kv.Key, StringComparer.Ordinal))
             sb.AppendLine($"    public static ReadOnlySpan<byte> {member} => {canonical};");
 
         sb.AppendLine("}");
-        Add("SharedTables.g.cs", sb.ToString());
+        Add(path, sb.ToString());
     }
 
     public int SharedTableCount => _sharedCounter;

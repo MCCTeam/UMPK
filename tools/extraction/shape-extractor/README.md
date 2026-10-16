@@ -25,6 +25,10 @@ These are default shapes measured with `EmptyBlockGetter` and `BlockPos.ZERO`. D
 
 Use Java 11 for older jars when required, or the existing logging shim with a recent JVM as described under mining measurements. The standalone extractor does not need a client/world adapter or a live server.
 
+The canonical `data/java/<protocol>/block-collision-grids.json` tables add `state_count` and artifact provenance to this schema. DataGen validates registry coverage, coordinate/cell/box consistency and singleton identity, then emits pooled binary grids and state references. `JavaGameData.BlockShapes` exposes the optional `IBlockCollisionGridSource` capability, and the client selects the source-backed query era once per session. The 32 measured protocols currently supply default grids; offset and entity-context families retain their existing contextual path until their native variants are extracted. The standalone extractor still writes only a raw external dump.
+
+DataGen emits collision-grid blobs into `SharedCollisionGrids.g.cs`, which shares the partial `SharedTables` type with the existing table source. This keeps both generated files below GitHub's 100 MiB file limit.
+
 ## Mining measurements
 
 Compile `PushDump.java` and `MiningDump.java` together with `javac --release 11 -d /tmp/umpk-mining-classes`. Use the unsigned exploded classpath described below, including the artifact's `data/minecraft/tags/` resources. Keep all intermediate files outside the repository.

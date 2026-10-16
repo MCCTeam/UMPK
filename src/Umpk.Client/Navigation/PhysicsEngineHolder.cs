@@ -115,7 +115,7 @@ internal sealed class PhysicsEngineHolder
         // Moving pistons belong to the level and survive a same-dimension player replacement.
         if (!sameWorld)
             _pistons.Clear();
-        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol));
+        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol), PhysicsProfile.BlockCollisionQueryForProtocol(_services.Version.Version.Protocol));
         _engine = new PlayerPhysics(_view, _profile);
         SelfState self = _services.State.Self;
         _engine.Reset(self.Position, self.Yaw, self.Pitch);

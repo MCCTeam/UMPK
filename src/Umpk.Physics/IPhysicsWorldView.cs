@@ -12,6 +12,12 @@ public interface IPhysicsWorldView
     /// <summary>The collision AABBs for a block state, in local (0..1) block coordinates.</summary>
     ReadOnlySpan<Aabb> GetCollisionShapes(BlockState state);
 
+    /// <summary>The block iterator's native voxel-query behavior. Views without exact grid data keep their bounding-box behavior.</summary>
+    BlockCollisionQueryEra CollisionQueryEra => BlockCollisionQueryEra.BoundingBoxes;
+
+    /// <summary>An exact block-local collision grid, or null when this view has only bounding boxes or requires a separate contextual shape.</summary>
+    BlockCollisionGrid? GetCollisionGrid(BlockState state) => null;
+
     /// <summary>Whether the chunk containing the given position is loaded (vanilla off-world fall behavior).</summary>
     bool IsChunkLoaded(BlockPos pos);
 

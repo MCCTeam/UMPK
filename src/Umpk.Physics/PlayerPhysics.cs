@@ -678,7 +678,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
     /// <summary>The entity half of vanilla's <c>collision-context construction</c>, rebuilt per query because every field of it changes within a tick: the sneak flag is written by the travel input, the fall distance by the previous move's resolution.</summary>
     /// <remarks><c>PowderSnowWalkable</c> comes off the pushed conditions rather than being derived here, because "leather boots in the feet slot" is an inventory read and the engine reads no game state of its own. See <see cref="PhysicsConditions.PowderSnowWalkable"/>.</remarks>
     private BodyCollisionContext Body =>
-        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable);
+        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable, _position);
 
     private double HeightForPose(EntityPose pose) => pose switch
     {

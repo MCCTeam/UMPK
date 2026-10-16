@@ -3290,3 +3290,18 @@ Umpk.Game.Registries.IBlockCollisionGridSource.GetCollisionGrid(Umpk.Game.Blocks
 static Umpk.Game.Blocks.BlockCollisionGrid.CreateWithHorizontalOffset(System.ReadOnlySpan<double> xCoordinates, System.ReadOnlySpan<double> yCoordinates, System.ReadOnlySpan<double> zCoordinates, System.ReadOnlySpan<int> occupiedCells, System.ReadOnlySpan<Umpk.Geometry.Aabb> boxes, double maxHorizontalOffset) -> Umpk.Game.Blocks.BlockCollisionGrid!
 Umpk.Game.Blocks.BlockCollisionGrid.MaxHorizontalOffset.get -> double
 Umpk.Game.Blocks.BlockCollisionGrid.OffsetAt(Umpk.Geometry.BlockPos position) -> Umpk.Geometry.Vec3d
+Umpk.Game.Registries.BlockReplacementInfo
+Umpk.Game.Registries.BlockReplacementInfo.BlockReplacementInfo() -> void
+Umpk.Game.Registries.BlockReplacementInfo.BlockReplacementInfo(bool ReplacesClickedBlock, bool AllowsPlacement) -> void
+Umpk.Game.Registries.BlockReplacementInfo.Deconstruct(out bool ReplacesClickedBlock, out bool AllowsPlacement) -> void
+Umpk.Game.Registries.BlockReplacementInfo.Equals(Umpk.Game.Registries.BlockReplacementInfo other) -> bool
+override Umpk.Game.Registries.BlockReplacementInfo.GetHashCode() -> int
+~override Umpk.Game.Registries.BlockReplacementInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.BlockReplacementInfo.ToString() -> string
+Umpk.Game.Registries.BlockReplacementInfo.ReplacesClickedBlock.get -> bool
+Umpk.Game.Registries.BlockReplacementInfo.ReplacesClickedBlock.init -> void
+Umpk.Game.Registries.BlockReplacementInfo.AllowsPlacement.get -> bool
+Umpk.Game.Registries.BlockReplacementInfo.AllowsPlacement.init -> void
+static Umpk.Game.Registries.BlockReplacementInfo.operator ==(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
+static Umpk.Game.Registries.BlockReplacementInfo.operator !=(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetCubeReplacement(int stateId, int? belowStateId, out Umpk.Game.Registries.BlockReplacementInfo info) -> bool

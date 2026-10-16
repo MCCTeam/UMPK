@@ -134,3 +134,20 @@ dotnet run --project ../Umpk.DataGen -- diff --data ../../data/java <previous-pr
 ```
 
 After extraction, regenerate all affected C# outputs through `Umpk.DataGen` and review the dataset and generated diffs together.
+## Ordinary cube replacement
+
+`extract_block_replacement.py` validates completed native client measurements and writes `block-replacement.json` through the canonical dataset pipeline. Pass each measurement root with a separate `--measurements` argument. The roots must retain their results, tool receipts, source snapshots, adapters and class-origin logs. Artifact jars and decompiled client trees remain under the shared official-artifact root.
+
+```bash
+python3 tools/extraction/extract_block_replacement.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-replacement-modern-all-20261016-v2" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-replacement-legacy-all-20261016-v1" \
+  --out data/java
+python3 -m unittest discover -s tools/extraction -p test_extract_block_replacement.py
+```
+
+The extractor checks official artifact hashes, preserved original client-class hashes, predicate origins, source bindings, exact registry and ordinary-cube item coverage, and equal-protocol release differences before writing any dataset files. It rejects per-item or per-face rules that the compact schema cannot represent. Protocol aliases select the latest measured vanilla client profile; measured earlier differences remain in provenance.
+
+Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicked block is replaced; flag 2 means the resolved destination accepts an ordinary cube item. These predicates are distinct in metadata-era clients. `below_overrides` retains the measured dependency of upper double plants on the lower cell. Gaps remain unknown state identifiers. These tables cover ordinary cube items; item components, block use, player state, survival, obstruction and other runtime placement conditions still require evaluation.

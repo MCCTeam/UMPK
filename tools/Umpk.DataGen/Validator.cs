@@ -77,6 +77,7 @@ internal static partial class Validator
             ValidateBlockMining(version, problems);
             ItemAttackTable.Load(version)?.Validate(version, problems);
             InteractionTable.Load(version)?.Validate(version, problems);
+            ReplacementTable.Load(version)?.Validate(version, problems);
             EntityObstructionTable.Load(version)?.Validate(version, problems);
             TargetingTable.Load(version)?.Validate(version, problems);
             CollisionGridTable.Load(version)?.Validate(version, problems);

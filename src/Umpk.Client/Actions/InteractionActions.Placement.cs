@@ -51,15 +51,20 @@ public sealed partial class InteractionActions
         IBlockInteractionSource data = JavaGameData.BlockInteractionData(_services.Version.Version.Protocol);
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use) || use.Kind != ItemUseOnKind.SimpleCubePlacement)
             return false;
-        if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block) || !block.NeverReplaceable)
+        if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block) || !TryReplacement(position, clicked, out BlockReplacementInfo replacement))
             return false;
         if (!block.PassiveUse && !_services.Self.Sneaking)
             return false;
-        BlockPos destination = position.Offset(face);
+        BlockPos destination = replacement.ReplacesClickedBlock ? position : position.Offset(face);
         if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY || world.GetColumn(destination) is null)
             return false;
-        BlockState previous = world.GetBlock(destination);
-        if (!previous.IsValid || !previous.IsAir)
+        if (!replacement.ReplacesClickedBlock)
+        {
+            BlockState previous = world.GetBlock(destination);
+            if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+                return false;
+        }
+        if (!replacement.AllowsPlacement)
             return false;
         if (_services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
             return false;
@@ -76,5 +81,11 @@ public sealed partial class InteractionActions
                 return false;
         }
         return true;
+
+        bool TryReplacement(BlockPos cell, BlockState state, out BlockReplacementInfo info)
+        {
+            BlockState lower = world.GetBlock(cell.Below());
+            return data.TryGetCubeReplacement(state.StateId, lower.IsValid ? lower.StateId : null, out info);
+        }
     }
 }

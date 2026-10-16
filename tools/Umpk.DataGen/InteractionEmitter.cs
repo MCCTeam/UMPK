@@ -10,8 +10,10 @@ internal sealed partial class Emitter
         using MemoryStream stream = new();
         InteractionTable? table = InteractionTable.Load(version);
         EntityObstructionTable? obstruction = EntityObstructionTable.Load(version);
-        WriteVarInt(stream, obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0);
-        if (table is not null || obstruction is not null)
+        ReplacementTable? replacement = ReplacementTable.Load(version);
+        int schema = replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
+        WriteVarInt(stream, schema);
+        if (schema >= 1)
         {
             void Text(string value)
             {
@@ -32,25 +34,45 @@ internal sealed partial class Emitter
                 stream.WriteByte(contract.Kind switch { "unknown" => 0, "pass" => 1, "simple_cube" => 2, _ => throw new DatasetException("Unsupported interaction item kind") });
                 Text(contract.Block);
             }
-            if (obstruction is not null)
+            if (schema >= 2)
             {
-                WriteVarInt(stream, obstruction.Entities.Count);
-                foreach ((string entity, int flags) in obstruction.Entities.OrderBy(row => row.Key, StringComparer.Ordinal))
+                WriteVarInt(stream, obstruction?.Entities.Count ?? 0);
+                foreach ((string entity, int flags) in (obstruction?.Entities.AsEnumerable() ?? []).OrderBy(row => row.Key, StringComparer.Ordinal))
                 {
                     Text(entity);
                     stream.WriteByte((byte)flags);
                 }
-                if (obstruction.FixedBoxes.Count > 0)
+                if (schema >= 3)
                 {
-                    WriteVarInt(stream, obstruction.FixedBoxes.Count);
+                    WriteVarInt(stream, obstruction?.FixedBoxes.Count ?? 0);
                     Span<byte> dimensions = stackalloc byte[8];
-                    foreach (var entity in obstruction.FixedBoxes.OrderBy(row => row.Key, StringComparer.Ordinal))
+                    foreach (var entity in (obstruction?.FixedBoxes.AsEnumerable() ?? []).OrderBy(row => row.Key, StringComparer.Ordinal))
                     {
                         Text(entity.Key);
                         BinaryPrimitives.WriteSingleBigEndian(dimensions, entity.Value.Width);
                         BinaryPrimitives.WriteSingleBigEndian(dimensions[4..], entity.Value.Height);
                         stream.Write(dimensions);
                     }
+                }
+            }
+            if (replacement is not null)
+            {
+                void Ranges(ReplacementRange[] ranges)
+                {
+                    WriteVarInt(stream, ranges.Length);
+                    foreach (ReplacementRange range in ranges)
+                    {
+                        WriteVarInt(stream, range.First);
+                        WriteVarInt(stream, range.Last);
+                        stream.WriteByte((byte)range.Flags);
+                    }
+                }
+                Ranges(replacement.Ranges);
+                WriteVarInt(stream, replacement.BelowOverrides.Count);
+                foreach ((int state, ReplacementRange[] ranges) in replacement.BelowOverrides.OrderBy(row => row.Key))
+                {
+                    WriteVarInt(stream, state);
+                    Ranges(ranges);
                 }
             }
         }

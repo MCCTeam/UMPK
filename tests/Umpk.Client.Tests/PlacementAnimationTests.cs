@@ -18,6 +18,72 @@ namespace Umpk.Client.Tests;
 
 public sealed class PlacementAnimationTests
 {
+    public static IEnumerable<object[]> ReplacementCases()
+    {
+        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct())
+            foreach (string material in new[] { "water", "lava", "plant", "stone" })
+                foreach (bool clicked in new[] { true, false })
+                    yield return [protocol, material, clicked];
+    }
+
+    public static IEnumerable<object[]> DoublePlantCases()
+    {
+        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Where(protocol => protocol < 393))
+            foreach (int lower in new[] { 0, 2800, 2802, 2803, 2805 })
+                yield return [protocol, lower];
+    }
+
+    [Theory]
+    [MemberData(nameof(DoublePlantCases))]
+    public async Task MetadataUpperPlantReplacementUsesTheActualLowerCell(int protocol, int lower)
+    {
+        await using var harness = new Harness(protocol);
+        harness.State.World.SetBlockStateId(harness.Target, 2808);
+        harness.State.World.SetBlockStateId(harness.Target.Below(), lower);
+        harness.State.World.SetBlockStateId(harness.Target.Above(), harness.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId);
+
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        if (protocol != 47)
+            harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+
+        bool swing = lower is 2802 or 2803;
+        Assert.Equal(swing ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(2808, harness.State.World.GetBlock(harness.Target).StateId);
+        Assert.Equal(lower, harness.State.World.GetBlock(harness.Target.Below()).StateId);
+        Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
+    }
+
+    [Theory]
+    [MemberData(nameof(ReplacementCases))]
+    public async Task OrdinaryCubePlacementUsesNativeReplacementRules(int protocol, string material, bool clicked)
+    {
+        await using var harness = new Harness(protocol);
+        string[] names = material != "plant" ? [material] : protocol < 393 ? ["tallgrass"] : ["short_grass", "grass"];
+        BlockDefinition? block = null;
+        foreach (string name in names)
+            if (harness.State.Registries!.Blocks.TryGetValue(Identifier.Minecraft(name), out block))
+                break;
+        Assert.NotNull(block);
+        BlockPos replaced = clicked ? harness.Target : harness.Target.Above();
+        harness.State.World.SetBlockStateId(replaced, block.DefaultStateId);
+
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        if (protocol != 47)
+            harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+
+        bool successful = clicked || material != "stone";
+        bool swing = protocol < 777 && successful;
+        Assert.Equal(swing ? 2 : 1, harness.Sink.Packets.Count);
+        if (swing)
+            Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(harness.Sink.Packets[1]).Hand);
+        Assert.Equal(block.DefaultStateId, harness.State.World.GetBlock(replaced).StateId);
+        Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
+    }
+
     [Theory]
     [InlineData(47)]
     [InlineData(107)]

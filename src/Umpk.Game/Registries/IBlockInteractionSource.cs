@@ -21,6 +21,11 @@ public enum ItemUseOnKind
 /// <param name="PlacedBlock">The block associated with a block item, or null for other items.</param>
 public readonly record struct ItemUseOnInfo(ItemUseOnKind Kind, Identifier? PlacedBlock);
 
+/// <summary>Measured replacement rules for ordinary cube items, before runtime placement conditions.</summary>
+/// <param name="ReplacesClickedBlock">The native placement context uses the clicked cell rather than the adjacent cell.</param>
+/// <param name="AllowsPlacement">The native resolved destination accepts an ordinary cube item.</param>
+public readonly record struct BlockReplacementInfo(bool ReplacesClickedBlock, bool AllowsPlacement);
+
 /// <summary>Artifact-backed block and default-item use contracts. Custom stack components and specialized world predicates require additional evaluation.</summary>
 public interface IBlockInteractionSource
 {
@@ -30,6 +35,12 @@ public interface IBlockInteractionSource
     bool TryGetBlock(Identifier block, out BlockInteractionInfo info);
     /// <summary>Returns the measured default-item contract. A known item can have an explicit unknown specialized rule.</summary>
     bool TryGetItem(Identifier item, out ItemUseOnInfo info);
+    /// <summary>Returns native ordinary-cube replacement rules. A lower state is required only for measured neighbor-dependent states; null means that cell is unknown.</summary>
+    bool TryGetCubeReplacement(int stateId, int? belowStateId, out BlockReplacementInfo info)
+    {
+        info = default;
+        return false;
+    }
     /// <summary>Whether the measured vanilla entity type never obstructs placement. False includes missing measurements and state-dependent obstruction.</summary>
     bool IsAlwaysNonObstructingEntity(Identifier entityType) => false;
     /// <summary>Returns measured centered entity dimensions that are independent of pose and synchronized metadata. Position, movement and world effects remain runtime state.</summary>

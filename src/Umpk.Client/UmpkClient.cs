@@ -28,6 +28,7 @@ public sealed class UmpkClient : IAsyncDisposable
     private readonly ITickSource _tickSource;
     private readonly EventBus _eventBus;
     private readonly MovementLeaseManager _leases = new();
+    private readonly List<int> _interpolatedEntityMoves = [];
     private readonly CommandService<ClientCommandSource> _commands = new();
     private readonly WireIndex _wire;
     private readonly int _customPayloadWireId;
@@ -899,7 +900,12 @@ public sealed class UmpkClient : IAsyncDisposable
 
         // Modern remote players remain ticking outside loaded terrain. Their native motion phase uses this same session clock even when local physics is disabled.
         if (State.WorldDimension is not null)
-            State.EntityMotion.Tick(State.EntitiesOrNull);
+        {
+            _interpolatedEntityMoves.Clear();
+            State.EntityMotion.Tick(State.EntitiesOrNull, _interpolatedEntityMoves);
+            foreach (int entityId in _interpolatedEntityMoves)
+                await _eventBus.PublishAsync(new EntityMoved(entityId)).ConfigureAwait(false);
+        }
 
         if (_settings.Features.Physics && readiness.MovementEligible)
         {

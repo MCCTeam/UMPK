@@ -29,6 +29,60 @@ public sealed class RemotePlayerVelocityRuntimeTests
     public static IEnumerable<object[]> GenericSpawnProtocols => Protocols.Where(row => (int)row[0] >= 764);
 
     [Theory]
+    [InlineData(755, false)]
+    [InlineData(755, true)]
+    [InlineData(762, false)]
+    [InlineData(762, true)]
+    [InlineData(764, false)]
+    [InlineData(764, true)]
+    [InlineData(768, false)]
+    [InlineData(768, true)]
+    [InlineData(769, false)]
+    [InlineData(769, true)]
+    public async Task PositionInterpolationUsesTheSessionClockWithoutLocalPhysics(int protocol, bool terrain)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain, physics: false);
+        await JoinAsync(client, server, version, ct);
+        await SendAndObserveAsync(client, server, version, (IPacket)Spawn(Create(protocol), protocol), ct);
+        Entity entity = client.State.Entities.Get(RemoteId)!;
+        Vec3d initial = entity.Position;
+        var moved = new List<Vec3d>();
+        using IDisposable subscription = client.Events.Subscribe<EntityMoved>(message =>
+        {
+            if (message.EntityId == RemoteId)
+                moved.Add(entity.Position);
+        });
+        await SendAndObserveAsync(client, server, version, new ClientboundMoveEntityPosPacket(RemoteId, 4096, 0, 0, true), ct);
+        Assert.Equal(initial, entity.Position);
+        await client.InvokeAsync(_ => true, ct);
+        Assert.Equal(initial, entity.Position);
+
+        await ticks.FireAsync(ct);
+        Assert.InRange(entity.Position.X, initial.X + 0.3, initial.X + 0.4);
+        await ticks.FireAsync(ct);
+        await ticks.FireAsync(ct);
+        Assert.Equal(initial.Add(1, 0, 0), entity.Position);
+        Assert.Equal(3, moved.Count(position => position != initial));
+
+        await SendAndObserveAsync(client, server, version, new ClientboundMoveEntityPosPacket(RemoteId, 4096, 0, 0, true), ct);
+        await SendAndObserveAsync(client, server, version, (IPacket)Spawn(Create(protocol), protocol), ct);
+        Entity replacement = client.State.Entities.Get(RemoteId)!;
+        Assert.NotSame(entity, replacement);
+        await ticks.FireAsync(ct);
+        Assert.Equal(initial, replacement.Position);
+        await SendAndObserveAsync(client, server, version, new ClientboundMoveEntityPosPacket(RemoteId, 4096, 0, 0, true), ct);
+        await SendAndObserveAsync(client, server, version, new ClientboundRemoveEntitiesPacket([RemoteId]), ct);
+        await ticks.FireAsync(ct);
+        Assert.Null(client.State.Entities.Get(RemoteId));
+        Assert.Equal(initial, replacement.Position);
+    }
+
+    [Theory]
     [MemberData(nameof(Protocols))]
     public async Task MotionObservationsUseTheNativeRemotePlayerEra(int protocol)
     {
@@ -269,7 +323,11 @@ public sealed class RemotePlayerVelocityRuntimeTests
                 applied.TrySetResult();
         });
         await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, packet, ct);
-        await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, new ClientboundSystemChatPacket(Component.Text(marker), false), ct);
+        bool systemChat = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound).Packets.Any(entry => entry.Type.Id == Identifier.Minecraft("system_chat"));
+        IPacket barrier = systemChat
+            ? new ClientboundSystemChatPacket(Component.Text(marker), false)
+            : new ClientboundLegacyChatPacket(Component.Text(marker), 1, Guid.Empty);
+        await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, barrier, ct);
         await applied.Task.WaitAsync(ct);
     }
 

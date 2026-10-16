@@ -39,11 +39,14 @@ internal static class ScriptedServer
         await server.NextFrameAsync(ct); // hello
         await SendAsync(server, descriptor, ProtocolPhase.Login,
             new ClientboundLoginFinishedPacket(Guid.NewGuid(), "Tester", [], null), ct);
-        await server.NextFrameAsync(ct); // login_acknowledged
-        server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
-        await server.NextFrameAsync(ct); // client_information
-        await SendAsync(server, descriptor, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct);
-        await server.NextFrameAsync(ct); // finish_configuration
+        if (version.Features.ConfigurationPhase)
+        {
+            await server.NextFrameAsync(ct); // login_acknowledged
+            server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
+            await server.NextFrameAsync(ct); // client_information
+            await SendAsync(server, descriptor, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct);
+            await server.NextFrameAsync(ct); // finish_configuration
+        }
         server.ServerConnection.SetPhase(ProtocolPhase.Play);
         await SendPlayReadinessFrameAsync(server, descriptor, ct);
     }

@@ -66,9 +66,13 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosPacket move:
                 if (store.TryGet(move.EntityId, out Entity? posEntity) && posEntity is not null)
                 {
-                    posEntity.Position = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
+                    Vec3d target = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
+                    bool deferred = context.State.EntityMotion.TryObserveInterpolation(posEntity, target, null, null);
+                    if (!deferred)
+                        posEntity.Position = target;
                     posEntity.OnGround = move.OnGround;
-                    await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
+                    if (!deferred)
+                        await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -77,14 +81,20 @@ internal sealed class EntityApplier : IApplier
                 if (store.TryGet(rot.EntityId, out Entity? rotEntity) && rotEntity is not null)
                 {
                     Vec3d previous = rotEntity.Position;
+                    Vec3d? target = null;
                     EntityPacketPosition profile = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol);
                     if (profile.RotationUsesPacketBase)
                     {
-                        rotEntity.Position = profile.Decode(context.State.PacketBases.Get(rotEntity), 0, 0, 0);
-                        context.State.PacketBases.Set(rotEntity, rotEntity.Position);
+                        target = profile.Decode(context.State.PacketBases.Get(rotEntity), 0, 0, 0);
+                        context.State.PacketBases.Set(rotEntity, target.Value);
                     }
-                    rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
-                    rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
+                    if (!context.State.EntityMotion.TryObserveInterpolation(rotEntity, target, SignedPacketAngle(rot.Yaw), SignedPacketAngle(rot.Pitch)))
+                    {
+                        if (target is { } current)
+                            rotEntity.Position = current;
+                        rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
+                        rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
+                    }
                     rotEntity.OnGround = rot.OnGround;
                     if (rotEntity.Position != previous)
                         await context.PublishAsync(new EntityMoved(rot.EntityId)).ConfigureAwait(false);
@@ -95,11 +105,17 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosRotPacket posRot:
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
-                    prEntity.Position = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
-                    prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
-                    prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
+                    Vec3d target = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
+                    bool deferred = context.State.EntityMotion.TryObserveInterpolation(prEntity, target, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch));
+                    if (!deferred)
+                    {
+                        prEntity.Position = target;
+                        prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
+                        prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
+                    }
                     prEntity.OnGround = posRot.OnGround;
-                    await context.PublishAsync(new EntityMoved(posRot.EntityId)).ConfigureAwait(false);
+                    if (!deferred)
+                        await context.PublishAsync(new EntityMoved(posRot.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -109,25 +125,37 @@ internal sealed class EntityApplier : IApplier
                 {
                     // A modern relative teleport changes displayed state; the independent base is replaced by entity_position_sync instead.
                     _ = context.State.PacketBases.Get(tpEntity);
+                    Vec3d previous = tpEntity.Position;
+                    bool deferred;
                     if (teleport.ModernValues is { } change)
                     {
-                        var source = new PositionMoveRotation(tpEntity.Position, tpEntity.Velocity, tpEntity.Yaw, tpEntity.Pitch);
-                        PositionMoveRotation destination = EntityTeleportProfile.ForProtocol(context.Version.Version.Protocol).Resolve(source, change, teleport.Relatives);
-                        tpEntity.Position = destination.Position;
-                        tpEntity.Velocity = destination.DeltaMovement;
-                        tpEntity.Yaw = destination.YRot;
-                        tpEntity.Pitch = destination.XRot;
+                        deferred = context.State.EntityMotion.TryObserveTeleport(tpEntity, change, teleport.Relatives);
+                        if (!deferred)
+                        {
+                            var source = new PositionMoveRotation(tpEntity.Position, tpEntity.Velocity, tpEntity.Yaw, tpEntity.Pitch);
+                            PositionMoveRotation destination = EntityTeleportProfile.ForProtocol(context.Version.Version.Protocol).Resolve(source, change, teleport.Relatives);
+                            tpEntity.Position = destination.Position;
+                            tpEntity.Velocity = destination.DeltaMovement;
+                            tpEntity.Yaw = destination.YRot;
+                            tpEntity.Pitch = destination.XRot;
+                        }
                     }
                     else
                     {
-                        tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
-                        tpEntity.Yaw = SignedPacketAngle(teleport.Yaw);
-                        tpEntity.Pitch = SignedPacketAngle(teleport.Pitch);
+                        var target = new Vec3d(teleport.X, teleport.Y, teleport.Z);
+                        deferred = context.State.EntityMotion.TryObserveLegacyTeleport(tpEntity, target, SignedPacketAngle(teleport.Yaw), SignedPacketAngle(teleport.Pitch));
+                        if (!deferred)
+                        {
+                            tpEntity.Position = target;
+                            tpEntity.Yaw = SignedPacketAngle(teleport.Yaw);
+                            tpEntity.Pitch = SignedPacketAngle(teleport.Pitch);
+                        }
                     }
                     if (EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).TeleportResetsPacketBase)
-                        context.State.PacketBases.Set(tpEntity, tpEntity.Position);
+                        context.State.PacketBases.Set(tpEntity, new Vec3d(teleport.X, teleport.Y, teleport.Z));
                     tpEntity.OnGround = teleport.OnGround;
-                    await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
+                    if (!deferred || tpEntity.Position != previous)
+                        await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -135,12 +163,18 @@ internal sealed class EntityApplier : IApplier
             case ClientboundEntityPositionSyncPacket sync:
                 if (store.TryGet(sync.EntityId, out Entity? syncEntity) && syncEntity is not null)
                 {
+                    Vec3d previous = syncEntity.Position;
                     context.State.PacketBases.Set(syncEntity, sync.Values.Position);
-                    syncEntity.Position = sync.Values.Position;
-                    syncEntity.Yaw = sync.Values.YRot;
-                    syncEntity.Pitch = sync.Values.XRot;
+                    bool deferred = context.State.EntityMotion.TryObservePositionSync(syncEntity, sync.Values);
+                    if (!deferred)
+                    {
+                        syncEntity.Position = sync.Values.Position;
+                        syncEntity.Yaw = sync.Values.YRot;
+                        syncEntity.Pitch = sync.Values.XRot;
+                    }
                     syncEntity.OnGround = sync.OnGround;
-                    await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
+                    if (!deferred || syncEntity.Position != previous)
+                        await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;

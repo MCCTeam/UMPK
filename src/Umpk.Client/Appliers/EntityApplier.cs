@@ -121,8 +121,8 @@ internal sealed class EntityApplier : IApplier
                     else
                     {
                         tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
-                        tpEntity.Yaw = teleport.Yaw;
-                        tpEntity.Pitch = teleport.Pitch;
+                        tpEntity.Yaw = SignedPacketAngle(teleport.Yaw);
+                        tpEntity.Pitch = SignedPacketAngle(teleport.Pitch);
                     }
                     if (EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).TeleportResetsPacketBase)
                         context.State.PacketBases.Set(tpEntity, tpEntity.Position);
@@ -147,7 +147,7 @@ internal sealed class EntityApplier : IApplier
 
             case ClientboundRotateHeadPacket head:
                 if (store.TryGet(head.EntityId, out Entity? headEntity) && headEntity is not null)
-                    headEntity.HeadYaw = head.HeadYaw;
+                    headEntity.HeadYaw = SignedPacketAngle(head.HeadYaw);
 
                 return true;
 
@@ -314,9 +314,9 @@ internal sealed class EntityApplier : IApplier
         var entity = new Entity(entityId, uuid, type, context.MetadataKeys)
         {
             Position = new Vec3d(x, y, z),
-            Yaw = yaw,
-            Pitch = pitch,
-            HeadYaw = headYaw,
+            Yaw = SignedPacketAngle(yaw),
+            Pitch = SignedPacketAngle(pitch),
+            HeadYaw = SignedPacketAngle(headYaw),
             Velocity = velocity,
         };
 

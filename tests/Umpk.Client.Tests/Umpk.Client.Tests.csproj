@@ -10,6 +10,7 @@
     <EmbeddedResource Include="Fixtures/SpawnMetadata.native.json" />
     <EmbeddedResource Include="Fixtures/EntityPacketPosition.native.json" />
     <EmbeddedResource Include="Fixtures/EntityPacketAngles.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityIngressAngles.native.json" />
     <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />

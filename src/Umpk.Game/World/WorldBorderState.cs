@@ -1,3 +1,5 @@
+using Umpk.Geometry;
+
 namespace Umpk.Game.World;
 
 /// <summary>Which world-border containment formula applies. Versions 1.14.4, 1.15.2, 1.17, 1.17.1, 1.19, 1.20.4, and 1.20.6 (protocols 498, 578, 755, 756, 759, 765, 766) all carry the <see cref="Legacy"/> shape; 1.21, 1.21.1, 1.21.2, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9, 1.21.11, 26.1, 26.2, 26.3 (protocols 767-777) all carry the <see cref="Modern"/> shape. The boundary is 1.21/protocol 767. The two formulas agree whenever the border's own bounds (<c>centerX/Z +/- size/2</c>) are integers and disagree ONLY on the min-X/min-Z edge otherwise - see <see cref="WorldBorderState.IsWithinBounds"/>'s remarks for the concrete case.</summary>
@@ -147,6 +149,46 @@ public sealed class WorldBorderState
     public bool IsWithinBounds(int x, int z, WorldBorderContainmentEra era) => era == WorldBorderContainmentEra.Legacy
         ? ((double)x + 1) > MinX && x < MaxX && ((double)z + 1) > MinZ && z < MaxZ
         : x >= MinX && x < MaxX && z >= MinZ && z < MaxZ;
+
+    /// <summary>Tests the border's native voxel collision against a proposed box. A missing source has no border collision; proximity uses the source's current position and the proposed box's horizontal size.</summary>
+    public bool CollidesWith(in Aabb box, Vec3d? sourcePosition, WorldBorderContainmentEra era)
+    {
+        if (sourcePosition is not { } source)
+            return false;
+
+        double maximumSize = Math.Max(Math.Max(Math.Abs(box.XSize), Math.Abs(box.ZSize)), 1.0);
+        // Preserve the native distance getter's order, including separate clock samples for a moving millisecond border.
+        double negativeZ = source.Z - MinZ;
+        double positiveZ = MaxZ - source.Z;
+        double negativeX = source.X - MinX;
+        double positiveX = MaxX - source.X;
+        double distance = Math.Min(Math.Min(Math.Min(negativeX, positiveX), negativeZ), positiveZ);
+        if (!(distance < maximumSize * 2.0))
+            return false;
+
+        // 1.20.6-client-decompiled net/minecraft/world/level/border/WorldBorder.java uses strict minimum edges; 1.21-client-decompiled net/minecraft/world/level/border/WorldBorder.java makes them inclusive.
+        bool close = era == WorldBorderContainmentEra.Legacy
+            ? source.X > MinX - maximumSize && source.X < MaxX + maximumSize && source.Z > MinZ - maximumSize && source.Z < MaxZ + maximumSize
+            : source.X >= MinX - maximumSize && source.X < MaxX + maximumSize && source.Z >= MinZ - maximumSize && source.Z < MaxZ + maximumSize;
+        if (!close)
+            return false;
+
+        double minX = Math.Floor(MinX);
+        double minZ = Math.Floor(MinZ);
+        double maxX = Math.Ceiling(MaxX);
+        double maxZ = Math.Ceiling(MaxZ);
+        if (minX > maxX || minZ > maxZ)
+            throw new InvalidOperationException("The border minimum exceeds its maximum collision edge.");
+
+        const double epsilon = 1.0E-7;
+        if (box.XSize < epsilon || box.YSize < epsilon || box.ZSize < epsilon)
+            return false;
+
+        // Native shapes subtract the rounded interior from infinite space. IndirectMerger subtracts epsilon from the next coordinate; changing this to a difference comparison loses boundary bits.
+        return minX == maxX || minZ == maxZ
+            || box.MinX < minX - epsilon || maxX < box.MaxX - epsilon
+            || box.MinZ < minZ - epsilon || maxZ < box.MaxZ - epsilon;
+    }
 
     private double ClampEdge(double value)
     {

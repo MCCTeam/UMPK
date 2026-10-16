@@ -40,6 +40,12 @@ public sealed class WorldBorderNativeTests
         WorldBorderInterpolationClock clock = WorldBorderState.InterpolationClockForProtocol(protocol);
         Assert.Equal(group.GetProperty("clock").GetString() == "world_ticks", clock == WorldBorderInterpolationClock.WorldTicks);
         JsonElement scenario = group.GetProperty("cases")[index];
+        ReplayScenario(scenario, protocol, (state, border) => AssertExtent(state, border, protocol));
+    }
+
+    internal static void ReplayScenario(JsonElement scenario, int protocol, Action<JsonElement, WorldBorderState> observe)
+    {
+        WorldBorderInterpolationClock clock = WorldBorderState.InterpolationClockForProtocol(protocol);
         var time = new BorderTimeProvider { TimestampNanos = 1_000_900_000 };
         var border = new WorldBorderState(0, 0, 100, 100, 0, 5, 15, 29_999_984, clock, time);
         switch (scenario.GetProperty("kind").GetString())
@@ -78,21 +84,26 @@ public sealed class WorldBorderNativeTests
                     break;
             }
 
-            EqualBits(state, "getSize", border.Size);
-            EqualBits(state, "getLerpTarget", border.TargetSize);
-            EqualBits(state, "getCenterX", border.CenterX);
-            EqualBits(state, "getCenterZ", border.CenterZ);
-            EqualBits(state, "getMinX", border.MinX);
-            EqualBits(state, "getMaxX", border.MaxX);
-            EqualBits(state, "getMinZ", border.MinZ);
-            EqualBits(state, "getMaxZ", border.MaxZ);
-            EqualBits(state, "getWarningTime", border.WarningTimeSeconds);
-            Assert.Equal(state.GetProperty("getWarningBlocks").GetInt32(), border.WarningBlocks);
-            Assert.Equal(state.GetProperty("getAbsoluteMaxSize").GetInt32(), border.AbsoluteMaxSize);
-            Assert.Equal(state.GetProperty("remaining").GetInt64(), border.LerpRemainingTime);
-            foreach (JsonElement point in state.GetProperty("block_points").EnumerateArray())
-                Assert.Equal(point[1].GetBoolean(), border.IsWithinBounds(point[0].GetInt32(), 0, WorldBorderState.ContainmentEraForProtocol(protocol)));
+            observe(state, border);
         }
+    }
+
+    private static void AssertExtent(JsonElement state, WorldBorderState border, int protocol)
+    {
+        EqualBits(state, "getSize", border.Size);
+        EqualBits(state, "getLerpTarget", border.TargetSize);
+        EqualBits(state, "getCenterX", border.CenterX);
+        EqualBits(state, "getCenterZ", border.CenterZ);
+        EqualBits(state, "getMinX", border.MinX);
+        EqualBits(state, "getMaxX", border.MaxX);
+        EqualBits(state, "getMinZ", border.MinZ);
+        EqualBits(state, "getMaxZ", border.MaxZ);
+        EqualBits(state, "getWarningTime", border.WarningTimeSeconds);
+        Assert.Equal(state.GetProperty("getWarningBlocks").GetInt32(), border.WarningBlocks);
+        Assert.Equal(state.GetProperty("getAbsoluteMaxSize").GetInt32(), border.AbsoluteMaxSize);
+        Assert.Equal(state.GetProperty("remaining").GetInt64(), border.LerpRemainingTime);
+        foreach (JsonElement point in state.GetProperty("block_points").EnumerateArray())
+            Assert.Equal(point[1].GetBoolean(), border.IsWithinBounds(point[0].GetInt32(), 0, WorldBorderState.ContainmentEraForProtocol(protocol)));
     }
 
     private static void EqualBits(JsonElement state, string property, double actual) => Assert.Equal(BitConverter.DoubleToInt64Bits(state.GetProperty(property).GetDouble()), BitConverter.DoubleToInt64Bits(actual));

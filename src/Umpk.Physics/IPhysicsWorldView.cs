@@ -15,6 +15,9 @@ public interface IPhysicsWorldView
     /// <summary>Whether the chunk containing the given position is loaded (vanilla off-world fall behavior).</summary>
     bool IsChunkLoaded(BlockPos pos);
 
+    /// <summary>Whether the proposed box collides with the world border for the source's current position. The view owns the border's era and settings. Views without a border return false.</summary>
+    bool CollidesWithBorder(in Aabb box, Vec3d sourcePosition) => false;
+
     /// <summary>Appends the hard hitboxes of nearby entities (boats, shulkers) that overlap <paramref name="region"/> into <paramref name="into"/>. The default implementation adds nothing; hosts with entity tracking override it. Colliders are in world coordinates.</summary>
     void CollectEntityColliders(in Aabb region, ICollection<Aabb> into)
     {

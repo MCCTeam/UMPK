@@ -1,4 +1,5 @@
 #nullable enable
+Umpk.Game.World.WorldBorderState.CollidesWith(in Umpk.Geometry.Aabb box, Umpk.Geometry.Vec3d? sourcePosition, Umpk.Game.World.WorldBorderContainmentEra era) -> bool
 Umpk.Game.Registries.BlockRayClipModel
 Umpk.Game.Registries.BlockRayClipModel.LegacyBox = 0 -> Umpk.Game.Registries.BlockRayClipModel
 Umpk.Game.Registries.BlockRayClipModel.LegacyBoxList = 3 -> Umpk.Game.Registries.BlockRayClipModel

@@ -1,4 +1,8 @@
 #nullable enable
+Umpk.Physics.IPhysicsWorldView.CollidesWithBorder(in Umpk.Geometry.Aabb box, Umpk.Geometry.Vec3d sourcePosition) -> bool
+Umpk.Physics.PhysicsCollisionQuery
+Umpk.Physics.PhysicsCollisionQuery.PhysicsCollisionQuery(Umpk.Physics.IPhysicsWorldView! world) -> void
+Umpk.Physics.PhysicsCollisionQuery.NoCollision(Umpk.Geometry.Vec3d sourcePosition, in Umpk.Geometry.Aabb box, bool descending = false, double fallDistance = 0, bool powderSnowWalkable = false) -> bool
 Umpk.Physics.FluidMovementEra
 Umpk.Physics.FluidMovementEra.Legacy = 0 -> Umpk.Physics.FluidMovementEra
 Umpk.Physics.FluidMovementEra.SwimmingUpdate = 1 -> Umpk.Physics.FluidMovementEra

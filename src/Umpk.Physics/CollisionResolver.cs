@@ -106,7 +106,13 @@ internal static class CollisionResolver
         IPhysicsWorldView world, in Aabb searchBox, double entityBottom, in BodyCollisionContext body, ColliderBuffer result)
     {
         result.Clear();
+        CollectBlockColliders(world, searchBox, entityBottom, in body, result, stopAfterFirst: false);
+        world.CollectEntityColliders(searchBox, result);
+    }
 
+    private static void CollectBlockColliders(
+        IPhysicsWorldView world, in Aabb searchBox, double entityBottom, in BodyCollisionContext body, ColliderBuffer result, bool stopAfterFirst)
+    {
         int minBX = (int)Math.Floor(searchBox.MinX - PhysicsConstants.CollisionEpsilon) - 1;
         int maxBX = (int)Math.Floor(searchBox.MaxX + PhysicsConstants.CollisionEpsilon) + 1;
         int minBY = (int)Math.Floor(searchBox.MinY - PhysicsConstants.CollisionEpsilon) - 1;
@@ -134,14 +140,17 @@ internal static class CollisionResolver
                     {
                         Aabb worldShape = shapes[s].Move(bx + shapeOffset.X, by, bz + shapeOffset.Z);
                         if (worldShape.Intersects(searchBox))
+                        {
                             result.Add(worldShape);
+                            if (stopAfterFirst)
+                                return;
+                        }
 
                     }
                 }
             }
         }
 
-        world.CollectEntityColliders(searchBox, result);
     }
 
     private static int CollectCandidateStepHeights(
@@ -191,11 +200,19 @@ internal static class CollisionResolver
         return false;
     }
 
-    /// <summary>True when the box has no collisions at all - block shapes AND any hard entity colliders, since it goes through <see cref="CollectColliders"/>, the same collection <see cref="Collide"/> uses. Used for pose-fit checks and for the collision half of <c>PlayerPhysics.IsFree</c>, whose contract depends on the entity colliders being included here.</summary>
+    /// <summary>Tests blocks, hard entity colliders and the source's border in native short-circuit order. Block shape and body-context rules are shared with <see cref="Collide"/>.</summary>
     public static bool NoCollision(
         IPhysicsWorldView world, in Aabb box, double entityBottom, in BodyCollisionContext body, ColliderBuffer scratch)
     {
-        CollectColliders(world, box, entityBottom, in body, scratch);
-        return scratch.Count == 0;
+        scratch.Clear();
+        CollectBlockColliders(world, box, entityBottom, in body, scratch, stopAfterFirst: true);
+        if (scratch.Count != 0)
+            return false;
+
+        world.CollectEntityColliders(box, scratch);
+        if (scratch.Count != 0)
+            return false;
+
+        return body.SourcePosition is not { } source || !world.CollidesWithBorder(box, source);
     }
 }

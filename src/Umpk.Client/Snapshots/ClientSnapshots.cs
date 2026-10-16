@@ -19,7 +19,7 @@ public sealed class ClientSnapshots
 
     /// <summary>Snapshots the local player's identity, kinematics, vitals, and game mode.</summary>
     public Task<SelfSnapshot> SelfAsync(CancellationToken ct = default) =>
-        _client.InvokeAsync(client => SelfSnapshot.Project(client.State), ct);
+        _client.InvokeAsync(client => SelfSnapshot.Project(client.State) with { EyeHeight = client.SelfEyeHeight }, ct);
 
     /// <summary>Snapshots the local player's server-advertised abilities.</summary>
     public Task<AbilitiesSnapshot> AbilitiesAsync(CancellationToken ct = default) =>
@@ -210,7 +210,8 @@ public sealed class ClientSnapshots
             return null;
 
         SelfState self = client.State.Self;
-        Vec3d eye = PlayerReach.EyePosition(self.Position);
+        // Entity.getEyePosition and Entity.pick start at the current pose's eye, including a forced crawl with no sneak input.
+        Vec3d eye = client.SelfEyePosition;
         double yawRad = self.Yaw * Math.PI / 180.0;
         double pitchRad = self.Pitch * Math.PI / 180.0;
         double cosPitch = Math.Cos(pitchRad);

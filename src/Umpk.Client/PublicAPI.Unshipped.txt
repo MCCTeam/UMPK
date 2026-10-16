@@ -78,6 +78,7 @@ Umpk.Client.Actions.InventoryActions.TryRenameItemAsync(string! name, System.Thr
 Umpk.Client.Actions.MovementActions
 Umpk.Client.Actions.MovementActions.LeaveBedAsync(System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Umpk.Client.Actions.MovementActions.LookAtAsync(Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Umpk.Client.Actions.MovementActions.LookAtLocalAsync(Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Umpk.Client.Actions.MovementActions.MoveToAsync(Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Umpk.Client.Actions.MovementActions.MoveToVerifiedAsync(Umpk.Geometry.Vec3d target, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
 Umpk.Client.Actions.MovementActions.MoveToVerifiedAsync(Umpk.Geometry.Vec3d target, Umpk.Pathfinding.PathfinderOptions! options, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Umpk.Client.Navigation.MoveResult!>!
@@ -1523,6 +1524,8 @@ Umpk.Client.Snapshots.SelfSnapshot.ExperienceLevel.get -> int
 Umpk.Client.Snapshots.SelfSnapshot.ExperienceLevel.init -> void
 Umpk.Client.Snapshots.SelfSnapshot.ExperienceProgress.get -> float
 Umpk.Client.Snapshots.SelfSnapshot.ExperienceProgress.init -> void
+Umpk.Client.Snapshots.SelfSnapshot.EyeHeight.get -> double
+Umpk.Client.Snapshots.SelfSnapshot.EyeHeight.init -> void
 Umpk.Client.Snapshots.SelfSnapshot.EyePosition.get -> Umpk.Geometry.Vec3d
 Umpk.Client.Snapshots.SelfSnapshot.Food.get -> int
 Umpk.Client.Snapshots.SelfSnapshot.Food.init -> void
@@ -1803,6 +1806,8 @@ Umpk.Client.UmpkClient.PacketFrameObserved -> System.Action<Umpk.Protocol.Java.P
 Umpk.Client.UmpkClient.PacketDecodeFailed -> System.Action<Umpk.Protocol.Java.PacketDecodeFailure!>?
 Umpk.Client.UmpkClient.Plugins.get -> Umpk.Client.Plugins.ClientPluginCollection!
 Umpk.Client.UmpkClient.PostAsync(System.Action<Umpk.Client.UmpkClient!>! work, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Umpk.Client.UmpkClient.SelfEyeHeight.get -> double
+Umpk.Client.UmpkClient.SelfEyePosition.get -> Umpk.Geometry.Vec3d
 Umpk.Client.UmpkClient.Session.get -> Umpk.Client.SessionInfo?
 Umpk.Client.UmpkClient.Snapshots.get -> Umpk.Client.Snapshots.ClientSnapshots!
 Umpk.Client.UmpkClient.Spawned.get -> System.Threading.Tasks.Task<bool>!

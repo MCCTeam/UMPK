@@ -52,14 +52,28 @@ public sealed class MovementActions
         && _services.Wire.CanSendPlay(EntityPackets.Serverbound.PlayerInput);
 
     /// <summary>Rotates the player to face a world position and sends the rotation.</summary>
-    public async Task LookAtAsync(Vec3d target, CancellationToken ct = default)
+    public Task LookAtAsync(Vec3d target, CancellationToken ct = default) => LookAtAsync(target, send: true, ct);
+
+    /// <summary>Rotates toward a world position on the session loop without sending a standalone packet. The normal movement tick reports the turn.</summary>
+    public Task LookAtLocalAsync(Vec3d target, CancellationToken ct = default) => LookAtAsync(target, send: false, ct);
+
+    private Task LookAtAsync(Vec3d target, bool send, CancellationToken ct) =>
+        _services.Scheduler.IsCurrent
+            ? LookAtOnLoopAsync(target, send, ct)
+            : _services.Scheduler.InvokeAsync(() => new ValueTask(LookAtOnLoopAsync(target, send, ct)), ct);
+
+    private Task LookAtOnLoopAsync(Vec3d target, bool send, CancellationToken ct)
     {
-        Vec3d eye = PlayerReach.EyePosition(Self.Position);
+        ct.ThrowIfCancellationRequested();
+        Vec3d eye = _services.EyePosition;
         Vec3d delta = target.Subtract(eye);
         double horizontal = Math.Sqrt(delta.X * delta.X + delta.Z * delta.Z);
         float yaw = (float)(Math.Atan2(-delta.X, delta.Z) * 180.0 / Math.PI);
         float pitch = (float)(-Math.Atan2(delta.Y, horizontal) * 180.0 / Math.PI);
-        await SetRotationAsync(yaw, pitch, ct).ConfigureAwait(false);
+        if (send)
+            return SetRotationAsync(yaw, pitch, ct);
+        SetRotation(yaw, pitch);
+        return Task.CompletedTask;
     }
 
     /// <summary>The pitch limits vanilla clamps a turn to; see <see cref="SetRotation"/>.</summary>

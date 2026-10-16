@@ -196,7 +196,10 @@ public sealed partial class InteractionActions
                 $"{nameof(UseBlockVerifiedAsync)} requires an event bus (ClientSessionServices.Events), and none is wired on this session.");
 
         // Both refusals happen BEFORE the send, because both describe a packet the server would do nothing with, and a send nobody acts on costs a whole confirmation window.
-        if (!IsWithinReach(target))
+        bool withinReach = _services.Scheduler.IsCurrent
+            ? IsWithinReach(target)
+            : await _services.Scheduler.InvokeAsync(() => IsWithinReach(target), ct).ConfigureAwait(false);
+        if (!withinReach)
             return UseBlockOutcome.OutOfReach;
 
         if (_services.Self.Sneaking && !HeldItem().IsEmpty)
@@ -309,12 +312,11 @@ public sealed partial class InteractionActions
     /// <summary>Whether the player's eye is within <see cref="BlockInteractionRange"/> of the nearest point of the target's unit cube.</summary>
     private bool IsWithinReach(BlockPos target)
     {
-        Vec3d feet = _services.Self.Position;
-        double eyeY = feet.Y + Umpk.Physics.PhysicsConstants.PlayerStandingEyeHeight;
+        Vec3d eye = _services.EyePosition;
 
-        double dx = Nearest(feet.X, target.X);
-        double dy = Nearest(eyeY, target.Y);
-        double dz = Nearest(feet.Z, target.Z);
+        double dx = Nearest(eye.X, target.X);
+        double dy = Nearest(eye.Y, target.Y);
+        double dz = Nearest(eye.Z, target.Z);
         return (dx * dx) + (dy * dy) + (dz * dz) <= BlockInteractionRange * BlockInteractionRange;
 
         // The gap between a coordinate and the [min, min+1] span of the cube on that axis; zero inside.

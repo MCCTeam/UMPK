@@ -274,6 +274,12 @@ public sealed class UmpkClient : IAsyncDisposable
     /// <summary>The profile configured for a not-yet-connected supervised attempt.</summary>
     internal GameProfile ConfiguredProfile => _settings.Profile;
 
+    /// <summary>The physics owner's observed pose eye height, or standing height when physics is unavailable. Read through <see cref="InvokeAsync{T}"/> for session-loop consistency.</summary>
+    public double SelfEyeHeight => _services.EyeHeight;
+
+    /// <summary>The tracked feet position plus <see cref="SelfEyeHeight"/>. Read through <see cref="InvokeAsync{T}"/> for session-loop consistency.</summary>
+    public Vec3d SelfEyePosition => _services.EyePosition;
+
     /// <summary>
     /// The login-phase plugin channels this client claims. Register on this BEFORE <see cref="ConnectAsync"/> is called (the client is in <see cref="ClientStatus.Created"/> then): the login driver reads the registry as each <c>minecraft:custom_query</c> arrives, and login is over before any per-session attach point exists. A channel nobody claimed keeps getting <c>understood = false</c>, which is what this client has always answered.
     /// <para>Claims are RELEASED when the session ends, so a responder holding session state cannot answer for the next one. A caller that reconnects the same client instance therefore re-registers; the supervised path builds a fresh client per attempt and registers on that.</para>

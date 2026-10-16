@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
 using Umpk.Client.State;
+using Umpk.Game.Players;
+using Umpk.Geometry;
 using Umpk.Hosting;
 using Umpk.Protocol.Java;
 
@@ -35,6 +37,12 @@ internal sealed class ClientSessionServices
 
     /// <summary>The existing physics owner's current pose and eye-water observation. Hand-built action harnesses can supply their own snapshot.</summary>
     public Func<Umpk.Physics.PhysicsState?> ReadPhysicsState { get; init; } = static () => null;
+
+    /// <summary>The physics owner's pose eye height, or the standing height when physics is unavailable. Read on the session loop.</summary>
+    public double EyeHeight => ReadPhysicsState()?.EyeHeight ?? PlayerReach.StandingEyeHeight;
+
+    /// <summary>The current tracked feet position plus the observed eye height. Read on the session loop.</summary>
+    public Vec3d EyePosition => Self.Position.Add(0, EyeHeight, 0);
 
     /// <summary>Reads the current block view ray on the session owner. Explicit-target actions do not use this input.</summary>
     public Func<double, Umpk.Game.World.BlockHitResult?> ReadBlockHit { get; init; } = static _ => null;

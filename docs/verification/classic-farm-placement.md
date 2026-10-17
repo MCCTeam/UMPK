@@ -1,6 +1,6 @@
 # Classic farm animal placement verification
 
-The tested producer is `fa9ac8b49be478cb472ff20c606f1f414e5c5d17`, which adds measured cow, pig, sheep and chicken geometry to protocol 47. All ten releases from 1.8 through 1.8.9 share these rules. The earlier [classic villager and dropped-item verification](classic-entity-placement.md) remains separate.
+The tested producer is `fa9ac8b49be478cb472ff20c606f1f414e5c5d17`, which adds measured cow, pig, sheep and chicken geometry to protocol 47. All ten releases from 1.8 through 1.8.9 share these rules. The earlier [classic villager and dropped-item verification](classic-entity-placement.md) remains separate. The [legacy farm verification](legacy-farm-placement.md) records the later extension through 1.13.2.
 
 ## Behavior and source evidence
 

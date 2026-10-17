@@ -4,11 +4,13 @@ The 1.10.2 reproduction placed blocks successfully but omitted swings while vill
 
 ## Implemented behavior
 
-The generated interaction source implements `IEntityGeometrySource`. Its 33 geometry datasets contain native age selectors, canonical poses and dimensions refresh rules for 1.10.2 and the measured protocol representatives from 1.14.4 through 26.3. The session owns current boxes and applies metadata callbacks in order. A position packet reapplies dimensions even when its coordinates are unchanged. World changes and entity removal clear owned geometry.
+The generated interaction source implements `IEntityGeometrySource`. Its 34 geometry datasets contain native age selectors, canonical poses and dimensions refresh rules for 1.10.2, 1.11 and the measured protocol representatives from 1.14.4 through 26.3. `JavaGameData.EntityGeometryData` loads geometry independently so entity tracking can trim unused block-interaction tables. The session owns current boxes and applies metadata callbacks in order. A position packet reapplies dimensions even when its coordinates are unchanged. World changes and entity removal clear owned geometry.
 
-Native 1.10.2 retains a box's minimum corner when dimensions shrink or grow. The measured clients from 1.14.4 through 1.16.5 recenter on shrink and retain the minimum on growth; the measured clients from 1.17 recenter on refresh. Sleeping villager dimensions are fixed at 0.2 × 0.2. Baby standing dimensions change from 0.3 × 0.975 through 1.21.11 to 0.49 × 0.99 in 26.1 and 0.49 × 0.98 in 26.2/26.3.
+Native 1.10.2 retains a box's minimum corner when dimensions shrink or grow. Native 1.11 and the measured clients from 1.14.4 through 1.16.5 recenter on shrink and retain the minimum on growth; the measured clients from 1.17 recenter on refresh. Sleeping villager dimensions are fixed at 0.2 × 0.2. Baby standing dimensions change from 0.3 × 0.975 through 1.21.11 to 0.49 × 0.99 in 26.1 and 0.49 × 0.98 in 26.2/26.3.
 
-Placement uses these owned boxes rather than the registry's placeholder dimensions. The original 1.10.2 item entity never blocks building; other unmeasured legacy entity keys remain unknown. Unknown poses, nondefault attribute scales, riders and specialized shapes still require implementation. Native mob tick interpolation and modern entity collision handlers remain unfinished.
+Placement uses these owned boxes rather than the registry's placeholder dimensions. The original 1.10.2 and 1.11 item entities never block building; other unmeasured legacy entity keys remain unknown. Unknown poses, nondefault attribute scales, riders and specialized shapes still require implementation. Native mob tick interpolation and modern entity collision handlers remain unfinished.
+
+The [AOT follow-up](entity-geometry-aot.md) records the trimming fix. The [1.11 follow-up](entity-geometry-1.11.md) records the next native boundary and its live acceptance.
 
 ## Native evidence
 

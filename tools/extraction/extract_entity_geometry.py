@@ -252,9 +252,10 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         expected = {"dimensions": living, "scale": living, "position": entity, "refresh": entity, "box": entity}
         if any(owners.get(method) != owner for method, owner in expected.items()):
             raise ValueError("Mapped native entity methods have unaudited owners")
-        if raw["entity"] == "minecraft:cat":
-            if not raw["entity_class"].endswith(".Cat") or owners.get("baby") not in ("net.minecraft.world.entity.AgeableMob", "net.minecraft.world.entity.AgableMob") or raw["selector_kind"] != "boolean":
-                raise ValueError("Mapped cat age selector has an unaudited owner")
+        if raw["entity"] in ("minecraft:cat", "minecraft:horse", "minecraft:cow"):
+            expected_class = {"minecraft:cat": ".Cat", "minecraft:horse": ".Horse", "minecraft:cow": ".Cow"}[raw["entity"]]
+            if not raw["entity_class"].endswith(expected_class) or owners.get("baby") not in ("net.minecraft.world.entity.AgeableMob", "net.minecraft.world.entity.AgableMob") or raw["selector_kind"] != "boolean":
+                raise ValueError("Mapped animal age selector has an unaudited owner")
         elif raw["entity"] == "minecraft:iron_golem":
             if not raw["entity_class"].endswith(".IronGolem") or owners.get("baby") != living or raw["selector_kind"] != "none":
                 raise ValueError("Mapped golem has an unaudited age predicate")

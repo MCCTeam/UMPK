@@ -92,7 +92,7 @@ public sealed class EntityGeometryStateTests
 
     [Theory]
     [MemberData(nameof(NativeMappedRoles))]
-    public async Task MappedCatAndGolemPhasesMatchEveryNativeWitness(int protocol, string release, int caseIndex, string entityName)
+    public async Task MappedEntityPhasesMatchEveryNativeWitness(int protocol, string release, int caseIndex, string entityName)
     {
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion? version));
         Assert.Equal(protocol, version!.Version.Protocol);

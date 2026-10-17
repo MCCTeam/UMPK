@@ -72,6 +72,24 @@ public sealed class PlacementAnimationTests
     }
 
     [Theory]
+    [InlineData(1.5)]
+    [InlineData(8.5)]
+    public async Task LegacyItemDropsDoNotSuppressPlacementSwings(double x)
+    {
+        await using var harness = new Harness(210);
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("item"), out RegistryEntry<EntityTypeDefinition> type));
+        var entity = new Entity(51, Guid.NewGuid(), type) { Position = new Vec3d(x, 65, 1.5) };
+        harness.State.Entities.Add(entity);
+
+        await harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5)).WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.Equal(2, harness.Sink.Packets.Count);
+        Assert.IsType<ServerboundSwingPacket>(harness.Sink.Packets[1]);
+        Assert.Equal(new Vec3d(x, 65, 1.5), entity.Position);
+        Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
+    }
+
+    [Theory]
     [MemberData(nameof(DoublePlantCases))]
     public async Task MetadataUpperPlantReplacementUsesTheActualLowerCell(int protocol, int lower)
     {

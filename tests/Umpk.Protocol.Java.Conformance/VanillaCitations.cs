@@ -41,8 +41,11 @@ internal static partial class VanillaCitations
         List<Citation> citations = [];
         foreach (string path in SourceFiles(repoRoot))
         {
+            string source = File.ReadAllText(path);
+            if (!source.Contains("-decompiled", StringComparison.Ordinal))
+                continue;
             string relative = Path.GetRelativePath(repoRoot, path);
-            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source, path: path);
             foreach (SyntaxTrivia trivia in syntaxTree.GetRoot().DescendantTrivia(descendIntoTrivia: true))
             {
                 if (!IsCommentTrivia(trivia.Kind()))
@@ -63,6 +66,20 @@ internal static partial class VanillaCitations
 
         return citations;
     }
+
+    private static readonly Citation[] SourceAnchors =
+    [
+        new("src/Umpk.Client/Internal/ClientTickClock.cs", 0, "1.20.4-client-decompiled", "net/minecraft/client/Timer.java"),
+        new("src/Umpk.Game/Blocks/BlockCollisionGrid.cs", 0, "26.3-client-decompiled", "net/minecraft/world/level/block/state/BlockBehaviour.java"),
+        new("src/Umpk.Physics/PhysicsProfile.cs", 0, "1.8-client-decompiled", "ahd.java"),
+        new("src/Umpk.Protocol.Java/Families/Entity/MoveEntityRot/MoveEntityRot.Wire.cs", 0, "26.3-client-decompiled", "ClientboundMoveEntityPacket.java"),
+    ];
+
+    /// <summary>Checks that a repository scan reaches known references in each library with structured vanilla citations.</summary>
+    internal static IReadOnlyList<Citation> MissingSourceAnchors(IReadOnlyList<Citation> citations)
+        => SourceAnchors.Where(anchor => !citations.Any(citation =>
+            string.Equals(citation.Source.Replace('\\', '/'), anchor.Source, StringComparison.Ordinal)
+            && citation.Tree == anchor.Tree && citation.File == anchor.File)).ToArray();
 
     /// <summary>The file a citation points at, or null when the tree or the class is not there.</summary>
     /// <remarks>A reference with no class resolves to its tree directory. Other references first use their relative path, then use a basename index when the path is incomplete.</remarks>

@@ -30,6 +30,19 @@
         "measurement_sha256": "2f3403fb61108a0ede2de6978709431e4b90820d3b9c4b0930bd438670549610",
         "native_witnesses": 147,
         "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep"
+      },
+      "minecraft:player": {
+        "measurement_sha256": "fc0cc075080a4624391d110589405620f42cffb28697f95d7e58c6ca66ed92dc",
+        "transition_sha256": "24c1bdbfd3b52bc3f40b12b8035f287200ec6e2f66ada8f9aa4105bb15904e59",
+        "native_witnesses": 147,
+        "client_sha256": "4a73008a73f3824b7c711750a5a37556df8614f193c0a531e292dad159a73a7c",
+        "server_sha256": "80cf86dc2004ec6a2dc0183d1c75a9af3ba0669f7c332e4247afb1d76fb67e8a",
+        "sources_sha256": {
+          "net/minecraft/world/entity/Entity.java": "3037fc13a8ddf404257f87a3f8b571f02194d260b81808bafc912fd0d0187e2f",
+          "net/minecraft/world/entity/LivingEntity.java": "e8ae5bfd91c9b1dfc657eae1eb0a2fe319bdd3cffe3beee75d50d396fe83cea2",
+          "net/minecraft/world/entity/player/Player.java": "a6c5f6ae491f6d90abe03ecf8d382bdd5f22eb8028bd58ce0754c707d90fee1b"
+        },
+        "scope": "Original Player dimensions and pose/position callbacks under controlled client-world inputs; default attribute scale, no entity/world ticks or rider positioning"
       }
     },
     "mapped_farm_roles": {
@@ -1164,6 +1177,75 @@
           0.45,
           0.65,
           false,
+          true
+        ]
+      ]
+    },
+    "minecraft:player": {
+      "selector": [
+        -1,
+        "none",
+        0,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          1.5,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.2,
+          0.2,
+          true,
           true
         ]
       ]

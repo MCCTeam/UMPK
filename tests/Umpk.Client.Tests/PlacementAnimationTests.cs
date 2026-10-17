@@ -51,6 +51,27 @@ public sealed class PlacementAnimationTests
     [MemberData(nameof(VillagerGeometryCases))]
     public Task VillagerPlacementObstructionUsesNativeAgeAndPose(int protocol, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings) => PlaceWithEntityGeometryAsync(protocol, "villager", babyIndex, baby, pose, x, y, swings);
 
+    public static IEnumerable<object[]> PlayerGeometryCases()
+    {
+        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Where(protocol => protocol >= 498))
+        {
+            yield return [protocol, EntityPose.Standing, 8.5, 65.0, true];
+            yield return [protocol, EntityPose.Standing, 1.5, 65.0, false];
+            yield return [protocol, EntityPose.Standing, 1.5, 64.0, false];
+            yield return [protocol, EntityPose.Crouching, 1.5, 64.0, false];
+            yield return [protocol, EntityPose.Swimming, 1.5, 64.0, true];
+            yield return [protocol, EntityPose.Sleeping, 1.5, 64.0, true];
+            yield return [protocol, EntityPose.Dying, 1.5, 64.0, true];
+            yield return [protocol, EntityPose.Crouching, 1.5, 63.5, true];
+            yield return [protocol, EntityPose.Standing, 1.5, 63.5, false];
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(PlayerGeometryCases))]
+    public Task PlayerPlacementUsesItsNativePoseBounds(int protocol, EntityPose pose, double x, double y, bool clear)
+        => PlaceWithEntityGeometryAsync(protocol, "player", -1, false, pose, x, y, clear && protocol < 777);
+
     public static IEnumerable<object[]> EntityRoleCases()
     {
         foreach (int protocol in new[] { 477, 480, 485, 490 })

@@ -229,6 +229,23 @@ python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry
 
 The 49 datasets cover the measured releases from 1.9 through 1.14.3, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field: index 11 through 1.9.4, index 12 from 1.10 through 1.13.2, and the measured modern indices thereafter. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
 
+`extract_player_geometry.py` adds player rules to the existing entity datasets from independent native snapshots and complete pose/position callback sweeps. It verifies official artifact hashes, original class hashes and captured class origins, adapter source hashes, callback owners, every pose transition and same-protocol aliases. Run it after the base entity extractor so both sets of rules remain present:
+
+```bash
+python3 tools/extraction/measure_entity_box_transitions.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements /external/fresh/player-box-transitions
+python3 tools/extraction/extract_player_geometry.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements /external/placement-entity-native \
+  --transitions /external/fresh/player-box-transitions \
+  --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/PlayerEntityGeometry.native.json.gz
+python3 -m unittest discover -s tools/extraction -p test_extract_player_geometry.py
+```
+
+Add `--check` to the extraction command to verify the existing outputs. The measured player batch covers 27,981 callbacks across 44 releases from 1.14.4 through 26.3 and 32 protocols. Older player eras, nondefault attribute scaling, spectator lookup/cache behavior and rider positioning need separate evidence; these measurements do not execute complete entity/world ticks. The actor is a survival Player adapter that inherits the original geometry methods. A separate source audit confirms that RemotePlayer and AbstractClientPlayer do not override those callbacks in the measured releases.
+
 The four early 1.14 datasets also contain native cat, horse and iron golem geometry. Cats and horses retain the Boolean baby selector; iron golems use `[-1, "none", 0, 0]` and only selector-zero variants. Each type retains its measured pose transitions, including sleeping dimensions. The separate role fixture contains 5,292 transitions across twelve release/entity measurements and three deduplicated cases. `--role` checks the original class origins, method owners, age predicate, complete callbacks and artifact hashes before adding each role. Include these arguments when regenerating the datasets.
 
 The 32 mapped protocol datasets also contain native cat, cow, horse and golem geometry. The 176 measurements cover 44 mapped releases and 363,753 native transition rows. The compressed replay fixture deduplicates 25 cases while retaining each release's artifact and measurement hashes. Gzip output uses no filename or clock metadata. The extractor checks the mapped method owners, original class preservation, official mappings and the native living-scale getter. Attribute scaling beyond the default value remains unmeasured; fixed dimensions retain their native behavior. Protocol aliases must agree on their geometry and scale contract. The official 26.1.1 and 26.1.2 clients use existing protocol 775; their release names share the same generated descriptor.

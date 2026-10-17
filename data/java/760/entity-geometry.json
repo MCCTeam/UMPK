@@ -86,6 +86,49 @@
             "server_sha256": "b26727069ef5f61c704add9a378ac90e3d271fd7876c0bd3dcfbe9fd0bec4d96"
           }
         ]
+      },
+      "minecraft:player": {
+        "measurement_sha256": "b6489edd473e29b710c287d9f2b899123bf94bd8cce9d62733fc40eccfe2265a",
+        "transition_sha256": "ad8dc6f595053099e3ea520ad26884bb94c7ed9b36ccf70349ee5feaa527e81c",
+        "native_witnesses": 588,
+        "client_sha256": "e1ac65de9b471b6916cc457fdcff00c1bafac17027aa79100c4df893b3d956db",
+        "server_sha256": "b26727069ef5f61c704add9a378ac90e3d271fd7876c0bd3dcfbe9fd0bec4d96",
+        "sources_sha256": {
+          "net/minecraft/world/entity/Entity.java": "88778fa6ed7f0d3a60847782a639a5fd3b3437939a9f338a2ccafe3465246632",
+          "net/minecraft/world/entity/LivingEntity.java": "f60af4a8860efc6a4e18430316237446c87535c9833a0c4b8275eb218a25ffe1",
+          "net/minecraft/world/entity/player/Player.java": "e4a13fd70b479939eee5fd50ef9e1584cdacb775b435b6d2a2bfebcfed86a84c"
+        },
+        "scope": "Original Player dimensions and pose/position callbacks under controlled client-world inputs; default attribute scale, no entity/world ticks or rider positioning",
+        "aliases": [
+          {
+            "version": "1.19.1",
+            "measurement_sha256": "1bdd20fc368cd7fc7309e5d217fcebd8f8d3f926831a29f417e8ee3c22360ba4",
+            "transition_sha256": "ad8dc6f595053099e3ea520ad26884bb94c7ed9b36ccf70349ee5feaa527e81c",
+            "native_witnesses": 588,
+            "client_sha256": "146d4018cfed50c5e77483940653091f186d2eea9ad42fc40939f5c72d6b7f52",
+            "server_sha256": "f15b93c25ac7343ae8db6e7883a97f11777baaee924e7a3c7aeed826b155b233",
+            "sources_sha256": {
+              "net/minecraft/world/entity/Entity.java": "88778fa6ed7f0d3a60847782a639a5fd3b3437939a9f338a2ccafe3465246632",
+              "net/minecraft/world/entity/LivingEntity.java": "f60af4a8860efc6a4e18430316237446c87535c9833a0c4b8275eb218a25ffe1",
+              "net/minecraft/world/entity/player/Player.java": "e4a13fd70b479939eee5fd50ef9e1584cdacb775b435b6d2a2bfebcfed86a84c"
+            },
+            "scope": "Original Player dimensions and pose/position callbacks under controlled client-world inputs; default attribute scale, no entity/world ticks or rider positioning"
+          },
+          {
+            "version": "1.19.2",
+            "measurement_sha256": "b6489edd473e29b710c287d9f2b899123bf94bd8cce9d62733fc40eccfe2265a",
+            "transition_sha256": "ad8dc6f595053099e3ea520ad26884bb94c7ed9b36ccf70349ee5feaa527e81c",
+            "native_witnesses": 588,
+            "client_sha256": "e1ac65de9b471b6916cc457fdcff00c1bafac17027aa79100c4df893b3d956db",
+            "server_sha256": "b26727069ef5f61c704add9a378ac90e3d271fd7876c0bd3dcfbe9fd0bec4d96",
+            "sources_sha256": {
+              "net/minecraft/world/entity/Entity.java": "88778fa6ed7f0d3a60847782a639a5fd3b3437939a9f338a2ccafe3465246632",
+              "net/minecraft/world/entity/LivingEntity.java": "f60af4a8860efc6a4e18430316237446c87535c9833a0c4b8275eb218a25ffe1",
+              "net/minecraft/world/entity/player/Player.java": "e4a13fd70b479939eee5fd50ef9e1584cdacb775b435b6d2a2bfebcfed86a84c"
+            },
+            "scope": "Original Player dimensions and pose/position callbacks under controlled client-world inputs; default attribute scale, no entity/world ticks or rider positioning"
+          }
+        ]
       }
     },
     "mapped_farm_roles": {
@@ -2242,6 +2285,131 @@
           14,
           0.45,
           0.65,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:player": {
+      "selector": [
+        -1,
+        "none",
+        0,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "recenter_on_refresh",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          1.5,
+          false,
+          true
+        ],
+        [
+          0,
+          6,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          8,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          9,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          11,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          12,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          13,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          14,
+          0.6,
+          1.8,
           false,
           true
         ]

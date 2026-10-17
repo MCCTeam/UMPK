@@ -98,6 +98,49 @@ public sealed class RemotePlayerVelocityRuntimeTests
     }
 
     [Theory]
+    [InlineData(498)]
+    [InlineData(754)]
+    public async Task ActiveInterpolationReappliesPlayerBoundsEvenWithoutCoordinateChanges(int protocol)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain: false, physics: false);
+        await JoinAsync(client, server, version, ct);
+        await SendAndObserveAsync(client, server, version, (IPacket)Spawn(Create(protocol), protocol), ct);
+        Entity entity = client.State.Entities.Get(RemoteId)!;
+        Vec3d position = entity.Position;
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(protocol);
+
+        await ChangePose(EntityPose.Sleeping);
+        await ChangePose(EntityPose.Standing);
+        AssertMinimum(position.X - .2F / 2.0);
+        await ticks.FireAsync(ct);
+        AssertMinimum(position.X - .2F / 2.0);
+
+        await SendAndObserveAsync(client, server, version, new ClientboundMoveEntityPosPacket(RemoteId, 0, 0, 0, false), ct);
+        await ticks.FireAsync(ct);
+
+        AssertMinimum(position.X - .6F / 2.0);
+        Assert.Equal(position, entity.Position);
+        await ticks.FireAsync(ct);
+        await ticks.FireAsync(ct);
+        await ChangePose(EntityPose.Sleeping);
+        await ChangePose(EntityPose.Standing);
+        await ticks.FireAsync(ct);
+        AssertMinimum(position.X - .2F / 2.0);
+
+        Task ChangePose(EntityPose pose) => SendAndObserveAsync(client, server, version, new ClientboundSetEntityDataPacket(RemoteId, new EntityMetadataList([new(6, MetadataValue.Pose(pose))], [])), ct);
+        void AssertMinimum(double minimum)
+        {
+            Assert.True(client.State.EntityGeometry.TryGet(entity, source, out Aabb box, out _, protocol));
+            Assert.Equal(minimum, box.MinX);
+        }
+    }
+
+    [Theory]
     [MemberData(nameof(GenericSpawnProtocols))]
     public async Task GenericPlayerSpawnAppliesVelocityOnlyFromTheNativeBoundary(int protocol)
     {
@@ -310,7 +353,7 @@ public sealed class RemotePlayerVelocityRuntimeTests
     {
         var spawn = new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, -1, false, false, null, 0, 63);
         await SendAndObserveAsync(client, server, version,
-            new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, spawn, false, false, null), ct);
+            new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, spawn, false, false, new LegacyLoginFields(0, 2, "flat")), ct);
     }
 
     private static async Task SendAndObserveAsync(UmpkClient client, FakeJavaServer server, JavaVersion version, IPacket packet, CancellationToken ct)

@@ -111,7 +111,7 @@ internal sealed class EntityMotionState
         return true;
     }
 
-    public void Tick(EntityStore? entities, List<int>? moved = null)
+    public void Tick(EntityStore? entities, List<int>? moved = null, EntityGeometryState? geometry = null)
     {
         if (entities is null)
             return;
@@ -123,8 +123,11 @@ internal sealed class EntityMotionState
             {
                 Vec3d before = entity.Position;
                 PullPosition(entity, position);
+                bool reappliesPosition = position.HasActiveInterpolation;
                 position.Tick(static _ => throw new InvalidOperationException("Legacy interpolation must not request world collisions."));
                 PushPosition(entity, position);
+                if (reappliesPosition)
+                    geometry?.ObservePosition(entity);
                 if (before != entity.Position)
                     moved?.Add(entity.Id);
             }

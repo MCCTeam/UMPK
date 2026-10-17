@@ -294,7 +294,7 @@ def legacy_fixture(records: list[dict]) -> dict:
     return {"releases": releases, "cases": cases}
 
 
-def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
+def read_legacy(root: Path, official: Path, catalog: list[dict], *, source_audit: dict | None = None) -> dict:
     receipt = json.loads((root / "result.json").read_text(encoding="utf-8"))
     version, protocol = receipt.get("version", "1.10.2"), receipt.get("protocol", 210)
     if not any(row["name"] == version and row["protocol"] == protocol for row in catalog):
@@ -306,9 +306,17 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     classic = receipt.get("format") == "classic-role-v1"
     ageable = receipt.get("format") == "legacy-ageable-role-v1"
     pose_farm = receipt.get("format") == "pose-farm-role-v1"
-    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1", "legacy-ageable-role-v1", "pose-farm-role-v1") or ((mapped or classic or ageable or pose_farm) and not role) or (classic and protocol != 47):
+    mapped_farm = receipt.get("format") == "mapped-farm-role-v1"
+    if mapped_farm and source_audit is None:
+        raise ValueError("Mapped farm receipt requires a source audit")
+    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1", "legacy-ageable-role-v1", "pose-farm-role-v1", "mapped-farm-role-v1") or ((mapped or classic or ageable or pose_farm or mapped_farm) and not role) or (classic and protocol != 47):
         raise ValueError("Unsupported native entity geometry receipt format")
-    if pose_farm:
+    if mapped_farm:
+        from extract_mapped_farm_geometry import mapped_farm_profile, verify_mapped_farm_identity
+
+        mapped_farm_scale = verify_mapped_farm_identity(root, official, raw, receipt, source_audit)
+        profile = mapped_farm_profile(raw, protocol, mapped_farm_scale)
+    elif pose_farm:
         from extract_pose_farm_geometry import pose_farm_profile
 
         profile = pose_farm_profile(raw, protocol)
@@ -335,7 +343,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     for name, expected in source_hashes.items():
         if sha(official / f"{version}-client-decompiled" / name) != expected:
             raise ValueError(f"Audited geometry source changed: {version}/{name}")
-    scale_attribute = ""
+    scale_attribute = mapped_farm_scale if mapped_farm else ""
     if classic:
         path = root / "bindings.json"
         if sha(path) != receipt.get("binding_sha256"):
@@ -398,7 +406,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
                 raise ValueError("Official entity geometry mappings changed")
         elif receipt.get("mappings_sha256") is not None:
             raise ValueError("Native entity geometry names an unavailable mappings artifact")
-    elif "poses" in raw:
+    elif not mapped_farm and "poses" in raw:
         binding = receipt["binding"]
         source = official / f"{version}-client-decompiled" / (binding["living"] + ".java")
         text = re.sub(r"/\*.*?\*/", "", source.read_text(encoding="utf-8"), flags=re.S)
@@ -421,7 +429,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         classes = {name for name in original.namelist() if name.endswith(".class")}
         if classes != {name for name in measured.namelist() if name.endswith(".class")} or len(classes) != receipt["preservation"]["unchanged_class_files"] or any(original.read(name) != measured.read(name) for name in classes):
             raise ValueError("Original geometry client class preservation failed")
-    return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt} | ({"entity": receipt["entity"]} if role else {}) | ({"scale_attribute": scale_attribute} if mapped else {})
+    return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt} | ({"entity": receipt["entity"]} if role else {}) | ({"scale_attribute": scale_attribute} if mapped or mapped_farm else {})
 
 
 def main() -> None:

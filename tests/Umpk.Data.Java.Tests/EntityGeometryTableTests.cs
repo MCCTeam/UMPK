@@ -9,6 +9,39 @@ namespace Umpk.Data.Java.Tests;
 
 public sealed class EntityGeometryTableTests
 {
+    public static IEnumerable<object[]> MappedFarmBoundaries()
+    {
+        foreach ((int protocol, int ageIndex, bool retained, bool scaled, bool largerChick) in new[] { (498, 14, true, false, false), (573, 15, true, false, false), (754, 15, true, false, false), (755, 16, false, false, false), (765, 16, false, false, false), (766, 16, false, true, false), (774, 16, false, true, false), (775, 16, false, true, true), (777, 16, false, true, true) })
+            foreach ((string name, float width, float height) in new[] { ("pig", .9F, .9F), ("sheep", .9F, 1.3F), ("chicken", .4F, .7F) })
+                yield return [protocol, ageIndex, retained, scaled, largerChick, name, width, height];
+    }
+
+    [Theory]
+    [MemberData(nameof(MappedFarmBoundaries))]
+    public void MappedFarmAnimalsKeepNativeMetadataRefreshAndChickSizeBoundaries(int protocol, int ageIndex, bool retained, bool scaled, bool largerChick, string name, float width, float height)
+    {
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(protocol);
+        var entity = Identifier.Minecraft(name);
+        Assert.True(source.TryGetRule(entity, out EntityGeometryRule rule));
+        Assert.Equal(ageIndex, rule.MetadataIndex);
+        Assert.Equal(6, rule.PoseMetadataIndex);
+        Assert.Equal(EntityGeometrySelectorKind.Boolean, rule.SelectorKind);
+        Assert.Equal(retained ? EntityDimensionsRefresh.RetainMinimumOnGrowth : EntityDimensionsRefresh.Recenter, rule.Refresh);
+        Assert.Equal(EntityGeometryRefreshTiming.SynchronizedData, rule.RefreshTiming);
+        Assert.Equal(0, rule.RequiredLoadedRadius);
+        Assert.Equal(scaled ? Identifier.Minecraft("scale") : (Identifier?)null, rule.ScaleAttribute);
+        foreach (bool baby in new[] { false, true })
+            foreach (EntityPose pose in new[] { EntityPose.Standing, EntityPose.Sleeping })
+            {
+                Assert.True(source.TryGetDimensions(entity, baby, pose, out EntityGeometryDimensions dimensions));
+                bool sleeping = pose == EntityPose.Sleeping;
+                float scale = baby ? .5F : 1F;
+                float expectedWidth = baby && largerChick && name == "chicken" ? .3F : width * scale;
+                float expectedHeight = baby && largerChick && name == "chicken" ? .4F : height * scale;
+                Assert.Equal(new EntityGeometryDimensions(sleeping ? .2F : expectedWidth, sleeping ? .2F : expectedHeight, sleeping, true), dimensions);
+            }
+    }
+
     public static IEnumerable<object[]> PoseFarmDimensions()
     {
         foreach (int protocol in new[] { 477, 480, 485, 490 })

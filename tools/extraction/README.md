@@ -257,6 +257,21 @@ python3 -m unittest discover -s tools/extraction -p test_extract_pose_farm_geome
 
 Omit `--check` to regenerate this cohort before DataGen. The explicit `pose-farm-role-v1` format requires all four releases and all four types. Earlier pilots and incomplete provenance receipts do not satisfy it. These measurements execute controlled metadata, refresh and position operations; complete entity/world ticks, riders, attribute-scale sweeps and moving mobs remain separate acceptance work.
 
+For mapped releases from 1.14.4 through 26.3, merge the separate pig, sheep and chicken cohort after the earlier geometry extractors. Its 132 release/type records cover all 44 stable releases and 32 protocols, with 335,772 native age/pose transitions. The explicit `mapped-farm-role-v1` format requires the complete cohort and a hash-pinned, post-measurement source audit. The audit binds factory and numeric registry contracts to the unchanged original receipts, helper classes, official artifacts and decompiled sources. Extraction also validates strict native child observations, the complete superclass chain, Boolean accessor defaults, callback delegation, the newer baby gate, scale-source behavior and every cached box phase. Existing entity profiles and provenance remain unchanged.
+
+```bash
+python3 tools/extraction/extract_mapped_farm_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-geometry-pilot-20261017-v2" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-geometry-all-20261017-v1" \
+  --source-audit "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-source-contracts-20261017-v1/audit.json" \
+  --source-audit-sha256 3e2c2c8bba4430330891912ffab142370f30bcbfca0ead465ce74b982c7dd401 \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/MappedFarmGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p '*mapped_farm*.py'
+```
+
+Omit `--check` to regenerate the datasets and deterministic compressed fixture, then run DataGen. Age metadata moves from index 14 to 15 in 1.15 and to 16 in 1.17. Refresh recenters on growth from 1.17; the scale attribute appears in 1.20.5. Baby chicken dimensions change from .2F by .35F to .3F by .4F in 26.1. These observations cover default attributes and controlled metadata, refresh and position operations. Attribute sweeps, riders, full entity/world ticks and moving mobs still need separate native acceptance.
+
 The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 
 `extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains their distinct obfuscated class bindings. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The remaining legacy entity keys retain unknown rules. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.

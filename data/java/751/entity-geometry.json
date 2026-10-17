@@ -31,6 +31,201 @@
         "native_witnesses": 147,
         "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep"
       }
+    },
+    "mapped_farm_roles": {
+      "measurements": [
+        "mapped-farm-geometry-pilot-20261017-v2",
+        "mapped-farm-geometry-all-20261017-v1"
+      ],
+      "scope": "Original factory, actual type, native registry ID/key, strict child observations, age/pose callbacks, refresh and position with controlled world inputs; no entity/world ticks; default attributes only",
+      "source_audit_sha256": "3e2c2c8bba4430330891912ffab142370f30bcbfca0ead465ce74b982c7dd401",
+      "helper_source_sha256": {
+        "PushDump.java": "14dab35dde7676dfffcaad0e65d989cd4d94a91d598facc62a689c5594f602b1",
+        "MiningDump.java": "743825a4bc345112acc351ad3edb67249cff026a85ffaf2f2aefef9c8b45c669",
+        "EntityPlacementProbe.java": "3754dde71a04e66e07e302a1fe7edda7da2f0dbbd3d8c75799e6a6550a56133b",
+        "EntityPlacementGeometry.java": "3de8700051bc8d000ecdb759bc2e81ba21db21c8070cb2f86b3ec032691b7c9c",
+        "MappedRoleGeometryDump.java": "25158ca709ebae38a6c9cd12d3de2e6939a4dd26ab3f98c541801b20e6473b8e"
+      },
+      "helper_class_sha256": "f65be16840187aa4accd6fcbddf957a3d7ccdec52435d3757668083db6e532c1",
+      "releases": [
+        {
+          "version": "1.16.2",
+          "entity": "minecraft:chicken",
+          "protocol": 751,
+          "registry_numeric_id": 9,
+          "registry_class": "net.minecraft.world.entity.animal.Chicken",
+          "measurement_sha256": "5a78b3d86050f0b0fef400a950bb1b774802fd10bbcad1091be5b82a6d1587c5",
+          "client_sha256": "19960f4e3c60f2723f361844d2b4020b8bf2160bd91a1e1efde8ce5aea4ff73d",
+          "server_sha256": "2902ed3ff84e4f810a2c0620c6b6df9c3ef8488b272c61274d5eac2433876f39",
+          "mappings_sha256": "c95a7046ab43371cc476b8b51978c6f2155c62f4cc5756b05c8ef81e0f11691f",
+          "sources_sha256": {
+            "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+            "net/minecraft/network/syncher/EntityDataAccessor.java": "af117ce4c3a53c4d7fc6d77d7474e92366287823764fcba131e40c8a52b6bcf3",
+            "net/minecraft/network/syncher/SynchedEntityData.java": "857bc4fa4c9cc5cd0bf52d1233004b45d13c571a4a71185a56ecfc1a6e3fbd64",
+            "net/minecraft/world/entity/AgableMob.java": "b2d2d525743045595d905590b950ff74179d9a79938c2fba9697341c2bd10697",
+            "net/minecraft/world/entity/Entity.java": "2bbc28ca73b9c18a5d2a95b4fa56ac0825203dd37b61b57254f56b673cedfa63",
+            "net/minecraft/world/entity/EntityDimensions.java": "2fde7f7b015c74464d39c138e4d60d15d448b7993f9b65a1693e29eea57986d7",
+            "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1",
+            "net/minecraft/world/entity/LivingEntity.java": "9ad616b9cb8cfc7f67c5b54997b21bffa6baea3652b59f748bb3a3f45b3dcb53",
+            "net/minecraft/world/entity/Mob.java": "21c3b91c15d741def500a41152f826e6c8e3128370b96ffa8215306db1e2de51",
+            "net/minecraft/world/entity/PathfinderMob.java": "8b50f15223e07b1447a400f98bb668d8abdc99cf90e83c812ab67d13850678c9",
+            "net/minecraft/world/entity/Pose.java": "69567dff71f0ac532944d96b0dff232aaaa6119e084e75ddbae126e7fdca10d3",
+            "net/minecraft/world/entity/animal/Animal.java": "690bc22a14493fff0ea8e7b0768ce8341112928b1960628dc71ddacde4e76139",
+            "net/minecraft/world/entity/animal/Chicken.java": "e638d0d97d8d82a436b660b37dcc9f86da989d89bcf35b7ca86ae4fdcc1d690c",
+            "net/minecraft/world/level/Level.java": "b869c7f2394df6537ef03ab422c6cc9ce6a5c9002c03bd8fb93024b9275ce5a2",
+            "net/minecraft/world/phys/AABB.java": "5aca319b3f7d145fd1272979daf7f13e7bfe1c38a29f8b597c01fcb77f7cd763",
+            ".complete.json": "a7f100f6f59e9d8fa08963f70c58af3fbad0c371416d4cd163d4a86c3468e7dc"
+          },
+          "preservation": {
+            "unchanged_class_files": 5426,
+            "unsigned_jar_sha256": "5503ace7738d5246d6b67daa2d542196cc4e6e2c8243706042362a5b1ec617d5",
+            "classes_sha256": "9b99875ee3e375203cbe804bd3cb61205cb20581cebd336c86cca187651ff89a"
+          },
+          "source_contract": {
+            "receipt_sha256": "c450c930ea2116cf718692f1ea4416dab52fbba8674139a08d24bc6c375006db",
+            "factory": {
+              "source": "net/minecraft/world/entity/EntityType.java",
+              "field": "CHICKEN",
+              "actor": "net.minecraft.world.entity.animal.Chicken",
+              "key": "\"chicken\"",
+              "key_source": null
+            },
+            "registry": {
+              "api_sources": [
+                "net/minecraft/core/IdMap.java",
+                "net/minecraft/core/Registry.java"
+              ],
+              "key_source": "net/minecraft/core/Registry.java",
+              "implementation_source": "net/minecraft/core/DefaultedRegistry.java",
+              "runtime_method": "a"
+            },
+            "sources_sha256": {
+              "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+              "net/minecraft/core/IdMap.java": "6154336f114e7c778f0aea9212f548caab4bf3ce45c2fcfc6145304fe635180a",
+              "net/minecraft/core/Registry.java": "198565567dee8ab71ab9590ca9a600fad4f6b712482ce12bd1ddf01518dc7ebe",
+              "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1"
+            }
+          }
+        },
+        {
+          "version": "1.16.2",
+          "entity": "minecraft:pig",
+          "protocol": 751,
+          "registry_numeric_id": 59,
+          "registry_class": "net.minecraft.world.entity.animal.Pig",
+          "measurement_sha256": "ca857d3aaa4759a02e94cf34dbab97197333f61863ec6450cbbf6cdbb427ca4b",
+          "client_sha256": "19960f4e3c60f2723f361844d2b4020b8bf2160bd91a1e1efde8ce5aea4ff73d",
+          "server_sha256": "2902ed3ff84e4f810a2c0620c6b6df9c3ef8488b272c61274d5eac2433876f39",
+          "mappings_sha256": "c95a7046ab43371cc476b8b51978c6f2155c62f4cc5756b05c8ef81e0f11691f",
+          "sources_sha256": {
+            "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+            "net/minecraft/network/syncher/EntityDataAccessor.java": "af117ce4c3a53c4d7fc6d77d7474e92366287823764fcba131e40c8a52b6bcf3",
+            "net/minecraft/network/syncher/SynchedEntityData.java": "857bc4fa4c9cc5cd0bf52d1233004b45d13c571a4a71185a56ecfc1a6e3fbd64",
+            "net/minecraft/world/entity/AgableMob.java": "b2d2d525743045595d905590b950ff74179d9a79938c2fba9697341c2bd10697",
+            "net/minecraft/world/entity/Entity.java": "2bbc28ca73b9c18a5d2a95b4fa56ac0825203dd37b61b57254f56b673cedfa63",
+            "net/minecraft/world/entity/EntityDimensions.java": "2fde7f7b015c74464d39c138e4d60d15d448b7993f9b65a1693e29eea57986d7",
+            "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1",
+            "net/minecraft/world/entity/LivingEntity.java": "9ad616b9cb8cfc7f67c5b54997b21bffa6baea3652b59f748bb3a3f45b3dcb53",
+            "net/minecraft/world/entity/Mob.java": "21c3b91c15d741def500a41152f826e6c8e3128370b96ffa8215306db1e2de51",
+            "net/minecraft/world/entity/PathfinderMob.java": "8b50f15223e07b1447a400f98bb668d8abdc99cf90e83c812ab67d13850678c9",
+            "net/minecraft/world/entity/Pose.java": "69567dff71f0ac532944d96b0dff232aaaa6119e084e75ddbae126e7fdca10d3",
+            "net/minecraft/world/entity/animal/Animal.java": "690bc22a14493fff0ea8e7b0768ce8341112928b1960628dc71ddacde4e76139",
+            "net/minecraft/world/entity/animal/Pig.java": "a3f4e7ab1ae3846dd6abe1def673dff63ebe4d9a66eca22f46ab399cd60815de",
+            "net/minecraft/world/level/Level.java": "b869c7f2394df6537ef03ab422c6cc9ce6a5c9002c03bd8fb93024b9275ce5a2",
+            "net/minecraft/world/phys/AABB.java": "5aca319b3f7d145fd1272979daf7f13e7bfe1c38a29f8b597c01fcb77f7cd763",
+            ".complete.json": "a7f100f6f59e9d8fa08963f70c58af3fbad0c371416d4cd163d4a86c3468e7dc"
+          },
+          "preservation": {
+            "unchanged_class_files": 5426,
+            "unsigned_jar_sha256": "5503ace7738d5246d6b67daa2d542196cc4e6e2c8243706042362a5b1ec617d5",
+            "classes_sha256": "9b99875ee3e375203cbe804bd3cb61205cb20581cebd336c86cca187651ff89a"
+          },
+          "source_contract": {
+            "receipt_sha256": "d19332e73f50e4e6e31dafb949c63d004f3931a2a97a7cb3972e39943f7098e2",
+            "factory": {
+              "source": "net/minecraft/world/entity/EntityType.java",
+              "field": "PIG",
+              "actor": "net.minecraft.world.entity.animal.Pig",
+              "key": "\"pig\"",
+              "key_source": null
+            },
+            "registry": {
+              "api_sources": [
+                "net/minecraft/core/IdMap.java",
+                "net/minecraft/core/Registry.java"
+              ],
+              "key_source": "net/minecraft/core/Registry.java",
+              "implementation_source": "net/minecraft/core/DefaultedRegistry.java",
+              "runtime_method": "a"
+            },
+            "sources_sha256": {
+              "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+              "net/minecraft/core/IdMap.java": "6154336f114e7c778f0aea9212f548caab4bf3ce45c2fcfc6145304fe635180a",
+              "net/minecraft/core/Registry.java": "198565567dee8ab71ab9590ca9a600fad4f6b712482ce12bd1ddf01518dc7ebe",
+              "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1"
+            }
+          }
+        },
+        {
+          "version": "1.16.2",
+          "entity": "minecraft:sheep",
+          "protocol": 751,
+          "registry_numeric_id": 69,
+          "registry_class": "net.minecraft.world.entity.animal.Sheep",
+          "measurement_sha256": "25aff11ccb482b356681a97ae5f2c4dd686e05b066761b4ac0cbb65a9401759b",
+          "client_sha256": "19960f4e3c60f2723f361844d2b4020b8bf2160bd91a1e1efde8ce5aea4ff73d",
+          "server_sha256": "2902ed3ff84e4f810a2c0620c6b6df9c3ef8488b272c61274d5eac2433876f39",
+          "mappings_sha256": "c95a7046ab43371cc476b8b51978c6f2155c62f4cc5756b05c8ef81e0f11691f",
+          "sources_sha256": {
+            "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+            "net/minecraft/network/syncher/EntityDataAccessor.java": "af117ce4c3a53c4d7fc6d77d7474e92366287823764fcba131e40c8a52b6bcf3",
+            "net/minecraft/network/syncher/SynchedEntityData.java": "857bc4fa4c9cc5cd0bf52d1233004b45d13c571a4a71185a56ecfc1a6e3fbd64",
+            "net/minecraft/world/entity/AgableMob.java": "b2d2d525743045595d905590b950ff74179d9a79938c2fba9697341c2bd10697",
+            "net/minecraft/world/entity/Entity.java": "2bbc28ca73b9c18a5d2a95b4fa56ac0825203dd37b61b57254f56b673cedfa63",
+            "net/minecraft/world/entity/EntityDimensions.java": "2fde7f7b015c74464d39c138e4d60d15d448b7993f9b65a1693e29eea57986d7",
+            "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1",
+            "net/minecraft/world/entity/LivingEntity.java": "9ad616b9cb8cfc7f67c5b54997b21bffa6baea3652b59f748bb3a3f45b3dcb53",
+            "net/minecraft/world/entity/Mob.java": "21c3b91c15d741def500a41152f826e6c8e3128370b96ffa8215306db1e2de51",
+            "net/minecraft/world/entity/PathfinderMob.java": "8b50f15223e07b1447a400f98bb668d8abdc99cf90e83c812ab67d13850678c9",
+            "net/minecraft/world/entity/Pose.java": "69567dff71f0ac532944d96b0dff232aaaa6119e084e75ddbae126e7fdca10d3",
+            "net/minecraft/world/entity/animal/Animal.java": "690bc22a14493fff0ea8e7b0768ce8341112928b1960628dc71ddacde4e76139",
+            "net/minecraft/world/entity/animal/Sheep.java": "1ae77f61021f6288cbd6f84a825c1612c83a706e53d6c3036c81cab2f02abcdd",
+            "net/minecraft/world/level/Level.java": "b869c7f2394df6537ef03ab422c6cc9ce6a5c9002c03bd8fb93024b9275ce5a2",
+            "net/minecraft/world/phys/AABB.java": "5aca319b3f7d145fd1272979daf7f13e7bfe1c38a29f8b597c01fcb77f7cd763",
+            ".complete.json": "a7f100f6f59e9d8fa08963f70c58af3fbad0c371416d4cd163d4a86c3468e7dc"
+          },
+          "preservation": {
+            "unchanged_class_files": 5426,
+            "unsigned_jar_sha256": "5503ace7738d5246d6b67daa2d542196cc4e6e2c8243706042362a5b1ec617d5",
+            "classes_sha256": "9b99875ee3e375203cbe804bd3cb61205cb20581cebd336c86cca187651ff89a"
+          },
+          "source_contract": {
+            "receipt_sha256": "23be385603b6d7d7c355206a56a1bf7eda4d836474edda5aace5012719054944",
+            "factory": {
+              "source": "net/minecraft/world/entity/EntityType.java",
+              "field": "SHEEP",
+              "actor": "net.minecraft.world.entity.animal.Sheep",
+              "key": "\"sheep\"",
+              "key_source": null
+            },
+            "registry": {
+              "api_sources": [
+                "net/minecraft/core/IdMap.java",
+                "net/minecraft/core/Registry.java"
+              ],
+              "key_source": "net/minecraft/core/Registry.java",
+              "implementation_source": "net/minecraft/core/DefaultedRegistry.java",
+              "runtime_method": "a"
+            },
+            "sources_sha256": {
+              "net/minecraft/core/DefaultedRegistry.java": "e1ab6382dbfe32ca7903be9ed9f7cfcc9921f1f2120ce350c5ab8e832da79b9d",
+              "net/minecraft/core/IdMap.java": "6154336f114e7c778f0aea9212f548caab4bf3ce45c2fcfc6145304fe635180a",
+              "net/minecraft/core/Registry.java": "198565567dee8ab71ab9590ca9a600fad4f6b712482ce12bd1ddf01518dc7ebe",
+              "net/minecraft/world/entity/EntityType.java": "1f760e97976ab9da3465848598fd4e970d274c357afa112b2eedf6fa109801c1"
+            }
+          }
+        }
+      ]
     }
   },
   "schema": 1,
@@ -599,6 +794,381 @@
           7,
           1.4,
           2.7,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:chicken": {
+      "selector": [
+        15,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.2,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.2,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.2,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.2,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.2,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.2,
+          0.35,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:pig": {
+      "selector": [
+        15,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.45,
+          0.45,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.45,
+          0.45,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.45,
+          0.45,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.45,
+          0.45,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.45,
+          0.45,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.45,
+          0.45,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:sheep": {
+      "selector": [
+        15,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.45,
+          0.65,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.45,
+          0.65,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.45,
+          0.65,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.45,
+          0.65,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.45,
+          0.65,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.45,
+          0.65,
           false,
           true
         ]

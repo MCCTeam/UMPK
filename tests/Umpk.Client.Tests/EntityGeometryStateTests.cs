@@ -69,7 +69,7 @@ public sealed class EntityGeometryStateTests
 
     [Theory]
     [MemberData(nameof(NativeRoleTransitions))]
-    public async Task CatAndGolemBoundsMatchNativeMetadataAndPosePhases(int protocol, int caseIndex, int index, string entityName)
+    public async Task AuditedEntityBoundsMatchNativeMetadataAndPosePhases(int protocol, int caseIndex, int index, string entityName)
     {
         using JsonDocument document = ReadRoles();
         await ReplayNativeAsync(protocol, document.RootElement.GetProperty("cases")[caseIndex], index, entityName["minecraft:".Length..]);

@@ -181,6 +181,7 @@ for release in 1.14 1.14.1 1.14.2 1.14.3; do
   for entity in cat iron_golem; do
     role_arguments+=(--role "$MINECRAFT_OFFICIAL_ROOT/runs/entity-role-geometry-batch-20261017-v1/$release/$entity")
   done
+  role_arguments+=(--role "$MINECRAFT_OFFICIAL_ROOT/runs/entity-horse-geometry-batch-20261017-v1/$release/horse")
 done
 python3 tools/extraction/extract_entity_geometry.py \
   --data data/java \
@@ -197,7 +198,7 @@ python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry
 
 The 49 datasets cover the measured releases from 1.9 through 1.14.3, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field: index 11 through 1.9.4, index 12 from 1.10 through 1.13.2, and the measured modern indices thereafter. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
 
-The four early 1.14 datasets also contain native cat and iron golem geometry. Cats retain the Boolean baby selector; iron golems use `[-1, "none", 0, 0]` and only selector-zero variants. Both retain their measured pose transitions, including sleeping dimensions. The separate role fixture contains 2,940 transitions across eight release/entity measurements and two deduplicated cases. `--role` checks the original class origins, method owners, age predicate, complete callbacks and artifact hashes before adding each role. Include these arguments when regenerating the datasets.
+The four early 1.14 datasets also contain native cat, horse and iron golem geometry. Cats and horses retain the Boolean baby selector; iron golems use `[-1, "none", 0, 0]` and only selector-zero variants. Both retain their measured pose transitions, including sleeping dimensions. The separate role fixture contains 5,292 transitions across twelve release/entity measurements and three deduplicated cases. `--role` checks the original class origins, method owners, age predicate, complete callbacks and artifact hashes before adding each role. Include these arguments when regenerating the datasets.
 
 The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 

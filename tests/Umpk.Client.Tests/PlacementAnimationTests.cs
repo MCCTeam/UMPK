@@ -63,12 +63,18 @@ public sealed class PlacementAnimationTests
             yield return [protocol, "iron_golem", -1, false, EntityPose.Standing, 8.5, 65.0, true];
             yield return [protocol, "iron_golem", -1, false, EntityPose.Standing, 1.5, 64.0, false];
             yield return [protocol, "iron_golem", -1, false, EntityPose.Sleeping, 1.5, 64.0, true];
+            yield return [protocol, "horse", 14, false, EntityPose.Standing, 8.5, 65.0, true];
+            yield return [protocol, "horse", 14, false, EntityPose.Standing, 1.5, 64.0, false];
+            yield return [protocol, "horse", 14, true, EntityPose.Standing, 1.5, 64.0, true];
+            yield return [protocol, "horse", 14, false, EntityPose.Standing, 2.5, 65.0, false];
+            yield return [protocol, "horse", 14, true, EntityPose.Standing, 2.5, 65.0, true];
+            yield return [protocol, "horse", 14, false, EntityPose.Sleeping, 1.5, 64.0, true];
         }
     }
 
     [Theory]
     [MemberData(nameof(EntityRoleCases))]
-    public Task CatAndGolemPlacementUsesMeasuredGeometry(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings) => PlaceWithEntityGeometryAsync(protocol, entityName, babyIndex, baby, pose, x, y, swings);
+    public Task AuditedEntityPlacementUsesMeasuredGeometry(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings) => PlaceWithEntityGeometryAsync(protocol, entityName, babyIndex, baby, pose, x, y, swings);
 
     private static async Task PlaceWithEntityGeometryAsync(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings)
     {

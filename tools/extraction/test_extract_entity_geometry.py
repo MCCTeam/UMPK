@@ -19,6 +19,14 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         release = next(row for row in fixture["releases"] if row["entity"] == entity)
         return fixture["cases"][release["case"]]
 
+    def test_horse_role_keeps_native_width_and_baby_height(self) -> None:
+        from extract_entity_geometry import role_profile
+
+        profile = role_profile(self.role_native("minecraft:horse"))
+        self.assertEqual([14, "boolean", 1, 0], profile["selector"])
+        self.assertIn([0, 0, 1.3964844, 1.6, False, True], profile["variants"])
+        self.assertIn([1, 0, .6982422, .8, False, True], profile["variants"])
+
     def test_cat_role_keeps_age_and_sleeping_dimensions(self) -> None:
         from extract_entity_geometry import role_profile
 

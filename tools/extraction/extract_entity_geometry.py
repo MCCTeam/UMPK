@@ -1,4 +1,4 @@
-"""Extract audited villager geometry from native metadata and pose transition witnesses."""
+"""Extract audited entity geometry from native metadata and pose transition witnesses."""
 
 import argparse
 import hashlib
@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 import zipfile
 
-from verify_entity_box_transitions import centered, finite, refresh, size
+from verify_entity_box_transitions import centered, finite, refresh, size, verify
 
 POSES = {name: index for index, name in enumerate(("STANDING", "FALL_FLYING", "SLEEPING", "SWIMMING", "SPIN_ATTACK", "CROUCHING", "LONG_JUMPING", "DYING", "CROAKING", "USING_TONGUE", "SITTING", "ROARING", "SNIFFING", "EMERGING", "DIGGING", "SLIDING", "SHOOTING", "INHALING"))}
 POSES["SNEAKING"] = POSES["CROUCHING"]
@@ -92,6 +92,57 @@ def legacy_villager_profile(raw: dict) -> dict:
     return {"selector": [raw["metadata_index"], "boolean", 1, 0], "pose_index": -1, "refresh": next(model for model, matches in models.items() if matches), "scale_attribute": "", "variants": variants}
 
 
+def role_profile(raw: dict) -> dict:
+    if type(raw.get("pose_index")) is not int or raw["pose_index"] != 6 or raw.get("blocks_building") is not True:
+        raise ValueError("Native entity pose or building contract is incomplete")
+    if raw.get("selector_kind") == "boolean":
+        if raw.get("metadata_default") is not False:
+            raise ValueError("Native Boolean selector default is not false")
+        return villager_profile(raw, scale_attribute="")
+    if raw.get("selector_kind") != "none" or type(raw.get("metadata_index")) is not int or raw["metadata_index"] != -1 or type(raw.get("metadata_default")) is not int or raw["metadata_default"] != 0:
+        raise ValueError("Native selector-free geometry contains a metadata selector")
+    poses = raw["poses"]
+    if "STANDING" not in poses or any(pose not in POSES for pose in poses):
+        raise ValueError("Native entity poses have no canonical mapping")
+    for row in raw["rows"]:
+        if any(type(row.get(field)) is not int or row[field] != 0 for field in ("from_age", "to_age")) or row["age_size"] != row["from_size"] or row["after_age_sync"] != row["before"]:
+            raise ValueError("Native selector-free geometry contains an age transition")
+    projected = {"poses": poses, "positions": raw["positions"], "rows": [{"from": row["from_pose"], "to": row["to_pose"], "position": row["position"], "from_size": row["from_size"], "to_size": row["to_size"], "before": row["before"], "after_sync": row["after_pose_sync"], "after_refresh": row["after_refresh"], "after_position": row["after_position"]} for row in raw["rows"]]}
+    checked = verify(projected)
+    variants = [[0, POSES[pose], *next(row["to_size"] for row in raw["rows"] if row["to_pose"] == index), True] for index, pose in enumerate(poses)]
+    return {"selector": [-1, "none", 0, 0], "pose_index": 6, "refresh": checked["profile"], "scale_attribute": "", "variants": sorted(variants, key=lambda row: row[1])}
+
+
+def group_roles(records: list[dict]) -> dict[int, dict[str, list[dict]]]:
+    groups, seen = {}, set()
+    for record in records:
+        entity, version, protocol = record["entity"], record["version"], record["protocol"]
+        if not isinstance(entity, str) or not entity.startswith("minecraft:") or not isinstance(version, str) or not version or type(protocol) is not int or protocol <= 0 or (entity, version) in seen:
+            raise ValueError("Duplicate or invalid native entity role release")
+        seen.add((entity, version))
+        group = groups.setdefault(protocol, {}).setdefault(entity, [])
+        profile = role_profile(record["raw"])
+        if group and profile != role_profile(group[0]["raw"]):
+            raise ValueError("Native entity role geometry differs between protocol aliases")
+        group.append(record)
+    return groups
+
+
+def role_fixture(records: list[dict]) -> dict:
+    group_roles(records)
+    cases, releases, seen = [], [], {}
+    fields = ("entity", "selector_kind", "metadata_index", "pose_index", "metadata_default", "blocks_building", "poses", "pose_constants", "positions", "rows")
+    for record in sorted(records, key=lambda row: (row["protocol"], row["version"], row["entity"])):
+        case = {key: record["raw"][key] for key in fields}
+        key = json.dumps(case, sort_keys=True)
+        if key not in seen:
+            seen[key] = len(cases)
+            cases.append(case)
+        receipt = record["receipt"]
+        releases.append({key: receipt[key] for key in ("version", "entity", "protocol", "measurement_sha256", "client_sha256", "server_sha256")} | {"case": seen[key]})
+    return {"releases": releases, "cases": cases}
+
+
 def sha(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
@@ -139,7 +190,10 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         raise ValueError("Legacy geometry release does not match the version catalog")
     path = root / "geometry.json"
     raw = json.loads(path.read_text(encoding="utf-8"))
-    legacy_villager_profile(raw)
+    role = "entity" in receipt
+    profile = role_profile(raw) if role else legacy_villager_profile(raw)
+    if role and (receipt["entity"] != raw.get("entity") or profile != receipt.get("profile")):
+        raise ValueError("Native entity role receipt differs from measured geometry")
     if receipt["status"] != "complete" or sha(path) != receipt["measurement_sha256"] or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
         raise ValueError("Legacy measurement receipt mismatch")
     seed = official / "downloads" / version
@@ -160,8 +214,14 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         source = official / f"{version}-client-decompiled" / (binding["living"] + ".java")
         text = re.sub(r"/\*.*?\*/", "", source.read_text(encoding="utf-8"), flags=re.S)
         scale = re.escape(binding["scale_method"])
-        if raw.get("entity_class") != binding["villager"] or not re.search(r"public float " + scale + r"\(\)\s*\{\s*return this\.\w+\(\)\s*\?\s*0\.5F\s*:\s*1\.0F\s*;", text):
-            raise ValueError("Unmapped villager dimensions need a separate attribute-scale model")
+        if raw.get("entity_class") != binding.get("actor", binding["villager"]) or not re.search(r"public float " + scale + r"\(\)\s*\{\s*return this\.\w+\(\)\s*\?\s*0\.5F\s*:\s*1\.0F\s*;", text):
+            raise ValueError("Unmapped entity dimensions need a separate attribute-scale model")
+        if role:
+            owners = raw["method_owners"]
+            if any(owners[name] != binding["root"] for name in ("position", "refresh", "box")) or any(owners[name] != binding["living"] for name in ("dimensions", "scale")):
+                raise ValueError("Native entity geometry methods have unaudited owners")
+            if raw["selector_kind"] == "none" and (owners["baby"] != binding["living"] or not re.search(r"public boolean " + re.escape(binding["is_baby_method"]) + r"\(\)\s*\{\s*return false;\s*\}", text)):
+                raise ValueError("Selector-free entity has an unverified age predicate")
     origins = raw.get("origins", {})
     if not origins or len(set(origins.values())) != 1:
         raise ValueError("Native geometry classes have inconsistent origins")
@@ -172,7 +232,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         classes = {name for name in original.namelist() if name.endswith(".class")}
         if classes != {name for name in measured.namelist() if name.endswith(".class")} or len(classes) != receipt["preservation"]["unchanged_class_files"] or any(original.read(name) != measured.read(name) for name in classes):
             raise ValueError("Original geometry client class preservation failed")
-    return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt}
+    return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt} | ({"entity": receipt["entity"]} if role else {})
 
 
 def main() -> None:
@@ -181,6 +241,8 @@ def main() -> None:
     parser.add_argument("--transitions", type=Path, required=True)
     parser.add_argument("--legacy", type=Path, action="append", required=True)
     parser.add_argument("--legacy-fixture", type=Path)
+    parser.add_argument("--role", type=Path, action="append", default=[])
+    parser.add_argument("--role-fixture", type=Path)
     parser.add_argument("--official", type=Path, required=True)
     parser.add_argument("--data", type=Path, default=Path("data/java"))
     parser.add_argument("--check", action="store_true")
@@ -190,6 +252,8 @@ def main() -> None:
     transitions = {row["version"]: row for row in json.loads((args.transitions / "villager-box-transition-results.json").read_text(encoding="utf-8"))}
     legacy_records = [read_legacy(root, args.official, catalog) for root in args.legacy]
     legacy = group_legacy(legacy_records)
+    role_records = [read_legacy(root, args.official, catalog) for root in args.role]
+    roles = group_roles(role_records)
     selected = {}
     for version in catalog:
         if version["name"] in geometry or version["protocol"] in legacy:
@@ -223,6 +287,12 @@ def main() -> None:
             if sha(args.official / "downloads" / name / f"{side}.jar") != receipt[f"{side}_sha256"]:
                 raise ValueError(f"Official {side} artifact mismatch: {name}")
         document = {"_provenance": {"kind": "extracted", "version": name, "protocol": protocol, "client_sha256": receipt["client_sha256"], "server_sha256": receipt["server_sha256"], **proof, "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"}, "schema": 1, "entities": {"minecraft:villager": profile}}
+        for entity, records in sorted(roles.get(protocol, {}).items()):
+            record = next((row for row in records if row["version"] == name), None)
+            if record is None or entity in document["entities"]:
+                raise ValueError(f"Missing or duplicate canonical entity role: {name}/{entity}")
+            document["entities"][entity] = role_profile(record["raw"])
+            document["_provenance"].setdefault("entity_roles", {})[entity] = {"measurement_sha256": record["receipt"]["measurement_sha256"], "native_witnesses": len(record["raw"]["rows"]), "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep"}
         output = json.dumps(document, indent=2) + "\n"
         destination = args.data / version["dataset"] / "entity-geometry.json"
         if args.check:
@@ -237,6 +307,15 @@ def main() -> None:
                 raise ValueError("Native legacy geometry fixture differs")
         else:
             args.legacy_fixture.write_text(output, encoding="utf-8")
+    if set(roles) - set(selected):
+        raise ValueError("Native entity roles have no canonical geometry dataset")
+    if args.role_fixture is not None:
+        output = json.dumps(role_fixture(role_records), indent=2) + "\n"
+        if args.check:
+            if not args.role_fixture.is_file() or args.role_fixture.read_text(encoding="utf-8") != output:
+                raise ValueError("Native entity role geometry fixture differs")
+        else:
+            args.role_fixture.write_text(output, encoding="utf-8")
     print(f"{'Checked' if args.check else 'Extracted'} {len(selected)} native villager geometry datasets")
 
 

@@ -13,6 +13,68 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.14.4.json"
         self.raw = json.loads(path.read_text(encoding="utf-8"))
 
+    def role_native(self, entity: str) -> dict:
+        path = Path(__file__).parents[2] / "tests/Umpk.Client.Tests/Fixtures/EntityRoleGeometry.native.json"
+        fixture = json.loads(path.read_text(encoding="utf-8"))
+        release = next(row for row in fixture["releases"] if row["entity"] == entity)
+        return fixture["cases"][release["case"]]
+
+    def test_cat_role_keeps_age_and_sleeping_dimensions(self) -> None:
+        from extract_entity_geometry import role_profile
+
+        profile = role_profile(self.role_native("minecraft:cat"))
+        self.assertEqual([14, "boolean", 1, 0], profile["selector"])
+        self.assertIn([1, 0, .3, .35, False, True], profile["variants"])
+        self.assertIn([0, 2, .2, .2, True, True], profile["variants"])
+
+    def test_golem_pose_geometry_has_no_dummy_age_axis(self) -> None:
+        from extract_entity_geometry import role_profile
+
+        profile = role_profile(self.role_native("minecraft:iron_golem"))
+        self.assertEqual([-1, "none", 0, 0], profile["selector"])
+        self.assertEqual(7, len(profile["variants"]))
+        self.assertIn([0, 0, 1.4, 2.7, False, True], profile["variants"])
+        self.assertIn([0, 2, .2, .2, True, True], profile["variants"])
+
+    def test_pose_only_role_rejects_age_mutation_and_incomplete_callbacks(self) -> None:
+        from extract_entity_geometry import role_profile
+
+        for defect in ("selector", "default", "age", "age-size", "age-callback", "missing", "duplicate", "pose", "blocking"):
+            with self.subTest(defect=defect):
+                raw = self.role_native("minecraft:iron_golem")
+                if defect == "selector": raw["metadata_index"] = 14
+                if defect == "default": raw["metadata_default"] = False
+                if defect == "age": raw["rows"][0]["to_age"] = 1
+                if defect == "age-size": raw["rows"][0]["age_size"][0] += .1
+                if defect == "age-callback": raw["rows"][0]["after_age_sync"][0] += .1
+                if defect == "missing": raw["rows"].pop()
+                if defect == "duplicate": raw["rows"].append(copy.deepcopy(raw["rows"][0]))
+                if defect == "pose": raw["poses"][1] = "UNKNOWN"
+                if defect == "blocking": raw["blocks_building"] = False
+                with self.assertRaises(ValueError):
+                    role_profile(raw)
+
+    def test_role_groups_keep_distinct_entities_and_reject_duplicate_or_unequal_aliases(self) -> None:
+        from extract_entity_geometry import group_roles
+
+        records = [{"version": "1.14", "protocol": 477, "entity": entity, "raw": self.role_native(entity)} for entity in ("minecraft:cat", "minecraft:iron_golem")]
+        self.assertEqual(2, len(group_roles(records)[477]))
+        with self.assertRaises(ValueError):
+            group_roles([records[0], records[0]])
+        alias = copy.deepcopy(records[1])
+        alias["version"] = "alias"
+        alias["raw"]["rows"].pop()
+        with self.assertRaises(ValueError):
+            group_roles([records[1], alias])
+
+    def test_role_fixture_keeps_each_entity_and_measurement_receipt(self) -> None:
+        from extract_entity_geometry import role_fixture
+
+        records = [{"version": "1.14", "protocol": 477, "entity": entity, "raw": self.role_native(entity), "receipt": {"version": "1.14", "protocol": 477, "entity": entity, "measurement_sha256": entity, "client_sha256": "client", "server_sha256": "server"}} for entity in ("minecraft:cat", "minecraft:iron_golem")]
+        fixture = role_fixture(records)
+        self.assertEqual(2, len(fixture["cases"]))
+        self.assertEqual(["minecraft:cat", "minecraft:iron_golem"], [row["measurement_sha256"] for row in fixture["releases"]])
+
     def test_equal_legacy_aliases_share_a_fixture_case_and_keep_both_receipts(self) -> None:
         from extract_entity_geometry import legacy_fixture
 

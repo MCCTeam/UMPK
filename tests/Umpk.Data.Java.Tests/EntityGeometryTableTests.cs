@@ -11,6 +11,8 @@ public sealed class EntityGeometryTableTests
 {
     [Theory]
     [InlineData("metadata")]
+    [InlineData("negative-metadata")]
+    [InlineData("pose-only-true-selector")]
     [InlineData("pose-index")]
     [InlineData("refresh")]
     [InlineData("scale")]
@@ -116,6 +118,23 @@ public sealed class EntityGeometryTableTests
         Assert.False(source.TryGetRule(Identifier.Minecraft("missing"), out _));
     }
 
+    [Fact]
+    public void PoseOnlyGeometryHasNoMetadataSelectorAndNoTrueVariant()
+    {
+        byte[] packed = Pack("pose-only");
+        IEntityGeometrySource[] sources = [JavaBlockInteractions.Create(packed), JavaEntityGeometry.Create([1, .. packed.AsSpan(7)])];
+        foreach (IEntityGeometrySource source in sources)
+        {
+            var golem = Identifier.Minecraft("iron_golem");
+            Assert.True(source.TryGetRule(golem, out EntityGeometryRule rule));
+            Assert.Equal(-1, rule.MetadataIndex);
+            Assert.Equal(6, rule.PoseMetadataIndex);
+            Assert.True(source.TryGetDimensions(golem, false, EntityPose.Standing, out EntityGeometryDimensions dimensions));
+            Assert.Equal(new EntityGeometryDimensions(1.4F, 2.7F, false, true), dimensions);
+            Assert.False(source.TryGetDimensions(golem, true, EntityPose.Standing, out _));
+        }
+    }
+
     private static byte[] Pack(string defect)
     {
         var buffer = new ArrayBufferWriter<byte>();
@@ -124,19 +143,19 @@ public sealed class EntityGeometryTableTests
         for (int index = 0; index < 6; index++)
             writer.WriteVarInt(0);
         writer.WriteVarInt(1);
-        writer.WriteString("minecraft:villager");
-        writer.WriteVarInt(defect == "metadata" ? 255 : 16);
+        writer.WriteString(defect == "pose-only" ? "minecraft:iron_golem" : "minecraft:villager");
+        writer.WriteVarInt(defect == "metadata" ? 255 : defect == "negative-metadata" ? -2 : defect is "pose-only" or "pose-only-true-selector" ? -1 : 16);
         writer.WriteVarInt(defect == "pose-index" ? 255 : 6);
         writer.WriteByte(defect == "refresh" ? (byte)3 : (byte)0);
         writer.WriteString(defect == "scale" ? "minecraft:missing" : "");
-        int count = defect == "missing" ? 1 : 2;
+        int count = defect is "missing" or "pose-only" ? 1 : 2;
         writer.WriteVarInt(count);
         for (int index = 0; index < count; index++)
         {
             writer.WriteByte(defect == "selector" ? (byte)2 : defect == "duplicate" ? (byte)0 : (byte)index);
             writer.WriteByte(defect == "pose" ? (byte)18 : (byte)0);
-            writer.WriteFloat(defect == "zero" ? 0 : defect == "nan" ? float.NaN : .6F);
-            writer.WriteFloat(defect == "negative" ? -1 : defect == "infinity" ? float.PositiveInfinity : 1.95F);
+            writer.WriteFloat(defect == "zero" ? 0 : defect == "nan" ? float.NaN : defect == "pose-only" ? 1.4F : .6F);
+            writer.WriteFloat(defect == "negative" ? -1 : defect == "infinity" ? float.PositiveInfinity : defect == "pose-only" ? 2.7F : 1.95F);
             writer.WriteByte(defect == "flags" ? (byte)4 : (byte)2);
         }
         if (defect == "trailing")

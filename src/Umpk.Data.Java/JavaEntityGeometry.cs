@@ -46,7 +46,7 @@ internal sealed class JavaEntityGeometry : IEntityGeometrySource
             int metadata = reader.ReadVarInt(), poseIndex = reader.ReadVarInt();
             byte refresh = reader.ReadByte();
             string scale = reader.ReadString();
-            if (metadata is < 0 or > 254 || poseIndex is < -1 or > 254 || metadata == poseIndex || refresh > 2 || scale is not ("" or "minecraft:scale") || !rules.TryAdd(name, new EntityGeometryRule(metadata, poseIndex, (EntityDimensionsRefresh)refresh, scale.Length == 0 ? null : Identifier.Parse(scale))))
+            if (metadata is < -1 or > 254 || poseIndex is < -1 or > 254 || (metadata >= 0 && metadata == poseIndex) || refresh > 2 || scale is not ("" or "minecraft:scale") || !rules.TryAdd(name, new EntityGeometryRule(metadata, poseIndex, (EntityDimensionsRefresh)refresh, scale.Length == 0 ? null : Identifier.Parse(scale))))
                 throw new ProtocolViolationException("Invalid generated entity geometry rule.");
             int variants = Count(ref reader, 11);
             HashSet<(bool Selector, EntityPose Pose)> seen = [];
@@ -60,7 +60,10 @@ internal sealed class JavaEntityGeometry : IEntityGeometrySource
                 dimensions.Add((name, selector == 1, (EntityPose)pose), new EntityGeometryDimensions(width, height, (flags & 1) != 0, (flags & 2) != 0));
             }
             HashSet<EntityPose> poses = [.. seen.Select(key => key.Pose)];
-            if (!poses.Contains(EntityPose.Standing) || !seen.SetEquals(poses.SelectMany(pose => new[] { (false, pose), (true, pose) })) || (poseIndex == -1 && poses.Count != 1))
+            bool complete = metadata == -1
+                ? seen.SetEquals(poses.Select(pose => (false, pose)))
+                : seen.SetEquals(poses.SelectMany(pose => new[] { (false, pose), (true, pose) }));
+            if (!poses.Contains(EntityPose.Standing) || !complete || (poseIndex == -1 && poses.Count != 1))
                 throw new ProtocolViolationException("Generated entity geometry has incomplete selector or pose coverage.");
         }
         return new JavaEntityGeometry(rules.ToFrozenDictionary(), dimensions.ToFrozenDictionary());

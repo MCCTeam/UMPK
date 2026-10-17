@@ -49,12 +49,34 @@ public sealed class PlacementAnimationTests
 
     [Theory]
     [MemberData(nameof(VillagerGeometryCases))]
-    public async Task VillagerPlacementObstructionUsesNativeAgeAndPose(int protocol, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings)
+    public Task VillagerPlacementObstructionUsesNativeAgeAndPose(int protocol, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings) => PlaceWithEntityGeometryAsync(protocol, "villager", babyIndex, baby, pose, x, y, swings);
+
+    public static IEnumerable<object[]> EntityRoleCases()
+    {
+        foreach (int protocol in new[] { 477, 480, 485, 490 })
+        {
+            yield return [protocol, "cat", 14, false, EntityPose.Standing, 8.5, 65.0, true];
+            yield return [protocol, "cat", 14, false, EntityPose.Standing, 1.5, 64.5, false];
+            yield return [protocol, "cat", 14, true, EntityPose.Standing, 1.5, 64.5, true];
+            yield return [protocol, "cat", 14, true, EntityPose.Standing, 1.5, 65.0, false];
+            yield return [protocol, "cat", 14, false, EntityPose.Sleeping, 1.5, 64.5, true];
+            yield return [protocol, "iron_golem", -1, false, EntityPose.Standing, 8.5, 65.0, true];
+            yield return [protocol, "iron_golem", -1, false, EntityPose.Standing, 1.5, 64.0, false];
+            yield return [protocol, "iron_golem", -1, false, EntityPose.Sleeping, 1.5, 64.0, true];
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(EntityRoleCases))]
+    public Task CatAndGolemPlacementUsesMeasuredGeometry(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings) => PlaceWithEntityGeometryAsync(protocol, entityName, babyIndex, baby, pose, x, y, swings);
+
+    private static async Task PlaceWithEntityGeometryAsync(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings)
     {
         await using var harness = new Harness(protocol);
-        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("villager"), out RegistryEntry<EntityTypeDefinition> type));
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft(entityName), out RegistryEntry<EntityTypeDefinition> type));
         var entity = new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(x, y, 1.5), Pose = pose };
-        entity.Metadata.Set(babyIndex, MetadataValue.Boolean(baby));
+        if (babyIndex >= 0)
+            entity.Metadata.Set(babyIndex, MetadataValue.Boolean(baby));
         harness.State.Entities.Add(entity);
 
         Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
@@ -66,8 +88,11 @@ public sealed class PlacementAnimationTests
         Assert.Equal(swings ? 2 : 1, harness.Sink.Packets.Count);
         Assert.Equal(new Vec3d(x, y, 1.5), entity.Position);
         Assert.Equal(pose, entity.Pose);
-        Assert.True(entity.Metadata.TryGet(babyIndex, out MetadataValue age));
-        Assert.Equal(baby, age.AsBoolean());
+        if (babyIndex >= 0)
+        {
+            Assert.True(entity.Metadata.TryGet(babyIndex, out MetadataValue age));
+            Assert.Equal(baby, age.AsBoolean());
+        }
         Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
     }
 

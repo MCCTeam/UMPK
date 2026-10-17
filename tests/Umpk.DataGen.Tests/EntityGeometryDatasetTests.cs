@@ -12,6 +12,10 @@ public sealed class EntityGeometryDatasetTests
     [InlineData("selector-kind")]
     [InlineData("selector-default")]
     [InlineData("selector-true-default")]
+    [InlineData("none-selector-index")]
+    [InlineData("none-selector-mask")]
+    [InlineData("none-selector-default")]
+    [InlineData("none-selector-true-variant")]
     [InlineData("pose-index")]
     [InlineData("pose-index-mismatch")]
     [InlineData("refresh")]
@@ -37,6 +41,10 @@ public sealed class EntityGeometryDatasetTests
             case "selector-kind": selector[1] = "float"; break;
             case "selector-default": selector[3] = 2; break;
             case "selector-true-default": selector[3] = 1; break;
+            case "none-selector-index": entity["selector"] = new JsonArray(16, "none", 0, 0); variants.RemoveAt(1); break;
+            case "none-selector-mask": entity["selector"] = new JsonArray(-1, "none", 1, 0); variants.RemoveAt(1); break;
+            case "none-selector-default": entity["selector"] = new JsonArray(-1, "none", 0, 1); variants.RemoveAt(1); break;
+            case "none-selector-true-variant": entity["selector"] = new JsonArray(-1, "none", 0, 0); break;
             case "pose-index": entity["pose_index"] = 255; break;
             case "pose-index-mismatch": entity["pose_index"] = 5; break;
             case "refresh": entity["refresh"] = "guess"; break;
@@ -64,6 +72,20 @@ public sealed class EntityGeometryDatasetTests
         JsonObject measurement = Measurement();
         measurement["entities"]!["minecraft:player"]!["refresh"] = refresh;
         File.WriteAllText(Path.Combine(builder.Root, "770/entity-geometry.json"), measurement.ToJsonString());
+        Assert.Empty(Validator.Validate(DatasetLoader.Load(builder.Root)));
+    }
+
+    [Fact]
+    public void PoseOnlyGeometryDoesNotNeedADummyMetadataSelector()
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        AddEntityRegistry(builder);
+        JsonObject measurement = Measurement();
+        JsonObject entry = measurement["entities"]!["minecraft:player"]!.AsObject();
+        entry["selector"] = new JsonArray(-1, "none", 0, 0);
+        entry["variants"]!.AsArray().RemoveAt(1);
+        File.WriteAllText(Path.Combine(builder.Root, "770/entity-geometry.json"), measurement.ToJsonString());
+
         Assert.Empty(Validator.Validate(DatasetLoader.Load(builder.Root)));
     }
 

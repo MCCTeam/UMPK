@@ -13,7 +13,7 @@ public enum EntityDimensionsRefresh
     RetainMinimum = 2,
 }
 
-/// <summary>A measured metadata selector and dimensions refresh contract. An absent scale attribute means attribute scaling does not apply.</summary>
+/// <summary>A measured metadata selector and dimensions refresh contract. MetadataIndex is -1 when no selector applies. An absent scale attribute means attribute scaling does not apply.</summary>
 public readonly record struct EntityGeometryRule(int MetadataIndex, int PoseMetadataIndex, EntityDimensionsRefresh Refresh, Identifier? ScaleAttribute);
 
 /// <summary>Native dimensions for one metadata and pose state. Fixed dimensions bypass attribute scaling.</summary>
@@ -22,8 +22,8 @@ public readonly record struct EntityGeometryDimensions(float Width, float Height
 /// <summary>Audited entity geometry. Unmeasured types, selectors and poses remain unknown; registry placeholder dimensions are not a fallback.</summary>
 public interface IEntityGeometrySource
 {
-    /// <summary>Returns the native Boolean metadata selector and refresh contract for an audited type.</summary>
+    /// <summary>Returns the native metadata selector and refresh contract for an audited type. A MetadataIndex of -1 requires no selector.</summary>
     bool TryGetRule(Identifier entityType, out EntityGeometryRule rule);
-    /// <summary>Returns dimensions at the default attribute scale for one Boolean selector and canonical pose.</summary>
+    /// <summary>Returns dimensions at the default attribute scale for one Boolean selector and canonical pose. Use false when the rule has no selector.</summary>
     bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions);
 }

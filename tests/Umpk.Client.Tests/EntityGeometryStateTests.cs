@@ -52,14 +52,45 @@ public sealed class EntityGeometryStateTests
     public async Task ApplierBoundsMatchNativeMetadataAndPositionPhases(int protocol, string versionName, int index)
     {
         using JsonDocument document = ReadNative(versionName);
-        JsonElement native = document.RootElement, row = native.GetProperty("rows")[index];
+        await ReplayNativeAsync(protocol, document.RootElement, index, "villager");
+    }
+
+    public static IEnumerable<object[]> NativeRoleTransitions()
+    {
+        using JsonDocument document = ReadRoles();
+        foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
+        {
+            int caseIndex = release.GetProperty("case").GetInt32();
+            JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
+            for (int index = 0; index < native.GetProperty("rows").GetArrayLength(); index++)
+                yield return [release.GetProperty("protocol").GetInt32(), caseIndex, index, release.GetProperty("entity").GetString()!];
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(NativeRoleTransitions))]
+    public async Task CatAndGolemBoundsMatchNativeMetadataAndPosePhases(int protocol, int caseIndex, int index, string entityName)
+    {
+        using JsonDocument document = ReadRoles();
+        await ReplayNativeAsync(protocol, document.RootElement.GetProperty("cases")[caseIndex], index, entityName["minecraft:".Length..]);
+    }
+
+    private static JsonDocument ReadRoles()
+    {
+        using Stream stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.EntityRoleGeometry.native.json")!;
+        return JsonDocument.Parse(stream);
+    }
+
+    private static async Task ReplayNativeAsync(int protocol, JsonElement native, int index, string entityName)
+    {
+        JsonElement row = native.GetProperty("rows")[index];
         bool legacy = protocol < 477;
         int babyIndex = native.GetProperty("metadata_index").GetInt32();
         JsonElement point = native.GetProperty("positions")[row.GetProperty("position").GetInt32()];
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion? version));
         var harness = new ApplierHarness(version!);
         harness.State.Registries = JavaGameData.Registries(protocol);
-        Assert.True(harness.State.Registries.EntityTypes.TryGet(Identifier.Minecraft("villager"), out RegistryEntry<EntityTypeDefinition> villager));
+        Assert.True(harness.State.Registries.EntityTypes.TryGet(Identifier.Minecraft(entityName), out RegistryEntry<EntityTypeDefinition> villager));
         await harness.ApplyAsync(new ClientboundAddMobPacket(42, villager.NetworkId, point[0].GetDouble(), point[1].GetDouble(), point[2].GetDouble(), 0, 0, 0, 0, 0, 0, new EntityMetadataList([], [])));
         Entity entity = Assert.IsType<Entity>(harness.State.Entities.Get(42));
         IEntityGeometrySource source = Assert.IsAssignableFrom<IEntityGeometrySource>(JavaGameData.BlockInteractionData(protocol));
@@ -79,7 +110,7 @@ public sealed class EntityGeometryStateTests
         await Reapply();
         AssertBox("after_position");
 
-        ValueTask SetAge(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(babyIndex, MetadataValue.Boolean(value != 0))], [])));
+        ValueTask SetAge(int value) => babyIndex == -1 ? ValueTask.CompletedTask : harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(babyIndex, MetadataValue.Boolean(value != 0))], [])));
         ValueTask SetPose(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(native.GetProperty("poses")[value].GetString() switch { "STANDING" => EntityPose.Standing, "FALL_FLYING" => EntityPose.FallFlying, "SLEEPING" => EntityPose.Sleeping, "SWIMMING" => EntityPose.Swimming, "SPIN_ATTACK" => EntityPose.SpinAttack, "SNEAKING" => EntityPose.Crouching, "DYING" => EntityPose.Dying, _ => throw new InvalidOperationException("Unmeasured native pose") }))], [])));
         ValueTask Reapply() => harness.ApplyAsync(new ClientboundMoveEntityPosPacket(42, 0, 0, 0, false));
         void AssertBox(string phase)

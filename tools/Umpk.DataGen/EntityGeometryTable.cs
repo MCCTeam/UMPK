@@ -32,7 +32,9 @@ internal sealed record EntityGeometryTable(int Schema, IReadOnlyDictionary<strin
         {
             if (!known.Contains(name))
                 Reject($"names an unknown entity {name}");
-            if (entry.MetadataIndex is < 0 or > 254 || entry.SelectorKind != "boolean" || entry.Mask != 1 || entry.DefaultValue != 0 || entry.PoseIndex is < -1 or > 254 || entry.MetadataIndex == entry.PoseIndex)
+            bool booleanSelector = entry.MetadataIndex is >= 0 and <= 254 && entry.SelectorKind == "boolean" && entry.Mask == 1 && entry.DefaultValue == 0;
+            bool noSelector = entry.MetadataIndex == -1 && entry.SelectorKind == "none" && entry.Mask == 0 && entry.DefaultValue == 0;
+            if ((!booleanSelector && !noSelector) || entry.PoseIndex is < -1 or > 254 || (entry.MetadataIndex >= 0 && entry.MetadataIndex == entry.PoseIndex))
                 Reject($"has an unsupported metadata selector for {name}");
             int expectedPoseIndex = version.MetadataKeys.EntityKeys.TryGetValue("pose", out int poseIndex) ? poseIndex : -1;
             if (entry.PoseIndex != expectedPoseIndex)
@@ -44,7 +46,10 @@ internal sealed record EntityGeometryTable(int Schema, IReadOnlyDictionary<strin
                 if (variant.Selector is < 0 or > 1 || variant.Pose is < 0 or > 17 || !float.IsFinite(variant.Width) || !float.IsFinite(variant.Height) || variant.Width <= 0 || variant.Height <= 0 || !seen.Add((variant.Selector, variant.Pose)))
                     Reject($"has invalid or repeated dimensions for {name}");
             HashSet<int> poses = [.. seen.Select(key => key.Pose)];
-            if (!poses.Contains(0) || !seen.SetEquals(poses.SelectMany(pose => new[] { (0, pose), (1, pose) })) || (entry.PoseIndex == -1 && (poses.Count != 1 || !poses.Contains(0))))
+            bool complete = noSelector
+                ? seen.SetEquals(poses.Select(pose => (0, pose)))
+                : seen.SetEquals(poses.SelectMany(pose => new[] { (0, pose), (1, pose) }));
+            if (!poses.Contains(0) || !complete || (entry.PoseIndex == -1 && (poses.Count != 1 || !poses.Contains(0))))
                 Reject($"has incomplete selector or pose coverage for {name}");
         }
     }

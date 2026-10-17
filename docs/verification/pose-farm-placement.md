@@ -1,6 +1,6 @@
 # Early 1.14 farm placement verification
 
-The tested producer is `703400f16ab87fcc00aa81834ee5bf45880abf2f`. It adds measured cow, pig, sheep and chicken geometry to protocols 477, 480, 485 and 490, covering 1.14, 1.14.1, 1.14.2 and 1.14.3. The [legacy farm verification](legacy-farm-placement.md) records the preceding Boolean-age eras; the [classic farm verification](classic-farm-placement.md) covers protocol 47.
+The tested producer is `703400f16ab87fcc00aa81834ee5bf45880abf2f`. It adds measured cow, pig, sheep and chicken geometry to protocols 477, 480, 485 and 490, covering 1.14, 1.14.1, 1.14.2 and 1.14.3. The [legacy farm verification](legacy-farm-placement.md) records the preceding Boolean-age eras; the [classic farm verification](classic-farm-placement.md) covers protocol 47. The [mapped farm verification](mapped-farm-placement.md) records the subsequent extension through 26.3.
 
 ## Native behavior and identity
 

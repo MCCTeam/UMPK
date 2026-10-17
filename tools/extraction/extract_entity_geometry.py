@@ -51,7 +51,7 @@ def villager_profile(raw: dict, *, scale_attribute: str) -> dict:
 
 def legacy_villager_profile(raw: dict) -> dict:
     positions = raw["positions"]
-    if not positions or raw["blocks_building"] is not True or type(raw["metadata_index"]) is not int or raw["metadata_index"] != 12:
+    if not positions or raw["blocks_building"] is not True or type(raw["metadata_index"]) is not int or raw["metadata_index"] not in (11, 12):
         raise ValueError("Legacy villager contract is incomplete")
     for position in positions:
         finite(position, 3)
@@ -84,7 +84,7 @@ def legacy_villager_profile(raw: dict) -> dict:
     if seen != expected or sum(models.values()) != 1:
         raise ValueError("Native transitions do not establish one complete legacy geometry profile")
     variants = [[age, 0, *next(row["after_size"] for row in raw["rows"] if row["to"] == age), False, True] for age in range(2)]
-    return {"selector": [12, "boolean", 1, 0], "pose_index": -1, "refresh": next(model for model, matches in models.items() if matches), "scale_attribute": "", "variants": variants}
+    return {"selector": [raw["metadata_index"], "boolean", 1, 0], "pose_index": -1, "refresh": next(model for model, matches in models.items() if matches), "scale_attribute": "", "variants": variants}
 
 
 def sha(path: Path) -> str:

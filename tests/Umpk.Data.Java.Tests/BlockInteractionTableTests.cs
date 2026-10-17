@@ -11,6 +11,10 @@ namespace Umpk.Data.Java.Tests;
 public sealed class BlockInteractionTableTests
 {
     [Theory]
+    [InlineData(107)]
+    [InlineData(108)]
+    [InlineData(109)]
+    [InlineData(110)]
     [InlineData(210)]
     [InlineData(315)]
     [InlineData(316)]

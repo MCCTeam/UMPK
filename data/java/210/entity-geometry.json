@@ -7,6 +7,26 @@
     "server_sha256": "195f468227c5f9218f3919538b9b16ba34adced67fc7d7b652c508a5e8d07a21",
     "measurement_sha256": "c79692383224b4dc12b25a25e81303f6c8dbff29fed6a7509e041ceb2bc86a66",
     "native_witnesses": 68,
+    "aliases": [
+      {
+        "version": "1.10",
+        "measurement_sha256": "df45c0a2e1a742cafb9d74a2010a79c267cec6c67f06f4e2a8a498b8ebb579d5",
+        "client_sha256": "c00f8170ebf4fd834f552246743a64885a6dffb3dd1e3a3f3dba9676b7a0af35",
+        "server_sha256": "dd44a72e920a01dedf57507b73642f4a9dd8c6052e1f42ff6cc0635008014201"
+      },
+      {
+        "version": "1.10.1",
+        "measurement_sha256": "643d2396afb315e83c5c945c5e3a858a31dcac5a0f4cad8410e843d93427345d",
+        "client_sha256": "338b205f20c22b9c676d9d3227a5e6c5e190f30ad84d7caad035150b3e05ba72",
+        "server_sha256": "623c8d67e7357c7078f30cee450562c52a05a42c394f064474c7f2d45b4a7d3f"
+      },
+      {
+        "version": "1.10.2",
+        "measurement_sha256": "c79692383224b4dc12b25a25e81303f6c8dbff29fed6a7509e041ceb2bc86a66",
+        "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
+        "server_sha256": "195f468227c5f9218f3919538b9b16ba34adced67fc7d7b652c508a5e8d07a21"
+      }
+    ],
     "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
   },
   "schema": 1,

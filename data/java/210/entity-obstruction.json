@@ -73,7 +73,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "5f1095815e87a6ecc33ee89c16c079c625e6646d3ef3fb77ac309df3524a41a0",
+    "tool_sha256": "f2e17015e3ed8a7b20a28927efffc5f6e5b3fc6ef5943937dcbbb954a4543f25",
     "version": "1.10.2",
     "protocol": 210,
     "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
@@ -98,6 +98,29 @@
       "yk.java": "27871855a6c6ea6fc0eb11756800381b6dd67d1ac532b29d359de43149d40179",
       "yl.java": "c267682f309a79e24bf04b309a7aed94941fb512cc35c6be17ee1dda38e1884a"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 8 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
+    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 8 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed.",
+    "aliases": [
+      {
+        "version": "1.10",
+        "client_sha256": "c00f8170ebf4fd834f552246743a64885a6dffb3dd1e3a3f3dba9676b7a0af35",
+        "server_sha256": "dd44a72e920a01dedf57507b73642f4a9dd8c6052e1f42ff6cc0635008014201",
+        "measurement_sha256": "e5c9bc7b86d7d74fb76723ed256be94543e39d50b61b319dbb9c27a9f9eb5163",
+        "audit_sha256": "0f7b4af36ca4750d520117d6c8520f3d92e2d3059817c7366f84c3d7dcf92efd"
+      },
+      {
+        "version": "1.10.1",
+        "client_sha256": "338b205f20c22b9c676d9d3227a5e6c5e190f30ad84d7caad035150b3e05ba72",
+        "server_sha256": "623c8d67e7357c7078f30cee450562c52a05a42c394f064474c7f2d45b4a7d3f",
+        "measurement_sha256": "258e83fc0ce41c71f2d8f9bf36e1f16dfe74a687072e7787ad3e61913d023f4a",
+        "audit_sha256": "c66ccde04885132178a808f0604a1338e50e03f8542fecc8b0a182cacf5edb3a"
+      },
+      {
+        "version": "1.10.2",
+        "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
+        "server_sha256": "195f468227c5f9218f3919538b9b16ba34adced67fc7d7b652c508a5e8d07a21",
+        "measurement_sha256": "cf155b0d238f83eafbe5492b52dd6d080c7a29889fa3b3b2e3644eb9e3168d8b",
+        "audit_sha256": "5432eef0fbe321c02a41182ceb25f5982776ec8281d196f19694488ff16b2950"
+      }
+    ]
   }
 }

@@ -72,6 +72,10 @@ public sealed class EntityGeometryTableTests
     }
 
     [Theory]
+    [InlineData(107, 11, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
+    [InlineData(108, 11, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
+    [InlineData(109, 11, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
+    [InlineData(110, 11, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
     [InlineData(210, 12, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
     [InlineData(315, 12, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
     [InlineData(316, 12, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]

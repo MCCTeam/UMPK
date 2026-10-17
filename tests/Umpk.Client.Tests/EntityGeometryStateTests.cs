@@ -92,6 +92,10 @@ public sealed class EntityGeometryStateTests
     }
 
     [Theory]
+    [InlineData(107, 11, false)]
+    [InlineData(108, 11, false)]
+    [InlineData(109, 11, false)]
+    [InlineData(110, 11, false)]
     [InlineData(210, 12, false)]
     [InlineData(315, 12, true)]
     [InlineData(316, 12, true)]

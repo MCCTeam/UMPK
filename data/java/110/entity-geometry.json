@@ -1,0 +1,58 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "version": "1.9.4",
+    "protocol": 110,
+    "client_sha256": "23e90103a1ca2ac71100004c6d5846de09f85695f579843ef8da41571e60c908",
+    "server_sha256": "13fea7aa10d804dd14ed7ebde2493dc64c7d3c8173369309bd7f6ea4c0ea40ad",
+    "measurement_sha256": "a507b7cfbe4c7b8278d7c3738211fdf5c085bc0be06e94123bdab132156d1423",
+    "native_witnesses": 12,
+    "aliases": [
+      {
+        "version": "1.9.3",
+        "measurement_sha256": "8dc71abca9afec3c76a81443f7f014f4a8138b51e49d3387a7d036a433c58659",
+        "client_sha256": "ab8fdde789c5b4614ffc98249e04fdcce7dfce320b55215bfe5418608af6a63b",
+        "server_sha256": "0eb669eeca23bad6d4ee5237aa24cd51274dfbda15813477f8414f4bfc2f1f27"
+      },
+      {
+        "version": "1.9.4",
+        "measurement_sha256": "a507b7cfbe4c7b8278d7c3738211fdf5c085bc0be06e94123bdab132156d1423",
+        "client_sha256": "23e90103a1ca2ac71100004c6d5846de09f85695f579843ef8da41571e60c908",
+        "server_sha256": "13fea7aa10d804dd14ed7ebde2493dc64c7d3c8173369309bd7f6ea4c0ea40ad"
+      }
+    ],
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
+  },
+  "schema": 1,
+  "entities": {
+    "minecraft:villager": {
+      "selector": [
+        11,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.975,
+          false,
+          true
+        ]
+      ]
+    }
+  }
+}

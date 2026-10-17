@@ -39,6 +39,13 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             group_legacy(records)
 
+    def test_legacy_1_9_uses_index_eleven_and_retains_the_box_minimum(self) -> None:
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.9.json"
+        profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))
+        self.assertEqual([11, "boolean", 1, 0], profile["selector"])
+        self.assertEqual("retain_minimum", profile["refresh"])
+        self.assertEqual(-1, profile["pose_index"])
+
     def test_legacy_shrinking_also_retains_the_minimum(self) -> None:
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json"
         profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))

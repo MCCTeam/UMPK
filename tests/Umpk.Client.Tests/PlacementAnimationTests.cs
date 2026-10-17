@@ -35,7 +35,7 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> VillagerGeometryCases()
     {
-        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (315, 12), (316, 12), (335, 12), (338, 12), (340, 12), (393, 12), (401, 12), (404, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
+        foreach ((int protocol, int babyIndex) in new[] { (107, 11), (108, 11), (109, 11), (110, 11), (210, 12), (315, 12), (316, 12), (335, 12), (338, 12), (340, 12), (393, 12), (401, 12), (404, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
         {
             yield return [protocol, babyIndex, false, EntityPose.Standing, 8.5, 65.0, true];
             yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 65.0, false];
@@ -73,7 +73,7 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> LegacyItemCases()
     {
-        foreach (int protocol in new[] { 210, 315, 316, 335, 338, 340, 393, 401, 404 })
+        foreach (int protocol in new[] { 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404 })
             foreach (double x in new[] { 1.5, 8.5 })
                 yield return [protocol, x];
     }

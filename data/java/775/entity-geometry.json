@@ -1,15 +1,67 @@
 {
   "_provenance": {
     "kind": "extracted",
-    "version": "26.1",
+    "version": "26.1.2",
     "protocol": 775,
-    "client_sha256": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
-    "server_sha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994",
-    "measurement_sha256": "646e54cf4b3edbb52d548c2375f0b5d530ededff97c714d59302c6ebcf63bf19",
-    "transition_sha256": "9c98d6d36cdc8119b390ff0a64636cfb2121c89d5e03d686976c1e28e7c696fb",
+    "client_sha256": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
+    "server_sha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42",
+    "measurement_sha256": "9bc67deceb9240d015d21e7061eec1f0f8b1ec485f140ab8e7476c507cc52124",
+    "transition_sha256": "d13910237b6c27f014337244da7182e6b65160eab011b3c23c1f3f62ba02f4ab",
     "native_witnesses": 3888,
     "living_source_sha256": "5714ed8783f4a1d46844c307659d3e91ae63ac7c1fd5020614206b3547ef5cdd",
-    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep",
+    "entity_roles": {
+      "minecraft:cat": {
+        "measurement_sha256": "088c61a643cdc526f31eafaddea3eb7b3b6abe6ff6c21b68b5ce59e7dd64c598",
+        "native_witnesses": 3888,
+        "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep",
+        "aliases": [
+          {
+            "version": "26.1",
+            "measurement_sha256": "6ab27f1fdd5f8005b21bda52cd377e6e23be61fc2e05d45b1de0a23af50f36de",
+            "client_sha256": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
+            "server_sha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994"
+          },
+          {
+            "version": "26.1.1",
+            "measurement_sha256": "4b92ed32ce62b7179fea957cb9bae2952db3abade1652568655aa112194fd10a",
+            "client_sha256": "8c109be6177f40d10d0afd820b06542f9609597874242b96e16c5b0dc9e1fef3",
+            "server_sha256": "d792784979722dc35144acffb953554e707445c62450550044c4281e632cbbcc"
+          },
+          {
+            "version": "26.1.2",
+            "measurement_sha256": "088c61a643cdc526f31eafaddea3eb7b3b6abe6ff6c21b68b5ce59e7dd64c598",
+            "client_sha256": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
+            "server_sha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42"
+          }
+        ]
+      },
+      "minecraft:iron_golem": {
+        "measurement_sha256": "0ff3da1aa6997ef6031b201fe798bc01443595a576cd5be977024dfd18bf69df",
+        "native_witnesses": 972,
+        "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep",
+        "aliases": [
+          {
+            "version": "26.1",
+            "measurement_sha256": "2d7462291eee07d60f4d814fac14ab18744f07fb582d516bea4516732faa7899",
+            "client_sha256": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
+            "server_sha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994"
+          },
+          {
+            "version": "26.1.1",
+            "measurement_sha256": "f746e418306f3c22daeaa0925441d1dcd7c8daf50ff04523af8a782563ba0ff2",
+            "client_sha256": "8c109be6177f40d10d0afd820b06542f9609597874242b96e16c5b0dc9e1fef3",
+            "server_sha256": "d792784979722dc35144acffb953554e707445c62450550044c4281e632cbbcc"
+          },
+          {
+            "version": "26.1.2",
+            "measurement_sha256": "0ff3da1aa6997ef6031b201fe798bc01443595a576cd5be977024dfd18bf69df",
+            "client_sha256": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
+            "server_sha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42"
+          }
+        ]
+      }
+    }
   },
   "schema": 1,
   "entities": {
@@ -309,6 +361,464 @@
           17,
           0.49,
           0.99,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:cat": {
+      "selector": [
+        16,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "recenter_on_refresh",
+      "scale_attribute": "minecraft:scale",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          6,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          8,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          9,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          10,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          11,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          12,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          13,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          14,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          15,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          16,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          17,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          6,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          8,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          9,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          10,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          11,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          12,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          13,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          14,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          15,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          16,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          17,
+          0.3,
+          0.35,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:iron_golem": {
+      "selector": [
+        -1,
+        "none",
+        0,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "recenter_on_refresh",
+      "scale_attribute": "minecraft:scale",
+      "variants": [
+        [
+          0,
+          0,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          6,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          8,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          9,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          10,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          11,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          12,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          13,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          14,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          15,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          16,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          17,
+          1.4,
+          2.7,
           false,
           true
         ]

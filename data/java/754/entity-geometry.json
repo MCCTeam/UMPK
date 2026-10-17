@@ -9,7 +9,47 @@
     "transition_sha256": "a169bc0391cfe87af84052ca399b02bed6760487b9b3c24f29f3e01f52456b55",
     "native_witnesses": 588,
     "living_source_sha256": "9ad616b9cb8cfc7f67c5b54997b21bffa6baea3652b59f748bb3a3f45b3dcb53",
-    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep",
+    "entity_roles": {
+      "minecraft:cat": {
+        "measurement_sha256": "cef87c837ab1f90d0c37350da376a63e9fa4e6c9a8cea594d26df77a1155cb0d",
+        "native_witnesses": 588,
+        "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep",
+        "aliases": [
+          {
+            "version": "1.16.4",
+            "measurement_sha256": "1099b376bd6419ec5ad534a8a554abd36d95874f48d2b94f23a5680143b26dcf",
+            "client_sha256": "d6740464ee2bdf37d285c5d368d2e16497492427fb5783e2db3482bbf0079ed0",
+            "server_sha256": "444d30d903a1ef489b6737bb9d021494faf23434ca8568fd72ce2e3d40b32506"
+          },
+          {
+            "version": "1.16.5",
+            "measurement_sha256": "cef87c837ab1f90d0c37350da376a63e9fa4e6c9a8cea594d26df77a1155cb0d",
+            "client_sha256": "00b5ebbc33e95ea88c1ab80601599c9827e9aa861d93ccc2cfcbbfd996e86263",
+            "server_sha256": "58f329c7d2696526f948470aa6fd0b45545039b64cb75015e64c12194b373da6"
+          }
+        ]
+      },
+      "minecraft:iron_golem": {
+        "measurement_sha256": "91cf2818dee3424d8e9c4ad250500f28b9467a2f850e8eee656418a7c9240b63",
+        "native_witnesses": 147,
+        "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep",
+        "aliases": [
+          {
+            "version": "1.16.4",
+            "measurement_sha256": "6a81dc7152314af1c6b8b5ad296980207ef94d964ddec615b7ae26a8055c2d73",
+            "client_sha256": "d6740464ee2bdf37d285c5d368d2e16497492427fb5783e2db3482bbf0079ed0",
+            "server_sha256": "444d30d903a1ef489b6737bb9d021494faf23434ca8568fd72ce2e3d40b32506"
+          },
+          {
+            "version": "1.16.5",
+            "measurement_sha256": "91cf2818dee3424d8e9c4ad250500f28b9467a2f850e8eee656418a7c9240b63",
+            "client_sha256": "00b5ebbc33e95ea88c1ab80601599c9827e9aa861d93ccc2cfcbbfd996e86263",
+            "server_sha256": "58f329c7d2696526f948470aa6fd0b45545039b64cb75015e64c12194b373da6"
+          }
+        ]
+      }
+    }
   },
   "schema": 1,
   "entities": {
@@ -133,6 +173,200 @@
           7,
           0.3,
           0.975,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:cat": {
+      "selector": [
+        15,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.6,
+          0.7,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.3,
+          0.35,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.3,
+          0.35,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:iron_golem": {
+      "selector": [
+        -1,
+        "none",
+        0,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          1.4,
+          2.7,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          1.4,
+          2.7,
           false,
           true
         ]

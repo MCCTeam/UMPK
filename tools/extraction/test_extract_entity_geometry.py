@@ -13,6 +13,59 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.14.4.json"
         self.raw = json.loads(path.read_text(encoding="utf-8"))
 
+    def test_living_scale_source_distinguishes_age_and_attribute_scaling(self) -> None:
+        from extract_entity_geometry import living_scale_attribute
+
+        self.assertEqual("", living_scale_attribute("public float getScale() { return this.isBaby() ? 0.5F : 1.0F; }"))
+        self.assertEqual("minecraft:scale", living_scale_attribute("public final float getScale() { AttributeMap attributes = this.getAttributes(); return attributes == null ? 1.0F : this.sanitizeScale((float)attributes.getValue(Attributes.SCALE)); }"))
+        self.assertEqual("minecraft:scale", living_scale_attribute("public float getScale() { return (float)this.getAttributeValue(Attributes.SCALE); }"))
+        with self.assertRaises(ValueError):
+            living_scale_attribute("public float getScale() { return unknownScale(); }")
+
+    def test_role_geometry_keeps_the_source_backed_scale_contract(self) -> None:
+        from extract_entity_geometry import role_profile
+
+        for entity in ("minecraft:cat", "minecraft:iron_golem"):
+            raw = self.role_native(entity)
+            original = role_profile(raw)
+            scaled = role_profile(raw, scale_attribute="minecraft:scale")
+            self.assertEqual("minecraft:scale", scaled.pop("scale_attribute"))
+            original.pop("scale_attribute")
+            self.assertEqual(original, scaled)
+            with self.assertRaises(ValueError):
+                role_profile(raw, scale_attribute="minecraft:missing")
+
+    def test_role_aliases_cannot_hide_different_scale_contracts(self) -> None:
+        from extract_entity_geometry import group_roles
+
+        original = {"version": "first", "protocol": 777, "entity": "minecraft:cat", "raw": self.role_native("minecraft:cat"), "scale_attribute": ""}
+        other = copy.deepcopy(original)
+        other.update(version="second", scale_attribute="minecraft:scale")
+        with self.assertRaises(ValueError):
+            group_roles([original, other])
+
+    def test_mapped_fixture_does_not_require_obfuscated_pose_field_names(self) -> None:
+        from extract_entity_geometry import role_fixture
+
+        raw = self.role_native("minecraft:cat")
+        raw.pop("pose_constants")
+        receipt = {"version": "1.14.4", "protocol": 498, "entity": "minecraft:cat", "measurement_sha256": "measurement", "client_sha256": "client", "server_sha256": "server"}
+        fixture = role_fixture([{"version": "1.14.4", "protocol": 498, "entity": "minecraft:cat", "raw": raw, "receipt": receipt}])
+        self.assertEqual(raw["poses"], fixture["cases"][0]["poses"])
+        self.assertNotIn("pose_constants", fixture["cases"][0])
+
+    def test_compressed_role_fixture_has_no_clock_or_filename_metadata(self) -> None:
+        import gzip
+        from extract_entity_geometry import fixture_bytes
+
+        fixture = {"schema": 1, "releases": [], "cases": []}
+        first = fixture_bytes(fixture, compressed=True)
+        self.assertEqual(first, fixture_bytes(fixture, compressed=True))
+        self.assertEqual(bytes(4), first[4:8])
+        self.assertEqual(255, first[9])
+        self.assertEqual(fixture, json.loads(gzip.decompress(first)))
+        self.assertEqual(fixture, json.loads(fixture_bytes(fixture, compressed=False)))
+
     def role_native(self, entity: str) -> dict:
         path = Path(__file__).parents[2] / "tests/Umpk.Client.Tests/Fixtures/EntityRoleGeometry.native.json"
         fixture = json.loads(path.read_text(encoding="utf-8"))

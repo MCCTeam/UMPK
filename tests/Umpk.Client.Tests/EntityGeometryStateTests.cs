@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Text.Json;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
@@ -81,6 +82,33 @@ public sealed class EntityGeometryStateTests
         return JsonDocument.Parse(stream);
     }
 
+    public static IEnumerable<object[]> NativeMappedRoles()
+    {
+        using JsonDocument document = ReadMappedRoles();
+        Assert.Equal(1, document.RootElement.GetProperty("schema").GetInt32());
+        foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
+            yield return [release.GetProperty("protocol").GetInt32(), release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32(), release.GetProperty("entity").GetString()!];
+    }
+
+    [Theory]
+    [MemberData(nameof(NativeMappedRoles))]
+    public async Task MappedCatAndGolemPhasesMatchEveryNativeWitness(int protocol, string release, int caseIndex, string entityName)
+    {
+        Assert.True(JavaVersions.TryGetByName(release, out JavaVersion? version));
+        Assert.Equal(protocol, version!.Version.Protocol);
+        using JsonDocument document = ReadMappedRoles();
+        JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
+        for (int index = 0; index < native.GetProperty("rows").GetArrayLength(); index++)
+            await ReplayNativeAsync(protocol, native, index, entityName["minecraft:".Length..]);
+    }
+
+    private static JsonDocument ReadMappedRoles()
+    {
+        using Stream stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.MappedEntityRoleGeometry.native.json.gz")!;
+        using var decompressed = new GZipStream(stream, CompressionMode.Decompress);
+        return JsonDocument.Parse(decompressed);
+    }
+
     private static async Task ReplayNativeAsync(int protocol, JsonElement native, int index, string entityName)
     {
         JsonElement row = native.GetProperty("rows")[index];
@@ -111,7 +139,7 @@ public sealed class EntityGeometryStateTests
         AssertBox("after_position");
 
         ValueTask SetAge(int value) => babyIndex == -1 ? ValueTask.CompletedTask : harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(babyIndex, MetadataValue.Boolean(value != 0))], [])));
-        ValueTask SetPose(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(native.GetProperty("poses")[value].GetString() switch { "STANDING" => EntityPose.Standing, "FALL_FLYING" => EntityPose.FallFlying, "SLEEPING" => EntityPose.Sleeping, "SWIMMING" => EntityPose.Swimming, "SPIN_ATTACK" => EntityPose.SpinAttack, "SNEAKING" => EntityPose.Crouching, "DYING" => EntityPose.Dying, _ => throw new InvalidOperationException("Unmeasured native pose") }))], [])));
+        ValueTask SetPose(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(native.GetProperty("poses")[value].GetString() switch { "STANDING" => EntityPose.Standing, "FALL_FLYING" => EntityPose.FallFlying, "SLEEPING" => EntityPose.Sleeping, "SWIMMING" => EntityPose.Swimming, "SPIN_ATTACK" => EntityPose.SpinAttack, "SNEAKING" or "CROUCHING" => EntityPose.Crouching, "LONG_JUMPING" => EntityPose.LongJumping, "DYING" => EntityPose.Dying, "CROAKING" => EntityPose.Croaking, "USING_TONGUE" => EntityPose.UsingTongue, "SITTING" => EntityPose.Sitting, "ROARING" => EntityPose.Roaring, "SNIFFING" => EntityPose.Sniffing, "EMERGING" => EntityPose.Emerging, "DIGGING" => EntityPose.Digging, "SLIDING" => EntityPose.Sliding, "SHOOTING" => EntityPose.Shooting, "INHALING" => EntityPose.Inhaling, _ => throw new InvalidOperationException("Unmeasured native pose") }))], [])));
         ValueTask Reapply() => harness.ApplyAsync(new ClientboundMoveEntityPosPacket(42, 0, 0, 0, false));
         void AssertBox(string phase)
         {

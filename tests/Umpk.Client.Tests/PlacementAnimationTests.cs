@@ -104,7 +104,7 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> LegacyItemCases()
     {
-        foreach (int protocol in new[] { 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490 })
+        foreach (int protocol in new[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404, 477, 480, 485, 490 })
             foreach (double x in new[] { 1.5, 8.5 })
                 yield return [protocol, x];
     }

@@ -233,7 +233,16 @@ The 32 mapped protocol datasets also contain native cat, cow, horse and golem ge
 
 The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 
-`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules through 1.13.2. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocols 393–404 use the native field `j`; protocols 477–490 return to `i`. The source bindings retain both boundaries explicitly. The remaining legacy entity keys retain unknown rules.
+`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains their distinct obfuscated class bindings. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The remaining legacy entity keys retain unknown rules. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.
+
+```bash
+classic_items="$MINECRAFT_OFFICIAL_ROOT/runs/classic-item-obstruction-all-20261017-v1"
+classic_aliases=()
+for release in 1.8 1.8.1 1.8.2 1.8.3 1.8.4 1.8.5 1.8.6 1.8.7 1.8.8; do
+  classic_aliases+=(--alias "$classic_items/$release")
+done
+python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$classic_items/1.8.9" "${classic_aliases[@]}" --check
+```
 
 ```bash
 python3 tools/extraction/extract_legacy_item_obstruction.py \

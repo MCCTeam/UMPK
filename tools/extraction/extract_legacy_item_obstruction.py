@@ -7,6 +7,13 @@ import json
 from pathlib import Path
 import zipfile
 
+CLASSIC_AUDITED = (
+    (("1.8",), "adw", "wv", "aqu", "k", {"ada": 1, "adu": 1, "adv": 1, "adx": 1, "aek": 1, "xm": 1}),
+    (("1.8.1",), "adx", "wx", "aqr", "k", {"adb": 1, "adv": 1, "adw": 1, "ady": 1, "ael": 1, "xo": 1}),
+    (("1.8.2", "1.8.3"), "va", "pl", "adn", "k", {"ps": 1, "ug": 1, "uy": 1, "uz": 1, "vb": 1, "vk": 1}),
+    (("1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8", "1.8.9"), "uz", "pk", "adm", "k", {"pr": 1, "uf": 1, "ux": 1, "uy": 1, "va": 1, "vj": 1}),
+)
+
 AUDITED = {
     107: (("1.9",), "yd", "rr", "aht", "i", {"aag": 1, "aah": 1, "sa": 1, "wt": 1, "xq": 2, "yc": 1, "ye": 1}),
     108: (("1.9.1",), "yd", "rr", "aht", "i", {"aag": 1, "aah": 1, "sa": 1, "wt": 1, "xq": 2, "yc": 1, "ye": 1}),
@@ -28,10 +35,34 @@ AUDITED = {
 }
 
 
-def item_rules(raw: dict, entities: set[str]) -> dict[str, int]:
-    binding = AUDITED.get(raw.get("protocol"))
-    if type(raw.get("protocol")) is not int or binding is None:
+def audited_binding(protocol: int, version: str | None) -> tuple:
+    if type(protocol) is not int:
         raise ValueError("Legacy item protocol has no audited binding")
+    if protocol == 47:
+        for binding in CLASSIC_AUDITED:
+            if version in binding[0]:
+                return binding
+    elif protocol in AUDITED:
+        binding = AUDITED[protocol]
+        if version is None or version in binding[0]:
+            return binding
+    raise ValueError("Legacy item release has no audited binding")
+
+
+def registry_identities(registry: dict) -> dict[str, str]:
+    identities = {}
+    for key in ("entries", "mob_entries", "object_entries"):
+        for row in registry.get(key, []):
+            name = row["id"]
+            canonical = name if ":" in name else "minecraft:" + name
+            if canonical in identities and identities[canonical] != name:
+                raise ValueError("Legacy registry aliases collide after qualification")
+            identities[canonical] = name
+    return identities
+
+
+def item_rules(raw: dict, entities: set[str]) -> dict[str, int]:
+    binding = audited_binding(raw.get("protocol"), raw.get("version"))
     versions, item, owner, world, field, _ = binding
     if raw.get("version") not in versions or (raw.get("entity"), raw.get("class"), raw.get("field_owner"), raw.get("field_name")) != ("minecraft:item", item, owner, field) or "minecraft:item" not in entities:
         raise ValueError("Legacy item source binding differs from the audited contract")
@@ -47,6 +78,8 @@ def item_rules(raw: dict, entities: set[str]) -> dict[str, int]:
 def item_alias_rules(measurements: list[dict], entities: set[str]) -> dict[str, int]:
     if not measurements or len({row["version"] for row in measurements}) != len(measurements) or len({row["protocol"] for row in measurements}) != 1:
         raise ValueError("Item aliases must name distinct releases of one protocol")
+    if measurements[0]["protocol"] == 47 and {row["version"] for row in measurements} != {version for binding in CLASSIC_AUDITED for version in binding[0]}:
+        raise ValueError("Classic item evidence must cover all ten protocol aliases")
     rules = [item_rules(row, entities) for row in measurements]
     if any(row != rules[0] for row in rules):
         raise ValueError("Item obstruction differs between protocol aliases")
@@ -61,9 +94,7 @@ def sha(path: Path) -> str:
 def read_measurement(root: Path, official: Path, data: Path) -> dict:
     receipt = json.loads((root / "result.json").read_text(encoding="utf-8"))
     protocol = receipt.get("protocol", 210)
-    if type(protocol) is not int or protocol not in AUDITED:
-        raise ValueError("Legacy item protocol has no audited binding")
-    versions, _, _, _, field, expected_writers = AUDITED[protocol]
+    versions, _, _, _, field, expected_writers = audited_binding(protocol, receipt.get("version"))
     version = receipt.get("version", versions[-1])
     if version not in versions:
         raise ValueError("Legacy item release has no audited binding")
@@ -91,12 +122,12 @@ def read_measurement(root: Path, official: Path, data: Path) -> dict:
     if writers["jar_sha256"] != sha(preserved) or writers["classes_scanned"] != len(classes) or Counter(row["class"] for row in writers["root_flag_writers"]) != Counter(expected_writers) or any(row["fieldref"] != [row["class"], field, "Z"] for row in writers["root_flag_writers"]):
         raise ValueError("Unclassified native building-flag writer")
     registry = json.loads((data / str(protocol) / "entities.json").read_text(encoding="utf-8"))
-    entities = {row["id"] for key in ("entries", "mob_entries", "object_entries") for row in registry.get(key, [])}
+    identities = registry_identities(registry)
     raw = json.loads(native.read_text(encoding="utf-8"))
     if raw["version"] != version or raw["protocol"] != protocol or any(Path(origin).resolve() != preserved.resolve() for origin in raw["origins"].values()):
         raise ValueError("Native item identity or class origin differs from its receipt")
-    rules = item_rules(raw, entities)
-    return {"receipt": receipt, "version": version, "protocol": protocol, "raw": raw, "rules": rules, "field": field, "writers": sum(expected_writers.values())}
+    rules = item_rules(raw, set(identities))
+    return {"receipt": receipt, "version": version, "protocol": protocol, "raw": raw, "rules": rules, "identities": identities, "field": field, "writers": sum(expected_writers.values())}
 
 
 def main() -> None:
@@ -114,7 +145,8 @@ def main() -> None:
     provenance = {"kind": "extracted", "tool": "tools/extraction/extract_legacy_item_obstruction.py", "tool_sha256": sha(Path(__file__)), "version": version, "protocol": protocol, "client_sha256": receipt["client_sha256"], "server_sha256": receipt["server_sha256"], "measurement_sha256": receipt["measurement_sha256"], "audit_sha256": receipt["audit_sha256"], "preservation": receipt["preservation"], "building_flag_source_sha256": receipt["sources_sha256"], "note": f"Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.{field} false; all original class files were audited, and its {primary['writers']} writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."}
     if len(records) > 1:
         provenance["aliases"] = [{"version": row["version"], "client_sha256": row["receipt"]["client_sha256"], "server_sha256": row["receipt"]["server_sha256"], "measurement_sha256": row["receipt"]["measurement_sha256"], "audit_sha256": row["receipt"]["audit_sha256"]} for row in sorted(records, key=lambda row: row["version"])]
-    document = {"schema": 1, "entities": rules, "fixed_boxes": {}, "_provenance": provenance}
+    registry_rules = {primary["identities"][name]: rule for name, rule in rules.items()}
+    document = {"schema": 1, "entities": registry_rules, "fixed_boxes": {}, "_provenance": provenance}
     output = json.dumps(document, indent=2) + "\n"
     destination = args.data / str(protocol) / "entity-obstruction.json"
     if args.check:

@@ -1,5 +1,295 @@
 [
   {
+    "version": "1.8",
+    "protocol": 47,
+    "measurement_sha256": "a730a7db59b0b99b09be49d745a49a98c475624319e08a51b250cbe58b80a693",
+    "client_sha256": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+    "native": {
+      "version": "1.8",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "adw",
+      "field_owner": "wv",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "adw": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar",
+        "wv": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar",
+        "aqu": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.1",
+    "protocol": 47,
+    "measurement_sha256": "dee9e809a013f8e33feac6695751fcf742fdfc8cec758450e9e773eea33b25c7",
+    "client_sha256": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+    "native": {
+      "version": "1.8.1",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "adx",
+      "field_owner": "wx",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "adx": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar",
+        "wx": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar",
+        "aqr": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.2",
+    "protocol": 47,
+    "measurement_sha256": "9cae3e0da3cf69f442b1a4eb08b39b470b37410219a306eaaa1b9506f971509b",
+    "client_sha256": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+    "native": {
+      "version": "1.8.2",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "va",
+      "field_owner": "pl",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "va": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar",
+        "pl": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar",
+        "adn": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.3",
+    "protocol": 47,
+    "measurement_sha256": "5149f6b517dd7276413bc561f0e9272151aeeee8d2c8d41df8d05471493c7f29",
+    "client_sha256": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+    "native": {
+      "version": "1.8.3",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "va",
+      "field_owner": "pl",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "va": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar",
+        "pl": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar",
+        "adn": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.4",
+    "protocol": 47,
+    "measurement_sha256": "099a78c1c30870192ed83e1ff40828cb2acc8d06c4f935afb5d2f7d14555cc2f",
+    "client_sha256": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+    "native": {
+      "version": "1.8.4",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.5",
+    "protocol": 47,
+    "measurement_sha256": "d5c39c25e82154061eae57a74cca42170cd51f86fdb62b241027e974b19a45fc",
+    "client_sha256": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+    "native": {
+      "version": "1.8.5",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.6",
+    "protocol": 47,
+    "measurement_sha256": "138b58188239167e3f6db1a225cc208e2ee130b8e0ec1a112c35c671273bc8e1",
+    "client_sha256": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+    "native": {
+      "version": "1.8.6",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.7",
+    "protocol": 47,
+    "measurement_sha256": "c3591eaf25999621952bffc151458208a7e9333947b5e1af5e633e8fd2010afe",
+    "client_sha256": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+    "native": {
+      "version": "1.8.7",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.8",
+    "protocol": 47,
+    "measurement_sha256": "974349921ad49534c194aaf3995c484b4be95a0433bd0d51be3118d0eee8be8a",
+    "client_sha256": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+    "native": {
+      "version": "1.8.8",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.9",
+    "protocol": 47,
+    "measurement_sha256": "5904935ead5c10fe2451676ee942ea6dd7e823dd4c06fe0255db90d046ced38c",
+    "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+    "native": {
+      "version": "1.8.9",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar"
+      }
+    }
+  },
+  {
     "version": "1.9",
     "protocol": 107,
     "measurement_sha256": "6405d8915d3c24e6f517123b78f9a21e9714820cd60f97aa979a68237ec53034",

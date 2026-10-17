@@ -31,6 +31,35 @@ class LegacyItemObstructionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             item_alias_rules(aliases, entities)
 
+    def test_classic_aliases_keep_their_original_class_names(self) -> None:
+        from extract_legacy_item_obstruction import item_alias_rules, item_rules
+
+        aliases = [row for row in self.native_measurements() if row["protocol"] == 47]
+        self.assertEqual(10, len(aliases))
+        self.assertEqual({"minecraft:item": 1}, item_alias_rules(aliases, {"minecraft:item"}))
+        for raw in aliases:
+            with self.subTest(version=raw["version"]):
+                self.assertEqual({"minecraft:item": 1}, item_rules(raw, {"minecraft:item"}))
+                raw["class"] = "yd"
+                with self.assertRaises(ValueError):
+                    item_rules(raw, {"minecraft:item"})
+
+    def test_classic_alias_coverage_cannot_stop_at_one_release(self) -> None:
+        from extract_legacy_item_obstruction import item_alias_rules
+
+        aliases = [row for row in self.native_measurements() if row["protocol"] == 47]
+        with self.assertRaises(ValueError):
+            item_alias_rules(aliases[:-1], {"minecraft:item"})
+
+    def test_legacy_registry_names_keep_their_spelling_after_identity_join(self) -> None:
+        from extract_legacy_item_obstruction import registry_identities
+
+        raw = {"mob_entries": [{"id": "villager"}], "object_entries": [{"id": "item"}, {"id": "minecraft:boat"}]}
+        self.assertEqual({"minecraft:villager": "villager", "minecraft:item": "item", "minecraft:boat": "minecraft:boat"}, registry_identities(raw))
+        raw["object_entries"].append({"id": "minecraft:item"})
+        with self.assertRaises(ValueError):
+            registry_identities(raw)
+
     def test_flattening_does_not_reuse_the_earlier_building_flag(self) -> None:
         from extract_legacy_item_obstruction import item_rules
 

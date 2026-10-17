@@ -9,12 +9,12 @@ using Umpk.Protocol.Java;
 
 namespace Umpk.Data.Java.V775;
 
-/// <summary>Generated descriptor for protocol 775 (26.1).</summary>
+/// <summary>Generated descriptor for protocol 775 (26.1.2).</summary>
 internal static class Descriptor
 {
     public static JavaVersion Build()
     {
-        var gameVersion = new GameVersion(GameEdition.Java, "26.1", 775);
+        var gameVersion = new GameVersion(GameEdition.Java, "26.1.2", 775);
         ProtocolFeatures features = BuildFeatures();
         var builder = new ProtocolDescriptorBuilder(gameVersion, features);
 

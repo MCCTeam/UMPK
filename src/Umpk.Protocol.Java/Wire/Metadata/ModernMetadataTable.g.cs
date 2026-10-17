@@ -343,7 +343,7 @@ internal sealed partial class ModernMetadataTable
         ModernMetadataSerializer.VarIntHolder, // 38 HUMANOID_ARM
     ]);
 
-    /// <summary>Protocol 775 (26.1) serializer order (ids 0-42).</summary>
+    /// <summary>Protocol 775 (26.1.2) serializer order (ids 0-42).</summary>
     public static ModernMetadataTable V26_1 { get; } = new(
     [
         ModernMetadataSerializer.Byte, // 0 BYTE

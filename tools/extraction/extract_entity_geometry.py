@@ -305,9 +305,14 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     mapped = receipt.get("format") == "mapped-role-v1"
     classic = receipt.get("format") == "classic-role-v1"
     ageable = receipt.get("format") == "legacy-ageable-role-v1"
-    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1", "legacy-ageable-role-v1") or ((mapped or classic or ageable) and not role) or (classic and protocol != 47):
+    pose_farm = receipt.get("format") == "pose-farm-role-v1"
+    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1", "legacy-ageable-role-v1", "pose-farm-role-v1") or ((mapped or classic or ageable or pose_farm) and not role) or (classic and protocol != 47):
         raise ValueError("Unsupported native entity geometry receipt format")
-    if ageable:
+    if pose_farm:
+        from extract_pose_farm_geometry import pose_farm_profile
+
+        profile = pose_farm_profile(raw, protocol)
+    elif ageable:
         from extract_legacy_ageable_geometry import ageable_profile
 
         profile = ageable_profile(raw, protocol)
@@ -354,6 +359,20 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         if len(ids) != 1:
             raise ValueError("Legacy farm entity has no unique canonical registry ID")
         verify_ageable_identity(raw, receipt, binding, sources, sha(helper_root / "LegacyEntityGeometryDump.java"), sha(helper_root / "classes/LegacyEntityGeometryDump.class"), ids[0])
+    elif pose_farm:
+        from extract_pose_farm_geometry import verify_pose_farm_identity
+
+        path = root / "bindings.json"
+        if sha(path) != receipt.get("binding_sha256"):
+            raise ValueError("Pose farm binding changed")
+        binding = json.loads(path.read_text(encoding="utf-8"))["geometry"]
+        sources = {name: (official / f"{version}-client-decompiled" / name).read_text(encoding="utf-8") for name in source_hashes}
+        dataset = next(row["dataset"] for row in catalog if row["name"] == version)
+        entities = json.loads((Path(__file__).parents[2] / "data/java" / dataset / "entities.json").read_text(encoding="utf-8"))
+        ids = [row["id_num"] for key in ("entries", "mob_entries") for row in entities.get(key, []) if row["id"] == receipt["entity"]]
+        if len(ids) != 1:
+            raise ValueError("Pose farm entity has no unique canonical registry ID")
+        verify_pose_farm_identity(raw, receipt, binding, sources, sha(root.parents[1] / "RoleGeometryDump.java"), sha(root / "classes/RoleGeometryDump.class"), ids[0])
     elif mapped:
         entity, living = "net.minecraft.world.entity.Entity", "net.minecraft.world.entity.LivingEntity"
         owners = raw.get("method_owners", {})

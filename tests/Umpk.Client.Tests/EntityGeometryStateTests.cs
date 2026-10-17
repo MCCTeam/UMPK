@@ -136,6 +136,35 @@ public sealed class EntityGeometryStateTests
         return JsonDocument.Parse(decompressed);
     }
 
+    public static IEnumerable<object[]> NativePoseFarmRoles()
+    {
+        using JsonDocument document = ReadPoseFarmRoles();
+        Assert.Equal(1, document.RootElement.GetProperty("schema").GetInt32());
+        foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
+            yield return [release.GetProperty("protocol").GetInt32(), release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32(), release.GetProperty("entity").GetString()!, release.GetProperty("registry_numeric_id").GetInt32()];
+    }
+
+    [Theory]
+    [MemberData(nameof(NativePoseFarmRoles))]
+    public async Task PoseFarmBoundsMatchEveryNativeAgeAndPosePhase(int protocol, string release, int caseIndex, string entityName, int nativeId)
+    {
+        Assert.True(JavaVersions.TryGetByName(release, out JavaVersion? version));
+        Assert.Equal(protocol, version!.Version.Protocol);
+        Assert.True(JavaGameData.Registries(protocol).EntityTypes.TryGet(Identifier.Parse(entityName), out RegistryEntry<EntityTypeDefinition> entry));
+        Assert.Equal(nativeId, entry.NetworkId);
+        using JsonDocument document = ReadPoseFarmRoles();
+        JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
+        for (int index = 0; index < native.GetProperty("rows").GetArrayLength(); index++)
+            await ReplayNativeAsync(protocol, native, index, entityName["minecraft:".Length..]);
+    }
+
+    private static JsonDocument ReadPoseFarmRoles()
+    {
+        using Stream stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.PoseFarmGeometry.native.json.gz")!;
+        using var decompressed = new GZipStream(stream, CompressionMode.Decompress);
+        return JsonDocument.Parse(decompressed);
+    }
+
     private static async Task ReplayNativeAsync(int protocol, JsonElement native, int index, string entityName)
     {
         JsonElement row = native.GetProperty("rows")[index];

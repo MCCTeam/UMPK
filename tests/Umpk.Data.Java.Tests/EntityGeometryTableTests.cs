@@ -9,6 +9,35 @@ namespace Umpk.Data.Java.Tests;
 
 public sealed class EntityGeometryTableTests
 {
+    public static IEnumerable<object[]> PoseFarmDimensions()
+    {
+        foreach (int protocol in new[] { 477, 480, 485, 490 })
+            foreach ((string name, float width, float height) in new[] { ("cow", .9F, 1.4F), ("pig", .9F, .9F), ("sheep", .9F, 1.3F), ("chicken", .4F, .7F) })
+                foreach (bool baby in new[] { false, true })
+                    foreach (EntityPose pose in new[] { EntityPose.Standing, EntityPose.FallFlying, EntityPose.Sleeping, EntityPose.Swimming, EntityPose.SpinAttack, EntityPose.Crouching, EntityPose.Dying })
+                        yield return [protocol, name, baby, pose, width, height];
+    }
+
+    [Theory]
+    [MemberData(nameof(PoseFarmDimensions))]
+    public void PoseFarmAnimalsUseNativeAgeAndPoseBounds(int protocol, string name, bool baby, EntityPose pose, float width, float height)
+    {
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(protocol);
+        var entity = Identifier.Minecraft(name);
+        Assert.True(source.TryGetRule(entity, out EntityGeometryRule rule));
+        Assert.Equal(14, rule.MetadataIndex);
+        Assert.Equal(6, rule.PoseMetadataIndex);
+        Assert.Equal(EntityGeometrySelectorKind.Boolean, rule.SelectorKind);
+        Assert.Equal(EntityDimensionsRefresh.RetainMinimumOnGrowth, rule.Refresh);
+        Assert.Equal(EntityGeometryRefreshTiming.SynchronizedData, rule.RefreshTiming);
+        Assert.Equal(0, rule.RequiredLoadedRadius);
+        Assert.Null(rule.ScaleAttribute);
+        Assert.True(source.TryGetDimensions(entity, baby, pose, out EntityGeometryDimensions dimensions));
+        bool sleeping = pose == EntityPose.Sleeping;
+        float scale = baby ? .5F : 1F;
+        Assert.Equal(new EntityGeometryDimensions(sleeping ? .2F : width * scale, sleeping ? .2F : height * scale, sleeping, true), dimensions);
+    }
+
     public static IEnumerable<object[]> LegacyFarmDimensions()
     {
         foreach (int protocol in new[] { 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404 })

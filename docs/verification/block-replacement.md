@@ -46,3 +46,5 @@ The same matrix stopped at a real 1.10.2 failure: the four placements succeed bu
 Earlier reproduction attempts exposed setup faults: a support block did not survive early world preparation, another attempt reached a server/client block mismatch during initialization, and teleport-based runs logged `moved wrongly`. Those failed runs remain separate evidence. They do not count as passes. The successful movement setup does not resolve legacy teleport reply timing or prove complete entity interpolation and obstruction behavior.
 
 The wider block interaction work remains open. This checkpoint does not establish vanilla parity for every interaction, every release or every server.
+
+The 1.10.2 villager and item-drop blockers are resolved by `9df820f` and `3528f9f`. See [native entity placement verification](entity-geometry.md) for the fresh five-scenario MCC run, tracked-entity capture, native evidence and remaining geometry work.

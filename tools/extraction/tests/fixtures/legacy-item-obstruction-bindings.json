@@ -1,0 +1,226 @@
+[
+  {
+    "native": {
+      "protocol": 316,
+      "version": "1.11.1",
+      "entity": "minecraft:item",
+      "class": "zj",
+      "field_owner": "sn",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "zj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar",
+        "sn": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar",
+        "ajs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "41fa31cd59269cda353f2520a5196559500515d2e60e7c330fd52ab79510da34",
+    "client_sha256": "eff72a31339cd9a96a61092eed2d95b95e4cc91516bea4e9105c3d73574147f6",
+    "audit_sha256": "e859e9181411773a1fd1f497435ad601554f215c79e6da3119d93808374083cd"
+  },
+  {
+    "native": {
+      "protocol": 316,
+      "version": "1.11.2",
+      "entity": "minecraft:item",
+      "class": "zj",
+      "field_owner": "sn",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "zj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar",
+        "sn": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar",
+        "ajs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "84d147d1667a0709a4383df9889f604db5695b164dfc00ba2222c08e15ebbede",
+    "client_sha256": "be3fff4f2cc005a1310a96389efdeb983d2bcb4b8e747c402acd616ae73d0ba2",
+    "audit_sha256": "7f9a9abb83d2bef440eacf865d09321b4789b36e374f10f156f8f8473521456f"
+  },
+  {
+    "native": {
+      "protocol": 335,
+      "version": "1.12",
+      "entity": "minecraft:item",
+      "class": "acj",
+      "field_owner": "ve",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar",
+        "ve": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar",
+        "ams": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "fa0cf2c9118dfd46ca42fee65cefbbf566ba52c069df6421a8cc858e8a0a19f6",
+    "client_sha256": "59e84cf6acc3912e1705ab05c722485afb3ec33343eef4756d8c16edfe6411ca",
+    "audit_sha256": "6be722c520799d18a86a32a06b9c5672a142d8f302c204ce4110504f2434b3e5"
+  },
+  {
+    "native": {
+      "protocol": 338,
+      "version": "1.12.1",
+      "entity": "minecraft:item",
+      "class": "acl",
+      "field_owner": "vg",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acl": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar",
+        "vg": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar",
+        "amu": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "caf4b29dbfed1aa204e9317c12df240c61cc41d80b07aa6954050a6c350e75b8",
+    "client_sha256": "19331fb29bf8b8d5ed764677c94cca9d66481e10104f660eb555894a4300cf22",
+    "audit_sha256": "800f83675b2fbcb4f2d95b0a093ba26b2728f404a3c152dd2facb4b65fb41031"
+  },
+  {
+    "native": {
+      "protocol": 340,
+      "version": "1.12.2",
+      "entity": "minecraft:item",
+      "class": "acl",
+      "field_owner": "vg",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acl": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar",
+        "vg": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar",
+        "amu": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "0f0fac7df2cee2a16c2adfbf9c482cd316a8209d764c5ab858eac88e3c2734de",
+    "client_sha256": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f",
+    "audit_sha256": "84153507fc20cbb50b981b8c1d17a38bccada761a08988dffe9329614ba15fd5"
+  },
+  {
+    "native": {
+      "protocol": 393,
+      "version": "1.13",
+      "entity": "minecraft:item",
+      "class": "ami",
+      "field_owner": "aeo",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ami": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar",
+        "aeo": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar",
+        "axs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "3adb08f5220d7975d42e175dd29e251e09c3bde315e4f851a35d580b613498b5",
+    "client_sha256": "d807a5ed9428b6c16b64888fd2b7fa76dcf5c55d06f96f7c0c47762c3fc3e26e",
+    "audit_sha256": "9ceecd909613f0a455ac4db727d1bb4fce13484120546fcffb2c70d3ffab3fcc"
+  },
+  {
+    "native": {
+      "protocol": 401,
+      "version": "1.13.1",
+      "entity": "minecraft:item",
+      "class": "aml",
+      "field_owner": "aer",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "aml": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar",
+        "aer": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar",
+        "axx": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "f8fc30b8212cc9ec6c7c08d25e4a88c1bab81b28b3bf055058460e875225424c",
+    "client_sha256": "f0b4cf6d1a87ae150f87a535651138ca7b82bdad8853f76e7ddbff1dd610ac87",
+    "audit_sha256": "11bfc8086efb010013ab6a231d6db31eb35058c320f7f2354139e4790df13776"
+  },
+  {
+    "native": {
+      "protocol": 404,
+      "version": "1.13.2",
+      "entity": "minecraft:item",
+      "class": "amm",
+      "field_owner": "aer",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "amm": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar",
+        "aer": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar",
+        "axy": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "689e59a782224f643bdbcb72ff170d35c7e7f37235712f3010ee5b3735866c09",
+    "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+    "audit_sha256": "aab57a432a827611b7e6553167d9e71c7c35f2c201689e9f577d56156f30734a"
+  }
+]

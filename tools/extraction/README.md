@@ -157,20 +157,30 @@ Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicke
 `extract_entity_geometry.py` writes audited villager dimensions and metadata refresh rules to `entity-geometry.json`. It checks the native age/pose transition phases, report hashes and official client/server hashes before extracting the selected protocol representatives. Preserve the complete measurement roots outside Git.
 
 ```bash
+legacy_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/legacy-entity-geometry-batch-20261017-v1"
+legacy_arguments=(
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1"
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-1.11-20261017-v1"
+)
+for release in 1.11.1 1.11.2 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
+  legacy_arguments+=(--legacy "$legacy_measurements/$release/geometry")
+done
 python3 tools/extraction/extract_entity_geometry.py \
   --data data/java \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-entity-native-all-20261017-v1" \
   --transitions "$MINECRAFT_OFFICIAL_ROOT/runs/villager-box-transitions-all-20261017-v1" \
-  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1" \
-  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-1.11-20261017-v1" \
+  "${legacy_arguments[@]}" \
+  --legacy-fixture tests/Umpk.Client.Tests/Fixtures/LegacyVillagerGeometry.native.json \
   --check
 python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry.py
 ```
 
-The 34 datasets cover 1.10.2, 1.11 and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
+The 41 datasets cover 1.10.2, the measured releases from 1.11 through 1.13.2, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
 
-`extract_legacy_item_obstruction.py` adds the original 1.10.2 and 1.11 item entities' nonblocking rules. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. The remaining legacy entity keys retain unknown rules.
+The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its two cases cover 176 transition replays across ten legacy releases.
+
+`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules through 1.13.2. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 393 changes that native field from `i` to `j`; the source bindings retain this boundary explicitly. The remaining legacy entity keys retain unknown rules.
 
 ```bash
 python3 tools/extraction/extract_legacy_item_obstruction.py \
@@ -183,4 +193,17 @@ python3 tools/extraction/extract_legacy_item_obstruction.py \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-1.11-20261017-v1" \
   --check
+python3 tools/extraction/extract_legacy_item_obstruction.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$legacy_measurements/1.11.2/item" \
+  --alias "$legacy_measurements/1.11.1/item" \
+  --check
+for release in 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
+  python3 tools/extraction/extract_legacy_item_obstruction.py \
+    --data data/java \
+    --official "$MINECRAFT_OFFICIAL_ROOT" \
+    --measurements "$legacy_measurements/$release/item" \
+    --check
+done
 ```

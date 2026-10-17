@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import zipfile
 
 from verify_entity_box_transitions import centered, finite, refresh, size
 
@@ -91,11 +92,79 @@ def sha(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def group_legacy(records: list[dict]) -> dict[int, list[dict]]:
+    groups, versions = {}, set()
+    for record in records:
+        protocol, version = record["protocol"], record["version"]
+        if type(protocol) is not int or protocol <= 0 or not isinstance(version, str) or not version or version in versions:
+            raise ValueError("Duplicate or invalid legacy geometry release")
+        versions.add(version)
+        group = groups.setdefault(protocol, [])
+        profile = legacy_villager_profile(record["raw"])
+        if group and profile != legacy_villager_profile(group[0]["raw"]):
+            raise ValueError(f"Legacy geometry differs between aliases of protocol {protocol}")
+        group.append(record)
+    return groups
+
+
+def legacy_fixture(records: list[dict]) -> dict:
+    group_legacy(records)
+    cases, releases, seen = [], [], {}
+    for record in sorted(records, key=lambda row: (row["protocol"], row["version"])):
+        raw = record["raw"]
+        case = {key: raw[key] for key in ("metadata_index", "blocks_building", "positions")}
+        case["rows"] = [{key: row[key] for key in ("from", "to", "position", "before_size", "before", "after_size", "after_sync", "after_position")} for row in raw["rows"]]
+        key = json.dumps(case, sort_keys=True)
+        if key not in seen:
+            seen[key] = len(cases)
+            cases.append(case)
+        receipt = record["receipt"]
+        releases.append({"version": record["version"], "protocol": record["protocol"], "case": seen[key], "measurement_sha256": receipt["measurement_sha256"], "client_sha256": receipt["client_sha256"], "server_sha256": receipt["server_sha256"]})
+    return {"releases": releases, "cases": cases}
+
+
+def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
+    receipt = json.loads((root / "result.json").read_text(encoding="utf-8"))
+    version, protocol = receipt.get("version", "1.10.2"), receipt.get("protocol", 210)
+    if not any(row["name"] == version and row["protocol"] == protocol for row in catalog):
+        raise ValueError("Legacy geometry release does not match the version catalog")
+    path = root / "geometry.json"
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    legacy_villager_profile(raw)
+    if receipt["status"] != "complete" or sha(path) != receipt["measurement_sha256"] or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
+        raise ValueError("Legacy measurement receipt mismatch")
+    seed = official / "downloads" / version
+    metadata = json.loads((seed / "version.json").read_text(encoding="utf-8"))
+    for side in ("client", "server"):
+        artifact = seed / (side + ".jar")
+        if sha(artifact) != receipt[side + "_sha256"] or hashlib.sha1(artifact.read_bytes()).hexdigest() != metadata["downloads"][side]["sha1"]:
+            raise ValueError(f"Official {side} artifact mismatch: {version}")
+    source_hashes = receipt.get("sources_sha256")
+    if source_hashes is None:
+        tree = official / f"{version}-client-decompiled"
+        source_hashes = {str(Path(name).relative_to(tree)): value for name, value in receipt.get("source_sha256", {}).items() if Path(name).is_relative_to(tree)}
+    for name, expected in source_hashes.items():
+        if sha(official / f"{version}-client-decompiled" / name) != expected:
+            raise ValueError(f"Audited geometry source changed: {version}/{name}")
+    origins = raw.get("origins", {})
+    if not origins or len(set(origins.values())) != 1:
+        raise ValueError("Native geometry classes have inconsistent origins")
+    preserved = Path(next(iter(origins.values())))
+    if sha(preserved) != receipt["preservation"]["unsigned_jar_sha256"]:
+        raise ValueError("Preserved geometry client changed")
+    with zipfile.ZipFile(seed / "client.jar") as original, zipfile.ZipFile(preserved) as measured:
+        classes = {name for name in original.namelist() if name.endswith(".class")}
+        if classes != {name for name in measured.namelist() if name.endswith(".class")} or len(classes) != receipt["preservation"]["unchanged_class_files"] or any(original.read(name) != measured.read(name) for name in classes):
+            raise ValueError("Original geometry client class preservation failed")
+    return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--measurements", type=Path, required=True)
     parser.add_argument("--transitions", type=Path, required=True)
     parser.add_argument("--legacy", type=Path, action="append", required=True)
+    parser.add_argument("--legacy-fixture", type=Path)
     parser.add_argument("--official", type=Path, required=True)
     parser.add_argument("--data", type=Path, default=Path("data/java"))
     parser.add_argument("--check", action="store_true")
@@ -103,13 +172,8 @@ def main() -> None:
     catalog = json.loads((args.data / "versions.json").read_text(encoding="utf-8"))["versions"]
     geometry = {row["version"]: row for row in json.loads((args.measurements / "entity-placement-client-results.json").read_text(encoding="utf-8"))}
     transitions = {row["version"]: row for row in json.loads((args.transitions / "villager-box-transition-results.json").read_text(encoding="utf-8"))}
-    legacy = {}
-    for root in args.legacy:
-        receipt = json.loads((root / "result.json").read_text(encoding="utf-8"))
-        protocol = receipt.get("protocol", 210)
-        if protocol in legacy:
-            raise ValueError(f"Duplicate legacy geometry protocol: {protocol}")
-        legacy[protocol] = (root, receipt)
+    legacy_records = [read_legacy(root, args.official, catalog) for root in args.legacy]
+    legacy = group_legacy(legacy_records)
     selected = {}
     for version in catalog:
         if version["name"] in geometry or version["protocol"] in legacy:
@@ -117,13 +181,14 @@ def main() -> None:
     for protocol, version in sorted(selected.items()):
         name = version["name"]
         if protocol in legacy:
-            root, receipt = legacy[protocol]
-            path = root / "geometry.json"
-            raw = json.loads(path.read_text(encoding="utf-8"))
+            record = next((row for row in legacy[protocol] if row["version"] == name), None)
+            if record is None:
+                raise ValueError(f"Native geometry is missing the canonical alias: {name}")
+            receipt, raw = record["receipt"], record["raw"]
             profile = legacy_villager_profile(raw)
-            if sha(path) != receipt["measurement_sha256"] or receipt["status"] != "complete" or receipt.get("version", "1.10.2") != name or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
-                raise ValueError("Legacy measurement receipt mismatch")
-            proof = {"measurement_sha256": sha(path), "native_witnesses": len(raw["rows"])}
+            proof = {"measurement_sha256": receipt["measurement_sha256"], "native_witnesses": len(raw["rows"])}
+            if len(legacy[protocol]) > 1:
+                proof["aliases"] = [{"version": row["version"], "measurement_sha256": row["receipt"]["measurement_sha256"], "client_sha256": row["receipt"]["client_sha256"], "server_sha256": row["receipt"]["server_sha256"]} for row in sorted(legacy[protocol], key=lambda row: row["version"])]
         else:
             receipt, transition_receipt = geometry[name], transitions[name]
             path = args.measurements / name / "entity-placement-client.json"
@@ -149,6 +214,13 @@ def main() -> None:
                 raise ValueError(f"Canonical geometry differs: {destination}")
         else:
             destination.write_text(output, encoding="utf-8")
+    if args.legacy_fixture is not None:
+        output = json.dumps(legacy_fixture(legacy_records), indent=2) + "\n"
+        if args.check:
+            if not args.legacy_fixture.is_file() or args.legacy_fixture.read_text(encoding="utf-8") != output:
+                raise ValueError("Native legacy geometry fixture differs")
+        else:
+            args.legacy_fixture.write_text(output, encoding="utf-8")
     print(f"{'Checked' if args.check else 'Extracted'} {len(selected)} native villager geometry datasets")
 
 

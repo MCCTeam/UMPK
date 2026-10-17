@@ -13,6 +13,32 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.14.4.json"
         self.raw = json.loads(path.read_text(encoding="utf-8"))
 
+    def test_equal_legacy_aliases_share_a_fixture_case_and_keep_both_receipts(self) -> None:
+        from extract_entity_geometry import legacy_fixture
+
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.11.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        records = [{"version": version, "protocol": 316, "raw": copy.deepcopy(raw), "receipt": {"measurement_sha256": version, "client_sha256": "client-" + version, "server_sha256": "server-" + version}} for version in ("1.11.1", "1.11.2")]
+        fixture = legacy_fixture(records)
+        self.assertEqual(1, len(fixture["cases"]))
+        self.assertEqual(["1.11.1", "1.11.2"], [row["version"] for row in fixture["releases"]])
+        self.assertEqual([0, 0], [row["case"] for row in fixture["releases"]])
+        self.assertEqual(["1.11.1", "1.11.2"], [row["measurement_sha256"] for row in fixture["releases"]])
+
+    def test_unequal_legacy_aliases_and_duplicate_releases_are_rejected(self) -> None:
+        from extract_entity_geometry import group_legacy
+
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.11.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        records = [{"version": version, "protocol": 316, "raw": copy.deepcopy(raw)} for version in ("1.11.1", "1.11.2")]
+        self.assertEqual(2, len(group_legacy(records)[316]))
+        with self.assertRaises(ValueError):
+            group_legacy([records[0], records[0]])
+        other = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json"
+        records[1]["raw"] = json.loads(other.read_text(encoding="utf-8"))
+        with self.assertRaises(ValueError):
+            group_legacy(records)
+
     def test_legacy_shrinking_also_retains_the_minimum(self) -> None:
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json"
         profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))

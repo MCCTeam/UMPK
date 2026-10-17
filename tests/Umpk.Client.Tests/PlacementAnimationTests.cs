@@ -35,7 +35,7 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> VillagerGeometryCases()
     {
-        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (315, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
+        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (315, 12), (316, 12), (335, 12), (338, 12), (340, 12), (393, 12), (401, 12), (404, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
         {
             yield return [protocol, babyIndex, false, EntityPose.Standing, 8.5, 65.0, true];
             yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 65.0, false];
@@ -71,11 +71,15 @@ public sealed class PlacementAnimationTests
         Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
     }
 
+    public static IEnumerable<object[]> LegacyItemCases()
+    {
+        foreach (int protocol in new[] { 210, 315, 316, 335, 338, 340, 393, 401, 404 })
+            foreach (double x in new[] { 1.5, 8.5 })
+                yield return [protocol, x];
+    }
+
     [Theory]
-    [InlineData(210, 1.5)]
-    [InlineData(210, 8.5)]
-    [InlineData(315, 1.5)]
-    [InlineData(315, 8.5)]
+    [MemberData(nameof(LegacyItemCases))]
     public async Task LegacyItemDropsDoNotSuppressPlacementSwings(int protocol, double x)
     {
         await using var harness = new Harness(protocol);

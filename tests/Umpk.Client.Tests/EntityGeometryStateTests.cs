@@ -33,12 +33,18 @@ public sealed class EntityGeometryStateTests
 
     public static IEnumerable<object[]> NativeTransitions()
     {
-        foreach ((int protocol, string version) in new[] { (210, "1.10.2"), (315, "1.11"), (498, "1.14.4") })
+        using (JsonDocument legacy = ReadLegacy())
         {
-            using JsonDocument document = ReadNative(version);
-            for (int index = 0; index < document.RootElement.GetProperty("rows").GetArrayLength(); index++)
-                yield return [protocol, version, index];
+            foreach (JsonElement release in legacy.RootElement.GetProperty("releases").EnumerateArray())
+            {
+                JsonElement native = legacy.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()];
+                for (int index = 0; index < native.GetProperty("rows").GetArrayLength(); index++)
+                    yield return [release.GetProperty("protocol").GetInt32(), release.GetProperty("version").GetString()!, index];
+            }
         }
+        using JsonDocument modern = ReadNative("1.14.4");
+        for (int index = 0; index < modern.RootElement.GetProperty("rows").GetArrayLength(); index++)
+            yield return [498, "1.14.4", index];
     }
 
     [Theory]
@@ -86,11 +92,18 @@ public sealed class EntityGeometryStateTests
     }
 
     [Theory]
-    [InlineData(210, 12)]
-    [InlineData(315, 12)]
-    [InlineData(498, 14)]
-    [InlineData(755, 16)]
-    public async Task MetadataCallbacksAndEqualPositionReapplicationKeepTheirNativeOrder(int protocol, int babyIndex)
+    [InlineData(210, 12, false)]
+    [InlineData(315, 12, true)]
+    [InlineData(316, 12, true)]
+    [InlineData(335, 12, true)]
+    [InlineData(338, 12, true)]
+    [InlineData(340, 12, true)]
+    [InlineData(393, 12, true)]
+    [InlineData(401, 12, true)]
+    [InlineData(404, 12, true)]
+    [InlineData(498, 14, true)]
+    [InlineData(755, 16, false)]
+    public async Task MetadataCallbacksAndEqualPositionReapplicationKeepTheirNativeOrder(int protocol, int babyIndex, bool retainedGrowth)
     {
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion? version));
         var harness = new ApplierHarness(version!);
@@ -107,7 +120,7 @@ public sealed class EntityGeometryStateTests
         await harness.ApplyAsync(Metadata(false));
 
         Assert.True(harness.State.EntityGeometry.TryGet(entity, source, out Aabb grown, out _));
-        double expectedMinimum = protocol is 315 or 498 ? 1.5 - .3F / 2.0 : original.MinX;
+        double expectedMinimum = retainedGrowth ? 1.5 - .3F / 2.0 : original.MinX;
         Assert.Equal(expectedMinimum, grown.MinX);
         Assert.Equal(expectedMinimum + .6F, grown.MaxX);
         Assert.Equal(new Vec3d(1.5, 64, 1.5), entity.Position);
@@ -122,7 +135,17 @@ public sealed class EntityGeometryStateTests
 
     private static JsonDocument ReadNative(string version)
     {
-        using Stream stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream($"Umpk.Client.Tests.Fixtures.VillagerGeometry{version}.native.json")!;
+        using Stream? stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream($"Umpk.Client.Tests.Fixtures.VillagerGeometry{version}.native.json");
+        if (stream is not null)
+            return JsonDocument.Parse(stream);
+        using JsonDocument legacy = ReadLegacy();
+        JsonElement release = legacy.RootElement.GetProperty("releases").EnumerateArray().Single(row => row.GetProperty("version").GetString() == version);
+        return JsonDocument.Parse(legacy.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()].GetRawText());
+    }
+
+    private static JsonDocument ReadLegacy()
+    {
+        using Stream stream = typeof(EntityGeometryStateTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.LegacyVillagerGeometry.native.json")!;
         return JsonDocument.Parse(stream);
     }
 }

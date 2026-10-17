@@ -161,8 +161,8 @@ Play Clientbound 0x74 minecraft:tab_list PlayerListCodecs.TabListV1_20_3 fault:C
 Play Clientbound 0x75 minecraft:tag_query marker n/a shape:opaque
 Play Clientbound 0x76 minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 read:3 shape:opaque
 Play Clientbound 0x77 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 read:62 shape:opaque
-Play Clientbound 0x78 minecraft:ticking_state marker n/a shape:opaque
-Play Clientbound 0x79 minecraft:ticking_step marker n/a shape:opaque
+Play Clientbound 0x78 minecraft:ticking_state WorldStateCodecs.TickingStateV1_20_3 read:5 shape:float,bool
+Play Clientbound 0x79 minecraft:ticking_step WorldStateCodecs.TickingStepV1_20_3 read:1 shape:varint
 Play Clientbound 0x7A minecraft:transfer PlayCommonCodecs.Transfer read:2 shape:string,varint
 Play Clientbound 0x7B minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_21_2 read:4 shape:update_advancements(icon=countfirst/components/6f7a8b38,text=nbt/legacy,criteria=0,telemetry=1,showadv=0)
 Play Clientbound 0x7C minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 read:2 shape:opaque

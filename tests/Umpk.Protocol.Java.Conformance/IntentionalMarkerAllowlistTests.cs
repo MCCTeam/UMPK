@@ -177,14 +177,14 @@ public sealed class IntentionalMarkerAllowlistTests
             .GroupBy(a => a.Reason)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        // Binding set_border removes one KnownGap across 26 protocols; the other marker reasons retain their exact totals.
-        Assert.Equal(69, IntentionalMarkers.All.Count);
-        Assert.Equal(1081, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
+        // Tick-state and tick-step codecs remove two KnownGaps across 13 protocols; other marker reasons retain their exact totals.
+        Assert.Equal(67, IntentionalMarkers.All.Count);
+        Assert.Equal(1055, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
         Assert.Equal(2, byReason[MarkerReason.HandledElsewhere]);
         Assert.Equal(4, byReason[MarkerReason.WrongCodecWouldBeWorse]);
         Assert.Equal(2, byReason[MarkerReason.DatasetArtifact]);
         Assert.Equal(12, byReason[MarkerReason.NoConsumerWorthWriting]);
-        Assert.Equal(49, byReason[MarkerReason.KnownGap]);
+        Assert.Equal(47, byReason[MarkerReason.KnownGap]);
     }
 
     private static Dictionary<(ProtocolPhase, PacketFlow, string), SortedSet<int>> ActualMarkers()

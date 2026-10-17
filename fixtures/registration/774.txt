@@ -171,8 +171,8 @@ Play Clientbound 0x79 minecraft:tag_query marker
 Play Clientbound 0x7A minecraft:take_item_entity codec
 Play Clientbound 0x7B minecraft:teleport_entity codec
 Play Clientbound 0x7C minecraft:test_instance_block_status marker
-Play Clientbound 0x7D minecraft:ticking_state marker
-Play Clientbound 0x7E minecraft:ticking_step marker
+Play Clientbound 0x7D minecraft:ticking_state codec
+Play Clientbound 0x7E minecraft:ticking_step codec
 Play Clientbound 0x7F minecraft:transfer codec
 Play Clientbound 0x80 minecraft:update_advancements codec
 Play Clientbound 0x81 minecraft:update_attributes codec

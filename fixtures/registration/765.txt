@@ -141,8 +141,8 @@ Play Clientbound 0x6A minecraft:tab_list codec
 Play Clientbound 0x6B minecraft:tag_query marker
 Play Clientbound 0x6C minecraft:take_item_entity codec
 Play Clientbound 0x6D minecraft:teleport_entity codec
-Play Clientbound 0x6E minecraft:ticking_state marker
-Play Clientbound 0x6F minecraft:ticking_step marker
+Play Clientbound 0x6E minecraft:ticking_state codec
+Play Clientbound 0x6F minecraft:ticking_step codec
 Play Clientbound 0x70 minecraft:update_advancements codec
 Play Clientbound 0x71 minecraft:update_attributes codec
 Play Clientbound 0x72 minecraft:update_mob_effect codec

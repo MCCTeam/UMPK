@@ -47,6 +47,8 @@ internal static class WorldBindings
         WorldStateCodecs.DeclareSetDefaultSpawnPosition(bindings);
         WorldStateCodecs.DeclareSetSimulationDistance(bindings);
         WorldStateCodecs.DeclareSetTime(bindings);
+        WorldStateCodecs.DeclareTickingState(bindings);
+        WorldStateCodecs.DeclareTickingStep(bindings);
         WorldTagCodecs.DeclareUpdateTags(bindings);
     }
 }

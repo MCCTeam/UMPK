@@ -175,6 +175,49 @@ public sealed class PistonPushEndToEndTests
         Assert.Equal(0, corrections);
     }
 
+    [Theory]
+    [InlineData(765)]
+    [InlineData(770)]
+    [InlineData(774)]
+    [InlineData(777)]
+    public async Task FrozenPistonAdvancesOnlyOnGrantedWorldSteps(int protocol)
+    {
+        using var budget = new CancellationTokenSource(Budget);
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ManualTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = Client(server, ticks, version);
+        var frames = new ConcurrentQueue<InboundFrame>();
+        await JoinAsync(client, server, frames, ct, version);
+        var piston = new BlockPos(4, 64, 8);
+        await BuildFixtureAsync(client, piston, ct);
+        var start = new Vec3d(piston.X + 1.5, 64, piston.Z + 0.5);
+        await TeleportAsync(client, server, start, ct, version);
+        await SettleAsync(client, ticks, ct);
+        await SendAsync(server, new ClientboundTickingStatePacket(20, true), ct, version);
+        await SendBlockEventAsync(client, server, piston, 0, ct, version);
+
+        await ticks.FireAsync(ct);
+        await ticks.FireAsync(ct);
+        Assert.Equal(start.X, client.State.Self.Position.X, BoxWidthTolerance);
+        Assert.True(client.State.WorldTicks.IsFrozen);
+        Assert.False(client.State.WorldTicks.RunsNormally);
+
+        await SendAsync(server, new ClientboundTickingStepPacket(2), ct, version);
+        // A following block event is an apply barrier for the preceding step packet; the non-piston position has no simulation side effect.
+        await SendBlockEventAsync(client, server, new BlockPos(0, 64, 0), 0, ct, version);
+        await ticks.FireAsync(ct);
+        Assert.Equal(start.X + 0.31000001192092896, client.State.Self.Position.X, BoxWidthTolerance);
+        await ticks.FireAsync(ct);
+        Assert.Equal(start.X + VanillaFullPush, client.State.Self.Position.X, BoxWidthTolerance);
+        Assert.True(client.State.WorldTicks.RunsNormally);
+        Assert.Equal(0, client.State.WorldTicks.FrozenTicksToRun);
+        await ticks.FireAsync(ct);
+        Assert.Equal(start.X + VanillaFullPush, client.State.Self.Position.X, BoxWidthTolerance);
+        Assert.False(client.State.WorldTicks.RunsNormally);
+    }
+
     private static async Task<List<Vec3d>> ReadTickPositionsAsync(ConcurrentQueue<InboundFrame> frames, JavaVersion version, CancellationToken ct)
     {
         var wire = new Internal.WireIndex(version);

@@ -24,6 +24,17 @@ internal sealed class ConnectionApplier : IApplier
 
         switch (packet)
         {
+            // Native listeners ignore tick control without a level. The level lifetime also exists when terrain tracking is disabled.
+            case ClientboundTickingStatePacket ticking:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.ApplyState(ticking.TickRate, ticking.IsFrozen);
+                return true;
+
+            case ClientboundTickingStepPacket stepping:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.SetSteps(stepping.TickSteps);
+                return true;
+
             case ClientboundLoginPacket join:
                 await ApplyJoinAsync(join, context, ct).ConfigureAwait(false);
                 return true;

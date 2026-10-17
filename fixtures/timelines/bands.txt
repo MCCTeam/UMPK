@@ -228,8 +228,8 @@ Play          Clientbound minecraft:tag_query                              393- 
 Play          Clientbound minecraft:take_item_entity                       47 EntityStateCodecs.TakeItemEntityV1_8 via:minecraft:collect_item | 107-210 EntityStateCodecs.TakeItemEntityV1_8 | 315- EntityStateCodecs.TakeItemEntityV1_11
 Play          Clientbound minecraft:teleport_entity                        47 EntityMoveCodecs.TeleportEntityV1_8 via:minecraft:entity_teleport | 107-767 EntityMoveCodecs.TeleportEntityV1_9 | 768- EntityMoveCodecs.TeleportEntityV1_21_2
 Play          Clientbound minecraft:test_instance_block_status             770- marker
-Play          Clientbound minecraft:ticking_state                          765- marker
-Play          Clientbound minecraft:ticking_step                           765- marker
+Play          Clientbound minecraft:ticking_state                          765- WorldStateCodecs.TickingStateV1_20_3
+Play          Clientbound minecraft:ticking_step                           765- WorldStateCodecs.TickingStepV1_20_3
 Play          Clientbound minecraft:title                                  47 TitleCodecs.LegacyTitleV1_8
 Play          Clientbound minecraft:transaction                            47 ContainerCodecs.TransactionClientV1_8 | 107-754 ContainerCodecs.TransactionClientV1_8 via:minecraft:container_ack
 Play          Clientbound minecraft:transfer                               766- PlayCommonCodecs.Transfer

@@ -90,10 +90,15 @@ public sealed class UmpkClient : IAsyncDisposable
         _logger = settings.LoggerFactory.CreateLogger("Umpk.Client");
         _ownsScheduler = settings.Scheduler is null;
         _scheduler = settings.Scheduler ?? new ChannelSessionScheduler(ex => _logger.LogError(ex, "Session loop work threw."));
-        _tickSource = settings.TickSource ?? new PeriodicTimerTickSource();
         _eventBus = new EventBus(_logger, settings.Options.LoopStallThreshold, settings.Options.DefaultStreamCapacity);
 
         State = new ClientState(settings.Features);
+        // Match the bound packet identity rather than a numeric version or an unimplemented marker. Host-provided sources already supply game ticks.
+        bool hasTickControl = settings.Version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound)
+            .Packets.Any(entry => ReferenceEquals(entry.Type, WorldPackets.Clientbound.TickingState));
+        _tickSource = settings.TickSource ?? (hasTickControl
+            ? new NativeClientTickSource(State.WorldTicks)
+            : new PeriodicTimerTickSource());
         Events = new ClientEvents(_eventBus);
         Snapshots = new ClientSnapshots(this);
         // The one discarded task in this class that stays discarded, and the reason is structural rather than convenient: EventBus.PublishAsync isolates every handler in its own try/catch and its stream sinks cannot throw, so this task has no failure to observe. It also cannot be awaited - the lag report is raised from inside another publish (or from a stream consumer's thread), where awaiting would re-enter the bus.
@@ -852,6 +857,10 @@ public sealed class UmpkClient : IAsyncDisposable
         // The session's own tick clock, advanced first so everything below dates against the tick it is running in. It is not gated on any feature - only the physics block further down is - because what it dates (today, effect apply stamps) is written by appliers that run whatever the feature set is.
         State.AdvanceSessionTick();
 
+        // TickRateManager latches whether this world tick runs before consuming a granted step. Player input still runs while the world is frozen.
+        if (State.WorldDimension is not null)
+            State.WorldTicks.BeginTick();
+
         // Held block input runs on the same clock as locomotion, before the movement report. A request never waits for a future tick or a server acknowledgment inside this loop.
         await Actions.Interaction.TickMiningOnLoopAsync(ct).ConfigureAwait(false);
 
@@ -942,6 +951,10 @@ public sealed class UmpkClient : IAsyncDisposable
                 _physics?.TickPistons();
 
         }
+
+        // ClientLevel.tick follows entities and block entities. Border animation is world state, so it respects freeze/step and does not publish a packet-change event.
+        if (State.WorldOrNull is { } tickingWorld && State.WorldTicks.RunsNormally)
+            tickingWorld.SetBorder(tickingWorld.Border.AdvanceTick());
 
         // The end-of-tick marker (1.21.2+). Vanilla's client sends it every tick and the server uses the ticks it does NOT arrive in to notice the player stopped moving: without it receivedMovementThisTick latches true after the first movement packet and the server's record of the player's velocity never returns to zero. Sent last in the tick, after any movement, so the frame order matches vanilla's.
         if (_sendsTickEnd && _sink is { } tickSink && State.Self.HasSpawned)

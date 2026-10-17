@@ -157,12 +157,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "test_instance_block_status", MarkerReason.NoConsumerWorthWriting, From(770),
             "Part of the 1.21.5 game-test instance-block tooling, which only a developer running the test framework drives. No gameplay consumer would read it."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "ticking_state", MarkerReason.KnownGap, From(765),
-            "The 1.20.3 server tick-rate and freeze state. Unbound with its ticking_step partner, so a consumer cannot tell a frozen or slowed server from a stalled connection."),
-
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "ticking_step", MarkerReason.KnownGap, From(765),
-            "The 1.20.3 single-step advance for a frozen server. Unbound with ticking_state above, and with the same consequence."),
-
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_enabled_features", MarkerReason.KnownGap, Between(761, 763),
             "The 1.19.3 through 1.20.1 feature-flag announcement, moved into the configuration phase at 1.20.2. Unbound on the three protocols that carry it in play, so a consumer cannot tell which experimental packs are enabled there."),
 

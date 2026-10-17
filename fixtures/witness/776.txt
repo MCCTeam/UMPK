@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 18 of 214 implemented bindings (corpus 6, synth 12)
+# witnessed 18 of 216 implemented bindings (corpus 6, synth 12)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -187,6 +187,8 @@ Play Clientbound 0x79 minecraft:system_chat ChatDisplayCodecs.SystemChatV1_21_5 
 Play Clientbound 0x7A minecraft:tab_list PlayerListCodecs.TabListV1_21_5 src:none
 Play Clientbound 0x7C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x7D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 src:none
+Play Clientbound 0x7F minecraft:ticking_state WorldStateCodecs.TickingStateV1_20_3 src:none
+Play Clientbound 0x80 minecraft:ticking_step WorldStateCodecs.TickingStepV1_20_3 src:none
 Play Clientbound 0x81 minecraft:transfer PlayCommonCodecs.Transfer src:none
 Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_2 src:synth w:377 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P775(UnmodeledItemComponentException) reject:P777(ProtocolViolationException)

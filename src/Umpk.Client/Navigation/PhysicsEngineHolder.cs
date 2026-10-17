@@ -415,7 +415,7 @@ internal sealed class PhysicsEngineHolder
     /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>
     public void TickPistons()
     {
-        if (_engine is null || _pistons.ActiveCount == 0)
+        if (!_services.State.WorldTicks.RunsNormally || _engine is null || _pistons.ActiveCount == 0)
             return;
 
         _pistons.Tick(_engine);

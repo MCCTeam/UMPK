@@ -173,8 +173,8 @@ Play Clientbound 0x7B minecraft:tag_query marker n/a shape:opaque
 Play Clientbound 0x7C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 read:3 shape:opaque
 Play Clientbound 0x7D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_21_2 read:62 shape:opaque
 Play Clientbound 0x7E minecraft:test_instance_block_status marker n/a shape:opaque
-Play Clientbound 0x7F minecraft:ticking_state marker n/a shape:opaque
-Play Clientbound 0x80 minecraft:ticking_step marker n/a shape:opaque
+Play Clientbound 0x7F minecraft:ticking_state WorldStateCodecs.TickingStateV1_20_3 read:5 shape:float,bool
+Play Clientbound 0x80 minecraft:ticking_step WorldStateCodecs.TickingStepV1_20_3 read:1 shape:varint
 Play Clientbound 0x81 minecraft:transfer PlayCommonCodecs.Transfer read:2 shape:string,varint
 Play Clientbound 0x82 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV26_2 read:5 shape:update_advancements(icon=template/components/4b7a7a87,text=nbt/modern,criteria=0,telemetry=1,showadv=1)
 Play Clientbound 0x83 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_21 read:2 shape:opaque

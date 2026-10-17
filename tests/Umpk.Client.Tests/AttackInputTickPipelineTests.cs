@@ -115,9 +115,11 @@ public sealed class AttackInputTickPipelineTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task SessionPlayerPhaseChargesTheNextClickWithOrWithoutPhysics(bool physics)
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async Task SessionPlayerPhaseChargesTheNextClickWithOrWithoutPhysics(bool physics, bool frozen)
     {
         using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         CancellationToken ct = budget.Token;
@@ -126,12 +128,19 @@ public sealed class AttackInputTickPipelineTests
         await using FakeJavaServer server = FakeJavaServer.Create();
         await using UmpkClient client = CreateClient(server, ticks, version, physics);
         await JoinAsync(client, server, version, "diamond_spear", ct);
+        if (frozen)
+        {
+            await ScriptedServer.SendAsync(server, version.Protocol, ProtocolPhase.Play, new ClientboundTickingStatePacket(1, true), ct);
+            await PreparePlayerAsync(client, server, version, "diamond_spear", ct);
+        }
         BlockPos target = new(1, 65, 1);
         for (int tick = 0; tick < 6; tick++)
         {
             await ticks.FireAsync(ct);
             Assert.Empty(await ReadActionsThroughTickEndAsync(server, version, ct));
         }
+        Assert.Equal(frozen, client.State.WorldTicks.IsFrozen);
+        Assert.Equal(!frozen, client.State.WorldTicks.RunsNormally);
 
         using var held = CancellationTokenSource.CreateLinkedTokenSource(ct);
         Task mining = client.Actions.Interaction.DigBlockAsync(target, Direction.North, held.Token);

@@ -43,6 +43,6 @@ The first sandboxed full-build attempt exited without diagnostics. A provenance-
 
 ## Remaining scope
 
-This proves the listed vanilla versions and scenarios. It does not establish all protocol representatives, public-server behavior, customized mining rules, dynamic mob geometry, scaling, riders, native mob interpolation or specialized placement. Shulker phase measurements and classic 1.8 geometry still need runtime integration and separate acceptance runs.
+This proves the listed vanilla versions and scenarios. It does not establish all protocol representatives, public-server behavior, customized mining rules, dynamic mob geometry, scaling, riders, native mob interpolation or specialized placement. [Classic 1.8 geometry and placement](classic-entity-placement.md) now have runtime integration and separate acceptance runs. Shulker phase measurements still need runtime integration and live validation.
 
 The evidence manifest is `/home/anon/Projects/MinecraftOfficial/runs/tick-control-proof-20261017-v1/proof.json` (SHA-256 `989cc3a31b6e59d1f96f8e10f2e324529ac284625ade5c0e9608597c8f219d21`). Raw logs, probes, binaries, captures and official artifacts remain outside Git.

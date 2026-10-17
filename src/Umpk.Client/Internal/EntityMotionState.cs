@@ -10,6 +10,8 @@ namespace Umpk.Client.Internal;
 internal sealed class EntityMotionState
 {
     private readonly ConditionalWeakTable<Entity, RemotePlayerMotion> _remotePlayers = new();
+    private readonly ConditionalWeakTable<Entity, object> _immovable = new();
+    private static readonly object ImmovableMarker = new();
 
     public void RegisterRemotePlayer(Entity entity, int protocol)
     {
@@ -25,8 +27,23 @@ internal sealed class EntityMotionState
         _remotePlayers.Add(entity, new RemotePlayerMotion(protocol, profile, position, velocity));
     }
 
+    public void RegisterImmovable(Entity entity)
+    {
+        _immovable.Add(entity, ImmovableMarker);
+        entity.Velocity = Vec3d.Zero;
+    }
+
+    /// <summary>Applies setDeltaMovement without replacing an existing lerpMotion target.</summary>
+    public void SetCurrentVelocity(Entity entity, Vec3d value)
+    {
+        if (!_immovable.TryGetValue(entity, out _))
+            entity.Velocity = value;
+    }
+
     public void ObserveVelocity(Entity entity, Vec3d value)
     {
+        if (_immovable.TryGetValue(entity, out _))
+            return;
         if (_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
         {
             VanillaEntityVelocity velocity = motion.Velocity;
@@ -119,9 +136,17 @@ internal sealed class EntityMotionState
         }
     }
 
-    public void Remove(Entity entity) => _remotePlayers.Remove(entity);
+    public void Remove(Entity entity)
+    {
+        _remotePlayers.Remove(entity);
+        _immovable.Remove(entity);
+    }
 
-    public void Clear() => _remotePlayers.Clear();
+    public void Clear()
+    {
+        _remotePlayers.Clear();
+        _immovable.Clear();
+    }
 
     private static void PullPosition(Entity entity, VanillaEntityInterpolation position)
     {

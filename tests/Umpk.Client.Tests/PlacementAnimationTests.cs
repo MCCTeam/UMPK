@@ -490,6 +490,47 @@ public sealed class PlacementAnimationTests
         Assert.IsType<ServerboundUseItemOnPacket>(Assert.Single(harness.Sink.Packets));
     }
 
+    public static IEnumerable<object[]> ShulkerPlacementCases()
+    {
+        foreach (int protocol in new[] { 770, 771, 772, 773, 774, 775, 776, 777 })
+        {
+            yield return [protocol, 1.5, 64.0, Direction.Down, 0, 1.0, true];
+            yield return [protocol, 1.5, 64.0, Direction.Down, 1, 1.0, false];
+            yield return [protocol, 8.5, 65.0, Direction.Down, 1, 1.0, true];
+            yield return [protocol, 1.5, 64.0, Direction.Up, 1, 1.0, true];
+            yield return [protocol, 1.5, 64.0, Direction.East, 1, 1.0, true];
+            yield return [protocol, 1.5, 65.0, Direction.Down, 0, 1.0, false];
+            yield return [protocol, 1.5, 64.0, Direction.Down, 0, 2.0, false];
+            yield return [protocol, 1.5, 64.0, Direction.Down, 1, .5, true];
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ShulkerPlacementCases))]
+    public async Task PlacementAnimationUsesTheCurrentShulkerLidBounds(int protocol, double x, double y, Direction face, int openingTicks, double scaleValue, bool clear)
+    {
+        await using var harness = new Harness(protocol);
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("shulker"), out RegistryEntry<EntityTypeDefinition> type));
+        Assert.True(harness.State.Registries.Attributes.TryGet(Identifier.Minecraft("scale"), out RegistryEntry<AttributeDefinition> scale));
+        var entity = new Entity(42, Guid.Empty, type) { Position = new Vec3d(x, y, 1.5) };
+        entity.Attributes.GetOrCreate(scale).BaseValue = scaleValue;
+        entity.Metadata.Set(16, MetadataValue.Direction(face));
+        entity.Metadata.Set(17, MetadataValue.Byte(openingTicks > 0 ? (sbyte)100 : (sbyte)0));
+        harness.State.Entities.Add(entity);
+        harness.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(protocol), protocol);
+        for (int tick = 0; tick < openingTicks; tick++)
+            harness.State.EntityGeometry.TickLivingDimensions(harness.State.Entities, harness.State.World);
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.Equal(clear && protocol < 777 ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
+        Assert.Equal(0, harness.State.World.GetBlock(harness.Target.Above()).StateId);
+    }
+
     private sealed class Harness : IAsyncDisposable
     {
         public ClientState State { get; }

@@ -26,6 +26,8 @@
     <EmbeddedResource Include="Fixtures/EntityTeleport.native.json" />
     <EmbeddedResource Include="Fixtures/EntityTeleportController.native.json" />
     <EmbeddedResource Include="Fixtures/RemotePlayer.native.json" />
+    <EmbeddedResource Include="Fixtures/ShulkerGeometry.native.json" />
+    <EmbeddedResource Include="Fixtures/ShulkerGeometryEdges.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyRemotePlayer.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyTeleportInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/MappedPlayerInterpolation.native.json" />

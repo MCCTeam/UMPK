@@ -11,11 +11,21 @@ namespace Umpk.Client.Internal;
 internal sealed class EntityGeometryState
 {
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
+    private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
     private bool _hasLivingTickRules;
+    private bool _hasShulkers;
 
-    public void Register(Entity entity, IEntityGeometrySource source)
+    public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0)
     {
-        if (_entities.TryGetValue(entity, out _) || !source.TryGetRule(entity.Type.Id, out EntityGeometryRule rule))
+        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _))
+            return;
+        if (TrackedShulkerGeometry.TryCreate(entity, protocol, out TrackedShulkerGeometry? shulker) && shulker is not null)
+        {
+            _shulkers.Add(entity, shulker);
+            _hasShulkers = true;
+            return;
+        }
+        if (!source.TryGetRule(entity.Type.Id, out EntityGeometryRule rule))
             return;
         var geometry = new Geometry(source, rule);
         _entities.Add(entity, geometry);
@@ -23,9 +33,14 @@ internal sealed class EntityGeometryState
         ReapplyPosition(entity, geometry);
     }
 
-    public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding)
+    public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
     {
-        Register(entity, source);
+        Register(entity, source, protocol);
+        if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
+        {
+            blocksBuilding = true;
+            return shulker.TryGet(entity, out box);
+        }
         if (!_entities.TryGetValue(entity, out Geometry? geometry))
         {
             box = default;
@@ -42,31 +57,58 @@ internal sealed class EntityGeometryState
 
     public void ObserveMetadata(Entity entity, int index)
     {
+        if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
+        {
+            shulker.ObserveMetadata(entity, index);
+            return;
+        }
         if (_entities.TryGetValue(entity, out Geometry? geometry) && (index == geometry.Rule.MetadataIndex || index == geometry.Rule.PoseMetadataIndex))
             ObserveDimensions(entity, geometry);
     }
 
     public void ObservePosition(Entity entity)
     {
+        if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
+        {
+            shulker.ObservePosition(entity);
+            return;
+        }
         if (_entities.TryGetValue(entity, out Geometry? geometry))
             ReapplyPosition(entity, geometry);
     }
 
+    public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
+
+    public void ObserveMount(Entity entity)
+    {
+        if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
+            shulker.ObserveMount(entity);
+    }
+
     public void ObserveAttributes(Entity entity)
     {
+        if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
+        {
+            shulker.ObserveAttributes(entity);
+            return;
+        }
         if (_entities.TryGetValue(entity, out Geometry? geometry))
             ObserveDimensions(entity, geometry);
     }
 
     public void TickLivingDimensions(EntityStore? entities, World? world)
     {
-        if (!_hasLivingTickRules || entities is null || world is null)
+        if ((!_hasLivingTickRules && !_hasShulkers) || entities is null || world is null)
             return;
         foreach (Entity entity in entities.All)
+        {
+            if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker) && HasLoadedArea(world, entity.Position, 0))
+                shulker.Tick(entity);
             if (_entities.TryGetValue(entity, out Geometry? geometry)
                 && geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick
                 && HasLoadedArea(world, entity.Position, geometry.Rule.RequiredLoadedRadius))
                 ObserveDimensions(entity, geometry, livingTick: true);
+        }
     }
 
     private static bool HasLoadedArea(World world, Vec3d point, int radius)
@@ -81,11 +123,17 @@ internal sealed class EntityGeometryState
         return true;
     }
 
-    public void Remove(Entity entity) => _entities.Remove(entity);
+    public void Remove(Entity entity)
+    {
+        _entities.Remove(entity);
+        _shulkers.Remove(entity);
+    }
     public void Clear()
     {
         _entities.Clear();
+        _shulkers.Clear();
         _hasLivingTickRules = false;
+        _hasShulkers = false;
     }
 
     private static bool Resolve(Entity entity, Geometry geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions)

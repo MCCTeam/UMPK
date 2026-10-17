@@ -1,12 +1,16 @@
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
+using Umpk.Game.Entities;
 using Umpk.Game.Registries;
+using Umpk.Geometry;
 using Umpk.Hosting;
 using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
 using Umpk.Protocol.Java.Transport;
 using Umpk.TestKit.Server;
@@ -113,6 +117,63 @@ public sealed class WorldTickPipelineTests
         await session.InitializeBorderAsync(2);
         await session.TickAsync();
         Assert.Equal(60, session.Client.State.World.Border.Size);
+    }
+
+    [Theory]
+    [InlineData(770)]
+    [InlineData(771)]
+    [InlineData(772)]
+    [InlineData(773)]
+    [InlineData(774)]
+    [InlineData(775)]
+    [InlineData(776)]
+    [InlineData(777)]
+    public async Task ShulkerPeekUsesLoadedWorldTicksAndHonorsFreezeAndStep(int protocol)
+    {
+        using Stream native = typeof(WorldTickPipelineTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.ShulkerGeometry.native.json")!;
+        using JsonDocument document = JsonDocument.Parse(native);
+        JsonElement release = document.RootElement.GetProperty("releases").EnumerateArray().First(row => row.GetProperty("protocol").GetInt32() == protocol);
+        JsonElement scenario = document.RootElement.GetProperty("groups")[release.GetProperty("group").GetInt32()].EnumerateArray().Single(row => row.GetProperty("scale").GetSingle() == 1F && row.GetProperty("face").GetString() == "DOWN" && row.GetProperty("input")[0].GetDouble() == .5);
+        JsonElement[] phases = scenario.GetProperty("steps").EnumerateArray().Where(row => row[0].GetInt32() == 1).Take(3).Select(row => row[2]).ToArray();
+        await using Session session = await Session.CreateAsync(protocol);
+        await session.JoinAsync();
+        Assert.True(session.Client.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("shulker"), out RegistryEntry<EntityTypeDefinition> type));
+        var spawn = new ClientboundAddEntityPacket(42, Guid.Empty, type.NetworkId, .5, 64, .5, 0, 0, 0, 0, 0, 0, 0, null);
+        await session.SendAsync(spawn);
+        await session.SendAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(17, MetadataValue.Byte(100))], [])));
+        AssertBox(scenario.GetProperty("initial"));
+        await session.TickAsync();
+        AssertBox(scenario.GetProperty("initial"));
+        await session.Client.InvokeAsync(client => client.State.World.LoadColumn(new ChunkPos(0, 0)));
+        await session.SendAsync(new ClientboundTickingStatePacket(20, true));
+        await session.TickAsync();
+        AssertBox(scenario.GetProperty("initial"));
+        await session.SendAsync(new ClientboundTickingStepPacket(2));
+        await session.TickAsync();
+        AssertBox(phases[0]);
+        await session.TickAsync();
+        AssertBox(phases[1]);
+        await session.TickAsync();
+        AssertBox(phases[1]);
+        await session.Client.InvokeAsync(client => client.State.World.UnloadColumn(new ChunkPos(0, 0)));
+        await session.SendAsync(new ClientboundTickingStatePacket(20, false));
+        await session.TickAsync();
+        AssertBox(phases[1]);
+        await session.Client.InvokeAsync(client => client.State.World.LoadColumn(new ChunkPos(0, 0)));
+        await session.TickAsync();
+        AssertBox(phases[2]);
+        await session.SendAsync(new ClientboundRemoveEntitiesPacket([42]));
+        await session.SendAsync(spawn);
+        await session.TickAsync();
+        AssertBox(scenario.GetProperty("initial"));
+
+        void AssertBox(JsonElement expected)
+        {
+            Entity entity = Assert.IsType<Entity>(session.Client.State.Entities.Get(42));
+            Assert.True(session.Client.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out Aabb box, out bool blocking));
+            Assert.True(blocking);
+            Assert.Equal(new Aabb(expected[3].GetDouble(), expected[4].GetDouble(), expected[5].GetDouble(), expected[6].GetDouble(), expected[7].GetDouble(), expected[8].GetDouble()), box);
+        }
     }
 
     private sealed class Session : IAsyncDisposable

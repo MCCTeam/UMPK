@@ -77,10 +77,8 @@ public sealed partial class InteractionActions
             if (entity.Vehicle is not null)
                 return false;
             Aabb bounds;
-            if (data is IEntityGeometrySource geometry && geometry.TryGetRule(entity.Type.Id, out _))
+            if (data is IEntityGeometrySource geometry && _services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding, _services.Version.Version.Protocol))
             {
-                if (!_services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding))
-                    return false;
                 if (!blocksBuilding)
                     continue;
             }

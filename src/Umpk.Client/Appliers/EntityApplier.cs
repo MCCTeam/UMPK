@@ -144,7 +144,7 @@ internal sealed class EntityApplier : IApplier
                             var source = new PositionMoveRotation(tpEntity.Position, tpEntity.Velocity, tpEntity.Yaw, tpEntity.Pitch);
                             PositionMoveRotation destination = EntityTeleportProfile.ForProtocol(context.Version.Version.Protocol).Resolve(source, change, teleport.Relatives);
                             tpEntity.Position = destination.Position;
-                            tpEntity.Velocity = destination.DeltaMovement;
+                            context.State.EntityMotion.SetCurrentVelocity(tpEntity, destination.DeltaMovement);
                             tpEntity.Yaw = destination.YRot;
                             tpEntity.Pitch = destination.XRot;
                         }
@@ -256,7 +256,7 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundSetPassengersPacket passengers:
-                ApplyPassengers(store, passengers);
+                ApplyPassengers(store, passengers, context);
                 await context.PublishAsync(new EntityPassengersChanged(passengers.VehicleId)).ConfigureAwait(false);
                 return true;
 
@@ -375,12 +375,14 @@ internal sealed class EntityApplier : IApplier
             entity.PlayerProfile = tabEntry.Profile;
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
-        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol));
+        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)
             context.State.EntityMotion.RegisterRemotePlayer(entity, context.Version.Version.Protocol);
-        context.State.PacketBases.Set(entity, entity.Position);
+        else if (context.State.EntityGeometry.IgnoresVelocity(entity))
+            context.State.EntityMotion.RegisterImmovable(entity);
+        context.State.PacketBases.Set(entity, new Vec3d(x, y, z));
 
         // Native client insertion discards the previous entity with this id before installing the new instance.
         if (store.Remove(entityId) is { } previous)
@@ -554,16 +556,23 @@ internal sealed class EntityApplier : IApplier
 
     }
 
-    private static void ApplyPassengers(EntityStore store, ClientboundSetPassengersPacket packet)
+    private static void ApplyPassengers(EntityStore store, ClientboundSetPassengersPacket packet, ApplierContext context)
     {
         if (!store.TryGet(packet.VehicleId, out Entity? vehicle) || vehicle is null)
             return;
 
         var passengers = new List<Entity>();
+        var mounts = new List<Entity>();
         foreach (int id in packet.Passengers)
             if (store.TryGet(id, out Entity? passenger) && passenger is not null)
+            {
                 passengers.Add(passenger);
+                if (passenger.Vehicle != vehicle && context.State.EntityGeometry.IgnoresVelocity(passenger))
+                    mounts.Add(passenger);
+            }
 
         store.SetPassengers(vehicle, passengers);
+        foreach (Entity passenger in mounts)
+            context.State.EntityGeometry.ObserveMount(passenger);
     }
 }

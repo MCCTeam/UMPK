@@ -88,7 +88,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "f2e17015e3ed8a7b20a28927efffc5f6e5b3fc6ef5943937dcbbb954a4543f25",
+    "tool_sha256": "a3880fbbcc0fab82f3c2a8856bcdf757ff6bb9bd5afc6db89d53288815d830ad",
     "version": "1.11.2",
     "protocol": 316,
     "client_sha256": "be3fff4f2cc005a1310a96389efdeb983d2bcb4b8e747c402acd616ae73d0ba2",

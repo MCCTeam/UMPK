@@ -159,6 +159,7 @@ Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicke
 ```bash
 legacy_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/legacy-entity-geometry-batch-20261017-v1"
 early_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/early-entity-geometry-batch-20261017"
+pose_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/early-pose-entity-geometry-batch-20261017-v5"
 legacy_arguments=(
   --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1"
   --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-1.11-20261017-v1"
@@ -172,6 +173,9 @@ done
 for release in 1.11.1 1.11.2 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
   legacy_arguments+=(--legacy "$legacy_measurements/$release/geometry")
 done
+for release in 1.14 1.14.1 1.14.2 1.14.3; do
+  legacy_arguments+=(--legacy "$pose_measurements/$release/geometry")
+done
 python3 tools/extraction/extract_entity_geometry.py \
   --data data/java \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
@@ -183,11 +187,11 @@ python3 tools/extraction/extract_entity_geometry.py \
 python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry.py
 ```
 
-The 45 datasets cover the measured releases from 1.9 through 1.13.2, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field: index 11 through 1.9.4, index 12 from 1.10 through 1.13.2, and the measured modern indices thereafter. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
+The 49 datasets cover the measured releases from 1.9 through 1.14.3, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field: index 11 through 1.9.4, index 12 from 1.10 through 1.13.2, and the measured modern indices thereafter. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
 
-The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its four cases cover 260 transition replays across seventeen legacy releases.
+The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 
-`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules through 1.13.2. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 393 changes that native field from `i` to `j`; the source bindings retain this boundary explicitly. The remaining legacy entity keys retain unknown rules.
+`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules through 1.13.2. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocols 393–404 use the native field `j`; protocols 477–490 return to `i`. The source bindings retain both boundaries explicitly. The remaining legacy entity keys retain unknown rules.
 
 ```bash
 python3 tools/extraction/extract_legacy_item_obstruction.py \
@@ -224,4 +228,12 @@ for release in 1.9 1.9.1 1.9.2; do
   python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v3/$release/item" --check
 done
 python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v4/1.9.4/item" --alias "$early_measurements-v4/1.9.3/item" --check
+```
+
+The `--legacy` inputs also accept the original pose-aware clients from 1.14 through 1.14.3. Their receipts verify native enum names, false baby defaults, pose metadata at index 6, building flags and a source-backed age-only scale method. The runtime name `SNEAKING` maps to canonical `CROUCHING`; obfuscated enum field names do not establish pose identities.
+
+```bash
+for release in 1.14 1.14.1 1.14.2 1.14.3; do
+  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$pose_measurements/$release/item" --check
+done
 ```

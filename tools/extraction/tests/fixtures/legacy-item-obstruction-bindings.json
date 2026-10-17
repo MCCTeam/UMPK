@@ -425,5 +425,121 @@
     "measurement_sha256": "689e59a782224f643bdbcb72ff170d35c7e7f37235712f3010ee5b3735866c09",
     "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
     "audit_sha256": "aab57a432a827611b7e6553167d9e71c7c35f2c201689e9f577d56156f30734a"
+  },
+  {
+    "version": "1.14",
+    "protocol": 477,
+    "measurement_sha256": "852622bcdc2006af505976a595ba7f898304985c755a9599ceacec5137900696",
+    "client_sha256": "93907cbf0655aa5f10d049efa4d745f4250eecc5d0d5d1268046eec3144f323a",
+    "native": {
+      "protocol": 477,
+      "version": "1.14",
+      "entity": "minecraft:item",
+      "class": "ato",
+      "field_owner": "aif",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ato": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar",
+        "aif": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar",
+        "bhh": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.1",
+    "protocol": 480,
+    "measurement_sha256": "7a9418a3211c9b06cad8d82cafc49deb8f511992c56b7c4fadee57d382310ac1",
+    "client_sha256": "7194d1326cf796f62ac55f3cb56f851c232895639ae27510f3207d5a73f91814",
+    "native": {
+      "protocol": 480,
+      "version": "1.14.1",
+      "entity": "minecraft:item",
+      "class": "atp",
+      "field_owner": "aii",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "atp": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar",
+        "aii": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar",
+        "bhi": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.2",
+    "protocol": 485,
+    "measurement_sha256": "0f7d6592de8435d437b605797500124d99e02af67e33e05170755177f22f400c",
+    "client_sha256": "9b740c9fd4955981125ebd3cd086baa8b4392963d043a3480b5b942a96637c25",
+    "native": {
+      "protocol": 485,
+      "version": "1.14.2",
+      "entity": "minecraft:item",
+      "class": "atp",
+      "field_owner": "aii",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "atp": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar",
+        "aii": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar",
+        "bhi": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.3",
+    "protocol": 490,
+    "measurement_sha256": "d52a67ccb9094e17c1efe2821c0c42f9e452f665be188197b839c19610552a6e",
+    "client_sha256": "4063062677433988e012fba53e42e4c21adb6919ac7f061f19f3c6e75b334e07",
+    "native": {
+      "protocol": 490,
+      "version": "1.14.3",
+      "entity": "minecraft:item",
+      "class": "ats",
+      "field_owner": "ail",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ats": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar",
+        "ail": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar",
+        "bhm": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar"
+      }
+    }
   }
 ]

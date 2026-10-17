@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import zipfile
 
@@ -50,6 +51,10 @@ def villager_profile(raw: dict, *, scale_attribute: str) -> dict:
 
 
 def legacy_villager_profile(raw: dict) -> dict:
+    if "poses" in raw:
+        if type(raw.get("pose_index")) is not int or raw["pose_index"] != 6 or raw.get("metadata_default") is not False or raw.get("blocks_building") is not True:
+            raise ValueError("Unmapped villager pose defaults or building flags are incomplete")
+        return villager_profile(raw, scale_attribute="")
     positions = raw["positions"]
     if not positions or raw["blocks_building"] is not True or type(raw["metadata_index"]) is not int or raw["metadata_index"] not in (11, 12):
         raise ValueError("Legacy villager contract is incomplete")
@@ -113,7 +118,11 @@ def legacy_fixture(records: list[dict]) -> dict:
     for record in sorted(records, key=lambda row: (row["protocol"], row["version"])):
         raw = record["raw"]
         case = {key: raw[key] for key in ("metadata_index", "blocks_building", "positions")}
-        case["rows"] = [{key: row[key] for key in ("from", "to", "position", "before_size", "before", "after_size", "after_sync", "after_position")} for row in raw["rows"]]
+        fields = ("from", "to", "position", "before_size", "before", "after_size", "after_sync", "after_position")
+        if "poses" in raw:
+            case.update({key: raw[key] for key in ("poses", "pose_index", "metadata_default", "pose_constants")})
+            fields = ("from_age", "to_age", "from_pose", "to_pose", "position", "from_size", "before", "age_size", "after_age_sync", "to_size", "after_pose_sync", "after_refresh", "after_position")
+        case["rows"] = [{key: row[key] for key in fields} for row in raw["rows"]]
         key = json.dumps(case, sort_keys=True)
         if key not in seen:
             seen[key] = len(cases)
@@ -146,6 +155,13 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     for name, expected in source_hashes.items():
         if sha(official / f"{version}-client-decompiled" / name) != expected:
             raise ValueError(f"Audited geometry source changed: {version}/{name}")
+    if "poses" in raw:
+        binding = receipt["binding"]
+        source = official / f"{version}-client-decompiled" / (binding["living"] + ".java")
+        text = re.sub(r"/\*.*?\*/", "", source.read_text(encoding="utf-8"), flags=re.S)
+        scale = re.escape(binding["scale_method"])
+        if raw.get("entity_class") != binding["villager"] or not re.search(r"public float " + scale + r"\(\)\s*\{\s*return this\.\w+\(\)\s*\?\s*0\.5F\s*:\s*1\.0F\s*;", text):
+            raise ValueError("Unmapped villager dimensions need a separate attribute-scale model")
     origins = raw.get("origins", {})
     if not origins or len(set(origins.values())) != 1:
         raise ValueError("Native geometry classes have inconsistent origins")

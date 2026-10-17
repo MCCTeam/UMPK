@@ -35,11 +35,23 @@ class LegacyItemObstructionTests(unittest.TestCase):
         from extract_legacy_item_obstruction import item_rules
 
         for raw in self.native_measurements():
-            if raw["protocol"] >= 393:
+            if raw["protocol"] in (393, 401, 404):
                 self.assertEqual("j", raw["field_name"])
                 raw["field_name"] = "i"
                 with self.assertRaises(ValueError):
                     item_rules(raw, {"minecraft:item", "minecraft:villager"})
+
+    def test_1_14_restores_the_native_i_field_binding(self) -> None:
+        from extract_legacy_item_obstruction import item_rules
+
+        for raw in self.native_measurements():
+            if raw["protocol"] in (477, 480, 485, 490):
+                with self.subTest(version=raw["version"]):
+                    self.assertEqual("i", raw["field_name"])
+                    self.assertEqual({"minecraft:item": 1}, item_rules(raw, {"minecraft:item"}))
+                    raw["field_name"] = "j"
+                    with self.assertRaises(ValueError):
+                        item_rules(raw, {"minecraft:item"})
 
     def measurement(self) -> dict:
         return {"protocol": 210, "version": "1.10.2", "entity": "minecraft:item", "class": "yk", "field_owner": "rw", "field_name": "i", "rows": [{"constructor": "default", "blocks_building": False}, {"constructor": "network_xyz", "blocks_building": False}], "origins": {name: "original-client.jar" for name in ("yk", "rw", "aid")}}

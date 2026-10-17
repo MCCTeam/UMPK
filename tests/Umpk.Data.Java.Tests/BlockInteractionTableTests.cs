@@ -24,6 +24,10 @@ public sealed class BlockInteractionTableTests
     [InlineData(393)]
     [InlineData(401)]
     [InlineData(404)]
+    [InlineData(477)]
+    [InlineData(480)]
+    [InlineData(485)]
+    [InlineData(490)]
     public void LegacyItemDropsHaveTheNativeNonblockingContract(int protocol)
     {
         IBlockInteractionSource source = JavaGameData.BlockInteractionData(protocol);

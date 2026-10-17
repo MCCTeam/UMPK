@@ -46,6 +46,29 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         self.assertEqual("retain_minimum", profile["refresh"])
         self.assertEqual(-1, profile["pose_index"])
 
+    def early_pose_native(self) -> dict:
+        path = Path(__file__).parents[2] / "tests/Umpk.Client.Tests/Fixtures/LegacyVillagerGeometry.native.json"
+        fixture = json.loads(path.read_text(encoding="utf-8"))
+        release = next(row for row in fixture["releases"] if row["version"] == "1.14")
+        return fixture["cases"][release["case"]]
+
+    def test_unmapped_1_14_retains_native_pose_and_age_callbacks(self) -> None:
+        profile = legacy_villager_profile(self.early_pose_native())
+        self.assertEqual([14, "boolean", 1, 0], profile["selector"])
+        self.assertEqual(6, profile["pose_index"])
+        self.assertEqual("retain_minimum_on_growth", profile["refresh"])
+        self.assertEqual(14, len(profile["variants"]))
+        self.assertIn([1, 2, .2, .2, True, True], profile["variants"])
+        self.assertIn([0, 7, .6, 1.95, False, True], profile["variants"])
+
+    def test_unmapped_pose_evidence_requires_known_defaults_and_flags(self) -> None:
+        for field, value in [("metadata_default", True), ("pose_index", 5), ("pose_index", 6.0), ("blocks_building", False)]:
+            with self.subTest(field=field):
+                raw = self.early_pose_native()
+                raw[field] = value
+                with self.assertRaises(ValueError):
+                    legacy_villager_profile(raw)
+
     def test_legacy_shrinking_also_retains_the_minimum(self) -> None:
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json"
         profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))

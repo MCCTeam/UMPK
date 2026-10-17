@@ -80,7 +80,7 @@ public sealed class EntityGeometryStateTests
         AssertBox("after_position");
 
         ValueTask SetAge(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(babyIndex, MetadataValue.Boolean(value != 0))], [])));
-        ValueTask SetPose(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(native.GetProperty("poses")[value].GetString() == "SLEEPING" ? EntityPose.Sleeping : EntityPose.Standing))], [])));
+        ValueTask SetPose(int value) => harness.ApplyAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(native.GetProperty("poses")[value].GetString() switch { "STANDING" => EntityPose.Standing, "FALL_FLYING" => EntityPose.FallFlying, "SLEEPING" => EntityPose.Sleeping, "SWIMMING" => EntityPose.Swimming, "SPIN_ATTACK" => EntityPose.SpinAttack, "SNEAKING" => EntityPose.Crouching, "DYING" => EntityPose.Dying, _ => throw new InvalidOperationException("Unmeasured native pose") }))], [])));
         ValueTask Reapply() => harness.ApplyAsync(new ClientboundMoveEntityPosPacket(42, 0, 0, 0, false));
         void AssertBox(string phase)
         {
@@ -105,6 +105,10 @@ public sealed class EntityGeometryStateTests
     [InlineData(393, 12, true)]
     [InlineData(401, 12, true)]
     [InlineData(404, 12, true)]
+    [InlineData(477, 14, true)]
+    [InlineData(480, 14, true)]
+    [InlineData(485, 14, true)]
+    [InlineData(490, 14, true)]
     [InlineData(498, 14, true)]
     [InlineData(755, 16, false)]
     public async Task MetadataCallbacksAndEqualPositionReapplicationKeepTheirNativeOrder(int protocol, int babyIndex, bool retainedGrowth)

@@ -21,6 +21,10 @@ AUDITED = {
     393: (("1.13",), "ami", "aeo", "axs", "j", {"aex": 1, "aky": 1, "alv": 1, "amh": 1, "amj": 1, "apd": 1, "apf": 1}),
     401: (("1.13.1",), "aml", "aer", "axx", "j", {"afa": 1, "alb": 1, "aly": 1, "amk": 1, "amm": 1, "apg": 1, "api": 1}),
     404: (("1.13.2",), "amm", "aer", "axy", "j", {"afa": 1, "alc": 1, "alz": 1, "aml": 1, "amn": 1, "aph": 1, "apj": 1}),
+    477: (("1.14",), "ato", "aif", "bhh", "i", {"aio": 1, "asf": 1, "atc": 1, "atn": 1, "atp": 1, "axl": 1, "axn": 1}),
+    480: (("1.14.1",), "atp", "aii", "bhi", "i", {"air": 1, "asg": 1, "atd": 1, "ato": 1, "atq": 1, "axm": 1, "axo": 1}),
+    485: (("1.14.2",), "atp", "aii", "bhi", "i", {"air": 1, "asg": 1, "atd": 1, "ato": 1, "atq": 1, "axm": 1, "axo": 1}),
+    490: (("1.14.3",), "ats", "ail", "bhm", "i", {"aiu": 1, "asj": 1, "atg": 1, "atr": 1, "att": 1, "axp": 1, "axr": 1}),
 }
 
 

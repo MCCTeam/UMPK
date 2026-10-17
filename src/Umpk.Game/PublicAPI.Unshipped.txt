@@ -1,4 +1,17 @@
 #nullable enable
+Umpk.Game.Registries.EntityGeometrySelectorKind
+Umpk.Game.Registries.EntityGeometrySelectorKind.None = 0 -> Umpk.Game.Registries.EntityGeometrySelectorKind
+Umpk.Game.Registries.EntityGeometrySelectorKind.Boolean = 1 -> Umpk.Game.Registries.EntityGeometrySelectorKind
+Umpk.Game.Registries.EntityGeometrySelectorKind.NegativeByte = 2 -> Umpk.Game.Registries.EntityGeometrySelectorKind
+Umpk.Game.Registries.EntityGeometryRefreshTiming
+Umpk.Game.Registries.EntityGeometryRefreshTiming.SynchronizedData = 0 -> Umpk.Game.Registries.EntityGeometryRefreshTiming
+Umpk.Game.Registries.EntityGeometryRefreshTiming.LivingTick = 1 -> Umpk.Game.Registries.EntityGeometryRefreshTiming
+Umpk.Game.Registries.EntityGeometryRule.SelectorKind.get -> Umpk.Game.Registries.EntityGeometrySelectorKind
+Umpk.Game.Registries.EntityGeometryRule.SelectorKind.init -> void
+Umpk.Game.Registries.EntityGeometryRule.RefreshTiming.get -> Umpk.Game.Registries.EntityGeometryRefreshTiming
+Umpk.Game.Registries.EntityGeometryRule.RefreshTiming.init -> void
+Umpk.Game.Registries.EntityGeometryRule.RequiredLoadedRadius.get -> int
+Umpk.Game.Registries.EntityGeometryRule.RequiredLoadedRadius.init -> void
 Umpk.Game.World.WorldBorderState.CollidesWith(in Umpk.Geometry.Aabb box, Umpk.Geometry.Vec3d? sourcePosition, Umpk.Game.World.WorldBorderContainmentEra era) -> bool
 Umpk.Game.Registries.BlockRayClipModel
 Umpk.Game.Registries.BlockRayClipModel.LegacyBox = 0 -> Umpk.Game.Registries.BlockRayClipModel

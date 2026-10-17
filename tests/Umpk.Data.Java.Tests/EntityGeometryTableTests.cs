@@ -58,8 +58,60 @@ public sealed class EntityGeometryTableTests
 
     [Theory]
     [InlineData(0)]
-    [InlineData(2)]
+    [InlineData(3)]
     public void IndependentGeometryRejectsUnsupportedSchemas(byte schema) => Assert.Throws<ProtocolViolationException>(() => JavaEntityGeometry.Create([schema, 0]));
+
+    [Theory]
+    [InlineData("valid")]
+    [InlineData("selector")]
+    [InlineData("none-index")]
+    [InlineData("timing")]
+    [InlineData("negative-radius")]
+    [InlineData("excessive-radius")]
+    [InlineData("unused-radius")]
+    [InlineData("truncated")]
+    [InlineData("trailing")]
+    public void DeferredTablesValidateTheirSelectorAndTickPolicy(string defect)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new PacketWriter(buffer);
+        writer.WriteVarInt(2);
+        writer.WriteVarInt(1);
+        writer.WriteString("minecraft:villager");
+        writer.WriteVarInt(12);
+        writer.WriteVarInt(-1);
+        writer.WriteByte(2);
+        writer.WriteByte(defect == "selector" ? (byte)3 : defect == "none-index" ? (byte)0 : (byte)2);
+        writer.WriteByte(defect == "timing" ? (byte)2 : defect == "unused-radius" ? (byte)0 : (byte)1);
+        writer.WriteVarInt(defect == "negative-radius" ? -1 : defect == "excessive-radius" ? 33 : 32);
+        writer.WriteString("");
+        writer.WriteVarInt(2);
+        for (int selector = 0; selector < 2; selector++)
+        {
+            writer.WriteByte((byte)selector);
+            writer.WriteByte(0);
+            writer.WriteFloat(selector == 0 ? .6F : .3F);
+            writer.WriteFloat(selector == 0 ? 1.8F : .9F);
+            writer.WriteByte(2);
+        }
+        if (defect == "trailing")
+            writer.WriteByte(0);
+        byte[] bytes = buffer.WrittenSpan.ToArray();
+        if (defect == "truncated")
+            bytes = bytes[..^1];
+        if (defect != "valid")
+        {
+            Assert.Throws<ProtocolViolationException>(() => JavaEntityGeometry.Create(bytes));
+            return;
+        }
+        IEntityGeometrySource source = JavaEntityGeometry.Create(bytes);
+        Assert.True(source.TryGetRule(Identifier.Minecraft("villager"), out EntityGeometryRule rule));
+        Assert.Equal(EntityGeometrySelectorKind.NegativeByte, rule.SelectorKind);
+        Assert.Equal(EntityGeometryRefreshTiming.LivingTick, rule.RefreshTiming);
+        Assert.Equal(32, rule.RequiredLoadedRadius);
+        Assert.True(source.TryGetDimensions(Identifier.Minecraft("villager"), true, EntityPose.Standing, out EntityGeometryDimensions dimensions));
+        Assert.Equal(new EntityGeometryDimensions(.3F, .9F, false, true), dimensions);
+    }
 
     [Fact]
     public void IndependentGeometryRejectsUnsupportedProtocols() => Assert.Throws<ArgumentOutOfRangeException>(() => JavaGameData.EntityGeometryData(-1));

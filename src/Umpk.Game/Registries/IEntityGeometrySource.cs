@@ -13,8 +13,38 @@ public enum EntityDimensionsRefresh
     RetainMinimum = 2,
 }
 
+/// <summary>The native predicate that selects an entity's alternate dimensions.</summary>
+public enum EntityGeometrySelectorKind
+{
+    /// <summary>No synchronized selector applies.</summary>
+    None = 0,
+    /// <summary>A synchronized Boolean selects the alternate dimensions when true.</summary>
+    Boolean = 1,
+    /// <summary>A synchronized signed byte selects the alternate dimensions when negative.</summary>
+    NegativeByte = 2,
+}
+
+/// <summary>The native phase that applies changed dimensions.</summary>
+public enum EntityGeometryRefreshTiming
+{
+    /// <summary>Apply the dimensions during the synchronized-data callback.</summary>
+    SynchronizedData = 0,
+    /// <summary>Apply the dimensions after the inherited living-entity phase.</summary>
+    LivingTick = 1,
+}
+
 /// <summary>A measured metadata selector and dimensions refresh contract. MetadataIndex is -1 when no selector applies. An absent scale attribute means attribute scaling does not apply.</summary>
-public readonly record struct EntityGeometryRule(int MetadataIndex, int PoseMetadataIndex, EntityDimensionsRefresh Refresh, Identifier? ScaleAttribute);
+public readonly record struct EntityGeometryRule(int MetadataIndex, int PoseMetadataIndex, EntityDimensionsRefresh Refresh, Identifier? ScaleAttribute)
+{
+    /// <summary>The native selector. Existing rules retain their Boolean or absent selector.</summary>
+    public EntityGeometrySelectorKind SelectorKind { get; init; } = MetadataIndex < 0 ? EntityGeometrySelectorKind.None : EntityGeometrySelectorKind.Boolean;
+
+    /// <summary>The phase that applies changed dimensions.</summary>
+    public EntityGeometryRefreshTiming RefreshTiming { get; init; }
+
+    /// <summary>The horizontal block radius whose intersecting columns must be loaded before a deferred living phase can run. The area includes both endpoints and the entity's own column.</summary>
+    public int RequiredLoadedRadius { get; init; }
+}
 
 /// <summary>Native dimensions for one metadata and pose state. Fixed dimensions bypass attribute scaling.</summary>
 public readonly record struct EntityGeometryDimensions(float Width, float Height, bool Fixed, bool BlocksBuilding);

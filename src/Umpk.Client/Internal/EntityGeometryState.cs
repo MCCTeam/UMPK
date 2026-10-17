@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
 using Umpk.Game.Entities;
 using Umpk.Game.Registries;
+using Umpk.Game.World;
 using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
@@ -10,6 +11,7 @@ namespace Umpk.Client.Internal;
 internal sealed class EntityGeometryState
 {
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
+    private bool _hasLivingTickRules;
 
     public void Register(Entity entity, IEntityGeometrySource source)
     {
@@ -17,6 +19,7 @@ internal sealed class EntityGeometryState
             return;
         var geometry = new Geometry(source, rule);
         _entities.Add(entity, geometry);
+        _hasLivingTickRules |= rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick;
         ReapplyPosition(entity, geometry);
     }
 
@@ -55,19 +58,56 @@ internal sealed class EntityGeometryState
             ObserveDimensions(entity, geometry);
     }
 
+    public void TickLivingDimensions(EntityStore? entities, World? world)
+    {
+        if (!_hasLivingTickRules || entities is null || world is null)
+            return;
+        foreach (Entity entity in entities.All)
+            if (_entities.TryGetValue(entity, out Geometry? geometry)
+                && geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick
+                && HasLoadedArea(world, entity.Position, geometry.Rule.RequiredLoadedRadius))
+                ObserveDimensions(entity, geometry, livingTick: true);
+    }
+
+    private static bool HasLoadedArea(World world, Vec3d point, int radius)
+    {
+        if (radius is < 0 or > 32 || !double.IsFinite(point.X) || !double.IsFinite(point.Z))
+            return false;
+        int x = (int)Math.Floor(point.X), z = (int)Math.Floor(point.Z);
+        for (int columnX = (x - radius) >> 4; columnX <= (x + radius) >> 4; columnX++)
+            for (int columnZ = (z - radius) >> 4; columnZ <= (z + radius) >> 4; columnZ++)
+                if (world.GetColumn(new ChunkPos(columnX, columnZ)) is null)
+                    return false;
+        return true;
+    }
+
     public void Remove(Entity entity) => _entities.Remove(entity);
-    public void Clear() => _entities.Clear();
+    public void Clear()
+    {
+        _entities.Clear();
+        _hasLivingTickRules = false;
+    }
 
     private static bool Resolve(Entity entity, Geometry geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions)
     {
         selector = false;
         pose = entity.Pose;
         dimensions = default;
+        if ((geometry.Rule.MetadataIndex < 0) != (geometry.Rule.SelectorKind == EntityGeometrySelectorKind.None))
+            return false;
         if (entity.Metadata.TryGet(geometry.Rule.MetadataIndex, out MetadataValue raw))
         {
-            if (raw.Kind != MetadataValueKind.Boolean)
-                return false;
-            selector = raw.AsBoolean();
+            switch (geometry.Rule.SelectorKind)
+            {
+                case EntityGeometrySelectorKind.Boolean when raw.Kind == MetadataValueKind.Boolean:
+                    selector = raw.AsBoolean();
+                    break;
+                case EntityGeometrySelectorKind.NegativeByte when raw.Kind == MetadataValueKind.Byte:
+                    selector = raw.AsByte() < 0;
+                    break;
+                default:
+                    return false;
+            }
         }
         if (!geometry.Source.TryGetDimensions(entity.Type.Id, selector, pose, out dimensions))
             return false;
@@ -75,8 +115,10 @@ internal sealed class EntityGeometryState
         return dimensions.Fixed || geometry.Rule.ScaleAttribute is not { } scale || entity.Attributes.GetValueOrDefault(scale, 1.0) == 1.0;
     }
 
-    private static void ObserveDimensions(Entity entity, Geometry geometry)
+    private static void ObserveDimensions(Entity entity, Geometry geometry, bool livingTick = false)
     {
+        if (geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick && !livingTick)
+            return;
         if (!Resolve(entity, geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions))
         {
             geometry.Known = false;
@@ -84,9 +126,14 @@ internal sealed class EntityGeometryState
         }
         if (!geometry.Known)
         {
-            if (geometry.Rule.Refresh == EntityDimensionsRefresh.Recenter)
-                ReapplyPosition(entity, geometry);
-            return;
+            if (livingTick && geometry.HasDimensions)
+                geometry.Known = true;
+            else
+            {
+                if (geometry.Rule.Refresh == EntityDimensionsRefresh.Recenter)
+                    ReapplyPosition(entity, geometry);
+                return;
+            }
         }
         if (geometry.Selector == selector && geometry.Pose == pose && geometry.Dimensions == dimensions)
             return;
@@ -101,7 +148,24 @@ internal sealed class EntityGeometryState
 
     private static void ReapplyPosition(Entity entity, Geometry geometry)
     {
+        if (geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick)
+        {
+            if (!geometry.HasDimensions)
+            {
+                // Native construction starts with the watcher default. A later metadata update waits for its living phase, including when a position is reapplied first.
+                geometry.Known = geometry.Source.TryGetDimensions(entity.Type.Id, false, entity.Pose, out EntityGeometryDimensions initial);
+                if (!geometry.Known)
+                    return;
+                geometry.Selector = false;
+                geometry.Pose = entity.Pose;
+                geometry.Dimensions = initial;
+                geometry.HasDimensions = true;
+            }
+            geometry.Bounds = VanillaEntityBounds.Create(entity.Position, geometry.Dimensions.Width, geometry.Dimensions.Height);
+            return;
+        }
         geometry.Known = Resolve(entity, geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions);
+        geometry.HasDimensions = geometry.Known;
         geometry.Selector = selector;
         geometry.Pose = pose;
         geometry.Dimensions = dimensions;
@@ -113,6 +177,7 @@ internal sealed class EntityGeometryState
         public IEntityGeometrySource Source { get; } = source;
         public EntityGeometryRule Rule { get; } = rule;
         public bool Known { get; set; }
+        public bool HasDimensions { get; set; }
         public bool Selector { get; set; }
         public EntityPose Pose { get; set; }
         public EntityGeometryDimensions Dimensions { get; set; }

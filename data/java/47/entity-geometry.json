@@ -1,0 +1,142 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "version": "1.8.9",
+    "protocol": 47,
+    "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+    "server_sha256": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312",
+    "measurement_sha256": "e5a6ee3f22ec94b9a1998b72fa16d86f695c125f6aef1f2e9ed8abf93b792c53",
+    "helper_sha256": "16e98638e26f96a71e4d0be5eccef1745542731ecf3c2e8c6b09f46531d36582",
+    "native_witnesses": 75,
+    "native_predicates": 256,
+    "sources_sha256": {
+      "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+      "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0",
+      "ph.java": "b200e359b603b99bdb8f5191e53478bb4f7cf1b7784c7d1326a1cd3b4714b7a7",
+      "pz.java": "4256bd9630590d7ecccf39be2f6362435b61023ed09bcf7d0c09956af8217805",
+      "kb.java": "b6dbca4014709396f14467978312768d6ec176c100373688d3cef7ed136ef4a5",
+      "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+      "wi.java": "c9c77a99d55f234addc312bab3234d1e1a1aa9fad443cf2fdf47a7babcebd879",
+      "uz.java": "6735693c2519493bd9780c20f7b27c6ccc675713b7ca5d30f03b4eb518567cea",
+      "pr.java": "df49f566c9875133134d74dc37f879ea57070827dda979f2a4226f76bd9ffab4",
+      "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830"
+    },
+    "aliases": [
+      {
+        "version": "1.8",
+        "protocol": 47,
+        "measurement_sha256": "56e99219d9846ce6a0f8e7347998bcbd07a3ab2f7f8faf5d27b1272c54a28a41",
+        "client_sha256": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+        "server_sha256": "40e23f3823d6f0e3cbadc491cedb55b8ba53f8ab516b68182ddd1536babeb291",
+        "case": 0
+      },
+      {
+        "version": "1.8.1",
+        "protocol": 47,
+        "measurement_sha256": "c422784f6018aa5ca59d44c9853df577ed6908db42ec83382ed05b1fcbe089bc",
+        "client_sha256": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+        "server_sha256": "ef5f5a1a1a78087859b18153acf97efc6ecb12540ac08d82b9c95024249b9845",
+        "case": 0
+      },
+      {
+        "version": "1.8.2",
+        "protocol": 47,
+        "measurement_sha256": "ef722227064a6a5a192c2a573676834502fff101105930d9ab1d730ef54b3477",
+        "client_sha256": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+        "server_sha256": "d99f3b3478018cb454fbee36fd60e3c4acbe1132f1cb26b3657f9ad291e7035c",
+        "case": 0
+      },
+      {
+        "version": "1.8.3",
+        "protocol": 47,
+        "measurement_sha256": "5a04b1aee7805e16121475ec12608ee772dd2877e197f58b99b7e1a755d8a10e",
+        "client_sha256": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+        "server_sha256": "a26751b18ccc80ceef488da645c3b785aa528e2ae20a6a6dbd46f6dc754e62bd",
+        "case": 0
+      },
+      {
+        "version": "1.8.4",
+        "protocol": 47,
+        "measurement_sha256": "f94d4c7b1fd6bc1e128f5e72d83c91399ba55d01d5ef6b78a3b45d9eced01ea6",
+        "client_sha256": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+        "server_sha256": "394a9d0d5bcd03272a58f036b8736a47d26d63b45a4e7c820629114876e72107",
+        "case": 0
+      },
+      {
+        "version": "1.8.5",
+        "protocol": 47,
+        "measurement_sha256": "26f780794f442962114a8bb92be0af3604c57af7c982fa19227821f2bfc89caa",
+        "client_sha256": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+        "server_sha256": "6a412e89009acfcd5c56084ddab4f9676c5561bb58a3f22d5ea4ba4ac5d3503e",
+        "case": 0
+      },
+      {
+        "version": "1.8.6",
+        "protocol": 47,
+        "measurement_sha256": "b5cbc22dbb2eab120004d0bc068db62109b405060b22cbe3cfc8d4208e161adc",
+        "client_sha256": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+        "server_sha256": "7fc66b2b54f0f4d65fdd6d6484a50f432c144ef02072d3435d5660f120f58e0d",
+        "case": 0
+      },
+      {
+        "version": "1.8.7",
+        "protocol": 47,
+        "measurement_sha256": "85004ee0a31677a015eaa673a18cc2e05d7e33caf999ae1370d8c42d03678ca4",
+        "client_sha256": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+        "server_sha256": "5cf4a49762c996c94f6b8b119f1c80b4de3c12b2f5c53268801905bb7daa0644",
+        "case": 0
+      },
+      {
+        "version": "1.8.8",
+        "protocol": 47,
+        "measurement_sha256": "95cd449cc772c40afb07fa7ab71d1d246b55e03ad308bf05e12699d5feea52cb",
+        "client_sha256": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+        "server_sha256": "39aef720dc5309476f56f2e96a516f3dd3041bbbf442cbfd47d63acbd06af31e",
+        "case": 0
+      },
+      {
+        "version": "1.8.9",
+        "protocol": 47,
+        "measurement_sha256": "e5a6ee3f22ec94b9a1998b72fa16d86f695c125f6aef1f2e9ed8abf93b792c53",
+        "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+        "server_sha256": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312",
+        "case": 0
+      }
+    ],
+    "scope": "Original watcher, signed child predicate and deferred age-size phase with controlled world inputs; not a full native entity/world tick; the loaded-area requirement comes from the verified original World source"
+  },
+  "schema": 1,
+  "entities": {
+    "minecraft:villager": {
+      "selector": [
+        12,
+        "negative_byte",
+        128,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum",
+      "refresh_timing": "living_tick",
+      "required_loaded_radius": 32,
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.9,
+          false,
+          true
+        ]
+      ]
+    }
+  }
+}

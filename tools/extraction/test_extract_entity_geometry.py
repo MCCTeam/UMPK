@@ -1,6 +1,7 @@
 """Keep native transition phases and incomplete geometry evidence distinct."""
 
 import copy
+import gzip
 import json
 from pathlib import Path
 import unittest
@@ -12,6 +13,37 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
     def setUp(self) -> None:
         path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.14.4.json"
         self.raw = json.loads(path.read_text(encoding="utf-8"))
+
+    @staticmethod
+    def classic_native() -> dict:
+        path = Path(__file__).parents[2] / "tests/Umpk.Client.Tests/Fixtures/ClassicVillagerGeometry.native.json.gz"
+        return json.loads(gzip.decompress(path.read_bytes()))["cases"][0]
+
+    def test_classic_signed_age_defers_refresh_until_the_living_phase(self) -> None:
+        profile = legacy_villager_profile(self.classic_native())
+        self.assertEqual([12, "negative_byte", 128, 0], profile["selector"])
+        self.assertEqual("living_tick", profile["refresh_timing"])
+        self.assertEqual(32, profile["required_loaded_radius"])
+        self.assertEqual("retain_minimum", profile["refresh"])
+        self.assertEqual([[0, 0, .6, 1.8, False, True], [1, 0, .3, .9, False, True]], profile["variants"])
+
+    def test_classic_incomplete_or_changed_native_phases_are_rejected(self) -> None:
+        for defect in ("predicate", "duplicate-predicate", "missing-predicate", "missing-phase", "duplicate-phase", "metadata-resize", "position-before-phase", "phase-bounds", "position-after-phase", "default", "dimension"):
+            with self.subTest(defect=defect):
+                raw = self.classic_native()
+                if defect == "predicate": raw["predicates"][0]["child"] = False
+                if defect == "duplicate-predicate": raw["predicates"][0] = raw["predicates"][1]
+                if defect == "missing-predicate": raw["predicates"].pop()
+                if defect == "missing-phase": raw["rows"].pop()
+                if defect == "duplicate-phase": raw["rows"][0] = raw["rows"][1]
+                if defect == "metadata-resize": raw["rows"][0]["after_metadata_size"] = [.6, 1.8]
+                if defect == "position-before-phase": raw["rows"][0]["before_phase_position"][0] += .1
+                if defect == "phase-bounds": raw["rows"][0]["after_phase"][0] += .1
+                if defect == "position-after-phase": raw["rows"][0]["after_position"][0] += .1
+                if defect == "default": raw["metadata_default"] = -1
+                if defect == "dimension": raw["rows"][0]["after_phase_size"][0] += .1
+                with self.assertRaises(ValueError):
+                    legacy_villager_profile(raw)
 
     def test_living_scale_source_distinguishes_age_and_attribute_scaling(self) -> None:
         from extract_entity_geometry import living_scale_attribute

@@ -52,7 +52,54 @@ def villager_profile(raw: dict, *, scale_attribute: str) -> dict:
     return {"selector": [raw["metadata_index"], "boolean", 1, 0], "pose_index": 6, "refresh": "retain_minimum_on_growth" if models[True] else "recenter_on_refresh", "scale_attribute": scale_attribute, "variants": variants}
 
 
+def classic_villager_profile(raw: dict) -> dict:
+    if type(raw.get("metadata_index")) is not int or raw["metadata_index"] != 12 or type(raw.get("metadata_default")) is not int or raw["metadata_default"] != 0 or raw.get("blocks_building") is not True:
+        raise ValueError("Classic villager watcher defaults or building flags differ")
+    predicates = raw["predicates"]
+    if len(predicates) != 256 or {row["value"] for row in predicates} != set(range(-128, 128)):
+        raise ValueError("Classic signed-age predicates are incomplete")
+    for row in predicates:
+        if type(row["value"]) is not int or type(row["stored"]) is not int or row["stored"] != row["value"] or type(row["child"]) is not bool or row["child"] != (row["value"] < 0):
+            raise ValueError("Classic child predicate is not a negative signed byte")
+    positions, values = raw["positions"], raw["selector_values"]
+    if not positions or not isinstance(values, list) or len(set(values)) != len(values) or any(type(value) is not int or not -128 <= value <= 127 for value in values) or not {-128, -1, 0, 1, 127}.issubset(values):
+        raise ValueError("Classic size-phase selector coverage is incomplete")
+    for point in positions:
+        finite(point, 3)
+    expected = {(source, target, position) for source in values for target in values for position in range(len(positions))}
+    seen, dimensions, reported = set(), {}, {}
+    for row in raw["rows"]:
+        key = (row["from"], row["to"], row["position"])
+        if any(type(value) is not int for value in key) or key not in expected or key in seen:
+            raise ValueError("Classic size phases have duplicate or invalid transitions")
+        seen.add(key)
+        source, target, position = key
+        before = size([*row["before_size"], False])
+        after = size([*row["after_phase_size"], False])
+        for selector, measured, raw_size in ((source < 0, before, row["before_size"]), (target < 0, after, row["after_phase_size"])):
+            if dimensions.setdefault(selector, measured) != measured:
+                raise ValueError("Classic dimensions differ for the same age predicate")
+            reported.setdefault(selector, raw_size)
+        if any(size([*row[name], False]) != before for name in ("after_metadata_size", "before_phase_position_size")):
+            raise ValueError("Classic metadata resized before its living phase")
+        for name in ("before", "after_metadata", "before_phase_position", "after_phase", "after_position"):
+            finite(row[name], 6)
+        centered_before = centered(positions[position], before)
+        if any(row[name] != centered_before for name in ("before", "after_metadata", "before_phase_position")):
+            raise ValueError("Classic metadata or position changed cached dimensions")
+        x, y, z = centered_before[:3]
+        retained = [x, y, z, x + after[0], y + after[1], z + after[0]]
+        if row["after_phase"] != retained or row["after_position"] != centered(positions[position], after):
+            raise ValueError("Classic living refresh or position reapplication differs")
+    if seen != expected or set(dimensions) != {False, True}:
+        raise ValueError("Classic native size phases are incomplete")
+    # 1.8-client-decompiled aqu.java: updateEntityWithOptionalForce requires loaded columns across an inclusive 32-block horizontal radius before the living tick.
+    return {"selector": [12, "negative_byte", 128, 0], "pose_index": -1, "refresh": "retain_minimum", "refresh_timing": "living_tick", "required_loaded_radius": 32, "scale_attribute": "", "variants": [[int(baby), 0, *reported[baby], False, True] for baby in (False, True)]}
+
+
 def legacy_villager_profile(raw: dict) -> dict:
+    if "predicates" in raw:
+        return classic_villager_profile(raw)
     if "poses" in raw:
         if type(raw.get("pose_index")) is not int or raw["pose_index"] != 6 or raw.get("metadata_default") is not False or raw.get("blocks_building") is not True:
             raise ValueError("Unmapped villager pose defaults or building flags are incomplete")

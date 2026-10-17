@@ -27,26 +27,38 @@ internal sealed class JavaEntityGeometry : IEntityGeometrySource
     internal static JavaEntityGeometry Create(ReadOnlySpan<byte> table)
     {
         var reader = new PacketReader(table);
-        if (reader.ReadVarInt() != 1)
+        int schema = reader.ReadVarInt();
+        if (schema is not (1 or 2))
             throw new ProtocolViolationException("Unsupported generated entity geometry schema.");
-        JavaEntityGeometry geometry = Read(ref reader);
+        JavaEntityGeometry geometry = Read(ref reader, schema == 2);
         if (reader.Remaining != 0)
             throw new ProtocolViolationException("Generated entity geometry table has trailing bytes.");
         return geometry;
     }
 
-    internal static JavaEntityGeometry Read(ref PacketReader reader)
+    internal static JavaEntityGeometry Read(ref PacketReader reader, bool hasTickPolicy = false)
     {
         Dictionary<Identifier, EntityGeometryRule> rules = [];
         Dictionary<(Identifier, bool, EntityPose), EntityGeometryDimensions> dimensions = [];
-        int count = Count(ref reader, 8);
+        int count = Count(ref reader, hasTickPolicy ? 11 : 8);
         for (int index = 0; index < count; index++)
         {
             Identifier name = Identifier.Parse(reader.ReadString());
             int metadata = reader.ReadVarInt(), poseIndex = reader.ReadVarInt();
             byte refresh = reader.ReadByte();
+            byte selectorKind = hasTickPolicy ? reader.ReadByte() : metadata < 0 ? (byte)0 : (byte)1;
+            byte timing = hasTickPolicy ? reader.ReadByte() : (byte)0;
+            int loadedRadius = hasTickPolicy ? reader.ReadVarInt() : 0;
             string scale = reader.ReadString();
-            if (metadata is < -1 or > 254 || poseIndex is < -1 or > 254 || (metadata >= 0 && metadata == poseIndex) || refresh > 2 || scale is not ("" or "minecraft:scale") || !rules.TryAdd(name, new EntityGeometryRule(metadata, poseIndex, (EntityDimensionsRefresh)refresh, scale.Length == 0 ? null : Identifier.Parse(scale))))
+            if (metadata is < -1 or > 254 || poseIndex is < -1 or > 254 || (metadata >= 0 && metadata == poseIndex) || refresh > 2 || selectorKind > 2 || (selectorKind == 0) != (metadata == -1) || timing > 1 || loadedRadius is < 0 or > 32 || (timing == 0 && loadedRadius != 0) || scale is not ("" or "minecraft:scale"))
+                throw new ProtocolViolationException("Invalid generated entity geometry rule.");
+            var rule = new EntityGeometryRule(metadata, poseIndex, (EntityDimensionsRefresh)refresh, scale.Length == 0 ? null : Identifier.Parse(scale))
+            {
+                SelectorKind = (EntityGeometrySelectorKind)selectorKind,
+                RefreshTiming = (EntityGeometryRefreshTiming)timing,
+                RequiredLoadedRadius = loadedRadius,
+            };
+            if (!rules.TryAdd(name, rule))
                 throw new ProtocolViolationException("Invalid generated entity geometry rule.");
             int variants = Count(ref reader, 11);
             HashSet<(bool Selector, EntityPose Pose)> seen = [];

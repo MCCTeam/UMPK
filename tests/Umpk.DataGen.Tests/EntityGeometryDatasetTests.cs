@@ -6,6 +6,40 @@ namespace Umpk.DataGen.Tests;
 public sealed class EntityGeometryDatasetTests
 {
     [Theory]
+    [InlineData("valid")]
+    [InlineData("selector-mask")]
+    [InlineData("selector-default")]
+    [InlineData("refresh-timing")]
+    [InlineData("negative-radius")]
+    [InlineData("excessive-radius")]
+    [InlineData("unused-radius")]
+    public void DeferredSignedAgeRulesHaveAnExplicitTickContract(string defect)
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        AddEntityRegistry(builder);
+        JsonObject measurement = Measurement();
+        JsonObject entry = measurement["entities"]!["minecraft:player"]!.AsObject();
+        entry["selector"] = new JsonArray(12, "negative_byte", 128, 0);
+        entry["refresh_timing"] = "living_tick";
+        entry["required_loaded_radius"] = 32;
+        switch (defect)
+        {
+            case "selector-mask": entry["selector"]![2] = 1; break;
+            case "selector-default": entry["selector"]![3] = -1; break;
+            case "refresh-timing": entry["refresh_timing"] = "render_tick"; break;
+            case "negative-radius": entry["required_loaded_radius"] = -1; break;
+            case "excessive-radius": entry["required_loaded_radius"] = 33; break;
+            case "unused-radius": entry["refresh_timing"] = "synchronized_data"; break;
+        }
+        File.WriteAllText(Path.Combine(builder.Root, "770/entity-geometry.json"), measurement.ToJsonString());
+        IReadOnlyList<string> problems = Validator.Validate(DatasetLoader.Load(builder.Root));
+        if (defect == "valid")
+            Assert.Empty(problems);
+        else
+            Assert.Contains(problems, problem => problem.Contains("entity-geometry.json", StringComparison.Ordinal));
+    }
+
+    [Theory]
     [InlineData("schema")]
     [InlineData("entity")]
     [InlineData("selector-index")]
@@ -86,6 +120,17 @@ public sealed class EntityGeometryDatasetTests
         entry["variants"]!.AsArray().RemoveAt(1);
         File.WriteAllText(Path.Combine(builder.Root, "770/entity-geometry.json"), measurement.ToJsonString());
 
+        Assert.Empty(Validator.Validate(DatasetLoader.Load(builder.Root)));
+    }
+
+    [Fact]
+    public void LegacyRegistryNamesJoinTheirQualifiedGeometryIdentity()
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        File.WriteAllText(Path.Combine(builder.Root, "770/entities.json"), """
+            {"_provenance":{"kind":"extracted"},"entries":[{"id":"player","id_num":0}]}
+            """);
+        File.WriteAllText(Path.Combine(builder.Root, "770/entity-geometry.json"), Measurement().ToJsonString());
         Assert.Empty(Validator.Validate(DatasetLoader.Load(builder.Root)));
     }
 

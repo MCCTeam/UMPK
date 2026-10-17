@@ -83,7 +83,8 @@ internal sealed partial class Emitter
     {
         using MemoryStream stream = new();
         EntityGeometryTable? geometry = EntityGeometryTable.Load(version);
-        WriteVarInt(stream, 1);
+        bool hasTickPolicy = geometry?.Entities.Values.Any(entry => entry.SelectorKind == "negative_byte" || entry.RefreshTiming != "synchronized_data" || entry.RequiredLoadedRadius != 0) == true;
+        WriteVarInt(stream, hasTickPolicy ? 2 : 1);
         WriteVarInt(stream, geometry?.Entities.Count ?? 0);
         void Text(string value)
         {
@@ -98,6 +99,12 @@ internal sealed partial class Emitter
             WriteVarInt(stream, entry.MetadataIndex);
             WriteVarInt(stream, entry.PoseIndex);
             stream.WriteByte(entry.Refresh switch { "recenter_on_refresh" => 0, "retain_minimum_on_growth" => 1, "retain_minimum" => 2, _ => throw new DatasetException("Unsupported entity dimensions refresh") });
+            if (hasTickPolicy)
+            {
+                stream.WriteByte(entry.SelectorKind switch { "none" => 0, "boolean" => 1, "negative_byte" => 2, _ => throw new DatasetException("Unsupported entity dimensions selector") });
+                stream.WriteByte(entry.RefreshTiming switch { "synchronized_data" => 0, "living_tick" => 1, _ => throw new DatasetException("Unsupported entity dimensions refresh timing") });
+                WriteVarInt(stream, entry.RequiredLoadedRadius);
+            }
             Text(entry.ScaleAttribute);
             WriteVarInt(stream, entry.Variants.Length);
             foreach (EntityGeometryVariant variant in entry.Variants.OrderBy(row => row.Selector).ThenBy(row => row.Pose))

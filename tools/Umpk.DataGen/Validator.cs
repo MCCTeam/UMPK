@@ -79,6 +79,7 @@ internal static partial class Validator
             InteractionTable.Load(version)?.Validate(version, problems);
             ReplacementTable.Load(version)?.Validate(version, problems);
             EntityObstructionTable.Load(version)?.Validate(version, problems);
+            EntityGeometryTable.Load(version)?.Validate(version, problems);
             TargetingTable.Load(version)?.Validate(version, problems);
             CollisionGridTable.Load(version)?.Validate(version, problems);
             CollisionGridTable.LoadOffsets(version)?.Validate(version, problems);

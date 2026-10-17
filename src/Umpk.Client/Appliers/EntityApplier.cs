@@ -1,5 +1,6 @@
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
+using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
 using Umpk.Game.Registries;
@@ -57,6 +58,7 @@ internal sealed class EntityApplier : IApplier
                     {
                         context.State.PacketBases.Remove(removed);
                         context.State.EntityMotion.Remove(removed);
+                        context.State.EntityGeometry.Remove(removed);
                     }
                     await context.PublishAsync(new EntityRemoved(id)).ConfigureAwait(false);
                 }
@@ -69,7 +71,10 @@ internal sealed class EntityApplier : IApplier
                     Vec3d target = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
                     bool deferred = context.State.EntityMotion.TryObserveInterpolation(posEntity, target, null, null);
                     if (!deferred)
+                    {
                         posEntity.Position = target;
+                        context.State.EntityGeometry.ObservePosition(posEntity);
+                    }
                     posEntity.OnGround = move.OnGround;
                     if (!deferred)
                         await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
@@ -91,7 +96,10 @@ internal sealed class EntityApplier : IApplier
                     if (!context.State.EntityMotion.TryObserveInterpolation(rotEntity, target, SignedPacketAngle(rot.Yaw), SignedPacketAngle(rot.Pitch)))
                     {
                         if (target is { } current)
+                        {
                             rotEntity.Position = current;
+                            context.State.EntityGeometry.ObservePosition(rotEntity);
+                        }
                         rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
                         rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
                     }
@@ -112,6 +120,7 @@ internal sealed class EntityApplier : IApplier
                         prEntity.Position = target;
                         prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
                         prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
+                        context.State.EntityGeometry.ObservePosition(prEntity);
                     }
                     prEntity.OnGround = posRot.OnGround;
                     if (!deferred)
@@ -155,7 +164,10 @@ internal sealed class EntityApplier : IApplier
                         context.State.PacketBases.Set(tpEntity, new Vec3d(teleport.X, teleport.Y, teleport.Z));
                     tpEntity.OnGround = teleport.OnGround;
                     if (!deferred || tpEntity.Position != previous)
+                    {
+                        context.State.EntityGeometry.ObservePosition(tpEntity);
                         await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
+                    }
                 }
 
                 return true;
@@ -174,7 +186,10 @@ internal sealed class EntityApplier : IApplier
                     }
                     syncEntity.OnGround = sync.OnGround;
                     if (!deferred || syncEntity.Position != previous)
+                    {
+                        context.State.EntityGeometry.ObservePosition(syncEntity);
                         await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
+                    }
                 }
 
                 return true;
@@ -198,7 +213,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundSetEntityDataPacket metadata:
                 if (store.TryGet(metadata.EntityId, out Entity? metadataEntity) && metadataEntity is not null)
                 {
-                    ApplyMetadata(metadataEntity, metadata.Metadata);
+                    ApplyMetadata(metadataEntity, metadata.Metadata, context);
                     await context.PublishAsync(new EntityMetadataChanged(metadata.EntityId)).ConfigureAwait(false);
                 }
 
@@ -250,6 +265,7 @@ internal sealed class EntityApplier : IApplier
                 {
                     context.State.PacketBases.Remove(pickedUp);
                     context.State.EntityMotion.Remove(pickedUp);
+                    context.State.EntityGeometry.Remove(pickedUp);
                 }
                 await context.PublishAsync(new ItemPickedUp(pickup.ItemEntityId, pickup.CollectorEntityId, pickup.Amount ?? 0)).ConfigureAwait(false);
                 return true;
@@ -359,8 +375,10 @@ internal sealed class EntityApplier : IApplier
             entity.PlayerProfile = tabEntry.Profile;
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
+        if (JavaGameData.BlockInteractionData(context.Version.Version.Protocol) is IEntityGeometrySource geometry)
+            context.State.EntityGeometry.Register(entity, geometry);
         if (initialMetadata is not null)
-            ApplyMetadata(entity, initialMetadata);
+            ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)
             context.State.EntityMotion.RegisterRemotePlayer(entity, context.Version.Version.Protocol);
         context.State.PacketBases.Set(entity, entity.Position);
@@ -370,17 +388,21 @@ internal sealed class EntityApplier : IApplier
         {
             context.State.PacketBases.Remove(previous);
             context.State.EntityMotion.Remove(previous);
+            context.State.EntityGeometry.Remove(previous);
             await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
         }
         store.Add(entity);
         await context.PublishAsync(new EntitySpawned(entityId, entity)).ConfigureAwait(false);
     }
 
-    private static void ApplyMetadata(Entity entity, EntityMetadataList metadata)
+    private static void ApplyMetadata(Entity entity, EntityMetadataList metadata, ApplierContext context)
     {
         foreach (EntityDataEntry entry in metadata.Entries)
+        {
             entity.Metadata.Set(entry.Index, entry.Value);
-        ProjectSemanticMetadata(entity);
+            ProjectSemanticMetadata(entity);
+            context.State.EntityGeometry.ObserveMetadata(entity, entry.Index);
+        }
     }
 
     /// <summary>Projects the semantic metadata keys onto the typed <see cref="Entity"/> properties (tier 2). The raw store keeps every index; this is what a consumer that asks for the custom name actually reads.</summary>
@@ -486,6 +508,8 @@ internal sealed class EntityApplier : IApplier
 
         if (isSelf && appliedAny)
             context.PhysicsConditionsDirty();
+        else if (appliedAny && entity is not null)
+            context.State.EntityGeometry.ObserveAttributes(entity);
 
     }
 

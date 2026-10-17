@@ -74,10 +74,21 @@ public sealed partial class InteractionActions
         {
             if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id))
                 continue;
-            // A measured constant shape uses the tracked position. Riders and other state-dependent shapes still need their native position and dimension controllers.
-            if (entity.Vehicle is not null || !data.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
+            if (entity.Vehicle is not null)
                 return false;
-            if (VanillaPlacementCollision.Intersects(destination, VanillaEntityBounds.Create(entity.Position, width, height).Box, _blockProfile))
+            Aabb bounds;
+            if (data is IEntityGeometrySource geometry && geometry.TryGetRule(entity.Type.Id, out _))
+            {
+                if (!_services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding))
+                    return false;
+                if (!blocksBuilding)
+                    continue;
+            }
+            else if (data.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
+                bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
+            else
+                return false;
+            if (VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
                 return false;
         }
         return true;

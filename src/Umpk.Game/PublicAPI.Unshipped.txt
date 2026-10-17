@@ -3305,3 +3305,46 @@ Umpk.Game.Registries.BlockReplacementInfo.AllowsPlacement.init -> void
 static Umpk.Game.Registries.BlockReplacementInfo.operator ==(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
 static Umpk.Game.Registries.BlockReplacementInfo.operator !=(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
 Umpk.Game.Registries.IBlockInteractionSource.TryGetCubeReplacement(int stateId, int? belowStateId, out Umpk.Game.Registries.BlockReplacementInfo info) -> bool
+Umpk.Game.Registries.EntityGeometryRule
+Umpk.Game.Registries.EntityGeometryRule.EntityGeometryRule() -> void
+Umpk.Game.Registries.EntityGeometryRule.EntityGeometryRule(int MetadataIndex, int PoseMetadataIndex, Umpk.Game.Registries.EntityDimensionsRefresh Refresh, Umpk.Identifier? ScaleAttribute) -> void
+Umpk.Game.Registries.EntityGeometryRule.Deconstruct(out int MetadataIndex, out int PoseMetadataIndex, out Umpk.Game.Registries.EntityDimensionsRefresh Refresh, out Umpk.Identifier? ScaleAttribute) -> void
+Umpk.Game.Registries.EntityGeometryRule.Equals(Umpk.Game.Registries.EntityGeometryRule other) -> bool
+override Umpk.Game.Registries.EntityGeometryRule.GetHashCode() -> int
+~override Umpk.Game.Registries.EntityGeometryRule.Equals(object obj) -> bool
+~override Umpk.Game.Registries.EntityGeometryRule.ToString() -> string
+Umpk.Game.Registries.EntityGeometryRule.MetadataIndex.get -> int
+Umpk.Game.Registries.EntityGeometryRule.MetadataIndex.init -> void
+Umpk.Game.Registries.EntityGeometryRule.PoseMetadataIndex.get -> int
+Umpk.Game.Registries.EntityGeometryRule.PoseMetadataIndex.init -> void
+Umpk.Game.Registries.EntityGeometryRule.Refresh.get -> Umpk.Game.Registries.EntityDimensionsRefresh
+Umpk.Game.Registries.EntityGeometryRule.Refresh.init -> void
+Umpk.Game.Registries.EntityGeometryRule.ScaleAttribute.get -> Umpk.Identifier?
+Umpk.Game.Registries.EntityGeometryRule.ScaleAttribute.init -> void
+static Umpk.Game.Registries.EntityGeometryRule.operator ==(Umpk.Game.Registries.EntityGeometryRule left, Umpk.Game.Registries.EntityGeometryRule right) -> bool
+static Umpk.Game.Registries.EntityGeometryRule.operator !=(Umpk.Game.Registries.EntityGeometryRule left, Umpk.Game.Registries.EntityGeometryRule right) -> bool
+Umpk.Game.Registries.EntityGeometryDimensions
+Umpk.Game.Registries.EntityGeometryDimensions.EntityGeometryDimensions() -> void
+Umpk.Game.Registries.EntityGeometryDimensions.EntityGeometryDimensions(float Width, float Height, bool Fixed, bool BlocksBuilding) -> void
+Umpk.Game.Registries.EntityGeometryDimensions.Deconstruct(out float Width, out float Height, out bool Fixed, out bool BlocksBuilding) -> void
+Umpk.Game.Registries.EntityGeometryDimensions.Equals(Umpk.Game.Registries.EntityGeometryDimensions other) -> bool
+override Umpk.Game.Registries.EntityGeometryDimensions.GetHashCode() -> int
+~override Umpk.Game.Registries.EntityGeometryDimensions.Equals(object obj) -> bool
+~override Umpk.Game.Registries.EntityGeometryDimensions.ToString() -> string
+Umpk.Game.Registries.EntityGeometryDimensions.Width.get -> float
+Umpk.Game.Registries.EntityGeometryDimensions.Width.init -> void
+Umpk.Game.Registries.EntityGeometryDimensions.Height.get -> float
+Umpk.Game.Registries.EntityGeometryDimensions.Height.init -> void
+Umpk.Game.Registries.EntityGeometryDimensions.Fixed.get -> bool
+Umpk.Game.Registries.EntityGeometryDimensions.Fixed.init -> void
+Umpk.Game.Registries.EntityGeometryDimensions.BlocksBuilding.get -> bool
+Umpk.Game.Registries.EntityGeometryDimensions.BlocksBuilding.init -> void
+static Umpk.Game.Registries.EntityGeometryDimensions.operator ==(Umpk.Game.Registries.EntityGeometryDimensions left, Umpk.Game.Registries.EntityGeometryDimensions right) -> bool
+static Umpk.Game.Registries.EntityGeometryDimensions.operator !=(Umpk.Game.Registries.EntityGeometryDimensions left, Umpk.Game.Registries.EntityGeometryDimensions right) -> bool
+Umpk.Game.Registries.EntityDimensionsRefresh
+Umpk.Game.Registries.EntityDimensionsRefresh.Recenter = 0 -> Umpk.Game.Registries.EntityDimensionsRefresh
+Umpk.Game.Registries.EntityDimensionsRefresh.RetainMinimumOnGrowth = 1 -> Umpk.Game.Registries.EntityDimensionsRefresh
+Umpk.Game.Registries.EntityDimensionsRefresh.RetainMinimum = 2 -> Umpk.Game.Registries.EntityDimensionsRefresh
+Umpk.Game.Registries.IEntityGeometrySource
+Umpk.Game.Registries.IEntityGeometrySource.TryGetRule(Umpk.Identifier entityType, out Umpk.Game.Registries.EntityGeometryRule rule) -> bool
+Umpk.Game.Registries.IEntityGeometrySource.TryGetDimensions(Umpk.Identifier entityType, bool selector, Umpk.Game.Entities.EntityPose pose, out Umpk.Game.Registries.EntityGeometryDimensions dimensions) -> bool

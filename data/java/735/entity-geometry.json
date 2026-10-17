@@ -1,0 +1,142 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "version": "1.16",
+    "protocol": 735,
+    "client_sha256": "00740ef4475d4cd0a1d7064f89602f759c45ff9afe29da9b0ee0b9037ebb2a71",
+    "server_sha256": "7d2d2d127b90baf2bd8fc61092cbff42bea1bdfae30a2838f45edb31294979b9",
+    "measurement_sha256": "468fff543ff361c526ec762582027465a6b154889ee0fbdecf46a8d8845911cc",
+    "transition_sha256": "0a619dbfe1999d1bc79dc7305500b1a3cd6836974ee6960a6e014c4fe6a4de6f",
+    "native_witnesses": 588,
+    "living_source_sha256": "fe9d20f6ef2dca83acbec2c7354b40069ccd0bcf8b419c281a328818b116cbf2",
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
+  },
+  "schema": 1,
+  "entities": {
+    "minecraft:villager": {
+      "selector": [
+        15,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.975,
+          false,
+          true
+        ],
+        [
+          1,
+          1,
+          0.3,
+          0.975,
+          false,
+          true
+        ],
+        [
+          1,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          1,
+          3,
+          0.3,
+          0.975,
+          false,
+          true
+        ],
+        [
+          1,
+          4,
+          0.3,
+          0.975,
+          false,
+          true
+        ],
+        [
+          1,
+          5,
+          0.3,
+          0.975,
+          false,
+          true
+        ],
+        [
+          1,
+          7,
+          0.3,
+          0.975,
+          false,
+          true
+        ]
+      ]
+    }
+  }
+}

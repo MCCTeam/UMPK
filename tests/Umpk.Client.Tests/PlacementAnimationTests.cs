@@ -33,6 +33,44 @@ public sealed class PlacementAnimationTests
                 yield return [protocol, lower];
     }
 
+    public static IEnumerable<object[]> VillagerGeometryCases()
+    {
+        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
+        {
+            yield return [protocol, babyIndex, false, EntityPose.Standing, 8.5, 65.0, true];
+            yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 65.0, false];
+            yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 64.0, false];
+            yield return [protocol, babyIndex, true, EntityPose.Standing, 1.5, 64.0, true];
+            yield return [protocol, babyIndex, true, EntityPose.Standing, 1.5, 65.0, false];
+            if (protocol != 210)
+                yield return [protocol, babyIndex, false, EntityPose.Sleeping, 1.5, 64.0, true];
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(VillagerGeometryCases))]
+    public async Task VillagerPlacementObstructionUsesNativeAgeAndPose(int protocol, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings)
+    {
+        await using var harness = new Harness(protocol);
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("villager"), out RegistryEntry<EntityTypeDefinition> type));
+        var entity = new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(x, y, 1.5), Pose = pose };
+        entity.Metadata.Set(babyIndex, MetadataValue.Boolean(baby));
+        harness.State.Entities.Add(entity);
+
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.Equal(swings ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(new Vec3d(x, y, 1.5), entity.Position);
+        Assert.Equal(pose, entity.Pose);
+        Assert.True(entity.Metadata.TryGet(babyIndex, out MetadataValue age));
+        Assert.Equal(baby, age.AsBoolean());
+        Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
+    }
+
     [Theory]
     [MemberData(nameof(DoublePlantCases))]
     public async Task MetadataUpperPlantReplacementUsesTheActualLowerCell(int protocol, int lower)

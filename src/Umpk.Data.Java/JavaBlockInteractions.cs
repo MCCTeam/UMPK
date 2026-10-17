@@ -6,7 +6,7 @@ using Umpk.Protocol.Java.Codecs;
 namespace Umpk.Data.Java;
 
 /// <summary>Named native contracts, independent of a server's numeric registry ordering.</summary>
-internal sealed class JavaBlockInteractions : IBlockInteractionSource
+internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, IEntityGeometrySource
 {
     private readonly FrozenDictionary<Identifier, BlockInteractionInfo> _blocks;
     private readonly FrozenDictionary<Identifier, ItemUseOnInfo> _items;
@@ -17,7 +17,7 @@ internal sealed class JavaBlockInteractions : IBlockInteractionSource
 
     private readonly record struct ReplacementRange(int First, int Last, byte Flags);
 
-    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides)
+    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, GeometryTables geometry)
     {
         _blocks = blocks.ToFrozenDictionary();
         _items = items.ToFrozenDictionary();
@@ -25,9 +25,10 @@ internal sealed class JavaBlockInteractions : IBlockInteractionSource
         _fixedBoxes = fixedBoxes.ToFrozenDictionary();
         _replacement = replacement;
         _belowOverrides = belowOverrides.ToFrozenDictionary();
+        _geometry = geometry;
     }
 
-    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0;
+    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.Rules.Count != 0;
     public bool TryGetBlock(Identifier block, out BlockInteractionInfo info) => _blocks.TryGetValue(block, out info);
     public bool TryGetItem(Identifier item, out ItemUseOnInfo info) => _items.TryGetValue(item, out info);
     public bool IsAlwaysNonObstructingEntity(Identifier entityType) => _entities.GetValueOrDefault(entityType);
@@ -65,9 +66,10 @@ internal sealed class JavaBlockInteractions : IBlockInteractionSource
         Dictionary<Identifier, (float Width, float Height)> fixedBoxes = [];
         ReplacementRange[] replacement = [];
         Dictionary<int, ReplacementRange[]> belowOverrides = [];
+        GeometryTables geometry = GeometryTables.Empty;
         var reader = new PacketReader(table);
         int schema = reader.ReadVarInt();
-        if (schema is not (0 or 1 or 2 or 3 or 4))
+        if (schema is not (0 or 1 or 2 or 3 or 4 or 5))
             throw new ProtocolViolationException("Unsupported generated block interaction schema.");
         if (schema >= 1)
         {
@@ -119,7 +121,7 @@ internal sealed class JavaBlockInteractions : IBlockInteractionSource
             }
             if (schema >= 4)
             {
-                replacement = ReadRanges(ref reader);
+                replacement = ReadRanges(ref reader, allowEmpty: schema >= 5);
                 int belowCount = Count(ref reader, 5);
                 for (int index = 0; index < belowCount; index++)
                 {
@@ -130,16 +132,18 @@ internal sealed class JavaBlockInteractions : IBlockInteractionSource
                         throw new ProtocolViolationException("Invalid generated lower-block replacement rule.");
                 }
             }
+            if (schema >= 5)
+                geometry = ReadGeometry(ref reader);
         }
         if (reader.Remaining != 0)
             throw new ProtocolViolationException("Generated block interaction table has trailing bytes.");
-        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides);
+        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides, geometry);
     }
 
-    private static ReplacementRange[] ReadRanges(ref PacketReader reader)
+    private static ReplacementRange[] ReadRanges(ref PacketReader reader, bool allowEmpty = false)
     {
         int count = Count(ref reader, 3);
-        if (count == 0)
+        if (count == 0 && !allowEmpty)
             throw new ProtocolViolationException("Generated replacement ranges are empty.");
         ReplacementRange[] ranges = new ReplacementRange[count];
         int previous = -1;

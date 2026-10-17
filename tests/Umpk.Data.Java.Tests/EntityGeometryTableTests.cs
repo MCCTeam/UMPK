@@ -1,0 +1,94 @@
+using System.Buffers;
+using Umpk.Game.Entities;
+using Umpk.Game.Registries;
+using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
+using Xunit;
+
+namespace Umpk.Data.Java.Tests;
+
+public sealed class EntityGeometryTableTests
+{
+    [Theory]
+    [InlineData("metadata")]
+    [InlineData("pose-index")]
+    [InlineData("refresh")]
+    [InlineData("scale")]
+    [InlineData("selector")]
+    [InlineData("pose")]
+    [InlineData("zero")]
+    [InlineData("negative")]
+    [InlineData("nan")]
+    [InlineData("infinity")]
+    [InlineData("flags")]
+    [InlineData("duplicate")]
+    [InlineData("missing")]
+    [InlineData("trailing")]
+    public void InvalidPackedGeometryIsRejected(string defect) => Assert.Throws<ProtocolViolationException>(() => JavaBlockInteractions.Create(Pack(defect)));
+
+    [Fact]
+    public void GeometryOnlyMeasurementIsKnownWithoutInventingBlockContracts()
+    {
+        JavaBlockInteractions source = JavaBlockInteractions.Create(Pack("valid"));
+        Assert.True(source.HasData);
+        Assert.True(source.TryGetRule(Identifier.Minecraft("villager"), out _));
+        Assert.False(source.TryGetBlock(Identifier.Minecraft("stone"), out _));
+    }
+
+    [Theory]
+    [InlineData(210, 12, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
+    [InlineData(498, 14, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
+    [InlineData(573, 15, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
+    [InlineData(754, 15, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
+    [InlineData(755, 16, EntityDimensionsRefresh.Recenter, .3F, .975F)]
+    [InlineData(769, 16, EntityDimensionsRefresh.Recenter, .3F, .975F)]
+    [InlineData(774, 16, EntityDimensionsRefresh.Recenter, .3F, .975F)]
+    [InlineData(775, 16, EntityDimensionsRefresh.Recenter, .49F, .99F)]
+    [InlineData(776, 16, EntityDimensionsRefresh.Recenter, .49F, .98F)]
+    [InlineData(777, 16, EntityDimensionsRefresh.Recenter, .49F, .98F)]
+    public void NativeVillagerGeometryPreservesEraBoundaries(int protocol, int metadata, EntityDimensionsRefresh refresh, float babyWidth, float babyHeight)
+    {
+        IEntityGeometrySource source = Assert.IsAssignableFrom<IEntityGeometrySource>(JavaGameData.BlockInteractionData(protocol));
+        var villager = Identifier.Minecraft("villager");
+        Assert.True(source.TryGetRule(villager, out EntityGeometryRule rule));
+        Assert.Equal(metadata, rule.MetadataIndex);
+        Assert.Equal(refresh, rule.Refresh);
+        Assert.True(source.TryGetDimensions(villager, false, EntityPose.Standing, out EntityGeometryDimensions adult));
+        Assert.Equal(new EntityGeometryDimensions(.6F, 1.95F, false, true), adult);
+        Assert.True(source.TryGetDimensions(villager, true, EntityPose.Standing, out EntityGeometryDimensions baby));
+        Assert.Equal(new EntityGeometryDimensions(babyWidth, babyHeight, false, true), baby);
+        Assert.Equal(protocol != 210, source.TryGetDimensions(villager, true, EntityPose.Sleeping, out EntityGeometryDimensions sleeping));
+        if (protocol != 210)
+            Assert.Equal(new EntityGeometryDimensions(.2F, .2F, true, true), sleeping);
+        Assert.False(source.TryGetDimensions(villager, false, EntityPose.Unknown, out _));
+        Assert.False(source.TryGetRule(Identifier.Minecraft("missing"), out _));
+    }
+
+    private static byte[] Pack(string defect)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        var writer = new PacketWriter(buffer);
+        writer.WriteVarInt(5);
+        for (int index = 0; index < 6; index++)
+            writer.WriteVarInt(0);
+        writer.WriteVarInt(1);
+        writer.WriteString("minecraft:villager");
+        writer.WriteVarInt(defect == "metadata" ? 255 : 16);
+        writer.WriteVarInt(defect == "pose-index" ? 255 : 6);
+        writer.WriteByte(defect == "refresh" ? (byte)3 : (byte)0);
+        writer.WriteString(defect == "scale" ? "minecraft:missing" : "");
+        int count = defect == "missing" ? 1 : 2;
+        writer.WriteVarInt(count);
+        for (int index = 0; index < count; index++)
+        {
+            writer.WriteByte(defect == "selector" ? (byte)2 : defect == "duplicate" ? (byte)0 : (byte)index);
+            writer.WriteByte(defect == "pose" ? (byte)18 : (byte)0);
+            writer.WriteFloat(defect == "zero" ? 0 : defect == "nan" ? float.NaN : .6F);
+            writer.WriteFloat(defect == "negative" ? -1 : defect == "infinity" ? float.PositiveInfinity : 1.95F);
+            writer.WriteByte(defect == "flags" ? (byte)4 : (byte)2);
+        }
+        if (defect == "trailing")
+            writer.WriteByte(0);
+        return buffer.WrittenSpan.ToArray();
+    }
+}

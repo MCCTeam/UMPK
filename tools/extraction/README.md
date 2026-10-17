@@ -151,3 +151,20 @@ python3 -m unittest discover -s tools/extraction -p test_extract_block_replaceme
 The extractor checks official artifact hashes, preserved original client-class hashes, predicate origins, source bindings, exact registry and ordinary-cube item coverage, and equal-protocol release differences before writing any dataset files. It rejects per-item or per-face rules that the compact schema cannot represent. Protocol aliases select the latest measured vanilla client profile; measured earlier differences remain in provenance.
 
 Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicked block is replaced; flag 2 means the resolved destination accepts an ordinary cube item. These predicates are distinct in metadata-era clients. `below_overrides` retains the measured dependency of upper double plants on the lower cell. Gaps remain unknown state identifiers. These tables cover ordinary cube items; item components, block use, player state, survival, obstruction and other runtime placement conditions still require evaluation.
+
+## Villager geometry
+
+`extract_entity_geometry.py` writes audited villager dimensions and metadata refresh rules to `entity-geometry.json`. It checks the native age/pose transition phases, report hashes and official client/server hashes before extracting the selected protocol representatives. Preserve the complete measurement roots outside Git.
+
+```bash
+python3 tools/extraction/extract_entity_geometry.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-entity-native-all-20261017-v1" \
+  --transitions "$MINECRAFT_OFFICIAL_ROOT/runs/villager-box-transitions-all-20261017-v1" \
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1" \
+  --check
+python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry.py
+```
+
+The 33 datasets cover 1.10.2 and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. The generated interaction source also implements `IEntityGeometrySource`; unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.

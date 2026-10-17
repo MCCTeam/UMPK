@@ -1,0 +1,45 @@
+"""Keep native transition phases and incomplete geometry evidence distinct."""
+
+import copy
+import json
+from pathlib import Path
+import unittest
+
+from extract_entity_geometry import legacy_villager_profile, villager_profile
+
+
+class VillagerGeometryExtractionTests(unittest.TestCase):
+    def setUp(self) -> None:
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.14.4.json"
+        self.raw = json.loads(path.read_text(encoding="utf-8"))
+
+    def test_legacy_shrinking_also_retains_the_minimum(self) -> None:
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json"
+        profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))
+        self.assertEqual("retain_minimum", profile["refresh"])
+        self.assertEqual(-1, profile["pose_index"])
+
+    def test_native_growth_retains_the_minimum_until_position_is_reapplied(self) -> None:
+        profile = villager_profile(self.raw, scale_attribute="")
+        self.assertEqual("retain_minimum_on_growth", profile["refresh"])
+        self.assertEqual([14, "boolean", 1, 0], profile["selector"])
+        self.assertEqual(6, profile["pose_index"])
+        self.assertEqual([[0, 0, .6, 1.95, False, True], [0, 2, .2, .2, True, True], [1, 0, .3, .975, False, True], [1, 2, .2, .2, True, True]], profile["variants"])
+
+    def test_incomplete_or_inconsistent_native_phases_are_rejected(self) -> None:
+        for defect in ("missing", "duplicate", "dimension", "callback", "position", "pose", "metadata"):
+            with self.subTest(defect=defect):
+                raw = copy.deepcopy(self.raw)
+                if defect == "missing": raw["rows"].pop()
+                if defect == "duplicate": raw["rows"].append(copy.deepcopy(raw["rows"][0]))
+                if defect == "dimension": raw["rows"][0]["to_size"][0] = .7
+                if defect == "callback": raw["rows"][0]["after_pose_sync"][0] += .01
+                if defect == "position": raw["rows"][0]["after_position"][0] += .01
+                if defect == "pose": raw["poses"][1] = "UNRECOGNIZED"
+                if defect == "metadata": raw["metadata_index"] = -1
+                with self.assertRaises(ValueError):
+                    villager_profile(raw, scale_attribute="")
+
+
+if __name__ == "__main__":
+    unittest.main()

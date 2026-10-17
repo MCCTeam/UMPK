@@ -83,4 +83,4 @@ python3 -m unittest discover -s tools/minecraft-official -p 'test_*.py'
 bash -n tools/decompile.sh tools/start-server.sh
 ```
 
-The tests cover failed-download preservation, artifact hashes, release selection, bundled jar extraction, and truncated RCON frames. The socket tests require local socket access.
+The tests cover failed-download preservation, artifact hashes, release selection, bundled jar extraction, and truncated RCON frames. RCON retries transport resets only while authenticating, up to three attempts; it sends each command once and propagates lost command responses. Rejected credentials and malformed or truncated authentication frames fail immediately. The socket tests require local socket access.

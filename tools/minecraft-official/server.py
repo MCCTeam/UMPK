@@ -30,34 +30,41 @@ def receive_exact(connection: socket.socket, length: int) -> bytes:
 
 
 def rcon(port: int, password: str, command: str) -> str:
-    with socket.create_connection(('127.0.0.1', port), timeout=5) as connection:
-        connection.settimeout(5)
+    for attempt in range(3):
+        with socket.create_connection(('127.0.0.1', port), timeout=5) as connection:
+            connection.settimeout(5)
 
-        def send(identifier: int, kind: int, body: str) -> None:
-            encoded = body.encode('utf-8')
-            connection.sendall(struct.pack('<iii', len(encoded) + 10, identifier, kind) + encoded + b'\0\0')
+            def send(identifier: int, kind: int, body: str) -> None:
+                encoded = body.encode('utf-8')
+                connection.sendall(struct.pack('<iii', len(encoded) + 10, identifier, kind) + encoded + b'\0\0')
 
-        def receive() -> tuple[int, int, str]:
-            length = struct.unpack('<i', receive_exact(connection, 4))[0]
-            if not 10 <= length <= 4 * 1024 * 1024:
-                raise ValueError('Invalid RCON frame length')
-            payload = receive_exact(connection, length)
-            if payload[-2:] != b'\0\0':
-                raise ValueError('Invalid RCON frame terminator')
-            identifier, kind = struct.unpack('<ii', payload[:8])
-            return identifier, kind, payload[8:-2].decode('utf-8')
+            def receive() -> tuple[int, int, str]:
+                length = struct.unpack('<i', receive_exact(connection, 4))[0]
+                if not 10 <= length <= 4 * 1024 * 1024:
+                    raise ValueError('Invalid RCON frame length')
+                payload = receive_exact(connection, length)
+                if payload[-2:] != b'\0\0':
+                    raise ValueError('Invalid RCON frame terminator')
+                identifier, kind = struct.unpack('<ii', payload[:8])
+                return identifier, kind, payload[8:-2].decode('utf-8')
 
-        send(1, 3, password)
-        identifier, kind, _ = receive()
-        if kind == 0 and identifier == 1:
-            identifier, kind, _ = receive()
-        if identifier != 1 or kind != 2:
-            raise PermissionError('RCON authentication failed')
-        send(2, 2, command)
-        identifier, kind, body = receive()
-        if identifier != 2 or kind != 0:
-            raise ValueError('Unexpected RCON command response')
-        return body
+            try:
+                send(1, 3, password)
+                identifier, kind, _ = receive()
+                if kind == 0 and identifier == 1:
+                    identifier, kind, _ = receive()
+            except (ConnectionResetError, BrokenPipeError, TimeoutError):
+                if attempt == 2:
+                    raise
+                time.sleep(.05)
+                continue
+            if identifier != 1 or kind != 2:
+                raise PermissionError('RCON authentication failed')
+            send(2, 2, command)
+            identifier, kind, body = receive()
+            if identifier != 2 or kind != 0:
+                raise ValueError('Unexpected RCON command response')
+            return body
 
 
 def check_port(port: int) -> None:

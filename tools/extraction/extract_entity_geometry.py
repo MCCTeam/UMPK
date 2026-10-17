@@ -304,9 +304,15 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     role = "entity" in receipt
     mapped = receipt.get("format") == "mapped-role-v1"
     classic = receipt.get("format") == "classic-role-v1"
-    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1") or ((mapped or classic) and not role) or (classic and protocol != 47):
+    ageable = receipt.get("format") == "legacy-ageable-role-v1"
+    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1", "legacy-ageable-role-v1") or ((mapped or classic or ageable) and not role) or (classic and protocol != 47):
         raise ValueError("Unsupported native entity geometry receipt format")
-    profile = classic_villager_profile(raw) if classic else role_profile(raw) if role else legacy_villager_profile(raw)
+    if ageable:
+        from extract_legacy_ageable_geometry import ageable_profile
+
+        profile = ageable_profile(raw, protocol)
+    else:
+        profile = classic_villager_profile(raw) if classic else role_profile(raw) if role else legacy_villager_profile(raw)
     if role and (receipt["entity"] != raw.get("entity") or profile != receipt.get("profile")):
         raise ValueError("Native entity role receipt differs from measured geometry")
     if receipt["status"] != "complete" or sha(path) != receipt["measurement_sha256"] or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
@@ -333,6 +339,21 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         helper_root = root.parents[1]
         sources = {name: (official / f"{version}-client-decompiled" / name).read_text(encoding="utf-8") for name in source_hashes}
         verify_classic_role_identity(raw, receipt, binding, sources, sha(helper_root / "ClassicGeometryDump.java"), sha(helper_root / "classes/ClassicGeometryDump.class"))
+    elif ageable:
+        from extract_legacy_ageable_geometry import verify_ageable_identity
+
+        path = root / "bindings.json"
+        if sha(path) != receipt.get("binding_sha256"):
+            raise ValueError("Legacy farm binding changed")
+        binding = json.loads(path.read_text(encoding="utf-8"))["geometry"]
+        helper_root = root.parents[1]
+        sources = {name: (official / f"{version}-client-decompiled" / name).read_text(encoding="utf-8") for name in source_hashes}
+        dataset = next(row["dataset"] for row in catalog if row["name"] == version)
+        entities = json.loads((Path(__file__).parents[2] / "data/java" / dataset / "entities.json").read_text(encoding="utf-8"))
+        ids = [row["id_num"] for key in ("entries", "mob_entries") for row in entities.get(key, []) if row["id"] == receipt["entity"]]
+        if len(ids) != 1:
+            raise ValueError("Legacy farm entity has no unique canonical registry ID")
+        verify_ageable_identity(raw, receipt, binding, sources, sha(helper_root / "LegacyEntityGeometryDump.java"), sha(helper_root / "classes/LegacyEntityGeometryDump.class"), ids[0])
     elif mapped:
         entity, living = "net.minecraft.world.entity.Entity", "net.minecraft.world.entity.LivingEntity"
         owners = raw.get("method_owners", {})

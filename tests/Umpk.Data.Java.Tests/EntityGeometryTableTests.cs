@@ -9,6 +9,30 @@ namespace Umpk.Data.Java.Tests;
 
 public sealed class EntityGeometryTableTests
 {
+    public static IEnumerable<object[]> LegacyFarmDimensions()
+    {
+        foreach (int protocol in new[] { 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404 })
+            foreach ((string name, float width, float height) in new[] { ("cow", .9F, 1.4F), ("pig", .9F, .9F), ("sheep", .9F, 1.3F), ("chicken", .4F, .7F) })
+                foreach (bool baby in new[] { false, true })
+                    yield return [protocol, name, baby, baby ? width * .5F : width, baby ? height * .5F : height];
+    }
+
+    [Theory]
+    [MemberData(nameof(LegacyFarmDimensions))]
+    public void LegacyFarmAnimalsUseNativeBooleanAgeBounds(int protocol, string name, bool baby, float width, float height)
+    {
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(protocol);
+        var entity = Identifier.Minecraft(name);
+        Assert.True(source.TryGetRule(entity, out EntityGeometryRule rule));
+        Assert.Equal(protocol <= 110 ? 11 : 12, rule.MetadataIndex);
+        Assert.Equal(EntityGeometrySelectorKind.Boolean, rule.SelectorKind);
+        Assert.Equal(protocol <= 210 ? EntityDimensionsRefresh.RetainMinimum : EntityDimensionsRefresh.RetainMinimumOnGrowth, rule.Refresh);
+        Assert.Equal(EntityGeometryRefreshTiming.SynchronizedData, rule.RefreshTiming);
+        Assert.Equal(0, rule.RequiredLoadedRadius);
+        Assert.True(source.TryGetDimensions(entity, baby, EntityPose.Standing, out EntityGeometryDimensions dimensions));
+        Assert.Equal(new EntityGeometryDimensions(width, height, false, true), dimensions);
+    }
+
     [Theory]
     [InlineData("cow", false, .9F, 1.3F)]
     [InlineData("cow", true, .45F, .65F)]

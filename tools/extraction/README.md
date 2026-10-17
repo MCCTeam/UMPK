@@ -233,6 +233,18 @@ The four early 1.14 datasets also contain native cat, horse and iron golem geome
 
 The 32 mapped protocol datasets also contain native cat, cow, horse and golem geometry. The 176 measurements cover 44 mapped releases and 363,753 native transition rows. The compressed replay fixture deduplicates 25 cases while retaining each release's artifact and measurement hashes. Gzip output uses no filename or clock metadata. The extractor checks the mapped method owners, original class preservation, official mappings and the native living-scale getter. Attribute scaling beyond the default value remains unmeasured; fixed dimensions retain their native behavior. Protocol aliases must agree on their geometry and scale contract. The official 26.1.1 and 26.1.2 clients use existing protocol 775; their release names share the same generated descriptor.
 
+After the general geometry extraction, merge the measured cow, pig, sheep and chicken profiles for 1.9 through 1.13.2. This preserves the existing villager profiles and provenance. The 68 release/type measurements cover all seventeen releases and thirteen protocols, with 816 original-client metadata/position transitions and twelve deduplicated fixture cases. The extractor requires complete aliases, native registry IDs, original class bytes, hashed source and helper files, Boolean child observations and callback delegation to the ageable base. It handles the native entity-list, class-registry and type-registry forms, including the flattened IDs from 1.13. The helper uses controlled world inputs and does not execute complete entity or world ticks.
+
+```bash
+python3 tools/extraction/extract_legacy_ageable_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-farm-geometry-all-20261017-v2" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/LegacyFarmGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p test_extract_legacy_ageable_geometry.py
+```
+
+Omit `--check` to regenerate the datasets and fixture from the complete measured cohort, then run DataGen. The Boolean age accessor is 11 through 1.9.4 and 12 from 1.10. All four types resize during the metadata callback. The refresh retains the minimum corner through 1.10.2; from 1.11 it recenters on shrink and retains the minimum on growth. Position reapplication recenters in every measured release. The cow's adult height is 1.4F, compared with 1.3F in the separately measured 1.8 cohort. No classic signed-age or deferred living-tick policy is reused for these Boolean-age profiles.
+
 The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 
 `extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains their distinct obfuscated class bindings. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The remaining legacy entity keys retain unknown rules. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.

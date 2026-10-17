@@ -62,4 +62,6 @@ Consumer receipts are in `classic-placement-consumers-20261017-v1`, fresh live r
 
 ## Remaining scope
 
+The later [classic farm animal fix](classic-farm-placement.md) adds cow, pig, sheep and chicken geometry for protocol 47, with separate native evidence and live acceptance.
+
 Native interpolation for moving mobs, additional entity types, non-default scaling, riders, specialized block/item placement and the complete live version matrix remain unfinished. The separate shulker and trigonometry work is excluded from this tested snapshot. Existing mapped-era and tick-control evidence is recorded in [mapped entity placement](entity-geometry-mapped.md) and [native tick control](native-tick-control.md).

@@ -1,6 +1,6 @@
 # Legacy farm animal placement verification
 
-The tested producer is `f021075d55bababf7ffadcd33284011dae1811a4`. It adds measured cow, pig, sheep and chicken geometry to the thirteen protocols used by all seventeen releases from 1.9 through 1.13.2. The separately measured [classic farm rules](classic-farm-placement.md) remain in place for protocol 47.
+The tested producer is `f021075d55bababf7ffadcd33284011dae1811a4`. It adds measured cow, pig, sheep and chicken geometry to the thirteen protocols used by all seventeen releases from 1.9 through 1.13.2. The separately measured [classic farm rules](classic-farm-placement.md) remain in place for protocol 47. The [early 1.14 verification](pose-farm-placement.md) records the later extension through 1.14.3.
 
 ## Native behavior
 

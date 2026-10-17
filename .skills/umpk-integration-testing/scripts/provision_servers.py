@@ -47,9 +47,8 @@ def ensure_download(entry: dict, destination: Path) -> None:
 
 
 def default_root() -> Path:
-    repo_root = Path(__file__).resolve().parents[3]
     configured = os.environ.get("UMPK_ORACLE_ROOT")
-    return Path(configured).expanduser().resolve() if configured else repo_root / "MinecraftOfficial"
+    return Path(configured).expanduser().resolve() if configured else Path(os.environ.get("MINECRAFT_OFFICIAL_ROOT", str(Path.home() / "Projects" / "MinecraftOfficial"))).expanduser().resolve()
 
 
 def main() -> int:

@@ -119,7 +119,7 @@ Play Clientbound 0x66 minecraft:update_attributes codec
 Play Clientbound 0x67 minecraft:update_enabled_features marker
 Play Clientbound 0x68 minecraft:update_mob_effect codec
 Play Clientbound 0x69 minecraft:update_recipes codec
-Play Clientbound 0x6A minecraft:update_tags marker
+Play Clientbound 0x6A minecraft:update_tags codec
 Play Serverbound 0x00 minecraft:accept_teleportation codec
 Play Serverbound 0x01 minecraft:block_entity_tag_query marker
 Play Serverbound 0x02 minecraft:change_difficulty marker

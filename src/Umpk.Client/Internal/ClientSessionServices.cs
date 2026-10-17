@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
 using Umpk.Client.State;
+using Umpk.Game.Players;
+using Umpk.Geometry;
 using Umpk.Hosting;
 using Umpk.Protocol.Java;
 
@@ -32,6 +34,18 @@ internal sealed class ClientSessionServices
     /// <summary>The current connection lifetime, or <see langword="null"/> when no connection exists. Live-client navigation links caller cancellation to this token so a terminal session fault cannot leave a movement operation running against a dead connection. Hand-built component tests retain their standalone lifetime through the default non-cancelable token.</summary>
     public Func<CancellationToken?> CurrentSessionCancellation { get; init; } =
         static () => CancellationToken.None;
+
+    /// <summary>The existing physics owner's current pose and eye-water observation. Hand-built action harnesses can supply their own snapshot.</summary>
+    public Func<Umpk.Physics.PhysicsState?> ReadPhysicsState { get; init; } = static () => null;
+
+    /// <summary>The physics owner's pose eye height, or the standing height when physics is unavailable. Read on the session loop.</summary>
+    public double EyeHeight => ReadPhysicsState()?.EyeHeight ?? PlayerReach.StandingEyeHeight;
+
+    /// <summary>The current tracked feet position plus the observed eye height. Read on the session loop.</summary>
+    public Vec3d EyePosition => Self.Position.Add(0, EyeHeight, 0);
+
+    /// <summary>Reads the current block view ray on the session owner. Explicit-target actions do not use this input.</summary>
+    public Func<double, Umpk.Game.World.BlockHitResult?> ReadBlockHit { get; init; } = static _ => null;
 
     /// <summary>Which version-optional actions this session can actually perform. Derived from <see cref="Wire"/> rather than injected so every construction site (including the test harnesses that build services by hand) gets the same answers the live client gives.</summary>
     public ClientActionCapabilities Capabilities =>

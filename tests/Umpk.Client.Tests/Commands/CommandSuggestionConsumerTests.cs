@@ -20,7 +20,7 @@ public sealed class CommandSuggestionConsumerTests
 
     public static TheoryData<string> JsonEraVersions => new() { "1.13.2", "1.16.5", "1.18.2", "1.20.2" };
 
-    public static TheoryData<string> NbtEraVersions => new() { "1.20.4", "1.21.5", "26.1", "26.2" };
+    public static TheoryData<string> NbtEraVersions => new() { "1.20.4", "1.21.5", "26.1", "26.1.1", "26.1.2", "26.2" };
 
     [Theory]
     [MemberData(nameof(JsonEraVersions))]
@@ -35,7 +35,7 @@ public sealed class CommandSuggestionConsumerTests
     private static async Task AssertReachesConsumerAsync(string versionName, byte[] frame)
     {
         using var cts = new CancellationTokenSource(Budget);
-        JavaVersion version = JavaVersions.All.Single(v => v.Version.Name == versionName);
+        Assert.True(JavaVersions.TryGetByName(versionName, out JavaVersion version));
         var harness = new ApplierHarness(version);
 
         // The first request allocates transaction id 1, which is what the frame below answers.

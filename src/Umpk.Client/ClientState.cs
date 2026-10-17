@@ -14,6 +14,7 @@ public sealed class ClientState
 {
     private readonly ClientFeatures _features;
     private World? _world;
+    private Identifier? _worldDimension;
     private EntityStore? _entities;
     private InventoryState? _inventory;
 
@@ -44,6 +45,9 @@ public sealed class ClientState
 
     /// <summary>The network-synced registries. Populated during configuration.</summary>
     public RegistryAccess? Registries { get; internal set; }
+
+    /// <summary>Tag membership belongs to the connection, including configuration-to-play and data-pack reloads.</summary>
+    internal Internal.ClientRegistryTags RegistryTags { get; } = new();
 
     /// <summary>The scoreboard/teams model. Always present.</summary>
     public Scoreboard Scoreboard { get; } = new();
@@ -109,9 +113,39 @@ public sealed class ClientState
 
     internal World? WorldOrNull => _world;
 
-    internal void InstallWorld(World world) => _world = world;
+    internal Internal.EntityPacketBases PacketBases { get; } = new();
 
-    internal void ResetForRespawn(World world) => _world = world;
+    internal Internal.EntityMotionState EntityMotion { get; } = new();
+
+    internal Internal.EntityGeometryState EntityGeometry { get; } = new();
+
+    internal Internal.WorldTickState WorldTicks { get; } = new();
+
+    internal Identifier? WorldDimension => _worldDimension;
+
+    internal long PlayerLifetime { get; private set; }
+
+    internal void AdvancePlayerLifetime() => PlayerLifetime++;
+
+    /// <summary>The native game-mode controller is created on join and retained across respawn.</summary>
+    internal long InteractionLifetime { get; private set; }
+
+    internal void AdvanceInteractionLifetime() => InteractionLifetime++;
+
+    internal void InstallWorld(World world) => InstallWorld(world.Dimension.DimensionName, world);
+
+    internal void InstallWorld(Identifier dimension, World? world)
+    {
+        _world = world;
+        _worldDimension = dimension;
+        _entities?.Clear();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        WorldTicks.Reset();
+    }
+
+    internal void ResetForRespawn(World world) => InstallWorld(world);
 
     /// <summary>
     /// Tears down everything the play phase built, for a play-to-configuration re-entry (<c>minecraft:start_configuration</c>, 1.20.2+). The protocol's re-entry behavior determines what survives:
@@ -129,7 +163,13 @@ public sealed class ClientState
     {
         // Level-owned in vanilla: cleared with the level, refilled by the join that ends the re-entry.
         _world = null;
+        _worldDimension = null;
+        AdvancePlayerLifetime();
         _entities?.Clear();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        WorldTicks.Reset();
         Scoreboard.Clear();
         Maps.Clear();
 
@@ -157,6 +197,11 @@ public sealed class ClientState
         bool wasShowing = Dialogs.IsShowing;
         Dialogs.Clear();
         Server.ResetForSessionEnd();
+        RegistryTags.Clear();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        WorldTicks.Reset();
 
         // The chat-signing counters describe ONE connection's profile key: the coordinator that owns them is built per connect and per negotiated version. Leaving them behind lets a 1.19.3 session that rotated once reconnect to a 1.19.2 server and report ProfileKeyRotationSupported == false beside ProfileKeyRotations == 1, plus a refresh instant belonging to a key this session never held.
         Chat.ResetProfileKeyState();

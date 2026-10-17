@@ -177,16 +177,20 @@ internal static class Descriptor
     // Table references (shared across versions by content; Vn names the earliest owning protocol).
     public static ReadOnlySpan<byte> ItemNames => SharedTables.ItemsV210;
     public static ReadOnlySpan<byte> LegacyItemDefs => SharedTables.LegacyItemsV210;
-    public static ReadOnlySpan<byte> BlockNames => SharedTables.BlocksV107;
-    public static ReadOnlySpan<byte> BlockDefs => SharedTables.BlockDefinitionsV107;
+    public static ReadOnlySpan<byte> BlockNames => SharedTables.BlocksV210;
+    public static ReadOnlySpan<byte> BlockDefs => SharedTables.BlockDefinitionsV210;
     public static ReadOnlySpan<byte> EntityNames => SharedTables.EntitiesV210;
     public static ReadOnlySpan<byte> SoundNames => SharedTables.SoundsV47;
     public static ReadOnlySpan<byte> LegacyObjectEntityNames => SharedTables.LegacyObjectEntitiesV107;
     public static ReadOnlySpan<byte> MenuDefs => SharedTables.MenusV47;
     public static ReadOnlySpan<byte> CollisionShapes => SharedTables.CollisionShapesV107;
-    public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.BlockShapeReferencesV107;
-    public static ReadOnlySpan<byte> BlockAttrs => SharedTables.BlockAttributesV107;
+    public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.BlockShapeReferencesV210;
+    public static ReadOnlySpan<byte> BlockAttrs => SharedTables.BlockAttributesV210;
     public static ReadOnlySpan<byte> BlockPush => SharedTables.BlockPushV47;
+    public static ReadOnlySpan<byte> BlockMining => SharedTables.BlockMiningV210;
+    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.BlockInteractionsV210;
+    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.EntityGeometryV210;
+    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.BlockTargetingV210;
     public static ReadOnlySpan<byte> EnchantmentDefs => SharedTables.EnchantmentsV47;
     public static ReadOnlySpan<byte> MobEffectDefs => SharedTables.MobEffectsV107;
     public static ReadOnlySpan<byte> AttributeDefs => SharedTables.AttributesV47;

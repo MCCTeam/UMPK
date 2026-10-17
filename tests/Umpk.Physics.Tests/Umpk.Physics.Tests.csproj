@@ -11,5 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Parity/Traces/*.umpktrace" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Fixtures/BlockCollisionContext.native.json" />
+    <EmbeddedResource Include="Fixtures/BlockCollisionGrid.native.json" />
   </ItemGroup>
 </Project>

@@ -86,8 +86,8 @@ public sealed class PlayerReachTests
     [Fact]
     public void StandingEyeHeight_IsVanillasDefault()
     {
-        Assert.Equal(1.62, PlayerReach.StandingEyeHeight);
-        Assert.Equal(new Vec3d(0.5, 65.62, 0.5), PlayerReach.EyePosition(new Vec3d(0.5, 64.0, 0.5)));
+        Assert.Equal(1.6200000047683716, PlayerReach.StandingEyeHeight);
+        Assert.Equal(new Vec3d(0.5, 65.62000000476837, 0.5), PlayerReach.EyePosition(new Vec3d(0.5, 64.0, 0.5)));
     }
 
     /// <summary>A single unexplained "5, to the centre, in every game mode" is neither rule this class models: the modern rule's survival bound is 4.5 measured to the BOX, and the legacy rule's bound is 6.0 measured to the centre. A point sitting exactly 5.0 from the centre lands exactly on the survival box's boundary (4.5 to the nearest face) and vanilla's comparison there is strict, so it is rejected, while the same point sits comfortably inside the legacy 6.0-to-centre bound.</summary>

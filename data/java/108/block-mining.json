@@ -1,0 +1,4773 @@
+{
+  "_provenance": {
+    "version": "1.9.1",
+    "protocol": 108,
+    "kind": "extracted",
+    "mapping_source": "obfuscated-source-derived",
+    "sources": [
+      "downloads/1.9.1/server.jar"
+    ],
+    "server_sha1": "bf95d9118d9b4b827f524c878efd275125b56181",
+    "server_sha256": "fcc5393c191afbcc0b706bd94616fb171e2fadaa107a3e5f36298ed2abf76c41",
+    "measurement_sha256": "abc8e6c8ebb81dffe82ad1631307f75d9e0f8bf163956b1e1acafb28b220c9ca",
+    "tool": "tools/extraction/shape-extractor/LegacyMiningGeneric.java",
+    "note": "Vanilla block tags are bound before measuring default item stacks. Every state is checked before collapsing facts by block name. Custom stack components and server data packs can override default tool behavior.",
+    "source_bindings": {
+      "version": "1.9.1",
+      "block": "ajt",
+      "state": "arc",
+      "item": "ado",
+      "stack": "adq",
+      "statelike": "arc",
+      "player": "zj",
+      "inventory": "zi",
+      "bootstrap": "kn",
+      "boot": "c",
+      "hardness": "b",
+      "hardness_args": [
+        "arc",
+        "aht",
+        "cj"
+      ],
+      "material": "a",
+      "always_destroyable": "l",
+      "speed": "a",
+      "correct": "b",
+      "registries": {
+        "block": [
+          "ajt",
+          "h",
+          "a"
+        ],
+        "item": [
+          "ado",
+          "g",
+          "a"
+        ]
+      },
+      "sources": {
+        "ajt": "f7c9553f430559f7b70e7012f5cd6e4d4b81329d1e7d46d9547479d1bc66a8a2",
+        "arc": "e64e321e42e4714f8b3d732106f6e2be21d6339909c66e1efe96d40adfeec8ba",
+        "ado": "aa2d9e9b1b4bd794c0305f9157c19304afc4559ec2f3901a155c20396c7542f4",
+        "adq": "24beacbeac8d8aae3fda891b579f6236e77aff2f6b638aa00feec151842c9200",
+        "zi": "4f5bdb91f271ca9b903296af3991949144fab095bab90ab71415dfd6ca277190",
+        "kn": "b3890dec368df9f2d5b33082fccf6d5bdc1977485339a2b80fbb0a7bfb58e074"
+      }
+    }
+  },
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 214,
+  "measured_state_count": 1463,
+  "item_count": 366,
+  "default_tool": [
+    1.0,
+    false
+  ],
+  "blocks": {
+    "acacia_door": [
+      3.0,
+      false
+    ],
+    "acacia_fence": [
+      2.0,
+      false
+    ],
+    "acacia_fence_gate": [
+      2.0,
+      false
+    ],
+    "acacia_stairs": [
+      2.0,
+      false
+    ],
+    "activator_rail": [
+      0.7,
+      false
+    ],
+    "air": [
+      0.0,
+      false
+    ],
+    "anvil": [
+      5.0,
+      true
+    ],
+    "barrier": [
+      -1.0,
+      true
+    ],
+    "beacon": [
+      3.0,
+      false
+    ],
+    "bed": [
+      0.2,
+      false
+    ],
+    "bedrock": [
+      -1.0,
+      true
+    ],
+    "beetroots": [
+      0.0,
+      false
+    ],
+    "birch_door": [
+      3.0,
+      false
+    ],
+    "birch_fence": [
+      2.0,
+      false
+    ],
+    "birch_fence_gate": [
+      2.0,
+      false
+    ],
+    "birch_stairs": [
+      2.0,
+      false
+    ],
+    "bookshelf": [
+      1.5,
+      false
+    ],
+    "brewing_stand": [
+      0.5,
+      true
+    ],
+    "brick_block": [
+      2.0,
+      true
+    ],
+    "brick_stairs": [
+      2.0,
+      true
+    ],
+    "brown_mushroom": [
+      0.0,
+      false
+    ],
+    "brown_mushroom_block": [
+      0.2,
+      false
+    ],
+    "cactus": [
+      0.4,
+      false
+    ],
+    "cake": [
+      0.5,
+      false
+    ],
+    "carpet": [
+      0.1,
+      false
+    ],
+    "carrots": [
+      0.0,
+      false
+    ],
+    "cauldron": [
+      2.0,
+      true
+    ],
+    "chain_command_block": [
+      -1.0,
+      true
+    ],
+    "chest": [
+      2.5,
+      false
+    ],
+    "chorus_flower": [
+      0.4,
+      false
+    ],
+    "chorus_plant": [
+      0.4,
+      false
+    ],
+    "clay": [
+      0.6,
+      false
+    ],
+    "coal_block": [
+      5.0,
+      true
+    ],
+    "coal_ore": [
+      3.0,
+      true
+    ],
+    "cobblestone": [
+      2.0,
+      true
+    ],
+    "cobblestone_wall": [
+      2.0,
+      true
+    ],
+    "cocoa": [
+      0.2,
+      false
+    ],
+    "command_block": [
+      -1.0,
+      true
+    ],
+    "crafting_table": [
+      2.5,
+      false
+    ],
+    "dark_oak_door": [
+      3.0,
+      false
+    ],
+    "dark_oak_fence": [
+      2.0,
+      false
+    ],
+    "dark_oak_fence_gate": [
+      2.0,
+      false
+    ],
+    "dark_oak_stairs": [
+      2.0,
+      false
+    ],
+    "daylight_detector": [
+      0.2,
+      false
+    ],
+    "daylight_detector_inverted": [
+      0.2,
+      false
+    ],
+    "deadbush": [
+      0.0,
+      false
+    ],
+    "detector_rail": [
+      0.7,
+      false
+    ],
+    "diamond_block": [
+      5.0,
+      true
+    ],
+    "diamond_ore": [
+      3.0,
+      true
+    ],
+    "dirt": [
+      0.5,
+      false
+    ],
+    "dispenser": [
+      3.5,
+      true
+    ],
+    "double_plant": [
+      0.0,
+      false
+    ],
+    "double_stone_slab": [
+      2.0,
+      true
+    ],
+    "double_stone_slab2": [
+      2.0,
+      true
+    ],
+    "double_wooden_slab": [
+      2.0,
+      false
+    ],
+    "dragon_egg": [
+      3.0,
+      false
+    ],
+    "dropper": [
+      3.5,
+      true
+    ],
+    "emerald_block": [
+      5.0,
+      true
+    ],
+    "emerald_ore": [
+      3.0,
+      true
+    ],
+    "enchanting_table": [
+      5.0,
+      true
+    ],
+    "end_bricks": [
+      0.8,
+      true
+    ],
+    "end_gateway": [
+      -1.0,
+      false
+    ],
+    "end_portal": [
+      -1.0,
+      false
+    ],
+    "end_portal_frame": [
+      -1.0,
+      true
+    ],
+    "end_rod": [
+      0.0,
+      false
+    ],
+    "end_stone": [
+      3.0,
+      true
+    ],
+    "ender_chest": [
+      22.5,
+      true
+    ],
+    "farmland": [
+      0.6,
+      false
+    ],
+    "fence": [
+      2.0,
+      false
+    ],
+    "fence_gate": [
+      2.0,
+      false
+    ],
+    "fire": [
+      0.0,
+      false
+    ],
+    "flower_pot": [
+      0.0,
+      false
+    ],
+    "flowing_lava": [
+      100.0,
+      false
+    ],
+    "flowing_water": [
+      100.0,
+      false
+    ],
+    "frosted_ice": [
+      0.5,
+      false
+    ],
+    "furnace": [
+      3.5,
+      true
+    ],
+    "glass": [
+      0.3,
+      false
+    ],
+    "glass_pane": [
+      0.3,
+      false
+    ],
+    "glowstone": [
+      0.3,
+      false
+    ],
+    "gold_block": [
+      3.0,
+      true
+    ],
+    "gold_ore": [
+      3.0,
+      true
+    ],
+    "golden_rail": [
+      0.7,
+      false
+    ],
+    "grass": [
+      0.6,
+      false
+    ],
+    "grass_path": [
+      0.65,
+      false
+    ],
+    "gravel": [
+      0.6,
+      false
+    ],
+    "hardened_clay": [
+      1.25,
+      true
+    ],
+    "hay_block": [
+      0.5,
+      false
+    ],
+    "heavy_weighted_pressure_plate": [
+      0.5,
+      true
+    ],
+    "hopper": [
+      3.0,
+      true
+    ],
+    "ice": [
+      0.5,
+      false
+    ],
+    "iron_bars": [
+      5.0,
+      true
+    ],
+    "iron_block": [
+      5.0,
+      true
+    ],
+    "iron_door": [
+      5.0,
+      true
+    ],
+    "iron_ore": [
+      3.0,
+      true
+    ],
+    "iron_trapdoor": [
+      5.0,
+      true
+    ],
+    "jukebox": [
+      2.0,
+      false
+    ],
+    "jungle_door": [
+      3.0,
+      false
+    ],
+    "jungle_fence": [
+      2.0,
+      false
+    ],
+    "jungle_fence_gate": [
+      2.0,
+      false
+    ],
+    "jungle_stairs": [
+      2.0,
+      false
+    ],
+    "ladder": [
+      0.4,
+      false
+    ],
+    "lapis_block": [
+      3.0,
+      true
+    ],
+    "lapis_ore": [
+      3.0,
+      true
+    ],
+    "lava": [
+      100.0,
+      false
+    ],
+    "leaves": [
+      0.2,
+      false
+    ],
+    "leaves2": [
+      0.2,
+      false
+    ],
+    "lever": [
+      0.5,
+      false
+    ],
+    "light_weighted_pressure_plate": [
+      0.5,
+      true
+    ],
+    "lit_furnace": [
+      3.5,
+      true
+    ],
+    "lit_pumpkin": [
+      1.0,
+      false
+    ],
+    "lit_redstone_lamp": [
+      0.3,
+      false
+    ],
+    "lit_redstone_ore": [
+      3.0,
+      true
+    ],
+    "log": [
+      2.0,
+      false
+    ],
+    "log2": [
+      2.0,
+      false
+    ],
+    "melon_block": [
+      1.0,
+      false
+    ],
+    "melon_stem": [
+      0.0,
+      false
+    ],
+    "mob_spawner": [
+      5.0,
+      true
+    ],
+    "monster_egg": [
+      0.75,
+      false
+    ],
+    "mossy_cobblestone": [
+      2.0,
+      true
+    ],
+    "mycelium": [
+      0.6,
+      false
+    ],
+    "nether_brick": [
+      2.0,
+      true
+    ],
+    "nether_brick_fence": [
+      2.0,
+      true
+    ],
+    "nether_brick_stairs": [
+      2.0,
+      true
+    ],
+    "nether_wart": [
+      0.0,
+      false
+    ],
+    "netherrack": [
+      0.4,
+      true
+    ],
+    "noteblock": [
+      0.8,
+      false
+    ],
+    "oak_stairs": [
+      2.0,
+      false
+    ],
+    "obsidian": [
+      50.0,
+      true
+    ],
+    "packed_ice": [
+      0.5,
+      false
+    ],
+    "piston": [
+      0.5,
+      false
+    ],
+    "piston_extension": [
+      -1.0,
+      false
+    ],
+    "piston_head": [
+      0.5,
+      false
+    ],
+    "planks": [
+      2.0,
+      false
+    ],
+    "portal": [
+      -1.0,
+      false
+    ],
+    "potatoes": [
+      0.0,
+      false
+    ],
+    "powered_comparator": [
+      0.0,
+      false
+    ],
+    "powered_repeater": [
+      0.0,
+      false
+    ],
+    "prismarine": [
+      1.5,
+      true
+    ],
+    "pumpkin": [
+      1.0,
+      false
+    ],
+    "pumpkin_stem": [
+      0.0,
+      false
+    ],
+    "purpur_block": [
+      1.5,
+      true
+    ],
+    "purpur_double_slab": [
+      2.0,
+      true
+    ],
+    "purpur_pillar": [
+      1.5,
+      true
+    ],
+    "purpur_slab": [
+      2.0,
+      true
+    ],
+    "purpur_stairs": [
+      1.5,
+      true
+    ],
+    "quartz_block": [
+      0.8,
+      true
+    ],
+    "quartz_ore": [
+      3.0,
+      true
+    ],
+    "quartz_stairs": [
+      0.8,
+      true
+    ],
+    "rail": [
+      0.7,
+      false
+    ],
+    "red_flower": [
+      0.0,
+      false
+    ],
+    "red_mushroom": [
+      0.0,
+      false
+    ],
+    "red_mushroom_block": [
+      0.2,
+      false
+    ],
+    "red_sandstone": [
+      0.8,
+      true
+    ],
+    "red_sandstone_stairs": [
+      0.8,
+      true
+    ],
+    "redstone_block": [
+      5.0,
+      true
+    ],
+    "redstone_lamp": [
+      0.3,
+      false
+    ],
+    "redstone_ore": [
+      3.0,
+      true
+    ],
+    "redstone_torch": [
+      0.0,
+      false
+    ],
+    "redstone_wire": [
+      0.0,
+      false
+    ],
+    "reeds": [
+      0.0,
+      false
+    ],
+    "repeating_command_block": [
+      -1.0,
+      true
+    ],
+    "sand": [
+      0.5,
+      false
+    ],
+    "sandstone": [
+      0.8,
+      true
+    ],
+    "sandstone_stairs": [
+      0.8,
+      true
+    ],
+    "sapling": [
+      0.0,
+      false
+    ],
+    "sea_lantern": [
+      0.3,
+      false
+    ],
+    "skull": [
+      1.0,
+      false
+    ],
+    "slime": [
+      0.0,
+      false
+    ],
+    "snow": [
+      0.2,
+      true
+    ],
+    "snow_layer": [
+      0.1,
+      true
+    ],
+    "soul_sand": [
+      0.5,
+      false
+    ],
+    "sponge": [
+      0.6,
+      false
+    ],
+    "spruce_door": [
+      3.0,
+      false
+    ],
+    "spruce_fence": [
+      2.0,
+      false
+    ],
+    "spruce_fence_gate": [
+      2.0,
+      false
+    ],
+    "spruce_stairs": [
+      2.0,
+      false
+    ],
+    "stained_glass": [
+      0.3,
+      false
+    ],
+    "stained_glass_pane": [
+      0.3,
+      false
+    ],
+    "stained_hardened_clay": [
+      1.25,
+      true
+    ],
+    "standing_banner": [
+      1.0,
+      false
+    ],
+    "standing_sign": [
+      1.0,
+      false
+    ],
+    "sticky_piston": [
+      0.5,
+      false
+    ],
+    "stone": [
+      1.5,
+      true
+    ],
+    "stone_brick_stairs": [
+      1.5,
+      true
+    ],
+    "stone_button": [
+      0.5,
+      false
+    ],
+    "stone_pressure_plate": [
+      0.5,
+      true
+    ],
+    "stone_slab": [
+      2.0,
+      true
+    ],
+    "stone_slab2": [
+      2.0,
+      true
+    ],
+    "stone_stairs": [
+      2.0,
+      true
+    ],
+    "stonebrick": [
+      1.5,
+      true
+    ],
+    "structure_block": [
+      -1.0,
+      true
+    ],
+    "tallgrass": [
+      0.0,
+      false
+    ],
+    "tnt": [
+      0.0,
+      false
+    ],
+    "torch": [
+      0.0,
+      false
+    ],
+    "trapdoor": [
+      3.0,
+      false
+    ],
+    "trapped_chest": [
+      2.5,
+      false
+    ],
+    "tripwire": [
+      0.0,
+      false
+    ],
+    "tripwire_hook": [
+      0.0,
+      false
+    ],
+    "unlit_redstone_torch": [
+      0.0,
+      false
+    ],
+    "unpowered_comparator": [
+      0.0,
+      false
+    ],
+    "unpowered_repeater": [
+      0.0,
+      false
+    ],
+    "vine": [
+      0.2,
+      false
+    ],
+    "wall_banner": [
+      1.0,
+      false
+    ],
+    "wall_sign": [
+      1.0,
+      false
+    ],
+    "water": [
+      100.0,
+      false
+    ],
+    "waterlily": [
+      0.0,
+      false
+    ],
+    "web": [
+      4.0,
+      true
+    ],
+    "wheat": [
+      0.0,
+      false
+    ],
+    "wooden_button": [
+      0.5,
+      false
+    ],
+    "wooden_door": [
+      3.0,
+      false
+    ],
+    "wooden_pressure_plate": [
+      0.5,
+      false
+    ],
+    "wooden_slab": [
+      2.0,
+      false
+    ],
+    "wool": [
+      0.8,
+      false
+    ],
+    "yellow_flower": [
+      0.0,
+      false
+    ]
+  },
+  "tools": {
+    "diamond_axe": {
+      "acacia_door": [
+        8.0,
+        false
+      ],
+      "acacia_fence": [
+        8.0,
+        false
+      ],
+      "acacia_fence_gate": [
+        8.0,
+        false
+      ],
+      "acacia_stairs": [
+        8.0,
+        false
+      ],
+      "beetroots": [
+        8.0,
+        false
+      ],
+      "birch_door": [
+        8.0,
+        false
+      ],
+      "birch_fence": [
+        8.0,
+        false
+      ],
+      "birch_fence_gate": [
+        8.0,
+        false
+      ],
+      "birch_stairs": [
+        8.0,
+        false
+      ],
+      "bookshelf": [
+        8.0,
+        false
+      ],
+      "brown_mushroom": [
+        8.0,
+        false
+      ],
+      "brown_mushroom_block": [
+        8.0,
+        false
+      ],
+      "carrots": [
+        8.0,
+        false
+      ],
+      "chest": [
+        8.0,
+        false
+      ],
+      "chorus_flower": [
+        8.0,
+        false
+      ],
+      "chorus_plant": [
+        8.0,
+        false
+      ],
+      "cocoa": [
+        8.0,
+        false
+      ],
+      "crafting_table": [
+        8.0,
+        false
+      ],
+      "dark_oak_door": [
+        8.0,
+        false
+      ],
+      "dark_oak_fence": [
+        8.0,
+        false
+      ],
+      "dark_oak_fence_gate": [
+        8.0,
+        false
+      ],
+      "dark_oak_stairs": [
+        8.0,
+        false
+      ],
+      "daylight_detector": [
+        8.0,
+        false
+      ],
+      "daylight_detector_inverted": [
+        8.0,
+        false
+      ],
+      "deadbush": [
+        8.0,
+        false
+      ],
+      "double_plant": [
+        8.0,
+        false
+      ],
+      "double_wooden_slab": [
+        8.0,
+        false
+      ],
+      "fence": [
+        8.0,
+        false
+      ],
+      "fence_gate": [
+        8.0,
+        false
+      ],
+      "jukebox": [
+        8.0,
+        false
+      ],
+      "jungle_door": [
+        8.0,
+        false
+      ],
+      "jungle_fence": [
+        8.0,
+        false
+      ],
+      "jungle_fence_gate": [
+        8.0,
+        false
+      ],
+      "jungle_stairs": [
+        8.0,
+        false
+      ],
+      "ladder": [
+        8.0,
+        false
+      ],
+      "lit_pumpkin": [
+        8.0,
+        false
+      ],
+      "log": [
+        8.0,
+        false
+      ],
+      "log2": [
+        8.0,
+        false
+      ],
+      "melon_block": [
+        8.0,
+        false
+      ],
+      "melon_stem": [
+        8.0,
+        false
+      ],
+      "nether_wart": [
+        8.0,
+        false
+      ],
+      "noteblock": [
+        8.0,
+        false
+      ],
+      "oak_stairs": [
+        8.0,
+        false
+      ],
+      "planks": [
+        8.0,
+        false
+      ],
+      "potatoes": [
+        8.0,
+        false
+      ],
+      "pumpkin": [
+        8.0,
+        false
+      ],
+      "pumpkin_stem": [
+        8.0,
+        false
+      ],
+      "red_flower": [
+        8.0,
+        false
+      ],
+      "red_mushroom": [
+        8.0,
+        false
+      ],
+      "red_mushroom_block": [
+        8.0,
+        false
+      ],
+      "reeds": [
+        8.0,
+        false
+      ],
+      "sapling": [
+        8.0,
+        false
+      ],
+      "spruce_door": [
+        8.0,
+        false
+      ],
+      "spruce_fence": [
+        8.0,
+        false
+      ],
+      "spruce_fence_gate": [
+        8.0,
+        false
+      ],
+      "spruce_stairs": [
+        8.0,
+        false
+      ],
+      "standing_banner": [
+        8.0,
+        false
+      ],
+      "standing_sign": [
+        8.0,
+        false
+      ],
+      "tallgrass": [
+        8.0,
+        false
+      ],
+      "trapdoor": [
+        8.0,
+        false
+      ],
+      "trapped_chest": [
+        8.0,
+        false
+      ],
+      "vine": [
+        8.0,
+        false
+      ],
+      "wall_banner": [
+        8.0,
+        false
+      ],
+      "wall_sign": [
+        8.0,
+        false
+      ],
+      "waterlily": [
+        8.0,
+        false
+      ],
+      "wheat": [
+        8.0,
+        false
+      ],
+      "wooden_button": [
+        8.0,
+        false
+      ],
+      "wooden_door": [
+        8.0,
+        false
+      ],
+      "wooden_pressure_plate": [
+        8.0,
+        false
+      ],
+      "wooden_slab": [
+        8.0,
+        false
+      ],
+      "yellow_flower": [
+        8.0,
+        false
+      ]
+    },
+    "diamond_pickaxe": {
+      "activator_rail": [
+        8.0,
+        false
+      ],
+      "anvil": [
+        8.0,
+        true
+      ],
+      "bedrock": [
+        8.0,
+        true
+      ],
+      "brewing_stand": [
+        8.0,
+        true
+      ],
+      "brick_block": [
+        8.0,
+        true
+      ],
+      "brick_stairs": [
+        8.0,
+        true
+      ],
+      "cauldron": [
+        8.0,
+        true
+      ],
+      "chain_command_block": [
+        8.0,
+        true
+      ],
+      "coal_block": [
+        8.0,
+        true
+      ],
+      "coal_ore": [
+        8.0,
+        true
+      ],
+      "cobblestone": [
+        8.0,
+        true
+      ],
+      "cobblestone_wall": [
+        8.0,
+        true
+      ],
+      "command_block": [
+        8.0,
+        true
+      ],
+      "detector_rail": [
+        8.0,
+        false
+      ],
+      "diamond_block": [
+        8.0,
+        true
+      ],
+      "diamond_ore": [
+        8.0,
+        true
+      ],
+      "dispenser": [
+        8.0,
+        true
+      ],
+      "double_stone_slab": [
+        8.0,
+        true
+      ],
+      "double_stone_slab2": [
+        8.0,
+        true
+      ],
+      "dropper": [
+        8.0,
+        true
+      ],
+      "emerald_block": [
+        8.0,
+        true
+      ],
+      "emerald_ore": [
+        8.0,
+        true
+      ],
+      "enchanting_table": [
+        8.0,
+        true
+      ],
+      "end_bricks": [
+        8.0,
+        true
+      ],
+      "end_portal_frame": [
+        8.0,
+        true
+      ],
+      "end_stone": [
+        8.0,
+        true
+      ],
+      "ender_chest": [
+        8.0,
+        true
+      ],
+      "furnace": [
+        8.0,
+        true
+      ],
+      "gold_block": [
+        8.0,
+        true
+      ],
+      "gold_ore": [
+        8.0,
+        true
+      ],
+      "golden_rail": [
+        8.0,
+        false
+      ],
+      "hardened_clay": [
+        8.0,
+        true
+      ],
+      "heavy_weighted_pressure_plate": [
+        8.0,
+        true
+      ],
+      "hopper": [
+        8.0,
+        true
+      ],
+      "ice": [
+        8.0,
+        false
+      ],
+      "iron_bars": [
+        8.0,
+        true
+      ],
+      "iron_block": [
+        8.0,
+        true
+      ],
+      "iron_door": [
+        8.0,
+        true
+      ],
+      "iron_ore": [
+        8.0,
+        true
+      ],
+      "iron_trapdoor": [
+        8.0,
+        true
+      ],
+      "lapis_block": [
+        8.0,
+        true
+      ],
+      "lapis_ore": [
+        8.0,
+        true
+      ],
+      "light_weighted_pressure_plate": [
+        8.0,
+        true
+      ],
+      "lit_furnace": [
+        8.0,
+        true
+      ],
+      "lit_redstone_ore": [
+        8.0,
+        true
+      ],
+      "mob_spawner": [
+        8.0,
+        true
+      ],
+      "mossy_cobblestone": [
+        8.0,
+        true
+      ],
+      "nether_brick": [
+        8.0,
+        true
+      ],
+      "nether_brick_fence": [
+        8.0,
+        true
+      ],
+      "nether_brick_stairs": [
+        8.0,
+        true
+      ],
+      "netherrack": [
+        8.0,
+        true
+      ],
+      "obsidian": [
+        8.0,
+        true
+      ],
+      "packed_ice": [
+        8.0,
+        false
+      ],
+      "prismarine": [
+        8.0,
+        true
+      ],
+      "purpur_block": [
+        8.0,
+        true
+      ],
+      "purpur_double_slab": [
+        8.0,
+        true
+      ],
+      "purpur_pillar": [
+        8.0,
+        true
+      ],
+      "purpur_slab": [
+        8.0,
+        true
+      ],
+      "purpur_stairs": [
+        8.0,
+        true
+      ],
+      "quartz_block": [
+        8.0,
+        true
+      ],
+      "quartz_ore": [
+        8.0,
+        true
+      ],
+      "quartz_stairs": [
+        8.0,
+        true
+      ],
+      "rail": [
+        8.0,
+        false
+      ],
+      "red_sandstone": [
+        8.0,
+        true
+      ],
+      "red_sandstone_stairs": [
+        8.0,
+        true
+      ],
+      "redstone_block": [
+        8.0,
+        true
+      ],
+      "redstone_ore": [
+        8.0,
+        true
+      ],
+      "repeating_command_block": [
+        8.0,
+        true
+      ],
+      "sandstone": [
+        8.0,
+        true
+      ],
+      "sandstone_stairs": [
+        8.0,
+        true
+      ],
+      "stained_hardened_clay": [
+        8.0,
+        true
+      ],
+      "stone": [
+        8.0,
+        true
+      ],
+      "stone_brick_stairs": [
+        8.0,
+        true
+      ],
+      "stone_button": [
+        8.0,
+        false
+      ],
+      "stone_pressure_plate": [
+        8.0,
+        true
+      ],
+      "stone_slab": [
+        8.0,
+        true
+      ],
+      "stone_slab2": [
+        8.0,
+        true
+      ],
+      "stone_stairs": [
+        8.0,
+        true
+      ],
+      "stonebrick": [
+        8.0,
+        true
+      ],
+      "structure_block": [
+        8.0,
+        true
+      ]
+    },
+    "diamond_shovel": {
+      "clay": [
+        8.0,
+        false
+      ],
+      "dirt": [
+        8.0,
+        false
+      ],
+      "farmland": [
+        8.0,
+        false
+      ],
+      "grass": [
+        8.0,
+        false
+      ],
+      "grass_path": [
+        8.0,
+        false
+      ],
+      "gravel": [
+        8.0,
+        false
+      ],
+      "mycelium": [
+        8.0,
+        false
+      ],
+      "sand": [
+        8.0,
+        false
+      ],
+      "snow": [
+        8.0,
+        true
+      ],
+      "snow_layer": [
+        8.0,
+        true
+      ],
+      "soul_sand": [
+        8.0,
+        false
+      ]
+    },
+    "diamond_sword": {
+      "beetroots": [
+        1.5,
+        false
+      ],
+      "brown_mushroom": [
+        1.5,
+        false
+      ],
+      "carrots": [
+        1.5,
+        false
+      ],
+      "chorus_flower": [
+        1.5,
+        false
+      ],
+      "chorus_plant": [
+        1.5,
+        false
+      ],
+      "cocoa": [
+        1.5,
+        false
+      ],
+      "deadbush": [
+        1.5,
+        false
+      ],
+      "double_plant": [
+        1.5,
+        false
+      ],
+      "leaves": [
+        1.5,
+        false
+      ],
+      "leaves2": [
+        1.5,
+        false
+      ],
+      "lit_pumpkin": [
+        1.5,
+        false
+      ],
+      "melon_block": [
+        1.5,
+        false
+      ],
+      "melon_stem": [
+        1.5,
+        false
+      ],
+      "nether_wart": [
+        1.5,
+        false
+      ],
+      "potatoes": [
+        1.5,
+        false
+      ],
+      "pumpkin": [
+        1.5,
+        false
+      ],
+      "pumpkin_stem": [
+        1.5,
+        false
+      ],
+      "red_flower": [
+        1.5,
+        false
+      ],
+      "red_mushroom": [
+        1.5,
+        false
+      ],
+      "reeds": [
+        1.5,
+        false
+      ],
+      "sapling": [
+        1.5,
+        false
+      ],
+      "tallgrass": [
+        1.5,
+        false
+      ],
+      "vine": [
+        1.5,
+        false
+      ],
+      "waterlily": [
+        1.5,
+        false
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wheat": [
+        1.5,
+        false
+      ],
+      "yellow_flower": [
+        1.5,
+        false
+      ]
+    },
+    "golden_axe": {
+      "acacia_door": [
+        12.0,
+        false
+      ],
+      "acacia_fence": [
+        12.0,
+        false
+      ],
+      "acacia_fence_gate": [
+        12.0,
+        false
+      ],
+      "acacia_stairs": [
+        12.0,
+        false
+      ],
+      "beetroots": [
+        12.0,
+        false
+      ],
+      "birch_door": [
+        12.0,
+        false
+      ],
+      "birch_fence": [
+        12.0,
+        false
+      ],
+      "birch_fence_gate": [
+        12.0,
+        false
+      ],
+      "birch_stairs": [
+        12.0,
+        false
+      ],
+      "bookshelf": [
+        12.0,
+        false
+      ],
+      "brown_mushroom": [
+        12.0,
+        false
+      ],
+      "brown_mushroom_block": [
+        12.0,
+        false
+      ],
+      "carrots": [
+        12.0,
+        false
+      ],
+      "chest": [
+        12.0,
+        false
+      ],
+      "chorus_flower": [
+        12.0,
+        false
+      ],
+      "chorus_plant": [
+        12.0,
+        false
+      ],
+      "cocoa": [
+        12.0,
+        false
+      ],
+      "crafting_table": [
+        12.0,
+        false
+      ],
+      "dark_oak_door": [
+        12.0,
+        false
+      ],
+      "dark_oak_fence": [
+        12.0,
+        false
+      ],
+      "dark_oak_fence_gate": [
+        12.0,
+        false
+      ],
+      "dark_oak_stairs": [
+        12.0,
+        false
+      ],
+      "daylight_detector": [
+        12.0,
+        false
+      ],
+      "daylight_detector_inverted": [
+        12.0,
+        false
+      ],
+      "deadbush": [
+        12.0,
+        false
+      ],
+      "double_plant": [
+        12.0,
+        false
+      ],
+      "double_wooden_slab": [
+        12.0,
+        false
+      ],
+      "fence": [
+        12.0,
+        false
+      ],
+      "fence_gate": [
+        12.0,
+        false
+      ],
+      "jukebox": [
+        12.0,
+        false
+      ],
+      "jungle_door": [
+        12.0,
+        false
+      ],
+      "jungle_fence": [
+        12.0,
+        false
+      ],
+      "jungle_fence_gate": [
+        12.0,
+        false
+      ],
+      "jungle_stairs": [
+        12.0,
+        false
+      ],
+      "ladder": [
+        12.0,
+        false
+      ],
+      "lit_pumpkin": [
+        12.0,
+        false
+      ],
+      "log": [
+        12.0,
+        false
+      ],
+      "log2": [
+        12.0,
+        false
+      ],
+      "melon_block": [
+        12.0,
+        false
+      ],
+      "melon_stem": [
+        12.0,
+        false
+      ],
+      "nether_wart": [
+        12.0,
+        false
+      ],
+      "noteblock": [
+        12.0,
+        false
+      ],
+      "oak_stairs": [
+        12.0,
+        false
+      ],
+      "planks": [
+        12.0,
+        false
+      ],
+      "potatoes": [
+        12.0,
+        false
+      ],
+      "pumpkin": [
+        12.0,
+        false
+      ],
+      "pumpkin_stem": [
+        12.0,
+        false
+      ],
+      "red_flower": [
+        12.0,
+        false
+      ],
+      "red_mushroom": [
+        12.0,
+        false
+      ],
+      "red_mushroom_block": [
+        12.0,
+        false
+      ],
+      "reeds": [
+        12.0,
+        false
+      ],
+      "sapling": [
+        12.0,
+        false
+      ],
+      "spruce_door": [
+        12.0,
+        false
+      ],
+      "spruce_fence": [
+        12.0,
+        false
+      ],
+      "spruce_fence_gate": [
+        12.0,
+        false
+      ],
+      "spruce_stairs": [
+        12.0,
+        false
+      ],
+      "standing_banner": [
+        12.0,
+        false
+      ],
+      "standing_sign": [
+        12.0,
+        false
+      ],
+      "tallgrass": [
+        12.0,
+        false
+      ],
+      "trapdoor": [
+        12.0,
+        false
+      ],
+      "trapped_chest": [
+        12.0,
+        false
+      ],
+      "vine": [
+        12.0,
+        false
+      ],
+      "wall_banner": [
+        12.0,
+        false
+      ],
+      "wall_sign": [
+        12.0,
+        false
+      ],
+      "waterlily": [
+        12.0,
+        false
+      ],
+      "wheat": [
+        12.0,
+        false
+      ],
+      "wooden_button": [
+        12.0,
+        false
+      ],
+      "wooden_door": [
+        12.0,
+        false
+      ],
+      "wooden_pressure_plate": [
+        12.0,
+        false
+      ],
+      "wooden_slab": [
+        12.0,
+        false
+      ],
+      "yellow_flower": [
+        12.0,
+        false
+      ]
+    },
+    "golden_pickaxe": {
+      "activator_rail": [
+        12.0,
+        false
+      ],
+      "anvil": [
+        12.0,
+        true
+      ],
+      "bedrock": [
+        12.0,
+        true
+      ],
+      "brewing_stand": [
+        12.0,
+        true
+      ],
+      "brick_block": [
+        12.0,
+        true
+      ],
+      "brick_stairs": [
+        12.0,
+        true
+      ],
+      "cauldron": [
+        12.0,
+        true
+      ],
+      "chain_command_block": [
+        12.0,
+        true
+      ],
+      "coal_block": [
+        12.0,
+        true
+      ],
+      "coal_ore": [
+        12.0,
+        true
+      ],
+      "cobblestone": [
+        12.0,
+        true
+      ],
+      "cobblestone_wall": [
+        12.0,
+        true
+      ],
+      "command_block": [
+        12.0,
+        true
+      ],
+      "detector_rail": [
+        12.0,
+        false
+      ],
+      "diamond_block": [
+        12.0,
+        false
+      ],
+      "diamond_ore": [
+        12.0,
+        false
+      ],
+      "dispenser": [
+        12.0,
+        true
+      ],
+      "double_stone_slab": [
+        12.0,
+        true
+      ],
+      "double_stone_slab2": [
+        12.0,
+        true
+      ],
+      "dropper": [
+        12.0,
+        true
+      ],
+      "emerald_block": [
+        12.0,
+        false
+      ],
+      "emerald_ore": [
+        12.0,
+        false
+      ],
+      "enchanting_table": [
+        12.0,
+        true
+      ],
+      "end_bricks": [
+        12.0,
+        true
+      ],
+      "end_portal_frame": [
+        12.0,
+        true
+      ],
+      "end_stone": [
+        12.0,
+        true
+      ],
+      "ender_chest": [
+        12.0,
+        true
+      ],
+      "furnace": [
+        12.0,
+        true
+      ],
+      "gold_block": [
+        12.0,
+        false
+      ],
+      "gold_ore": [
+        12.0,
+        false
+      ],
+      "golden_rail": [
+        12.0,
+        false
+      ],
+      "hardened_clay": [
+        12.0,
+        true
+      ],
+      "heavy_weighted_pressure_plate": [
+        12.0,
+        true
+      ],
+      "hopper": [
+        12.0,
+        true
+      ],
+      "ice": [
+        12.0,
+        false
+      ],
+      "iron_bars": [
+        12.0,
+        true
+      ],
+      "iron_block": [
+        12.0,
+        false
+      ],
+      "iron_door": [
+        12.0,
+        true
+      ],
+      "iron_ore": [
+        12.0,
+        false
+      ],
+      "iron_trapdoor": [
+        12.0,
+        true
+      ],
+      "lapis_block": [
+        12.0,
+        false
+      ],
+      "lapis_ore": [
+        12.0,
+        false
+      ],
+      "light_weighted_pressure_plate": [
+        12.0,
+        true
+      ],
+      "lit_furnace": [
+        12.0,
+        true
+      ],
+      "lit_redstone_ore": [
+        12.0,
+        false
+      ],
+      "mob_spawner": [
+        12.0,
+        true
+      ],
+      "mossy_cobblestone": [
+        12.0,
+        true
+      ],
+      "nether_brick": [
+        12.0,
+        true
+      ],
+      "nether_brick_fence": [
+        12.0,
+        true
+      ],
+      "nether_brick_stairs": [
+        12.0,
+        true
+      ],
+      "netherrack": [
+        12.0,
+        true
+      ],
+      "obsidian": [
+        12.0,
+        false
+      ],
+      "packed_ice": [
+        12.0,
+        false
+      ],
+      "prismarine": [
+        12.0,
+        true
+      ],
+      "purpur_block": [
+        12.0,
+        true
+      ],
+      "purpur_double_slab": [
+        12.0,
+        true
+      ],
+      "purpur_pillar": [
+        12.0,
+        true
+      ],
+      "purpur_slab": [
+        12.0,
+        true
+      ],
+      "purpur_stairs": [
+        12.0,
+        true
+      ],
+      "quartz_block": [
+        12.0,
+        true
+      ],
+      "quartz_ore": [
+        12.0,
+        true
+      ],
+      "quartz_stairs": [
+        12.0,
+        true
+      ],
+      "rail": [
+        12.0,
+        false
+      ],
+      "red_sandstone": [
+        12.0,
+        true
+      ],
+      "red_sandstone_stairs": [
+        12.0,
+        true
+      ],
+      "redstone_block": [
+        12.0,
+        true
+      ],
+      "redstone_ore": [
+        12.0,
+        false
+      ],
+      "repeating_command_block": [
+        12.0,
+        true
+      ],
+      "sandstone": [
+        12.0,
+        true
+      ],
+      "sandstone_stairs": [
+        12.0,
+        true
+      ],
+      "stained_hardened_clay": [
+        12.0,
+        true
+      ],
+      "stone": [
+        12.0,
+        true
+      ],
+      "stone_brick_stairs": [
+        12.0,
+        true
+      ],
+      "stone_button": [
+        12.0,
+        false
+      ],
+      "stone_pressure_plate": [
+        12.0,
+        true
+      ],
+      "stone_slab": [
+        12.0,
+        true
+      ],
+      "stone_slab2": [
+        12.0,
+        true
+      ],
+      "stone_stairs": [
+        12.0,
+        true
+      ],
+      "stonebrick": [
+        12.0,
+        true
+      ],
+      "structure_block": [
+        12.0,
+        true
+      ]
+    },
+    "golden_shovel": {
+      "clay": [
+        12.0,
+        false
+      ],
+      "dirt": [
+        12.0,
+        false
+      ],
+      "farmland": [
+        12.0,
+        false
+      ],
+      "grass": [
+        12.0,
+        false
+      ],
+      "grass_path": [
+        12.0,
+        false
+      ],
+      "gravel": [
+        12.0,
+        false
+      ],
+      "mycelium": [
+        12.0,
+        false
+      ],
+      "sand": [
+        12.0,
+        false
+      ],
+      "snow": [
+        12.0,
+        true
+      ],
+      "snow_layer": [
+        12.0,
+        true
+      ],
+      "soul_sand": [
+        12.0,
+        false
+      ]
+    },
+    "golden_sword": {
+      "beetroots": [
+        1.5,
+        false
+      ],
+      "brown_mushroom": [
+        1.5,
+        false
+      ],
+      "carrots": [
+        1.5,
+        false
+      ],
+      "chorus_flower": [
+        1.5,
+        false
+      ],
+      "chorus_plant": [
+        1.5,
+        false
+      ],
+      "cocoa": [
+        1.5,
+        false
+      ],
+      "deadbush": [
+        1.5,
+        false
+      ],
+      "double_plant": [
+        1.5,
+        false
+      ],
+      "leaves": [
+        1.5,
+        false
+      ],
+      "leaves2": [
+        1.5,
+        false
+      ],
+      "lit_pumpkin": [
+        1.5,
+        false
+      ],
+      "melon_block": [
+        1.5,
+        false
+      ],
+      "melon_stem": [
+        1.5,
+        false
+      ],
+      "nether_wart": [
+        1.5,
+        false
+      ],
+      "potatoes": [
+        1.5,
+        false
+      ],
+      "pumpkin": [
+        1.5,
+        false
+      ],
+      "pumpkin_stem": [
+        1.5,
+        false
+      ],
+      "red_flower": [
+        1.5,
+        false
+      ],
+      "red_mushroom": [
+        1.5,
+        false
+      ],
+      "reeds": [
+        1.5,
+        false
+      ],
+      "sapling": [
+        1.5,
+        false
+      ],
+      "tallgrass": [
+        1.5,
+        false
+      ],
+      "vine": [
+        1.5,
+        false
+      ],
+      "waterlily": [
+        1.5,
+        false
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wheat": [
+        1.5,
+        false
+      ],
+      "yellow_flower": [
+        1.5,
+        false
+      ]
+    },
+    "iron_axe": {
+      "acacia_door": [
+        6.0,
+        false
+      ],
+      "acacia_fence": [
+        6.0,
+        false
+      ],
+      "acacia_fence_gate": [
+        6.0,
+        false
+      ],
+      "acacia_stairs": [
+        6.0,
+        false
+      ],
+      "beetroots": [
+        6.0,
+        false
+      ],
+      "birch_door": [
+        6.0,
+        false
+      ],
+      "birch_fence": [
+        6.0,
+        false
+      ],
+      "birch_fence_gate": [
+        6.0,
+        false
+      ],
+      "birch_stairs": [
+        6.0,
+        false
+      ],
+      "bookshelf": [
+        6.0,
+        false
+      ],
+      "brown_mushroom": [
+        6.0,
+        false
+      ],
+      "brown_mushroom_block": [
+        6.0,
+        false
+      ],
+      "carrots": [
+        6.0,
+        false
+      ],
+      "chest": [
+        6.0,
+        false
+      ],
+      "chorus_flower": [
+        6.0,
+        false
+      ],
+      "chorus_plant": [
+        6.0,
+        false
+      ],
+      "cocoa": [
+        6.0,
+        false
+      ],
+      "crafting_table": [
+        6.0,
+        false
+      ],
+      "dark_oak_door": [
+        6.0,
+        false
+      ],
+      "dark_oak_fence": [
+        6.0,
+        false
+      ],
+      "dark_oak_fence_gate": [
+        6.0,
+        false
+      ],
+      "dark_oak_stairs": [
+        6.0,
+        false
+      ],
+      "daylight_detector": [
+        6.0,
+        false
+      ],
+      "daylight_detector_inverted": [
+        6.0,
+        false
+      ],
+      "deadbush": [
+        6.0,
+        false
+      ],
+      "double_plant": [
+        6.0,
+        false
+      ],
+      "double_wooden_slab": [
+        6.0,
+        false
+      ],
+      "fence": [
+        6.0,
+        false
+      ],
+      "fence_gate": [
+        6.0,
+        false
+      ],
+      "jukebox": [
+        6.0,
+        false
+      ],
+      "jungle_door": [
+        6.0,
+        false
+      ],
+      "jungle_fence": [
+        6.0,
+        false
+      ],
+      "jungle_fence_gate": [
+        6.0,
+        false
+      ],
+      "jungle_stairs": [
+        6.0,
+        false
+      ],
+      "ladder": [
+        6.0,
+        false
+      ],
+      "lit_pumpkin": [
+        6.0,
+        false
+      ],
+      "log": [
+        6.0,
+        false
+      ],
+      "log2": [
+        6.0,
+        false
+      ],
+      "melon_block": [
+        6.0,
+        false
+      ],
+      "melon_stem": [
+        6.0,
+        false
+      ],
+      "nether_wart": [
+        6.0,
+        false
+      ],
+      "noteblock": [
+        6.0,
+        false
+      ],
+      "oak_stairs": [
+        6.0,
+        false
+      ],
+      "planks": [
+        6.0,
+        false
+      ],
+      "potatoes": [
+        6.0,
+        false
+      ],
+      "pumpkin": [
+        6.0,
+        false
+      ],
+      "pumpkin_stem": [
+        6.0,
+        false
+      ],
+      "red_flower": [
+        6.0,
+        false
+      ],
+      "red_mushroom": [
+        6.0,
+        false
+      ],
+      "red_mushroom_block": [
+        6.0,
+        false
+      ],
+      "reeds": [
+        6.0,
+        false
+      ],
+      "sapling": [
+        6.0,
+        false
+      ],
+      "spruce_door": [
+        6.0,
+        false
+      ],
+      "spruce_fence": [
+        6.0,
+        false
+      ],
+      "spruce_fence_gate": [
+        6.0,
+        false
+      ],
+      "spruce_stairs": [
+        6.0,
+        false
+      ],
+      "standing_banner": [
+        6.0,
+        false
+      ],
+      "standing_sign": [
+        6.0,
+        false
+      ],
+      "tallgrass": [
+        6.0,
+        false
+      ],
+      "trapdoor": [
+        6.0,
+        false
+      ],
+      "trapped_chest": [
+        6.0,
+        false
+      ],
+      "vine": [
+        6.0,
+        false
+      ],
+      "wall_banner": [
+        6.0,
+        false
+      ],
+      "wall_sign": [
+        6.0,
+        false
+      ],
+      "waterlily": [
+        6.0,
+        false
+      ],
+      "wheat": [
+        6.0,
+        false
+      ],
+      "wooden_button": [
+        6.0,
+        false
+      ],
+      "wooden_door": [
+        6.0,
+        false
+      ],
+      "wooden_pressure_plate": [
+        6.0,
+        false
+      ],
+      "wooden_slab": [
+        6.0,
+        false
+      ],
+      "yellow_flower": [
+        6.0,
+        false
+      ]
+    },
+    "iron_pickaxe": {
+      "activator_rail": [
+        6.0,
+        false
+      ],
+      "anvil": [
+        6.0,
+        true
+      ],
+      "bedrock": [
+        6.0,
+        true
+      ],
+      "brewing_stand": [
+        6.0,
+        true
+      ],
+      "brick_block": [
+        6.0,
+        true
+      ],
+      "brick_stairs": [
+        6.0,
+        true
+      ],
+      "cauldron": [
+        6.0,
+        true
+      ],
+      "chain_command_block": [
+        6.0,
+        true
+      ],
+      "coal_block": [
+        6.0,
+        true
+      ],
+      "coal_ore": [
+        6.0,
+        true
+      ],
+      "cobblestone": [
+        6.0,
+        true
+      ],
+      "cobblestone_wall": [
+        6.0,
+        true
+      ],
+      "command_block": [
+        6.0,
+        true
+      ],
+      "detector_rail": [
+        6.0,
+        false
+      ],
+      "diamond_block": [
+        6.0,
+        true
+      ],
+      "diamond_ore": [
+        6.0,
+        true
+      ],
+      "dispenser": [
+        6.0,
+        true
+      ],
+      "double_stone_slab": [
+        6.0,
+        true
+      ],
+      "double_stone_slab2": [
+        6.0,
+        true
+      ],
+      "dropper": [
+        6.0,
+        true
+      ],
+      "emerald_block": [
+        6.0,
+        true
+      ],
+      "emerald_ore": [
+        6.0,
+        true
+      ],
+      "enchanting_table": [
+        6.0,
+        true
+      ],
+      "end_bricks": [
+        6.0,
+        true
+      ],
+      "end_portal_frame": [
+        6.0,
+        true
+      ],
+      "end_stone": [
+        6.0,
+        true
+      ],
+      "ender_chest": [
+        6.0,
+        true
+      ],
+      "furnace": [
+        6.0,
+        true
+      ],
+      "gold_block": [
+        6.0,
+        true
+      ],
+      "gold_ore": [
+        6.0,
+        true
+      ],
+      "golden_rail": [
+        6.0,
+        false
+      ],
+      "hardened_clay": [
+        6.0,
+        true
+      ],
+      "heavy_weighted_pressure_plate": [
+        6.0,
+        true
+      ],
+      "hopper": [
+        6.0,
+        true
+      ],
+      "ice": [
+        6.0,
+        false
+      ],
+      "iron_bars": [
+        6.0,
+        true
+      ],
+      "iron_block": [
+        6.0,
+        true
+      ],
+      "iron_door": [
+        6.0,
+        true
+      ],
+      "iron_ore": [
+        6.0,
+        true
+      ],
+      "iron_trapdoor": [
+        6.0,
+        true
+      ],
+      "lapis_block": [
+        6.0,
+        true
+      ],
+      "lapis_ore": [
+        6.0,
+        true
+      ],
+      "light_weighted_pressure_plate": [
+        6.0,
+        true
+      ],
+      "lit_furnace": [
+        6.0,
+        true
+      ],
+      "lit_redstone_ore": [
+        6.0,
+        true
+      ],
+      "mob_spawner": [
+        6.0,
+        true
+      ],
+      "mossy_cobblestone": [
+        6.0,
+        true
+      ],
+      "nether_brick": [
+        6.0,
+        true
+      ],
+      "nether_brick_fence": [
+        6.0,
+        true
+      ],
+      "nether_brick_stairs": [
+        6.0,
+        true
+      ],
+      "netherrack": [
+        6.0,
+        true
+      ],
+      "obsidian": [
+        6.0,
+        false
+      ],
+      "packed_ice": [
+        6.0,
+        false
+      ],
+      "prismarine": [
+        6.0,
+        true
+      ],
+      "purpur_block": [
+        6.0,
+        true
+      ],
+      "purpur_double_slab": [
+        6.0,
+        true
+      ],
+      "purpur_pillar": [
+        6.0,
+        true
+      ],
+      "purpur_slab": [
+        6.0,
+        true
+      ],
+      "purpur_stairs": [
+        6.0,
+        true
+      ],
+      "quartz_block": [
+        6.0,
+        true
+      ],
+      "quartz_ore": [
+        6.0,
+        true
+      ],
+      "quartz_stairs": [
+        6.0,
+        true
+      ],
+      "rail": [
+        6.0,
+        false
+      ],
+      "red_sandstone": [
+        6.0,
+        true
+      ],
+      "red_sandstone_stairs": [
+        6.0,
+        true
+      ],
+      "redstone_block": [
+        6.0,
+        true
+      ],
+      "redstone_ore": [
+        6.0,
+        true
+      ],
+      "repeating_command_block": [
+        6.0,
+        true
+      ],
+      "sandstone": [
+        6.0,
+        true
+      ],
+      "sandstone_stairs": [
+        6.0,
+        true
+      ],
+      "stained_hardened_clay": [
+        6.0,
+        true
+      ],
+      "stone": [
+        6.0,
+        true
+      ],
+      "stone_brick_stairs": [
+        6.0,
+        true
+      ],
+      "stone_button": [
+        6.0,
+        false
+      ],
+      "stone_pressure_plate": [
+        6.0,
+        true
+      ],
+      "stone_slab": [
+        6.0,
+        true
+      ],
+      "stone_slab2": [
+        6.0,
+        true
+      ],
+      "stone_stairs": [
+        6.0,
+        true
+      ],
+      "stonebrick": [
+        6.0,
+        true
+      ],
+      "structure_block": [
+        6.0,
+        true
+      ]
+    },
+    "iron_shovel": {
+      "clay": [
+        6.0,
+        false
+      ],
+      "dirt": [
+        6.0,
+        false
+      ],
+      "farmland": [
+        6.0,
+        false
+      ],
+      "grass": [
+        6.0,
+        false
+      ],
+      "grass_path": [
+        6.0,
+        false
+      ],
+      "gravel": [
+        6.0,
+        false
+      ],
+      "mycelium": [
+        6.0,
+        false
+      ],
+      "sand": [
+        6.0,
+        false
+      ],
+      "snow": [
+        6.0,
+        true
+      ],
+      "snow_layer": [
+        6.0,
+        true
+      ],
+      "soul_sand": [
+        6.0,
+        false
+      ]
+    },
+    "iron_sword": {
+      "beetroots": [
+        1.5,
+        false
+      ],
+      "brown_mushroom": [
+        1.5,
+        false
+      ],
+      "carrots": [
+        1.5,
+        false
+      ],
+      "chorus_flower": [
+        1.5,
+        false
+      ],
+      "chorus_plant": [
+        1.5,
+        false
+      ],
+      "cocoa": [
+        1.5,
+        false
+      ],
+      "deadbush": [
+        1.5,
+        false
+      ],
+      "double_plant": [
+        1.5,
+        false
+      ],
+      "leaves": [
+        1.5,
+        false
+      ],
+      "leaves2": [
+        1.5,
+        false
+      ],
+      "lit_pumpkin": [
+        1.5,
+        false
+      ],
+      "melon_block": [
+        1.5,
+        false
+      ],
+      "melon_stem": [
+        1.5,
+        false
+      ],
+      "nether_wart": [
+        1.5,
+        false
+      ],
+      "potatoes": [
+        1.5,
+        false
+      ],
+      "pumpkin": [
+        1.5,
+        false
+      ],
+      "pumpkin_stem": [
+        1.5,
+        false
+      ],
+      "red_flower": [
+        1.5,
+        false
+      ],
+      "red_mushroom": [
+        1.5,
+        false
+      ],
+      "reeds": [
+        1.5,
+        false
+      ],
+      "sapling": [
+        1.5,
+        false
+      ],
+      "tallgrass": [
+        1.5,
+        false
+      ],
+      "vine": [
+        1.5,
+        false
+      ],
+      "waterlily": [
+        1.5,
+        false
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wheat": [
+        1.5,
+        false
+      ],
+      "yellow_flower": [
+        1.5,
+        false
+      ]
+    },
+    "shears": {
+      "leaves": [
+        15.0,
+        false
+      ],
+      "leaves2": [
+        15.0,
+        false
+      ],
+      "redstone_wire": [
+        1.0,
+        true
+      ],
+      "tripwire": [
+        1.0,
+        true
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wool": [
+        5.0,
+        false
+      ]
+    },
+    "stone_axe": {
+      "acacia_door": [
+        4.0,
+        false
+      ],
+      "acacia_fence": [
+        4.0,
+        false
+      ],
+      "acacia_fence_gate": [
+        4.0,
+        false
+      ],
+      "acacia_stairs": [
+        4.0,
+        false
+      ],
+      "beetroots": [
+        4.0,
+        false
+      ],
+      "birch_door": [
+        4.0,
+        false
+      ],
+      "birch_fence": [
+        4.0,
+        false
+      ],
+      "birch_fence_gate": [
+        4.0,
+        false
+      ],
+      "birch_stairs": [
+        4.0,
+        false
+      ],
+      "bookshelf": [
+        4.0,
+        false
+      ],
+      "brown_mushroom": [
+        4.0,
+        false
+      ],
+      "brown_mushroom_block": [
+        4.0,
+        false
+      ],
+      "carrots": [
+        4.0,
+        false
+      ],
+      "chest": [
+        4.0,
+        false
+      ],
+      "chorus_flower": [
+        4.0,
+        false
+      ],
+      "chorus_plant": [
+        4.0,
+        false
+      ],
+      "cocoa": [
+        4.0,
+        false
+      ],
+      "crafting_table": [
+        4.0,
+        false
+      ],
+      "dark_oak_door": [
+        4.0,
+        false
+      ],
+      "dark_oak_fence": [
+        4.0,
+        false
+      ],
+      "dark_oak_fence_gate": [
+        4.0,
+        false
+      ],
+      "dark_oak_stairs": [
+        4.0,
+        false
+      ],
+      "daylight_detector": [
+        4.0,
+        false
+      ],
+      "daylight_detector_inverted": [
+        4.0,
+        false
+      ],
+      "deadbush": [
+        4.0,
+        false
+      ],
+      "double_plant": [
+        4.0,
+        false
+      ],
+      "double_wooden_slab": [
+        4.0,
+        false
+      ],
+      "fence": [
+        4.0,
+        false
+      ],
+      "fence_gate": [
+        4.0,
+        false
+      ],
+      "jukebox": [
+        4.0,
+        false
+      ],
+      "jungle_door": [
+        4.0,
+        false
+      ],
+      "jungle_fence": [
+        4.0,
+        false
+      ],
+      "jungle_fence_gate": [
+        4.0,
+        false
+      ],
+      "jungle_stairs": [
+        4.0,
+        false
+      ],
+      "ladder": [
+        4.0,
+        false
+      ],
+      "lit_pumpkin": [
+        4.0,
+        false
+      ],
+      "log": [
+        4.0,
+        false
+      ],
+      "log2": [
+        4.0,
+        false
+      ],
+      "melon_block": [
+        4.0,
+        false
+      ],
+      "melon_stem": [
+        4.0,
+        false
+      ],
+      "nether_wart": [
+        4.0,
+        false
+      ],
+      "noteblock": [
+        4.0,
+        false
+      ],
+      "oak_stairs": [
+        4.0,
+        false
+      ],
+      "planks": [
+        4.0,
+        false
+      ],
+      "potatoes": [
+        4.0,
+        false
+      ],
+      "pumpkin": [
+        4.0,
+        false
+      ],
+      "pumpkin_stem": [
+        4.0,
+        false
+      ],
+      "red_flower": [
+        4.0,
+        false
+      ],
+      "red_mushroom": [
+        4.0,
+        false
+      ],
+      "red_mushroom_block": [
+        4.0,
+        false
+      ],
+      "reeds": [
+        4.0,
+        false
+      ],
+      "sapling": [
+        4.0,
+        false
+      ],
+      "spruce_door": [
+        4.0,
+        false
+      ],
+      "spruce_fence": [
+        4.0,
+        false
+      ],
+      "spruce_fence_gate": [
+        4.0,
+        false
+      ],
+      "spruce_stairs": [
+        4.0,
+        false
+      ],
+      "standing_banner": [
+        4.0,
+        false
+      ],
+      "standing_sign": [
+        4.0,
+        false
+      ],
+      "tallgrass": [
+        4.0,
+        false
+      ],
+      "trapdoor": [
+        4.0,
+        false
+      ],
+      "trapped_chest": [
+        4.0,
+        false
+      ],
+      "vine": [
+        4.0,
+        false
+      ],
+      "wall_banner": [
+        4.0,
+        false
+      ],
+      "wall_sign": [
+        4.0,
+        false
+      ],
+      "waterlily": [
+        4.0,
+        false
+      ],
+      "wheat": [
+        4.0,
+        false
+      ],
+      "wooden_button": [
+        4.0,
+        false
+      ],
+      "wooden_door": [
+        4.0,
+        false
+      ],
+      "wooden_pressure_plate": [
+        4.0,
+        false
+      ],
+      "wooden_slab": [
+        4.0,
+        false
+      ],
+      "yellow_flower": [
+        4.0,
+        false
+      ]
+    },
+    "stone_pickaxe": {
+      "activator_rail": [
+        4.0,
+        false
+      ],
+      "anvil": [
+        4.0,
+        true
+      ],
+      "bedrock": [
+        4.0,
+        true
+      ],
+      "brewing_stand": [
+        4.0,
+        true
+      ],
+      "brick_block": [
+        4.0,
+        true
+      ],
+      "brick_stairs": [
+        4.0,
+        true
+      ],
+      "cauldron": [
+        4.0,
+        true
+      ],
+      "chain_command_block": [
+        4.0,
+        true
+      ],
+      "coal_block": [
+        4.0,
+        true
+      ],
+      "coal_ore": [
+        4.0,
+        true
+      ],
+      "cobblestone": [
+        4.0,
+        true
+      ],
+      "cobblestone_wall": [
+        4.0,
+        true
+      ],
+      "command_block": [
+        4.0,
+        true
+      ],
+      "detector_rail": [
+        4.0,
+        false
+      ],
+      "diamond_block": [
+        4.0,
+        false
+      ],
+      "diamond_ore": [
+        4.0,
+        false
+      ],
+      "dispenser": [
+        4.0,
+        true
+      ],
+      "double_stone_slab": [
+        4.0,
+        true
+      ],
+      "double_stone_slab2": [
+        4.0,
+        true
+      ],
+      "dropper": [
+        4.0,
+        true
+      ],
+      "emerald_block": [
+        4.0,
+        false
+      ],
+      "emerald_ore": [
+        4.0,
+        false
+      ],
+      "enchanting_table": [
+        4.0,
+        true
+      ],
+      "end_bricks": [
+        4.0,
+        true
+      ],
+      "end_portal_frame": [
+        4.0,
+        true
+      ],
+      "end_stone": [
+        4.0,
+        true
+      ],
+      "ender_chest": [
+        4.0,
+        true
+      ],
+      "furnace": [
+        4.0,
+        true
+      ],
+      "gold_block": [
+        4.0,
+        false
+      ],
+      "gold_ore": [
+        4.0,
+        false
+      ],
+      "golden_rail": [
+        4.0,
+        false
+      ],
+      "hardened_clay": [
+        4.0,
+        true
+      ],
+      "heavy_weighted_pressure_plate": [
+        4.0,
+        true
+      ],
+      "hopper": [
+        4.0,
+        true
+      ],
+      "ice": [
+        4.0,
+        false
+      ],
+      "iron_bars": [
+        4.0,
+        true
+      ],
+      "iron_block": [
+        4.0,
+        true
+      ],
+      "iron_door": [
+        4.0,
+        true
+      ],
+      "iron_ore": [
+        4.0,
+        true
+      ],
+      "iron_trapdoor": [
+        4.0,
+        true
+      ],
+      "lapis_block": [
+        4.0,
+        true
+      ],
+      "lapis_ore": [
+        4.0,
+        true
+      ],
+      "light_weighted_pressure_plate": [
+        4.0,
+        true
+      ],
+      "lit_furnace": [
+        4.0,
+        true
+      ],
+      "lit_redstone_ore": [
+        4.0,
+        false
+      ],
+      "mob_spawner": [
+        4.0,
+        true
+      ],
+      "mossy_cobblestone": [
+        4.0,
+        true
+      ],
+      "nether_brick": [
+        4.0,
+        true
+      ],
+      "nether_brick_fence": [
+        4.0,
+        true
+      ],
+      "nether_brick_stairs": [
+        4.0,
+        true
+      ],
+      "netherrack": [
+        4.0,
+        true
+      ],
+      "obsidian": [
+        4.0,
+        false
+      ],
+      "packed_ice": [
+        4.0,
+        false
+      ],
+      "prismarine": [
+        4.0,
+        true
+      ],
+      "purpur_block": [
+        4.0,
+        true
+      ],
+      "purpur_double_slab": [
+        4.0,
+        true
+      ],
+      "purpur_pillar": [
+        4.0,
+        true
+      ],
+      "purpur_slab": [
+        4.0,
+        true
+      ],
+      "purpur_stairs": [
+        4.0,
+        true
+      ],
+      "quartz_block": [
+        4.0,
+        true
+      ],
+      "quartz_ore": [
+        4.0,
+        true
+      ],
+      "quartz_stairs": [
+        4.0,
+        true
+      ],
+      "rail": [
+        4.0,
+        false
+      ],
+      "red_sandstone": [
+        4.0,
+        true
+      ],
+      "red_sandstone_stairs": [
+        4.0,
+        true
+      ],
+      "redstone_block": [
+        4.0,
+        true
+      ],
+      "redstone_ore": [
+        4.0,
+        false
+      ],
+      "repeating_command_block": [
+        4.0,
+        true
+      ],
+      "sandstone": [
+        4.0,
+        true
+      ],
+      "sandstone_stairs": [
+        4.0,
+        true
+      ],
+      "stained_hardened_clay": [
+        4.0,
+        true
+      ],
+      "stone": [
+        4.0,
+        true
+      ],
+      "stone_brick_stairs": [
+        4.0,
+        true
+      ],
+      "stone_button": [
+        4.0,
+        false
+      ],
+      "stone_pressure_plate": [
+        4.0,
+        true
+      ],
+      "stone_slab": [
+        4.0,
+        true
+      ],
+      "stone_slab2": [
+        4.0,
+        true
+      ],
+      "stone_stairs": [
+        4.0,
+        true
+      ],
+      "stonebrick": [
+        4.0,
+        true
+      ],
+      "structure_block": [
+        4.0,
+        true
+      ]
+    },
+    "stone_shovel": {
+      "clay": [
+        4.0,
+        false
+      ],
+      "dirt": [
+        4.0,
+        false
+      ],
+      "farmland": [
+        4.0,
+        false
+      ],
+      "grass": [
+        4.0,
+        false
+      ],
+      "grass_path": [
+        4.0,
+        false
+      ],
+      "gravel": [
+        4.0,
+        false
+      ],
+      "mycelium": [
+        4.0,
+        false
+      ],
+      "sand": [
+        4.0,
+        false
+      ],
+      "snow": [
+        4.0,
+        true
+      ],
+      "snow_layer": [
+        4.0,
+        true
+      ],
+      "soul_sand": [
+        4.0,
+        false
+      ]
+    },
+    "stone_sword": {
+      "beetroots": [
+        1.5,
+        false
+      ],
+      "brown_mushroom": [
+        1.5,
+        false
+      ],
+      "carrots": [
+        1.5,
+        false
+      ],
+      "chorus_flower": [
+        1.5,
+        false
+      ],
+      "chorus_plant": [
+        1.5,
+        false
+      ],
+      "cocoa": [
+        1.5,
+        false
+      ],
+      "deadbush": [
+        1.5,
+        false
+      ],
+      "double_plant": [
+        1.5,
+        false
+      ],
+      "leaves": [
+        1.5,
+        false
+      ],
+      "leaves2": [
+        1.5,
+        false
+      ],
+      "lit_pumpkin": [
+        1.5,
+        false
+      ],
+      "melon_block": [
+        1.5,
+        false
+      ],
+      "melon_stem": [
+        1.5,
+        false
+      ],
+      "nether_wart": [
+        1.5,
+        false
+      ],
+      "potatoes": [
+        1.5,
+        false
+      ],
+      "pumpkin": [
+        1.5,
+        false
+      ],
+      "pumpkin_stem": [
+        1.5,
+        false
+      ],
+      "red_flower": [
+        1.5,
+        false
+      ],
+      "red_mushroom": [
+        1.5,
+        false
+      ],
+      "reeds": [
+        1.5,
+        false
+      ],
+      "sapling": [
+        1.5,
+        false
+      ],
+      "tallgrass": [
+        1.5,
+        false
+      ],
+      "vine": [
+        1.5,
+        false
+      ],
+      "waterlily": [
+        1.5,
+        false
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wheat": [
+        1.5,
+        false
+      ],
+      "yellow_flower": [
+        1.5,
+        false
+      ]
+    },
+    "wooden_axe": {
+      "acacia_door": [
+        2.0,
+        false
+      ],
+      "acacia_fence": [
+        2.0,
+        false
+      ],
+      "acacia_fence_gate": [
+        2.0,
+        false
+      ],
+      "acacia_stairs": [
+        2.0,
+        false
+      ],
+      "beetroots": [
+        2.0,
+        false
+      ],
+      "birch_door": [
+        2.0,
+        false
+      ],
+      "birch_fence": [
+        2.0,
+        false
+      ],
+      "birch_fence_gate": [
+        2.0,
+        false
+      ],
+      "birch_stairs": [
+        2.0,
+        false
+      ],
+      "bookshelf": [
+        2.0,
+        false
+      ],
+      "brown_mushroom": [
+        2.0,
+        false
+      ],
+      "brown_mushroom_block": [
+        2.0,
+        false
+      ],
+      "carrots": [
+        2.0,
+        false
+      ],
+      "chest": [
+        2.0,
+        false
+      ],
+      "chorus_flower": [
+        2.0,
+        false
+      ],
+      "chorus_plant": [
+        2.0,
+        false
+      ],
+      "cocoa": [
+        2.0,
+        false
+      ],
+      "crafting_table": [
+        2.0,
+        false
+      ],
+      "dark_oak_door": [
+        2.0,
+        false
+      ],
+      "dark_oak_fence": [
+        2.0,
+        false
+      ],
+      "dark_oak_fence_gate": [
+        2.0,
+        false
+      ],
+      "dark_oak_stairs": [
+        2.0,
+        false
+      ],
+      "daylight_detector": [
+        2.0,
+        false
+      ],
+      "daylight_detector_inverted": [
+        2.0,
+        false
+      ],
+      "deadbush": [
+        2.0,
+        false
+      ],
+      "double_plant": [
+        2.0,
+        false
+      ],
+      "double_wooden_slab": [
+        2.0,
+        false
+      ],
+      "fence": [
+        2.0,
+        false
+      ],
+      "fence_gate": [
+        2.0,
+        false
+      ],
+      "jukebox": [
+        2.0,
+        false
+      ],
+      "jungle_door": [
+        2.0,
+        false
+      ],
+      "jungle_fence": [
+        2.0,
+        false
+      ],
+      "jungle_fence_gate": [
+        2.0,
+        false
+      ],
+      "jungle_stairs": [
+        2.0,
+        false
+      ],
+      "ladder": [
+        2.0,
+        false
+      ],
+      "lit_pumpkin": [
+        2.0,
+        false
+      ],
+      "log": [
+        2.0,
+        false
+      ],
+      "log2": [
+        2.0,
+        false
+      ],
+      "melon_block": [
+        2.0,
+        false
+      ],
+      "melon_stem": [
+        2.0,
+        false
+      ],
+      "nether_wart": [
+        2.0,
+        false
+      ],
+      "noteblock": [
+        2.0,
+        false
+      ],
+      "oak_stairs": [
+        2.0,
+        false
+      ],
+      "planks": [
+        2.0,
+        false
+      ],
+      "potatoes": [
+        2.0,
+        false
+      ],
+      "pumpkin": [
+        2.0,
+        false
+      ],
+      "pumpkin_stem": [
+        2.0,
+        false
+      ],
+      "red_flower": [
+        2.0,
+        false
+      ],
+      "red_mushroom": [
+        2.0,
+        false
+      ],
+      "red_mushroom_block": [
+        2.0,
+        false
+      ],
+      "reeds": [
+        2.0,
+        false
+      ],
+      "sapling": [
+        2.0,
+        false
+      ],
+      "spruce_door": [
+        2.0,
+        false
+      ],
+      "spruce_fence": [
+        2.0,
+        false
+      ],
+      "spruce_fence_gate": [
+        2.0,
+        false
+      ],
+      "spruce_stairs": [
+        2.0,
+        false
+      ],
+      "standing_banner": [
+        2.0,
+        false
+      ],
+      "standing_sign": [
+        2.0,
+        false
+      ],
+      "tallgrass": [
+        2.0,
+        false
+      ],
+      "trapdoor": [
+        2.0,
+        false
+      ],
+      "trapped_chest": [
+        2.0,
+        false
+      ],
+      "vine": [
+        2.0,
+        false
+      ],
+      "wall_banner": [
+        2.0,
+        false
+      ],
+      "wall_sign": [
+        2.0,
+        false
+      ],
+      "waterlily": [
+        2.0,
+        false
+      ],
+      "wheat": [
+        2.0,
+        false
+      ],
+      "wooden_button": [
+        2.0,
+        false
+      ],
+      "wooden_door": [
+        2.0,
+        false
+      ],
+      "wooden_pressure_plate": [
+        2.0,
+        false
+      ],
+      "wooden_slab": [
+        2.0,
+        false
+      ],
+      "yellow_flower": [
+        2.0,
+        false
+      ]
+    },
+    "wooden_pickaxe": {
+      "activator_rail": [
+        2.0,
+        false
+      ],
+      "anvil": [
+        2.0,
+        true
+      ],
+      "bedrock": [
+        2.0,
+        true
+      ],
+      "brewing_stand": [
+        2.0,
+        true
+      ],
+      "brick_block": [
+        2.0,
+        true
+      ],
+      "brick_stairs": [
+        2.0,
+        true
+      ],
+      "cauldron": [
+        2.0,
+        true
+      ],
+      "chain_command_block": [
+        2.0,
+        true
+      ],
+      "coal_block": [
+        2.0,
+        true
+      ],
+      "coal_ore": [
+        2.0,
+        true
+      ],
+      "cobblestone": [
+        2.0,
+        true
+      ],
+      "cobblestone_wall": [
+        2.0,
+        true
+      ],
+      "command_block": [
+        2.0,
+        true
+      ],
+      "detector_rail": [
+        2.0,
+        false
+      ],
+      "diamond_block": [
+        2.0,
+        false
+      ],
+      "diamond_ore": [
+        2.0,
+        false
+      ],
+      "dispenser": [
+        2.0,
+        true
+      ],
+      "double_stone_slab": [
+        2.0,
+        true
+      ],
+      "double_stone_slab2": [
+        2.0,
+        true
+      ],
+      "dropper": [
+        2.0,
+        true
+      ],
+      "emerald_block": [
+        2.0,
+        false
+      ],
+      "emerald_ore": [
+        2.0,
+        false
+      ],
+      "enchanting_table": [
+        2.0,
+        true
+      ],
+      "end_bricks": [
+        2.0,
+        true
+      ],
+      "end_portal_frame": [
+        2.0,
+        true
+      ],
+      "end_stone": [
+        2.0,
+        true
+      ],
+      "ender_chest": [
+        2.0,
+        true
+      ],
+      "furnace": [
+        2.0,
+        true
+      ],
+      "gold_block": [
+        2.0,
+        false
+      ],
+      "gold_ore": [
+        2.0,
+        false
+      ],
+      "golden_rail": [
+        2.0,
+        false
+      ],
+      "hardened_clay": [
+        2.0,
+        true
+      ],
+      "heavy_weighted_pressure_plate": [
+        2.0,
+        true
+      ],
+      "hopper": [
+        2.0,
+        true
+      ],
+      "ice": [
+        2.0,
+        false
+      ],
+      "iron_bars": [
+        2.0,
+        true
+      ],
+      "iron_block": [
+        2.0,
+        false
+      ],
+      "iron_door": [
+        2.0,
+        true
+      ],
+      "iron_ore": [
+        2.0,
+        false
+      ],
+      "iron_trapdoor": [
+        2.0,
+        true
+      ],
+      "lapis_block": [
+        2.0,
+        false
+      ],
+      "lapis_ore": [
+        2.0,
+        false
+      ],
+      "light_weighted_pressure_plate": [
+        2.0,
+        true
+      ],
+      "lit_furnace": [
+        2.0,
+        true
+      ],
+      "lit_redstone_ore": [
+        2.0,
+        false
+      ],
+      "mob_spawner": [
+        2.0,
+        true
+      ],
+      "mossy_cobblestone": [
+        2.0,
+        true
+      ],
+      "nether_brick": [
+        2.0,
+        true
+      ],
+      "nether_brick_fence": [
+        2.0,
+        true
+      ],
+      "nether_brick_stairs": [
+        2.0,
+        true
+      ],
+      "netherrack": [
+        2.0,
+        true
+      ],
+      "obsidian": [
+        2.0,
+        false
+      ],
+      "packed_ice": [
+        2.0,
+        false
+      ],
+      "prismarine": [
+        2.0,
+        true
+      ],
+      "purpur_block": [
+        2.0,
+        true
+      ],
+      "purpur_double_slab": [
+        2.0,
+        true
+      ],
+      "purpur_pillar": [
+        2.0,
+        true
+      ],
+      "purpur_slab": [
+        2.0,
+        true
+      ],
+      "purpur_stairs": [
+        2.0,
+        true
+      ],
+      "quartz_block": [
+        2.0,
+        true
+      ],
+      "quartz_ore": [
+        2.0,
+        true
+      ],
+      "quartz_stairs": [
+        2.0,
+        true
+      ],
+      "rail": [
+        2.0,
+        false
+      ],
+      "red_sandstone": [
+        2.0,
+        true
+      ],
+      "red_sandstone_stairs": [
+        2.0,
+        true
+      ],
+      "redstone_block": [
+        2.0,
+        true
+      ],
+      "redstone_ore": [
+        2.0,
+        false
+      ],
+      "repeating_command_block": [
+        2.0,
+        true
+      ],
+      "sandstone": [
+        2.0,
+        true
+      ],
+      "sandstone_stairs": [
+        2.0,
+        true
+      ],
+      "stained_hardened_clay": [
+        2.0,
+        true
+      ],
+      "stone": [
+        2.0,
+        true
+      ],
+      "stone_brick_stairs": [
+        2.0,
+        true
+      ],
+      "stone_button": [
+        2.0,
+        false
+      ],
+      "stone_pressure_plate": [
+        2.0,
+        true
+      ],
+      "stone_slab": [
+        2.0,
+        true
+      ],
+      "stone_slab2": [
+        2.0,
+        true
+      ],
+      "stone_stairs": [
+        2.0,
+        true
+      ],
+      "stonebrick": [
+        2.0,
+        true
+      ],
+      "structure_block": [
+        2.0,
+        true
+      ]
+    },
+    "wooden_shovel": {
+      "clay": [
+        2.0,
+        false
+      ],
+      "dirt": [
+        2.0,
+        false
+      ],
+      "farmland": [
+        2.0,
+        false
+      ],
+      "grass": [
+        2.0,
+        false
+      ],
+      "grass_path": [
+        2.0,
+        false
+      ],
+      "gravel": [
+        2.0,
+        false
+      ],
+      "mycelium": [
+        2.0,
+        false
+      ],
+      "sand": [
+        2.0,
+        false
+      ],
+      "snow": [
+        2.0,
+        true
+      ],
+      "snow_layer": [
+        2.0,
+        true
+      ],
+      "soul_sand": [
+        2.0,
+        false
+      ]
+    },
+    "wooden_sword": {
+      "beetroots": [
+        1.5,
+        false
+      ],
+      "brown_mushroom": [
+        1.5,
+        false
+      ],
+      "carrots": [
+        1.5,
+        false
+      ],
+      "chorus_flower": [
+        1.5,
+        false
+      ],
+      "chorus_plant": [
+        1.5,
+        false
+      ],
+      "cocoa": [
+        1.5,
+        false
+      ],
+      "deadbush": [
+        1.5,
+        false
+      ],
+      "double_plant": [
+        1.5,
+        false
+      ],
+      "leaves": [
+        1.5,
+        false
+      ],
+      "leaves2": [
+        1.5,
+        false
+      ],
+      "lit_pumpkin": [
+        1.5,
+        false
+      ],
+      "melon_block": [
+        1.5,
+        false
+      ],
+      "melon_stem": [
+        1.5,
+        false
+      ],
+      "nether_wart": [
+        1.5,
+        false
+      ],
+      "potatoes": [
+        1.5,
+        false
+      ],
+      "pumpkin": [
+        1.5,
+        false
+      ],
+      "pumpkin_stem": [
+        1.5,
+        false
+      ],
+      "red_flower": [
+        1.5,
+        false
+      ],
+      "red_mushroom": [
+        1.5,
+        false
+      ],
+      "reeds": [
+        1.5,
+        false
+      ],
+      "sapling": [
+        1.5,
+        false
+      ],
+      "tallgrass": [
+        1.5,
+        false
+      ],
+      "vine": [
+        1.5,
+        false
+      ],
+      "waterlily": [
+        1.5,
+        false
+      ],
+      "web": [
+        15.0,
+        true
+      ],
+      "wheat": [
+        1.5,
+        false
+      ],
+      "yellow_flower": [
+        1.5,
+        false
+      ]
+    }
+  }
+}

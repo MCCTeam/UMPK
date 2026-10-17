@@ -4,7 +4,7 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Snapshots;
 
-/// <summary>An immutable snapshot of <see cref="SelfState"/>: identity, kinematics, vitals, abilities-adjacent facts (held slot, sneaking/sprinting), and game mode. Field-for-field with the tracker it projects, so a field added to <see cref="SelfState"/> and not to this record is a missing line in <see cref="Project"/>, not a silent gap.</summary>
+/// <summary>An immutable snapshot of the local player's tracked state and observed eye height.</summary>
 /// <param name="EntityId">The local player's entity id, assigned at join.</param>
 /// <param name="Uuid">The local player's uuid.</param>
 /// <param name="Username">The local player's username.</param>
@@ -49,13 +49,16 @@ public sealed record SelfSnapshot(
     bool Sprinting,
     bool HasSpawned)
 {
-    /// <summary>The eye position for a player standing at <see cref="Position"/> (feet + 1.62).</summary>
-    public Vec3d EyePosition => PlayerReach.EyePosition(Position);
+    /// <summary>The observed pose eye height. Defaults to standing when constructed without physics state.</summary>
+    public double EyeHeight { get; init; } = PlayerReach.StandingEyeHeight;
+
+    /// <summary>The eye position at these feet coordinates and the captured eye height.</summary>
+    public Vec3d EyePosition => Position.Add(0, EyeHeight, 0);
 
     /// <summary>Whether <see cref="GameMode"/> is spectator.</summary>
     public bool IsSpectator => GameMode == GameMode.Spectator;
 
-    /// <summary>Projects a <see cref="SelfSnapshot"/> from live tracked state. Pure; no session loop involved.</summary>
+    /// <summary>Projects tracked state with the standing eye-height default. Use <see cref="ClientSnapshots.SelfAsync"/> to include the physics owner's pose.</summary>
     /// <exception cref="ArgumentNullException"><paramref name="state"/> is null.</exception>
     public static SelfSnapshot Project(ClientState state)
     {

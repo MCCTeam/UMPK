@@ -394,6 +394,10 @@ internal sealed partial class Emitter
         ("CollisionShapes", "collision-shape"),
         ("BlockShapeRefs", "block shape-reference"),
         ("BlockPush", "block-push"),
+        ("BlockMining", "block-mining"),
+        ("BlockInteractions", "block-interactions"),
+        ("EntityGeometry", "entity-geometry"),
+        ("BlockTargeting", "block-targeting"),
         ("EnchantmentDefs", "enchantment-definition"),
         ("MobEffectDefs", "mob-effect definition"),
         ("AttributeDefs", "attribute-definition"),
@@ -427,7 +431,16 @@ internal sealed partial class Emitter
             sb.AppendLine("    };");
         }
 
-        // The one table that answers rather than refuses. Only the pre-flattening descriptors declare LegacyItemDefs (the emitter writes it under the same "legacy" identity test), so a full 49-arm switch would not compile, and an empty span IS the answer for a flattened protocol.
+        sb.AppendLine("    /// <summary>Exact collision grids for measured protocols. An absent table retains the source's existing bounding-box path.</summary>");
+        sb.AppendLine("    private static ReadOnlySpan<byte> BlockCollisionGrids(int protocol) => protocol switch");
+        sb.AppendLine("    {");
+        foreach (VersionData version in versions.Where(version => CollisionGridTable.Load(version) is not null))
+            sb.AppendLine(CultureInfo.InvariantCulture, $"        {version.Protocol} => global::Umpk.Data.Java.V{version.Protocol}.Descriptor.BlockCollisionGrids,");
+        sb.AppendLine("        _ => default,");
+        sb.AppendLine("    };");
+        sb.AppendLine();
+
+        // Only the pre-flattening descriptors declare LegacyItemDefs, so a full protocol switch would not compile. An empty span is the answer for a flattened protocol.
         sb.AppendLine();
         sb.AppendLine("    /// <summary>The packed legacy composite item table for a pre-flattening protocol, or an empty span for the flattened protocols (which have no such table) and for unsupported protocols.</summary>");
         sb.AppendLine("    /// <remarks>The one table here that answers rather than refuses, because the generated descriptors carry a <c>LegacyItemDefs</c> member only for the pre-flattening versions: an empty span IS the answer for a flattened protocol, and a full switch over every protocol would not compile.</remarks>");
@@ -436,6 +449,13 @@ internal sealed partial class Emitter
         foreach (VersionData version in versions.Where(v => v.Identity == "legacy"))
             sb.AppendLine(CultureInfo.InvariantCulture, $"        {version.Protocol} => global::Umpk.Data.Java.V{version.Protocol}.Descriptor.LegacyItemDefs,");
 
+        sb.AppendLine("        _ => default,");
+        sb.AppendLine("    };");
+        sb.AppendLine();
+        sb.AppendLine("    private static ReadOnlySpan<byte> ItemAttackDefaults(int protocol) => protocol switch");
+        sb.AppendLine("    {");
+        foreach (VersionData version in versions.Where(version => ItemAttackTable.Load(version) is not null))
+            sb.AppendLine(CultureInfo.InvariantCulture, $"        {version.Protocol} => global::Umpk.Data.Java.V{version.Protocol}.Descriptor.ItemAttackDefaults,");
         sb.AppendLine("        _ => default,");
         sb.AppendLine("    };");
         sb.AppendLine("}");

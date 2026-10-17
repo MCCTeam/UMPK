@@ -19,7 +19,7 @@ public sealed class ClientSnapshots
 
     /// <summary>Snapshots the local player's identity, kinematics, vitals, and game mode.</summary>
     public Task<SelfSnapshot> SelfAsync(CancellationToken ct = default) =>
-        _client.InvokeAsync(client => SelfSnapshot.Project(client.State), ct);
+        _client.InvokeAsync(client => SelfSnapshot.Project(client.State) with { EyeHeight = client.SelfEyeHeight }, ct);
 
     /// <summary>Snapshots the local player's server-advertised abilities.</summary>
     public Task<AbilitiesSnapshot> AbilitiesAsync(CancellationToken ct = default) =>
@@ -204,13 +204,14 @@ public sealed class ClientSnapshots
         return new BlockSnapshot(position, state, loaded);
     }
 
-    private static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids)
+    internal static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids)
     {
         if (!client.State.HasWorld || client.Session is null)
             return null;
 
         SelfState self = client.State.Self;
-        Vec3d eye = PlayerReach.EyePosition(self.Position);
+        // Entity.getEyePosition and Entity.pick start at the current pose's eye, including a forced crawl with no sneak input.
+        Vec3d eye = client.SelfEyePosition;
         double yawRad = self.Yaw * Math.PI / 180.0;
         double pitchRad = self.Pitch * Math.PI / 180.0;
         double cosPitch = Math.Cos(pitchRad);
@@ -219,7 +220,9 @@ public sealed class ClientSnapshots
 
         // The negotiated protocol's own generated shape tables (real slab/stair/fence/wall/pane/carpet geometry per protocol), resolved from the live session rather than one fixed dataset.
         IBlockShapeSource shapes = JavaGameData.BlockShapes(client.Session.Version.Version.Protocol);
-        BlockHitResult hit = Raycast.CastBlock(client.State.World, eye, end, includeFluids, shapes);
+        ItemStack held = client.State.Features.Inventory ? PlayerInventorySnapshot.ResolveHeldItem(client.State.Inventory.PlayerSlots, self.HeldSlot) : ItemStack.Empty;
+        Identifier heldId = held.IsEmpty ? Identifier.Minecraft("air") : held.Item.Id;
+        BlockHitResult hit = Raycast.CastBlockWithContext(client.State.World, eye, end, includeFluids, shapes, heldId);
         return hit.Hit ? hit : null;
     }
 }

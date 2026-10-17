@@ -1,7 +1,7 @@
 {
-  "implementedBindings": 7172,
-  "exercisedBindings": 1769,
-  "coveredFamilies": 68,
+  "implementedBindings": 7480,
+  "exercisedBindings": 1844,
+  "coveredFamilies": 72,
   "budgets": [
     {
       "protocol": 775,
@@ -592,6 +592,18 @@
       "budgetBytesPerFrame": 404
     },
     {
+      "protocol": 754,
+      "phase": "Play",
+      "flow": "Clientbound",
+      "packet": "minecraft:set_border",
+      "capture": "chunk-join.umpkcap",
+      "frame": 580,
+      "wireId": 61,
+      "bodyBytes": 40,
+      "measuredBytesPerFrame": 72,
+      "budgetBytesPerFrame": 80
+    },
+    {
       "protocol": 776,
       "phase": "Play",
       "flow": "Clientbound",
@@ -763,6 +775,30 @@
       "protocol": 776,
       "phase": "Play",
       "flow": "Clientbound",
+      "packet": "minecraft:ticking_state",
+      "capture": "chunk-join.umpkcap",
+      "frame": 52,
+      "wireId": 127,
+      "bodyBytes": 5,
+      "measuredBytesPerFrame": 24,
+      "budgetBytesPerFrame": 32
+    },
+    {
+      "protocol": 776,
+      "phase": "Play",
+      "flow": "Clientbound",
+      "packet": "minecraft:ticking_step",
+      "capture": "chunk-join.umpkcap",
+      "frame": 53,
+      "wireId": 128,
+      "bodyBytes": 1,
+      "measuredBytesPerFrame": 24,
+      "budgetBytesPerFrame": 32
+    },
+    {
+      "protocol": 776,
+      "phase": "Play",
+      "flow": "Clientbound",
       "packet": "minecraft:update_advancements",
       "capture": "chunk-join.umpkcap",
       "frame": 98,
@@ -794,6 +830,18 @@
       "bodyBytes": 3360,
       "measuredBytesPerFrame": 3408,
       "budgetBytesPerFrame": 3579
+    },
+    {
+      "protocol": 763,
+      "phase": "Play",
+      "flow": "Clientbound",
+      "packet": "minecraft:update_tags",
+      "capture": "chunk-join.umpkcap",
+      "frame": 9,
+      "wireId": 110,
+      "bodyBytes": 19385,
+      "measuredBytesPerFrame": 120768,
+      "budgetBytesPerFrame": 126807
     },
     {
       "protocol": 47,

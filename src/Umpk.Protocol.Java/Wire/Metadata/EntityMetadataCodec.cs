@@ -146,8 +146,9 @@ internal static class EntityMetadataCodec
     // modern format (1.9+; index byte, VarInt serializer id, value)
 
     /// <summary>Reads a modern metadata list under the given serializer table. Each entry is an index byte (0xff terminates), a VarInt serializer id, then the serializer's value. When a serializer maps to a modern item slot (no length-derivable codec yet), decode stops and the remainder is captured raw (including this entry's header). See <see cref="EntityMetadataList.RawTail"/>.</summary>
-    public static EntityMetadataList ReadModern(ref PacketReader r, ModernMetadataTable table, NbtWireFormat nbt, ComponentWireEra component, bool componentJson = false, BlockPosLayout blockPos = BlockPosLayout.Packed114, MetadataParticleEra? particles = null, MetadataItemEra? items = null, PacketCodecContext? context = null)
+    public static EntityMetadataList ReadModern(ref PacketReader r, ModernMetadataTable table, NbtWireFormat nbt, ComponentWireEra component, bool componentJson = false, BlockPosLayout blockPos = BlockPosLayout.Packed114, MetadataParticleEra? particles = null, MetadataItemEra? items = null, PacketCodecContext? context = null, MetadataPoseEra? poses = null)
     {
+        poses ??= MetadataPoseEra.V1_14;
         var entries = new List<EntityDataEntry>();
         while (true)
         {
@@ -182,6 +183,16 @@ internal static class EntityMetadataCodec
                 return new EntityMetadataList(entries, tail);
             }
 
+            if (serializer == ModernMetadataSerializer.Pose)
+            {
+                int poseId = r.ReadVarInt();
+                EntityPose canonical = poses.Decode(poseId);
+                MetadataValue pose = poses.Encode(canonical, null) == poseId
+                    ? MetadataValue.Pose(canonical)
+                    : MetadataValue.PoseWithWireId(canonical, poseId);
+                entries.Add(new EntityDataEntry(index, pose, serializerId));
+                continue;
+            }
             MetadataValue value = serializer switch
             {
                 ModernMetadataSerializer.Particle =>
@@ -196,9 +207,10 @@ internal static class EntityMetadataCodec
     }
 
     /// <summary>Writes a modern metadata list mirroring <see cref="ReadModern"/>, including any raw tail.</summary>
-    public static void WriteModern(ref PacketWriter w, EntityMetadataList list, ModernMetadataTable table, NbtWireFormat nbt, ComponentWireEra component, bool componentJson = false, BlockPosLayout blockPos = BlockPosLayout.Packed114, MetadataParticleEra? particles = null, MetadataItemEra? items = null, PacketCodecContext? context = null)
+    public static void WriteModern(ref PacketWriter w, EntityMetadataList list, ModernMetadataTable table, NbtWireFormat nbt, ComponentWireEra component, bool componentJson = false, BlockPosLayout blockPos = BlockPosLayout.Packed114, MetadataParticleEra? particles = null, MetadataItemEra? items = null, PacketCodecContext? context = null, MetadataPoseEra? poses = null)
     {
         ArgumentNullException.ThrowIfNull(list);
+        poses ??= MetadataPoseEra.V1_14;
         foreach (EntityDataEntry entry in list.Entries)
         {
             w.WriteByte((byte)entry.Index);
@@ -210,6 +222,9 @@ internal static class EntityMetadataCodec
             w.WriteVarInt(serializerId);
             switch (entry.Value.Kind)
             {
+                case MetadataValueKind.Pose:
+                    w.WriteVarInt(poses.Encode(entry.Value.AsPose(), entry.Value.AsPoseWireId()));
+                    break;
                 case MetadataValueKind.Particle:
                     ParticleCodec.WriteModern(ref w, (ParticleData)entry.Value.AsParticle());
                     break;
@@ -270,7 +285,6 @@ internal static class EntityMetadataCodec
         ModernMetadataSerializer.CompoundTag => MetadataValue.Nbt(r.ReadNbt(nbt)),
         ModernMetadataSerializer.VillagerData => MetadataValue.VillagerData(new VillagerData(r.ReadVarInt(), r.ReadVarInt(), r.ReadVarInt())),
         ModernMetadataSerializer.OptionalUnsignedInt => MetadataValue.OptionalVarInt(ReadOptionalUnsignedInt(ref r)),
-        ModernMetadataSerializer.Pose => MetadataValue.Pose((EntityPose)r.ReadVarInt()),
         ModernMetadataSerializer.VarIntHolder => MetadataValue.VarInt(r.ReadVarInt()),
         ModernMetadataSerializer.OptionalGlobalPos => MetadataValue.OptionalGlobalPosition(ReadOptionalGlobalPos(ref r, blockPos)),
         ModernMetadataSerializer.Vector3 => MetadataValue.Vector3(new Vec3d(r.ReadFloat(), r.ReadFloat(), r.ReadFloat())),
@@ -336,7 +350,6 @@ internal static class EntityMetadataCodec
                 w.WriteVarInt(vd.Type); w.WriteVarInt(vd.Profession); w.WriteVarInt(vd.Level);
                 break;
             case MetadataValueKind.OptionalVarInt: w.WriteVarInt((value.AsOptionalVarInt() ?? -1) + 1); break;
-            case MetadataValueKind.Pose: w.WriteVarInt((int)value.AsPose()); break;
             case MetadataValueKind.OptionalGlobalPosition:
                 GlobalPosition? gp = value.AsOptionalGlobalPosition();
                 w.WriteBool(gp.HasValue);

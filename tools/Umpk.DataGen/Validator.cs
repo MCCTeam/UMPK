@@ -74,6 +74,15 @@ internal static partial class Validator
             ValidateBlockPropertyDomains(version, dataset.Shared.BlockAttributes, problems);
             ValidateShapeRefs(version, legacy, problems);
             ValidateBlockPush(version, legacy, problems);
+            ValidateBlockMining(version, problems);
+            ItemAttackTable.Load(version)?.Validate(version, problems);
+            InteractionTable.Load(version)?.Validate(version, problems);
+            ReplacementTable.Load(version)?.Validate(version, problems);
+            EntityObstructionTable.Load(version)?.Validate(version, problems);
+            EntityGeometryTable.Load(version)?.Validate(version, problems);
+            TargetingTable.Load(version)?.Validate(version, problems);
+            CollisionGridTable.Load(version)?.Validate(version, problems);
+            CollisionGridTable.LoadOffsets(version)?.Validate(version, problems);
             ValidateMetadata(version, problems);
             ValidateComponents(version, legacy, problems);
             ValidateProjectedRegistryOrder(version, problems);
@@ -419,6 +428,65 @@ internal static partial class Validator
                     $"proto {version.Protocol}: block-push.json uses PushReaction '{reaction}', which is "
                     + "not one of vanilla's five");
 
+    }
+
+    private static void ValidateBlockMining(VersionData version, List<string> problems)
+    {
+        MiningTable? mining = MiningTable.Load(version);
+        if (mining is null)
+            return;
+
+        void Reject(string detail) => problems.Add($"proto {version.Protocol}: block-mining.json {detail}");
+        if (mining.Schema != 1 || mining.Identity != version.Blocks.Identity)
+            Reject("schema or identity differs from the supported block table");
+        if (mining.StateCount != version.Blocks.Blocks.Sum(block => block.NumStates ?? 1))
+            Reject("state count differs from the block table");
+        if (mining.ItemCount != version.Items.Count)
+            Reject("item count differs from the item table");
+        if (mining.DefaultTool != new MiningRow(1.0F, false))
+            Reject("default tool must have speed 1 and no special harvest capability");
+
+        HashSet<string> blocks = [.. version.Blocks.Blocks.Select(block => block.Name ?? string.Empty)];
+        if (!blocks.SetEquals(mining.Blocks.Keys))
+            Reject("must measure every block name exactly once");
+        foreach ((string name, MiningRow row) in mining.Blocks)
+            if (!float.IsFinite(row.Value) || (row.Value < 0 && row.Value != -1.0F))
+                Reject($"has invalid hardness for '{name}'");
+
+        HashSet<string> items = [.. version.Items.Select(item => item.Name)];
+        if (DefaultMiningTools.Load(version) is { } defaults)
+        {
+            if (!items.SetEquals(defaults.Keys))
+                Reject("default components must measure every item exactly once");
+            foreach ((string item, DefaultMiningTool? tool) in defaults)
+            {
+                if (tool is null)
+                    continue;
+                if (!float.IsFinite(tool.Speed) || tool.Speed < 0 || tool.Damage < 0)
+                    Reject($"has invalid default Tool values for '{item}'");
+                foreach (DefaultMiningRule rule in tool.Rules)
+                {
+                    if (rule.Tag is { } tag && (string.IsNullOrWhiteSpace(tag) || !tag.Contains(':')))
+                        Reject($"has an invalid default Tool tag for '{item}'");
+                    if (rule.Blocks.Any(block => !blocks.Contains(block)))
+                        Reject($"has an unknown default Tool block for '{item}'");
+                    if (rule.Speed is { } speed && (!float.IsFinite(speed) || speed <= 0))
+                        Reject($"has an invalid default Tool rule speed for '{item}'");
+                }
+            }
+        }
+        foreach ((string item, IReadOnlyDictionary<string, MiningRow> rules) in mining.Tools)
+        {
+            if (!items.Contains(item))
+                Reject($"names unknown item '{item}'");
+            foreach ((string block, MiningRow row) in rules)
+            {
+                if (!blocks.Contains(block))
+                    Reject($"tool '{item}' names unknown block '{block}'");
+                if (!float.IsFinite(row.Value) || row.Value < 0)
+                    Reject($"has invalid tool speed for '{item}' and '{block}'");
+            }
+        }
     }
 
     private static void ValidateShapeRefs(VersionData version, bool legacy, List<string> problems)

@@ -80,7 +80,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
     /// <summary>The conditions last pushed by the host.</summary>
     public PhysicsConditions Conditions => _conditions;
 
-    /// <summary>Full reset to a spawn or teleport position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
+    /// <summary>Starts fresh player physics at a spawn position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
     public void Reset(Vec3d position, float yaw, float pitch)
     {
         _position = position;
@@ -112,6 +112,15 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _wasGliding = false;
         _bouncedThisTick = false;
         _lastLandingFallDistance = 0;
+    }
+
+    /// <summary>Applies a server-resolved position, rotation, and velocity while preserving the existing player's pose, fall, contact, environment, and input state.</summary>
+    public void ApplyPositionCorrection(Vec3d position, float yaw, float pitch, Vec3d velocity)
+    {
+        _position = position;
+        _yaw = yaw;
+        _pitch = pitch;
+        _velocity = velocity;
     }
 
     /// <summary>Pushes host-computed game conditions (abilities, effects, resolved attributes, equipment). Call whenever they change; the engine never pulls them.</summary>
@@ -152,7 +161,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _pitch = pitch;
     }
 
-    /// <summary>Overwrites the current velocity. The host calls this after a server teleport that carries momentum the player is to keep. <see cref="Reset(Vec3d, float, float)"/> zeroes the velocity because it models a spawn; a teleport that hands the client momentum re-seeds it here.</summary>
+    /// <summary>Overwrites the current velocity without changing position or other player state.</summary>
     public void SetVelocity(Vec3d velocity) => _velocity = velocity;
 
     // Piston push
@@ -678,7 +687,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
     /// <summary>The entity half of vanilla's <c>collision-context construction</c>, rebuilt per query because every field of it changes within a tick: the sneak flag is written by the travel input, the fall distance by the previous move's resolution.</summary>
     /// <remarks><c>PowderSnowWalkable</c> comes off the pushed conditions rather than being derived here, because "leather boots in the feet slot" is an inventory read and the engine reads no game state of its own. See <see cref="PhysicsConditions.PowderSnowWalkable"/>.</remarks>
     private BodyCollisionContext Body =>
-        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable);
+        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable, _position);
 
     private double HeightForPose(EntityPose pose) => pose switch
     {
@@ -687,13 +696,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _ => _profile.StandingHeight,
     };
 
-    // Vanilla Avatar.POSES eye heights per pose (standing 1.62, crouching 1.27, swim/glide 0.4).
-    private double EyeHeightForPose(EntityPose pose) => pose switch
-    {
-        EntityPose.Crouching => PhysicsConstants.PlayerCrouchEyeHeight,
-        EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => PhysicsConstants.PlayerSwimEyeHeight,
-        _ => PhysicsConstants.PlayerStandingEyeHeight,
-    };
+    private double EyeHeightForPose(EntityPose pose) => PhysicsProfile.EyeHeightForPose(pose, _profile.PoseDimensions);
 
     private double Height => HeightForPose(_pose);
 
@@ -1561,6 +1564,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         VerticalCollision = _verticalCollision,
         FallDistance = _fallDistance,
         Pose = _pose,
+        PoseDimensions = _profile.PoseDimensions == PoseDimensionsEra.ModernCrawl ? null : _profile.PoseDimensions,
         BoundingBox = BoundingBox,
         InWater = _inWater,
         IsUnderWater = _isUnderWater,

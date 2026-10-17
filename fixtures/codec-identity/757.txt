@@ -90,7 +90,7 @@ Play Clientbound 0x49 minecraft:set_chunk_cache_center WorldStateCodecs.SetChunk
 Play Clientbound 0x4A minecraft:set_chunk_cache_radius WorldStateCodecs.SetChunkCacheRadiusV1_14 read:1 shape:opaque
 Play Clientbound 0x4B minecraft:set_default_spawn_position WorldStateCodecs.SetDefaultSpawnV1_17 read:12 shape:opaque
 Play Clientbound 0x4C minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_18 read:2 shape:opaque
-Play Clientbound 0x4D minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_14 fault:ProtocolViolationException shape:varint,metadata|metadata/32f25bb3,json,presentid,Packed114,JavaNamedRoot
+Play Clientbound 0x4D minecraft:set_entity_data EntityDataCodecs.SetEntityDataV1_17 fault:ProtocolViolationException shape:varint,metadata|metadata/32f25bb3,json,presentid,Packed114,JavaNamedRoot,poses/3816a9ee
 Play Clientbound 0x4E minecraft:set_entity_link EntityStateCodecs.SetEntityLinkV1_9 read:8 shape:opaque
 Play Clientbound 0x4F minecraft:set_entity_motion EntityMoveCodecs.SetEntityMotion read:7 shape:opaque
 Play Clientbound 0x50 minecraft:set_equipment EntityEquipmentCodecs.SetEquipmentV1_16 read:256 shape:opaque
@@ -116,7 +116,7 @@ Play Clientbound 0x63 minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x64 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 read:2 shape:opaque
 Play Clientbound 0x65 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_18 read:5 shape:opaque
 Play Clientbound 0x66 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern read:256 shape:opaque
-Play Clientbound 0x67 minecraft:update_tags marker n/a shape:opaque
+Play Clientbound 0x67 minecraft:update_tags WorldTagCodecs.TagsV1_17 read:1 shape:list(registry,list(tag,list(varint)))
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation read:1 shape:opaque
 Play Serverbound 0x01 minecraft:block_entity_tag_query marker n/a shape:opaque
 Play Serverbound 0x02 minecraft:change_difficulty marker n/a shape:opaque

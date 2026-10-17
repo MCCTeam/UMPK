@@ -267,6 +267,11 @@ internal sealed partial class Emitter
         // The pool above is inert on its own: this is the table that maps a block state (flattened bands) or a block network id (pre-flattening bands) onto a pool index. Emitted for every protocol so the accessor is uniform.
         string shapeRefsMember = InternShapeRefs(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.{shapeRefsMember};");
+        if (CollisionGridTable.Load(version) is not null)
+        {
+            string collisionGridsMember = InternBlockCollisionGrids(version);
+            sb.AppendLine($"    public static ReadOnlySpan<byte> BlockCollisionGrids => SharedTables.{collisionGridsMember};");
+        }
 
         // The per-block attribute table: physics scalars, per-state semantic flags, and block-state property names with their value domains where the resolver could prove them.
         string attrsMember = InternBlockAttrs(version, _dataset.Shared.BlockAttributes);
@@ -275,6 +280,19 @@ internal sealed partial class Emitter
         // The per-block piston facts. Emitted for every protocol so the accessor is uniform, but EMPTY wherever the dataset carries no measurement: the reader turns an empty table into "no data", and the client then models only the piston's own head and base.
         string pushMember = InternBlockPush(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockPush => SharedTables.{pushMember};");
+        string miningMember = InternBlockMining(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockMining => SharedTables.{miningMember};");
+        if (ItemAttackTable.Load(version) is { } attack)
+        {
+            string attackMember = InternItemAttackDefaults(version, attack);
+            sb.AppendLine($"    public static ReadOnlySpan<byte> ItemAttackDefaults => SharedTables.{attackMember};");
+        }
+        string interactionsMember = InternBlockInteractions(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.{interactionsMember};");
+        string geometryMember = InternEntityGeometry(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.{geometryMember};");
+        string targetingMember = InternBlockTargeting(version);
+        sb.AppendLine($"    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.{targetingMember};");
 
         // The two identity registries the client resolves wire holder ids against. Emitted for every protocol so the accessor is uniform, and EMPTY wherever the dataset carries no entries for that registry, which the reader treats as unresolvable.
         string enchantmentsMember = InternRegistryDefs(version, "minecraft:enchantment", "enchantments");
@@ -501,6 +519,133 @@ internal sealed partial class Emitter
         }
 
         return InternBlob("blockpush", version.Protocol, ms.ToArray());
+    }
+
+    /// <summary>Mining table: schema marker, named block facts, known item names, then sparse tool rules indexed by those names. Float values retain the vanilla single-precision representation.</summary>
+    private string InternBlockMining(VersionData version)
+    {
+        using MemoryStream stream = new();
+        MiningTable? mining = MiningTable.Load(version);
+        if (mining is null)
+        {
+            WriteVarInt(stream, 0);
+            return InternBlob("blockmining", version.Protocol, stream.ToArray());
+        }
+
+        void WriteName(string name)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(name);
+            WriteVarInt(stream, bytes.Length);
+            stream.Write(bytes);
+        }
+        void WriteRow(MiningRow row)
+        {
+            Span<byte> bytes = stackalloc byte[4];
+            BinaryPrimitives.WriteSingleBigEndian(bytes, row.Value);
+            stream.Write(bytes);
+            stream.WriteByte(row.Flag ? (byte)1 : (byte)0);
+        }
+
+        IReadOnlyDictionary<string, DefaultMiningTool?>? defaults = DefaultMiningTools.Load(version);
+        WriteVarInt(stream, defaults is null ? 1 : 2);
+        string[] blocks = [.. mining.Blocks.Keys.Order(StringComparer.Ordinal)];
+        Dictionary<string, int> blockIndices = [];
+        WriteVarInt(stream, blocks.Length);
+        for (int index = 0; index < blocks.Length; index++)
+        {
+            blockIndices.Add(blocks[index], index);
+            WriteName(blocks[index]);
+            WriteRow(mining.Blocks[blocks[index]]);
+        }
+        string[] items = [.. version.Items.Select(item => item.Name).Distinct().Order(StringComparer.Ordinal)];
+        Dictionary<string, int> itemIndices = [];
+        WriteVarInt(stream, items.Length);
+        for (int index = 0; index < items.Length; index++)
+        {
+            itemIndices.Add(items[index], index);
+            WriteName(items[index]);
+        }
+        WriteVarInt(stream, mining.Tools.Count);
+        foreach ((string item, IReadOnlyDictionary<string, MiningRow> rules) in mining.Tools.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            WriteVarInt(stream, itemIndices[item]);
+            WriteVarInt(stream, rules.Count);
+            foreach ((string block, MiningRow row) in rules.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                WriteVarInt(stream, blockIndices[block]);
+                WriteRow(row);
+            }
+        }
+        if (defaults is not null)
+        {
+            WriteVarInt(stream, defaults.Count(pair => pair.Value is not null));
+            foreach ((string item, DefaultMiningTool? tool) in defaults.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                if (tool is null)
+                    continue;
+                WriteVarInt(stream, itemIndices[item]);
+                WriteRow(new MiningRow(tool.Speed, tool.Creative));
+                WriteVarInt(stream, tool.Damage);
+                WriteVarInt(stream, tool.Rules.Count);
+                foreach (DefaultMiningRule rule in tool.Rules)
+                {
+                    stream.WriteByte(rule.Tag is null ? (byte)0 : (byte)1);
+                    if (rule.Tag is { } tag)
+                        WriteName(tag);
+                    else
+                    {
+                        WriteVarInt(stream, rule.Blocks.Count);
+                        foreach (string block in rule.Blocks)
+                            WriteVarInt(stream, blockIndices[block]);
+                    }
+                    stream.WriteByte(rule.Speed is null ? (byte)0 : (byte)1);
+                    if (rule.Speed is { } speed)
+                        WriteRow(new MiningRow(speed, false));
+                    stream.WriteByte(rule.Correct is null ? (byte)0 : rule.Correct.Value ? (byte)2 : (byte)1);
+                }
+            }
+        }
+        return InternBlob("blockmining", version.Protocol, stream.ToArray());
+    }
+
+    private string InternItemAttackDefaults(VersionData version, ItemAttackTable table)
+    {
+        using MemoryStream stream = new();
+        void Name(string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            WriteVarInt(stream, bytes.Length);
+            stream.Write(bytes);
+        }
+        void Sound(string? name)
+        {
+            stream.WriteByte(name is null ? (byte)0 : (byte)1);
+            if (name is not null)
+                WriteVarInt(stream, version.Registries["minecraft:sound_event"].Single(entry => entry.Name == name).Id);
+        }
+        WriteVarInt(stream, 1);
+        var rows = table.Items.Where(row => row.Value.Piercing is not null || row.Value.Charge is not null).OrderBy(row => row.Key, StringComparer.Ordinal).ToArray();
+        WriteVarInt(stream, rows.Length);
+        Span<byte> chargeBytes = stackalloc byte[4];
+        foreach ((string item, DefaultAttack value) in rows)
+        {
+            Name(item);
+            stream.WriteByte(value.Piercing is null ? (byte)0 : (byte)1);
+            if (value.Piercing is { } piercing)
+            {
+                stream.WriteByte(piercing.Knockback ? (byte)1 : (byte)0);
+                stream.WriteByte(piercing.Dismounts ? (byte)1 : (byte)0);
+                Sound(piercing.Sound);
+                Sound(piercing.HitSound);
+            }
+            stream.WriteByte(value.Charge is null ? (byte)0 : (byte)1);
+            if (value.Charge is { } charge)
+            {
+                BinaryPrimitives.WriteSingleBigEndian(chargeBytes, charge);
+                stream.Write(chargeBytes);
+            }
+        }
+        return InternBlob("itemattack", version.Protocol, stream.ToArray());
     }
 
     /// <summary>Vanilla <c>PushReaction</c>'s own declaration order.</summary>
@@ -730,6 +875,12 @@ internal sealed partial class Emitter
         "shaperefs" => "BlockShapeReferences",
         "blockattrs" => "BlockAttributes",
         "blockpush" => "BlockPush",
+        "blockmining" => "BlockMining",
+        "itemattack" => "ItemAttackDefaults",
+        "blockinteractions" => "BlockInteractions",
+        "entitygeometry" => "EntityGeometry",
+        "blocktargeting" => "BlockTargeting",
+        "blockcollisiongrids" => "BlockCollisionGrids",
         "enchantments" => "Enchantments",
         "mobeffects" => "MobEffects",
         "attributes" => "Attributes",
@@ -741,24 +892,33 @@ internal sealed partial class Emitter
 
     private void EmitSharedTables()
     {
+        EmitSharedTableFile("SharedTables.g.cs", collisionGrids: false);
+        if (_blobs.Keys.Concat(_aliases.Keys).Any(IsCollisionGridMember))
+            EmitSharedTableFile("SharedCollisionGrids.g.cs", collisionGrids: true);
+    }
+
+    private static bool IsCollisionGridMember(string member) => member.StartsWith("BlockCollisionGrids", StringComparison.Ordinal);
+
+    private void EmitSharedTableFile(string path, bool collisionGrids)
+    {
         StringBuilder sb = new();
         Header(sb, "Umpk.Data.Java");
         sb.AppendLine("namespace Umpk.Data.Java;");
         sb.AppendLine();
         sb.AppendLine("/// <summary>Content-deduplicated binary tables. Each member is a ReadOnlySpan&lt;byte&gt; over an embedded blob; identical tables of one semantic kind across versions collapse to the member named for their earliest owning protocol. Identical bytes used by different semantic kinds retain readable alias members but share one embedded blob. Index structs over these blobs live in Umpk.Data.Java.</summary>");
-        sb.AppendLine("internal static class SharedTables");
+        sb.AppendLine("internal static partial class SharedTables");
         sb.AppendLine("{");
-        foreach ((string member, byte[] blob) in _blobs.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach ((string member, byte[] blob) in _blobs.Where(pair => IsCollisionGridMember(pair.Key) == collisionGrids).OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             sb.Append($"    public static ReadOnlySpan<byte> {member} => new byte[] {{ ");
             sb.Append(string.Join(", ", blob.Select(b => "0x" + b.ToString("X2", CultureInfo.InvariantCulture))));
             sb.AppendLine(" };");
         }
-        foreach ((string member, string canonical) in _aliases.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach ((string member, string canonical) in _aliases.Where(pair => IsCollisionGridMember(pair.Key) == collisionGrids).OrderBy(kv => kv.Key, StringComparer.Ordinal))
             sb.AppendLine($"    public static ReadOnlySpan<byte> {member} => {canonical};");
 
         sb.AppendLine("}");
-        Add("SharedTables.g.cs", sb.ToString());
+        Add(path, sb.ToString());
     }
 
     public int SharedTableCount => _sharedCounter;

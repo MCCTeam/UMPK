@@ -280,13 +280,14 @@ public sealed class BlockShapeTableTests
     public void The_same_protocol_returns_the_same_cached_source()
         => Assert.Same(JavaGameData.BlockShapes(770), JavaGameData.BlockShapes(770));
 
-    /// <summary>Outline shapes have no separate table in the dataset, so they answer with the collision shapes. This preserves the current approximation until a separate outline table exists.</summary>
+    /// <summary>Vanilla's default oak fence targets a one-block-high post but collides with a one-and-a-half-block-high post.</summary>
     [Fact]
-    public void Outline_shapes_currently_mirror_collision_shapes()
+    public void Outline_shapes_use_the_separate_vanilla_targeting_table()
     {
         IBlockShapeSource shapes = JavaGameData.BlockShapes(770);
         int fence = DefaultStateId(770, "minecraft:oak_fence");
-        Assert.Equal(shapes.GetCollisionShapes(fence).ToArray(), shapes.GetOutlineShapes(fence).ToArray());
+        Assert.Equal(1.5, Assert.Single(shapes.GetCollisionShapes(fence).ToArray()).MaxY);
+        Assert.Equal(1.0, Assert.Single(shapes.GetOutlineShapes(fence).ToArray()).MaxY);
     }
 
     private static ReadOnlySpan<Aabb> DefaultShape(int protocol, string blockName)

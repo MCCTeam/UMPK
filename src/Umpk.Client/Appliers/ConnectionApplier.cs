@@ -24,6 +24,17 @@ internal sealed class ConnectionApplier : IApplier
 
         switch (packet)
         {
+            // Native listeners ignore tick control without a level. The level lifetime also exists when terrain tracking is disabled.
+            case ClientboundTickingStatePacket ticking:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.ApplyState(ticking.TickRate, ticking.IsFrozen);
+                return true;
+
+            case ClientboundTickingStepPacket stepping:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.SetSteps(stepping.TickSteps);
+                return true;
+
             case ClientboundLoginPacket join:
                 await ApplyJoinAsync(join, context, ct).ConfigureAwait(false);
                 return true;
@@ -62,6 +73,14 @@ internal sealed class ConnectionApplier : IApplier
 
                 // Configuration traffic also reaches handlers registered for that channel, and a minecraft:register announcement is folded into the server-announced set. Routing is unconditional rather than an else-arm of the brand: the brand is still captured into ClientState above, and "the engine reads it too" is a less surprising rule for a consumer than one channel silently not being deliverable. The return value is ignored because this applier claims the packet either way; an unclaimed configuration payload has nowhere else to go in the chain.
                 context.DispatchConfigurationChannel(payload.Channel, payload.Data);
+                return true;
+
+            case ClientboundConfigUpdateTagsPacket tags:
+                context.State.RegistryTags.Install(tags.Registries);
+                return true;
+
+            case ClientboundUpdateTagsPacket tags:
+                context.State.RegistryTags.Install(tags.Registries);
                 return true;
 
             // 1.20.2+ registry data. Three registries are kept, and only three, because they are the three this client acts on: minecraft:dimension_type decides where every decoded chunk column lands, minecraft:chat_type decides how a 1.19+ chat body is composed into the line a consumer sees, and minecraft:enchantment is the only thing that can name the numeric holder id a 1.21+ enchantment component carries. From protocol 767 there is no built-in table to fall back on and an uninstalled one decodes every enchantment to an unbound handle). Every other registry in this packet is deliberately dropped rather than half-modelled; decoding one with no consumer would only move the drop one layer up. Claiming the packet either way keeps it from falling through the chain as unhandled.
@@ -268,6 +287,8 @@ internal sealed class ConnectionApplier : IApplier
             DimensionTypeName = join.SpawnInfo.DimensionTypeName,
             InlineType = join.DimensionTypeNbt,
         });
+        context.State.AdvanceInteractionLifetime();
+        context.State.AdvancePlayerLifetime();
 
         // World construction is the required, failure-prone part of a join. Complete it before making the player observable as spawned or resetting join-owned state, so an unusable required custom dimension terminates the session without leaving a half-applied player/world transition.
         SelfState self = context.State.Self;
@@ -321,6 +342,7 @@ internal sealed class ConnectionApplier : IApplier
         {
             context.WorldSetup(new CommonWorldSetup(spawn.Dimension, spawn.DimensionTypeId)
             {
+                IsRespawn = true,
                 DimensionTypeName = spawn.DimensionTypeName,
                 InlineType = respawn.DimensionTypeNbt,
             });
@@ -329,9 +351,10 @@ internal sealed class ConnectionApplier : IApplier
         else if (respawn.Legacy is { } legacy)
         {
             // 47-404 name the dimension with a signed int rather than a resource key, and the respawn packet is the ONLY notice a client gets that it moved between them. Without this the world instance keeps the previous dimension's height bounds and skylight after a portal, which silently mis-sizes every chunk column decoded afterwards.
-            context.WorldSetup(new CommonWorldSetup(LegacyDimensionName(legacy.Dimension), legacy.Dimension));
+            context.WorldSetup(new CommonWorldSetup(LegacyDimensionName(legacy.Dimension), legacy.Dimension) { IsRespawn = true });
             gameMode = (Game.Players.GameMode)legacy.GameMode;
         }
+        context.State.AdvancePlayerLifetime();
 
         // As on join, resolve/install the required world first. An invalid replacement must leave the previous player and world coherent while the required packet fault ends the connection.
         ClearSprintLatch(context.State.Self);

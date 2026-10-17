@@ -7,7 +7,24 @@
    "minecraft-data pc/1.12/blocks.json (meta-0 base table; ids need not be gapless)"
   ],
   "kind": "extracted",
-  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one)."
+  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one).",
+  "vanilla_corrections": {
+   "version": "1.12",
+   "server_sha256": "feebff3834e41cc096522525707d2dd27adc2431b1f3145b9d0ccfc4c8a3dc09",
+   "source": "1.12-decompiled/aou.java",
+   "source_sha256": "ff6b2cad2cc021dfc7b9a629d3e3ef35705748b65f86e24f4fc1113755881464",
+   "rows": [
+    {
+     "id": 227,
+     "name": "silver_shulker_box"
+    },
+    {
+     "id": 243,
+     "name": "silver_glazed_terracotta"
+    }
+   ],
+   "note": "Native registration IDs and names verified against this release; preserves existing provenance for the remaining rows."
+  }
  },
  "identity": "legacy",
  "identity_formula": "(block_id << 4) | meta",
@@ -1605,7 +1622,7 @@
    "block_id": 227,
    "meta": 0,
    "state_id": 3632,
-   "material": "light_gray_shulker_box",
+   "material": "silver_shulker_box",
    "curated": false
   },
   {
@@ -1717,7 +1734,7 @@
    "block_id": 243,
    "meta": 0,
    "state_id": 3888,
-   "material": "light_gray_glazed_terracotta",
+   "material": "silver_glazed_terracotta",
    "curated": false
   },
   {

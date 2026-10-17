@@ -7898,3 +7898,80 @@ const Umpk.Protocol.Java.Capture.UmpkCapFormat.FrameCountOffset = 19 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.HeaderLength = 23 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.RecordPrefixLength = 26 -> int
 const Umpk.Protocol.Java.Capture.UmpkCapFormat.Version = 1 -> int
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket!
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.ClientboundUpdateTagsPacket(System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>! Registries) -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>! Registries) -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Registries.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.Packets.TagRegistry!>!
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Registries.init -> void
+Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? left, Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.UpdateTags -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundUpdateTagsPacket!>!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Action.get -> Umpk.Protocol.Java.Packets.WorldBorderAction
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Action.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterX.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterX.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterZ.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.CenterZ.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.ClientboundSetBorderPacket(Umpk.Protocol.Java.Packets.WorldBorderAction Action, double CenterX, double CenterZ, double OldSize, double NewSize, long LerpTime, int PortalTeleportBoundary, int WarningTime, int WarningBlocks) -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Deconstruct(out Umpk.Protocol.Java.Packets.WorldBorderAction Action, out double CenterX, out double CenterZ, out double OldSize, out double NewSize, out long LerpTime, out int PortalTeleportBoundary, out int WarningTime, out int WarningBlocks) -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.LerpTime.get -> long
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.LerpTime.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.NewSize.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.NewSize.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.OldSize.get -> double
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.OldSize.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.PortalTeleportBoundary.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.PortalTeleportBoundary.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningBlocks.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningBlocks.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningTime.get -> int
+Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.WarningTime.init -> void
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? left, Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? left, Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.SetBorder -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldBorderCodecs.SetBorderV1_9 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundSetBorderPacket!>!
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket!
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.ClientboundTickingStatePacket(float TickRate, bool IsFrozen) -> void
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.Deconstruct(out float TickRate, out bool IsFrozen) -> void
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.Equals(Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.TickRate.get -> float
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.TickRate.init -> void
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.IsFrozen.get -> bool
+Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.IsFrozen.init -> void
+override Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket? left, Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket? left, Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.TickingState -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket!>!
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket!
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.ClientboundTickingStepPacket(int TickSteps) -> void
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.Deconstruct(out int TickSteps) -> void
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.Equals(Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket? other) -> bool
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.Type.get -> Umpk.Protocol.Java.PacketType!
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.TickSteps.get -> int
+Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.TickSteps.init -> void
+override Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.GetHashCode() -> int
+override Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.ToString() -> string!
+static Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.operator !=(Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket? left, Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket? right) -> bool
+static Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.operator ==(Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket? left, Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket? right) -> bool
+static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.TickingStep -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.TickingStateV1_20_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket!>!
+static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.TickingStepV1_20_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket!>!

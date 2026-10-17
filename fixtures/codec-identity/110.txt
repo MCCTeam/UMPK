@@ -64,7 +64,7 @@ Play Clientbound 0x31 minecraft:remove_mob_effect EntityEffectCodecs.RemoveMobEf
 Play Clientbound 0x32 minecraft:resource_pack ResourcePackCodecs.LegacyResourcePackV1_8 read:2 shape:opaque
 Play Clientbound 0x33 minecraft:respawn WorldStateCodecs.RespawnV1_8 read:7 shape:opaque
 Play Clientbound 0x34 minecraft:rotate_head EntityMoveCodecs.RotateHead read:2 shape:opaque
-Play Clientbound 0x35 minecraft:set_border marker n/a shape:opaque
+Play Clientbound 0x35 minecraft:set_border WorldBorderCodecs.SetBorderV1_9 read:9 shape:opaque
 Play Clientbound 0x36 minecraft:set_camera EntityStateCodecs.SetCamera read:1 shape:opaque
 Play Clientbound 0x37 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 read:1 via:minecraft:set_carried_item shape:opaque
 Play Clientbound 0x38 minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 read:2 shape:opaque

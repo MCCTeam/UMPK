@@ -175,8 +175,8 @@ internal static class Descriptor
     };
 
     // Table references (shared across versions by content; Vn names the earliest owning protocol).
-    public static ReadOnlySpan<byte> ItemNames => SharedTables.ItemsV315;
-    public static ReadOnlySpan<byte> LegacyItemDefs => SharedTables.LegacyItemsV315;
+    public static ReadOnlySpan<byte> ItemNames => SharedTables.ItemsV316;
+    public static ReadOnlySpan<byte> LegacyItemDefs => SharedTables.LegacyItemsV316;
     public static ReadOnlySpan<byte> BlockNames => SharedTables.BlocksV315;
     public static ReadOnlySpan<byte> BlockDefs => SharedTables.BlockDefinitionsV315;
     public static ReadOnlySpan<byte> EntityNames => SharedTables.EntitiesV315;
@@ -187,6 +187,10 @@ internal static class Descriptor
     public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.BlockShapeReferencesV315;
     public static ReadOnlySpan<byte> BlockAttrs => SharedTables.BlockAttributesV315;
     public static ReadOnlySpan<byte> BlockPush => SharedTables.BlockPushV47;
+    public static ReadOnlySpan<byte> BlockMining => SharedTables.BlockMiningV316;
+    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.BlockInteractionsV316;
+    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.EntityGeometryV315;
+    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.BlockTargetingV315;
     public static ReadOnlySpan<byte> EnchantmentDefs => SharedTables.EnchantmentsV47;
     public static ReadOnlySpan<byte> MobEffectDefs => SharedTables.MobEffectsV107;
     public static ReadOnlySpan<byte> AttributeDefs => SharedTables.AttributesV47;

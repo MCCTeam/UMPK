@@ -139,9 +139,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "projectile_power", MarkerReason.KnownGap, From(766),
             "The 1.20.5 fireball acceleration update. Unbound on the whole band, so a tracked projectile's acceleration is never corrected from the server."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "set_border", MarkerReason.KnownGap, Between(107, 754),
-            "The pre-1.17 combined world-border packet, split at 1.17 into the set_border family that IS bound. So the border is tracked from 755 up and invisible on 107 through 754."),
-
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "set_compression", MarkerReason.KnownGap, Only(47),
             "The 1.8-only play-phase set-compression frame; 1.9 moved compression negotiation entirely into login. Unbound, so a 1.8 server that changes the threshold mid-play desyncs the stream. Rare in practice because servers set it during login, where the packet IS bound."),
 
@@ -160,12 +157,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "test_instance_block_status", MarkerReason.NoConsumerWorthWriting, From(770),
             "Part of the 1.21.5 game-test instance-block tooling, which only a developer running the test framework drives. No gameplay consumer would read it."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "ticking_state", MarkerReason.KnownGap, From(765),
-            "The 1.20.3 server tick-rate and freeze state. Unbound with its ticking_step partner, so a consumer cannot tell a frozen or slowed server from a stalled connection."),
-
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "ticking_step", MarkerReason.KnownGap, From(765),
-            "The 1.20.3 single-step advance for a frozen server. Unbound with ticking_state above, and with the same consequence."),
-
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_enabled_features", MarkerReason.KnownGap, Between(761, 763),
             "The 1.19.3 through 1.20.1 feature-flag announcement, moved into the configuration phase at 1.20.2. Unbound on the three protocols that carry it in play, so a consumer cannot tell which experimental packs are enabled there."),
 
@@ -174,9 +165,6 @@ internal static class IntentionalMarkers
 
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_sign", MarkerReason.KnownGap, Between(47, 109),
             "The 1.8 through 1.9.2 clientbound sign contents packet, dropped by vanilla in favour of block entity data. Unbound on all four protocols that carry it, so sign text does not reach a consumer there. Distinct from the serverbound minecraft:sign_update entry below, which is a different argument."),
-
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_tags", MarkerReason.KnownGap, From(393),
-            "The registry tag sets for blocks, items, fluids and entities. Unbound on every protocol that carries it, and nothing in UMPK models tags, so a consumer cannot ask whether a block is in minecraft:logs."),
 
         // Play, serverbound
         new(ProtocolPhase.Play, PacketFlow.Serverbound, "block_entity_tag_query", MarkerReason.KnownGap, From(393),

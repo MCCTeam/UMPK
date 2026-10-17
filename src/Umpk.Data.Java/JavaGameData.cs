@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using Umpk.Game.Blocks;
 using Umpk.Game.Entities;
 using Umpk.Game.Items;
@@ -18,6 +19,9 @@ public static partial class JavaGameData
     private static readonly ConcurrentDictionary<int, IMetadataKeySource> MetadataKeyCache = new();
 
     private static readonly ConcurrentDictionary<int, IBlockPushSource> PushCache = new();
+    private static readonly ConcurrentDictionary<int, IBlockMiningSource> MiningCache = new();
+    private static readonly ConcurrentDictionary<int, IBlockInteractionSource> InteractionCache = new();
+    private static readonly ConcurrentDictionary<int, IEntityGeometrySource> GeometryCache = new();
 
     /// <summary>The lowest protocol whose item ids are index-based (1.13, the flattening).</summary>
     private const int FirstFlattenedProtocol = 393;
@@ -52,11 +56,23 @@ public static partial class JavaGameData
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IBlockShapeSource"/> for a protocol from the generated shape pool and its per-state reference table. This is what makes physics and pathfinding collide against real slab, stair, fence, wall, pane and carpet geometry instead of a unit cube. Safe to call repeatedly. An unsupported protocol is refused rather than answered from block flags alone, which would be a plausible-looking world model built on no data.</summary>
     public static IBlockShapeSource BlockShapes(int protocol) =>
-        ShapeCache.GetOrAdd(protocol, static p => new JavaBlockShapes(CollisionShapes(p), BlockShapeRefs(p)));
+        ShapeCache.GetOrAdd(protocol, static p => new JavaBlockShapes(CollisionShapes(p), BlockShapeRefs(p), BlockTargeting(p), BlockCollisionGrids(p)));
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IBlockPushSource"/> for a protocol: the piston push reaction, unbreakability and block-entity status of every block. Safe to call repeatedly; an unsupported protocol is refused. A protocol the dataset carries no measurement for yields a source whose <see cref="IBlockPushSource.HasData"/> is false, which a caller must read as "unknown" and not as "normal".</summary>
     public static IBlockPushSource BlockPushData(int protocol) =>
         PushCache.GetOrAdd(protocol, static p => JavaBlockPush.Create(Registries(p).Blocks, BlockPush(p)));
+
+    /// <summary>Returns cached vanilla hardness, harvest requirements and default-stack tool rules for the protocol. A missing measurement reports no data; unknown names are refused. Custom item components and server tags can override default rules.</summary>
+    public static IBlockMiningSource BlockMiningData(int protocol) =>
+        MiningCache.GetOrAdd(protocol, static p => JavaBlockMining.Create(BlockMining(p), BuildBlocks(p)));
+
+    /// <summary>Returns cached native block-use and default-item placement contracts. Missing measurements and specialized rules remain explicit unknowns.</summary>
+    public static IBlockInteractionSource BlockInteractionData(int protocol) =>
+        InteractionCache.GetOrAdd(protocol, static p => JavaBlockInteractions.Create(BlockInteractions(p), (JavaEntityGeometry)EntityGeometryData(p)));
+
+    /// <summary>Returns cached native entity dimensions and metadata refresh rules without loading block-interaction tables. Unmeasured entity states remain unknown.</summary>
+    public static IEntityGeometrySource EntityGeometryData(int protocol) =>
+        GeometryCache.GetOrAdd(protocol, static p => JavaEntityGeometry.Create(EntityGeometry(p)));
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IMetadataKeySource"/> for a protocol: which tier-1 entity-metadata index each semantic key occupies on that era. Without one, every tier-2 read misses and typed entity properties such as the custom name stay empty even though the raw value was decoded and stored. Safe to call repeatedly.</summary>
     public static IMetadataKeySource EntityMetadataKeys(int protocol) =>
@@ -85,12 +101,33 @@ public static partial class JavaGameData
             // minecraft:attribute joins registry identity with the DefaultValue/MinValue/MaxValue that AttributeInstance consumes. Empty on 47-578, which carry no attribute registry and do not need one (their update_attributes names attributes by string). See BuildAttributes.
             .Add(BuildAttributes(protocol));
 
+        Registry<object> sounds = BuildSoundNames(protocol);
+        if (sounds.Count > 0)
+            builder.Add(sounds);
+
         // Pre-1.14 versions resolve add_entity (SpawnObject) against a SECOND, disjoint id space. The registry is only added when the era actually has one, so its presence IS the split-id-space signal that RegistryAccess.HasSplitEntityIdSpaces reports and the entity applier routes on.
         Registry<EntityTypeDefinition> objectTypes = BuildLegacyObjectTypes(protocol);
         if (objectTypes.Count > 0)
             builder.Add(objectTypes);
 
         return RegistryAccess.FromSnapshot(builder.Build());
+    }
+
+    // Sound-holder component hashes use registry names rather than wire ids. These entries expose only the measured identity table; sound definitions remain outside this registry's contract.
+    private static Registry<object> BuildSoundNames(int protocol)
+    {
+        ReadOnlySpan<byte> table = SoundNames(protocol);
+        var reader = new PacketReader(table);
+        int count = table.IsEmpty ? 0 : reader.ReadVarInt();
+        var builder = new RegistryBuilder<object>(Identifier.Minecraft("sound_event"), count);
+        object identity = new();
+        for (int id = 0; id < count; id++)
+        {
+            string name = reader.ReadString();
+            if (name.Length > 0)
+                builder.Add(id, Identifier.Parse(name), identity);
+        }
+        return builder.Build();
     }
 
     /// <summary>Builds the item registry for either era, keyed by the era's own wire id. Flattened protocols (1.13+) read the packed item-name table and key entries by flat index. Pre-flattening protocols read the packed legacy table (VarInt count; per item: string name, VarInt composite key) and key entries by the <c>(item_id &lt;&lt; 16) | damage</c> composite the 1.8 slot codec resolves, which is what makes inventory work on 1.8-1.12.2. Duplicate composites or identifiers keep the first occurrence: legacy datasets fold a few damage variants (1.8 potions) onto one name, and those variants still resolve through the codec's base-composite fallback with the damage carried as a component.</summary>
@@ -105,10 +142,25 @@ public static partial class JavaGameData
 
             var flatReader = new PacketReader(flat);
             int flatCount = flatReader.ReadVarInt();
+            IBlockMiningSource mining = BlockMiningData(protocol);
+            FrozenDictionary<Identifier, IReadOnlyDictionary<DataComponentType, object>> attacks = ReadItemAttackDefaults(protocol);
             for (int id = 0; id < flatCount; id++)
             {
                 string name = flatReader.ReadString();
-                items.Add(id, Identifier.Parse(name), new ItemDefinition());
+                Identifier key = Identifier.Parse(name);
+                ItemDefinition definition = new();
+                Dictionary<DataComponentType, object>? components = null;
+                if (mining.TryGetDefaultTool(key, out var tool) && tool is not null)
+                    components = new Dictionary<DataComponentType, object> { [DataComponents.Tool] = tool };
+                if (attacks.TryGetValue(key, out var attack))
+                {
+                    components ??= [];
+                    foreach ((DataComponentType type, object value) in attack)
+                        components.Add(type, value);
+                }
+                if (components is not null)
+                    definition = definition with { DefaultComponents = components.ToFrozenDictionary() };
+                items.Add(id, key, definition);
             }
             return items.Build();
         }

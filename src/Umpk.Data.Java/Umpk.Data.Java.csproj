@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
+    <InternalsVisibleTo Include="Umpk.Data.Java.Tests" />
   </ItemGroup>
 </Project>

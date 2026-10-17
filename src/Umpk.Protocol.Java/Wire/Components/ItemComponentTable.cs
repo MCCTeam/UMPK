@@ -234,6 +234,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.WrittenBookContent,
             ItemComponentCodecs.Trim,
             ItemComponentCodecs.Tool,
+            ItemComponentCodecs.PiercingWeapon,
             layout.AttributeDisplay ? ItemComponentCodecs.AttributeModifiersV26_2 : ItemComponentCodecs.AttributeModifiersV1_21_5,
 
             // Fixed-shape components shared by protocols 770 and 776.
@@ -372,6 +373,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.Profile,
             ItemComponentCodecs.WritableBookContent,
             ItemComponentCodecs.WrittenBookContentLegacy,
+            ItemComponentCodecs.ToolLegacy,
 
             // Only components whose 1.20.6/1.21.1 payload matches the bound implementation are here;
             // era-specific variants get their own codec (Unbreakable is a bool here, zero bytes on 770+; custom_model_data is a single VarInt here, four lists on 770+).

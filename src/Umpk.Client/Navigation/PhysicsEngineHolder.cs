@@ -23,6 +23,7 @@ internal sealed class PhysicsEngineHolder
     private PlayerPhysics? _engine;
     private WorldPhysicsView? _view;
     private Umpk.Game.World.World? _installedWorld;
+    private long _installedPlayerLifetime;
     private readonly MovingPistonTracker _pistons;
 
     /// <summary>The held key record requested by the controller on the most recent physical tick.</summary>
@@ -92,26 +93,29 @@ internal sealed class PhysicsEngineHolder
             Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(services.Version.Version.Protocol));
     }
 
-    /// <summary>Ensures the engine exists once the world is available, and rebuilds it whenever a DIFFERENT world has been installed; resets it at the current position either way.</summary>
-    /// <remarks>The guard is world IDENTITY, not "is there an engine". <c>WorldPhysicsView</c> closes over the world instance it was built from, so a respawn or dimension change (which calls <c>ClientState.InstallWorld</c> with a brand new <c>World</c>) would otherwise leave the engine colliding against the world the session left behind: solid where the new dimension is air and air where it is solid. This runs on the idle tick and on both navigation paths, so it stays a null check plus a reference comparison in the steady state.</remarks>
+    /// <summary>Ensures the engine exists once the world is available, and rebuilds it when the world or local player lifetime changes.</summary>
+    /// <remarks>The collision view belongs to the level, while the physics engine belongs to its local player. A same-dimension respawn retains the level and replaces the player. Steady-state calls preserve accumulated physics.</remarks>
     public void EnsureEngine()
     {
         Umpk.Game.World.World? world = _services.State.WorldOrNull;
         if (world is null)
             return;
 
-        if (_engine is not null && ReferenceEquals(_installedWorld, world))
+        bool sameWorld = ReferenceEquals(_installedWorld, world);
+        if (_engine is not null && sameWorld && _installedPlayerLifetime == _services.State.PlayerLifetime)
             return;
 
         _installedWorld = world;
+        _installedPlayerLifetime = _services.State.PlayerLifetime;
         _holdClimbable = false;
         _holdAgainstCurrent = null;
         LastRequestedInput = MovementInput.None;
         LastAppliedInput = MovementInput.None;
 
-        // A respawn or dimension change replaces the world; a piston that was mid-extension in the world the session left behind must not keep pushing in the new one.
-        _pistons.Clear();
-        _view = new WorldPhysicsView(world, _shapes);
+        // Moving pistons belong to the level and survive a same-dimension player replacement.
+        if (!sameWorld)
+            _pistons.Clear();
+        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol), PhysicsProfile.BlockCollisionQueryForProtocol(_services.Version.Version.Protocol));
         _engine = new PlayerPhysics(_view, _profile);
         SelfState self = _services.State.Self;
         _engine.Reset(self.Position, self.Yaw, self.Pitch);
@@ -408,10 +412,10 @@ internal sealed class PhysicsEngineHolder
         _pistons.OnBlockEvent(position, action, param);
 
     /// <summary>Ticks the live moving pistons and publishes any displacement into self state.</summary>
-    /// <remarks>Called after the tick's movement send because entity movement precedes block-entity piston motion. Putting it before the send would report the push one tick earlier than vanilla does, which is a divergence even though it would look like an improvement against a server that is racing the same two ticks.</remarks>
+    /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>
     public void TickPistons()
     {
-        if (_engine is null || _pistons.ActiveCount == 0)
+        if (!_services.State.WorldTicks.RunsNormally || _engine is null || _pistons.ActiveCount == 0)
             return;
 
         _pistons.Tick(_engine);
@@ -440,7 +444,7 @@ internal sealed class PhysicsEngineHolder
         if (world.GetColumn(cell) is null)
             return true;
 
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2).WithCollisionQueryEra(_view.CollisionQueryEra);
         var ctx = new CalculationContext(
             planning,
             options,
@@ -466,7 +470,7 @@ internal sealed class PhysicsEngineHolder
 
         BlockPos start = BlockPos.Containing(_services.State.Self.Position);
         BlockPos goalHint = ApproximateGoal(goal, start);
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24).WithCollisionQueryEra(_view.CollisionQueryEra);
 
         // The player half of the snapshot, read here for the same reason the region and the air supply are: everything the off-loop search may price has to be observed once, on the loop.
         Umpk.Pathfinding.Core.PathfinderCapabilities capabilities = CapabilityCapture.From(
@@ -873,7 +877,7 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>Re-seeds the engine position AND velocity after a server teleport. Called from the player-position apply path with self state already holding the absolute post-teleport position, rotation and delta movement. Creates the engine first when the world is available but no engine exists yet, so a teleport that lands before the first tick seeds the engine at the server's position rather than at the origin.</summary>
-    /// <remarks><see cref="PlayerPhysics.Reset(Vec3d, float, float)"/> zeroes the velocity (it models a spawn), so the resolved delta movement is pushed back afterwards. Position correction preserves the server-reported velocity on every protocol.</remarks>
+    /// <remarks>The existing player's pose, fall, contact, environment, and input state survive a correction. A new world or player lifetime starts fresh through <see cref="EnsureEngine"/>.</remarks>
     public void ResyncPosition()
     {
         EnsureEngine();
@@ -884,14 +888,13 @@ internal sealed class PhysicsEngineHolder
         // A server teleport ends any hold: the player is no longer where it was holding station.
         _holdClimbable = false;
         _holdAgainstCurrent = null;
-        _engine.Reset(self.Position, self.Yaw, self.Pitch);
-        _engine.SetVelocity(self.Velocity);
+        _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
     }
 
     /// <summary>Pushes the tracked self velocity into the engine and changes nothing else. Called from the <c>set_entity_motion</c> apply path once a server-applied velocity (knockback, explosion, piston, bounce) has landed in self state.</summary>
     /// <remarks>
-    /// This is deliberately NOT <see cref="ResyncPosition"/>. That models a teleport and calls <see cref="PlayerPhysics.Reset(Vec3d, float, float)"/>, which clears fall distance, ground state, pose, the collision flags and the water/lava sensing. A server velocity packet changes only velocity, so a knockback must not reset the fall the player was already in.
+    /// A velocity push preserves the existing position, pose, fall, contact, environment, and input state.
     /// <para>The velocity does not need to be re-read here on the next tick: <see cref="PlayerPhysics.Step"/> consumes and updates the engine's own velocity field, and <see cref="SyncSelf"/> publishes the result back. Creating the engine first matters for a velocity that arrives before the first tick; <see cref="EnsureEngine"/> seeds it from the same self state.</para>
     /// </remarks>
     public void ApplyVelocity()

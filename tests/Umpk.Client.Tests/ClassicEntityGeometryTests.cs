@@ -23,18 +23,24 @@ public sealed class ClassicEntityGeometryTests
 {
     public static IEnumerable<object[]> Releases()
     {
-        using JsonDocument document = ReadNative();
-        foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
-            yield return [release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32()];
+        foreach (string fixture in new[] { "ClassicVillagerGeometry", "ClassicFarmGeometry" })
+        {
+            using JsonDocument document = ReadNative(fixture);
+            foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
+            {
+                string entity = release.TryGetProperty("entity", out JsonElement value) ? value.GetString()!.Split(':')[1] : "villager";
+                yield return [release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32(), entity, fixture];
+            }
+        }
     }
 
     [Theory]
     [MemberData(nameof(Releases))]
-    public async Task SignedAgeBytesMatchEveryNativeChildPredicate(string release, int caseIndex)
+    public async Task SignedAgeBytesMatchEveryNativeChildPredicate(string release, int caseIndex, string entity, string fixture)
     {
-        using JsonDocument document = ReadNative();
+        using JsonDocument document = ReadNative(fixture);
         JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
-        await using Session session = await Session.CreateAsync(release);
+        await using Session session = await Session.CreateAsync(release, entity);
         var point = new Vec3d(1.5, 64, 1.5);
         await session.LoadAroundAsync(point);
         await session.SpawnAsync(point);
@@ -44,18 +50,19 @@ public sealed class ClassicEntityGeometryTests
             await session.TickAsync();
             await session.ReapplyAsync();
             bool baby = row.GetProperty("child").GetBoolean();
-            float width = baby ? .3F : .6F, height = baby ? .9F : 1.8F;
+            JsonElement size = native.GetProperty("rows").EnumerateArray().First(value => (value.GetProperty("from").GetInt32() < 0) == baby).GetProperty("before_size");
+            float width = size[0].GetSingle(), height = size[1].GetSingle();
             Assert.Equal(new Aabb(point.X - width / 2F, point.Y, point.Z - width / 2F, point.X + width / 2F, point.Y + height, point.Z + width / 2F), await session.BoundsAsync());
         }
     }
 
     [Theory]
     [MemberData(nameof(Releases))]
-    public async Task MetadataPositionAndSessionTickMatchEveryNativeSizePhase(string release, int caseIndex)
+    public async Task MetadataPositionAndSessionTickMatchEveryNativeSizePhase(string release, int caseIndex, string entity, string fixture)
     {
-        using JsonDocument document = ReadNative();
+        using JsonDocument document = ReadNative(fixture);
         JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
-        await using Session session = await Session.CreateAsync(release);
+        await using Session session = await Session.CreateAsync(release, entity);
         foreach (JsonElement row in native.GetProperty("rows").EnumerateArray())
         {
             JsonElement value = native.GetProperty("positions")[row.GetProperty("position").GetInt32()];
@@ -98,9 +105,9 @@ public sealed class ClassicEntityGeometryTests
         Assert.Equal(new Aabb(adult.MinX, adult.MinY, adult.MinZ, adult.MinX + .3F, adult.MinY + .9F, adult.MinZ + .3F), await session.BoundsAsync());
     }
 
-    private static JsonDocument ReadNative()
+    private static JsonDocument ReadNative(string fixture)
     {
-        using Stream stream = typeof(ClassicEntityGeometryTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.ClassicVillagerGeometry.native.json.gz")!;
+        using Stream stream = typeof(ClassicEntityGeometryTests).Assembly.GetManifestResourceStream($"Umpk.Client.Tests.Fixtures.{fixture}.native.json.gz")!;
         using var gzip = new GZipStream(stream, CompressionMode.Decompress);
         return JsonDocument.Parse(gzip);
     }
@@ -111,11 +118,13 @@ public sealed class ClassicEntityGeometryTests
         private readonly FakeJavaServer _server = FakeJavaServer.Create();
         private readonly ObservedTickSource _ticks = new();
         private readonly JavaVersion _version;
+        private readonly string _entityName;
         private long _marker;
 
-        private Session(JavaVersion version)
+        private Session(JavaVersion version, string entityName)
         {
             _version = version;
+            _entityName = entityName;
             Client = new UmpkClientBuilder()
                 .UseVersion(version)
                 .UseProfile(new GameProfile(Guid.NewGuid(), "ClassicGeometry"))
@@ -132,11 +141,11 @@ public sealed class ClassicEntityGeometryTests
 
         private UmpkClient Client { get; }
 
-        internal static async Task<Session> CreateAsync(string release)
+        internal static async Task<Session> CreateAsync(string release, string entityName = "villager")
         {
             Assert.True(JavaVersions.TryGetByName(release, out JavaVersion? version));
             Assert.Equal(47, version!.Version.Protocol);
-            var session = new Session(version);
+            var session = new Session(version, entityName);
             try
             {
                 await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session._budget.Token), ScriptedServer.DriveToPlayAsync(session._server, version, session._budget.Token));
@@ -161,8 +170,8 @@ public sealed class ClassicEntityGeometryTests
 
         internal Task SpawnAsync(Vec3d point)
         {
-            Assert.True(JavaGameData.Registries(47).EntityTypes.TryGet(Identifier.Minecraft("villager"), out RegistryEntry<EntityTypeDefinition> villager));
-            return SendAsync(new ClientboundAddMobPacket(42, villager.NetworkId, point.X, point.Y, point.Z, 0, 0, 0, 0, 0, 0, new EntityMetadataList([], [])));
+            Assert.True(JavaGameData.Registries(47).EntityTypes.TryGet(Identifier.Minecraft(_entityName), out RegistryEntry<EntityTypeDefinition> type));
+            return SendAsync(new ClientboundAddMobPacket(42, type.NetworkId, point.X, point.Y, point.Z, 0, 0, 0, 0, 0, 0, new EntityMetadataList([], [])));
         }
 
         internal Task AgeAsync(sbyte value) => SendAsync(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(12, MetadataValue.Byte(value))], [])));
@@ -172,7 +181,7 @@ public sealed class ClassicEntityGeometryTests
         internal Task<Aabb> BoundsAsync() => Client.InvokeAsync(client =>
         {
             Entity entity = Assert.IsType<Entity>(client.State.Entities.Get(42));
-            Assert.True(client.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(47), out Aabb bounds, out bool blocksBuilding), "Classic villager geometry is unavailable.");
+            Assert.True(client.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(47), out Aabb bounds, out bool blocksBuilding), "Classic entity geometry is unavailable.");
             Assert.True(blocksBuilding);
             return bounds;
         }, _budget.Token);

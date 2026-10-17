@@ -13,6 +13,7 @@ from verify_entity_box_transitions import centered, finite, refresh, size, verif
 
 POSES = {name: index for index, name in enumerate(("STANDING", "FALL_FLYING", "SLEEPING", "SWIMMING", "SPIN_ATTACK", "CROUCHING", "LONG_JUMPING", "DYING", "CROAKING", "USING_TONGUE", "SITTING", "ROARING", "SNIFFING", "EMERGING", "DIGGING", "SLIDING", "SHOOTING", "INHALING"))}
 POSES["SNEAKING"] = POSES["CROUCHING"]
+CLASSIC_ROLES = {"minecraft:cow": ("Cow", 92), "minecraft:pig": ("Pig", 90), "minecraft:sheep": ("Sheep", 91), "minecraft:chicken": ("Chicken", 93)}
 
 
 def villager_profile(raw: dict, *, scale_attribute: str) -> dict:
@@ -95,6 +96,36 @@ def classic_villager_profile(raw: dict) -> dict:
         raise ValueError("Classic native size phases are incomplete")
     # 1.8-client-decompiled aqu.java: updateEntityWithOptionalForce requires loaded columns across an inclusive 32-block horizontal radius before the living tick.
     return {"selector": [12, "negative_byte", 128, 0], "pose_index": -1, "refresh": "retain_minimum", "refresh_timing": "living_tick", "required_loaded_radius": 32, "scale_attribute": "", "variants": [[int(baby), 0, *reported[baby], False, True] for baby in (False, True)]}
+
+
+def verify_classic_role_identity(raw: dict, receipt: dict, binding: dict, sources: dict[str, str], helper_source_sha256: str, helper_class_sha256: str) -> None:
+    entity = receipt.get("entity")
+    actor, ageable = binding.get("villager"), binding.get("ageable")
+    if entity not in CLASSIC_ROLES or not isinstance(actor, str) or not actor or raw.get("entity") != entity or raw.get("entity_class") != actor or receipt.get("registry_class") != actor:
+        raise ValueError("Classic role identity differs from its original actor")
+    legacy_name, numeric = CLASSIC_ROLES[entity]
+    if type(receipt.get("registry_numeric_id")) is not int or receipt["registry_numeric_id"] != numeric or raw.get("age_phase_owner") != ageable or raw.get("child_predicate_owner") != ageable:
+        raise ValueError("Classic role registry or age-method owner differs")
+    if receipt.get("helper_source_sha256") != helper_source_sha256 or receipt.get("helper_class_sha256") != helper_class_sha256:
+        raise ValueError("Classic role helper source or class bytes changed")
+    hierarchy = [actor]
+    while hierarchy[-1] != ageable:
+        text = sources.get(hierarchy[-1] + ".java", "")
+        parent = re.search(r"public (?:abstract )?class " + re.escape(hierarchy[-1]) + r" extends (\w+)", text)
+        if parent is None or parent[1] in hierarchy or len(hierarchy) >= 32:
+            raise ValueError("Classic actor does not inherit the audited ageable base")
+        hierarchy.append(parent[1])
+    if binding.get("hierarchy") != hierarchy:
+        raise ValueError("Classic role hierarchy differs from its original source")
+    required = {binding[key] for key in ("root", "living", "world", "ageable", "data", "entity_registry")} | set(hierarchy)
+    if not {name + ".java" for name in required}.issubset(sources):
+        raise ValueError("Classic role source coverage is incomplete")
+    registry = sources[binding["entity_registry"] + ".java"]
+    if re.search(r"\ba\(\s*" + re.escape(actor) + r'\.class,\s*"' + legacy_name + r'",\s*' + str(numeric) + r"\b", registry) is None:
+        raise ValueError("Classic role class does not match its original registry entry")
+    origins = raw.get("origins", {})
+    if set(origins) != required - {binding["entity_registry"]} or len(set(origins.values())) != 1 or not all(isinstance(value, str) and value for value in origins.values()):
+        raise ValueError("Classic role origins do not cover its original hierarchy")
 
 
 def legacy_villager_profile(raw: dict) -> dict:
@@ -272,9 +303,10 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
     raw = json.loads(path.read_text(encoding="utf-8"))
     role = "entity" in receipt
     mapped = receipt.get("format") == "mapped-role-v1"
-    if receipt.get("format") not in (None, "mapped-role-v1") or (mapped and not role):
+    classic = receipt.get("format") == "classic-role-v1"
+    if receipt.get("format") not in (None, "mapped-role-v1", "classic-role-v1") or ((mapped or classic) and not role) or (classic and protocol != 47):
         raise ValueError("Unsupported native entity geometry receipt format")
-    profile = role_profile(raw) if role else legacy_villager_profile(raw)
+    profile = classic_villager_profile(raw) if classic else role_profile(raw) if role else legacy_villager_profile(raw)
     if role and (receipt["entity"] != raw.get("entity") or profile != receipt.get("profile")):
         raise ValueError("Native entity role receipt differs from measured geometry")
     if receipt["status"] != "complete" or sha(path) != receipt["measurement_sha256"] or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
@@ -293,7 +325,15 @@ def read_legacy(root: Path, official: Path, catalog: list[dict]) -> dict:
         if sha(official / f"{version}-client-decompiled" / name) != expected:
             raise ValueError(f"Audited geometry source changed: {version}/{name}")
     scale_attribute = ""
-    if mapped:
+    if classic:
+        path = root / "bindings.json"
+        if sha(path) != receipt.get("binding_sha256"):
+            raise ValueError("Classic role binding changed")
+        binding = json.loads(path.read_text(encoding="utf-8"))["geometry"]
+        helper_root = root.parents[1]
+        sources = {name: (official / f"{version}-client-decompiled" / name).read_text(encoding="utf-8") for name in source_hashes}
+        verify_classic_role_identity(raw, receipt, binding, sources, sha(helper_root / "ClassicGeometryDump.java"), sha(helper_root / "classes/ClassicGeometryDump.class"))
+    elif mapped:
         entity, living = "net.minecraft.world.entity.Entity", "net.minecraft.world.entity.LivingEntity"
         owners = raw.get("method_owners", {})
         expected = {"dimensions": living, "scale": living, "position": entity, "refresh": entity, "box": entity}

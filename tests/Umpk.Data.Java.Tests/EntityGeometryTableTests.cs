@@ -10,6 +10,27 @@ namespace Umpk.Data.Java.Tests;
 public sealed class EntityGeometryTableTests
 {
     [Theory]
+    [InlineData("cow", false, .9F, 1.3F)]
+    [InlineData("cow", true, .45F, .65F)]
+    [InlineData("pig", false, .9F, .9F)]
+    [InlineData("pig", true, .45F, .45F)]
+    [InlineData("sheep", false, .9F, 1.3F)]
+    [InlineData("sheep", true, .45F, .65F)]
+    [InlineData("chicken", false, .4F, .7F)]
+    [InlineData("chicken", true, .2F, .35F)]
+    public void ClassicFarmAnimalsUseMeasuredAgeBounds(string name, bool baby, float width, float height)
+    {
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(47);
+        var entity = Identifier.Minecraft(name);
+        Assert.True(source.TryGetRule(entity, out EntityGeometryRule rule));
+        Assert.Equal(EntityGeometrySelectorKind.NegativeByte, rule.SelectorKind);
+        Assert.Equal(EntityGeometryRefreshTiming.LivingTick, rule.RefreshTiming);
+        Assert.Equal(32, rule.RequiredLoadedRadius);
+        Assert.True(source.TryGetDimensions(entity, baby, EntityPose.Standing, out EntityGeometryDimensions dimensions));
+        Assert.Equal(new EntityGeometryDimensions(width, height, false, true), dimensions);
+    }
+
+    [Theory]
     [InlineData("metadata")]
     [InlineData("negative-metadata")]
     [InlineData("pose-only-true-selector")]

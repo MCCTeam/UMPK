@@ -14,6 +14,7 @@
     <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyVillagerGeometry.native.json" />
     <EmbeddedResource Include="Fixtures/ClassicVillagerGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/ClassicFarmGeometry.native.json.gz" />
     <EmbeddedResource Include="Fixtures/EntityRoleGeometry.native.json" />
     <EmbeddedResource Include="Fixtures/MappedEntityRoleGeometry.native.json.gz" />
     <EmbeddedResource Include="../../tools/extraction/tests/fixtures/villager-box-transitions-1.14.4.json" Link="Fixtures/VillagerGeometry1.14.4.native.json" />

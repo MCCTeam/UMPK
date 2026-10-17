@@ -156,17 +156,19 @@ Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicke
 
 `extract_entity_geometry.py` writes audited entity dimensions and metadata refresh rules to `entity-geometry.json`. It checks the native age/pose transition phases, report hashes and official client/server hashes before extracting the selected protocol representatives. Preserve the complete measurement roots outside Git.
 
-Use the classic extractor for protocol 47. It verifies all ten 1.8 release aliases, their original client classes and artifact hashes before writing the signed-age selector and deferred living-tick contract. Metadata index 12 selects baby dimensions when its signed byte is negative. Adult dimensions are 0.6F by 1.8F; baby dimensions are 0.3F by 0.9F. Metadata updates and position reapplication keep cached dimensions until the eligible living phase runs. The original world source requires loaded columns across an inclusive 32-block horizontal radius.
+Use the classic extractor for protocol 47. It verifies all ten 1.8 release aliases, their original client classes and artifact hashes before writing the signed-age selector and deferred living-tick contract. Metadata index 12 selects baby dimensions when its signed byte is negative. Villager adult dimensions are 0.6F by 1.8F; baby dimensions are 0.3F by 0.9F. Metadata updates and position reapplication keep cached dimensions until the eligible living phase runs. The original world source requires loaded columns across an inclusive 32-block horizontal radius.
 
 ```bash
 python3 tools/extraction/extract_classic_entity_geometry.py \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/classic-villager-geometry-all-20261017-v1" \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --data data/java \
-  --fixture tests/Umpk.Client.Tests/Fixtures/ClassicVillagerGeometry.native.json.gz
+  --fixture tests/Umpk.Client.Tests/Fixtures/ClassicVillagerGeometry.native.json.gz \
+  --roles "$MINECRAFT_OFFICIAL_ROOT/runs/classic-farm-geometry-all-20261017-v2" \
+  --role-fixture tests/Umpk.Client.Tests/Fixtures/ClassicFarmGeometry.native.json.gz
 ```
 
-Add `--check` to verify both outputs without rewriting them. The native measurements cover the watcher predicate and size phases; complete mob movement and other dynamic geometry require their own evidence.
+Add `--check` to verify the dataset and both fixtures without rewriting them. The four farm-animal types require all ten release aliases. Their explicit `classic-role-v1` receipts retain canonical entity identity, original registry class and numeric ID, source hierarchy, method owners and helper source/class hashes. Cows, pigs, sheep and chickens use the same signed-age selector and deferred size phase, with their own measured dimensions. The separate role fixture contains 10,240 predicates and 3,000 size transitions in four deduplicated cases. The existing villager rule and fixture remain unchanged. These measurements cover the watcher predicate and size phases; complete mob movement and other dynamic geometry require their own evidence.
 
 ```bash
 legacy_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/legacy-entity-geometry-batch-20261017-v1"

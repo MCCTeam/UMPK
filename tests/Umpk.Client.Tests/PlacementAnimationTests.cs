@@ -35,14 +35,14 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> VillagerGeometryCases()
     {
-        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
+        foreach ((int protocol, int babyIndex) in new[] { (210, 12), (315, 12), (498, 14), (573, 15), (755, 16), (769, 16), (774, 16), (776, 16) })
         {
             yield return [protocol, babyIndex, false, EntityPose.Standing, 8.5, 65.0, true];
             yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 65.0, false];
             yield return [protocol, babyIndex, false, EntityPose.Standing, 1.5, 64.0, false];
             yield return [protocol, babyIndex, true, EntityPose.Standing, 1.5, 64.0, true];
             yield return [protocol, babyIndex, true, EntityPose.Standing, 1.5, 65.0, false];
-            if (protocol != 210)
+            if (protocol >= 477)
                 yield return [protocol, babyIndex, false, EntityPose.Sleeping, 1.5, 64.0, true];
         }
     }
@@ -72,11 +72,13 @@ public sealed class PlacementAnimationTests
     }
 
     [Theory]
-    [InlineData(1.5)]
-    [InlineData(8.5)]
-    public async Task LegacyItemDropsDoNotSuppressPlacementSwings(double x)
+    [InlineData(210, 1.5)]
+    [InlineData(210, 8.5)]
+    [InlineData(315, 1.5)]
+    [InlineData(315, 8.5)]
+    public async Task LegacyItemDropsDoNotSuppressPlacementSwings(int protocol, double x)
     {
-        await using var harness = new Harness(210);
+        await using var harness = new Harness(protocol);
         Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("item"), out RegistryEntry<EntityTypeDefinition> type));
         var entity = new Entity(51, Guid.NewGuid(), type) { Position = new Vec3d(x, 65, 1.5) };
         harness.State.Entities.Add(entity);

@@ -33,7 +33,7 @@ public sealed class EntityGeometryStateTests
 
     public static IEnumerable<object[]> NativeTransitions()
     {
-        foreach ((int protocol, string version) in new[] { (210, "1.10.2"), (498, "1.14.4") })
+        foreach ((int protocol, string version) in new[] { (210, "1.10.2"), (315, "1.11"), (498, "1.14.4") })
         {
             using JsonDocument document = ReadNative(version);
             for (int index = 0; index < document.RootElement.GetProperty("rows").GetArrayLength(); index++)
@@ -47,7 +47,7 @@ public sealed class EntityGeometryStateTests
     {
         using JsonDocument document = ReadNative(versionName);
         JsonElement native = document.RootElement, row = native.GetProperty("rows")[index];
-        bool legacy = protocol == 210;
+        bool legacy = protocol < 477;
         int babyIndex = native.GetProperty("metadata_index").GetInt32();
         JsonElement point = native.GetProperty("positions")[row.GetProperty("position").GetInt32()];
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion? version));
@@ -87,6 +87,7 @@ public sealed class EntityGeometryStateTests
 
     [Theory]
     [InlineData(210, 12)]
+    [InlineData(315, 12)]
     [InlineData(498, 14)]
     [InlineData(755, 16)]
     public async Task MetadataCallbacksAndEqualPositionReapplicationKeepTheirNativeOrder(int protocol, int babyIndex)
@@ -106,7 +107,7 @@ public sealed class EntityGeometryStateTests
         await harness.ApplyAsync(Metadata(false));
 
         Assert.True(harness.State.EntityGeometry.TryGet(entity, source, out Aabb grown, out _));
-        double expectedMinimum = protocol == 498 ? 1.5 - .3F / 2.0 : original.MinX;
+        double expectedMinimum = protocol is 315 or 498 ? 1.5 - .3F / 2.0 : original.MinX;
         Assert.Equal(expectedMinimum, grown.MinX);
         Assert.Equal(expectedMinimum + .6F, grown.MaxX);
         Assert.Equal(new Vec3d(1.5, 64, 1.5), entity.Position);

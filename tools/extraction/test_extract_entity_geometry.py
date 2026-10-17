@@ -19,6 +19,29 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
         self.assertEqual("retain_minimum", profile["refresh"])
         self.assertEqual(-1, profile["pose_index"])
 
+    def test_legacy_1_11_shrinking_recenters_but_growth_retains_the_minimum(self) -> None:
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.11.json"
+        profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))
+        self.assertEqual("retain_minimum_on_growth", profile["refresh"])
+        self.assertEqual([12, "boolean", 1, 0], profile["selector"])
+        self.assertEqual(-1, profile["pose_index"])
+
+    def test_incomplete_or_invalid_legacy_measurements_are_rejected(self) -> None:
+        path = Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.11.json"
+        for defect in ("empty", "missing", "duplicate", "indices", "position", "callback", "metadata", "blocking"):
+            with self.subTest(defect=defect):
+                raw = json.loads(path.read_text(encoding="utf-8"))
+                if defect == "empty": raw["positions"] = []; raw["rows"] = []
+                if defect == "missing": raw["rows"].pop()
+                if defect == "duplicate": raw["rows"].append(copy.deepcopy(raw["rows"][0]))
+                if defect == "indices": raw["rows"][0]["from"] = False
+                if defect == "position": raw["positions"][0][0] = float("nan")
+                if defect == "callback": raw["rows"][0]["after_sync"][0] += .01
+                if defect == "metadata": raw["metadata_index"] = -1
+                if defect == "blocking": raw["blocks_building"] = False
+                with self.assertRaises(ValueError):
+                    legacy_villager_profile(raw)
+
     def test_native_growth_retains_the_minimum_until_position_is_reapplied(self) -> None:
         profile = villager_profile(self.raw, scale_attribute="")
         self.assertEqual("retain_minimum_on_growth", profile["refresh"])

@@ -50,11 +50,16 @@ def villager_profile(raw: dict, *, scale_attribute: str) -> dict:
 
 def legacy_villager_profile(raw: dict) -> dict:
     positions = raw["positions"]
+    if not positions or raw["blocks_building"] is not True or type(raw["metadata_index"]) is not int or raw["metadata_index"] != 12:
+        raise ValueError("Legacy villager contract is incomplete")
+    for position in positions:
+        finite(position, 3)
     expected = {(a, b, p) for a in range(2) for b in range(2) for p in range(len(positions))}
     seen, dimensions = set(), {}
+    models = {name: True for name in ("retain_minimum", "retain_minimum_on_growth", "recenter_on_refresh")}
     for row in raw["rows"]:
         key = (row["from"], row["to"], row["position"])
-        if key not in expected or key in seen:
+        if any(type(index) is not int for index in key) or key not in expected or key in seen:
             raise ValueError("Incomplete legacy villager transitions")
         seen.add(key)
         a, b, p = key
@@ -63,13 +68,22 @@ def legacy_villager_profile(raw: dict) -> dict:
             if dimensions.setdefault(state, measured) != measured:
                 raise ValueError("Inconsistent legacy villager dimensions")
         before = centered(positions[p], old)
-        synchronized = [*before[:3], before[0] + target[0], before[1] + target[1], before[2] + target[0]] if a != b else before
-        if row["before"] != before or row["after_sync"] != synchronized or row["after_position"] != centered(positions[p], target):
-            raise ValueError("Legacy villager callback or position bounds differ")
-    if seen != expected or raw["blocks_building"] is not True or raw["metadata_index"] != 12:
-        raise ValueError("Legacy villager contract is incomplete")
+        for name in ("before", "after_sync", "after_position"):
+            finite(row[name], 6)
+        if row["before"] != before or row["after_position"] != centered(positions[p], target):
+            raise ValueError("Legacy villager position bounds differ")
+        for model in models:
+            if a == b:
+                synchronized = before
+            elif model == "retain_minimum":
+                synchronized = [*before[:3], before[0] + target[0], before[1] + target[1], before[2] + target[0]]
+            else:
+                synchronized = refresh(before, old[0], target, positions[p], model == "retain_minimum_on_growth")
+            models[model] &= row["after_sync"] == synchronized
+    if seen != expected or sum(models.values()) != 1:
+        raise ValueError("Native transitions do not establish one complete legacy geometry profile")
     variants = [[age, 0, *next(row["after_size"] for row in raw["rows"] if row["to"] == age), False, True] for age in range(2)]
-    return {"selector": [12, "boolean", 1, 0], "pose_index": -1, "refresh": "retain_minimum", "scale_attribute": "", "variants": variants}
+    return {"selector": [12, "boolean", 1, 0], "pose_index": -1, "refresh": next(model for model, matches in models.items() if matches), "scale_attribute": "", "variants": variants}
 
 
 def sha(path: Path) -> str:
@@ -81,7 +95,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--measurements", type=Path, required=True)
     parser.add_argument("--transitions", type=Path, required=True)
-    parser.add_argument("--legacy", type=Path, required=True)
+    parser.add_argument("--legacy", type=Path, action="append", required=True)
     parser.add_argument("--official", type=Path, required=True)
     parser.add_argument("--data", type=Path, default=Path("data/java"))
     parser.add_argument("--check", action="store_true")
@@ -89,19 +103,27 @@ def main() -> None:
     catalog = json.loads((args.data / "versions.json").read_text(encoding="utf-8"))["versions"]
     geometry = {row["version"]: row for row in json.loads((args.measurements / "entity-placement-client-results.json").read_text(encoding="utf-8"))}
     transitions = {row["version"]: row for row in json.loads((args.transitions / "villager-box-transition-results.json").read_text(encoding="utf-8"))}
+    legacy = {}
+    for root in args.legacy:
+        receipt = json.loads((root / "result.json").read_text(encoding="utf-8"))
+        protocol = receipt.get("protocol", 210)
+        if protocol in legacy:
+            raise ValueError(f"Duplicate legacy geometry protocol: {protocol}")
+        legacy[protocol] = (root, receipt)
     selected = {}
     for version in catalog:
-        if version["name"] in geometry or version["protocol"] == 210:
+        if version["name"] in geometry or version["protocol"] in legacy:
             selected[version["protocol"]] = version
     for protocol, version in sorted(selected.items()):
         name = version["name"]
-        if protocol == 210:
-            receipt = json.loads((args.legacy / "result.json").read_text(encoding="utf-8"))
-            path = args.legacy / "geometry.json"
-            profile = legacy_villager_profile(json.loads(path.read_text(encoding="utf-8")))
-            if sha(path) != receipt["measurement_sha256"] or receipt["status"] != "complete":
+        if protocol in legacy:
+            root, receipt = legacy[protocol]
+            path = root / "geometry.json"
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            profile = legacy_villager_profile(raw)
+            if sha(path) != receipt["measurement_sha256"] or receipt["status"] != "complete" or receipt.get("version", "1.10.2") != name or receipt.get("witnesses", len(raw["rows"])) != len(raw["rows"]):
                 raise ValueError("Legacy measurement receipt mismatch")
-            proof = {"measurement_sha256": sha(path), "native_witnesses": receipt["witnesses"]}
+            proof = {"measurement_sha256": sha(path), "native_witnesses": len(raw["rows"])}
         else:
             receipt, transition_receipt = geometry[name], transitions[name]
             path = args.measurements / name / "entity-placement-client.json"

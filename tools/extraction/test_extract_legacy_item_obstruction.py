@@ -13,6 +13,13 @@ class LegacyItemObstructionTests(unittest.TestCase):
 
         self.assertEqual({"minecraft:item": 1, "minecraft:villager": 0}, item_rules(self.measurement(), {"minecraft:item", "minecraft:villager"}))
 
+    def test_1_11_uses_its_own_audited_class_binding(self) -> None:
+        from extract_legacy_item_obstruction import item_rules
+
+        raw = self.measurement()
+        raw.update(protocol=315, version="1.11", **{"class": "zi", "field_owner": "sm", "origins": {name: "original-1.11-client.jar" for name in ("zi", "sm", "ajq")}})
+        self.assertEqual({"minecraft:item": 1, "minecraft:villager": 0}, item_rules(raw, {"minecraft:item", "minecraft:villager"}))
+
     def test_missing_constructors_wrong_types_and_origins_are_rejected(self) -> None:
         from extract_legacy_item_obstruction import item_rules
 

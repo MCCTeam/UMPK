@@ -1,0 +1,44 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "version": "1.11",
+    "protocol": 315,
+    "client_sha256": "f0d11987ea743f55a2c03bf77216e6dc9baea7201cc7bf498ceb18043e984634",
+    "server_sha256": "3277965fd83d26944dfbd1b9740d95cf206985da330a1b3733868e4de7dc6f83",
+    "measurement_sha256": "9acd0f140f7556174f7c630c2aa7b593108c982e72f1c99a2824067f4ed08c82",
+    "native_witnesses": 12,
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep"
+  },
+  "schema": 1,
+  "entities": {
+    "minecraft:villager": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.975,
+          false,
+          true
+        ]
+      ]
+    }
+  }
+}

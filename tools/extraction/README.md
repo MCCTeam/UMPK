@@ -163,18 +163,24 @@ python3 tools/extraction/extract_entity_geometry.py \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-entity-native-all-20261017-v1" \
   --transitions "$MINECRAFT_OFFICIAL_ROOT/runs/villager-box-transitions-all-20261017-v1" \
   --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1" \
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-1.11-20261017-v1" \
   --check
 python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry.py
 ```
 
-The 33 datasets cover 1.10.2 and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. The generated interaction source also implements `IEntityGeometrySource`; unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
+The 34 datasets cover 1.10.2, 1.11 and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
 
-`extract_legacy_item_obstruction.py` adds the original 1.10.2 item entity's nonblocking rule. It verifies both native constructors, original client-class preservation and an audit of every write to the building flag. The remaining legacy entity keys retain unknown rules.
+`extract_legacy_item_obstruction.py` adds the original 1.10.2 and 1.11 item entities' nonblocking rules. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. The remaining legacy entity keys retain unknown rules.
 
 ```bash
 python3 tools/extraction/extract_legacy_item_obstruction.py \
   --data data/java \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-20261017-v1" \
+  --check
+python3 tools/extraction/extract_legacy_item_obstruction.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-1.11-20261017-v1" \
   --check
 ```

@@ -73,7 +73,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "1d38a917a1740e22d6a93c7dfeb27dbd3576283670f1cb7d5a8bff10943d4a87",
+    "tool_sha256": "98e8aee9ee2f6c03707a813f66bc59e0003c9a5b591cbc4b0e0dc6868bcd2ef1",
     "version": "1.10.2",
     "protocol": 210,
     "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
@@ -98,6 +98,6 @@
       "yk.java": "27871855a6c6ea6fc0eb11756800381b6dd67d1ac532b29d359de43149d40179",
       "yl.java": "c267682f309a79e24bf04b309a7aed94941fb512cc35c6be17ee1dda38e1884a"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its eight writers affect this in unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
+    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 8 writers affect this in unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
   }
 }

@@ -10,10 +10,12 @@ namespace Umpk.Data.Java.Tests;
 
 public sealed class BlockInteractionTableTests
 {
-    [Fact]
-    public void LegacyItemDropsHaveTheNativeNonblockingContract()
+    [Theory]
+    [InlineData(210)]
+    [InlineData(315)]
+    public void LegacyItemDropsHaveTheNativeNonblockingContract(int protocol)
     {
-        IBlockInteractionSource source = JavaGameData.BlockInteractionData(210);
+        IBlockInteractionSource source = JavaGameData.BlockInteractionData(protocol);
         Assert.True(source.IsAlwaysNonObstructingEntity(Identifier.Minecraft("item")));
         Assert.False(source.IsAlwaysNonObstructingEntity(Identifier.Minecraft("villager")));
         Assert.False(source.TryGetFixedEntityDimensions(Identifier.Minecraft("item"), out _, out _));

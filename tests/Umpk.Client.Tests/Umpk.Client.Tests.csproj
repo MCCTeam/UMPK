@@ -13,6 +13,7 @@
     <EmbeddedResource Include="Fixtures/EntityIngressAngles.native.json" />
     <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
     <EmbeddedResource Include="../../tools/extraction/tests/fixtures/villager-box-transitions-1.10.2.json" Link="Fixtures/VillagerGeometry1.10.2.native.json" />
+    <EmbeddedResource Include="../../tools/extraction/tests/fixtures/villager-box-transitions-1.11.json" Link="Fixtures/VillagerGeometry1.11.native.json" />
     <EmbeddedResource Include="../../tools/extraction/tests/fixtures/villager-box-transitions-1.14.4.json" Link="Fixtures/VillagerGeometry1.14.4.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
     <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />

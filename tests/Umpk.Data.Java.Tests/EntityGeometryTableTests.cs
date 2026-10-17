@@ -73,6 +73,7 @@ public sealed class EntityGeometryTableTests
 
     [Theory]
     [InlineData(210, 12, EntityDimensionsRefresh.RetainMinimum, .3F, .975F)]
+    [InlineData(315, 12, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
     [InlineData(498, 14, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
     [InlineData(573, 15, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
     [InlineData(754, 15, EntityDimensionsRefresh.RetainMinimumOnGrowth, .3F, .975F)]
@@ -93,8 +94,8 @@ public sealed class EntityGeometryTableTests
         Assert.Equal(new EntityGeometryDimensions(.6F, 1.95F, false, true), adult);
         Assert.True(source.TryGetDimensions(villager, true, EntityPose.Standing, out EntityGeometryDimensions baby));
         Assert.Equal(new EntityGeometryDimensions(babyWidth, babyHeight, false, true), baby);
-        Assert.Equal(protocol != 210, source.TryGetDimensions(villager, true, EntityPose.Sleeping, out EntityGeometryDimensions sleeping));
-        if (protocol != 210)
+        Assert.Equal(protocol >= 477, source.TryGetDimensions(villager, true, EntityPose.Sleeping, out EntityGeometryDimensions sleeping));
+        if (protocol >= 477)
             Assert.Equal(new EntityGeometryDimensions(.2F, .2F, true, true), sleeping);
         Assert.False(source.TryGetDimensions(villager, false, EntityPose.Unknown, out _));
         Assert.False(source.TryGetRule(Identifier.Minecraft("missing"), out _));

@@ -396,6 +396,7 @@ internal sealed partial class Emitter
         ("BlockPush", "block-push"),
         ("BlockMining", "block-mining"),
         ("BlockInteractions", "block-interactions"),
+        ("EntityGeometry", "entity-geometry"),
         ("BlockTargeting", "block-targeting"),
         ("EnchantmentDefs", "enchantment-definition"),
         ("MobEffectDefs", "mob-effect definition"),

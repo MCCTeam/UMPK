@@ -263,6 +263,7 @@ internal static class Descriptor
     public static ReadOnlySpan<byte> BlockPush => SharedTables.BlockPushV763;
     public static ReadOnlySpan<byte> BlockMining => SharedTables.BlockMiningV763;
     public static ReadOnlySpan<byte> BlockInteractions => SharedTables.BlockInteractionsV763;
+    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.EntityGeometryV761;
     public static ReadOnlySpan<byte> BlockTargeting => SharedTables.BlockTargetingV763;
     public static ReadOnlySpan<byte> EnchantmentDefs => SharedTables.EnchantmentsV759;
     public static ReadOnlySpan<byte> MobEffectDefs => SharedTables.MobEffectsV759;

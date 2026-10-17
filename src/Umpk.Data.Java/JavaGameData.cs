@@ -21,6 +21,7 @@ public static partial class JavaGameData
     private static readonly ConcurrentDictionary<int, IBlockPushSource> PushCache = new();
     private static readonly ConcurrentDictionary<int, IBlockMiningSource> MiningCache = new();
     private static readonly ConcurrentDictionary<int, IBlockInteractionSource> InteractionCache = new();
+    private static readonly ConcurrentDictionary<int, IEntityGeometrySource> GeometryCache = new();
 
     /// <summary>The lowest protocol whose item ids are index-based (1.13, the flattening).</summary>
     private const int FirstFlattenedProtocol = 393;
@@ -67,7 +68,11 @@ public static partial class JavaGameData
 
     /// <summary>Returns cached native block-use and default-item placement contracts. Missing measurements and specialized rules remain explicit unknowns.</summary>
     public static IBlockInteractionSource BlockInteractionData(int protocol) =>
-        InteractionCache.GetOrAdd(protocol, static p => JavaBlockInteractions.Create(BlockInteractions(p)));
+        InteractionCache.GetOrAdd(protocol, static p => JavaBlockInteractions.Create(BlockInteractions(p), (JavaEntityGeometry)EntityGeometryData(p)));
+
+    /// <summary>Returns cached native entity dimensions and metadata refresh rules without loading block-interaction tables. Unmeasured entity states remain unknown.</summary>
+    public static IEntityGeometrySource EntityGeometryData(int protocol) =>
+        GeometryCache.GetOrAdd(protocol, static p => JavaEntityGeometry.Create(EntityGeometry(p)));
 
     /// <summary>Builds (and caches) the version-accurate <see cref="IMetadataKeySource"/> for a protocol: which tier-1 entity-metadata index each semantic key occupies on that era. Without one, every tier-2 read misses and typed entity properties such as the custom name stay empty even though the raw value was decoded and stored. Safe to call repeatedly.</summary>
     public static IMetadataKeySource EntityMetadataKeys(int protocol) =>

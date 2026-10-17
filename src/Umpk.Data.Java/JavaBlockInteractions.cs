@@ -1,4 +1,5 @@
 using System.Collections.Frozen;
+using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
@@ -14,10 +15,11 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
     private readonly FrozenDictionary<Identifier, (float Width, float Height)> _fixedBoxes;
     private readonly ReplacementRange[] _replacement;
     private readonly FrozenDictionary<int, ReplacementRange[]> _belowOverrides;
+    private readonly JavaEntityGeometry _geometry;
 
     private readonly record struct ReplacementRange(int First, int Last, byte Flags);
 
-    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, GeometryTables geometry)
+    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, JavaEntityGeometry geometry)
     {
         _blocks = blocks.ToFrozenDictionary();
         _items = items.ToFrozenDictionary();
@@ -28,7 +30,9 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         _geometry = geometry;
     }
 
-    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.Rules.Count != 0;
+    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.HasData;
+    public bool TryGetRule(Identifier entityType, out EntityGeometryRule rule) => _geometry.TryGetRule(entityType, out rule);
+    public bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions) => _geometry.TryGetDimensions(entityType, selector, pose, out dimensions);
     public bool TryGetBlock(Identifier block, out BlockInteractionInfo info) => _blocks.TryGetValue(block, out info);
     public bool TryGetItem(Identifier item, out ItemUseOnInfo info) => _items.TryGetValue(item, out info);
     public bool IsAlwaysNonObstructingEntity(Identifier entityType) => _entities.GetValueOrDefault(entityType);
@@ -58,7 +62,7 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         return found;
     }
 
-    public static JavaBlockInteractions Create(ReadOnlySpan<byte> table)
+    public static JavaBlockInteractions Create(ReadOnlySpan<byte> table, JavaEntityGeometry? entityGeometry = null)
     {
         Dictionary<Identifier, BlockInteractionInfo> blocks = [];
         Dictionary<Identifier, ItemUseOnInfo> items = [];
@@ -66,7 +70,7 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         Dictionary<Identifier, (float Width, float Height)> fixedBoxes = [];
         ReplacementRange[] replacement = [];
         Dictionary<int, ReplacementRange[]> belowOverrides = [];
-        GeometryTables geometry = GeometryTables.Empty;
+        JavaEntityGeometry geometry = entityGeometry ?? JavaEntityGeometry.Empty;
         var reader = new PacketReader(table);
         int schema = reader.ReadVarInt();
         if (schema is not (0 or 1 or 2 or 3 or 4 or 5))
@@ -133,7 +137,7 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
                 }
             }
             if (schema >= 5)
-                geometry = ReadGeometry(ref reader);
+                geometry = JavaEntityGeometry.Read(ref reader);
         }
         if (reader.Remaining != 0)
             throw new ProtocolViolationException("Generated block interaction table has trailing bytes.");

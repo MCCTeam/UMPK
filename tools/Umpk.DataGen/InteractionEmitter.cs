@@ -11,8 +11,7 @@ internal sealed partial class Emitter
         InteractionTable? table = InteractionTable.Load(version);
         EntityObstructionTable? obstruction = EntityObstructionTable.Load(version);
         ReplacementTable? replacement = ReplacementTable.Load(version);
-        EntityGeometryTable? geometry = EntityGeometryTable.Load(version);
-        int schema = geometry is not null ? 5 : replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
+        int schema = replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
         WriteVarInt(stream, schema);
         if (schema >= 1)
         {
@@ -76,30 +75,41 @@ internal sealed partial class Emitter
                     Ranges(ranges);
                 }
             }
-            if (geometry is not null)
-            {
-                WriteVarInt(stream, geometry.Entities.Count);
-                Span<byte> dimensions = stackalloc byte[8];
-                foreach ((string name, EntityGeometryEntry entry) in geometry.Entities.OrderBy(row => row.Key, StringComparer.Ordinal))
-                {
-                    Text(name);
-                    WriteVarInt(stream, entry.MetadataIndex);
-                    WriteVarInt(stream, entry.PoseIndex);
-                    stream.WriteByte(entry.Refresh switch { "recenter_on_refresh" => 0, "retain_minimum_on_growth" => 1, "retain_minimum" => 2, _ => throw new DatasetException("Unsupported entity dimensions refresh") });
-                    Text(entry.ScaleAttribute);
-                    WriteVarInt(stream, entry.Variants.Length);
-                    foreach (EntityGeometryVariant variant in entry.Variants.OrderBy(row => row.Selector).ThenBy(row => row.Pose))
-                    {
-                        stream.WriteByte((byte)variant.Selector);
-                        stream.WriteByte((byte)variant.Pose);
-                        BinaryPrimitives.WriteSingleBigEndian(dimensions, variant.Width);
-                        BinaryPrimitives.WriteSingleBigEndian(dimensions[4..], variant.Height);
-                        stream.Write(dimensions);
-                        stream.WriteByte((byte)((variant.Fixed ? 1 : 0) | (variant.BlocksBuilding ? 2 : 0)));
-                    }
-                }
-            }
         }
         return InternBlob("blockinteractions", version.Protocol, stream.ToArray());
+    }
+
+    private string InternEntityGeometry(VersionData version)
+    {
+        using MemoryStream stream = new();
+        EntityGeometryTable? geometry = EntityGeometryTable.Load(version);
+        WriteVarInt(stream, 1);
+        WriteVarInt(stream, geometry?.Entities.Count ?? 0);
+        void Text(string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            WriteVarInt(stream, bytes.Length);
+            stream.Write(bytes);
+        }
+        Span<byte> dimensions = stackalloc byte[8];
+        foreach ((string name, EntityGeometryEntry entry) in (geometry?.Entities.AsEnumerable() ?? []).OrderBy(row => row.Key, StringComparer.Ordinal))
+        {
+            Text(name);
+            WriteVarInt(stream, entry.MetadataIndex);
+            WriteVarInt(stream, entry.PoseIndex);
+            stream.WriteByte(entry.Refresh switch { "recenter_on_refresh" => 0, "retain_minimum_on_growth" => 1, "retain_minimum" => 2, _ => throw new DatasetException("Unsupported entity dimensions refresh") });
+            Text(entry.ScaleAttribute);
+            WriteVarInt(stream, entry.Variants.Length);
+            foreach (EntityGeometryVariant variant in entry.Variants.OrderBy(row => row.Selector).ThenBy(row => row.Pose))
+            {
+                stream.WriteByte((byte)variant.Selector);
+                stream.WriteByte((byte)variant.Pose);
+                BinaryPrimitives.WriteSingleBigEndian(dimensions, variant.Width);
+                BinaryPrimitives.WriteSingleBigEndian(dimensions[4..], variant.Height);
+                stream.Write(dimensions);
+                stream.WriteByte((byte)((variant.Fixed ? 1 : 0) | (variant.BlocksBuilding ? 2 : 0)));
+            }
+        }
+        return InternBlob("entitygeometry", version.Protocol, stream.ToArray());
     }
 }

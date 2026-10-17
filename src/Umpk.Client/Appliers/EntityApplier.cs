@@ -375,8 +375,7 @@ internal sealed class EntityApplier : IApplier
             entity.PlayerProfile = tabEntry.Profile;
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
-        if (JavaGameData.BlockInteractionData(context.Version.Version.Protocol) is IEntityGeometrySource geometry)
-            context.State.EntityGeometry.Register(entity, geometry);
+        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol));
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)

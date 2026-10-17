@@ -6,20 +6,36 @@ using Umpk.Protocol.Java.Codecs;
 
 namespace Umpk.Data.Java;
 
-internal sealed partial class JavaBlockInteractions
+internal sealed class JavaEntityGeometry : IEntityGeometrySource
 {
-    private readonly GeometryTables _geometry;
+    private readonly FrozenDictionary<Identifier, EntityGeometryRule> _rules;
+    private readonly FrozenDictionary<(Identifier Type, bool Selector, EntityPose Pose), EntityGeometryDimensions> _dimensions;
 
-    private sealed record GeometryTables(FrozenDictionary<Identifier, EntityGeometryRule> Rules, FrozenDictionary<(Identifier Type, bool Selector, EntityPose Pose), EntityGeometryDimensions> Dimensions)
+    private JavaEntityGeometry(FrozenDictionary<Identifier, EntityGeometryRule> rules, FrozenDictionary<(Identifier, bool, EntityPose), EntityGeometryDimensions> dimensions)
     {
-        public static GeometryTables Empty { get; } = new(FrozenDictionary<Identifier, EntityGeometryRule>.Empty, FrozenDictionary<(Identifier, bool, EntityPose), EntityGeometryDimensions>.Empty);
+        _rules = rules;
+        _dimensions = dimensions;
     }
 
-    public bool TryGetRule(Identifier entityType, out EntityGeometryRule rule) => _geometry.Rules.TryGetValue(entityType, out rule);
+    internal static JavaEntityGeometry Empty { get; } = new(FrozenDictionary<Identifier, EntityGeometryRule>.Empty, FrozenDictionary<(Identifier, bool, EntityPose), EntityGeometryDimensions>.Empty);
+    internal bool HasData => _rules.Count != 0;
 
-    public bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions) => _geometry.Dimensions.TryGetValue((entityType, selector, pose), out dimensions);
+    public bool TryGetRule(Identifier entityType, out EntityGeometryRule rule) => _rules.TryGetValue(entityType, out rule);
 
-    private static GeometryTables ReadGeometry(ref PacketReader reader)
+    public bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions) => _dimensions.TryGetValue((entityType, selector, pose), out dimensions);
+
+    internal static JavaEntityGeometry Create(ReadOnlySpan<byte> table)
+    {
+        var reader = new PacketReader(table);
+        if (reader.ReadVarInt() != 1)
+            throw new ProtocolViolationException("Unsupported generated entity geometry schema.");
+        JavaEntityGeometry geometry = Read(ref reader);
+        if (reader.Remaining != 0)
+            throw new ProtocolViolationException("Generated entity geometry table has trailing bytes.");
+        return geometry;
+    }
+
+    internal static JavaEntityGeometry Read(ref PacketReader reader)
     {
         Dictionary<Identifier, EntityGeometryRule> rules = [];
         Dictionary<(Identifier, bool, EntityPose), EntityGeometryDimensions> dimensions = [];
@@ -47,6 +63,14 @@ internal sealed partial class JavaBlockInteractions
             if (!poses.Contains(EntityPose.Standing) || !seen.SetEquals(poses.SelectMany(pose => new[] { (false, pose), (true, pose) })) || (poseIndex == -1 && poses.Count != 1))
                 throw new ProtocolViolationException("Generated entity geometry has incomplete selector or pose coverage.");
         }
-        return new GeometryTables(rules.ToFrozenDictionary(), dimensions.ToFrozenDictionary());
+        return new JavaEntityGeometry(rules.ToFrozenDictionary(), dimensions.ToFrozenDictionary());
+    }
+
+    private static int Count(ref PacketReader reader, int minimum)
+    {
+        int count = reader.ReadVarInt();
+        if (count < 0 || count > reader.Remaining / minimum)
+            throw new ProtocolViolationException("Generated entity geometry count exceeds available rows.");
+        return count;
     }
 }

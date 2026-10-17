@@ -24,7 +24,43 @@ public sealed class EntityGeometryTableTests
     [InlineData("duplicate")]
     [InlineData("missing")]
     [InlineData("trailing")]
-    public void InvalidPackedGeometryIsRejected(string defect) => Assert.Throws<ProtocolViolationException>(() => JavaBlockInteractions.Create(Pack(defect)));
+    public void InvalidPackedGeometryIsRejected(string defect)
+    {
+        Assert.Throws<ProtocolViolationException>(() => JavaBlockInteractions.Create(Pack(defect)));
+        byte[] standalone = [1, .. Pack(defect).AsSpan(7)];
+        Assert.Throws<ProtocolViolationException>(() => JavaEntityGeometry.Create(standalone));
+    }
+
+    [Theory]
+    [InlineData(47)]
+    [InlineData(210)]
+    [InlineData(498)]
+    [InlineData(754)]
+    [InlineData(755)]
+    [InlineData(777)]
+    public void IndependentGeometryIsCachedAndMatchesTheInteractionAdapter(int protocol)
+    {
+        IEntityGeometrySource source = JavaGameData.EntityGeometryData(protocol);
+        Assert.Same(source, JavaGameData.EntityGeometryData(protocol));
+        IEntityGeometrySource adapter = Assert.IsAssignableFrom<IEntityGeometrySource>(JavaGameData.BlockInteractionData(protocol));
+        var villager = Identifier.Minecraft("villager");
+        Assert.Equal(adapter.TryGetRule(villager, out EntityGeometryRule expected), source.TryGetRule(villager, out EntityGeometryRule actual));
+        Assert.Equal(expected, actual);
+        foreach (bool baby in new[] { false, true })
+            foreach (EntityPose pose in new[] { EntityPose.Standing, EntityPose.Sleeping, EntityPose.Unknown })
+            {
+                Assert.Equal(adapter.TryGetDimensions(villager, baby, pose, out EntityGeometryDimensions expectedSize), source.TryGetDimensions(villager, baby, pose, out EntityGeometryDimensions actualSize));
+                Assert.Equal(expectedSize, actualSize);
+            }
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    public void IndependentGeometryRejectsUnsupportedSchemas(byte schema) => Assert.Throws<ProtocolViolationException>(() => JavaEntityGeometry.Create([schema, 0]));
+
+    [Fact]
+    public void IndependentGeometryRejectsUnsupportedProtocols() => Assert.Throws<ArgumentOutOfRangeException>(() => JavaGameData.EntityGeometryData(-1));
 
     [Fact]
     public void GeometryOnlyMeasurementIsKnownWithoutInventingBlockContracts()

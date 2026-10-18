@@ -11,7 +11,7 @@ from extract_entity_geometry import fixture_bytes
 from extract_legacy_collision_grids import sha
 
 
-def read_run(root: Path, official: Path) -> dict[str, tuple[dict, dict]]:
+def read_run(root: Path, official: Path, *, observation: str = 'clearance.json') -> dict[str, tuple[dict, dict]]:
     receipts = json.loads((root / 'results.json').read_text())
     tools = json.loads((root / 'tools.json').read_text())
     probes = list(root.glob('*.java'))
@@ -45,7 +45,7 @@ def read_run(root: Path, official: Path) -> dict[str, tuple[dict, dict]]:
                 digest = hashlib.file_digest(stream, 'sha1').hexdigest()
             if digest != metadata['downloads'][side]['sha1'] or sha(artifact) != receipt[side + '_sha256']:
                 raise ValueError('An original clearance artifact changed: ' + version + '/' + side)
-        raw = json.loads((directory / 'clearance.json').read_text())
+        raw = json.loads((directory / observation).read_text())
         if len(raw['rows']) != receipt['rows'] or set(raw['origins']) != {Path(name).stem for name in contract['sources_sha256']}:
             raise ValueError('Native clearance observations or class-origin coverage differs: ' + version)
         origins = set(raw['origins'].values())

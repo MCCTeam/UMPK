@@ -378,3 +378,17 @@ python3 tools/extraction/extract_legacy_player_clearance.py \
   --composite "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-composite-clearance-20261018-v1" \
   --official "$MINECRAFT_OFFICIAL_ROOT" --out tests/Umpk.Client.Tests/Fixtures --check
 ```
+## Legacy player lifecycle geometry
+
+`extract_legacy_player_lifecycle.py` reconstructs the explicit sleep, wake-after-removal, death-size and position witnesses across 27 releases from 1.8 through 1.13.2. It also reconstructs the 17-release size-phase sweep, including shared-flag noise, sleeping/spin priority, failed resize attempts and position reapplication. The importer checks original artifact and class bytes, source hashes, method owners, complete matrices and protocol aliases before writing deterministic gzip fixtures.
+
+```bash
+python3 tools/extraction/extract_legacy_player_lifecycle.py \
+  --classic "$UMPK_ORACLE_ROOT/runs/pre-pose-player-lifecycle-1.8-20261018-v1" \
+  --phases "$UMPK_ORACLE_ROOT/runs/pre-pose-player-lifecycle-all-20261018-v1" \
+  --size-phases "$UMPK_ORACLE_ROOT/runs/pre-pose-player-size-phase-20261018-v3" \
+  --official "$UMPK_ORACLE_ROOT" \
+  --out tests/Umpk.Client.Tests/Fixtures --check
+```
+
+The fixtures exercise `VanillaLegacyPlayerGeometry` together with the measured block-clearance component. Session wiring, intact-bed wake exits, packet-listener execution and complete native player ticks remain unfinished. Health and velocity effects are outside this geometry component.

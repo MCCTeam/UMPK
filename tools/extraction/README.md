@@ -400,3 +400,12 @@ python3 tools/extraction/extract_legacy_bed_facings.py \
   --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-facing-all-20261018-v1" \
   --official "$UMPK_ORACLE_ROOT" --data data/java --check
 ```
+
+`extract_legacy_player_wake.py` reconstructs the original intact-bed wake geometry, integer exit and ordered candidate evaluations across all 27 legacy releases. The five controlled neighborhoods include a valid exit only in the second search area and an obstructed first candidate. The component receives support/material predicates from its caller; native World.setBlock notifications, full ticks and packet handlers remain outside these measurements.
+
+```bash
+python3 tools/extraction/extract_legacy_player_wake.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-player-intact-wake-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java \
+  --out tests/Umpk.Client.Tests/Fixtures/LegacyPlayerWake.native.json.gz --check
+```

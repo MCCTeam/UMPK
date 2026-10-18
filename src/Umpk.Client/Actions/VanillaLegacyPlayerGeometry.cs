@@ -59,6 +59,37 @@ internal sealed class VanillaLegacyPlayerGeometry
         Sleeping = false;
     }
 
+    /// <summary>Applies wake after the caller updates the occupied bed state. The predicate supplies the native support and material rules; null means the original scan used its above-bed fallback.</summary>
+    public BlockPos? WakeFromIntactBed(BlockPos bed, Direction facing, Func<BlockPos, bool> canStand)
+    {
+        ArgumentNullException.ThrowIfNull(canStand);
+        if (facing is < Direction.North or > Direction.East)
+            throw new ArgumentOutOfRangeException(nameof(facing), "A waking player requires a horizontal bed facing.");
+        Resize(.6F, 1.8F);
+        BlockPos? exit = FindBedExit(bed, facing, canStand);
+        BlockPos destination = exit ?? new BlockPos(bed.X, bed.Y + 1, bed.Z);
+        SetPosition(new Vec3d(destination.X + .5F, destination.Y + .1F, destination.Z + .5F));
+        Sleeping = false;
+        return exit;
+    }
+
+    private static BlockPos? FindBedExit(BlockPos bed, Direction facing, Func<BlockPos, bool> canStand)
+    {
+        for (int area = 0; area <= 1; area++)
+        {
+            int firstX = bed.X - facing.StepX() * area - 1;
+            int firstZ = bed.Z - facing.StepZ() * area - 1;
+            for (int x = firstX; x <= firstX + 2; x++)
+                for (int z = firstZ; z <= firstZ + 2; z++)
+                {
+                    var candidate = new BlockPos(x, bed.Y, z);
+                    if (canStand(candidate))
+                        return candidate;
+                }
+        }
+        return null;
+    }
+
     /// <summary>Applies the death callback's size and explicit position operations. A subsequent size phase still evaluates the flags and sleeping state.</summary>
     public void HandleDeath()
     {

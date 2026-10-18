@@ -12,22 +12,24 @@ namespace Umpk.Pathfinding.Tests;
 public sealed class PlanningCollisionGridTests
 {
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void SelectingAnEraPreservesCapturedTerrainAndDefersDemandReads(bool demand)
+    [InlineData(false, BlockCollisionQueryEra.QueryFirst)]
+    [InlineData(true, BlockCollisionQueryEra.QueryFirst)]
+    [InlineData(false, BlockCollisionQueryEra.QueryFirstStrict)]
+    [InlineData(true, BlockCollisionQueryEra.QueryFirstStrict)]
+    public void SelectingAnEraPreservesCapturedTerrainAndDefersDemandReads(bool demand, BlockCollisionQueryEra era)
     {
         var fixture = new FixtureWorld();
         var position = new BlockPos(0, 61, 0);
         fixture.Set(position.X, position.Y, position.Z, FixtureWorld.Bamboo);
         PlanningWorldView original = demand ? fixture.CaptureOnDemand(position, position) : fixture.Capture(position, position);
         int sections = original.Region.SectionsCaptured;
-        PlanningWorldView configured = original.WithCollisionQueryEra(BlockCollisionQueryEra.QueryFirst);
+        PlanningWorldView configured = original.WithCollisionQueryEra(era);
 
         Assert.Same(original.Region, configured.Region);
         Assert.Same(original.Shapes, configured.Shapes);
         Assert.Equal(sections, configured.Region.SectionsCaptured);
         Assert.Equal(BlockCollisionQueryEra.BoundingBoxes, original.CollisionQueryEra);
-        Assert.Equal(BlockCollisionQueryEra.QueryFirst, configured.CollisionQueryEra);
+        Assert.Equal(era, configured.CollisionQueryEra);
         Assert.Equal(FixtureWorld.Bamboo, configured.GetBlock(position).StateId);
         fixture.Set(position.X, position.Y, position.Z, FixtureWorld.Air);
         Assert.Equal(FixtureWorld.Bamboo, configured.GetBlock(position).StateId);
@@ -35,6 +37,7 @@ public sealed class PlanningCollisionGridTests
 
     [Theory]
     [InlineData(BlockCollisionQueryEra.QueryFirst)]
+    [InlineData(BlockCollisionQueryEra.QueryFirstStrict)]
     [InlineData(BlockCollisionQueryEra.Modern)]
     public void SourcesWithoutGridsRetainTheirBoundingBoxFallback(BlockCollisionQueryEra era)
     {
@@ -51,7 +54,7 @@ public sealed class PlanningCollisionGridTests
 
     [Theory]
     [InlineData(-1)]
-    [InlineData(4)]
+    [InlineData(5)]
     public void UndefinedCollisionErasAreRejected(int era)
     {
         var fixture = new FixtureWorld();

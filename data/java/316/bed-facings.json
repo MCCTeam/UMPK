@@ -1,0 +1,147 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "scope": "Original bed registry objects and facing properties; all raw legacy metadata inputs or original flattened global state-registry values; legacy output uses the canonical block-id shifted four bits plus input metadata, while preserving the original native packed decoded-state id separately; no actor or world callbacks",
+    "measurement": "pre-pose-bed-facing-all-20261018-v1",
+    "probe_sha256": "953d76f47df129d8e71025bebe7fb2d431c615be72dc2e6774813f94113ffac3",
+    "releases": [
+      {
+        "version": "1.11.1",
+        "client_sha256": "eff72a31339cd9a96a61092eed2d95b95e4cc91516bea4e9105c3d73574147f6",
+        "server_sha256": "8002bc32fdba21bf73fa30d94524b0c823bf7256e9c71598d2f18fb319e72c98",
+        "measurement_sha256": "d91d49cf0e670225eb44783d2af32d656264627421e2f2913b6f96931a075003",
+        "sources_sha256": {
+          "ajs.java": "978bd486dbd27c18060b688dd5bb20dba1b73b43989540a25abd3b2a5a499b00",
+          "alu.java": "72e04c46b74a884a9c6fb0a4fd6ce75d197f74291d61697b3fd02a235bd5da01",
+          "alv.java": "ce9aa6a80fb35bf90886fc86a9d1780e8872a26d6197421d2c3eab2943a02e62",
+          "atl.java": "2aa540bfd73ced5b328787a63bd7b42a978795c6965fbd87825635de7acfc185",
+          "bdt.java": "174caee61e9fb41f5b32fd025eefaf9d6f6503cedbadd14d3eed213ec6fe34e4",
+          "bnq.java": "c9198f66fb737c1bbfafb457a3490be8df796a58be8acf68c408d2717ccd7127",
+          "co.java": "ba096f712b37f113e05771518a477c05218b21faa370764c071ec3d19ec1ce76",
+          "bpt.java": "6309024d7ffdcc6370bfe6e8db6846204b34ad95a478aa50c406746163da78e0",
+          "bpp.java": "c49f17c429b920c2d3cd37774afe05d8a6e7fe885eaef37b97f705f18ce35dad",
+          "aay.java": "4193e005974a492d01445bb9a461a103b66f11ada64c6a1aa9ef14dd4d861b64",
+          "sw.java": "32740bbf01f9da57135e32fda15499c986fd5f6f63e8e19baebdb21102d88078",
+          "sn.java": "a0aac70f7f1edea76b09bebc9533697e4b6015bb88937734036df58c05abd069",
+          "cv.java": "53b213dd39dde82ebcd3af1e54ebeacba229dd0ab116c00cd2d5dc00c4eb621b",
+          "aoi.java": "f2340e0f68633d75d9111c6f9c397e0263c5505cbdf879262ee1187021b68b1c",
+          "ajp.java": "7403210ac61cfa5c4080e746737b06e4dbcb84dea1d94acc1490b4cb2011fcd8",
+          "nm.java": "455c2ca98526b61a34d6f439b212f264862caa5aba62bcd06da3839ce548d452",
+          "bno.java": "9c037357e34e528ae7a1e4e293242c12bd925010e842dfdcb0d518c8e8eab24d",
+          "hi.java": "7eade3a2a8269ce66502a2894fabf3b986a3f86a97a255f1c67c4207a57726c8",
+          "fw.java": "6c04d2d89dafa1622b4753809c361f17e25ad23f7c58cdbab1972577bf4f3b85",
+          "als.java": "9b1b787a3528bf4a220c6defdf681c0195d762be1297dcb1f8abbe99dabca039"
+        },
+        "method_owners": {
+          "block_id": "alu",
+          "decode_metadata": "als",
+          "facing_reader": "atl",
+          "state_id": "alu"
+        }
+      },
+      {
+        "version": "1.11.2",
+        "client_sha256": "be3fff4f2cc005a1310a96389efdeb983d2bcb4b8e747c402acd616ae73d0ba2",
+        "server_sha256": "dec47d36b429fd05076b90b1f42c2a25138bc39204aa51b9674ef2a98d64d88a",
+        "measurement_sha256": "f0db495a0098138ec0ce46f4eff2053f97bf374b8d0a166657719347646c3687",
+        "sources_sha256": {
+          "ajs.java": "978bd486dbd27c18060b688dd5bb20dba1b73b43989540a25abd3b2a5a499b00",
+          "alu.java": "72e04c46b74a884a9c6fb0a4fd6ce75d197f74291d61697b3fd02a235bd5da01",
+          "alv.java": "ce9aa6a80fb35bf90886fc86a9d1780e8872a26d6197421d2c3eab2943a02e62",
+          "atl.java": "2aa540bfd73ced5b328787a63bd7b42a978795c6965fbd87825635de7acfc185",
+          "bdt.java": "174caee61e9fb41f5b32fd025eefaf9d6f6503cedbadd14d3eed213ec6fe34e4",
+          "bnq.java": "c9198f66fb737c1bbfafb457a3490be8df796a58be8acf68c408d2717ccd7127",
+          "co.java": "ba096f712b37f113e05771518a477c05218b21faa370764c071ec3d19ec1ce76",
+          "bpt.java": "6309024d7ffdcc6370bfe6e8db6846204b34ad95a478aa50c406746163da78e0",
+          "bpp.java": "c49f17c429b920c2d3cd37774afe05d8a6e7fe885eaef37b97f705f18ce35dad",
+          "aay.java": "b3fac4efe4e6497fbeb00f649aa43b3a6c0900d4460cbae0a5cfb873f6f820aa",
+          "sw.java": "32740bbf01f9da57135e32fda15499c986fd5f6f63e8e19baebdb21102d88078",
+          "sn.java": "5b967ed806ad3d43b0314a87836f9b668cc252c7180fc9cb14e3bcd72a014746",
+          "cv.java": "53b213dd39dde82ebcd3af1e54ebeacba229dd0ab116c00cd2d5dc00c4eb621b",
+          "aoi.java": "f2340e0f68633d75d9111c6f9c397e0263c5505cbdf879262ee1187021b68b1c",
+          "ajp.java": "7403210ac61cfa5c4080e746737b06e4dbcb84dea1d94acc1490b4cb2011fcd8",
+          "nm.java": "455c2ca98526b61a34d6f439b212f264862caa5aba62bcd06da3839ce548d452",
+          "bno.java": "9c037357e34e528ae7a1e4e293242c12bd925010e842dfdcb0d518c8e8eab24d",
+          "hi.java": "7eade3a2a8269ce66502a2894fabf3b986a3f86a97a255f1c67c4207a57726c8",
+          "fw.java": "6c04d2d89dafa1622b4753809c361f17e25ad23f7c58cdbab1972577bf4f3b85",
+          "als.java": "9b1b787a3528bf4a220c6defdf681c0195d762be1297dcb1f8abbe99dabca039"
+        },
+        "method_owners": {
+          "block_id": "alu",
+          "decode_metadata": "als",
+          "facing_reader": "atl",
+          "state_id": "alu"
+        }
+      }
+    ]
+  },
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 16,
+  "states": [
+    [
+      416,
+      3
+    ],
+    [
+      417,
+      4
+    ],
+    [
+      418,
+      2
+    ],
+    [
+      419,
+      5
+    ],
+    [
+      420,
+      3
+    ],
+    [
+      421,
+      4
+    ],
+    [
+      422,
+      2
+    ],
+    [
+      423,
+      5
+    ],
+    [
+      424,
+      3
+    ],
+    [
+      425,
+      4
+    ],
+    [
+      426,
+      2
+    ],
+    [
+      427,
+      5
+    ],
+    [
+      428,
+      3
+    ],
+    [
+      429,
+      4
+    ],
+    [
+      430,
+      2
+    ],
+    [
+      431,
+      5
+    ]
+  ]
+}

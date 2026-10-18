@@ -11,7 +11,8 @@ internal sealed partial class Emitter
         InteractionTable? table = InteractionTable.Load(version);
         EntityObstructionTable? obstruction = EntityObstructionTable.Load(version);
         ReplacementTable? replacement = ReplacementTable.Load(version);
-        int schema = replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
+        BedFacingTable? beds = BedFacingTable.Load(version);
+        int schema = beds is not null ? 6 : replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
         WriteVarInt(stream, schema);
         if (schema >= 1)
         {
@@ -73,6 +74,15 @@ internal sealed partial class Emitter
                 {
                     WriteVarInt(stream, state);
                     Ranges(ranges);
+                }
+            }
+            if (schema == 6)
+            {
+                WriteVarInt(stream, beds!.States.Count);
+                foreach (BedFacingEntry bed in beds.States)
+                {
+                    WriteVarInt(stream, bed.State);
+                    stream.WriteByte((byte)bed.Facing);
                 }
             }
         }

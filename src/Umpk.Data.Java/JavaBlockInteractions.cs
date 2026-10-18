@@ -1,6 +1,7 @@
 using System.Collections.Frozen;
 using Umpk.Game.Entities;
 using Umpk.Game.Registries;
+using Umpk.Geometry;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
 
@@ -16,10 +17,12 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
     private readonly ReplacementRange[] _replacement;
     private readonly FrozenDictionary<int, ReplacementRange[]> _belowOverrides;
     private readonly JavaEntityGeometry _geometry;
+    private readonly int[] _bedStates;
+    private readonly Direction[] _bedFacings;
 
     private readonly record struct ReplacementRange(int First, int Last, byte Flags);
 
-    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, JavaEntityGeometry geometry)
+    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, JavaEntityGeometry geometry, int[] bedStates, Direction[] bedFacings)
     {
         _blocks = blocks.ToFrozenDictionary();
         _items = items.ToFrozenDictionary();
@@ -28,9 +31,17 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         _replacement = replacement;
         _belowOverrides = belowOverrides.ToFrozenDictionary();
         _geometry = geometry;
+        _bedStates = bedStates;
+        _bedFacings = bedFacings;
     }
 
-    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.HasData;
+    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.HasData || _bedStates.Length != 0;
+    public bool TryGetBedFacing(int stateId, out Direction facing)
+    {
+        int index = Array.BinarySearch(_bedStates, stateId);
+        facing = index >= 0 ? _bedFacings[index] : default;
+        return index >= 0;
+    }
     public bool TryGetRule(Identifier entityType, out EntityGeometryRule rule) => _geometry.TryGetRule(entityType, out rule);
     public bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions) => _geometry.TryGetDimensions(entityType, selector, pose, out dimensions);
     public bool TryGetBlock(Identifier block, out BlockInteractionInfo info) => _blocks.TryGetValue(block, out info);
@@ -71,9 +82,11 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         ReplacementRange[] replacement = [];
         Dictionary<int, ReplacementRange[]> belowOverrides = [];
         JavaEntityGeometry geometry = entityGeometry ?? JavaEntityGeometry.Empty;
+        int[] bedStates = [];
+        Direction[] bedFacings = [];
         var reader = new PacketReader(table);
         int schema = reader.ReadVarInt();
-        if (schema is not (0 or 1 or 2 or 3 or 4 or 5))
+        if (schema is not (0 or 1 or 2 or 3 or 4 or 5 or 6))
             throw new ProtocolViolationException("Unsupported generated block interaction schema.");
         if (schema >= 1)
         {
@@ -136,12 +149,29 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
                         throw new ProtocolViolationException("Invalid generated lower-block replacement rule.");
                 }
             }
-            if (schema >= 5)
+            if (schema == 5)
                 geometry = JavaEntityGeometry.Read(ref reader);
+            if (schema == 6)
+            {
+                int bedCount = Count(ref reader, 2);
+                bedStates = new int[bedCount];
+                bedFacings = new Direction[bedCount];
+                int previous = -1;
+                for (int index = 0; index < bedCount; index++)
+                {
+                    int state = reader.ReadVarInt();
+                    byte facing = reader.ReadByte();
+                    if (state <= previous || facing is < 2 or > 5)
+                        throw new ProtocolViolationException("Invalid generated bed state or horizontal facing.");
+                    bedStates[index] = state;
+                    bedFacings[index] = (Direction)facing;
+                    previous = state;
+                }
+            }
         }
         if (reader.Remaining != 0)
             throw new ProtocolViolationException("Generated block interaction table has trailing bytes.");
-        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides, geometry);
+        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides, geometry, bedStates, bedFacings);
     }
 
     private static ReplacementRange[] ReadRanges(ref PacketReader reader, bool allowEmpty = false)

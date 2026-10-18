@@ -1,3 +1,5 @@
+using Umpk.Geometry;
+
 namespace Umpk.Game.Registries;
 
 /// <summary>Measured block-use inheritance and replacement contracts. False does not imply the opposite behavior; it means the specialized rule still needs evaluation.</summary>
@@ -35,6 +37,12 @@ public interface IBlockInteractionSource
     bool TryGetBlock(Identifier block, out BlockInteractionInfo info);
     /// <summary>Returns the measured default-item contract. A known item can have an explicit unknown specialized rule.</summary>
     bool TryGetItem(Identifier item, out ItemUseOnInfo info);
+    /// <summary>Returns the measured horizontal facing of a bed state, or false when its state or version is unmeasured.</summary>
+    bool TryGetBedFacing(int stateId, out Direction facing)
+    {
+        facing = default;
+        return false;
+    }
     /// <summary>Returns native ordinary-cube replacement rules. A lower state is required only for measured neighbor-dependent states; null means that cell is unknown.</summary>
     bool TryGetCubeReplacement(int stateId, int? belowStateId, out BlockReplacementInfo info)
     {

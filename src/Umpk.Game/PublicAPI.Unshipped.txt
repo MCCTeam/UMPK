@@ -3318,6 +3318,7 @@ Umpk.Game.Registries.BlockReplacementInfo.AllowsPlacement.init -> void
 static Umpk.Game.Registries.BlockReplacementInfo.operator ==(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
 static Umpk.Game.Registries.BlockReplacementInfo.operator !=(Umpk.Game.Registries.BlockReplacementInfo left, Umpk.Game.Registries.BlockReplacementInfo right) -> bool
 Umpk.Game.Registries.IBlockInteractionSource.TryGetCubeReplacement(int stateId, int? belowStateId, out Umpk.Game.Registries.BlockReplacementInfo info) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetBedFacing(int stateId, out Umpk.Geometry.Direction facing) -> bool
 Umpk.Game.Registries.EntityGeometryRule
 Umpk.Game.Registries.EntityGeometryRule.EntityGeometryRule() -> void
 Umpk.Game.Registries.EntityGeometryRule.EntityGeometryRule(int MetadataIndex, int PoseMetadataIndex, Umpk.Game.Registries.EntityDimensionsRefresh Refresh, Umpk.Identifier? ScaleAttribute) -> void

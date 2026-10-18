@@ -392,3 +392,11 @@ python3 tools/extraction/extract_legacy_player_lifecycle.py \
 ```
 
 The fixtures exercise `VanillaLegacyPlayerGeometry` together with the measured block-clearance component. Session wiring, intact-bed wake exits, packet-listener execution and complete native player ticks remain unfinished. Health and velocity effects are outside this geometry component.
+
+`extract_legacy_bed_facings.py` imports all sixteen raw metadata values for each legacy bed and all registered flattened bed states from 27 original clients. It preserves the original decoded packed state ID as an import check while writing UMPK's canonical wire state IDs. Fourteen per-protocol tables contain 944 measured horizontal facings; unmeasured versions remain unknown.
+
+```bash
+python3 tools/extraction/extract_legacy_bed_facings.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-facing-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java --check
+```

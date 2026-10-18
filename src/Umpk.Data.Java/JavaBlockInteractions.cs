@@ -19,10 +19,11 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
     private readonly JavaEntityGeometry _geometry;
     private readonly int[] _bedStates;
     private readonly Direction[] _bedFacings;
+    private readonly ReplacementRange[] _bedExitCells;
 
     private readonly record struct ReplacementRange(int First, int Last, byte Flags);
 
-    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, JavaEntityGeometry geometry, int[] bedStates, Direction[] bedFacings)
+    private JavaBlockInteractions(Dictionary<Identifier, BlockInteractionInfo> blocks, Dictionary<Identifier, ItemUseOnInfo> items, Dictionary<Identifier, bool> entities, Dictionary<Identifier, (float Width, float Height)> fixedBoxes, ReplacementRange[] replacement, Dictionary<int, ReplacementRange[]> belowOverrides, JavaEntityGeometry geometry, int[] bedStates, Direction[] bedFacings, ReplacementRange[] bedExitCells)
     {
         _blocks = blocks.ToFrozenDictionary();
         _items = items.ToFrozenDictionary();
@@ -33,9 +34,16 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         _geometry = geometry;
         _bedStates = bedStates;
         _bedFacings = bedFacings;
+        _bedExitCells = bedExitCells;
     }
 
-    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.HasData || _bedStates.Length != 0;
+    public bool HasData => _blocks.Count != 0 || _entities.Count != 0 || _replacement.Length != 0 || _geometry.HasData || _bedStates.Length != 0 || _bedExitCells.Length != 0;
+    public bool TryGetBedExitCell(int stateId, out BedExitCellInfo info)
+    {
+        int index = FindRange(_bedExitCells, stateId);
+        info = index >= 0 ? new BedExitCellInfo((_bedExitCells[index].Flags & 1) != 0, (_bedExitCells[index].Flags & 2) != 0) : default;
+        return index >= 0;
+    }
     public bool TryGetBedFacing(int stateId, out Direction facing)
     {
         int index = Array.BinarySearch(_bedStates, stateId);
@@ -84,9 +92,10 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
         JavaEntityGeometry geometry = entityGeometry ?? JavaEntityGeometry.Empty;
         int[] bedStates = [];
         Direction[] bedFacings = [];
+        ReplacementRange[] bedExitCells = [];
         var reader = new PacketReader(table);
         int schema = reader.ReadVarInt();
-        if (schema is not (0 or 1 or 2 or 3 or 4 or 5 or 6))
+        if (schema is not (0 or 1 or 2 or 3 or 4 or 5 or 6 or 7))
             throw new ProtocolViolationException("Unsupported generated block interaction schema.");
         if (schema >= 1)
         {
@@ -151,7 +160,7 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
             }
             if (schema == 5)
                 geometry = JavaEntityGeometry.Read(ref reader);
-            if (schema == 6)
+            if (schema >= 6)
             {
                 int bedCount = Count(ref reader, 2);
                 bedStates = new int[bedCount];
@@ -168,10 +177,12 @@ internal sealed partial class JavaBlockInteractions : IBlockInteractionSource, I
                     previous = state;
                 }
             }
+            if (schema == 7)
+                bedExitCells = ReadRanges(ref reader);
         }
         if (reader.Remaining != 0)
             throw new ProtocolViolationException("Generated block interaction table has trailing bytes.");
-        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides, geometry, bedStates, bedFacings);
+        return new JavaBlockInteractions(blocks, items, entities, fixedBoxes, replacement, belowOverrides, geometry, bedStates, bedFacings, bedExitCells);
     }
 
     private static ReplacementRange[] ReadRanges(ref PacketReader reader, bool allowEmpty = false)

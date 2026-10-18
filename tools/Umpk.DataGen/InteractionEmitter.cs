@@ -12,7 +12,8 @@ internal sealed partial class Emitter
         EntityObstructionTable? obstruction = EntityObstructionTable.Load(version);
         ReplacementTable? replacement = ReplacementTable.Load(version);
         BedFacingTable? beds = BedFacingTable.Load(version);
-        int schema = beds is not null ? 6 : replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
+        BedExitCellTable? exitCells = BedExitCellTable.Load(version);
+        int schema = exitCells is not null ? 7 : beds is not null ? 6 : replacement is not null ? 4 : obstruction?.FixedBoxes.Count > 0 ? 3 : obstruction is not null ? 2 : table is not null ? 1 : 0;
         WriteVarInt(stream, schema);
         if (schema >= 1)
         {
@@ -76,13 +77,23 @@ internal sealed partial class Emitter
                     Ranges(ranges);
                 }
             }
-            if (schema == 6)
+            if (schema >= 6)
             {
-                WriteVarInt(stream, beds!.States.Count);
-                foreach (BedFacingEntry bed in beds.States)
+                WriteVarInt(stream, beds?.States.Count ?? 0);
+                foreach (BedFacingEntry bed in beds?.States ?? [])
                 {
                     WriteVarInt(stream, bed.State);
                     stream.WriteByte((byte)bed.Facing);
+                }
+            }
+            if (schema == 7)
+            {
+                WriteVarInt(stream, exitCells!.Ranges.Length);
+                foreach (ReplacementRange range in exitCells.Ranges)
+                {
+                    WriteVarInt(stream, range.First);
+                    WriteVarInt(stream, range.Last);
+                    stream.WriteByte((byte)range.Flags);
                 }
             }
         }

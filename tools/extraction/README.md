@@ -409,3 +409,11 @@ python3 tools/extraction/extract_legacy_player_wake.py \
   --official "$UMPK_ORACLE_ROOT" --data data/java \
   --out tests/Umpk.Client.Tests/Fixtures/LegacyPlayerWake.native.json.gz --check
 ```
+
+`extract_legacy_bed_exit_cells.py` imports the original bed exit predicate's support, feet-material and head-material evaluations across all 27 releases. Fourteen canonical tables partition every registry state into measured flags or an explicit native metadata rejection. The probe invokes the original predicate at a fixed cell in a controlled client world; it does not execute player ticks or world notifications. Runtime world bounds and missing chunks require separate handling.
+
+```bash
+python3 tools/extraction/extract_legacy_bed_exit_cells.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-exit-cells-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java --check
+```

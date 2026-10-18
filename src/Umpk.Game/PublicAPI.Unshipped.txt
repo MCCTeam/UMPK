@@ -3362,3 +3362,18 @@ Umpk.Game.Registries.EntityDimensionsRefresh.RetainMinimum = 2 -> Umpk.Game.Regi
 Umpk.Game.Registries.IEntityGeometrySource
 Umpk.Game.Registries.IEntityGeometrySource.TryGetRule(Umpk.Identifier entityType, out Umpk.Game.Registries.EntityGeometryRule rule) -> bool
 Umpk.Game.Registries.IEntityGeometrySource.TryGetDimensions(Umpk.Identifier entityType, bool selector, Umpk.Game.Entities.EntityPose pose, out Umpk.Game.Registries.EntityGeometryDimensions dimensions) -> bool
+Umpk.Game.Registries.BedExitCellInfo
+Umpk.Game.Registries.BedExitCellInfo.BedExitCellInfo() -> void
+Umpk.Game.Registries.BedExitCellInfo.BedExitCellInfo(bool SupportsPlayer, bool AllowsBody) -> void
+Umpk.Game.Registries.BedExitCellInfo.Deconstruct(out bool SupportsPlayer, out bool AllowsBody) -> void
+Umpk.Game.Registries.BedExitCellInfo.Equals(Umpk.Game.Registries.BedExitCellInfo other) -> bool
+override Umpk.Game.Registries.BedExitCellInfo.GetHashCode() -> int
+~override Umpk.Game.Registries.BedExitCellInfo.Equals(object obj) -> bool
+~override Umpk.Game.Registries.BedExitCellInfo.ToString() -> string
+Umpk.Game.Registries.BedExitCellInfo.SupportsPlayer.get -> bool
+Umpk.Game.Registries.BedExitCellInfo.SupportsPlayer.init -> void
+Umpk.Game.Registries.BedExitCellInfo.AllowsBody.get -> bool
+Umpk.Game.Registries.BedExitCellInfo.AllowsBody.init -> void
+static Umpk.Game.Registries.BedExitCellInfo.operator ==(Umpk.Game.Registries.BedExitCellInfo left, Umpk.Game.Registries.BedExitCellInfo right) -> bool
+static Umpk.Game.Registries.BedExitCellInfo.operator !=(Umpk.Game.Registries.BedExitCellInfo left, Umpk.Game.Registries.BedExitCellInfo right) -> bool
+Umpk.Game.Registries.IBlockInteractionSource.TryGetBedExitCell(int stateId, out Umpk.Game.Registries.BedExitCellInfo info) -> bool

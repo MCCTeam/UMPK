@@ -28,6 +28,9 @@ public readonly record struct ItemUseOnInfo(ItemUseOnKind Kind, Identifier? Plac
 /// <param name="AllowsPlacement">The native resolved destination accepts an ordinary cube item.</param>
 public readonly record struct BlockReplacementInfo(bool ReplacesClickedBlock, bool AllowsPlacement);
 
+/// <summary>Measured support and material predicates for the cells used by a bed's exit search. These rules are independent of collision-box overlap.</summary>
+public readonly record struct BedExitCellInfo(bool SupportsPlayer, bool AllowsBody);
+
 /// <summary>Artifact-backed block and default-item use contracts. Custom stack components and specialized world predicates require additional evaluation.</summary>
 public interface IBlockInteractionSource
 {
@@ -41,6 +44,12 @@ public interface IBlockInteractionSource
     bool TryGetBedFacing(int stateId, out Direction facing)
     {
         facing = default;
+        return false;
+    }
+    /// <summary>Returns original bed-exit cell predicates, or false for missing measurements and natively rejected metadata.</summary>
+    bool TryGetBedExitCell(int stateId, out BedExitCellInfo info)
+    {
+        info = default;
         return false;
     }
     /// <summary>Returns native ordinary-cube replacement rules. A lower state is required only for measured neighbor-dependent states; null means that cell is unknown.</summary>

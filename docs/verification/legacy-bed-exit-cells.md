@@ -17,3 +17,9 @@ Interaction schema 7 preserves the schema 6 payload after its version byte and a
 The fourteen native lookup cases fail against the previous unknown default. The completed focused run passes 534 table and geometry tests, including all measured flags, rejected metadata, malformed packed ranges, older providers and unmeasured versions. The 59 validator cases include 35 new registry partition cases. Eight new Python tests cover invalid measurements. One green build stopped on a missing test import; the corrected run passes.
 
 Full exact-commit gates and fresh consumer/AOT checks are recorded after completion. This data capability supplies the pending legacy player runtime integration; it does not by itself handle sleep or wake packets.
+
+## Managed world query
+
+`LegacyBedExitQuery` evaluates support, feet material and head material in their original short-circuit order. It preserves unknown results instead of treating an unmeasured state as clear. Direct block reads reject horizontal coordinates outside [-30,000,000, 30,000,000) through 1.9.2; from 1.9.3 they retain only the original vertical bounds. This boundary differs from the separate resize collision query.
+
+All 27 original wake replays also pass through the generated support/material data and this query, preserving 21,120 wake exits, candidate sequences, positions and boxes. Another 28 cases cover read order, unknown support/feet/head states and direct-read boundaries. The focused wake, lifecycle, clearance and query group passes 146 cases. The initial query stub fails all 27 original wake cases; a preceding fixture build stopped on incorrect registry access and supplies no behavioral result. Session packet routing and eligible world ticks remain pending.

@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text.Json;
 using Umpk.Client.Actions;
+using Umpk.Client.Internal;
 using Umpk.Data.Java;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
@@ -20,11 +21,24 @@ public sealed class LegacyPlayerWakeTests
     [Theory]
     [MemberData(nameof(NativeReleases))]
     public void WakeGeometryAndExitOrderMatchEveryOriginalClient(string version, int protocol, int caseIndex)
+        => AssertNativeWake(version, protocol, caseIndex, measuredCells: false);
+
+    [Theory]
+    [MemberData(nameof(NativeReleases))]
+    public void MeasuredCellQueryPreservesEveryOriginalWakeExit(string version, int protocol, int caseIndex)
+        => AssertNativeWake(version, protocol, caseIndex, measuredCells: true);
+
+    private static void AssertNativeWake(string version, int protocol, int caseIndex, bool measuredCells)
     {
         Assert.True(JavaVersions.TryGetByName(version, out JavaVersion? release));
         Assert.Equal(protocol, release.Version.Protocol);
         using JsonDocument fixture = ReadNative();
         JsonElement native = fixture.RootElement.GetProperty("cases")[caseIndex];
+        var registries = JavaGameData.Registries(protocol);
+        Assert.True(registries.Blocks.TryGet(Identifier.Minecraft("stone"), out var stone));
+        int stoneId = stone.Value.DefaultStateId;
+        using JsonDocument beds = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Umpk.TestKit.FixturePaths.RepoRoot(), "data", "java", protocol.ToString(System.Globalization.CultureInfo.InvariantCulture), "bed-facings.json")));
+        int bedId = beds.RootElement.GetProperty("states")[0][0].GetInt32();
         int count = 0;
         foreach (JsonElement row in native.GetProperty("rows").EnumerateArray())
         {
@@ -39,6 +53,7 @@ public sealed class LegacyPlayerWakeTests
             if (row.GetProperty("sequence").GetInt32() == 2)
                 geometry.HandleDeath();
             int scene = row.GetProperty("scene").GetInt32();
+            var cellQuery = new LegacyBedExitQuery(protocol, JavaGameData.BlockInteractionData(protocol), StateAt);
             List<BlockPos> queries = [];
             BlockPos? exit = geometry.WakeFromIntactBed(bed, facing, CanStand);
             JsonElement expected = row.GetProperty("exit");
@@ -58,12 +73,33 @@ public sealed class LegacyPlayerWakeTests
                 Assert.Equal(1.8F, geometry.Height);
                 Assert.True(geometry.Sleeping);
                 queries.Add(cell);
+                if (measuredCells)
+                {
+                    Assert.True(cellQuery.TryCanStand(cell, out bool result));
+                    return result;
+                }
                 // These controlled stone/air/material inputs are independently checked against the original native predicate. Direct block reads retain absolute bounds only through 1.9.2.
                 if (protocol < 110 && (cell.X is < -30_000_000 or >= 30_000_000 || cell.Z is < -30_000_000 or >= 30_000_000))
                     return false;
                 bool support = scene is 1 or 2 or 4 || (scene == 3 && cell.X == bed.X - 2 * dx && cell.Z == bed.Z - 2 * dz);
                 bool blocked = cell == bed || scene == 2 || (scene == 4 && cell.X == bed.X - 1 && cell.Z == bed.Z - 1);
                 return support && !blocked;
+            }
+
+            int StateAt(BlockPos cell)
+            {
+                if (cell == bed)
+                    return bedId;
+                if (scene > 0 && Math.Abs(cell.X - bed.X) <= 3 && Math.Abs(cell.Z - bed.Z) <= 3)
+                {
+                    if (cell.Y == bed.Y - 1 && (scene != 3 || cell.X == bed.X - 2 * dx && cell.Z == bed.Z - 2 * dz))
+                        return stoneId;
+                    if (scene == 2 && cell.Y >= bed.Y && cell.Y <= bed.Y + 2)
+                        return stoneId;
+                    if (scene == 4 && cell.X == bed.X - 1 && cell.Z == bed.Z - 1 && cell.Y >= bed.Y && cell.Y <= bed.Y + 1)
+                        return stoneId;
+                }
+                return 0;
             }
         }
         Assert.Equal(protocol == 47 ? 480 : 960, count);

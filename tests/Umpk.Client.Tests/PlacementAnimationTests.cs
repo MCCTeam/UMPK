@@ -53,7 +53,7 @@ public sealed class PlacementAnimationTests
 
     public static IEnumerable<object[]> PlayerGeometryCases()
     {
-        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Where(protocol => protocol >= 498))
+        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Where(protocol => protocol >= 477))
         {
             yield return [protocol, EntityPose.Standing, 8.5, 65.0, true];
             yield return [protocol, EntityPose.Standing, 1.5, 65.0, false];

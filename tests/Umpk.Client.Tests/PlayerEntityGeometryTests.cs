@@ -16,18 +16,21 @@ public sealed class PlayerEntityGeometryTests
 {
     public static IEnumerable<object[]> NativeReleases()
     {
-        using JsonDocument document = ReadNative();
-        foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
-            yield return [release.GetProperty("protocol").GetInt32(), release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32()];
+        foreach (string resource in new[] { "PlayerEntityGeometry", "LegacyPosePlayerGeometry" })
+        {
+            using JsonDocument document = ReadNative(resource);
+            foreach (JsonElement release in document.RootElement.GetProperty("releases").EnumerateArray())
+                yield return [release.GetProperty("protocol").GetInt32(), release.GetProperty("version").GetString()!, release.GetProperty("case").GetInt32(), resource];
+        }
     }
 
     [Theory]
     [MemberData(nameof(NativeReleases))]
-    public async Task TrackedPlayerBoundsMatchNativePoseAndPositionCallbacks(int protocol, string releaseName, int caseIndex)
+    public async Task TrackedPlayerBoundsMatchNativePoseAndPositionCallbacks(int protocol, string releaseName, int caseIndex, string resource)
     {
         Assert.True(JavaVersions.TryGetByName(releaseName, out JavaVersion? version));
         Assert.Equal(protocol, version.Version.Protocol);
-        using JsonDocument document = ReadNative();
+        using JsonDocument document = ReadNative(resource);
         JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
         foreach (JsonElement row in native.GetProperty("rows").EnumerateArray())
         {
@@ -74,9 +77,9 @@ public sealed class PlayerEntityGeometryTests
         }
     }
 
-    private static JsonDocument ReadNative()
+    private static JsonDocument ReadNative(string resource)
     {
-        using Stream stream = typeof(PlayerEntityGeometryTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.PlayerEntityGeometry.native.json.gz")!;
+        using Stream stream = typeof(PlayerEntityGeometryTests).Assembly.GetManifestResourceStream($"Umpk.Client.Tests.Fixtures.{resource}.native.json.gz")!;
         using var decompressed = new GZipStream(stream, CompressionMode.Decompress);
         return JsonDocument.Parse(decompressed);
     }

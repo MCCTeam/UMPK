@@ -246,6 +246,16 @@ python3 -m unittest discover -s tools/extraction -p test_extract_player_geometry
 
 Add `--check` to the extraction command to verify the existing outputs. The measured player batch covers 27,981 callbacks across 44 releases from 1.14.4 through 26.3 and 32 protocols. Older player eras, nondefault attribute scaling, spectator lookup/cache behavior and rider positioning need separate evidence; these measurements do not execute complete entity/world ticks. The actor is a survival Player adapter that inherits the original geometry methods. A separate source audit confirms that RemotePlayer and AbstractClientPlayer do not override those callbacks in the measured releases.
 
+`extract_legacy_player_geometry.py` adds player geometry for 1.14, 1.14.1, 1.14.2 and 1.14.3. The separate original RemotePlayer probe covers 588 pose-pair/position transitions, constructor building flags, pose accessor 6 and actual callback owners. Source verification checks the original hierarchy, first-call delegation from LivingEntity to Entity, the pose setter and refresh callback, the dimension getter and the placement building predicate. Native `SNEAKING` maps to canonical crouching; native dying ordinal 6 maps to canonical dying 7 through the existing pose codec. These measurements execute controlled callbacks with an empty world, not complete entity/world ticks or rider positioning. The owned helper sources, adapters, commands and artifact hashes are preserved with `legacy-player-geometry-20261018-v2` under the shared runs directory.
+
+```bash
+python3 tools/extraction/extract_legacy_player_geometry.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-player-geometry-20261018-v2" \
+  --fixture tests/Umpk.Client.Tests/Fixtures/LegacyPosePlayerGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p test_extract_legacy_player_geometry.py
+```
+
 The four early 1.14 datasets also contain native cat, horse and iron golem geometry. Cats and horses retain the Boolean baby selector; iron golems use `[-1, "none", 0, 0]` and only selector-zero variants. Each type retains its measured pose transitions, including sleeping dimensions. The separate role fixture contains 5,292 transitions across twelve release/entity measurements and three deduplicated cases. `--role` checks the original class origins, method owners, age predicate, complete callbacks and artifact hashes before adding each role. Include these arguments when regenerating the datasets.
 
 The 32 mapped protocol datasets also contain native cat, cow, horse and golem geometry. The 176 measurements cover 44 mapped releases and 363,753 native transition rows. The compressed replay fixture deduplicates 25 cases while retaining each release's artifact and measurement hashes. Gzip output uses no filename or clock metadata. The extractor checks the mapped method owners, original class preservation, official mappings and the native living-scale getter. Attribute scaling beyond the default value remains unmeasured; fixed dimensions retain their native behavior. Protocol aliases must agree on their geometry and scale contract. The official 26.1.1 and 26.1.2 clients use existing protocol 775; their release names share the same generated descriptor.

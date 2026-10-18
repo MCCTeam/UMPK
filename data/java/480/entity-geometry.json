@@ -23,6 +23,27 @@
         "measurement_sha256": "4bd37a440420a490a1f9b7585cc0b24fde83f79af3061892d9e4478c3321a10e",
         "native_witnesses": 147,
         "scope": "Original vanilla dimensions and metadata/pose callbacks; controlled world inputs, no entity/world tick or attribute-scale sweep"
+      },
+      "minecraft:player": {
+        "measurement_sha256": "ef2c6da61c6aafa2c42a9960132571a59ce6ecda5e5101e733a846f14da20dbd",
+        "bindings_sha256": "9c1a3f76d83a25c7db068eb2fe33a559069b359a5cb600cea63001214eccbc36",
+        "native_witnesses": 147,
+        "client_sha256": "7194d1326cf796f62ac55f3cb56f851c232895639ae27510f3207d5a73f91814",
+        "server_sha256": "f822f0b730b7e1f05fca84248a6873400bac4ca449ff6762a55cab3d68b1f03e",
+        "sources_sha256": {
+          "aii.java": "b5f8436c413f499ae96de43e66d94796a3b9c08ef6addc4b8389976cd7501a38",
+          "air.java": "ab3d47f5ff3a5a17bc0dd6a72db10a2488039f4c246e8c29f80cd6398ba08798",
+          "ajb.java": "c57b66b6949207bfea64cba5319f0d229dee054fed11278eedc75a51a105c88a",
+          "avy.java": "0bb463ce86782a967b130fc11e4fc7cc28acd912300096ffbd470b2c22d3d919",
+          "bha.java": "fc9ee44cc209e6024ce1a1a77f0b439435ce20ac6843047cf0ba838c9d1a9b8c",
+          "crs.java": "017880eb7dcc47b7f38e7ade5e8dbb7facb5f7f6a79ccf09405e6054ddf8bdd2",
+          "dju.java": "80f90dc9af601839a0b2ef7f61a5d632c4bb98e2065bddbd4bff3c065d13aaa5",
+          "djy.java": "ff2871324dcc3237cfa07fa0ce92892033d94efdd2b8c41b6cd1ca1368f39707",
+          "qh.java": "c87f2d76767edb01a681c37f68aa96d3a8409588abb82378a93f1cb0cf8273cf",
+          "qk.java": "17d41813517201da963a4ed56c9dbe0917afc3a3af38c646f5845918c82f94dd"
+        },
+        "probe_source_sha256": "341d5fc59d09764ab4986f0b5b1aa283676e61357ecd7703f6d83b978c6958eb",
+        "scope": "Original RemotePlayer constructor in an owned survival subtype; original pose synchronization, dimension getter, refresh and position methods. Empty world adapter; no world constructor, packet handler or complete player/entity/world tick."
       }
     },
     "pose_farm_roles": {
@@ -1164,6 +1185,75 @@
           0.45,
           0.65,
           false,
+          true
+        ]
+      ]
+    },
+    "minecraft:player": {
+      "selector": [
+        -1,
+        "none",
+        0,
+        0
+      ],
+      "pose_index": 6,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.8,
+          false,
+          true
+        ],
+        [
+          0,
+          1,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          2,
+          0.2,
+          0.2,
+          true,
+          true
+        ],
+        [
+          0,
+          3,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          4,
+          0.6,
+          0.6,
+          false,
+          true
+        ],
+        [
+          0,
+          5,
+          0.6,
+          1.5,
+          false,
+          true
+        ],
+        [
+          0,
+          7,
+          0.2,
+          0.2,
+          true,
           true
         ]
       ]

@@ -917,7 +917,7 @@ public sealed class UmpkClient : IAsyncDisposable
         if (State.WorldDimension is not null)
         {
             _interpolatedEntityMoves.Clear();
-            State.EntityMotion.Tick(State.EntitiesOrNull, _interpolatedEntityMoves, State.EntityGeometry);
+            State.EntityMotion.Tick(State.EntitiesOrNull, _interpolatedEntityMoves, State.EntityGeometry, State.TabList);
             // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
             if (State.WorldTicks.RunsNormally)
                 State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);

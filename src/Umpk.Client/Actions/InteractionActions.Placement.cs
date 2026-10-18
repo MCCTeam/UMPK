@@ -86,7 +86,9 @@ public sealed partial class InteractionActions
                 bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
             else
                 return false;
-            if (VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
+            if (Aabb.BlockAt(destination.X, destination.Y, destination.Z).Intersects(bounds)
+                && !_services.State.EntityMotion.IsSpectator(entity, _services.State.TabList)
+                && VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
                 return false;
         }
         return true;

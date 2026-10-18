@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
 using Umpk.Game.Entities;
+using Umpk.Game.Players;
 using Umpk.Geometry;
 using Umpk.Protocol.Java.Packets;
 
@@ -31,6 +32,20 @@ internal sealed class EntityMotionState
     {
         _immovable.Add(entity, ImmovableMarker);
         entity.Velocity = Vec3d.Zero;
+    }
+
+    public bool IsSpectator(Entity entity, TabList players)
+        => _remotePlayers.TryGetValue(entity, out RemotePlayerMotion? player)
+            && ResolvePlayerInfo(entity, player, players)?.GameMode == GameMode.Spectator;
+
+    private static TabListEntry? ResolvePlayerInfo(Entity entity, RemotePlayerMotion player, TabList players)
+    {
+        if (player.Profile.CachesPlayerInfo && player.PlayerInfo is { } cached)
+            return cached;
+        players.TryGet(entity.Uuid, out TabListEntry? info);
+        if (player.Profile.CachesPlayerInfo)
+            player.PlayerInfo = info;
+        return info;
     }
 
     /// <summary>Applies setDeltaMovement without replacing an existing lerpMotion target.</summary>
@@ -111,7 +126,7 @@ internal sealed class EntityMotionState
         return true;
     }
 
-    public void Tick(EntityStore? entities, List<int>? moved = null, EntityGeometryState? geometry = null)
+    public void Tick(EntityStore? entities, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null)
     {
         if (entities is null)
             return;
@@ -119,6 +134,8 @@ internal sealed class EntityMotionState
         {
             if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
                 continue;
+            if (players is not null)
+                ResolvePlayerInfo(entity, motion, players);
             if (motion.Position is { } position)
             {
                 Vec3d before = entity.Position;
@@ -164,12 +181,15 @@ internal sealed class EntityMotionState
         entity.Pitch = position.Pitch;
     }
 
-    private sealed record RemotePlayerMotion(int Protocol, RemotePlayerProfile Profile, VanillaEntityInterpolation? Position, VanillaEntityVelocity Velocity);
+    private sealed record RemotePlayerMotion(int Protocol, RemotePlayerProfile Profile, VanillaEntityInterpolation? Position, VanillaEntityVelocity Velocity)
+    {
+        public TabListEntry? PlayerInfo { get; set; }
+    }
 
-    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport)
+    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo)
     {
         // Actual RemotePlayer traces cover all 75 releases; generic spawn starts carrying players in 1.20.2, before Entity.recreateFromPacket applies their velocity in 1.21.5.
         public static RemotePlayerProfile ForProtocol(int protocol)
-            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498);
+            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498, protocol >= 761);
     }
 }

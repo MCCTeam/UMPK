@@ -5,6 +5,7 @@ using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
 using Umpk.Game.Entities;
+using Umpk.Game.Players;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
 using Umpk.Hosting;
@@ -323,6 +324,45 @@ public sealed class RemotePlayerVelocityRuntimeTests
         }
         await ticks.FireAsync(ct);
         Assert.Equal(Vec3d.Zero, entity.Velocity);
+    }
+
+    [Theory]
+    [InlineData(760, false)]
+    [InlineData(760, true)]
+    [InlineData(761, false)]
+    [InlineData(761, true)]
+    [InlineData(770, false)]
+    [InlineData(770, true)]
+    [InlineData(777, false)]
+    [InlineData(777, true)]
+    public async Task RemotePlayerTickResolvesInfoBeforeMotionEvenWithoutPhysics(int protocol, bool firstSpectator)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain: false, physics: false);
+        await JoinAsync(client, server, version, ct);
+        await SendAndObserveAsync(client, server, version, (IPacket)Spawn(Create(protocol), protocol), ct);
+        Entity entity = client.State.Entities.Get(RemoteId)!;
+        await SendAndObserveAsync(client, server, version, Add(firstSpectator), ct);
+        await ticks.FireAsync(ct);
+        IPacket remove = protocol < 761
+            ? new ClientboundLegacyPlayerListItemPacket(LegacyPlayerListAction.RemovePlayer, [new(entity.Uuid, null, null, 0, 0, null)])
+            : new ClientboundPlayerInfoRemovePacket([entity.Uuid]);
+        await SendAndObserveAsync(client, server, version, remove, ct);
+        await SendAndObserveAsync(client, server, version, Add(!firstSpectator), ct);
+        bool spectator = await client.InvokeAsync(current => current.State.EntityMotion.IsSpectator(entity, current.State.TabList), ct);
+        Assert.Equal(protocol >= 761 ? firstSpectator : !firstSpectator, spectator);
+
+        IPacket Add(bool spectator)
+        {
+            GameMode mode = spectator ? GameMode.Spectator : GameMode.Survival;
+            return protocol < 761
+                ? new ClientboundLegacyPlayerListItemPacket(LegacyPlayerListAction.AddPlayer, [new(entity.Uuid, "TickPeer", [], (int)mode, 0, null)])
+                : new ClientboundPlayerInfoUpdatePacket(PlayerInfoActions.AddPlayer | PlayerInfoActions.UpdateGameMode, [new(entity.Uuid, "TickPeer", [], false, null, mode, false, 0, null, 0, true)]);
+        }
     }
 
     private static Vec3d Advance(Vec3d current, Vec3d target, int remaining)

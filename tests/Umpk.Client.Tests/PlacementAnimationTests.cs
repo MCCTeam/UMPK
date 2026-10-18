@@ -72,6 +72,54 @@ public sealed class PlacementAnimationTests
     public Task PlayerPlacementUsesItsNativePoseBounds(int protocol, EntityPose pose, double x, double y, bool clear)
         => PlaceWithEntityGeometryAsync(protocol, "player", -1, false, pose, x, y, clear && protocol < 777);
 
+    public static IEnumerable<object[]> PlayerSpectatorCases()
+    {
+        foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct().Where(protocol => protocol >= 498))
+            foreach (GameMode mode in new[] { GameMode.Survival, GameMode.Creative, GameMode.Adventure, GameMode.Spectator })
+                yield return [protocol, mode];
+    }
+
+    [Theory]
+    [MemberData(nameof(PlayerSpectatorCases))]
+    public async Task PlacementObstructionExcludesSpectatorPlayers(int protocol, GameMode mode)
+    {
+        await using var harness = new Harness(protocol);
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("player"), out RegistryEntry<EntityTypeDefinition> type));
+        var entity = new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(1.5, 65, 1.5) };
+        harness.State.Entities.Add(entity);
+        harness.State.EntityMotion.RegisterRemotePlayer(entity, protocol);
+        harness.State.TabList.Upsert(new TabListEntry(new GameProfile(entity.Uuid, "SpectatorPeer")) { GameMode = mode, Listed = false });
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal(mode == GameMode.Spectator && protocol < 777 ? 2 : 1, harness.Sink.Packets.Count);
+    }
+
+    [Theory]
+    [InlineData(8.5, true, false)]
+    [InlineData(2.3, true, true)]
+    [InlineData(1.5, false, true)]
+    public async Task PlacementQueriesPlayerInfoOnlyInsideTheNativeCandidateBox(double x, bool clear, bool queried)
+    {
+        const int protocol = 770;
+        await using var harness = new Harness(protocol);
+        Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("player"), out RegistryEntry<EntityTypeDefinition> type));
+        var entity = new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(x, 65, 1.5) };
+        harness.State.Entities.Add(entity);
+        harness.State.EntityMotion.RegisterRemotePlayer(entity, protocol);
+        harness.State.TabList.Upsert(new TabListEntry(new GameProfile(entity.Uuid, "QueryPeer")) { GameMode = GameMode.Survival });
+        Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
+        await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
+        harness.Acknowledge();
+        await place.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal(clear ? 2 : 1, harness.Sink.Packets.Count);
+        harness.State.TabList.Upsert(new TabListEntry(new GameProfile(entity.Uuid, "QueryPeer")) { GameMode = GameMode.Spectator });
+        Assert.Equal(!queried, harness.State.EntityMotion.IsSpectator(entity, harness.State.TabList));
+    }
+
     public static IEnumerable<object[]> EntityRoleCases()
     {
         foreach (int protocol in new[] { 477, 480, 485, 490 })

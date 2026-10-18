@@ -30,6 +30,8 @@
     <EmbeddedResource Include="Fixtures/ShulkerGeometryEdges.native.json.gz" />
     <EmbeddedResource Include="Fixtures/PlayerEntityGeometry.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPosePlayerGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerClearance.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyCompositeClearance.native.json.gz" />
     <EmbeddedResource Include="Fixtures/PlayerInfoLookup.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyRemotePlayer.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyTeleportInterpolation.native.json" />

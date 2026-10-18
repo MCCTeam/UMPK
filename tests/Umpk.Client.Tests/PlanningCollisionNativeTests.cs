@@ -19,7 +19,12 @@ public sealed class PlanningCollisionNativeTests
 {
     [Theory]
     [InlineData(47, BlockCollisionQueryEra.BoundingBoxes)]
-    [InlineData(393, BlockCollisionQueryEra.BoundingBoxes)]
+    [InlineData(340, BlockCollisionQueryEra.BoundingBoxes)]
+    [InlineData(393, BlockCollisionQueryEra.QueryFirstStrict)]
+    [InlineData(401, BlockCollisionQueryEra.QueryFirstStrict)]
+    [InlineData(404, BlockCollisionQueryEra.QueryFirstStrict)]
+    [InlineData(477, BlockCollisionQueryEra.QueryFirst)]
+    [InlineData(490, BlockCollisionQueryEra.QueryFirst)]
     [InlineData(498, BlockCollisionQueryEra.QueryFirst)]
     [InlineData(735, BlockCollisionQueryEra.BlockFirst)]
     [InlineData(755, BlockCollisionQueryEra.Modern)]

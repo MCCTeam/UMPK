@@ -6,6 +6,40 @@ namespace Umpk.DataGen.Tests;
 public sealed class CollisionGridDatasetTests
 {
     [Fact]
+    public void NativeEmptyShapeRetainsZeroCoordinatePlanes()
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        JsonObject grid = Measurement();
+        grid["groups"]![0]!["planes"] = new JsonArray(new JsonArray(), new JsonArray(), new JsonArray());
+        File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-grids.json"), grid.ToJsonString());
+        Dataset data = DatasetLoader.Load(builder.Root);
+        Assert.Empty(Validator.Validate(data));
+        Assert.Contains("BlockCollisionGridsV770", new Emitter(data).Emit()["SharedCollisionGrids.g.cs"].Text, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("partial-axis")]
+    [InlineData("occupied-cell")]
+    [InlineData("box")]
+    [InlineData("canonical")]
+    public void AbsentCoordinatePlanesCannotHideMalformedGeometry(string defect)
+    {
+        using DatasetBuilder builder = DatasetBuilder.ValidBaseline();
+        JsonObject grid = Measurement();
+        JsonNode empty = grid["groups"]![0]!;
+        empty["planes"] = new JsonArray(new JsonArray(), new JsonArray(), new JsonArray());
+        switch (defect)
+        {
+            case "partial-axis": empty["planes"]![0]!.AsArray().Add(0); break;
+            case "occupied-cell": empty["cells"]!.AsArray().Add(0); break;
+            case "box": empty["boxes"]!.AsArray().Add(new JsonArray(0, 0, 0, 1, 1, 1)); break;
+            case "canonical": empty["canonical_full_block"] = true; break;
+        }
+        File.WriteAllText(Path.Combine(builder.Root, "770/block-collision-grids.json"), grid.ToJsonString());
+        Assert.Contains(Validator.Validate(DatasetLoader.Load(builder.Root)), problem => problem.Contains("block-collision-grids.json", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void MeasuredOffsetGridsReplaceTheirOriginOnlyReferences()
     {
         using DatasetBuilder builder = DatasetBuilder.ValidBaseline();

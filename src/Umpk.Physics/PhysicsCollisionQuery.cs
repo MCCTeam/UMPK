@@ -22,4 +22,18 @@ public sealed class PhysicsCollisionQuery
         var body = new BodyCollisionContext(descending, fallDistance, powderSnowWalkable, sourcePosition);
         return CollisionResolver.NoCollision(_world, box, sourcePosition.Y, body, _scratch);
     }
+
+    /// <summary>Tests one block's state-only collision shape against the proposed box. The caller owns block iteration and any entity, border or entity-context checks.</summary>
+    public bool IntersectsBlock(BlockPos position, in Aabb box)
+    {
+        var block = _world.GetBlock(position);
+        if (_world.CollisionQueryEra != BlockCollisionQueryEra.BoundingBoxes && _world.GetCollisionGrid(block) is { } grid)
+            return VoxelCollisionQuery.Intersects(grid, position, box, _world.CollisionQueryEra, grid.OffsetAt(position));
+
+        Vec3d offset = BlockShapeOffset.For(block, position);
+        foreach (Aabb shape in _world.GetCollisionShapes(block))
+            if (shape.Move(offset).Move(position.X, position.Y, position.Z).Intersects(box))
+                return true;
+        return false;
+    }
 }

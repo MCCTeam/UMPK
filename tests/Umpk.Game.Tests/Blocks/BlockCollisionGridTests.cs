@@ -7,6 +7,35 @@ namespace Umpk.Game.Tests.Blocks;
 public sealed class BlockCollisionGridTests
 {
     [Fact]
+    public void NativeEmptyShapeRetainsZeroCoordinatePlanes()
+    {
+        var grid = new BlockCollisionGrid([], [], [], [], []);
+        Assert.Empty(grid.XCoordinates.ToArray());
+        Assert.Empty(grid.YCoordinates.ToArray());
+        Assert.Empty(grid.ZCoordinates.ToArray());
+        Assert.Empty(grid.OccupiedCells.ToArray());
+        Assert.Empty(grid.Boxes.ToArray());
+        Assert.False(grid.CanonicalFullBlock);
+    }
+
+    [Theory]
+    [InlineData("partial-axis")]
+    [InlineData("occupied-cell")]
+    [InlineData("box")]
+    [InlineData("canonical")]
+    [InlineData("offset")]
+    public void AbsentCoordinatePlanesCannotHideMalformedGeometry(string defect)
+    {
+        double[] x = defect == "partial-axis" ? [0] : [];
+        int[] cells = defect == "occupied-cell" ? [0] : [];
+        Aabb[] boxes = defect == "box" ? [Aabb.BlockAt(0, 0, 0)] : [];
+        if (defect == "offset")
+            Assert.Throws<ArgumentException>(() => BlockCollisionGrid.CreateWithHorizontalOffset(x, [], [], cells, boxes, .25));
+        else
+            Assert.Throws<ArgumentException>(() => new BlockCollisionGrid(x, [], [], cells, boxes, defect == "canonical"));
+    }
+
+    [Fact]
     public void NativeCoincidentWallPlanesRemainOccupied()
     {
         var grid = new BlockCollisionGrid([.5, .5], [0, 1.5], [.5, .5], [0], [new(.5, 0, .5, .5, 1.5, .5)]);

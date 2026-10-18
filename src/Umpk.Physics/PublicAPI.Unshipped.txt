@@ -3,6 +3,7 @@ Umpk.Physics.IPhysicsWorldView.CollidesWithBorder(in Umpk.Geometry.Aabb box, Ump
 Umpk.Physics.PhysicsCollisionQuery
 Umpk.Physics.PhysicsCollisionQuery.PhysicsCollisionQuery(Umpk.Physics.IPhysicsWorldView! world) -> void
 Umpk.Physics.PhysicsCollisionQuery.NoCollision(Umpk.Geometry.Vec3d sourcePosition, in Umpk.Geometry.Aabb box, bool descending = false, double fallDistance = 0, bool powderSnowWalkable = false) -> bool
+Umpk.Physics.PhysicsCollisionQuery.IntersectsBlock(Umpk.Geometry.BlockPos position, in Umpk.Geometry.Aabb box) -> bool
 Umpk.Physics.FluidMovementEra
 Umpk.Physics.FluidMovementEra.Legacy = 0 -> Umpk.Physics.FluidMovementEra
 Umpk.Physics.FluidMovementEra.SwimmingUpdate = 1 -> Umpk.Physics.FluidMovementEra
@@ -337,6 +338,7 @@ Umpk.Physics.BlockCollisionQueryEra.BoundingBoxes = 0 -> Umpk.Physics.BlockColli
 Umpk.Physics.BlockCollisionQueryEra.QueryFirst = 1 -> Umpk.Physics.BlockCollisionQueryEra
 Umpk.Physics.BlockCollisionQueryEra.BlockFirst = 2 -> Umpk.Physics.BlockCollisionQueryEra
 Umpk.Physics.BlockCollisionQueryEra.Modern = 3 -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Physics.BlockCollisionQueryEra.QueryFirstStrict = 4 -> Umpk.Physics.BlockCollisionQueryEra
 Umpk.Physics.IPhysicsWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollisionQueryEra
 Umpk.Physics.IPhysicsWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
 static Umpk.Physics.PhysicsProfile.BlockCollisionQueryForProtocol(int protocol) -> Umpk.Physics.BlockCollisionQueryEra

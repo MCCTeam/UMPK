@@ -42,6 +42,10 @@ def verify(document: object, *, offsets: bool = False) -> None:
         if not isinstance(group.get("planes"), list) or len(group["planes"]) != 3:
             raise ValueError(f"group {index}: expected three coordinate-plane lists")
         planes = group["planes"]
+        if all(isinstance(axis, list) and not axis for axis in planes):
+            if group["canonical_full_block"] or group.get("cells") != [] or group.get("boxes") != []:
+                raise ValueError(f"group {index}: absent coordinate planes require an empty noncanonical shape")
+            continue
         for axis in planes:
             if not isinstance(axis, list) or not axis or any(not number(value) for value in axis):
                 raise ValueError(f"group {index}: coordinates must be finite numbers")

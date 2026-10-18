@@ -47,6 +47,12 @@ internal sealed record CollisionGridTable(int Schema, int StateCount, string Cel
             CollisionGridRow group = Groups[index];
             if (!double.IsFinite(group.MaxHorizontalOffset) || (Offsets ? group.MaxHorizontalOffset <= 0 || group.Canonical || group.Cells.Length == 0 : group.MaxHorizontalOffset != 0))
                 Reject($"group {index} has an invalid position-offset contract");
+            if (group.Planes.Length == 3 && group.Planes.All(axis => axis.Length == 0))
+            {
+                if (group.Canonical || group.Cells.Length != 0 || group.Boxes.Length != 0)
+                    Reject($"group {index} absent coordinate planes require an empty noncanonical shape");
+                continue;
+            }
             if (group.Planes.Length != 3 || group.Planes.Any(axis => axis.Length == 0 || axis.Any(value => !double.IsFinite(value)) || axis.Zip(axis.Skip(1)).Any(pair => pair.First > pair.Second)))
             {
                 Reject($"group {index} has invalid coordinate planes");

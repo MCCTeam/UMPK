@@ -356,3 +356,25 @@ for release in 1.14 1.14.1 1.14.2 1.14.3; do
   python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$pose_measurements/$release/item" --check
 done
 ```
+
+## Early voxel grids and legacy resize queries
+
+`run_legacy_collision_grids.py` measures every original block state for the seven releases from 1.13 through 1.14.3. It uses the audited client symbol bindings, a fresh signature-free copy with byte-identical original classes, Java 11 and a fresh external output directory. Native planes, occupied cells, boxes and canonical full-block identity remain unchanged. The 1.13 empty shape has three empty coordinate lists. Default shapes do not establish neighbor, block-entity or actor-context variants.
+
+```bash
+python3 tools/extraction/run_legacy_collision_grids.py --official "$MINECRAFT_OFFICIAL_ROOT" --out /absolute/fresh-collision-grid-run
+python3 tools/extraction/extract_legacy_collision_grids.py --official "$MINECRAFT_OFFICIAL_ROOT" --measurements /absolute/fresh-collision-grid-run --data data/java
+```
+
+The importer verifies run files, source hashes, official jar hashes, native class origins and unchanged original class bytes before writing all seven tables. Add `--check` to compare the committed data with the same audited measurement run. The recorded dataset uses `runs/pre-pose-collision-grids-20261018-v3`; its provenance identifies each exact measurement.
+
+`extract_legacy_player_clearance.py` reconstructs both resize-query replay fixtures from the original query, player size-phase and composite measurements. It verifies the source, artifacts, helper classes and run receipts before deriving the fixtures. The captures control air/stone inputs and bypass the world constructor; they do not execute complete player ticks or bed/death packet handlers.
+
+```bash
+python3 tools/extraction/extract_legacy_player_clearance.py \
+  --classic "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-client-clearance-20261018-v1" \
+  --voxel "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-voxel-clearance-20261018-v1" \
+  --phase "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-size-phase-20261018-v3" \
+  --composite "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-composite-clearance-20261018-v1" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --out tests/Umpk.Client.Tests/Fixtures --check
+```

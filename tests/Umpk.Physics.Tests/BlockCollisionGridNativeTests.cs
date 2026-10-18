@@ -50,8 +50,10 @@ public sealed class BlockCollisionGridNativeTests
         {
             world.Position = new BlockPos(row[2][0].GetInt32(), row[2][1].GetInt32(), row[2][2].GetInt32());
             world.Grid = shapes[row[1].GetInt32()];
-            bool actual = query.NoCollision(new Vec3d(.5, 65, .5), Box(row[3]));
-            if (actual != row[4].GetBoolean())
+            Aabb box = Box(row[3]);
+            bool actual = query.NoCollision(new Vec3d(.5, 65, .5), box);
+            bool singleBlockClear = !query.IntersectsBlock(world.Position, box);
+            if (actual != row[4].GetBoolean() || singleBlockClear != row[4].GetBoolean())
                 failures.Add(row[0].GetString()!);
             count++;
         }

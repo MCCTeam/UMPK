@@ -14,4 +14,7 @@ public enum BlockCollisionQueryEra
 
     /// <summary>Also discard thin query shapes and use rounded query-grid detection.</summary>
     Modern = 3,
+
+    /// <summary>Use query-first merging with the 1.13 strict plane-coalescing comparison, preserving planes exactly one epsilon apart.</summary>
+    QueryFirstStrict = 4,
 }

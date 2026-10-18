@@ -24,6 +24,30 @@ def top_slab() -> dict:
 
 
 class CollisionGridVerificationTests(unittest.TestCase):
+    def test_preserves_native_empty_shape_without_coordinate_planes(self) -> None:
+        data = top_slab()
+        data['groups'][0] = {'canonical_full_block': False, 'planes': [[], [], []], 'cells': [], 'boxes': []}
+        before = copy.deepcopy(data)
+        verify(data)
+        self.assertEqual(before, data)
+
+    def test_absent_planes_cannot_hide_malformed_geometry(self) -> None:
+        for defect in ['partial-axis', 'occupied-cell', 'box', 'canonical']:
+            with self.subTest(defect=defect):
+                data = top_slab()
+                group = {'canonical_full_block': False, 'planes': [[], [], []], 'cells': [], 'boxes': []}
+                if defect == 'partial-axis':
+                    group['planes'][0] = [0]
+                elif defect == 'occupied-cell':
+                    group['cells'] = [0]
+                elif defect == 'box':
+                    group['boxes'] = [[0, 0, 0, 1, 1, 1]]
+                else:
+                    group['canonical_full_block'] = True
+                data['groups'][0] = group
+                with self.assertRaises(ValueError):
+                    verify(data)
+
     def test_accepts_sparse_offset_grids_without_changing_native_geometry(self) -> None:
         data = top_slab()
         data["state_count"] = 8

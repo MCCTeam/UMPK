@@ -963,6 +963,13 @@ public static partial class JavaGameData
     /// <summary>Exact collision grids for measured protocols. An absent table retains the source's existing bounding-box path.</summary>
     private static ReadOnlySpan<byte> BlockCollisionGrids(int protocol) => protocol switch
     {
+        393 => global::Umpk.Data.Java.V393.Descriptor.BlockCollisionGrids,
+        401 => global::Umpk.Data.Java.V401.Descriptor.BlockCollisionGrids,
+        404 => global::Umpk.Data.Java.V404.Descriptor.BlockCollisionGrids,
+        477 => global::Umpk.Data.Java.V477.Descriptor.BlockCollisionGrids,
+        480 => global::Umpk.Data.Java.V480.Descriptor.BlockCollisionGrids,
+        485 => global::Umpk.Data.Java.V485.Descriptor.BlockCollisionGrids,
+        490 => global::Umpk.Data.Java.V490.Descriptor.BlockCollisionGrids,
         498 => global::Umpk.Data.Java.V498.Descriptor.BlockCollisionGrids,
         573 => global::Umpk.Data.Java.V573.Descriptor.BlockCollisionGrids,
         575 => global::Umpk.Data.Java.V575.Descriptor.BlockCollisionGrids,

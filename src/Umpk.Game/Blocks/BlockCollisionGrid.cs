@@ -10,7 +10,7 @@ public sealed class BlockCollisionGrid
     private readonly int[] _cells;
     private readonly Aabb[] _boxes;
 
-    /// <summary>Copies exact native coordinates, sorted unique occupied cells, and the shape's bounding-box decomposition.</summary>
+    /// <summary>Copies exact native coordinates, sorted unique occupied cells, and the shape's bounding-box decomposition. All three coordinate lists can be empty for a native empty shape.</summary>
     public BlockCollisionGrid(ReadOnlySpan<double> xCoordinates, ReadOnlySpan<double> yCoordinates, ReadOnlySpan<double> zCoordinates, ReadOnlySpan<int> occupiedCells, ReadOnlySpan<Aabb> boxes, bool canonicalFullBlock = false)
         : this(xCoordinates, yCoordinates, zCoordinates, occupiedCells, boxes, canonicalFullBlock, 0)
     {
@@ -20,10 +20,13 @@ public sealed class BlockCollisionGrid
     {
         if (!double.IsFinite(maxHorizontalOffset) || maxHorizontalOffset < 0 || (canonicalFullBlock && maxHorizontalOffset != 0))
             throw new ArgumentOutOfRangeException(nameof(maxHorizontalOffset));
-        ValidateCoordinates(xCoordinates, nameof(xCoordinates));
-        ValidateCoordinates(yCoordinates, nameof(yCoordinates));
-        ValidateCoordinates(zCoordinates, nameof(zCoordinates));
-        long capacity = checked((long)(xCoordinates.Length - 1) * (yCoordinates.Length - 1) * (zCoordinates.Length - 1));
+        bool noPlanes = xCoordinates.IsEmpty && yCoordinates.IsEmpty && zCoordinates.IsEmpty;
+        if (noPlanes && (!occupiedCells.IsEmpty || !boxes.IsEmpty || maxHorizontalOffset != 0))
+            throw new ArgumentException("A shape without coordinate planes must have no occupied cells, boxes or position offset.", nameof(xCoordinates));
+        ValidateCoordinates(xCoordinates, nameof(xCoordinates), noPlanes);
+        ValidateCoordinates(yCoordinates, nameof(yCoordinates), noPlanes);
+        ValidateCoordinates(zCoordinates, nameof(zCoordinates), noPlanes);
+        long capacity = noPlanes ? 0 : checked((long)(xCoordinates.Length - 1) * (yCoordinates.Length - 1) * (zCoordinates.Length - 1));
         if (occupiedCells.IsEmpty != boxes.IsEmpty)
             throw new ArgumentException("Occupied cells and collision boxes must agree on whether the shape is empty.", nameof(boxes));
         int previous = -1;
@@ -94,9 +97,9 @@ public sealed class BlockCollisionGrid
 
     private static bool IsUnitAxis(ReadOnlySpan<double> coordinates) => coordinates.Length == 2 && coordinates[0] == 0 && coordinates[1] == 1;
 
-    private static void ValidateCoordinates(ReadOnlySpan<double> coordinates, string name)
+    private static void ValidateCoordinates(ReadOnlySpan<double> coordinates, string name, bool allowEmpty)
     {
-        if (coordinates.IsEmpty)
+        if (coordinates.IsEmpty && !allowEmpty)
             throw new ArgumentException("A voxel axis must contain at least one coordinate.", name);
         for (int index = 0; index < coordinates.Length; index++)
             if (!double.IsFinite(coordinates[index]) || (index > 0 && coordinates[index] < coordinates[index - 1]))

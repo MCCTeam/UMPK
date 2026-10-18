@@ -17,13 +17,14 @@ public sealed class GeneratedCollisionGridCoverageTests
     public void GeneratedDefaultGridsRetainEveryNativeCoordinateAndCell()
     {
         string root = Path.Combine(FixturePaths.RepoRoot(), "data", "java");
-        int protocols = 0, checkedStates = 0;
+        int protocols = 0, checkedStates = 0, nativeStates = 0;
         foreach (string path in Directory.EnumerateFiles(root, "block-collision-grids.json", SearchOption.AllDirectories))
         {
             using JsonDocument document = JsonDocument.Parse(File.ReadAllBytes(path));
             string offsetsPath = Path.Combine(Path.GetDirectoryName(path)!, "block-collision-offsets.json");
             using JsonDocument? offsets = File.Exists(offsetsPath) ? JsonDocument.Parse(File.ReadAllBytes(offsetsPath)) : null;
             JsonElement table = document.RootElement;
+            nativeStates += table.GetProperty("state_count").GetInt32();
             int protocol = int.Parse(Path.GetFileName(Path.GetDirectoryName(path))!, CultureInfo.InvariantCulture);
             Registry<BlockDefinition> blocks = JavaGameData.Registries(protocol).Blocks;
             var data = new RegistryBlockDataSource(blocks, isLegacy: false);
@@ -53,8 +54,9 @@ public sealed class GeneratedCollisionGridCoverageTests
             }
             protocols++;
         }
-        Assert.Equal(32, protocols);
-        Assert.True(checkedStates > 700_000);
+        Assert.Equal(39, protocols);
+        Assert.Equal(797_628, nativeStates);
+        Assert.True(checkedStates > 770_000);
     }
 
     [Fact]

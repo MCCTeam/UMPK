@@ -5,7 +5,7 @@ using Umpk.Geometry;
 namespace Umpk.Physics;
 
 /// <summary>Intersects a translated block grid with a native AABB query shape. The block iterator wraps coordinate lists on translation, so two implicit cube-list merging is unreachable here.</summary>
-/// <remarks>1.14.4-client-decompiled net/minecraft/world/level/LevelReader.java supplies query-first merging; 1.16-client-decompiled net/minecraft/world/level/CollisionSpliterator.java adds the canonical full-block shortcut and block-first merging. 1.17-client-decompiled net/minecraft/world/phys/shapes/Shapes.java changes thin-query and grid detection. 26.3-client-decompiled net/minecraft/world/phys/shapes/IndirectMerger.java retains the previous plane's index mapping until the next distinct plane is found.</remarks>
+/// <remarks>1.13.2-client-decompiled cep.java keeps planes exactly one epsilon apart; 1.14-client-decompiled csi.java changes that strict comparison. 1.14.4-client-decompiled net/minecraft/world/level/LevelReader.java supplies query-first merging; 1.16-client-decompiled net/minecraft/world/level/CollisionSpliterator.java adds the canonical full-block shortcut and block-first merging. 1.17-client-decompiled net/minecraft/world/phys/shapes/Shapes.java changes thin-query and grid detection. 26.3-client-decompiled net/minecraft/world/phys/shapes/IndirectMerger.java retains the previous plane's index mapping until the next distinct plane is found.</remarks>
 internal static class VoxelCollisionQuery
 {
     private const double Epsilon = PhysicsConstants.CollisionEpsilon;
@@ -14,7 +14,7 @@ internal static class VoxelCollisionQuery
     {
         if (grid.OccupiedCells.IsEmpty)
             return false;
-        if (era >= BlockCollisionQueryEra.BlockFirst && grid.CanonicalFullBlock)
+        if (era is BlockCollisionQueryEra.BlockFirst or BlockCollisionQueryEra.Modern && grid.CanonicalFullBlock)
             return Aabb.BlockAt(position.X, position.Y, position.Z).Intersects(query);
         bool modern = era == BlockCollisionQueryEra.Modern;
         if (modern && (query.XSize < Epsilon || query.YSize < Epsilon || query.ZSize < Epsilon))
@@ -59,10 +59,11 @@ internal static class VoxelCollisionQuery
         matches.Clear();
         try
         {
-            bool queryFirst = era == BlockCollisionQueryEra.QueryFirst;
-            MarkAxis(grid.XCoordinates, shapeOffset.X, position.X, queryCoordinates[..sizes[0]], low[0], high[0], queryFirst, matches[..nx]);
-            MarkAxis(grid.YCoordinates, shapeOffset.Y, position.Y, queryCoordinates.Slice(9, sizes[1]), low[1], high[1], queryFirst, matches.Slice(nx, ny));
-            MarkAxis(grid.ZCoordinates, shapeOffset.Z, position.Z, queryCoordinates.Slice(18, sizes[2]), low[2], high[2], queryFirst, matches.Slice(nx + ny, nz));
+            bool queryFirst = era is BlockCollisionQueryEra.QueryFirst or BlockCollisionQueryEra.QueryFirstStrict;
+            bool strict = era == BlockCollisionQueryEra.QueryFirstStrict;
+            MarkAxis(grid.XCoordinates, shapeOffset.X, position.X, queryCoordinates[..sizes[0]], low[0], high[0], queryFirst, strict, matches[..nx]);
+            MarkAxis(grid.YCoordinates, shapeOffset.Y, position.Y, queryCoordinates.Slice(9, sizes[1]), low[1], high[1], queryFirst, strict, matches.Slice(nx, ny));
+            MarkAxis(grid.ZCoordinates, shapeOffset.Z, position.Z, queryCoordinates.Slice(18, sizes[2]), low[2], high[2], queryFirst, strict, matches.Slice(nx + ny, nz));
             foreach (int cell in grid.OccupiedCells)
             {
                 int z = cell % nz, xy = cell / nz, y = xy % ny, x = xy / ny;
@@ -94,7 +95,7 @@ internal static class VoxelCollisionQuery
         return -1;
     }
 
-    private static void MarkAxis(ReadOnlySpan<double> block, double shapeOffset, double offset, ReadOnlySpan<double> query, int low, int high, bool queryFirst, Span<byte> matches)
+    private static void MarkAxis(ReadOnlySpan<double> block, double shapeOffset, double offset, ReadOnlySpan<double> query, int low, int high, bool queryFirst, bool strict, Span<byte> matches)
     {
         bool identical = block.Length == query.Length;
         for (int index = 0; identical && index < block.Length; index++)
@@ -128,7 +129,7 @@ internal static class VoxelCollisionQuery
                     continue;
             }
             double coordinate = chooseBlock ? block[b - 1] + shapeOffset + offset : query[q - 1];
-            if (!(last >= coordinate - Epsilon))
+            if (strict ? !(last > coordinate - Epsilon) : !(last >= coordinate - Epsilon))
             {
                 if (pendingBlock >= 0 && pendingBlock < matches.Length && pendingQuery >= low && pendingQuery < high)
                     matches[pendingBlock] = 1;

@@ -8,6 +8,19 @@ namespace Umpk.Physics.Tests;
 public sealed class PhysicsCollisionQueryTests
 {
     [Fact]
+    public void SingleBlockQueryExcludesEntitiesBordersAndOtherBlocks()
+    {
+        var world = new BorderWorld();
+        world.Blocks.Set(0, 64, 0, BlockKind.Stone);
+        var query = new PhysicsCollisionQuery(world);
+        var box = new Aabb(.2, 64.2, .2, .8, 64.8, .8);
+        Assert.False(query.IntersectsBlock(new BlockPos(1, 64, 0), box));
+        Assert.True(query.IntersectsBlock(new BlockPos(0, 64, 0), box));
+        Assert.Equal(0, world.BorderCalls);
+        Assert.Equal(0, world.EntityCalls);
+    }
+
+    [Fact]
     public void BorderQueryReceivesTheActualSourcePosition()
     {
         var world = new BorderWorld();

@@ -75,7 +75,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         _positionKnown = true;
     }
 
-    public bool BeginSleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null)
+    public bool BeginSleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
     {
         _bed = bed;
         if (world is null)
@@ -87,7 +87,8 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
             _geometry.BeginSleepWithoutBedRead(bed);
         else
         {
-            if (MissingBlockColumn(bed, membership) || world.GetColumn(bed) is null || !source.TryGetBedFacing(world.GetBlockStateId(bed), out Direction facing))
+            int state = ReadState(world, bed, membership, emptyChunk);
+            if (state < 0 || !source.TryGetBedFacing(state, out Direction facing))
             {
                 _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
                 return false;
@@ -99,7 +100,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         return true;
     }
 
-    public void Wake(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null)
+    public void Wake(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
     {
         if (_bed is not { } bed || world is null)
         {
@@ -113,21 +114,24 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
             _bed = null;
             return;
         }
-        if (MissingBlockColumn(bed, membership) || world.GetColumn(bed) is null)
+        int state = ReadState(world, bed, membership, emptyChunk);
+        if (state < 0)
         {
             _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
             return;
         }
-        int state = world.GetBlockStateId(bed);
         if (source.TryGetBedFacing(state, out Direction facing))
         {
-            if (!TryClearOccupied(world.GetBlock(bed), out int unoccupied))
+            if (!TryClearOccupied(world.BlockData.GetState(state), out int unoccupied))
             {
                 _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
                 return;
             }
-            world.SetBlockStateId(bed, unoccupied);
-            var query = new LegacyBedExitQuery(protocol, source, cell => MissingBlockColumn(cell, membership) || world.GetColumn(cell) is null ? -1 : world.GetBlockStateId(cell));
+            if (UsesEmptyChunk(bed, membership, emptyChunk))
+                emptyChunk!.ObserveWrite(membership!, bed, unoccupied);
+            else
+                world.SetBlockStateId(bed, unoccupied);
+            var query = new LegacyBedExitQuery(protocol, source, cell => ReadState(world, cell, membership, emptyChunk));
             _positionKnown = _geometry.TryWakeFromIntactBed(bed, facing, query.TryCanStand, out _);
             _dimensionsKnown = _lifecycleKnown = true;
             if (_positionKnown)
@@ -137,7 +141,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         }
         else
         {
-            var current = world.GetBlock(bed);
+            var current = world.BlockData.GetState(state);
             if (!current.IsValid || current.Block.Id.Path is "bed" || current.Block.Id.Path.EndsWith("_bed", StringComparison.Ordinal))
             {
                 _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
@@ -151,6 +155,13 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
 
     private bool MissingBlockColumn(BlockPos cell, EntityMembershipState? membership)
         => !_profile.RetainsEmptyChunkWrites && membership is not null && !membership.HasColumn(cell);
+
+    private bool UsesEmptyChunk(BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
+        => _profile.RetainsEmptyChunkWrites && emptyChunk is not null && membership is not null && !membership.HasColumn(cell);
+
+    private int ReadState(World world, BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
+        => UsesEmptyChunk(cell, membership, emptyChunk) ? emptyChunk!.Read(cell)
+            : MissingBlockColumn(cell, membership) || world.GetColumn(cell) is null ? -1 : world.GetBlockStateId(cell);
 
     private static bool TryClearOccupied(BlockState state, out int result)
     {

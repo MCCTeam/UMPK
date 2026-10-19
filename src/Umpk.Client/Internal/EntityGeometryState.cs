@@ -16,6 +16,7 @@ internal sealed class EntityGeometryState
     private World? _legacyWorld;
     private EntityMembershipState? _legacyMembership;
     private LegacyPlayerResizeClearance? _legacyClearance;
+    private LegacyEmptyChunkState? _legacyEmptyChunk;
     private bool _hasLivingTickRules;
     private bool _hasShulkers;
 
@@ -26,6 +27,7 @@ internal sealed class EntityGeometryState
         if (isPlayer && LegacyPlayerGeometryProfile.Supports(protocol))
         {
             _legacyPlayers.Add(entity, new TrackedLegacyPlayerGeometry(entity, protocol));
+            _ = EmptyChunkFor(protocol);
             return;
         }
         if (TrackedShulkerGeometry.TryCreate(entity, protocol, out TrackedShulkerGeometry? shulker) && shulker is not null)
@@ -122,13 +124,23 @@ internal sealed class EntityGeometryState
     }
 
     public bool BeginLegacySleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null)
-        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed, membership);
+        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed, membership, _legacyEmptyChunk);
 
     public void WakeLegacyPlayer(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null)
     {
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
-            legacy.Wake(entity, world, source, membership);
+            legacy.Wake(entity, world, source, membership, _legacyEmptyChunk);
     }
+
+    public void ObserveLegacyBlockUpdate(int protocol, EntityMembershipState membership, BlockPos cell, int state)
+        => EmptyChunkFor(protocol)?.ObserveWrite(membership, cell, state);
+
+    public void ObserveLegacyPartialColumn(int protocol, EntityMembershipState membership, ChunkColumn column)
+        => EmptyChunkFor(protocol)?.InvalidatePartialColumn(membership, column);
+
+    private LegacyEmptyChunkState? EmptyChunkFor(int protocol)
+        => LegacyPlayerGeometryProfile.Supports(protocol) && LegacyPlayerGeometryProfile.ForProtocol(protocol).RetainsEmptyChunkWrites
+            ? _legacyEmptyChunk ??= new LegacyEmptyChunkState() : null;
 
     public bool ObserveLegacyDeath(Entity entity)
     {
@@ -198,6 +210,7 @@ internal sealed class EntityGeometryState
         _legacyWorld = null;
         _legacyMembership = null;
         _legacyClearance = null;
+        _legacyEmptyChunk = null;
         _hasLivingTickRules = false;
         _hasShulkers = false;
     }

@@ -46,7 +46,10 @@ internal sealed class WorldApplier : IApplier
                     world.RemoveBlockEntityNbt(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
                 }
                 else
+                {
+                    context.State.EntityGeometry.ObserveLegacyPartialColumn(context.Version.Version.Protocol, context.State.EntityMembership, chunk.Column);
                     world.MergeColumnSections(chunk.Column);
+                }
 
                 foreach (ChunkBlockEntity blockEntity in chunk.BlockEntities)
                     world.SetBlockEntityNbt(blockEntity.Position, blockEntity.Nbt);
@@ -71,6 +74,7 @@ internal sealed class WorldApplier : IApplier
                 return true;
 
             case ClientboundBlockUpdatePacket block:
+                context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, block.Position, block.BlockStateId);
                 world.SetBlockStateId(block.Position, block.BlockStateId);
                 await context.PublishAsync(new BlockChanged(block.Position, block.BlockStateId)).ConfigureAwait(false);
                 return true;
@@ -221,6 +225,7 @@ internal sealed class WorldApplier : IApplier
                 int localZ = (packed >> 8) & 0xF;
                 int worldY = packed & 0xFF;
                 var legacyPos = new BlockPos(baseX + localX, worldY, baseZ + localZ);
+                context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, legacyPos, change.BlockStateId);
                 world.SetBlockStateId(legacyPos, change.BlockStateId);
                 await context.PublishAsync(new BlockChanged(legacyPos, change.BlockStateId)).ConfigureAwait(false);
             }

@@ -83,7 +83,12 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Unknown;
         if (item.IsEmpty || _services.Self.ItemCooldowns.GetValueOrDefault(item.Item.NetworkId) > 0)
             return BlockUsePrediction.Pass;
-        if (!item.Components.HasNoPatch || _services.Self.GameMode == GameMode.Adventure)
+        if (_services.Self.GameMode == GameMode.Adventure)
+            return BlockUsePrediction.Unknown;
+        VanillaHoeUse hoe = VanillaHoeUse.ForProtocol(_services.Version.Version.Protocol);
+        if (hoe.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction toolUse))
+            return hoe.SupportsStack(item) ? toolUse : BlockUsePrediction.Unknown;
+        if (!item.Components.HasNoPatch)
             return BlockUsePrediction.Unknown;
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use))
             return BlockUsePrediction.Unknown;

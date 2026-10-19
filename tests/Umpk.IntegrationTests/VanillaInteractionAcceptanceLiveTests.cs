@@ -5,6 +5,7 @@ using Umpk.Client;
 using Umpk.Client.Actions;
 using Umpk.Data.Java;
 using Umpk.Game.Players;
+using Umpk.Game.Items;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
@@ -165,6 +166,95 @@ public sealed class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper outp
             await server.WriteAsync("capture.json", capture.Frames);
             await server.WriteAsync("client-logs.json", logs.Entries);
             await server.WriteAsync("result.json", new { passed, release, protocol, capture.PayloadBytes, capture.Overflowed });
+            if (client.Status != ClientStatus.Disconnected)
+            {
+                using var disconnectDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                await client.DisconnectAsync(disconnectDeadline.Token);
+            }
+        }
+    }
+
+    [NightlyTheory]
+    [InlineData("1.14.4", 498)]
+    [InlineData("1.17", 755)]
+    [InlineData("26.2", 776)]
+    public async Task HoeUseMatchesNativeTerrainDurabilityAndSwing(string release, int protocol)
+    {
+        Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
+        using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        CancellationToken ct = deadline.Token;
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
+        output.WriteLine($"Evidence: {server.DirectoryPath}");
+        await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
+        var capture = new Capture(version);
+        client.PacketFrameObserved += capture.Observe;
+        bool passed = false;
+        try
+        {
+            await client.ConnectAsync(new ServerEndpoint("127.0.0.1", (ushort)server.Port), ct);
+            Assert.True(await client.Spawned.WaitAsync(ct));
+            await WaitAsync(client, c => c.State.IsLocalChunkLoaded, "hoe terrain", ct);
+            Assert.True(client.State.Features.Physics);
+            Vec3d spawn = await client.InvokeAsync(c => c.State.Self.Position, ct);
+            int x = (int)Math.Floor(spawn.X), z = (int)Math.Floor(spawn.Z);
+            var target = new BlockPos(x + 2, 100, z);
+            await server.ConsoleAsync("difficulty peaceful", ct);
+            await server.ConsoleAsync($"fill {x - 4} 99 {z - 4} {x + 4} 99 {z + 4} minecraft:stone", ct);
+            await server.ConsoleAsync($"fill {x - 4} 100 {z - 4} {x + 4} 104 {z + 4} minecraft:air", ct);
+            await server.ConsoleAsync($"tp {Username} {x + 0.5:R} 100 {z + 0.5:R}", ct);
+            await server.ConsoleAsync($"gamemode survival {Username}", ct);
+            await server.ConsoleAsync($"clear {Username}", ct);
+            await server.ConsoleAsync($"give {Username} minecraft:diamond_hoe 1", ct);
+            await client.Actions.Inventory.SelectHeldSlotAsync(0, ct);
+            await WaitAsync(client, c => c.State.Self.GameMode == GameMode.Survival && c.State.Self.OnGround && Math.Abs(c.State.Self.Position.Y - 100) < .01 && c.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft("diamond_hoe"), "grounded hoe owner and inventory", ct);
+            capture.Start();
+
+            await Use("dirt", "farmland", Direction.Up, blockedAbove: false, success: true, damage: 1);
+            await Use("grass_block", "farmland", Direction.Up, blockedAbove: false, success: true, damage: 2);
+            await Use("coarse_dirt", "dirt", Direction.Up, blockedAbove: false, success: true, damage: 3);
+            await Use("dirt", "dirt", Direction.Down, blockedAbove: false, success: false, damage: 3);
+            await Use("dirt", "dirt", Direction.Up, blockedAbove: true, success: false, damage: 3);
+            if (protocol >= 755)
+                await Use("rooted_dirt", "dirt", Direction.Down, blockedAbove: true, success: true, damage: 4);
+            int replayed = capture.AssertRoundTrips(client.State.Registries!);
+            await client.DisconnectAsync(ct);
+            await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "hoe server-observed disconnect", ct);
+            await server.WriteAsync("hoe-acceptance.json", new { release, protocol, physics = true, dirtGrassAndCoarse = true, wornTool = true, downwardAndCoveredDirtPass = true, rootedDirt = protocol >= 755, replayed, peerObservedDisconnect = true });
+            passed = true;
+
+            async Task Use(string before, string after, Direction face, bool blockedAbove, bool success, int damage)
+            {
+                await server.ConsoleAsync($"setblock {target.X} {target.Y + 1} {target.Z} minecraft:{(blockedAbove ? "stone" : "air")}", ct);
+                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:{before}", ct);
+                await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft(before) && c.State.World.GetBlock(target.Above()).Block.Id == Identifier.Minecraft(blockedAbove ? "stone" : "air"), "hoe precondition updates", ct);
+                int mark = capture.Mark();
+                await client.Actions.Interaction.PlaceBlockAsync(target, face, new Vec3d(.5, 1, .5), ct: ct);
+                await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft(after) && Damage(c.State.Inventory.GetSlot(36)) == damage, "hoe result and native durability", ct);
+                await AssertBlockAsync(server, protocol, target, after, ct);
+                string marker = "hoe-damage-" + Guid.NewGuid().ToString("N");
+                string predicate = protocol < 766
+                    ? "execute if entity @a[name=" + Username + ",nbt={SelectedItem:{id:\"minecraft:diamond_hoe\",tag:{Damage:" + damage + "}}}]"
+                    : $"execute if items entity {Username} weapon.mainhand minecraft:diamond_hoe[minecraft:damage={damage}]";
+                await server.CommandAsync(predicate + " run say " + marker, ct);
+                await WaitAsync(() => server.ServerLog.Contains("[Rcon] " + marker, StringComparison.Ordinal), "independent server durability predicate", ct);
+                await Task.Delay(TimeSpan.FromSeconds(2.1), ct);
+                CapturedFrame[] frames = capture.Since(mark).Where(IsUseOrAnimation).ToArray();
+                Assert.Equal(success ? 2 : 1, frames.Length);
+                var use = Assert.IsType<ServerboundUseItemOnPacket>(frames[0].Packet);
+                Assert.Equal(target, use.Position);
+                Assert.Equal((int)face, use.Face);
+                Assert.Equal(0, use.Hand);
+                if (success)
+                    Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(frames[1].Packet).Hand);
+            }
+
+            int Damage(ItemStack stack) => protocol >= 766 ? stack.Damage : stack.Components.Get(DataComponents.LegacyNbt)?.Nbt.GetInt("Damage") ?? 0;
+        }
+        finally
+        {
+            capture.Stop();
+            await server.WriteAsync("capture.json", capture.Frames);
+            await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "hoe use", capture.PayloadBytes, capture.Overflowed });
             if (client.Status != ClientStatus.Disconnected)
             {
                 using var disconnectDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));

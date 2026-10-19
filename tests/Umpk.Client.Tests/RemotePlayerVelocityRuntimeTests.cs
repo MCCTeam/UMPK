@@ -1,5 +1,7 @@
+using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
@@ -28,6 +30,88 @@ public sealed class RemotePlayerVelocityRuntimeTests
     public static IEnumerable<object[]> Protocols => JavaVersions.All.Select(version => new object[] { version.Version.Protocol });
 
     public static IEnumerable<object[]> GenericSpawnProtocols => Protocols.Where(row => (int)row[0] >= 764);
+
+    public static IEnumerable<object[]> LegacyMembershipProtocols => Protocols.Where(row => (int)row[0] <= 404)
+        .SelectMany(row => new[] { new object[] { row[0], false }, new object[] { row[0], true } });
+
+    [Theory]
+    [MemberData(nameof(LegacyMembershipProtocols))]
+    public async Task LegacyMembershipAndSizeFollowFramedPacketsAndSessionTicks(int protocol, bool terrain)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain, physics: false);
+        await JoinAsync(client, server, version, ct);
+        var initial = new Vec3d(1.5, 64, 1.5);
+        var target = initial.Add(2, 1, 2);
+        await SpawnAndTarget();
+        Entity actor = client.State.Entities.Get(RemoteId)!;
+        await SendAndObserveAsync(client, server, version, new ClientboundBlockUpdatePacket(new BlockPos(1, 64, 1), 0), ct);
+        Assert.Equal(terrain, client.State.HasWorld);
+        if (terrain)
+            Assert.NotNull(client.State.World.GetColumn(new ChunkPos(0, 0)));
+
+        await ticks.FireAsync(ct);
+        Assert.Equal(initial, actor.Position);
+        await SendAndObserveAsync(client, server, version, NativeChunk("initial_full"), ct);
+        await ticks.FireAsync(ct);
+        Assert.Equal(protocol == 47 ? initial.Add(2.0 / 3, 1.0 / 3, 2.0 / 3) : initial, actor.Position);
+        for (int i = 0; i < 3; i++)
+            await ticks.FireAsync(ct);
+        Assert.Equal(target, actor.Position);
+        bool known = await client.InvokeAsync(c => c.State.EntityGeometry.TryGet(actor, JavaGameData.EntityGeometryData(protocol), out _, out _, protocol), ct);
+        Assert.Equal(terrain || protocol == 47, known);
+
+        await SendAndObserveAsync(client, server, version, new ClientboundTeleportEntityPacket(RemoteId, target.X + 2, target.Y + 1, target.Z + 2, 90, 45, false, null, 0), ct);
+        await SendAndObserveAsync(client, server, version, NativeChunk("unload"), ct);
+        await ticks.FireAsync(ct);
+        Assert.Equal(target, actor.Position);
+        if (terrain)
+            Assert.Null(client.State.World.GetColumn(new ChunkPos(0, 0)));
+        await ticks.FireAsync(ct);
+        Assert.NotEqual(target, actor.Position);
+
+        Vec3d previous = actor.Position;
+        await JoinWorldAsync(client, server, version, ct);
+        Assert.Null(client.State.Entities.Get(RemoteId));
+        await SpawnAndTarget();
+        Entity replacement = client.State.Entities.Get(RemoteId)!;
+        Assert.NotSame(actor, replacement);
+        await ticks.FireAsync(ct);
+        Assert.Equal(initial, replacement.Position);
+        Assert.Equal(previous, actor.Position);
+
+        await client.DisconnectAsync(ct);
+        await Assert.ThrowsAsync<ConnectionClosedException>(async () =>
+        {
+            while (true)
+                await server.NextFrameAsync(ct);
+        });
+
+        async Task SpawnAndTarget()
+        {
+            var metadata = new EntityMetadataList([new(0, MetadataValue.Byte(2))], []);
+            await SendAndObserveAsync(client, server, version, new ClientboundAddPlayerPacket(RemoteId, Guid.NewGuid(), initial.X, initial.Y, initial.Z, 0, 0, 0, metadata), ct);
+            await SendAndObserveAsync(client, server, version, new ClientboundTeleportEntityPacket(RemoteId, target.X, target.Y, target.Z, 90, 45, false, null, 0), ct);
+        }
+
+        IPacket NativeChunk(string action)
+        {
+            using Stream resource = typeof(RemotePlayerVelocityRuntimeTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.LegacyPlayerTraversal.native.json.gz")!;
+            using var gzip = new GZipStream(resource, CompressionMode.Decompress);
+            using JsonDocument document = JsonDocument.Parse(gzip);
+            JsonElement release = document.RootElement.GetProperty("releases").EnumerateArray().Last(row => row.GetProperty("protocol").GetInt32() == protocol);
+            JsonElement native = document.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()];
+            JsonElement scenario = native.GetProperty("rows").EnumerateArray().Single(row => row.GetProperty("position").GetInt32() == 0 && row.GetProperty("scene").GetInt32() == 5);
+            JsonElement packet = scenario.GetProperty("packets").EnumerateArray().Single(row => row.GetProperty("action").GetString() == action);
+            byte[] body = Convert.FromHexString(native.GetProperty("packet_bodies").GetProperty(packet.GetProperty("sha256").GetString()!).GetString()!);
+            return (IPacket)BoundDescriptorCodec.Clientbound(protocol, action == "unload" && protocol != 47 ? "forget_level_chunk" : "level_chunk_with_light")
+                .Decode(body, new PacketCodecContext(JavaGameData.Registries(protocol), IConnectionCodecState.Empty));
+        }
+    }
 
     [Theory]
     [InlineData(755, false)]

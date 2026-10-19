@@ -59,6 +59,7 @@ internal sealed class EntityApplier : IApplier
                         context.State.PacketBases.Remove(removed);
                         context.State.EntityMotion.Remove(removed);
                         context.State.EntityGeometry.Remove(removed);
+                        context.State.EntityMembership.Remove(removed);
                     }
                     await context.PublishAsync(new EntityRemoved(id)).ConfigureAwait(false);
                 }
@@ -289,6 +290,7 @@ internal sealed class EntityApplier : IApplier
                     context.State.PacketBases.Remove(pickedUp);
                     context.State.EntityMotion.Remove(pickedUp);
                     context.State.EntityGeometry.Remove(pickedUp);
+                    context.State.EntityMembership.Remove(pickedUp);
                 }
                 await context.PublishAsync(new ItemPickedUp(pickup.ItemEntityId, pickup.CollectorEntityId, pickup.Amount ?? 0)).ConfigureAwait(false);
                 return true;
@@ -401,6 +403,7 @@ internal sealed class EntityApplier : IApplier
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
         context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
+        context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)
@@ -415,6 +418,7 @@ internal sealed class EntityApplier : IApplier
             context.State.PacketBases.Remove(previous);
             context.State.EntityMotion.Remove(previous);
             context.State.EntityGeometry.Remove(previous);
+            context.State.EntityMembership.Remove(previous);
             await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
         }
         store.Add(entity);

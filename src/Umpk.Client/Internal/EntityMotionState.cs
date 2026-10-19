@@ -131,29 +131,40 @@ internal sealed class EntityMotionState
         if (entities is null)
             return;
         foreach (Entity entity in entities.All)
+            TickEntity(entity, moved, geometry, players);
+    }
+
+    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null)
+    {
+        if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
+            return;
+        if (players is not null)
+            ResolvePlayerInfo(entity, motion, players);
+        if (motion.Position is { } position)
         {
-            if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
-                continue;
-            if (players is not null)
-                ResolvePlayerInfo(entity, motion, players);
-            if (motion.Position is { } position)
-            {
-                Vec3d before = entity.Position;
-                PullPosition(entity, position);
-                bool reappliesPosition = position.HasActiveInterpolation;
-                position.Tick(static _ => throw new InvalidOperationException("Legacy interpolation must not request world collisions."));
+            Vec3d before = entity.Position;
+            PullPosition(entity, position);
+            bool reappliesPosition = position.HasActiveInterpolation;
+            bool positionKnown = geometry?.IsPositionKnown(entity) != false;
+            position.Tick(static _ => throw new InvalidOperationException("Legacy interpolation must not request world collisions."));
+            if (positionKnown)
                 PushPosition(entity, position);
-                if (reappliesPosition)
-                    geometry?.ObservePosition(entity);
-                if (before != entity.Position)
-                    moved?.Add(entity.Id);
+            else
+            {
+                // A completed arithmetic interpolation cannot prove a position whose starting value was unknown. Rotation remains independent of that uncertainty.
+                entity.Yaw = position.Yaw;
+                entity.Pitch = position.Pitch;
             }
-            // Native rideTick zeros current movement before invoking the player's tick; the pending lerpMotion target survives.
-            VanillaEntityVelocity velocity = motion.Velocity;
-            velocity.SetCurrent(entity.Vehicle is null ? entity.Velocity : Vec3d.Zero);
-            velocity.Tick();
-            entity.Velocity = velocity.Value;
+            if (reappliesPosition && positionKnown)
+                geometry?.ObservePosition(entity);
+            if (before != entity.Position)
+                moved?.Add(entity.Id);
         }
+        // Native rideTick zeros current movement before invoking the player's tick; the pending lerpMotion target survives.
+        VanillaEntityVelocity velocity = motion.Velocity;
+        velocity.SetCurrent(entity.Vehicle is null ? entity.Velocity : Vec3d.Zero);
+        velocity.Tick();
+        entity.Velocity = velocity.Value;
     }
 
     public void Remove(Entity entity)

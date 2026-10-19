@@ -119,19 +119,27 @@ internal sealed class VanillaLegacyPlayerGeometry
     }
 
     public void ApplySizePhase(Func<Aabb, bool> noCollision)
+        => TryApplySizePhase(noCollision, dimensionsKnown: true);
+
+    /// <summary>When prior dimensions are uncertain, only a successful forced query proves the requested size. A rejected query retains uncertainty.</summary>
+    public bool TryApplySizePhase(Func<Aabb, bool> noCollision, bool dimensionsKnown)
     {
         if (!_profile.HasSizePhase)
-            return;
+            return dimensionsKnown;
         ArgumentNullException.ThrowIfNull(noCollision);
         (float width, float height) = (SharedFlags & 128) != 0 ? (.6F, .6F)
             : Sleeping ? (.2F, .2F)
             : _profile.SwimmingAndSpin && ((SharedFlags & 16) != 0 || SpinAttack) ? (.6F, .6F)
             : (.6F, (SharedFlags & 2) != 0 ? 1.65F : 1.8F);
-        if (Width == width && Height == height)
-            return;
+        if (dimensionsKnown && Width == width && Height == height)
+            return true;
         var candidate = new Aabb(Bounds.MinX, Bounds.MinY, Bounds.MinZ, Bounds.MinX + width, Bounds.MinY + height, Bounds.MinZ + width);
         if (noCollision(candidate))
+        {
             Resize(width, height);
+            return true;
+        }
+        return dimensionsKnown;
     }
 }
 

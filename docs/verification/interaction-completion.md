@@ -29,7 +29,7 @@ Use `passed`, `failed`, `not run`, `not applicable` or `harness failure` for acc
 
 ## Finite inventory
 
-The [legacy packet runtime report](legacy-player-runtime.md) records the first production slice after this ledger was established: owned sleep/wake/death geometry, explicit player registration before initial metadata, unknown wake propagation and original occupied-bed world mutations. Its 75 new Client cases passed together with the complete 21,502-case Client suite. Tick membership, the size phase, local-player ownership and live acceptance remain open, so the complete `legacy-listeners` and `legacy-membership` rows remain `not run`.
+The [legacy packet runtime report](legacy-player-runtime.md) records the first production slice at `310af8b`: owned sleep/wake/death geometry, explicit player registration before initial metadata, unknown wake propagation and original occupied-bed world mutations. Its 75 new Client cases passed together with the complete 21,502-case Client suite. The next slice connects chunk membership and the size phase to real session ticks, with 95 further cases covering native chunk/multi-player replays, framed sessions, placement decisions and unknown-wake controls. All 95 focused cases passed. The full `legacy-listeners` and `legacy-membership` acceptance rows remain `not run` because the report's required listener, vehicle, local-player and live work remains open.
 
 `interaction-inventory.json` records the canonical coverage at `dd14241`. It normalizes unqualified legacy identifiers to `minecraft:` and partitions each supported protocol's item-use and default entity-geometry entries. Inclusive bands select only the explicitly listed supported protocols. Source hashes bind every partition to the canonical inputs.
 

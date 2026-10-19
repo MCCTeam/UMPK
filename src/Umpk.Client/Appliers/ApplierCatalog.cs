@@ -18,6 +18,9 @@ internal static class ApplierCatalog
             new RecipeApplier(),
         };
 
+        if (features.Entities)
+            appliers.Add(new EntityMembershipApplier());
+
         if (features.Terrain)
             appliers.Add(new WorldApplier());
 

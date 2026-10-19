@@ -917,7 +917,8 @@ public sealed class UmpkClient : IAsyncDisposable
         if (State.WorldDimension is not null)
         {
             _interpolatedEntityMoves.Clear();
-            State.EntityMotion.Tick(State.EntitiesOrNull, _interpolatedEntityMoves, State.EntityGeometry, State.TabList);
+            State.TickEntities(_settings.Version.Version.Protocol,
+                _settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(_settings.Version.Version.Protocol), _interpolatedEntityMoves);
             // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
             if (State.WorldTicks.RunsNormally)
                 State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);
@@ -956,6 +957,8 @@ public sealed class UmpkClient : IAsyncDisposable
         }
 
         // ClientLevel.tick follows entities and block entities. Border animation is world state, so it respects freeze/step and does not publish a packet-change event.
+        if (State.WorldDimension is not null)
+            State.EntityMembership.FinishWorldPhase();
         if (State.WorldOrNull is { } tickingWorld && State.WorldTicks.RunsNormally)
             tickingWorld.SetBorder(tickingWorld.Border.AdvanceTick());
 

@@ -31,6 +31,13 @@ internal sealed class WorldApplier : IApplier
         Game.World.World world = context.State.World;
         switch (packet)
         {
+            case ClientboundLevelChunkPacket chunk when EntityMembershipApplier.IsLegacyUnload(chunk):
+                var unloaded = new ChunkPos(chunk.ChunkX, chunk.ChunkZ);
+                world.UnloadColumn(unloaded);
+                world.RemoveBlockEntityNbt(unloaded);
+                await context.PublishAsync(new ChunkUnloaded(unloaded)).ConfigureAwait(false);
+                return true;
+
             case ClientboundLevelChunkPacket chunk:
                 // A frame that is not ground-up carries ONLY the sections its bitmask names, so installing it as a whole column deletes every other section of that column. Vanilla's server sends exactly that frame whenever 64 distinct block changes land in one chunk in one tick, in place of the block-update and section-blocks-update forms, and it is only ever sent for a column the client already holds in full. See MergeColumnSections.
                 if (chunk.FullChunk)

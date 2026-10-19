@@ -13,6 +13,8 @@ internal sealed class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
+    private World? _legacyWorld;
+    private LegacyPlayerResizeClearance? _legacyClearance;
     private bool _hasLivingTickRules;
     private bool _hasShulkers;
 
@@ -100,6 +102,23 @@ internal sealed class EntityGeometryState
 
     public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
 
+    public bool IsPositionKnown(Entity entity)
+        => !_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown;
+
+    public void TickLegacyPlayer(Entity entity, World? world, IBlockShapeSource shapes, int protocol)
+    {
+        if (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+            return;
+        if (!ReferenceEquals(world, _legacyWorld))
+        {
+            _legacyWorld = world;
+            _legacyClearance = world is not null && LegacyPlayerGeometryProfile.ForProtocol(protocol).HasSizePhase
+                ? new LegacyPlayerResizeClearance(world, shapes, protocol)
+                : null;
+        }
+        legacy.Tick(_legacyClearance);
+    }
+
     public bool BeginLegacySleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed)
         => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed);
 
@@ -170,6 +189,8 @@ internal sealed class EntityGeometryState
         _entities.Clear();
         _shulkers.Clear();
         _legacyPlayers.Clear();
+        _legacyWorld = null;
+        _legacyClearance = null;
         _hasLivingTickRules = false;
         _hasShulkers = false;
     }

@@ -16,6 +16,32 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
     private bool _positionKnown = true;
     private bool _dimensionsKnown = true;
     private bool _metadataKnown = true;
+    private bool _lifecycleKnown = true;
+    private bool _queryKnown;
+    private LegacyPlayerResizeClearance? _clearance;
+    private Func<Aabb, bool>? _noCollision;
+
+    public bool IsPositionKnown => _positionKnown;
+
+    public void Tick(LegacyPlayerResizeClearance? clearance)
+    {
+        if (!_lifecycleKnown || !_metadataKnown)
+        {
+            _dimensionsKnown = false;
+            return;
+        }
+        _clearance = _positionKnown ? clearance : null;
+        _queryKnown = true;
+        _dimensionsKnown = _geometry.TryApplySizePhase(_noCollision ??= QueryResize, _dimensionsKnown) && _queryKnown;
+    }
+
+    private bool QueryResize(Aabb candidate)
+    {
+        if (_clearance is not null)
+            return _clearance.NoCollision(candidate);
+        _queryKnown = false;
+        return false;
+    }
 
     public bool TryGet(Entity entity, out Aabb bounds)
     {
@@ -33,7 +59,10 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         bool spinKnown = !_hasSpinFlags || !entity.Metadata.TryGet(6, out MetadataValue spin) || spin.Kind == MetadataValueKind.Byte;
         _metadataKnown = sharedKnown && spinKnown;
         if (!_metadataKnown)
+        {
+            _dimensionsKnown = _lifecycleKnown = false;
             return;
+        }
         byte flags = entity.Metadata.TryGet(0, out shared) ? unchecked((byte)shared.AsByte()) : (byte)0;
         // 1.13.2-client-decompiled afa.java: the synchronized living flags use bit 4 for spin attack.
         bool spinAttack = _hasSpinFlags && entity.Metadata.TryGet(6, out spin) && (spin.AsByte() & 4) != 0;
@@ -51,12 +80,12 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         _bed = bed;
         if (world is null || world.GetColumn(bed) is null || !source.TryGetBedFacing(world.GetBlockStateId(bed), out Direction facing))
         {
-            _positionKnown = _dimensionsKnown = false;
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
             return false;
         }
         _geometry.BeginSleep(bed, facing);
         entity.Position = _geometry.Position;
-        _positionKnown = _dimensionsKnown = true;
+        _positionKnown = _dimensionsKnown = _lifecycleKnown = true;
         return true;
     }
 
@@ -64,7 +93,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
     {
         if (_bed is not { } bed || world is null || world.GetColumn(bed) is null)
         {
-            _positionKnown = _dimensionsKnown = false;
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
             return;
         }
         int state = world.GetBlockStateId(bed);
@@ -72,13 +101,13 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         {
             if (!TryClearOccupied(world.GetBlock(bed), out int unoccupied))
             {
-                _positionKnown = _dimensionsKnown = false;
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
                 return;
             }
             world.SetBlockStateId(bed, unoccupied);
             var query = new LegacyBedExitQuery(protocol, source, cell => world.GetColumn(cell) is null ? -1 : world.GetBlockStateId(cell));
             _positionKnown = _geometry.TryWakeFromIntactBed(bed, facing, query.TryCanStand, out _);
-            _dimensionsKnown = true;
+            _dimensionsKnown = _lifecycleKnown = true;
             if (_positionKnown)
                 entity.Position = _geometry.Position;
             else
@@ -89,11 +118,11 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
             var current = world.GetBlock(bed);
             if (!current.IsValid || current.Block.Id.Path is "bed" || current.Block.Id.Path.EndsWith("_bed", StringComparison.Ordinal))
             {
-                _positionKnown = _dimensionsKnown = false;
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
                 return;
             }
             _geometry.WakeAfterBedRemoval();
-            _dimensionsKnown = true;
+            _dimensionsKnown = _lifecycleKnown = true;
         }
         _bed = null;
     }

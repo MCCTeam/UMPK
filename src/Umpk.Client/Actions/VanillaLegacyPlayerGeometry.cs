@@ -52,6 +52,14 @@ internal sealed class VanillaLegacyPlayerGeometry
         Sleeping = true;
     }
 
+    /// <summary>Applies the centered path when the original sleep callback's world-validity guard skips its bed read.</summary>
+    public void BeginSleepWithoutBedRead(BlockPos bed)
+    {
+        Resize(.2F, .2F);
+        SetPosition(new Vec3d(bed.X + .5F, bed.Y + .6875F, bed.Z + .5F));
+        Sleeping = true;
+    }
+
     /// <summary>Applies wake when the original bed is gone. Intact-bed exit selection belongs to the caller's world operation.</summary>
     public void WakeAfterBedRemoval()
     {
@@ -143,19 +151,23 @@ internal sealed class VanillaLegacyPlayerGeometry
     }
 }
 
-internal readonly record struct LegacyPlayerGeometryProfile(bool HasSizePhase, bool RecenterOnShrink, bool VectorSleepOffsets, bool SwimmingAndSpin)
+internal readonly record struct LegacyPlayerGeometryProfile(bool HasSizePhase, bool RecenterOnShrink, bool VectorSleepOffsets, bool SwimmingAndSpin, bool BoundedBedRead)
 {
     public static bool Supports(int protocol) => protocol is 47 or 107 or 108 or 109 or 110 or 210 or 315 or 316 or 335 or 338 or 340 or 393 or 401 or 404;
 
-    // Original callbacks across 27 releases and 19,968 native size phases establish each boundary independently of packet IDs.
+    // Original callbacks and 19,968 native size phases establish size/offset boundaries. The separate 27-release world/bed-availability campaign establishes the bed-read guard.
     public static LegacyPlayerGeometryProfile ForProtocol(int protocol) => protocol switch
     {
-        47 => new(false, false, false, false),
-        107 or 108 or 109 or 110 or 210 => new(true, false, false, false),
-        315 or 316 or 335 or 338 or 340 => new(true, true, true, false),
-        393 or 401 or 404 => new(true, true, true, true),
+        47 => new(false, false, false, false, true),
+        107 or 108 or 109 => new(true, false, false, false, true),
+        110 or 210 => new(true, false, false, false, false),
+        315 or 316 or 335 or 338 or 340 => new(true, true, true, false, false),
+        393 or 401 or 404 => new(true, true, true, true, false),
         _ => throw new ArgumentOutOfRangeException(nameof(protocol), "The legacy player lifecycle profile has not been measured for this protocol."),
     };
+
+    // Through 1.9.2, World.isBlockLoaded and direct block reads share the full coordinate-validity guard. From 1.9.3, the sleep availability check no longer has that guard.
+    public bool SkipsBedRead(BlockPos bed) => BoundedBedRead && (bed.Y is < 0 or >= 256 || bed.X is < -30_000_000 or >= 30_000_000 || bed.Z is < -30_000_000 or >= 30_000_000);
 }
 
 internal delegate bool LegacyBedExitPredicate(BlockPos cell, out bool canStand);

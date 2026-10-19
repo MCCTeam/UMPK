@@ -11,7 +11,7 @@ namespace Umpk.Client.Internal;
 internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
 {
     private readonly VanillaLegacyPlayerGeometry _geometry = new(protocol, entity.Position);
-    private readonly bool _hasSpinFlags = LegacyPlayerGeometryProfile.ForProtocol(protocol).SwimmingAndSpin;
+    private readonly LegacyPlayerGeometryProfile _profile = LegacyPlayerGeometryProfile.ForProtocol(protocol);
     private BlockPos? _bed;
     private bool _positionKnown = true;
     private bool _dimensionsKnown = true;
@@ -53,10 +53,10 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
 
     public void ObserveMetadata(Entity entity, int index)
     {
-        if (index != 0 && !(_hasSpinFlags && index == 6))
+        if (index != 0 && !(_profile.SwimmingAndSpin && index == 6))
             return;
         bool sharedKnown = !entity.Metadata.TryGet(0, out MetadataValue shared) || shared.Kind == MetadataValueKind.Byte;
-        bool spinKnown = !_hasSpinFlags || !entity.Metadata.TryGet(6, out MetadataValue spin) || spin.Kind == MetadataValueKind.Byte;
+        bool spinKnown = !_profile.SwimmingAndSpin || !entity.Metadata.TryGet(6, out MetadataValue spin) || spin.Kind == MetadataValueKind.Byte;
         _metadataKnown = sharedKnown && spinKnown;
         if (!_metadataKnown)
         {
@@ -65,7 +65,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
         }
         byte flags = entity.Metadata.TryGet(0, out shared) ? unchecked((byte)shared.AsByte()) : (byte)0;
         // 1.13.2-client-decompiled afa.java: the synchronized living flags use bit 4 for spin attack.
-        bool spinAttack = _hasSpinFlags && entity.Metadata.TryGet(6, out spin) && (spin.AsByte() & 4) != 0;
+        bool spinAttack = _profile.SwimmingAndSpin && entity.Metadata.TryGet(6, out spin) && (spin.AsByte() & 4) != 0;
         _geometry.ObserveFlags(flags, spinAttack);
     }
 
@@ -78,12 +78,22 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
     public bool BeginSleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed)
     {
         _bed = bed;
-        if (world is null || world.GetColumn(bed) is null || !source.TryGetBedFacing(world.GetBlockStateId(bed), out Direction facing))
+        if (world is null)
         {
             _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
             return false;
         }
-        _geometry.BeginSleep(bed, facing);
+        if (_profile.SkipsBedRead(bed))
+            _geometry.BeginSleepWithoutBedRead(bed);
+        else
+        {
+            if (world.GetColumn(bed) is null || !source.TryGetBedFacing(world.GetBlockStateId(bed), out Direction facing))
+            {
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+                return false;
+            }
+            _geometry.BeginSleep(bed, facing);
+        }
         entity.Position = _geometry.Position;
         _positionKnown = _dimensionsKnown = _lifecycleKnown = true;
         return true;
@@ -91,7 +101,19 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
 
     public void Wake(Entity entity, World? world, IBlockInteractionSource source)
     {
-        if (_bed is not { } bed || world is null || world.GetColumn(bed) is null)
+        if (_bed is not { } bed || world is null)
+        {
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+            return;
+        }
+        if (_profile.SkipsBedRead(bed))
+        {
+            _geometry.WakeAfterBedRemoval();
+            _dimensionsKnown = _lifecycleKnown = true;
+            _bed = null;
+            return;
+        }
+        if (world.GetColumn(bed) is null)
         {
             _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
             return;

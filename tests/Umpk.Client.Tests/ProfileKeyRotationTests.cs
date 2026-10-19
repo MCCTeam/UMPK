@@ -573,6 +573,8 @@ public sealed class ProfileKeyRotationTests
         clock.Advance(TimeSpan.FromSeconds(31));
         await send.WaitAsync(TimeSpan.FromSeconds(30));
 
+        // Sending can finish before the abandoned provider's cancellation continuation runs.
+        await provider.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(30));
         Assert.True(provider.Cancelled);
 
         // No second announcement, and no rotation: the hung answer reached no Install.
@@ -1381,9 +1383,13 @@ public sealed class ProfileKeyRotationTests
     private sealed class BlockingProvider(PlayerCertificates first, Task gate, TaskCompletionSource entered)
         : IChatSigningProvider
     {
+        private readonly TaskCompletionSource _cancellationObserved = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         public int Calls { get; private set; }
 
         public bool Cancelled { get; private set; }
+
+        public Task CancellationObserved => _cancellationObserved.Task;
 
         public async ValueTask<PlayerCertificates?> GetCertificatesAsync(CancellationToken cancellationToken)
         {
@@ -1398,6 +1404,7 @@ public sealed class ProfileKeyRotationTests
             catch (OperationCanceledException)
             {
                 Cancelled = true;
+                _cancellationObserved.TrySetResult();
                 throw;
             }
 

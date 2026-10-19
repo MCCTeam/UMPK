@@ -66,7 +66,6 @@ internal static class InteractionPicker
         Aabb? body = services.ReadPhysicsState()?.BoundingBox;
         Aabb? query = body is { XSize: > 0, YSize: > 0 } box ? box.ExpandTowards(direction.Scale(traceRange)).Inflate(1) : null;
         IEntityGeometrySource geometry = JavaGameData.EntityGeometryData(protocol);
-        IBlockInteractionSource interactions = JavaGameData.BlockInteractionData(protocol);
         double nearest = blockDistance;
         Entity? selected = null;
         Vec3d selectedPoint = default;
@@ -144,16 +143,7 @@ internal static class InteractionPicker
         return new(InteractionPickKind.Block, block);
 
         bool TryBounds(Entity entity, out Aabb bounds)
-        {
-            if (state.EntityGeometry.TryGet(entity, geometry, out bounds, out _, protocol))
-                return true;
-            if (interactions.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
-            {
-                bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
-                return true;
-            }
-            return false;
-        }
+            => state.EntityGeometry.TryGet(entity, geometry, out bounds, out _, protocol);
     }
 
     private static bool IsNativeNonparticipant(Entity entity)

@@ -23,3 +23,9 @@ The complete Client suite passes 22,548 tests with no failures or skips on the f
 ```
 
 Both scoped formatter commands use the official SDK as `DOTNET_ROOT` and first on `PATH`. The source manifest records base `6299aad7f64d2e19d64ec92d995223cd33f39cf3`, eight exact overlays, 4,148 unchanged base blobs and the deliberate 35-case addition. Complete repository, consumer, AOT, live targeting and version-matrix acceptance for this later producer remain pending. The separate baseline 1.9 placement-swing discrepancy with distant falling-block entities remains unresolved; this picker change does not close it.
+
+## Keeping the tick path within the AOT budget
+
+The first immutable picker producer `315e15337c9b7f002f40b880e9b4683cad55b628` passes all 24 repository/reconstruction gates and fresh 1,999 DMCBK/918 MCC tests, with 33 matching dependency DLLs and unchanged sibling source/Git snapshots. Its Native AOT publish fails the unchanged strict size guard: 27,331,376 bytes versus less than 25,165,824. Smoke and package stages stop at that failure; they are not passes.
+
+The new picker made the general block-use tables reachable from the session's always-reachable mining tick. It now obtains bounds only from the existing narrow entity geometry source. Unclassified geometry remains unknown. The ordinary cow/player scope retains all 544 focused/adjacent passes. An isolated size experiment then publishes 24,967,984 bytes under the same limit, SHA-256 `b00f0d18c40056a35e3d4ad68a3d6ee820f7cceedcce4a08a7b1e7a36b831c7f`. This experiment is not final immutable consumer/AOT acceptance. Original failure receipts are in `runs/connected-picker-{validation,consumers,aot}-20261019-v1` under the shared oracle; the experiment is `/tmp/umpk-picker-aot-narrow-20261019-v1/result.json`. This repeats the earlier bed-data lesson: common tick callers must not root the full interaction table for a narrower query.

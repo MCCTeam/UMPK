@@ -25,12 +25,15 @@ internal sealed class EntityMembershipState
 
     public void LoadColumn(ChunkPos column)
     {
-        // A full packet installs a new native chunk. Existing added-to-chunk flags survive, but the new chunk has no old entity list.
+        // A replacing packet installs a new native chunk. Existing added-to-chunk flags survive, but the new chunk has no old entity list.
         foreach (Membership player in _players.Values)
             if (player.Column == column)
                 player.Column = null;
         _columns.Add(column);
     }
+
+    /// <summary>Observes the native fill-or-create policy without discarding an existing chunk's entity list.</summary>
+    public void EnsureColumn(ChunkPos column) => _columns.Add(column);
 
     public void UnloadColumn(ChunkPos column)
     {

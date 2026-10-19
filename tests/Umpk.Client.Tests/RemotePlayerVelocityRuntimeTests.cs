@@ -34,6 +34,67 @@ public sealed class RemotePlayerVelocityRuntimeTests
     public static IEnumerable<object[]> LegacyMembershipProtocols => Protocols.Where(row => (int)row[0] <= 404)
         .SelectMany(row => new[] { new object[] { row[0], false }, new object[] { row[0], true } });
 
+    public static IEnumerable<object[]> ChunkPayloadMembershipProtocols => new[] { 393, 401, 404 }
+        .SelectMany(protocol => new[] { false, true }.SelectMany(terrain => new[] { false, true }.Select(full => new object[] { protocol, terrain, full })));
+
+    [Theory]
+    [MemberData(nameof(ChunkPayloadMembershipProtocols))]
+    public async Task ChunkPayloadProviderPolicyDrivesFramedMembershipAndEligibleMovement(int protocol, bool terrain, bool full)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain, physics: false);
+        await JoinAsync(client, server, version, ct);
+        using JsonDocument document = LegacyPlayerPartialContextTests.ReadNative();
+        JsonElement release = document.RootElement.GetProperty("releases").EnumerateArray().Last(row => row.GetProperty("protocol").GetInt32() == protocol);
+        JsonElement native = document.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()];
+        JsonElement scenario = native.GetProperty(full ? "full" : "traversal").EnumerateArray().Single(row => row.GetProperty("point").GetInt32() == 0 && row.GetProperty("terrain").GetInt32() == (full ? 1 : 0) && row.GetProperty("partial_cell").GetInt32() == 0 && row.GetProperty("payload").GetInt32() == 1);
+        JsonElement packets = scenario.GetProperty("world_packets"), setup = scenario.GetProperty("setup"), phases = scenario.GetProperty("observations");
+        for (int packet = 0; packet < packets.GetArrayLength() - 1; packet++)
+            await SendPacket(packets[packet]);
+        await SendAndObserveAsync(client, server, version, new ClientboundAddPlayerPacket(RemoteId, Guid.NewGuid(), 1.5, 64, 1.5, 0, 0, 0, new EntityMetadataList([new(0, MetadataValue.Byte(2))], [])), ct);
+        await SendAndObserveAsync(client, server, version, new ClientboundTeleportEntityPacket(RemoteId, 3.5, 65, 3.5, 90, 45, false, null, 0), ct);
+        Entity actor = client.State.Entities.Get(RemoteId)!;
+        await AssertPhase(setup[0]);
+
+        await SendPacket(packets[packets.GetArrayLength() - 1]);
+
+        await AssertPhase(setup[1]);
+        for (int tick = 0; tick < 4; tick++)
+        {
+            await ticks.FireAsync(ct);
+            await AssertPhase(phases[2 * tick + 2]);
+        }
+        await JoinWorldAsync(client, server, version, ct);
+        Assert.Null(client.State.Entities.Get(RemoteId));
+        await client.DisconnectAsync(ct);
+        await Assert.ThrowsAsync<ConnectionClosedException>(async () =>
+        {
+            while (true)
+                await server.NextFrameAsync(ct);
+        });
+        return;
+
+        Task SendPacket(JsonElement packet)
+        {
+            string identifier = packet.GetProperty("action").GetString() == "seed_bed_a" ? "block_update" : "level_chunk_with_light";
+            byte[] body = Convert.FromHexString(native.GetProperty("packet_bodies").GetProperty(packet.GetProperty("sha256").GetString()!).GetString()!);
+            var value = Assert.IsAssignableFrom<IPacket>(BoundDescriptorCodec.Clientbound(protocol, identifier).Decode(body, new PacketCodecContext(JavaGameData.Registries(protocol), IConnectionCodecState.Empty)));
+            return SendAndObserveAsync(client, server, version, value, ct);
+        }
+
+        async Task AssertPhase(JsonElement expected)
+        {
+            JsonElement point = expected.GetProperty("state").GetProperty("position");
+            Assert.Equal(new Vec3d(point[0].GetDouble(), point[1].GetDouble(), point[2].GetDouble()), actor.Position);
+            Assert.Equal(expected.GetProperty("added").GetBoolean() && expected.GetProperty("in_entity_list").GetBoolean(), await client.InvokeAsync(c => c.State.EntityMembership.CanTick(actor), ct));
+            Assert.Equal(!expected.GetProperty("placement_clear").GetBoolean(), await client.InvokeAsync(c => c.State.EntityMembership.IsWorldQueryMember(actor), ct));
+        }
+    }
+
     [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]

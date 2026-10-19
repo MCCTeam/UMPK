@@ -16,19 +16,21 @@ internal sealed class LegacyEmptyChunkState
             _states[Key(cell)] = state;
     }
 
-    public void InvalidatePartialColumn(EntityMembershipState membership, ChunkColumn column)
+    public void ObservePartialColumn(EntityMembershipState membership, ChunkColumn column)
     {
         if (membership.HasColumn(new BlockPos(column.Position.X << 4, 0, column.Position.Z << 4)))
             return;
-        // Until the original partial-payload listener is accepted, its affected shared sections cannot retain earlier known cells. Other sections are independent.
+        // Original 1.8 payloads fill the provider's shared EmptyChunk sections. Copy values so later logical-world writes cannot mutate this context through shared decoded storage.
         for (int index = 0; index < column.SectionCount; index++)
-            if (column.GetSection(index) is not null)
+            if (column.GetSection(index) is { } section)
             {
-                int section = (column.MinY >> 4) + index;
-                if (section is < 0 or >= 16)
+                int baseY = column.MinY + index * 16;
+                if (baseY is < 0 or >= 256)
                     continue;
-                for (int key = section << 12, end = key + 4096; key < end; key++)
-                    _states.Remove(key);
+                for (int y = 0; y < 16; y++)
+                    for (int z = 0; z < 16; z++)
+                        for (int x = 0; x < 16; x++)
+                            _states[((baseY + y) << 8) | (z << 4) | x] = section.GetBlockStateId(x, y, z);
             }
     }
 

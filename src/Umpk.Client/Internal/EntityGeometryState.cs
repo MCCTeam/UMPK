@@ -136,7 +136,12 @@ internal sealed class EntityGeometryState
         => EmptyChunkFor(protocol)?.ObserveWrite(membership, cell, state);
 
     public void ObserveLegacyPartialColumn(int protocol, EntityMembershipState membership, ChunkColumn column)
-        => EmptyChunkFor(protocol)?.InvalidatePartialColumn(membership, column);
+        => EmptyChunkFor(protocol)?.ObservePartialColumn(membership, column);
+
+    /// <summary>Reads the owned player's effective block context, retaining unknown cells separately from native air.</summary>
+    public int ReadLegacyBlockState(Entity entity, World world, BlockPos cell, EntityMembershipState membership)
+        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy)
+            ? legacy.ReadState(world, cell, membership, _legacyEmptyChunk) : -1;
 
     private LegacyEmptyChunkState? EmptyChunkFor(int protocol)
         => LegacyPlayerGeometryProfile.Supports(protocol) && LegacyPlayerGeometryProfile.ForProtocol(protocol).RetainsEmptyChunkWrites

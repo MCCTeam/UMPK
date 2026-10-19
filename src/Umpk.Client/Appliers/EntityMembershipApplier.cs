@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Umpk.Client.Actions;
 using Umpk.Client.Internal;
 using Umpk.Geometry;
 using Umpk.Protocol.Java.Codecs;
@@ -18,6 +19,9 @@ internal sealed class EntityMembershipApplier : IApplier
             case ClientboundLevelChunkPacket chunk:
                 if (IsLegacyUnload(chunk))
                     context.State.EntityMembership.UnloadColumn(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
+                else if (LegacyPlayerGeometryProfile.Supports(context.Version.Version.Protocol)
+                    && LegacyPlayerGeometryProfile.ForProtocol(context.Version.Version.Protocol).RetainsColumnForChunkPayloads)
+                    context.State.EntityMembership.EnsureColumn(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
                 else if (chunk.FullChunk)
                     context.State.EntityMembership.LoadColumn(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
                 break;

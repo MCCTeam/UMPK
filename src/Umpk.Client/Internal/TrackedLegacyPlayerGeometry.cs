@@ -159,7 +159,7 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
     private bool UsesEmptyChunk(BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
         => _profile.RetainsEmptyChunkWrites && emptyChunk is not null && membership is not null && !membership.HasColumn(cell);
 
-    private int ReadState(World world, BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
+    public int ReadState(World world, BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
         => UsesEmptyChunk(cell, membership, emptyChunk) ? emptyChunk!.Read(cell)
             : MissingBlockColumn(cell, membership) || world.GetColumn(cell) is null ? -1 : world.GetBlockStateId(cell);
 

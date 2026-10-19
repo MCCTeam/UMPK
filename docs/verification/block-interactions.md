@@ -4,6 +4,14 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Current checkpoint, 2026-10-19
+
+All fifteen repository gates pass on `dd1424159418381e2cfd548c6dc381216939e365`: 34,877 .NET tests pass, seven opt-in cases are skipped, 242 Python tests pass and all seventeen suite totals match. All 61 generated files reproduce exactly, and all 4,099 archived source blobs and links remain unchanged. The native bed-cell data and `LegacyBedExitQuery` are complete; their session callers remain unfinished. Exact gate commands and hashes are in `/home/anon/Projects/MinecraftOfficial/runs/pre-pose-bed-exit-query-validation-20261019-v1/`.
+
+Fresh consumer validation uses that exact immutable producer. DMCBK passes 1,999 tests and MCC passes 918, all 33 dependency DLL comparisons match, and before/after snapshots confirm unchanged sibling source and Git state. The frozen MCC output and manifests are in `runs/pre-pose-bed-exit-query-consumers-20261019-v1` under the shared oracle. Native AOT publish and smoke pass in `runs/pre-pose-bed-exit-query-aot-20261019-v1`; the executable is 24,727,168 bytes against the unchanged strict 25,165,824-byte limit. Its SHA-256 is `1b47c2a99398d5c0df433db02c33b0ec6d12fed993bb69ea77e665d4e48b3cff`. The smoke TRX contains exactly one executed passing test, and the tested producer binaries remain unchanged.
+
+Legacy player packet/tick ownership, modern collision-aware motion, general scaling, rider positioning, pushes, specialized block use and the remaining interaction/version matrix are still open. Earlier sections record their own historical commits and results; old failures and TODOs do not override this checkpoint or the later scoped reports. No new live behavior is claimed for the bed query.
+
 ## Artifacts and mining measurements
 
 The local oracle is `/home/anon/Projects/MinecraftOfficial`. It contains official server and client jars and decompiled trees for all 75 stable releases from 1.8 through 26.3. Download provenance records Mojang's SHA-1 and the local SHA-256. `data/java/<protocol>/block-mining.json` contains measurements for all 50 supported protocols. Every registered vanilla block state and default item stack was examined; aliases sharing a protocol were checked for equal mining facts. The canonical tables preserve hardness, correct-tool requirements and default-stack speed and harvest rules.

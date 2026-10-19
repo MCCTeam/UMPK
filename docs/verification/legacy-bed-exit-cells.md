@@ -16,7 +16,7 @@ Interaction schema 7 preserves the schema 6 payload after its version byte and a
 
 The fourteen native lookup cases fail against the previous unknown default. The completed focused run passes 534 table and geometry tests, including all measured flags, rejected metadata, malformed packed ranges, older providers and unmeasured versions. The 59 validator cases include 35 new registry partition cases. Eight new Python tests cover invalid measurements. One green build stopped on a missing test import; the corrected run passes.
 
-Full exact-commit gates and fresh consumer/AOT checks are recorded after completion. This data capability supplies the pending legacy player runtime integration; it does not by itself handle sleep or wake packets.
+All fifteen repository gates pass on `dd1424159418381e2cfd548c6dc381216939e365`: 34,877 .NET tests, seven opt-in skips, 242 Python tests, matching counts for all seventeen suites and identical output for all 61 generated files. All 4,099 archived source blobs and links remain unchanged. Fresh producer-matched consumer checks pass 1,999 DMCBK and 918 MCC tests with 33 matching dependency DLL comparisons and unchanged sibling source/Git snapshots. Native AOT publish and one executed smoke test pass at 24,727,168 bytes against the unchanged strict 25,165,824-byte limit. Exact receipts are under the shared oracle in `runs/pre-pose-bed-exit-query-validation-20261019-v1`, `runs/pre-pose-bed-exit-query-consumers-20261019-v1` and `runs/pre-pose-bed-exit-query-aot-20261019-v1`. This data capability supplies the pending legacy player runtime integration; it does not by itself handle sleep or wake packets.
 
 ## Managed world query
 

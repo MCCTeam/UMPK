@@ -6,13 +6,21 @@ The first committed implementation checkpoint was `c015405` on `codex/vanilla-bl
 
 ## Current checkpoint, 2026-10-19
 
-The [completion ledger](interaction-completion.md) tracks the remaining work. The [legacy packet runtime report](legacy-player-runtime.md) records subsequent owned lifecycle geometry, native chunk membership, eligible size phases and framed-session/placement controls. These are partial implementations of milestone C; local-player, vehicle and live acceptance remain open. The receipts below continue to identify the earlier bed-query producer.
+The [completion ledger](interaction-completion.md) tracks the remaining work. The [legacy packet runtime report](legacy-player-runtime.md) records owned lifecycle geometry, native chunk membership, eligible size phases, bounded sleep/wake and framed-session/placement controls. It also records the original spawn/metadata campaign and its runtime replays. Milestone C remains partial: complete death effects, unknown-wake movement/membership, vehicles, the local player and physics-enabled live acceptance remain open.
+
+The latest immutable local acceptance identifies `1c83e6ef6ce0adb97b492e92872a4b21b82166a5`. All 18 repository/reconstruction gates pass: 35,080 .NET tests, seven opt-in skips, 276 Python tests, 17 matching suite totals, 61 identical generated files and 4,119 unchanged archived source blobs. Fresh consumers pass 1,999 DMCBK and 918 MCC tests with all 33 dependency DLL comparisons and unchanged sibling source/Git snapshots. Strict Native AOT acceptance passes at 24,914,640 bytes with exactly one executed passing smoke test and unchanged producer DLLs. Exact commands, hashes and frozen MCC binaries are indexed in `runs/pre-pose-bed-availability-{validation,consumers,aot}-20261019-v1` under the shared oracle.
+
+All seven CI jobs pass on the prior correction head `188b995` after one unchanged Windows rerun. The original packet-observation timeout remains recorded; no budget or assertion was changed for the retry. The later published head requires its own CI result. No complete modern motion, entity-family, interaction or final 50-protocol/75-release live matrix is claimed.
+
+### Retained bed-query checkpoint
+
+The following receipts retain their original `dd14241` producer and helper/data scope. Subsequent runtime acceptance is indexed above and in the scoped report.
 
 All fifteen repository gates pass on `dd1424159418381e2cfd548c6dc381216939e365`: 34,877 .NET tests pass, seven opt-in cases are skipped, 242 Python tests pass and all seventeen suite totals match. All 61 generated files reproduce exactly, and all 4,099 archived source blobs and links remain unchanged. The native bed-cell data and `LegacyBedExitQuery` are complete; their session callers remain unfinished. Exact gate commands and hashes are in `/home/anon/Projects/MinecraftOfficial/runs/pre-pose-bed-exit-query-validation-20261019-v1/`.
 
 Fresh consumer validation uses that exact immutable producer. DMCBK passes 1,999 tests and MCC passes 918, all 33 dependency DLL comparisons match, and before/after snapshots confirm unchanged sibling source and Git state. The frozen MCC output and manifests are in `runs/pre-pose-bed-exit-query-consumers-20261019-v1` under the shared oracle. Native AOT publish and smoke pass in `runs/pre-pose-bed-exit-query-aot-20261019-v1`; the executable is 24,727,168 bytes against the unchanged strict 25,165,824-byte limit. Its SHA-256 is `1b47c2a99398d5c0df433db02c33b0ec6d12fed993bb69ea77e665d4e48b3cff`. The smoke TRX contains exactly one executed passing test, and the tested producer binaries remain unchanged.
 
-Legacy player packet/tick ownership, modern collision-aware motion, general scaling, rider positioning, pushes, specialized block use and the remaining interaction/version matrix are still open. Earlier sections record their own historical commits and results; old failures and TODOs do not override this checkpoint or the later scoped reports. No new live behavior is claimed for the bed query.
+At this earlier checkpoint, legacy player packet/tick ownership, modern collision-aware motion, general scaling, rider positioning, pushes, specialized block use and the remaining interaction/version matrix were still open. Earlier sections record their own historical commits and results; old failures and TODOs do not override this checkpoint or the later scoped reports. No new live behavior is claimed for the bed query.
 
 ## Artifacts and mining measurements
 

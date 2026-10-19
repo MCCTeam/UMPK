@@ -225,7 +225,7 @@ public sealed partial class InteractionActions
     }
 
     private bool SameDestroyTarget(BlockPos position, ItemStack item)
-        => _destroyTarget is { } target && target.Position == position && item.IsSameItemSameComponents(target.Item);
+        => _destroyTarget is { } target && target.Position == position && VanillaMiningItemIdentity.Matches(item, target.Item, _services.Version.Version.Protocol);
 
     private void SynchronizeMiningOwner()
     {

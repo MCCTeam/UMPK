@@ -348,6 +348,7 @@ public sealed class TickMiningLifecycleTests
             State.RegistryTags.Install([new TagRegistry(RegistryIds.Block,
                 [new TagEntry(Identifier.Minecraft("mineable/pickaxe"), [1])])]);
             InstallWorld();
+            State.Self.Position = new Vec3d(1.5, 64, .5);
             var sequences = new SequenceTracker();
             var services = new ClientSessionServices
             {

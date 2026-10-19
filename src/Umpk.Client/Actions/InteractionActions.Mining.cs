@@ -1,3 +1,4 @@
+using Umpk.Client.Internal;
 using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Blocks;
@@ -52,7 +53,7 @@ public sealed partial class InteractionActions
             throw new InvalidOperationException("A block attack is already active. Cancel it before starting another.");
         if (viewDistance is double distance)
         {
-            if (_services.ReadBlockHit(distance) is not { Hit: true } hit || hit.BlockPos != position)
+            if (_services.ReadInteractionPick(distance) is not { Kind: InteractionPickKind.Block, BlockHit: { Hit: true } hit } || hit.BlockPos != position)
                 throw new OperationCanceledException("The requested block is no longer in view.", new CancellationToken(true));
             face = hit.Face;
         }
@@ -96,7 +97,7 @@ public sealed partial class InteractionActions
 
             if (request.ViewDistance is double distance)
             {
-                if (_services.ReadBlockHit(distance) is not { Hit: true } hit || hit.BlockPos != request.Position)
+                if (_services.ReadInteractionPick(distance) is not { Kind: InteractionPickKind.Block, BlockHit: { Hit: true } hit } || hit.BlockPos != request.Position)
                 {
                     await ReleaseMiningOnLoopAsync(request, ct).ConfigureAwait(false);
                     return;

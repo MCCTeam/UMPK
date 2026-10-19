@@ -262,6 +262,10 @@ internal sealed class EntityApplier : IApplier
                 await context.PublishAsync(new EntityPassengersChanged(passengers.VehicleId)).ConfigureAwait(false);
                 return true;
 
+            case ClientboundSetEntityLinkPacket link:
+                context.State.EntityMotion.ObserveLocalLegacyMount(context.State.Self.EntityId, link.SourceId, link.DestId, link.LegacyLeash);
+                return true;
+
             case ClientboundUseBedPacket bed:
                 if (store.TryGet(bed.PlayerId, out Entity? sleepingPlayer) && sleepingPlayer is not null)
                 {
@@ -602,7 +606,9 @@ internal sealed class EntityApplier : IApplier
 
     private static void ApplyPassengers(EntityStore store, ClientboundSetPassengersPacket packet, ApplierContext context)
     {
-        if (!store.TryGet(packet.VehicleId, out Entity? vehicle) || vehicle is null)
+        bool hasVehicle = store.TryGet(packet.VehicleId, out Entity? vehicle);
+        context.State.EntityMotion.ObserveLocalPassengers(context.State.Self.EntityId, packet.VehicleId, packet.Passengers, vehicle);
+        if (!hasVehicle || vehicle is null)
             return;
 
         var passengers = new List<Entity>();

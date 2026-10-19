@@ -144,7 +144,11 @@ public sealed class ClientState
 
     internal long PlayerLifetime { get; private set; }
 
-    internal void AdvancePlayerLifetime() => PlayerLifetime++;
+    internal void AdvancePlayerLifetime()
+    {
+        PlayerLifetime++;
+        EntityMotion.ResetLocalMount();
+    }
 
     /// <summary>The native game-mode controller is created on join and retained across respawn.</summary>
     internal long InteractionLifetime { get; private set; }

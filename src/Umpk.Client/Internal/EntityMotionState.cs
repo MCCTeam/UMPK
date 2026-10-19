@@ -38,6 +38,36 @@ internal sealed class EntityMotionState
         => _remotePlayers.TryGetValue(entity, out RemotePlayerMotion? player)
             && ResolvePlayerInfo(entity, player, players)?.GameMode == GameMode.Spectator;
 
+    public bool IsTrackedPlayer(Entity entity) => _remotePlayers.TryGetValue(entity, out _);
+
+    private bool _localMountUnresolved;
+    private Entity? _localMountVehicle;
+
+    /// <summary>The bounded interaction picker cannot reconstruct the local rider's native position or shared-root filtering.</summary>
+    public bool IsLocalMountUnresolved => _localMountUnresolved;
+
+    public void ObserveLocalPassengers(int selfId, int vehicleId, IReadOnlyList<int> passengerIds, Entity? vehicle = null)
+    {
+        if (passengerIds.Contains(selfId))
+        {
+            _localMountUnresolved = true;
+            _localMountVehicle = vehicle;
+        }
+        else if (vehicle is not null && vehicle.Id == vehicleId && ReferenceEquals(vehicle, _localMountVehicle))
+        {
+            _localMountUnresolved = false;
+            _localMountVehicle = null;
+        }
+    }
+
+    public void ObserveLocalLegacyMount(int selfId, int sourceId, int destinationId, bool? legacyLeash)
+    {
+        if (sourceId != selfId || legacyLeash != false)
+            return;
+        _localMountUnresolved = destinationId != -1;
+        _localMountVehicle = null;
+    }
+
     private static TabListEntry? ResolvePlayerInfo(Entity entity, RemotePlayerMotion player, TabList players)
     {
         if (player.Profile.CachesPlayerInfo && player.PlayerInfo is { } cached)
@@ -177,6 +207,13 @@ internal sealed class EntityMotionState
     {
         _remotePlayers.Clear();
         _immovable.Clear();
+        ResetLocalMount();
+    }
+
+    public void ResetLocalMount()
+    {
+        _localMountUnresolved = false;
+        _localMountVehicle = null;
     }
 
     private static void PullPosition(Entity entity, VanillaEntityInterpolation position)

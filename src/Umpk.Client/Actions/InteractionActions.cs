@@ -345,6 +345,7 @@ public sealed partial class InteractionActions
     /// <remarks>Same era split as <see cref="PlaceBlockAsync"/>. 1.8 spells "use the held item in the air" as a <c>block_place</c> at the sentinel position (-1, -1, -1) with face 255. The 1.8 form carries only the held item stack.</remarks>
     public Task UseItemAsync(Hand hand = Hand.Main, CancellationToken ct = default)
     {
+        RequireBlockUseHand(hand, nameof(UseItemAsync));
         if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItem))
             return SendLegacyBlockPlaceAsync(nameof(UseItemAsync), LegacyUseItemPosition, LegacyUseItemFace, default, ct);
 

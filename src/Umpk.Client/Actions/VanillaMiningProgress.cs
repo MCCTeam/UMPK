@@ -12,6 +12,8 @@ internal readonly record struct MiningModifiers(
     bool OnGround)
 {
     public static MiningModifiers Grounded => new(0.0F, -1, -1, 1.0F, 0.2F, false, true);
+
+    public bool LegacyUnderwaterPenalty { get; init; }
 }
 
 /// <summary>Vanilla Player.getDestroySpeed followed by BlockBehaviour.getDestroyProgress. Keep every intermediate value single precision and retain the era's fatigue formula.</summary>
@@ -42,7 +44,8 @@ internal static class VanillaMiningProgress
         }
         speed *= modifiers.BlockBreakSpeed;
         if (modifiers.EyesUnderwater)
-            speed *= modifiers.SubmergedMiningSpeed;
+            // Before the submerged-mining-speed attribute, native divides by five. Multiplication by 0.2F can cross the completion threshold a tick earlier.
+            speed = modifiers.LegacyUnderwaterPenalty ? speed / 5.0F : speed * modifiers.SubmergedMiningSpeed;
         if (!modifiers.OnGround)
             speed /= 5.0F;
 

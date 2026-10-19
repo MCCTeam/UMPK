@@ -332,11 +332,20 @@ public sealed partial class InteractionActions
         if (!efficiencyAttribute && item.TryGetEnchantmentLevel(Identifier.Minecraft("efficiency"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int level) && level > 0)
             efficiency = level * (float)level + 1.0F;
         float submerged = (float)_services.Self.Attributes.Value(Identifier.Minecraft("submerged_mining_speed"), 0.2);
-        if (!HasMiningAttribute(registries, "submerged_mining_speed") && _services.State.Features.Inventory)
+        bool legacyUnderwaterPenalty = !HasMiningAttribute(registries, "submerged_mining_speed");
+        if (legacyUnderwaterPenalty && _services.State.Features.Inventory)
         {
-            ItemStack helmet = _services.State.Inventory.PlayerSlots[5];
-            if (helmet.TryGetEnchantmentLevel(Identifier.Minecraft("aqua_affinity"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int aqua) && aqua > 0)
-                submerged = 1.0F;
+            // Native Aqua Affinity selects all armor slots, including server-supplied enchantments outside the ordinary helmet slot.
+            for (int slot = 5; slot <= 8; slot++)
+            {
+                ItemStack armor = _services.State.Inventory.PlayerSlots[slot];
+                if (armor.TryGetEnchantmentLevel(Identifier.Minecraft("aqua_affinity"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int aqua) && aqua > 0)
+                {
+                    submerged = 1.0F;
+                    legacyUnderwaterPenalty = false;
+                    break;
+                }
+            }
         }
         var modifiers = new MiningModifiers(
             efficiency,
@@ -345,12 +354,17 @@ public sealed partial class InteractionActions
             (float)_services.Self.Attributes.Value(Identifier.Minecraft("block_break_speed"), 1),
             submerged,
             _services.ReadPhysicsState()?.IsUnderWater ?? false,
-            _services.Self.OnGround);
+            _services.Self.OnGround)
+        {
+            LegacyUnderwaterPenalty = legacyUnderwaterPenalty,
+        };
         return VanillaMiningProgress.Compute(hardness, tool, modifiers, _blockProfile.ExponentialMiningFatigue);
     }
 
     private static bool HasMiningAttribute(RegistryAccess registries, string name)
-        => registries.Attributes.TryGetNetworkId(Identifier.Minecraft(name), out _) || registries.Attributes.TryGetNetworkId(Identifier.Minecraft("generic." + name), out _);
+        => registries.Attributes.TryGetNetworkId(Identifier.Minecraft(name), out _)
+            || registries.Attributes.TryGetNetworkId(Identifier.Minecraft("player." + name), out _)
+            || registries.Attributes.TryGetNetworkId(Identifier.Minecraft("generic." + name), out _);
 
     private int MiningEffectAmplifier(RegistryAccess registries, string name)
     {

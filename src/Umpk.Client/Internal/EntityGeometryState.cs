@@ -128,10 +128,14 @@ internal sealed class EntityGeometryState
             legacy.Wake(entity, world, source);
     }
 
-    public void ObserveLegacyDeath(Entity entity)
+    public bool ObserveLegacyDeath(Entity entity)
     {
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+        {
             legacy.HandleDeath();
+            return true;
+        }
+        return false;
     }
 
     public void ObserveMount(Entity entity)

@@ -1,3 +1,4 @@
+using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Data.Java;
@@ -296,8 +297,21 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundEntityEventPacket entityEvent:
-                if (entityEvent.EventId == 3 && store.TryGet(entityEvent.EntityId, out Entity? dyingPlayer) && dyingPlayer is not null)
-                    context.State.EntityGeometry.ObserveLegacyDeath(dyingPlayer);
+                if (entityEvent.EventId == 3 && store.TryGet(entityEvent.EntityId, out Entity? dyingPlayer) && dyingPlayer is not null
+                    && context.State.EntityGeometry.ObserveLegacyDeath(dyingPlayer))
+                {
+                    if (context.MetadataKeys.TryResolveIndex(dyingPlayer.Type, EntityMetadataKeys.Health, out int healthIndex))
+                        dyingPlayer.Metadata.Set(healthIndex, MetadataValue.Float(0));
+                    LegacyPlayerGeometryProfile profile = LegacyPlayerGeometryProfile.ForProtocol(context.Version.Version.Protocol);
+                    // Original remote-player damage overrides perform no local damage calculation. These packet paths retain the constructor/reset damage yaw of zero.
+                    context.State.EntityMotion.SetCurrentVelocity(dyingPlayer, profile.DeathVelocity(dyingPlayer.Yaw, damageYaw: 0));
+                    if (profile.ClearsFireOnDeath && (!dyingPlayer.Metadata.TryGet(0, out MetadataValue flags) || flags.Kind == MetadataValueKind.Byte))
+                    {
+                        byte value = flags.Kind == MetadataValueKind.Byte ? unchecked((byte)flags.AsByte()) : (byte)0;
+                        dyingPlayer.Metadata.Set(0, MetadataValue.Byte(unchecked((sbyte)(value & ~1))));
+                        context.State.EntityGeometry.ObserveMetadata(dyingPlayer, 0);
+                    }
+                }
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 

@@ -41,6 +41,7 @@
     <EmbeddedResource Include="Fixtures/LegacyPlayerSpawn.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerDeath.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerDeathTraversal.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerBlockContext.native.json.gz" />
     <EmbeddedResource Include="Fixtures/PlayerInfoLookup.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyRemotePlayer.native.json" />
     <EmbeddedResource Include="Fixtures/LegacyTeleportInterpolation.native.json" />

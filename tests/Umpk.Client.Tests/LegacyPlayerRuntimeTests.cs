@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Text.Json;
 using Umpk.Client.Events;
@@ -16,6 +18,8 @@ namespace Umpk.Client.Tests;
 
 public sealed class LegacyPlayerRuntimeTests
 {
+    private static readonly Lazy<IReadOnlyDictionary<int, byte[]>> NativeColumnBodies = new(ReadColumnBodies);
+
     public static IEnumerable<object[]> NativeReleases()
     {
         using JsonDocument document = ReadNative();
@@ -39,7 +43,10 @@ public sealed class LegacyPlayerRuntimeTests
         var bed = new BlockPos(0, 64, 0);
         for (int x = -1; x <= 0; x++)
             for (int z = -1; z <= 0; z++)
+            {
+                await LoadColumnAsync(harness, protocol, new ChunkPos(x, z));
                 harness.State.World.SetBlockStateId(new BlockPos(x * 16, 0, z * 16), 0);
+            }
         IBlockInteractionSource source = JavaGameData.BlockInteractionData(protocol);
         foreach (JsonElement row in document.RootElement.GetProperty("cases")[caseIndex].GetProperty("states").EnumerateArray())
         {
@@ -91,6 +98,7 @@ public sealed class LegacyPlayerRuntimeTests
             Entity entity = await Spawn(harness, protocol, point);
             Assert.True(TryBounds(harness, entity, protocol, out _));
             BlockPos bed = Cell(row.GetProperty("bed"));
+            await LoadColumnAsync(harness, protocol, ChunkPos.Containing(bed));
             JsonElement vector = native.GetProperty("facings")[row.GetProperty("facing").GetInt32()];
             Direction facing = Facing(vector);
             int state = beds.RootElement.GetProperty("states").EnumerateArray()
@@ -205,6 +213,7 @@ public sealed class LegacyPlayerRuntimeTests
         var harness = Create(protocol, terrain: true);
         var bed = new BlockPos(0, 64, 0);
         using JsonDocument beds = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Umpk.TestKit.FixturePaths.RepoRoot(), "data", "java", protocol.ToString(System.Globalization.CultureInfo.InvariantCulture), "bed-facings.json")));
+        await LoadColumnAsync(harness, protocol, ChunkPos.Containing(bed));
         harness.State.World.SetBlockStateId(bed, beds.RootElement.GetProperty("states")[0][0].GetInt32());
         Entity previous = await Spawn(harness, protocol, new Vec3d(1.5, 64, 1.5));
         await harness.ApplyAsync(BoundDescriptorCodec.RoundTrip(protocol, "use_bed", new ClientboundUseBedPacket(42, bed)));
@@ -239,6 +248,44 @@ public sealed class LegacyPlayerRuntimeTests
 
     private static bool TryBounds(ApplierHarness harness, Entity entity, int protocol, out Aabb bounds)
         => harness.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out bounds, out _, protocol);
+
+    private static async Task LoadColumnAsync(ApplierHarness harness, int protocol, ChunkPos position)
+    {
+        // The retained native section payload supplies full terrain. Only the setup coordinates are translated; these bytes are not claimed as a new vanilla capture.
+        byte[] body = NativeColumnBodies.Value[protocol].ToArray();
+        BinaryPrimitives.WriteInt32BigEndian(body.AsSpan(0, 4), position.X);
+        BinaryPrimitives.WriteInt32BigEndian(body.AsSpan(4, 4), position.Z);
+        BoundPacketCodec codec = BoundDescriptorCodec.Clientbound(protocol, "level_chunk_with_light");
+        var context = new PacketCodecContext(harness.State.Registries!, IConnectionCodecState.Empty);
+        var packet = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(body, context));
+        Assert.True(packet.FullChunk);
+        Assert.Equal(position.X, packet.ChunkX);
+        Assert.Equal(position.Z, packet.ChunkZ);
+        Assert.Equal(position, packet.Column.Position);
+        var output = new ArrayBufferWriter<byte>();
+        var writer = new PacketWriter(output);
+        codec.Encode(ref writer, packet, context);
+        Assert.Equal(body, output.WrittenSpan.ToArray());
+        await harness.ApplyAsync(packet);
+    }
+
+    private static IReadOnlyDictionary<int, byte[]> ReadColumnBodies()
+    {
+        using JsonDocument document = LegacyPlayerMembershipRuntimeTests.ReadNative();
+        var result = new Dictionary<int, byte[]>();
+        foreach (var group in document.RootElement.GetProperty("releases").EnumerateArray().GroupBy(row => row.GetProperty("protocol").GetInt32()))
+        {
+            JsonElement native = document.RootElement.GetProperty("cases")[group.Last().GetProperty("case").GetInt32()];
+            JsonElement packet = native.GetProperty("rows").EnumerateArray().Single(row => row.GetProperty("position").GetInt32() == 0 && row.GetProperty("scene").GetInt32() == 1).GetProperty("packets")[0];
+            Assert.Equal("initial_full", packet.GetProperty("action").GetString());
+            byte[] body = Convert.FromHexString(native.GetProperty("packet_bodies").GetProperty(packet.GetProperty("sha256").GetString()!).GetString()!);
+            Assert.Equal(packet.GetProperty("bytes").GetInt32(), body.Length);
+            Assert.Equal(0, BinaryPrimitives.ReadInt32BigEndian(body.AsSpan(0, 4)));
+            Assert.Equal(0, BinaryPrimitives.ReadInt32BigEndian(body.AsSpan(4, 4)));
+            result.Add(group.Key, body);
+        }
+        return result;
+    }
 
     private static Direction Facing(JsonElement value) => (value[0].GetInt32(), value[1].GetInt32()) switch
     {

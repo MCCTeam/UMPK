@@ -14,6 +14,7 @@ internal sealed class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
     private World? _legacyWorld;
+    private EntityMembershipState? _legacyMembership;
     private LegacyPlayerResizeClearance? _legacyClearance;
     private bool _hasLivingTickRules;
     private bool _hasShulkers;
@@ -105,27 +106,28 @@ internal sealed class EntityGeometryState
     public bool IsPositionKnown(Entity entity)
         => !_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown;
 
-    public void TickLegacyPlayer(Entity entity, World? world, IBlockShapeSource shapes, int protocol)
+    public void TickLegacyPlayer(Entity entity, World? world, IBlockShapeSource shapes, int protocol, EntityMembershipState? membership = null)
     {
         if (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
             return;
-        if (!ReferenceEquals(world, _legacyWorld))
+        if (!ReferenceEquals(world, _legacyWorld) || !ReferenceEquals(membership, _legacyMembership))
         {
             _legacyWorld = world;
+            _legacyMembership = membership;
             _legacyClearance = world is not null && LegacyPlayerGeometryProfile.ForProtocol(protocol).HasSizePhase
-                ? new LegacyPlayerResizeClearance(world, shapes, protocol)
+                ? new LegacyPlayerResizeClearance(world, shapes, protocol, membership)
                 : null;
         }
         legacy.Tick(_legacyClearance);
     }
 
-    public bool BeginLegacySleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed)
-        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed);
+    public bool BeginLegacySleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null)
+        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed, membership);
 
-    public void WakeLegacyPlayer(Entity entity, World? world, IBlockInteractionSource source)
+    public void WakeLegacyPlayer(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null)
     {
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
-            legacy.Wake(entity, world, source);
+            legacy.Wake(entity, world, source, membership);
     }
 
     public bool ObserveLegacyDeath(Entity entity)
@@ -194,6 +196,7 @@ internal sealed class EntityGeometryState
         _shulkers.Clear();
         _legacyPlayers.Clear();
         _legacyWorld = null;
+        _legacyMembership = null;
         _legacyClearance = null;
         _hasLivingTickRules = false;
         _hasShulkers = false;

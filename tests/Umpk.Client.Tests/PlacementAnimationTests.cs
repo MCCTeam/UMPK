@@ -76,6 +76,71 @@ public sealed class PlacementAnimationTests
         }
     }
 
+    [Theory]
+    [MemberData(nameof(LegacyPlayerResizeCases))]
+    public async Task PlacementResizeIgnoresBlocksInColumnsWithoutReceivedTerrain(int protocol, int caseIndex, bool receivedNeighbor)
+    {
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
+        var applier = new Support.ApplierHarness(version, new ClientFeatures { Terrain = true, Entities = true, Inventory = true, Physics = false, Pathfinding = false });
+        applier.State.Registries = JavaGameData.Registries(protocol);
+        WorldFactory.InstallWorld(applier.State, new CommonWorldSetup("minecraft:overworld", 0), protocol);
+        using System.Text.Json.JsonDocument document = LegacyPlayerMembershipRuntimeTests.ReadNative();
+        System.Text.Json.JsonElement native = document.RootElement.GetProperty("cases")[caseIndex];
+        System.Text.Json.JsonElement crossing = native.GetProperty("rows").EnumerateArray().Single(row => row.GetProperty("position").GetInt32() == 0 && row.GetProperty("scene").GetInt32() == 7);
+        await ApplyColumn("initial_full", new ChunkPos(0, 0));
+        if (receivedNeighbor)
+            await ApplyColumn("crossing_full", new ChunkPos(1, 0));
+        var metadata = new EntityMetadataList([new(0, MetadataValue.Byte(2))], []);
+        await applier.ApplyAsync(Support.BoundDescriptorCodec.RoundTrip(protocol, "add_player", new ClientboundAddPlayerPacket(42, Guid.Empty, 15.8125, 63.3125, 1.5, 0, 0, 0, metadata)));
+        Entity actor = applier.State.Entities.Get(42)!;
+        Assert.True(applier.State.EntityMembership.CanTick(actor));
+        Assert.True(applier.State.Registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out var stone));
+        var neighbor = new BlockPos(16, 64, 1);
+        await applier.ApplyAsync(Support.BoundDescriptorCodec.RoundTrip(protocol, "block_update", new ClientboundBlockUpdatePacket(neighbor, stone.DefaultStateId)));
+        Assert.NotNull(applier.State.World.GetColumn(neighbor));
+        Assert.Equal(receivedNeighbor, applier.State.EntityMembership.HasColumn(neighbor));
+
+        applier.State.TickEntities(protocol, JavaGameData.BlockShapes(protocol), []);
+
+        bool shrinks = protocol != 47 && !receivedNeighbor;
+        Assert.True(applier.State.EntityGeometry.TryGet(actor, JavaGameData.EntityGeometryData(protocol), out Aabb bounds, out _, protocol));
+        Assert.Equal(shrinks ? 1.65F : 1.8F, (float)bounds.YSize);
+        Assert.True(applier.State.EntityMembership.CanTick(actor));
+        var target = new BlockPos(15, 64, 1);
+        applier.State.World.SetBlockStateId(target, stone.DefaultStateId);
+        Assert.True(applier.State.Registries.Items.TryGet(Identifier.Minecraft("stone"), out RegistryEntry<ItemDefinition> item));
+        applier.State.Inventory.SetSlot(0, 36, new ItemStack(item, 32));
+        await using var scheduler = new ChannelSessionScheduler();
+        using var lifetime = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        var sink = new RecordingSink();
+        var services = new ClientSessionServices { Version = version, Options = new(), Policies = new(), State = applier.State, Wire = new(version), Logger = NullLogger.Instance, Scheduler = scheduler, ReadPhysicsState = () => new PhysicsState { BoundingBox = Aabb.OfSize(.5, 64, -1.5, .6, 1.8) }, CurrentSessionCancellation = () => lifetime.Token };
+        var actions = new InteractionActions(sink, services, new SequenceTracker());
+
+        await actions.PlaceBlockAsync(target, Direction.Up, new Vec3d(.5, 1, .5), ct: lifetime.Token);
+
+        Assert.Equal(shrinks ? 2 : 1, sink.Packets.Count);
+        if (protocol == 47)
+            Assert.IsType<ServerboundLegacyBlockPlacePacket>(sink.Packets[0]);
+        else
+            Assert.IsType<ServerboundUseItemOnPacket>(sink.Packets[0]);
+        if (shrinks)
+            Assert.IsType<ServerboundSwingPacket>(sink.Packets[1]);
+        foreach (object sent in sink.Packets)
+            Assert.NotEmpty(Support.BoundDescriptorCodec.EncodeServerbound(protocol, Assert.IsAssignableFrom<Umpk.Protocol.Java.IPacket>(sent)));
+        Assert.Equal(32, applier.State.Inventory.GetSlot(36).Count);
+        Assert.True(applier.State.World.GetBlock(target.Above()).IsAir);
+        return;
+
+        async Task ApplyColumn(string action, ChunkPos expected)
+        {
+            var packet = crossing.GetProperty("packets").EnumerateArray().Single(row => row.GetProperty("action").GetString() == action);
+            var column = Assert.IsType<ClientboundLevelChunkPacket>(LegacyPlayerMembershipRuntimeTests.DecodeNative(applier, protocol, native, packet));
+            Assert.True(column.FullChunk);
+            Assert.Equal(expected, column.Column.Position);
+            await applier.ApplyAsync(column);
+        }
+    }
+
     public static IEnumerable<object[]> ReplacementCases()
     {
         foreach (int protocol in JavaVersions.All.Select(row => row.Version.Protocol).Distinct())

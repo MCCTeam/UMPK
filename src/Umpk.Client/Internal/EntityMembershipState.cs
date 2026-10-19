@@ -12,6 +12,8 @@ internal sealed class EntityMembershipState
     private readonly List<Membership> _reentry = [];
     private int _reentryCapacity = 16;
 
+    public bool HasColumn(BlockPos cell) => _columns.Contains(ChunkPos.Containing(cell));
+
     public void Register(Entity entity, int protocol, bool isPlayer, int? healthIndex = null)
     {
         if (!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol))

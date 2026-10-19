@@ -132,7 +132,7 @@ public sealed class ClientState
             {
                 EntityMembership.BeginPlayerTick(entity);
                 EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList);
-                EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol);
+                EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol, EntityMembership);
             }
             EntityMembership.AfterEntityPhase(entity);
         }

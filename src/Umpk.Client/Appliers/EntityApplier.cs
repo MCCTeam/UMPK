@@ -267,7 +267,7 @@ internal sealed class EntityApplier : IApplier
                 {
                     Vec3d previous = sleepingPlayer.Position;
                     if (context.State.EntityGeometry.BeginLegacySleep(sleepingPlayer, context.State.WorldOrNull,
-                        JavaGameData.BedInteractionData(context.Version.Version.Protocol), bed.Position))
+                        JavaGameData.BedInteractionData(context.Version.Version.Protocol), bed.Position, context.State.EntityMembership))
                         context.State.EntityMotion.SetCurrentVelocity(sleepingPlayer, Vec3d.Zero);
                     if (sleepingPlayer.Position != previous)
                         await context.PublishAsync(new EntityMoved(bed.PlayerId)).ConfigureAwait(false);
@@ -279,7 +279,7 @@ internal sealed class EntityApplier : IApplier
                 {
                     Vec3d previous = wakingPlayer.Position;
                     context.State.EntityGeometry.WakeLegacyPlayer(wakingPlayer, context.State.WorldOrNull,
-                        JavaGameData.BedInteractionData(context.Version.Version.Protocol));
+                        JavaGameData.BedInteractionData(context.Version.Version.Protocol), context.State.EntityMembership);
                     if (wakingPlayer.Position != previous)
                         await context.PublishAsync(new EntityMoved(wake.EntityId)).ConfigureAwait(false);
                 }

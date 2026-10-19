@@ -154,12 +154,15 @@ internal sealed class VanillaLegacyPlayerGeometry
 
 internal readonly record struct LegacyPlayerGeometryProfile(bool HasSizePhase, bool RecenterOnShrink, bool VectorSleepOffsets, bool SwimmingAndSpin, bool BoundedBedRead, bool DeathPiBeforeDivision, bool ClearsFireOnDeath)
 {
+    // Original EmptyChunk block-update listeners retain state only in the measured protocol-47 band; this is independent of the size-phase and bed-validity guards.
+    public bool RetainsEmptyChunkWrites { get; init; }
+
     public static bool Supports(int protocol) => protocol is 47 or 107 or 108 or 109 or 110 or 210 or 315 or 316 or 335 or 338 or 340 or 393 or 401 or 404;
 
     // Original callbacks and 19,968 native size phases establish size/offset boundaries. The separate 27-release world/bed-availability campaign establishes the bed-read guard.
     public static LegacyPlayerGeometryProfile ForProtocol(int protocol) => protocol switch
     {
-        47 => new(false, false, false, false, true, true, false),
+        47 => new(false, false, false, false, true, true, false) { RetainsEmptyChunkWrites = true },
         107 or 108 or 109 => new(true, false, false, false, true, false, false),
         110 or 210 => new(true, false, false, false, false, false, false),
         315 or 316 or 335 or 338 or 340 => new(true, true, true, false, false, false, true),

@@ -11,9 +11,11 @@ internal sealed class LegacyPlayerResizeClearance
 {
     private readonly PhysicsCollisionQuery _blocks;
     private readonly QueryProfile _profile;
+    private readonly EntityMembershipState? _membership;
 
-    internal LegacyPlayerResizeClearance(World world, IBlockShapeSource shapes, int protocol)
+    internal LegacyPlayerResizeClearance(World world, IBlockShapeSource shapes, int protocol, EntityMembershipState? membership = null)
     {
+        _membership = membership;
         _profile = QueryProfile.ForProtocol(protocol);
         _blocks = new PhysicsCollisionQuery(new WorldPhysicsView(world, shapes, WorldBorderContainmentEra.Legacy, PhysicsProfile.BlockCollisionQueryForProtocol(protocol)));
     }
@@ -33,7 +35,7 @@ internal sealed class LegacyPlayerResizeClearance
                         int sides = (x == minX || x == maxX - 1 ? 1 : 0) + (z == minZ || z == maxZ - 1 ? 1 : 0);
                         if (sides == 2 || (sides != 0 && (y == minY || y == maxY - 1)))
                             continue;
-                        blocked |= _blocks.IntersectsBlock(new BlockPos(x, y, z), box);
+                        blocked |= IntersectsBlock(new BlockPos(x, y, z), box);
                     }
             return !blocked;
         }
@@ -49,12 +51,15 @@ internal sealed class LegacyPlayerResizeClearance
                 {
                     if (sides != 0 && (y == maxY - 1 || (_profile.SkipBottomPadding && y == minY)))
                         continue;
-                    if ((!_profile.Voxel && outside) || _blocks.IntersectsBlock(new BlockPos(x, y, z), box))
+                    if ((!_profile.Voxel && outside) || IntersectsBlock(new BlockPos(x, y, z), box))
                         return false;
                 }
             }
         return true;
     }
+
+    private bool IntersectsBlock(BlockPos cell, in Aabb box)
+        => (_membership is null || _membership.HasColumn(cell)) && _blocks.IntersectsBlock(cell, box);
 
     private readonly record struct QueryProfile(bool BoundedLoadedColumns, bool SkipBottomPadding, bool Voxel, bool DeferredFullCubes)
     {

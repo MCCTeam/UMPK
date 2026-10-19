@@ -431,6 +431,15 @@ internal sealed partial class Emitter
             sb.AppendLine("    };");
         }
 
+        sb.AppendLine("    /// <summary>Measured bed-facing and exit-cell facts without other interaction contracts. Missing measurements use the existing schema-zero unknown source.</summary>");
+        sb.AppendLine("    private static ReadOnlySpan<byte> BedInteractions(int protocol) => protocol switch");
+        sb.AppendLine("    {");
+        foreach (VersionData version in versions.Where(version => BedFacingTable.Load(version) is not null || BedExitCellTable.Load(version) is not null))
+            sb.AppendLine(CultureInfo.InvariantCulture, $"        {version.Protocol} => global::Umpk.Data.Java.V{version.Protocol}.Descriptor.BedInteractions,");
+        sb.AppendLine("        _ => [0],");
+        sb.AppendLine("    };");
+        sb.AppendLine();
+
         sb.AppendLine("    /// <summary>Exact collision grids for measured protocols. An absent table retains the source's existing bounding-box path.</summary>");
         sb.AppendLine("    private static ReadOnlySpan<byte> BlockCollisionGrids(int protocol) => protocol switch");
         sb.AppendLine("    {");

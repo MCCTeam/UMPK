@@ -960,6 +960,26 @@ public static partial class JavaGameData
         777 => global::Umpk.Data.Java.V777.Descriptor.AttributeDefs,
         _ => throw Unsupported(protocol, "attribute-definition"),
     };
+    /// <summary>Measured bed-facing and exit-cell facts without other interaction contracts. Missing measurements use the existing schema-zero unknown source.</summary>
+    private static ReadOnlySpan<byte> BedInteractions(int protocol) => protocol switch
+    {
+        47 => global::Umpk.Data.Java.V47.Descriptor.BedInteractions,
+        107 => global::Umpk.Data.Java.V107.Descriptor.BedInteractions,
+        108 => global::Umpk.Data.Java.V108.Descriptor.BedInteractions,
+        109 => global::Umpk.Data.Java.V109.Descriptor.BedInteractions,
+        110 => global::Umpk.Data.Java.V110.Descriptor.BedInteractions,
+        210 => global::Umpk.Data.Java.V210.Descriptor.BedInteractions,
+        315 => global::Umpk.Data.Java.V315.Descriptor.BedInteractions,
+        316 => global::Umpk.Data.Java.V316.Descriptor.BedInteractions,
+        335 => global::Umpk.Data.Java.V335.Descriptor.BedInteractions,
+        338 => global::Umpk.Data.Java.V338.Descriptor.BedInteractions,
+        340 => global::Umpk.Data.Java.V340.Descriptor.BedInteractions,
+        393 => global::Umpk.Data.Java.V393.Descriptor.BedInteractions,
+        401 => global::Umpk.Data.Java.V401.Descriptor.BedInteractions,
+        404 => global::Umpk.Data.Java.V404.Descriptor.BedInteractions,
+        _ => [0],
+    };
+
     /// <summary>Exact collision grids for measured protocols. An absent table retains the source's existing bounding-box path.</summary>
     private static ReadOnlySpan<byte> BlockCollisionGrids(int protocol) => protocol switch
     {

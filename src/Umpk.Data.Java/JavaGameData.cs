@@ -21,6 +21,7 @@ public static partial class JavaGameData
     private static readonly ConcurrentDictionary<int, IBlockPushSource> PushCache = new();
     private static readonly ConcurrentDictionary<int, IBlockMiningSource> MiningCache = new();
     private static readonly ConcurrentDictionary<int, IBlockInteractionSource> InteractionCache = new();
+    private static readonly ConcurrentDictionary<int, IBlockInteractionSource> BedInteractionCache = new();
     private static readonly ConcurrentDictionary<int, IEntityGeometrySource> GeometryCache = new();
 
     /// <summary>The lowest protocol whose item ids are index-based (1.13, the flattening).</summary>
@@ -69,6 +70,10 @@ public static partial class JavaGameData
     /// <summary>Returns cached native block-use and default-item placement contracts. Missing measurements and specialized rules remain explicit unknowns.</summary>
     public static IBlockInteractionSource BlockInteractionData(int protocol) =>
         InteractionCache.GetOrAdd(protocol, static p => JavaBlockInteractions.Create(BlockInteractions(p), (JavaEntityGeometry)EntityGeometryData(p)));
+
+    /// <summary>Returns cached measured bed-facing and exit-cell predicates without loading other interaction contracts. Missing versions, states and non-bed contracts remain unknown.</summary>
+    public static IBlockInteractionSource BedInteractionData(int protocol) =>
+        BedInteractionCache.GetOrAdd(protocol, static p => JavaBlockInteractions.Create(BedInteractions(p)));
 
     /// <summary>Returns cached native entity dimensions and metadata refresh rules without loading block-interaction tables. Unmeasured entity states remain unknown.</summary>
     public static IEntityGeometrySource EntityGeometryData(int protocol) =>

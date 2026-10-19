@@ -289,6 +289,11 @@ internal sealed partial class Emitter
         }
         string interactionsMember = InternBlockInteractions(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.{interactionsMember};");
+        if (BedFacingTable.Load(version) is not null || BedExitCellTable.Load(version) is not null)
+        {
+            string bedsMember = InternBedInteractions(version);
+            sb.AppendLine($"    public static ReadOnlySpan<byte> BedInteractions => SharedTables.{bedsMember};");
+        }
         string geometryMember = InternEntityGeometry(version);
         sb.AppendLine($"    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.{geometryMember};");
         string targetingMember = InternBlockTargeting(version);
@@ -878,6 +883,7 @@ internal sealed partial class Emitter
         "blockmining" => "BlockMining",
         "itemattack" => "ItemAttackDefaults",
         "blockinteractions" => "BlockInteractions",
+        "bedinteractions" => "BedInteractions",
         "entitygeometry" => "EntityGeometry",
         "blocktargeting" => "BlockTargeting",
         "blockcollisiongrids" => "BlockCollisionGrids",

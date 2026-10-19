@@ -78,26 +78,41 @@ internal sealed partial class Emitter
                 }
             }
             if (schema >= 6)
-            {
-                WriteVarInt(stream, beds?.States.Count ?? 0);
-                foreach (BedFacingEntry bed in beds?.States ?? [])
-                {
-                    WriteVarInt(stream, bed.State);
-                    stream.WriteByte((byte)bed.Facing);
-                }
-            }
-            if (schema == 7)
-            {
-                WriteVarInt(stream, exitCells!.Ranges.Length);
-                foreach (ReplacementRange range in exitCells.Ranges)
-                {
-                    WriteVarInt(stream, range.First);
-                    WriteVarInt(stream, range.Last);
-                    stream.WriteByte((byte)range.Flags);
-                }
-            }
+                WriteBedFacts(stream, beds, exitCells);
         }
         return InternBlob("blockinteractions", version.Protocol, stream.ToArray());
+    }
+
+    private string InternBedInteractions(VersionData version)
+    {
+        using MemoryStream stream = new();
+        BedFacingTable? beds = BedFacingTable.Load(version);
+        BedExitCellTable? cells = BedExitCellTable.Load(version);
+        WriteVarInt(stream, cells is not null ? 7 : 6);
+        // Keep the existing packed-reader schema. Other interaction contracts remain unknown in this source.
+        for (int section = 0; section < 6; section++)
+            WriteVarInt(stream, 0);
+        WriteBedFacts(stream, beds, cells);
+        return InternBlob("bedinteractions", version.Protocol, stream.ToArray());
+    }
+
+    private static void WriteBedFacts(Stream stream, BedFacingTable? beds, BedExitCellTable? cells)
+    {
+        WriteVarInt(stream, beds?.States.Count ?? 0);
+        foreach (BedFacingEntry bed in beds?.States ?? [])
+        {
+            WriteVarInt(stream, bed.State);
+            stream.WriteByte((byte)bed.Facing);
+        }
+        if (cells is null)
+            return;
+        WriteVarInt(stream, cells.Ranges.Length);
+        foreach (ReplacementRange range in cells.Ranges)
+        {
+            WriteVarInt(stream, range.First);
+            WriteVarInt(stream, range.Last);
+            stream.WriteByte((byte)range.Flags);
+        }
     }
 
     private string InternEntityGeometry(VersionData version)

@@ -90,7 +90,8 @@ public sealed partial class InteractionActions
             if (request.World is { } previous && !ReferenceEquals(previous, world))
                 throw new MiningUnavailableException("The mining world has ended.");
             request.World = world;
-            if (_services.Self.GameMode is GameMode.Spectator or GameMode.Adventure)
+            if (_services.Self.GameMode == GameMode.Spectator
+                || _services.Self.GameMode == GameMode.Adventure && !VanillaLegacyMiningPermission.Supports(_services.Version.Version.Protocol))
                 throw new MiningUnavailableException("This game mode requires an allowed block interaction before mining.");
 
             if (request.ViewDistance is double distance)
@@ -167,8 +168,8 @@ public sealed partial class InteractionActions
             float progress = ReadMiningProgress(block, item);
             if (_blockProfile.CanBreakInstantly(_services.Self) || !SameDestroyTarget(request.Position, item))
             {
-                await StartMiningTargetOnLoopAsync(request, item, progress, ct).ConfigureAwait(false);
-                await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
+                if (await StartMiningTargetOnLoopAsync(request, item, progress, ct).ConfigureAwait(false))
+                    await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
                 return;
             }
 
@@ -241,13 +242,17 @@ public sealed partial class InteractionActions
             _destroyTarget = null;
     }
 
-    private async ValueTask StartMiningTargetOnLoopAsync(MiningRequest request, ItemStack item, float progress, CancellationToken ct)
+    private async ValueTask<bool> StartMiningTargetOnLoopAsync(MiningRequest request, ItemStack item, float progress, CancellationToken ct)
     {
+        // Native checks Adventure permission before aborting an old target or sending START. Ordinary same-target continuation does not repeat this check.
+        if (_services.Self.GameMode == GameMode.Adventure
+            && !VanillaLegacyMiningPermission.Allows(item, request.World!.GetBlock(request.Position), _services.Version.Version.Protocol))
+            return false;
         bool instantBuild = _blockProfile.CanBreakInstantly(_services.Self);
         if (!instantBuild && _destroyTarget is { Active: true } previous)
         {
             if (SameDestroyTarget(request.Position, item))
-                return;
+                return true;
             await SendAbortMiningAsync(previous.Position, request.Face, ct).ConfigureAwait(false);
         }
 
@@ -261,6 +266,7 @@ public sealed partial class InteractionActions
         }
         else
             _destroyTarget = new MiningTarget(request, item);
+        return true;
     }
 
     private void CompleteMining(MiningRequest request, int? sequence)

@@ -260,6 +260,29 @@ internal sealed class EntityApplier : IApplier
                 await context.PublishAsync(new EntityPassengersChanged(passengers.VehicleId)).ConfigureAwait(false);
                 return true;
 
+            case ClientboundUseBedPacket bed:
+                if (store.TryGet(bed.PlayerId, out Entity? sleepingPlayer) && sleepingPlayer is not null)
+                {
+                    Vec3d previous = sleepingPlayer.Position;
+                    if (context.State.EntityGeometry.BeginLegacySleep(sleepingPlayer, context.State.WorldOrNull,
+                        JavaGameData.BlockInteractionData(context.Version.Version.Protocol), bed.Position))
+                        context.State.EntityMotion.SetCurrentVelocity(sleepingPlayer, Vec3d.Zero);
+                    if (sleepingPlayer.Position != previous)
+                        await context.PublishAsync(new EntityMoved(bed.PlayerId)).ConfigureAwait(false);
+                }
+                return true;
+
+            case ClientboundAnimatePacket { Action: 2 } wake:
+                if (store.TryGet(wake.EntityId, out Entity? wakingPlayer) && wakingPlayer is not null)
+                {
+                    Vec3d previous = wakingPlayer.Position;
+                    context.State.EntityGeometry.WakeLegacyPlayer(wakingPlayer, context.State.WorldOrNull,
+                        JavaGameData.BlockInteractionData(context.Version.Version.Protocol));
+                    if (wakingPlayer.Position != previous)
+                        await context.PublishAsync(new EntityMoved(wake.EntityId)).ConfigureAwait(false);
+                }
+                return true;
+
             case ClientboundTakeItemEntityPacket pickup:
                 if (store.Remove(pickup.ItemEntityId) is { } pickedUp)
                 {
@@ -271,6 +294,8 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundEntityEventPacket entityEvent:
+                if (entityEvent.EventId == 3 && store.TryGet(entityEvent.EntityId, out Entity? dyingPlayer) && dyingPlayer is not null)
+                    context.State.EntityGeometry.ObserveLegacyDeath(dyingPlayer);
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 
@@ -375,7 +400,7 @@ internal sealed class EntityApplier : IApplier
             entity.PlayerProfile = tabEntry.Profile;
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
-        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol);
+        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)

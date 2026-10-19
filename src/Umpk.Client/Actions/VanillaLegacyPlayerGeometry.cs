@@ -63,18 +63,34 @@ internal sealed class VanillaLegacyPlayerGeometry
     public BlockPos? WakeFromIntactBed(BlockPos bed, Direction facing, Func<BlockPos, bool> canStand)
     {
         ArgumentNullException.ThrowIfNull(canStand);
+        TryWakeFromIntactBed(bed, facing, KnownCell, out BlockPos? exit);
+        return exit;
+
+        bool KnownCell(BlockPos cell, out bool result)
+        {
+            result = canStand(cell);
+            return true;
+        }
+    }
+
+    /// <summary>Returns false at the first unknown candidate. A true result with no exit means the original above-bed fallback is proven.</summary>
+    public bool TryWakeFromIntactBed(BlockPos bed, Direction facing, LegacyBedExitPredicate canStand, out BlockPos? exit)
+    {
+        ArgumentNullException.ThrowIfNull(canStand);
         if (facing is < Direction.North or > Direction.East)
             throw new ArgumentOutOfRangeException(nameof(facing), "A waking player requires a horizontal bed facing.");
         Resize(.6F, 1.8F);
-        BlockPos? exit = FindBedExit(bed, facing, canStand);
+        if (!TryFindBedExit(bed, facing, canStand, out exit))
+            return false;
         BlockPos destination = exit ?? new BlockPos(bed.X, bed.Y + 1, bed.Z);
         SetPosition(new Vec3d(destination.X + .5F, destination.Y + .1F, destination.Z + .5F));
         Sleeping = false;
-        return exit;
+        return true;
     }
 
-    private static BlockPos? FindBedExit(BlockPos bed, Direction facing, Func<BlockPos, bool> canStand)
+    private static bool TryFindBedExit(BlockPos bed, Direction facing, LegacyBedExitPredicate canStand, out BlockPos? exit)
     {
+        exit = null;
         for (int area = 0; area <= 1; area++)
         {
             int firstX = bed.X - facing.StepX() * area - 1;
@@ -83,11 +99,16 @@ internal sealed class VanillaLegacyPlayerGeometry
                 for (int z = firstZ; z <= firstZ + 2; z++)
                 {
                     var candidate = new BlockPos(x, bed.Y, z);
-                    if (canStand(candidate))
-                        return candidate;
+                    if (!canStand(candidate, out bool supported))
+                        return false;
+                    if (supported)
+                    {
+                        exit = candidate;
+                        return true;
+                    }
                 }
         }
-        return null;
+        return true;
     }
 
     /// <summary>Applies the death callback's size and explicit position operations. A subsequent size phase still evaluates the flags and sleeping state.</summary>
@@ -116,6 +137,8 @@ internal sealed class VanillaLegacyPlayerGeometry
 
 internal readonly record struct LegacyPlayerGeometryProfile(bool HasSizePhase, bool RecenterOnShrink, bool VectorSleepOffsets, bool SwimmingAndSpin)
 {
+    public static bool Supports(int protocol) => protocol is 47 or 107 or 108 or 109 or 110 or 210 or 315 or 316 or 335 or 338 or 340 or 393 or 401 or 404;
+
     // Original callbacks across 27 releases and 19,968 native size phases establish each boundary independently of packet IDs.
     public static LegacyPlayerGeometryProfile ForProtocol(int protocol) => protocol switch
     {
@@ -126,3 +149,5 @@ internal readonly record struct LegacyPlayerGeometryProfile(bool HasSizePhase, b
         _ => throw new ArgumentOutOfRangeException(nameof(protocol), "The legacy player lifecycle profile has not been measured for this protocol."),
     };
 }
+
+internal delegate bool LegacyBedExitPredicate(BlockPos cell, out bool canStand);

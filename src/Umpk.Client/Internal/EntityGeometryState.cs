@@ -12,13 +12,19 @@ internal sealed class EntityGeometryState
 {
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
+    private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
     private bool _hasLivingTickRules;
     private bool _hasShulkers;
 
-    public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0)
+    public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
     {
-        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _))
+        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _) || _legacyPlayers.TryGetValue(entity, out _))
             return;
+        if (isPlayer && LegacyPlayerGeometryProfile.Supports(protocol))
+        {
+            _legacyPlayers.Add(entity, new TrackedLegacyPlayerGeometry(entity, protocol));
+            return;
+        }
         if (TrackedShulkerGeometry.TryCreate(entity, protocol, out TrackedShulkerGeometry? shulker) && shulker is not null)
         {
             _shulkers.Add(entity, shulker);
@@ -36,6 +42,11 @@ internal sealed class EntityGeometryState
     public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
     {
         Register(entity, source, protocol);
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+        {
+            blocksBuilding = true;
+            return legacy.TryGet(entity, out box);
+        }
         if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
         {
             blocksBuilding = true;
@@ -57,6 +68,11 @@ internal sealed class EntityGeometryState
 
     public void ObserveMetadata(Entity entity, int index)
     {
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+        {
+            legacy.ObserveMetadata(entity, index);
+            return;
+        }
         if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
         {
             shulker.ObserveMetadata(entity, index);
@@ -68,6 +84,11 @@ internal sealed class EntityGeometryState
 
     public void ObservePosition(Entity entity)
     {
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+        {
+            legacy.ObservePosition(entity);
+            return;
+        }
         if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
         {
             shulker.ObservePosition(entity);
@@ -78,6 +99,21 @@ internal sealed class EntityGeometryState
     }
 
     public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
+
+    public bool BeginLegacySleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed)
+        => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) && legacy.BeginSleep(entity, world, source, bed);
+
+    public void WakeLegacyPlayer(Entity entity, World? world, IBlockInteractionSource source)
+    {
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+            legacy.Wake(entity, world, source);
+    }
+
+    public void ObserveLegacyDeath(Entity entity)
+    {
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+            legacy.HandleDeath();
+    }
 
     public void ObserveMount(Entity entity)
     {
@@ -127,11 +163,13 @@ internal sealed class EntityGeometryState
     {
         _entities.Remove(entity);
         _shulkers.Remove(entity);
+        _legacyPlayers.Remove(entity);
     }
     public void Clear()
     {
         _entities.Clear();
         _shulkers.Clear();
+        _legacyPlayers.Clear();
         _hasLivingTickRules = false;
         _hasShulkers = false;
     }

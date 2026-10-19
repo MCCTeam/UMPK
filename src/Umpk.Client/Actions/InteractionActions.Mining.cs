@@ -17,6 +17,7 @@ public sealed partial class InteractionActions
     private MiningRequest? _mining;
     private MiningTarget? _destroyTarget;
     private readonly VanillaAttackCharge _attackCharge = new();
+    private readonly VanillaFlattenedMiningPermission _flattenedMiningPermission = new();
     private long? _interactionLifetime;
     private int _destroyDelay;
 
@@ -92,7 +93,9 @@ public sealed partial class InteractionActions
                 throw new MiningUnavailableException("The mining world has ended.");
             request.World = world;
             if (_services.Self.GameMode == GameMode.Spectator
-                || _services.Self.GameMode == GameMode.Adventure && !VanillaLegacyMiningPermission.Supports(_services.Version.Version.Protocol))
+                || _services.Self.GameMode == GameMode.Adventure
+                && !VanillaLegacyMiningPermission.Supports(_services.Version.Version.Protocol)
+                && !VanillaFlattenedMiningPermission.Supports(_services.Version.Version.Protocol))
                 throw new MiningUnavailableException("This game mode requires an allowed block interaction before mining.");
 
             if (request.ViewDistance is double distance)
@@ -231,6 +234,7 @@ public sealed partial class InteractionActions
 
     private void SynchronizeMiningOwner()
     {
+        _flattenedMiningPermission.Synchronize(_services.State.InteractionLifetime, _services.State.PlayerLifetime, _services.State.WorldOrNull);
         if (_interactionLifetime != _services.State.InteractionLifetime)
         {
             _interactionLifetime = _services.State.InteractionLifetime;
@@ -246,9 +250,18 @@ public sealed partial class InteractionActions
     private async ValueTask<bool> StartMiningTargetOnLoopAsync(MiningRequest request, ItemStack item, float progress, CancellationToken ct)
     {
         // Native checks Adventure permission before aborting an old target or sending START. Ordinary same-target continuation does not repeat this check.
-        if (_services.Self.GameMode == GameMode.Adventure
-            && !VanillaLegacyMiningPermission.Allows(item, request.World!.GetBlock(request.Position), _services.Version.Version.Protocol))
-            return false;
+        if (_services.Self.GameMode == GameMode.Adventure)
+        {
+            int protocol = _services.Version.Version.Protocol;
+            BlockState block = request.World!.GetBlock(request.Position);
+            bool? allowed = VanillaLegacyMiningPermission.Supports(protocol)
+                ? VanillaLegacyMiningPermission.Allows(item, block, protocol)
+                : _flattenedMiningPermission.Allows(item, block, (_services.State.Registries ?? JavaGameData.Registries(protocol)).Blocks, _services.State.RegistryTags, protocol);
+            if (allowed is null)
+                throw new MiningUnavailableException("The Adventure permission requires unavailable tag, property-kind or block-entity facts.");
+            if (!allowed.Value)
+                return false;
+        }
         bool instantBuild = _blockProfile.CanBreakInstantly(_services.Self);
         if (!instantBuild && _destroyTarget is { Active: true } previous)
         {

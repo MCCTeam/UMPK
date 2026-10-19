@@ -32,13 +32,13 @@ internal static class VanillaLegacyMiningPermission
                 path = path.ToLowerInvariant();
             if (nameSpace.Equals(target.Block.Id.Namespace, StringComparison.OrdinalIgnoreCase) && path == target.Block.Id.Path)
                 return true;
-            if (TryReadBlockNumber(selector, out int id) && id == target.Block.NetworkId)
+            if (TryReadJavaInteger(selector, out int id) && id == target.Block.NetworkId)
                 return true;
         }
         return false;
     }
 
-    private static bool TryReadBlockNumber(ReadOnlySpan<char> value, out int id)
+    internal static bool TryReadJavaInteger(ReadOnlySpan<char> value, out int id)
     {
         id = 0;
         if (value.IsEmpty)

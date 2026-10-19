@@ -191,8 +191,6 @@ public sealed class LegacyAdventureMiningRuntimeTests
     }
 
     [Theory]
-    [InlineData(393)]
-    [InlineData(765)]
     [InlineData(766)]
     [InlineData(770)]
     [InlineData(777)]

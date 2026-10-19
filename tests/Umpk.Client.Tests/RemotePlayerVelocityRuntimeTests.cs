@@ -36,6 +36,62 @@ public sealed class RemotePlayerVelocityRuntimeTests
 
     [Theory]
     [MemberData(nameof(LegacyMembershipProtocols))]
+    public async Task LegacyDeathLifetimeUsesOnlyEligibleSessionTicksAndRetainsPacketLookup(int protocol, bool terrain)
+    {
+        using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        CancellationToken ct = budget.Token;
+        Assert.True(JavaVersions.TryGetByProtocol(protocol, out JavaVersion version));
+        var ticks = new ObservedTickSource();
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = CreateClient(server, ticks, version, terrain, physics: false);
+        await JoinAsync(client, server, version, ct);
+        await SendAndObserveAsync(client, server, version, NativeMembershipChunk(protocol, "initial_full"), ct);
+        await Spawn();
+        Entity actor = client.State.Entities.Get(RemoteId)!;
+        Assert.True(JavaGameData.EntityMetadataKeys(protocol).TryResolveIndex(actor.Type, EntityMetadataKeys.Health, out int healthIndex));
+        await SendAndObserveAsync(client, server, version, new ClientboundSetEntityDataPacket(RemoteId, new EntityMetadataList([new(healthIndex, MetadataValue.Float(0))], [])), ct);
+        await client.InvokeAsync(_ => true, ct);
+        Assert.True(await client.InvokeAsync(c => c.State.EntityMembership.CanTick(actor), ct));
+        for (int tick = 0; tick < 19; tick++)
+            await ticks.FireAsync(ct);
+        Assert.True(await client.InvokeAsync(c => c.State.EntityMembership.CanTick(actor), ct));
+
+        await ticks.FireAsync(ct);
+
+        Assert.False(await client.InvokeAsync(c => c.State.EntityMembership.CanTick(actor), ct));
+        Assert.False(await client.InvokeAsync(c => c.State.EntityMembership.IsWorldQueryMember(actor), ct));
+        Assert.Same(actor, client.State.Entities.Get(RemoteId));
+        Vec3d position = actor.Position;
+        await SendAndObserveAsync(client, server, version, new ClientboundTeleportEntityPacket(RemoteId, 3.5, 65, 3.5, 90, 45, false, null, 0), ct);
+        for (int tick = 0; tick < 3; tick++)
+            await ticks.FireAsync(ct);
+        Assert.Equal(position, actor.Position);
+
+        await Spawn();
+        Entity replacement = client.State.Entities.Get(RemoteId)!;
+        Assert.NotSame(actor, replacement);
+        for (int tick = 0; tick < 20; tick++)
+            await ticks.FireAsync(ct);
+        Assert.True(await client.InvokeAsync(c => c.State.EntityMembership.CanTick(replacement), ct));
+        await JoinWorldAsync(client, server, version, ct);
+        Assert.Null(client.State.Entities.Get(RemoteId));
+        await Spawn();
+        Entity nextWorld = client.State.Entities.Get(RemoteId)!;
+        await ticks.FireAsync(ct);
+        Assert.False(await client.InvokeAsync(c => c.State.EntityMembership.IsWorldQueryMember(nextWorld), ct));
+
+        await client.DisconnectAsync(ct);
+        await Assert.ThrowsAsync<ConnectionClosedException>(async () =>
+        {
+            while (true)
+                await server.NextFrameAsync(ct);
+        });
+
+        Task Spawn() => SendAndObserveAsync(client, server, version, new ClientboundAddPlayerPacket(RemoteId, Guid.NewGuid(), 1.5, 64, 1.5, 0, 0, 0, new EntityMetadataList([], [])), ct);
+    }
+
+    [Theory]
+    [MemberData(nameof(LegacyMembershipProtocols))]
     public async Task LegacyMembershipAndSizeFollowFramedPacketsAndSessionTicks(int protocol, bool terrain)
     {
         using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(30));
@@ -98,19 +154,7 @@ public sealed class RemotePlayerVelocityRuntimeTests
             await SendAndObserveAsync(client, server, version, new ClientboundTeleportEntityPacket(RemoteId, target.X, target.Y, target.Z, 90, 45, false, null, 0), ct);
         }
 
-        IPacket NativeChunk(string action)
-        {
-            using Stream resource = typeof(RemotePlayerVelocityRuntimeTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.LegacyPlayerTraversal.native.json.gz")!;
-            using var gzip = new GZipStream(resource, CompressionMode.Decompress);
-            using JsonDocument document = JsonDocument.Parse(gzip);
-            JsonElement release = document.RootElement.GetProperty("releases").EnumerateArray().Last(row => row.GetProperty("protocol").GetInt32() == protocol);
-            JsonElement native = document.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()];
-            JsonElement scenario = native.GetProperty("rows").EnumerateArray().Single(row => row.GetProperty("position").GetInt32() == 0 && row.GetProperty("scene").GetInt32() == 5);
-            JsonElement packet = scenario.GetProperty("packets").EnumerateArray().Single(row => row.GetProperty("action").GetString() == action);
-            byte[] body = Convert.FromHexString(native.GetProperty("packet_bodies").GetProperty(packet.GetProperty("sha256").GetString()!).GetString()!);
-            return (IPacket)BoundDescriptorCodec.Clientbound(protocol, action == "unload" && protocol != 47 ? "forget_level_chunk" : "level_chunk_with_light")
-                .Decode(body, new PacketCodecContext(JavaGameData.Registries(protocol), IConnectionCodecState.Empty));
-        }
+        IPacket NativeChunk(string action) => NativeMembershipChunk(protocol, action);
     }
 
     [Theory]
@@ -447,6 +491,20 @@ public sealed class RemotePlayerVelocityRuntimeTests
                 ? new ClientboundLegacyPlayerListItemPacket(LegacyPlayerListAction.AddPlayer, [new(entity.Uuid, "TickPeer", [], (int)mode, 0, null)])
                 : new ClientboundPlayerInfoUpdatePacket(PlayerInfoActions.AddPlayer | PlayerInfoActions.UpdateGameMode, [new(entity.Uuid, "TickPeer", [], false, null, mode, false, 0, null, 0, true)]);
         }
+    }
+
+    private static IPacket NativeMembershipChunk(int protocol, string action)
+    {
+        using Stream resource = typeof(RemotePlayerVelocityRuntimeTests).Assembly.GetManifestResourceStream("Umpk.Client.Tests.Fixtures.LegacyPlayerTraversal.native.json.gz")!;
+        using var gzip = new GZipStream(resource, CompressionMode.Decompress);
+        using JsonDocument document = JsonDocument.Parse(gzip);
+        JsonElement release = document.RootElement.GetProperty("releases").EnumerateArray().Last(row => row.GetProperty("protocol").GetInt32() == protocol);
+        JsonElement native = document.RootElement.GetProperty("cases")[release.GetProperty("case").GetInt32()];
+        JsonElement scenario = native.GetProperty("rows").EnumerateArray().Single(row => row.GetProperty("position").GetInt32() == 0 && row.GetProperty("scene").GetInt32() == 5);
+        JsonElement packet = scenario.GetProperty("packets").EnumerateArray().Single(row => row.GetProperty("action").GetString() == action);
+        byte[] body = Convert.FromHexString(native.GetProperty("packet_bodies").GetProperty(packet.GetProperty("sha256").GetString()!).GetString()!);
+        return (IPacket)BoundDescriptorCodec.Clientbound(protocol, action == "unload" && protocol != 47 ? "forget_level_chunk" : "level_chunk_with_light")
+            .Decode(body, new PacketCodecContext(JavaGameData.Registries(protocol), IConnectionCodecState.Empty));
     }
 
     private static Vec3d Advance(Vec3d current, Vec3d target, int remaining)

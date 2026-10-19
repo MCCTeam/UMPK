@@ -130,6 +130,7 @@ public sealed class ClientState
         {
             if (EntityMembership.CanTick(entity))
             {
+                EntityMembership.BeginPlayerTick(entity);
                 EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList);
                 EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol);
             }

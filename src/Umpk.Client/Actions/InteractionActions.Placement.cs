@@ -74,6 +74,11 @@ public sealed partial class InteractionActions
         {
             if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id))
                 continue;
+            bool? member = _services.State.EntityMembership.IsWorldQueryMember(entity);
+            if (member is false)
+                continue;
+            if (member is null)
+                return false;
             if (entity.Vehicle is not null)
                 return false;
             Aabb bounds;

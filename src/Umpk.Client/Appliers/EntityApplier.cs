@@ -417,7 +417,8 @@ internal sealed class EntityApplier : IApplier
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
         context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
-        context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer);
+        int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
+        context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)

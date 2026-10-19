@@ -30,13 +30,12 @@ public sealed class WorldTickPipelineTests
         await session.JoinAsync();
         await session.SendAsync(new ClientboundTickingStatePacket(1, false));
         long start = session.Client.State.SessionTick;
-        await Task.Delay(300);
-        // Permit one frame already queued when the state packet was applied; a fixed 20 TPS source produces about six.
-        Assert.InRange(session.Client.State.SessionTick - start, 0, 1);
-        long deadline = Environment.TickCount64 + 3000;
-        while (session.Client.State.SessionTick == start && Environment.TickCount64 < deadline)
-            await Task.Delay(10);
-        Assert.True(session.Client.State.SessionTick > start);
+        await session.AdvanceFrameAsync(300);
+        Assert.Equal(start, session.Client.State.SessionTick);
+        await session.AdvanceFrameAsync(1000);
+        Assert.Equal(start + 1, session.Client.State.SessionTick);
+        await session.AdvanceFrameAsync(2000);
+        Assert.Equal(start + 2, session.Client.State.SessionTick);
     }
 
     [Theory]
@@ -182,6 +181,7 @@ public sealed class WorldTickPipelineTests
         private readonly FakeJavaServer _server = FakeJavaServer.Create();
         private readonly ObservedTickSource _ticks = new();
         private readonly JavaVersion _version;
+        private readonly ObservedFrames? _nativeFrames;
 
         private Session(JavaVersion version, bool useDefaultClock)
         {
@@ -196,9 +196,17 @@ public sealed class WorldTickPipelineTests
                     features.Physics = false;
                     features.Pathfinding = false;
                 });
-            if (!useDefaultClock)
+            if (useDefaultClock)
+            {
+                var time = new ManualTimeProvider();
+                _nativeFrames = new ObservedFrames(time);
+                Client = builder.BuildWithNativeFrames(time, _nativeFrames);
+            }
+            else
+            {
                 builder.UseTickSource(_ticks);
-            Client = builder.Build();
+                Client = builder.Build();
+            }
         }
 
         internal UmpkClient Client { get; }
@@ -210,6 +218,8 @@ public sealed class WorldTickPipelineTests
             try
             {
                 await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session._budget.Token), ScriptedServer.DriveToPlayAsync(session._server, version!, session._budget.Token));
+                if (session._nativeFrames is { } frames)
+                    await frames.Ready.WaitAsync(session._budget.Token);
                 return session;
             }
             catch
@@ -230,6 +240,8 @@ public sealed class WorldTickPipelineTests
         internal Task InitializeBorderAsync(long duration) => SendAsync(new ClientboundInitializeBorderPacket(0, 0, 100, 20, duration, 1000, 5, 15));
 
         internal Task TickAsync() => _ticks.FireAsync(_budget.Token);
+
+        internal Task AdvanceFrameAsync(long milliseconds) => _nativeFrames!.PushAsync(milliseconds, _budget.Token);
 
         internal async Task SendAsync(IPacket packet)
         {
@@ -278,6 +290,36 @@ public sealed class WorldTickPipelineTests
             {
                 yield return ++sequence;
                 completed.TrySetResult();
+            }
+        }
+    }
+
+    private sealed class ObservedFrames(ManualTimeProvider time) : ITickSource
+    {
+        private sealed record Frame(long Milliseconds, TaskCompletionSource Processed);
+        private readonly Channel<Frame> _frames = Channel.CreateUnbounded<Frame>();
+        private readonly TaskCompletionSource _ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TimeSpan TickInterval => TimeSpan.FromMilliseconds(50);
+        internal Task Ready => _ready.Task;
+
+        internal async Task PushAsync(long milliseconds, CancellationToken ct)
+        {
+            var completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            await _frames.Writer.WriteAsync(new Frame(milliseconds, completed), ct);
+            await completed.Task.WaitAsync(TimeSpan.FromSeconds(3), ct);
+        }
+
+        public async IAsyncEnumerable<long> Ticks([EnumeratorCancellation] CancellationToken ct)
+        {
+            long sequence = 0, previous = 0;
+            _ready.TrySetResult();
+            await foreach (Frame frame in _frames.Reader.ReadAllAsync(ct))
+            {
+                time.Advance(TimeSpan.FromMilliseconds(frame.Milliseconds - previous));
+                previous = frame.Milliseconds;
+                yield return sequence++;
+                // NativeClientTickSource returns to this frame enumerator only after the session has consumed every game tick produced by this timestamp.
+                frame.Processed.TrySetResult();
             }
         }
     }

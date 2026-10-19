@@ -84,7 +84,7 @@ public sealed class UmpkClient : IAsyncDisposable
     private TaskCompletionSource<bool> _spawned =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    internal UmpkClient(UmpkClientSettings settings)
+    internal UmpkClient(UmpkClientSettings settings, TimeProvider? nativeFrameTime = null, ITickSource? nativeFrames = null)
     {
         _settings = settings;
         _logger = settings.LoggerFactory.CreateLogger("Umpk.Client");
@@ -97,7 +97,7 @@ public sealed class UmpkClient : IAsyncDisposable
         bool hasTickControl = settings.Version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound)
             .Packets.Any(entry => ReferenceEquals(entry.Type, WorldPackets.Clientbound.TickingState));
         _tickSource = settings.TickSource ?? (hasTickControl
-            ? new NativeClientTickSource(State.WorldTicks)
+            ? new NativeClientTickSource(State.WorldTicks, nativeFrameTime, nativeFrames)
             : new PeriodicTimerTickSource());
         Events = new ClientEvents(_eventBus);
         Snapshots = new ClientSnapshots(this);

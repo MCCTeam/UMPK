@@ -19,6 +19,34 @@ namespace Umpk.Client.Tests;
 
 public sealed class FallingBlockPlacementRegressionTests
 {
+    // Original 1.9 liquid witness: all128state/context traces match air over12ticks; observations SHA-256 fff1347ec67ffdb35cf98ee436545b3df900d273aecc9cbae0cbdadd1052a40e.
+    [Theory]
+    [InlineData(8)]
+    [InlineData(9)]
+    [InlineData(10)]
+    [InlineData(11)]
+    public async Task NativeLiquidStatesKeepFallingBoundsKnown(int blockId)
+    {
+        for (int metadata = 0; metadata < 16; metadata++)
+            foreach (bool side in new[] { false, true })
+            {
+                await using var harness = new MotionHarness();
+                await harness.Column();
+                await harness.BlockState(new BlockPos(side ? 2 : 1, 101, 1), (blockId << 4) | metadata);
+                await harness.Spawn(42, 101);
+                Entity actor = harness.State.Entities.Get(42)!;
+                for (int step = 0; step < 12; step++)
+                {
+                    await harness.Tick();
+                    Assert.True(harness.State.EntityGeometry.TryGet(actor, JavaGameData.EntityGeometryData(107), out Aabb box, out bool blocksBuilding, 107));
+                    Assert.True(blocksBuilding);
+                    Assert.Equal(NativeY[1][step + 1], box.MinY);
+                    Assert.Equal(NativeY[1][step + 1], actor.Position.Y);
+                    Assert.Equal(NativeVelocityY[1][step + 1], actor.Velocity.Y);
+                }
+            }
+    }
+
     [Fact]
     public async Task InitialQueuedFallersUseNativeHashSetGrowthAndTenEntryReentry()
     {
@@ -396,6 +424,7 @@ public sealed class FallingBlockPlacementRegressionTests
         public Task Motion(int id, short y) => Motion(id, 0, y, 0);
         public Task Motion(int id, short x, short y, short z) => Apply("set_entity_motion", new ClientboundSetEntityMotionPacket(id, x, y, z, null));
         public Task Teleport(int id, double y, double x = 1.5) => Apply("teleport_entity", new ClientboundTeleportEntityPacket(id, x, y, 1.5, 0, 0, false, null, 0));
+        public Task BlockState(BlockPos cell, int stateId) => Apply("block_update", new ClientboundBlockUpdatePacket(cell, stateId));
         public Task Block(BlockPos cell, string name)
         {
             Assert.True(State.Registries!.Blocks.TryGetValue(Identifier.Minecraft(name), out var block));

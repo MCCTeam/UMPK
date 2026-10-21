@@ -41,6 +41,12 @@ internal sealed class LegacyFallingBlockCollision(World world, WorldPhysicsView 
                         return false;
                     if (block.IsAir)
                         continue;
+                    if (LegacyFallingBlockProfile.HasBaseCallbacksAndEmptyCollision(block.Block.NetworkId))
+                    {
+                        if (!view.GetCollisionShapes(block).IsEmpty)
+                            return false;
+                        continue;
+                    }
                     if (!LegacyFallingBlockProfile.HasBaseCollisionAndCallbacks(block.Block.NetworkId))
                         return false;
                     ReadOnlySpan<Aabb> shapes = view.GetCollisionShapes(block);

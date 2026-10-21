@@ -265,6 +265,7 @@ public sealed class AttackInputTickPipelineTests
             RegistryAccess registries = current.State.Registries!;
             Assert.True(registries.Items.TryGet(Identifier.Minecraft(item), out RegistryEntry<ItemDefinition> spear));
             Assert.True(registries.Blocks.TryGetValue(Identifier.Minecraft("bedrock"), out BlockDefinition? bedrock));
+            current.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
             current.State.World.SetBlockStateId(target, bedrock.DefaultStateId);
             current.State.World.SetBlockStateId(new BlockPos(2, 64, 2), bedrock.DefaultStateId);
             current.State.Inventory.SetSlot(0, 36, new ItemStack(spear, 1));

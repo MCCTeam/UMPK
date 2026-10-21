@@ -532,6 +532,7 @@ public sealed class PistonPushEndToEndTests
             c =>
             {
                 c.State.World.LoadColumn(new ChunkPos(piston.X >> 4, piston.Z >> 4));
+                c.State.EntityMembership.LoadColumn(new ChunkPos(piston.X >> 4, piston.Z >> 4));
                 for (int x = piston.X - 2; x <= piston.X + 6; x++)
                     for (int z = piston.Z - 2; z <= piston.Z + 2; z++)
                         c.State.World.SetBlockStateId(new BlockPos(x, piston.Y - 1, z), stone);

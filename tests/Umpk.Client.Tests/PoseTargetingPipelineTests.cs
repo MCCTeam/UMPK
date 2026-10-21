@@ -64,6 +64,7 @@ public sealed class PoseTargetingPipelineTests
         await corrected.Task.WaitAsync(ct);
         await client.InvokeAsync(current =>
         {
+            current.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
             int stone = current.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId;
             for (int x = 7; x <= 9; x++)
                 for (int z = 7; z <= 11; z++)

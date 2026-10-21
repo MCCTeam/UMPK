@@ -63,11 +63,18 @@ internal sealed class SelfApplier : IApplier
                 return true;
 
             case ClientboundCooldownPacket cooldown:
-                // Below 1.21.2 the cooldown is per ITEM and the wire carries the item's registry id;
-                // from 1.21.2 it is a cooldown-GROUP identifier. Keying on the group alone would fold every pre-1.21.2 cooldown onto one bucket (the default identifier's hash), so the item id wins wherever the era provides one.
-                int cooldownKey = cooldown.ItemId ?? cooldown.CooldownGroup.GetHashCode();
-                self.SetItemCooldown(cooldownKey, cooldown.Ticks);
-                await context.PublishAsync(new ItemCooldownChanged(cooldownKey, cooldown.Ticks)).ConfigureAwait(false);
+                int? cooldownItem = cooldown.ItemId;
+                if (cooldownItem is { } itemId)
+                    self.SetItemCooldown(itemId, cooldown.Ticks);
+                else
+                {
+                    if (context.State.Registries?.Items.TryGet(cooldown.CooldownGroup, out var item) is true)
+                        cooldownItem = item.NetworkId;
+                    self.SetGroupCooldown(cooldown.CooldownGroup, cooldown.Ticks, cooldownItem);
+                }
+                // The public event describes an item ID. Custom groups without an item projection remain in the exact group owner.
+                if (cooldownItem is { } knownItem)
+                    await context.PublishAsync(new ItemCooldownChanged(knownItem, cooldown.Ticks)).ConfigureAwait(false);
                 return true;
 
             // Entity metadata addressed to the LOCAL player. Self is not a member of the shared EntityStore, so EntityApplier's own set_entity_data arm looked this id up, missed, and returned true anyway: every field the server told the client about ITSELF was decoded and then dropped. This applier runs BEFORE EntityApplier (see ApplierCatalog), and the guard is what keeps that ordering harmless - a frame for any other entity falls through to the default and reaches the entity store exactly as before.

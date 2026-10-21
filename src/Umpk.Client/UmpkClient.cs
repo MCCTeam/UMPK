@@ -802,11 +802,11 @@ public sealed class UmpkClient : IAsyncDisposable
     private void SetupWorld(CommonWorldSetup setup)
     {
         WorldFactory.InstallWorld(State, setup, _settings.Version.Version.Protocol);
+        // A retained level still receives a new local player, including sessions without terrain storage.
+        _movementReadiness.Reset();
         if (!_settings.Features.Terrain)
             return;
 
-        // A retained level still receives a new local player, whose movement readiness must be rebuilt.
-        _movementReadiness.Reset();
         _physics?.EnsureEngine();
     }
 
@@ -874,14 +874,15 @@ public sealed class UmpkClient : IAsyncDisposable
         foreach (PluginHost host in Plugins.SnapshotHosts())
             host.Scheduler.Ticks.Tick(ex => _logger.LogError(ex, "Plugin {Plugin} tick threw.", host.Id));
 
-        // Placement and terrain feed the era-specific readiness owner below. Older clients continue to consult the current column, protocol 770 has its bounded fallback, and later load-tracker clients retain readiness after the first usable terrain. This prevents initial free fall into an empty world without imposing an incorrect universal own-column gate after loading.
+        // The native player tick uses received chunk availability independently of terrain storage and physics. Protocol 768 ticks immediately; 769–773 also count the pre-position load timeout, and later load-tracker clients retain readiness after their first usable terrain.
         //
         // The position report itself is no longer gated on movementFree. A movement lease (Navigator.MoveToAsync / NavigateAsync) suppresses the idle physics step for its whole run, but it moves the tracked position on every tick of its own. Reporting that position each tick keeps long navigations below the server's move-distance limit instead of sending one large displacement when the lease ends.
         bool placed = _spawned.Task.IsCompletedSuccessfully && _spawned.Task.Result;
         ReadinessTick readiness = _movementReadiness.Advance(
             _settings.Version.Version.Protocol,
-            placed && State.HasWorld,
-            State.IsLocalChunkLoaded);
+            placed,
+            State.EntityMembership.HasColumn(BlockPos.Containing(State.Self.Position)),
+            playerExists: State.WorldDimension is not null);
 
         if (readiness.AnnouncePlayerLoaded && _sink is { } readinessSink)
             await SendTickPacketAsync(
@@ -912,6 +913,8 @@ public sealed class UmpkClient : IAsyncDisposable
 
         // Native Player.tick advances attack strength after input and movement simulation, before LocalPlayer publishes its movement. Player loading gates this phase; disabling physics does not disable the player's charge counter.
         Actions.Interaction.TickAttackChargeOnLoop(readiness.MovementEligible);
+        if (_movementReadiness.PlayerTickEligible)
+            State.Self.TickItemCooldowns();
 
         // Modern remote players remain ticking outside loaded terrain. Their native motion phase uses this same session clock even when local physics is disabled.
         if (State.WorldDimension is not null)

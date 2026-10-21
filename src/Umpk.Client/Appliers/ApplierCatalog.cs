@@ -2,7 +2,7 @@ using Umpk.Client.Internal;
 
 namespace Umpk.Client.Appliers;
 
-/// <summary>Builds the ordered applier chain for a session based on the enabled features. Feature-gated appliers are omitted when their feature is off, so a disabled module registers no packet handling.</summary>
+/// <summary>Builds the ordered applier chain for a session based on the enabled features. Received chunk availability is core self-tick context; optional terrain, entity, and inventory storage appliers are omitted when their feature is off.</summary>
 internal static class ApplierCatalog
 {
     public static IReadOnlyList<IApplier> Build(ClientFeatures features)
@@ -16,10 +16,8 @@ internal static class ApplierCatalog
             new CommandTreeApplier(),
             new BlockAckApplier(),
             new RecipeApplier(),
+            new EntityMembershipApplier(),
         };
-
-        if (features.Entities || features.Terrain)
-            appliers.Add(new EntityMembershipApplier());
 
         if (features.Terrain)
             appliers.Add(new WorldApplier());

@@ -147,6 +147,7 @@ public sealed class ClientState
     internal void AdvancePlayerLifetime()
     {
         PlayerLifetime++;
+        Self.ClearItemCooldowns();
         EntityMotion.ResetLocalMount();
     }
 
@@ -221,6 +222,7 @@ public sealed class ClientState
     {
         bool wasShowing = Dialogs.IsShowing;
         Dialogs.Clear();
+        Self.ClearItemCooldowns();
         Server.ResetForSessionEnd();
         RegistryTags.Clear();
         PacketBases.Clear();

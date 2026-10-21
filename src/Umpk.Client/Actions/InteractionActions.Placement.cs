@@ -81,7 +81,7 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Unknown;
         if (!inventoryKnown)
             return BlockUsePrediction.Unknown;
-        if (item.IsEmpty || _services.Self.ItemCooldowns.GetValueOrDefault(item.Item.NetworkId) > 0)
+        if (item.IsEmpty || _services.Self.IsItemOnCooldown(item, _services.Version.Version.Protocol))
             return BlockUsePrediction.Pass;
         if (_services.Self.GameMode == GameMode.Adventure)
             return BlockUsePrediction.Unknown;

@@ -39,7 +39,11 @@ public sealed class PositionReportUnderLeaseTests
         var frames = new ConcurrentQueue<int>();
 
         await JoinAsync(client, server, frames, ct);
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         await TeleportAsync(client, server, frames, new Vec3d(8.5, 200.0, 8.5), ct);
 
         IMovementLease lease = plugin.Context!.TryAcquireMovement("test")
@@ -78,7 +82,11 @@ public sealed class PositionReportUnderLeaseTests
         var frames = new ConcurrentQueue<int>();
 
         await JoinAsync(client, server, frames, ct);
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         await TeleportAsync(client, server, frames, new Vec3d(8.5, 200.0, 8.5), ct);
 
         IMovementLease lease = plugin.Context!.TryAcquireMovement("test")

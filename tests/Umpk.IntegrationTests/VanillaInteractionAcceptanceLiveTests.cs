@@ -18,7 +18,7 @@ namespace Umpk.IntegrationTests;
 
 /// <summary>Direct survival interaction acceptance with physics, independent vanilla commands, actual outbound frames and retained cleanup evidence.</summary>
 [Collection(LiveServerCollection.Name)]
-public sealed class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper output)
+public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper output)
 {
     private const string Username = "InteractionTest";
 

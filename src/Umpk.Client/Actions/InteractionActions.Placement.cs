@@ -89,6 +89,9 @@ public sealed partial class InteractionActions
         if (hoe.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction toolUse))
             // A block update can synthesize a storage column before native chunk arrival or after unload. It does not establish the terrain needed by the tool.
             return hoe.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? toolUse : BlockUsePrediction.Unknown;
+        VanillaShovelUse shovel = VanillaShovelUse.ForProtocol(_services.Version.Version.Protocol);
+        if (shovel.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction shovelUse))
+            return shovel.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? shovelUse : BlockUsePrediction.Unknown;
         if (!item.Components.HasNoPatch)
             return BlockUsePrediction.Unknown;
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use))

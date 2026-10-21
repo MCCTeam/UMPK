@@ -83,7 +83,7 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 port,
                 rconPort,
                 serverSha256 = jarHash,
-                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
+                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),
             });
@@ -135,15 +135,12 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
     {
         // Legacy RCON executes on its own thread. World mutations must use the server's console queue.
         int before = ServerLog.Length;
+        string marker = "interaction-console-" + Guid.NewGuid().ToString("N");
         await _launcher.StandardInput.WriteLineAsync(command.AsMemory(), ct);
+        await _launcher.StandardInput.WriteLineAsync(("say " + marker).AsMemory(), ct);
         await _launcher.StandardInput.FlushAsync(ct);
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
         deadline.CancelAfter(TimeSpan.FromSeconds(15));
-        while (ServerLog.Length == before)
-            await Task.Delay(25, deadline.Token);
-        string marker = "interaction-console-" + Guid.NewGuid().ToString("N");
-        await _launcher.StandardInput.WriteLineAsync(("say " + marker).AsMemory(), ct);
-        await _launcher.StandardInput.FlushAsync(ct);
         while (!ServerLog.Contains(marker, StringComparison.Ordinal))
             await Task.Delay(25, deadline.Token);
         _commands.Add(new { command, channel = "console", completionMarker = marker, response = ServerLog[before..] });

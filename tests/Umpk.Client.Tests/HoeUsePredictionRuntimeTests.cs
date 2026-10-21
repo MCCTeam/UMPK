@@ -90,7 +90,6 @@ public sealed class HoeUsePredictionRuntimeTests
     }
 
     [Theory]
-    [InlineData(490)]
     [InlineData(777)]
     public async Task AnUnclassifiedNativeToolEraStaysPacketOnly(int protocol)
     {

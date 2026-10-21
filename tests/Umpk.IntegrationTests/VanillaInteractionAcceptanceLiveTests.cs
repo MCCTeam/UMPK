@@ -175,6 +175,10 @@ public sealed class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper outp
     }
 
     [NightlyTheory]
+    [InlineData("1.8.9", 47)]
+    [InlineData("1.9", 107)]
+    [InlineData("1.13", 393)]
+    [InlineData("1.14.3", 490)]
     [InlineData("1.14.4", 498)]
     [InlineData("1.17", 755)]
     [InlineData("26.2", 776)]
@@ -225,30 +229,66 @@ public sealed class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper outp
             async Task Use(string before, string after, Direction face, bool blockedAbove, bool success, int damage)
             {
                 await server.ConsoleAsync($"setblock {target.X} {target.Y + 1} {target.Z} minecraft:{(blockedAbove ? "stone" : "air")}", ct);
-                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:{before}", ct);
-                await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft(before) && c.State.World.GetBlock(target.Above()).Block.Id == Identifier.Minecraft(blockedAbove ? "stone" : "air"), "hoe precondition updates", ct);
+                string nativeTarget = NativeBlockName(before) + (protocol < 393 && before == "coarse_dirt" ? " 1" : "");
+                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:{nativeTarget}", ct);
+                await WaitAsync(client, c => HasBlock(c, before) && c.State.World.GetBlock(target.Above()).Block.Id == Identifier.Minecraft(blockedAbove ? "stone" : "air"), "hoe precondition updates", ct);
                 int mark = capture.Mark();
                 await client.Actions.Interaction.PlaceBlockAsync(target, face, new Vec3d(.5, 1, .5), ct: ct);
-                await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft(after) && Damage(c.State.Inventory.GetSlot(36)) == damage, "hoe result and native durability", ct);
-                await AssertBlockAsync(server, protocol, target, after, ct);
-                string marker = "hoe-damage-" + Guid.NewGuid().ToString("N");
-                string predicate = protocol < 766
-                    ? "execute if entity @a[name=" + Username + ",nbt={SelectedItem:{id:\"minecraft:diamond_hoe\",tag:{Damage:" + damage + "}}}]"
-                    : $"execute if items entity {Username} weapon.mainhand minecraft:diamond_hoe[minecraft:damage={damage}]";
-                await server.CommandAsync(predicate + " run say " + marker, ct);
-                await WaitAsync(() => server.ServerLog.Contains("[Rcon] " + marker, StringComparison.Ordinal), "independent server durability predicate", ct);
+                await WaitAsync(client, c => HasBlock(c, after) && Damage(c.State.Inventory.GetSlot(36)) == damage, "hoe result and native durability", ct);
+                await AssertBlockAsync(server, protocol, target, NativeBlockName(after), ct, protocol < 393 && after == "dirt" ? 0 : null);
+                if (protocol < 393)
+                {
+                    string response = await server.CommandAsync($"testfor @a[name={Username}] {{SelectedItem:{{id:\"minecraft:diamond_hoe\",Damage:{damage}s}}}}", ct);
+                    Assert.Equal("Found " + Username, response);
+                }
+                else
+                {
+                    string marker = "hoe-damage-" + Guid.NewGuid().ToString("N");
+                    string predicate = protocol < 766
+                        ? "execute if entity @a[name=" + Username + ",nbt={SelectedItem:{id:\"minecraft:diamond_hoe\",tag:{Damage:" + damage + "}}}]"
+                        : $"execute if items entity {Username} weapon.mainhand minecraft:diamond_hoe[minecraft:damage={damage}]";
+                    await server.CommandAsync(predicate + " run say " + marker, ct);
+                    await WaitAsync(() => server.ServerLog.Contains("[Rcon] " + marker, StringComparison.Ordinal), "independent server durability predicate", ct);
+                }
                 await Task.Delay(TimeSpan.FromSeconds(2.1), ct);
                 CapturedFrame[] frames = capture.Since(mark).Where(IsUseOrAnimation).ToArray();
                 Assert.Equal(success ? 2 : 1, frames.Length);
-                var use = Assert.IsType<ServerboundUseItemOnPacket>(frames[0].Packet);
-                Assert.Equal(target, use.Position);
-                Assert.Equal((int)face, use.Face);
-                Assert.Equal(0, use.Hand);
+                if (protocol == 47)
+                {
+                    var use = Assert.IsType<ServerboundLegacyBlockPlacePacket>(frames[0].Packet);
+                    Assert.Equal(target, use.Position);
+                    Assert.Equal((int)face, use.Face);
+                    Assert.Equal(Identifier.Minecraft("diamond_hoe"), use.HeldItem.Item.Id);
+                    Assert.Equal((byte)8, use.CursorX);
+                    Assert.Equal((byte)16, use.CursorY);
+                    Assert.Equal((byte)8, use.CursorZ);
+                }
+                else
+                {
+                    var use = Assert.IsType<ServerboundUseItemOnPacket>(frames[0].Packet);
+                    Assert.Equal(target, use.Position);
+                    Assert.Equal((int)face, use.Face);
+                    Assert.Equal(0, use.Hand);
+                }
                 if (success)
                     Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(frames[1].Packet).Hand);
             }
 
-            int Damage(ItemStack stack) => protocol >= 766 ? stack.Damage : stack.Components.Get(DataComponents.LegacyNbt)?.Nbt.GetInt("Damage") ?? 0;
+            int Damage(ItemStack stack) => protocol < 393 || protocol >= 766 ? stack.Damage : stack.Components.Get(DataComponents.LegacyNbt)?.Nbt.GetInt("Damage") ?? 0;
+
+            string NativeBlockName(string block) => protocol >= 393 ? block : block switch
+            {
+                "grass_block" => "grass",
+                "coarse_dirt" => "dirt",
+                _ => block,
+            };
+
+            bool HasBlock(UmpkClient owner, string block)
+            {
+                var state = owner.State.World.GetBlock(target);
+                return state.IsValid && state.Block.Id == Identifier.Minecraft(NativeBlockName(block))
+                    && (protocol >= 393 || block is not ("dirt" or "coarse_dirt") || state.LegacyMeta == (block == "coarse_dirt" ? 1 : 0));
+            }
         }
         finally
         {
@@ -263,10 +303,10 @@ public sealed class VanillaInteractionAcceptanceLiveTests(ITestOutputHelper outp
         }
     }
 
-    private static async Task AssertBlockAsync(VanillaInteractionAcceptanceHarness server, int protocol, BlockPos position, string block, CancellationToken ct)
+    private static async Task AssertBlockAsync(VanillaInteractionAcceptanceHarness server, int protocol, BlockPos position, string block, CancellationToken ct, int? legacyData = null)
     {
         string command = protocol < 393
-            ? $"testforblock {position.X} {position.Y} {position.Z} minecraft:{block}"
+            ? $"testforblock {position.X} {position.Y} {position.Z} minecraft:{block}" + (legacyData is int value ? $" {value}" : "")
             : $"execute if block {position.X} {position.Y} {position.Z} minecraft:{block}";
         string response = await server.CommandAsync(command, ct);
         Assert.Equal(protocol < 393 ? $"Successfully found the block at {position.X},{position.Y},{position.Z}." : "Test passed", response);

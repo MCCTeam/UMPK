@@ -6,10 +6,10 @@ using Umpk.Geometry;
 namespace Umpk.Client.Actions;
 
 /// <summary>The original HoeItem use result; server-owned terrain, drops and durability remain authoritative.</summary>
-internal readonly record struct VanillaHoeUse(bool HasRules, bool HasRootedDirt, bool UsesComponents)
+internal readonly record struct VanillaHoeUse(bool HasRules, bool HasRootedDirt, bool UsesComponents, bool LegacyBlockStates)
 {
-    // Original HoeItem and ItemStack/MultiPlayerGameMode sources are audited on all 43 releases from 1.14.4 through 26.2. Protocol 755 adds rooted dirt with an unconditional predicate; 777 replaces HoeItem with data-driven BlockTransformer components.
-    public static VanillaHoeUse ForProtocol(int protocol) => new(protocol is >= 498 and <= 776, protocol >= 755, protocol >= 766);
+    // Original client HoeItem sources are audited on all 74 releases through 26.2. Protocol 47 retains the 1.8.9 profile; legacy dirt variants are separate from flattened block names. Protocol 755 adds unconditional rooted dirt; 777 replaces HoeItem with data-driven BlockTransformer components.
+    public static VanillaHoeUse ForProtocol(int protocol) => new(protocol is >= 47 and <= 776, protocol >= 755, protocol >= 766, protocol < 393);
 
     public bool SupportsStack(ItemStack stack)
     {
@@ -36,7 +36,23 @@ internal readonly record struct VanillaHoeUse(bool HasRules, bool HasRootedDirt,
             prediction = BlockUsePrediction.Success(localSwing: false);
             return true;
         }
-        if (face == Direction.Down || block is not ("grass_block" or "dirt" or "coarse_dirt" or "grass_path" or "dirt_path"))
+        bool tillable = LegacyBlockStates
+            ? block is "grass" or "dirt" or "grass_path"
+            : block is "grass_block" or "dirt" or "coarse_dirt" or "grass_path" or "dirt_path";
+        if (!tillable)
+            return true;
+        if (LegacyBlockStates && clicked.LegacyMeta != 0)
+        {
+            // Original dirt variants 0/1 till successfully; variant 2 (podzol) passes. Unused packed metadata is not evidence of either native state, and the legacy grass name must never classify the flattened grass plant.
+            if (block == "dirt" && clicked.LegacyMeta == 2)
+                return true;
+            if (block != "dirt" || clicked.LegacyMeta != 1)
+            {
+                prediction = BlockUsePrediction.Unknown;
+                return true;
+            }
+        }
+        if (face == Direction.Down)
             return true;
         BlockPos above = position.Above();
         BlockState upper = world.GetBlock(above);

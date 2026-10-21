@@ -1,5 +1,7 @@
 # Native hoe-on-block prediction
 
+The later [legacy extension](legacy-hoe-use.md) supplies protocols 47–490, and the [received-terrain guard](hoe-terrain-context.md) supplies the chunk-availability precondition. The original profile, overlay checks and later immutable checkpoint below retain their exact historical scope. Protocol 777 and incomplete context remain explicit unknowns.
+
 The existing session-owned block-use sender now predicts the original `HoeItem` result on protocols 498–776. Successful use sends use-on followed by the selected hand's swing. A native pass sends use-on without inventing a swing. Terrain, drops and durability remain server-owned. This is the explicit block-use contract; it does not add the graphical client's automatic air-use or alternate-hand fallback.
 
 ## Behavior and caller

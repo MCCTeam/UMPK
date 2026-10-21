@@ -78,7 +78,7 @@ def stop(process: subprocess.Popen) -> None:
     try:
         process.stdin.write('stop\n')
         process.stdin.flush()
-    except (BrokenPipeError, OSError):
+    except (BrokenPipeError, OSError, ValueError):
         process.terminate()
     try:
         process.wait(timeout=20)
@@ -146,15 +146,17 @@ def run(args: argparse.Namespace) -> None:
             print(f'READY {args.version} port={args.port} rcon={args.rcon_port}: {response}', flush=True)
             if not args.smoke:
                 print('Send console commands on stdin. Send stop or press Ctrl+C to end this owned run.', flush=True)
+                input_open = True
                 while process.poll() is None:
-                    readable, _, _ = select.select([sys.stdin], [], [], 1)
+                    readable, _, _ = select.select([sys.stdin] if input_open else [], [], [], 1)
                     if readable:
-                        line = sys.stdin.readline()
-                        if not line:
-                            time.sleep(1)
-                            continue
-                        process.stdin.write(line)
-                        process.stdin.flush()
+                        chunk = os.read(sys.stdin.fileno(), 4096)
+                        if chunk:
+                            process.stdin.buffer.write(chunk)
+                            process.stdin.buffer.flush()
+                        else:
+                            process.stdin.close()
+                            input_open = False
             if process.poll() is not None and process.returncode != 0:
                 raise RuntimeError(f'Server exited with {process.returncode}. Inspect {log_path}')
         finally:

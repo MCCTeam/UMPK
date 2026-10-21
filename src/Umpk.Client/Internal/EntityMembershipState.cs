@@ -4,7 +4,7 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>Session-owned packet chunk availability and native legacy-player list/chunk membership.</summary>
+/// <summary>Session-owned packet chunk availability and measured legacy player/falling-block list and chunk membership.</summary>
 internal sealed class EntityMembershipState
 {
     private readonly HashSet<ChunkPos> _columns = [];
@@ -16,11 +16,17 @@ internal sealed class EntityMembershipState
 
     public void Register(Entity entity, int protocol, bool isPlayer, int? healthIndex = null)
     {
-        if (!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol))
+        bool falling = LegacyFallingBlockProfile.Supports(entity, protocol);
+        if ((!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol)) && !falling)
             return;
-        var membership = new Membership(entity, protocol == 47, healthIndex);
+        var membership = new Membership(entity, protocol == 47, healthIndex, isPlayer)
+        {
+            InEntityList = isPlayer || HasColumn(new BlockPos((int)Math.Floor(entity.Position.X), 64, (int)Math.Floor(entity.Position.Z))),
+        };
         _players.Add(entity, membership);
         TryAddToColumn(membership);
+        if (!membership.InEntityList)
+            QueueReentry(membership);
     }
 
     public void LoadColumn(ChunkPos column)
@@ -61,9 +67,7 @@ internal sealed class EntityMembershipState
                 // Original WorldClient.onEntityRemoved queues a tracked player only while its native alive predicate is true. ID lookup survives the other path.
                 if (player.Removed || !(health > 0))
                     continue;
-                _reentry.Add(player);
-                if (_reentry.Count > _reentryCapacity * 3 / 4)
-                    _reentryCapacity *= 2;
+                QueueReentry(player);
             }
     }
 
@@ -72,7 +76,7 @@ internal sealed class EntityMembershipState
     /// <summary>Runs the inherited living death phase on the existing eligible actor tick, before remote interpolation and the player size phase.</summary>
     public void BeginPlayerTick(Entity entity)
     {
-        if (!_players.TryGetValue(entity, out Membership? player))
+        if (!_players.TryGetValue(entity, out Membership? player) || !player.IsPlayer)
             return;
         if (!TryGetHealth(player, out float health))
             player.LifetimeKnown = false;
@@ -87,6 +91,8 @@ internal sealed class EntityMembershipState
             return true;
         if (player.Removed)
             return false;
+        if (!player.IsPlayer)
+            return player.MembershipKnown ? player.Column is not null : null;
         if (!player.MembershipKnown || !player.LifetimeKnown || !TryGetHealth(player, out _))
             return null;
         return player.Column is not null;
@@ -96,6 +102,8 @@ internal sealed class EntityMembershipState
     {
         // Original constructors provide health 20 until a metadata frame supplies its value. A malformed stored kind cannot prove a lifetime or reentry decision.
         health = 20;
+        if (!player.IsPlayer)
+            return true;
         if (player.HealthIndex is not { } index)
             return false;
         if (!player.Entity.Metadata.TryGet(index, out MetadataValue value))
@@ -143,9 +151,24 @@ internal sealed class EntityMembershipState
             }
             Membership player = _reentry[selected];
             _reentry.RemoveAt(selected);
-            player.InEntityList = true;
-            TryAddToColumn(player);
+            (int x, _, int z) = Chunk(player.Entity.Position);
+            if (player.IsPlayer || _columns.Contains(new ChunkPos(x, z)))
+            {
+                player.InEntityList = true;
+                TryAddToColumn(player);
+            }
+            else
+                QueueReentry(player);
         }
+    }
+
+    private void QueueReentry(Membership member)
+    {
+        if (_reentry.Contains(member))
+            return;
+        _reentry.Add(member);
+        if (_reentry.Count > _reentryCapacity * 3 / 4)
+            _reentryCapacity *= 2;
     }
 
     private int Bucket(int id) => (id ^ (int)((uint)id >> 16)) & (_reentryCapacity - 1);
@@ -182,11 +205,12 @@ internal sealed class EntityMembershipState
         _reentryCapacity = 16;
     }
 
-    private sealed class Membership(Entity entity, bool setsAddedForEmptyChunk, int? healthIndex)
+    private sealed class Membership(Entity entity, bool setsAddedForEmptyChunk, int? healthIndex, bool isPlayer)
     {
         public Entity Entity { get; } = entity;
         public int? HealthIndex { get; } = healthIndex;
         public bool SetsAddedForEmptyChunk { get; } = setsAddedForEmptyChunk;
+        public bool IsPlayer { get; } = isPlayer;
         public bool InEntityList { get; set; } = true;
         public bool Added { get; set; }
         public bool PendingUnload { get; set; }

@@ -1,7 +1,10 @@
 using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
+using Umpk.Client.Navigation;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
+using Umpk.Game.Registries;
+using Umpk.Game.World;
 using Umpk.Geometry;
 using Umpk.Protocol.Java.Packets;
 
@@ -12,6 +15,7 @@ internal sealed class EntityMotionState
 {
     private readonly ConditionalWeakTable<Entity, RemotePlayerMotion> _remotePlayers = new();
     private readonly ConditionalWeakTable<Entity, object> _immovable = new();
+    private readonly ConditionalWeakTable<Entity, FallingBlockMotion> _fallingBlocks = new();
     private static readonly object ImmovableMarker = new();
 
     public void RegisterRemotePlayer(Entity entity, int protocol)
@@ -32,6 +36,18 @@ internal sealed class EntityMotionState
     {
         _immovable.Add(entity, ImmovableMarker);
         entity.Velocity = Vec3d.Zero;
+    }
+
+    public bool RegisterFallingBlock(Entity entity, int protocol, int? objectData, EntityGeometryState geometry)
+    {
+        if (!LegacyFallingBlockProfile.Supports(entity, protocol))
+            return false;
+        geometry.RegisterFallingBlock(entity);
+        entity.Velocity = Vec3d.Zero;
+        _fallingBlocks.Add(entity, new FallingBlockMotion(objectData));
+        if (objectData is null)
+            geometry.InvalidateFallingBlock(entity);
+        return true;
     }
 
     public bool IsSpectator(Entity entity, TabList players)
@@ -164,8 +180,13 @@ internal sealed class EntityMotionState
             TickEntity(entity, moved, geometry, players);
     }
 
-    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null)
+    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null)
     {
+        if (_fallingBlocks.TryGetValue(entity, out FallingBlockMotion? falling))
+        {
+            TickFallingBlock(entity, falling, moved, geometry, world, shapes, membership, entities);
+            return;
+        }
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
             return;
         if (players is not null)
@@ -197,16 +218,57 @@ internal sealed class EntityMotionState
         entity.Velocity = velocity.Value;
     }
 
+    private void TickFallingBlock(Entity entity, FallingBlockMotion motion, List<int>? moved, EntityGeometryState? geometry, World? world, IBlockShapeSource? shapes, EntityMembershipState? membership, EntityStore? entities)
+    {
+        if (geometry is null)
+            return;
+        if (world is null || shapes is null || membership is null || entities is null || entity.Vehicle is not null || entity.Passengers.Count != 0
+            || !geometry.TryGetFallingBlock(entity, out Aabb box) || motion.ObjectData is not { } data || !world.BlockData.Blocks.TryGet(data & 4095, out var block) || block.NetworkId == 0)
+        {
+            geometry.InvalidateFallingBlock(entity);
+            return;
+        }
+        motion.Collision ??= new LegacyFallingBlockCollision(world, new WorldPhysicsView(world, shapes, WorldBorderContainmentEra.Legacy,
+            entityContext: new EntityCollisionContext(entity, entities, membership, this, 107)));
+        if (!motion.HasTicked)
+        {
+            motion.HasTicked = true;
+            var cell = new BlockPos((int)Math.Floor(entity.Position.X), (int)Math.Floor(entity.Position.Y), (int)Math.Floor(entity.Position.Z));
+            var original = motion.Collision.ReadBlock(cell);
+            if (!original.IsValid)
+            {
+                geometry.InvalidateFallingBlock(entity);
+                return;
+            }
+            if (original.Block.NetworkId == block.NetworkId)
+                world.SetBlockStateId(cell, 0);
+        }
+        Vec3d requested = entity.Velocity.Subtract(0, .04F, 0);
+        if (!motion.Collision.TryCollide(box, requested, out Vec3d displacement))
+        {
+            geometry.InvalidateFallingBlock(entity);
+            return;
+        }
+        Vec3d before = entity.Position;
+        geometry.MoveFallingBlock(entity, displacement);
+        entity.OnGround = requested.Y != displacement.Y && requested.Y < 0;
+        entity.Velocity = new Vec3d(requested.X == displacement.X ? requested.X : 0, requested.Y == displacement.Y ? requested.Y : 0, requested.Z == displacement.Z ? requested.Z : 0).Scale(.98F);
+        if (before != entity.Position)
+            moved?.Add(entity.Id);
+    }
+
     public void Remove(Entity entity)
     {
         _remotePlayers.Remove(entity);
         _immovable.Remove(entity);
+        _fallingBlocks.Remove(entity);
     }
 
     public void Clear()
     {
         _remotePlayers.Clear();
         _immovable.Clear();
+        _fallingBlocks.Clear();
         ResetLocalMount();
     }
 
@@ -232,6 +294,13 @@ internal sealed class EntityMotionState
     private sealed record RemotePlayerMotion(int Protocol, RemotePlayerProfile Profile, VanillaEntityInterpolation? Position, VanillaEntityVelocity Velocity)
     {
         public TabListEntry? PlayerInfo { get; set; }
+    }
+
+    private sealed class FallingBlockMotion(int? objectData)
+    {
+        public int? ObjectData { get; } = objectData;
+        public bool HasTicked { get; set; }
+        public LegacyFallingBlockCollision? Collision { get; set; }
     }
 
     private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo)

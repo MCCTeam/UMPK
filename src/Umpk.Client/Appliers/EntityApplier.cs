@@ -25,7 +25,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundAddEntityPacket add:
                 Vec3d addVelocity = SpawnVelocity(add.VelocityX, add.VelocityY, add.VelocityZ, add.ModernVelocityRaw);
                 await SpawnAsync(store, context, add.EntityId, add.Uuid, add.TypeId, EntitySpawnSpace.Object,
-                    add.X, add.Y, add.Z, add.YRot, add.XRot, add.YHeadRot, addVelocity).ConfigureAwait(false);
+                    add.X, add.Y, add.Z, add.YRot, add.XRot, add.YHeadRot, addVelocity, objectData: add.Data).ConfigureAwait(false);
                 TryApplySelfVelocity(context, add.EntityId, addVelocity);
                 return true;
 
@@ -378,14 +378,14 @@ internal sealed class EntityApplier : IApplier
 
     private static ValueTask SpawnAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid, int typeId, EntitySpawnSpace space,
-        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity, EntityMetadataList? initialMetadata = null)
+        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity, EntityMetadataList? initialMetadata = null, int? objectData = null)
     {
         RegistryEntry<EntityTypeDefinition> type =
             context.EntityTypes.Resolve(context.State.Registries, typeId < 0 ? 0 : typeId, space);
 
         // From 1.20.2 add_player is gone and players arrive here, on the generic spawn path, carrying the player entity type. That is the only signal available, so the profile hook keys on it.
         return AddAsync(store, context, entityId, uuid, type, x, y, z, yaw, pitch, headYaw, velocity,
-            isPlayer: type.Id == PlayerType, initialMetadata);
+            isPlayer: type.Id == PlayerType, initialMetadata, objectData);
     }
 
     private static ValueTask SpawnKeyedAsync(
@@ -401,7 +401,7 @@ internal sealed class EntityApplier : IApplier
         EntityStore store, ApplierContext context, int entityId, Guid uuid,
         RegistryEntry<EntityTypeDefinition> type,
         double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity,
-        bool isPlayer, EntityMetadataList? initialMetadata)
+        bool isPlayer, EntityMetadataList? initialMetadata, int? objectData = null)
     {
         // The key source is what makes the typed metadata properties readable at all: Entity builds its metadata store around it, and an entity constructed without one answers false to every tier-2 lookup no matter how complete the raw store is.
         //
@@ -421,6 +421,7 @@ internal sealed class EntityApplier : IApplier
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
         context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
+        context.State.EntityMotion.RegisterFallingBlock(entity, context.Version.Version.Protocol, objectData, context.State.EntityGeometry);
         int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
         context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
         if (initialMetadata is not null)

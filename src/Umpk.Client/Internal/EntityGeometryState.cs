@@ -13,6 +13,7 @@ internal sealed class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
+    private readonly ConditionalWeakTable<Entity, TrackedFallingBlockGeometry> _fallingBlocks = new();
     private World? _legacyWorld;
     private EntityMembershipState? _legacyMembership;
     private LegacyPlayerResizeClearance? _legacyClearance;
@@ -22,7 +23,7 @@ internal sealed class EntityGeometryState
 
     public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
     {
-        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _) || _legacyPlayers.TryGetValue(entity, out _))
+        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _) || _legacyPlayers.TryGetValue(entity, out _) || _fallingBlocks.TryGetValue(entity, out _))
             return;
         if (isPlayer && LegacyPlayerGeometryProfile.Supports(protocol))
         {
@@ -47,6 +48,13 @@ internal sealed class EntityGeometryState
     public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
     {
         Register(entity, source, protocol);
+        if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
+        {
+            if (falling.ObservedPosition != entity.Position)
+                falling.ObservePosition(entity);
+            blocksBuilding = true;
+            return falling.TryGet(out box);
+        }
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
         {
             blocksBuilding = true;
@@ -89,6 +97,11 @@ internal sealed class EntityGeometryState
 
     public void ObservePosition(Entity entity)
     {
+        if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
+        {
+            falling.ObservePosition(entity);
+            return;
+        }
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
         {
             legacy.ObservePosition(entity);
@@ -106,7 +119,32 @@ internal sealed class EntityGeometryState
     public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
 
     public bool IsPositionKnown(Entity entity)
-        => !_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown;
+        => (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
+            && (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling) || falling.Known);
+
+    public void RegisterFallingBlock(Entity entity) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity));
+
+    public bool TryGetFallingBlock(Entity entity, out Aabb box)
+    {
+        box = default;
+        if (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
+            return false;
+        if (falling.ObservedPosition != entity.Position)
+            falling.ObservePosition(entity);
+        return falling.TryGet(out box);
+    }
+
+    public void MoveFallingBlock(Entity entity, Vec3d displacement)
+    {
+        if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
+            falling.Move(entity, displacement);
+    }
+
+    public void InvalidateFallingBlock(Entity entity)
+    {
+        if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
+            falling.Invalidate();
+    }
 
     public void TickLegacyPlayer(Entity entity, World? world, IBlockShapeSource shapes, int protocol, EntityMembershipState? membership = null)
     {
@@ -206,12 +244,14 @@ internal sealed class EntityGeometryState
         _entities.Remove(entity);
         _shulkers.Remove(entity);
         _legacyPlayers.Remove(entity);
+        _fallingBlocks.Remove(entity);
     }
     public void Clear()
     {
         _entities.Clear();
         _shulkers.Clear();
         _legacyPlayers.Clear();
+        _fallingBlocks.Clear();
         _legacyWorld = null;
         _legacyMembership = null;
         _legacyClearance = null;

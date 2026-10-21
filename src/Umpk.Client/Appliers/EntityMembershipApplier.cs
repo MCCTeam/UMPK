@@ -7,7 +7,7 @@ using Umpk.Protocol.Java.Packets;
 
 namespace Umpk.Client.Appliers;
 
-/// <summary>Observes received chunk headers for entity ticking, including sessions that do not retain terrain.</summary>
+/// <summary>Observes received chunk availability for interaction context and entity ticking, including sessions that do not retain terrain.</summary>
 internal sealed class EntityMembershipApplier : IApplier
 {
     public ValueTask<bool> TryApplyAsync(object packet, ApplierContext context, CancellationToken ct)

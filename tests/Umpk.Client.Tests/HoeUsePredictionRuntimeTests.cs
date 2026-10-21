@@ -138,6 +138,44 @@ public sealed class HoeUsePredictionRuntimeTests
         Assert.Equal((int)hand, Assert.IsType<ServerboundSwingPacket>(harness.Sent[1]).Hand);
     }
 
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, 0)]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    [InlineData(false, 3)]
+    [InlineData(true, 3)]
+    [InlineData(false, 4)]
+    [InlineData(true, 4)]
+    public async Task OnlyReceivedTerrainCanSupplyTheHoeContext(bool entities, int scene)
+    {
+        await using var harness = new Harness(498, entities, nativeTerrain: false);
+        if (scene is 1 or 2 or 3)
+            await harness.ReceiveColumn();
+        if (scene is 2 or 3)
+            await harness.ForgetColumn();
+        if (scene == 3)
+            await harness.ReceiveColumn();
+        if (scene == 4)
+            await harness.ReceiveColumn(fullChunk: false);
+        await harness.Block(harness.Target, "dirt");
+        Assert.NotNull(harness.State.World.GetColumn(harness.Target));
+        Assert.Equal(Identifier.Minecraft("dirt"), harness.State.World.GetBlock(harness.Target).Block.Id);
+        bool nativeTerrain = scene is 1 or 3;
+        Assert.Equal(nativeTerrain, harness.State.EntityMembership.HasColumn(harness.Target));
+        Assert.True(harness.State.Registries!.Items.TryGet(Identifier.Minecraft("diamond_hoe"), out var item));
+        await harness.Slot(Hand.Main, new ItemStack(item, 1));
+
+        await harness.Use(Direction.Up, Hand.Main);
+
+        Assert.Equal(nativeTerrain ? 2 : 1, harness.Sent.Count);
+        Assert.IsType<ServerboundUseItemOnPacket>(harness.Sent[0]);
+        if (nativeTerrain)
+            Assert.Equal((int)Hand.Main, Assert.IsType<ServerboundSwingPacket>(harness.Sent[1]).Hand);
+    }
+
     private sealed class Harness : IAsyncDisposable
     {
         private readonly int _protocol;
@@ -149,13 +187,15 @@ public sealed class HoeUsePredictionRuntimeTests
         public ClientState State => _applier.State;
         public List<object> Sent { get; } = [];
 
-        public Harness(int protocol)
+        public Harness(int protocol, bool entities = true, bool nativeTerrain = true)
         {
             _protocol = protocol;
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
-            _applier = new ApplierHarness(version);
+            _applier = new ApplierHarness(version, new ClientFeatures { Terrain = true, Entities = entities, Inventory = true, Physics = false, Pathfinding = false });
             State.Registries = JavaGameData.Registries(protocol);
             WorldFactory.InstallWorld(State, new CommonWorldSetup("minecraft:overworld", 0), protocol);
+            if (nativeTerrain)
+                State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
             var services = new ClientSessionServices { Version = version, Options = new(), Policies = new(), State = State, Wire = new(version), Logger = NullLogger.Instance, Scheduler = _scheduler, CurrentSessionCancellation = () => _session.Token };
             _actions = new InteractionActions(new Sink(Sent, _applier.Sequences, protocol), services, _applier.Sequences);
         }
@@ -165,6 +205,31 @@ public sealed class HoeUsePredictionRuntimeTests
             Assert.True(State.Registries!.Blocks.TryGetValue(Identifier.Minecraft(name), out var block));
             return Apply("block_update", new ClientboundBlockUpdatePacket(position, block.DefaultStateId));
         }
+
+        public Task ReceiveColumn(bool fullChunk = true)
+        {
+            var body = new Pre1_18ChunkWireBody(0, 0, fullChunk, 0, new NbtCompound(), [], fullChunk ? new byte[256 * 4] : [], [0], []);
+            byte[] bytes = ChunkCodecs.EncodeStructural(body);
+            Assert.True(JavaVersions.TryGetByProtocol(_protocol, out var version));
+            Assert.True(version.Protocol.TryGetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound, out var registry));
+            string name = Assert.Single(registry.Packets, pair => pair.Type.Id.Path is "level_chunk" or "level_chunk_with_light").Type.Id.Path;
+            BoundPacketCodec codec = BoundDescriptorCodec.Clientbound(_protocol, name);
+            var context = new PacketCodecContext(State.Registries!, IConnectionCodecState.Empty);
+            var decoded = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(bytes, context));
+            Assert.Equal(fullChunk, decoded.FullChunk);
+            Assert.Equal(0, decoded.ChunkX);
+            Assert.Equal(0, decoded.ChunkZ);
+            Assert.Equal(16, decoded.Column.SectionCount);
+            Assert.Equal(0, decoded.Column.GetBlockStateId(Target.X, Target.Y, Target.Z));
+            Assert.Equal(bytes, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(decoded)));
+            var roundTrip = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(roundTrip);
+            codec.Encode(ref writer, decoded, context);
+            Assert.Equal(bytes, roundTrip.WrittenSpan.ToArray());
+            return _scheduler.InvokeAsync(() => _applier.ApplyAsync(decoded), _session.Token);
+        }
+
+        public Task ForgetColumn() => Apply("forget_level_chunk", new ClientboundForgetLevelChunkPacket(new ChunkPos(0, 0)));
 
         public Task Slot(Hand hand, ItemStack item) => Apply("container_set_slot", new ClientboundContainerSetSlotPacket(0, 0, hand == Hand.Main ? 36 : 45, item));
         public Task GameMode(GameMode mode) => Apply("game_event", new ClientboundGameEventPacket(3, (float)mode));

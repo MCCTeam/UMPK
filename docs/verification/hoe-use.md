@@ -16,6 +16,8 @@ The existing session-owned block-use sender now predicts the original `HoeItem` 
 
 Original `HoeItem` ignores legacy NBT and durability when selecting its client result. Ordinary legacy tags and a modern Damage patch therefore do not suppress a second use. Other modern patches remain explicitly unclassified; this slice does not claim complete component/cooldown-group support. Protocols before 498 retain their previous unknown behavior. Protocol 777 replaces `HoeItem` with data-driven `BlockTransformer` components and is deliberately not inferred from 776. Those older and newer tool eras remain open.
 
+The later [terrain-context regression](hoe-terrain-context.md) requires packet-established chunk availability and preserves unknown results after unload or a partial-only arrival. Its additional ten cases and producer identity are recorded separately from the original overlay results below.
+
 ## Source and focused runtime checks
 
 The source audit verifies client jars, decompile receipts and relevant `HoeItem`, `Items`, `ItemStack`, `MultiPlayerGameMode` and `InteractionResult` hashes on all 43 named releases from 1.14.4 through 26.2, covering 31 protocol datasets. It checks the native transformation map, registered hoe materials, the rooted-dirt boundary, client/server branch and result forms. `native-source-audit.json` has SHA-256 `48a8ad949cb904ea8bba869013ac47906e249858faf6834b304a21bf20a092dc`. This is original client source evidence, not an executed native-client campaign.

@@ -94,7 +94,7 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 rconPort,
                 serverSha256 = jarHash,
                 viewDistance = viewDistance ?? 4,
-                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
+                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceLiveTests.Scale.cs", "VanillaInteractionAcceptanceLiveTests.Menu.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),
             });

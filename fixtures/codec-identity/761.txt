@@ -116,7 +116,7 @@ Play Clientbound 0x63 minecraft:take_item_entity EntityStateCodecs.TakeItemEntit
 Play Clientbound 0x64 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 read:28 shape:opaque
 Play Clientbound 0x65 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_13_2 read:4 shape:update_advancements(icon=presentid,text=json,criteria=1,telemetry=0,showadv=0)
 Play Clientbound 0x66 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 read:2 shape:opaque
-Play Clientbound 0x67 minecraft:update_enabled_features marker n/a shape:opaque
+Play Clientbound 0x67 minecraft:update_enabled_features PlayUpdateEnabledFeatures read:1 shape:opaque
 Play Clientbound 0x68 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 read:6 shape:opaque
 Play Clientbound 0x69 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern read:256 shape:opaque
 Play Clientbound 0x6A minecraft:update_tags WorldTagCodecs.TagsV1_17 read:1 shape:list(registry,list(tag,list(varint)))

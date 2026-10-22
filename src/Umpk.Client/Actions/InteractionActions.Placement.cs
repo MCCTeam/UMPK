@@ -44,6 +44,16 @@ public sealed partial class InteractionActions
 
     private BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Hand hand)
     {
+        bool inventoryKnown = _services.State.Features.Inventory;
+        ItemStack main = HeldItem();
+        ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
+        ItemStack item = hand == Hand.Main ? main : off;
+        // Minecraft.startUseItem rejects disabled nonempty stacks before useItemOn, independently of terrain and spectator mode. Without inventory, only a completely classified and enabled native catalog can establish permission.
+        bool? itemEnabled = inventoryKnown
+            ? item.IsEmpty ? true : _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol)
+            : _services.State.EnabledFeatures.IsUnobservedItemEnabled(_services.State.Registries, _services.Version.Version.Protocol);
+        if (itemEnabled is false)
+            return BlockUsePrediction.Rejected;
         if (!_services.State.HasWorld)
             return BlockUsePrediction.Unknown;
         World world = _services.State.World;
@@ -52,6 +62,8 @@ public sealed partial class InteractionActions
         if (world.GetColumn(position) is null)
             return BlockUsePrediction.Unknown;
         BlockState clicked = world.GetBlock(position);
+        if (itemEnabled is null)
+            return BlockUsePrediction.Unknown;
         // Before 1.21.2 the spectator controller returns SUCCESS before item use. Later clients return CONSUME, whose swing source is NONE.
         if (_services.Self.GameMode == GameMode.Spectator)
             return !clicked.IsValid || clicked.IsAir ? BlockUsePrediction.Unknown
@@ -59,14 +71,17 @@ public sealed partial class InteractionActions
         IBlockInteractionSource data = JavaGameData.BlockInteractionData(_services.Version.Version.Protocol);
         if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block))
             return BlockUsePrediction.Unknown;
-        bool inventoryKnown = _services.State.Features.Inventory;
-        if (_services.Self.Sneaking && !inventoryKnown)
-            return BlockUsePrediction.Unknown;
-        ItemStack main = HeldItem();
-        ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
-        ItemStack item = hand == Hand.Main ? main : off;
         // 1.14.4 and 26.3 MultiPlayerGameMode.useItemOn/performUseItemOn suppress block activation only when secondary use has a nonempty stack in either hand. Activation runs before item cooldown and placement permissions.
         bool suppressActivation = _services.Self.Sneaking && (!main.IsEmpty || !off.IsEmpty);
+        // performUseItemOn fails on a disabled target before activation, but still commits the use packet. Native secondary use suppresses this entire target/activation phase.
+        if (_services.Self.Sneaking && !inventoryKnown)
+            return BlockUsePrediction.Unknown;
+        if (!suppressActivation)
+        {
+            bool? blockEnabled = _services.State.EnabledFeatures.IsBlockEnabled(clicked.Block.Id, _services.Version.Version.Protocol);
+            if (blockEnabled is not true)
+                return blockEnabled is false ? BlockUsePrediction.Fail : BlockUsePrediction.Unknown;
+        }
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult);
         bool activationPassesOffhand = hasActivation && activation.EmptyHandActivationIsMainHandOnly && hand == Hand.Off;
@@ -92,6 +107,9 @@ public sealed partial class InteractionActions
         VanillaShovelUse shovel = VanillaShovelUse.ForProtocol(_services.Version.Version.Protocol);
         if (shovel.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction shovelUse))
             return shovel.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? shovelUse : BlockUsePrediction.Unknown;
+        VanillaAxeUse axe = VanillaAxeUse.ForProtocol(_services.Version.Version.Protocol);
+        if (axe.TryPredict(item.Item.Id, clicked, hand, off, _services.Self.Sneaking, out BlockUsePrediction axeUse))
+            return axe.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? axeUse : BlockUsePrediction.Unknown;
         if (!item.Components.HasNoPatch)
             return BlockUsePrediction.Unknown;
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use))

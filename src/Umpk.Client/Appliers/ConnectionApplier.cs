@@ -75,6 +75,10 @@ internal sealed class ConnectionApplier : IApplier
                 context.DispatchConfigurationChannel(payload.Channel, payload.Data);
                 return true;
 
+            case ClientboundConfigUpdateEnabledFeaturesPacket features:
+                context.State.EnabledFeatures.Install(features.Features, context.Version.Version.Protocol);
+                return true;
+
             case ClientboundConfigUpdateTagsPacket tags:
                 context.State.RegistryTags.Install(tags.Registries);
                 return true;

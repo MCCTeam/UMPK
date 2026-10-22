@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 17 of 154 implemented bindings (corpus 6, synth 11)
+# witnessed 17 of 155 implemented bindings (corpus 6, synth 11)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -147,6 +147,7 @@ Play Clientbound 0x68 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV
 Play Clientbound 0x69 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20 src:corpus@763 w:320 ok UpdateAdvancements{Added=[2:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=BF59BEA8
     reject:P404(FormatException) reject:P764(ProtocolViolationException)
 Play Clientbound 0x6A minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
+Play Clientbound 0x6B minecraft:update_enabled_features PlayUpdateEnabledFeatures src:none
 Play Clientbound 0x6C minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 src:none
 Play Clientbound 0x6D minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
 Play Clientbound 0x6E minecraft:update_tags WorldTagCodecs.TagsV1_17 src:none

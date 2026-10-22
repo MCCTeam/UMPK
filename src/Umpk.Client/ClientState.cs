@@ -49,6 +49,9 @@ public sealed class ClientState
     /// <summary>Tag membership belongs to the connection, including configuration-to-play and data-pack reloads.</summary>
     internal Internal.ClientRegistryTags RegistryTags { get; } = new();
 
+    /// <summary>Native connection features survive world and configuration transitions.</summary>
+    internal Internal.EnabledFeatureState EnabledFeatures { get; } = new();
+
     /// <summary>The scoreboard/teams model. Always present.</summary>
     public Scoreboard Scoreboard { get; } = new();
 
@@ -225,6 +228,7 @@ public sealed class ClientState
         Self.ClearItemCooldowns();
         Server.ResetForSessionEnd();
         RegistryTags.Clear();
+        EnabledFeatures.Reset();
         PacketBases.Clear();
         EntityMotion.Clear();
         EntityGeometry.Clear();

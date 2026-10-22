@@ -1,3 +1,4 @@
+using System.Buffers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Umpk.Client.Actions;
 using Umpk.Client.Internal;
@@ -10,6 +11,7 @@ using Umpk.Geometry;
 using Umpk.Hosting;
 using Umpk.Physics;
 using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
 using Umpk.TestKit;
 using Xunit;
@@ -33,6 +35,8 @@ public sealed class BlockUsePredictionRuntimeTests
         foreach (var button in JavaGameData.Registries(protocol).Blocks.Where(entry => entry.Id.Path.EndsWith("_button", StringComparison.Ordinal)))
         {
             await using var harness = new Harness(protocol);
+            if (protocol is 761 or 762 or 768)
+                await harness.EnableExperimentalFeatures(protocol);
             BlockDefinition definition = button.Value;
             int selectedState = Enumerable.Range(definition.MinStateId, definition.StateCount)
                 .First(state => definition.TryGetPropertyValue(state, "powered", out string value) && value == (powered ? "true" : "false"));
@@ -181,6 +185,7 @@ public sealed class BlockUsePredictionRuntimeTests
 
     private sealed class Harness : IAsyncDisposable
     {
+        private readonly ApplierHarness _applier;
         public ClientState State { get; }
         public ChannelSessionScheduler Scheduler { get; } = new();
         public RecordingSink Sink { get; }
@@ -191,7 +196,8 @@ public sealed class BlockUsePredictionRuntimeTests
         public Harness(int protocol)
         {
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
-            State = new ClientState(new ClientFeatures().Normalized());
+            _applier = new ApplierHarness(version);
+            State = _applier.State;
             RegistryAccess registries = JavaGameData.Registries(protocol);
             State.Registries = registries;
             var world = new Umpk.Game.World.World(WorldFactory.CreateDimension(new CommonWorldSetup("minecraft:overworld", 0), null, protocol), new RegistryBlockDataSource(registries.Blocks, isLegacy: protocol < 393), WorldFactory.EmptyBiomes());
@@ -215,6 +221,31 @@ public sealed class BlockUsePredictionRuntimeTests
                 CurrentSessionCancellation = () => _session.Token,
             };
             Actions = new InteractionActions(Sink, services, sequences);
+        }
+
+        public Task EnableExperimentalFeatures(int protocol)
+        {
+            Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
+            ProtocolPhase phase = protocol < 764 ? ProtocolPhase.Play : ProtocolPhase.Configuration;
+            Assert.True(version.Protocol.TryGetRegistry(phase, PacketFlow.Clientbound, out var registry));
+            var entry = Assert.Single(registry.Packets, pair => pair.Type.Id == Identifier.Minecraft("update_enabled_features"));
+            Assert.True(registry.TryGetInbound(entry.WireId, out var codec));
+            Assert.True(codec.IsImplemented);
+            Identifier[] flags = [Identifier.Minecraft("vanilla"), Identifier.Minecraft(protocol == 768 ? "winter_drop" : "update_1_20")];
+            var output = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(output);
+            writer.WriteVarInt(flags.Length);
+            foreach (Identifier flag in flags)
+                writer.WriteString(flag.ToString());
+            var context = new PacketCodecContext(State.Registries!, IConnectionCodecState.Empty);
+            var decoded = Assert.IsType<ClientboundConfigUpdateEnabledFeaturesPacket>(codec.Decode(output.WrittenSpan, context));
+            Assert.Equal(flags, decoded.Features);
+            Assert.Equal(phase, decoded.Type.Phase);
+            var encoded = new ArrayBufferWriter<byte>();
+            var roundTrip = new PacketWriter(encoded);
+            codec.Encode(ref roundTrip, decoded, context);
+            Assert.Equal(output.WrittenSpan.ToArray(), encoded.WrittenSpan.ToArray());
+            return Scheduler.InvokeAsync(() => _applier.ApplyAsync(decoded), _session.Token);
         }
 
         public Task Use(Hand hand = Hand.Main) => Actions.PlaceBlockAsync(Target, Direction.Up, new Vec3d(.5, 1, .5), hand).WaitAsync(TimeSpan.FromSeconds(5));

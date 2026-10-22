@@ -1,0 +1,89 @@
+# Axe block-use prediction and enabled features
+
+The private slice over `53c6f97418d5f377fee5f03338149dee62fc46ec` connects native axe results to `InteractionActions.PlaceBlockAsync` for protocols 47–776. It also supplies the native feature permissions needed to distinguish disabled experimental blocks/items from missing context. Feature permissions extend through protocol 777; its data-driven axe transformations and unclassified component patches remain unknown. This report records an external source overlay, not an immutable producer commit or final acceptance of all block interactions.
+
+## Runtime behavior
+
+| Native boundary | Production decision | Evidence and acceptance |
+| --- | --- | --- |
+| 1.8.9 profile, protocol 47, through 1.12.2/340 | Axes inherit the native item pass result; a use packet has no predicted swing. Protocol 47 retains the existing 1.8.9 profile. | Original client hierarchy/dispatch audited across the named releases; all applicable dataset/hand controls execute through the existing action owner. |
+| 1.13/393 | Recognized logs and wood produce a successful axe result, regardless of clicked face or the block above. | Source map and native return path; real-codec runtime coverage of the registered material/map combinations, pass targets and ordinary permissions. |
+| 1.16/735, 1.19/759, 1.19.3/761, 1.19.4/762 and 1.21.2/768 | The same source-bound map includes nether stems/hyphae, mangrove, bamboo, cherry and pale oak when those entries exist in the matching registry. | All 23 native stripping targets are reviewed against the original per-release map and exercised where registered. |
+| 1.17/755 through 26.2/776 | Wax removal and one oxidation-step scraping are successful results; unwaxed unoxidized copper and unrelated blocks pass. | Original wax/weathering maps and later weathering collections; runtime cases cover fifteen registered copper families and eight wax/weather combinations, including nonparticipating controls. |
+| 1.21/767–769 | A main-hand axe passes when the other hand holds a shield and secondary use is inactive. Offhand use and secondary use preserve their native behavior. | Original `AxeItem` blocking-intent branch; framed inventory and actual movement-action controls on both sides of the boundary. |
+| 1.21.5/770–776 | Native effective `BLOCKS_ATTACKS` replaces the fixed shield check. Default vanilla shield and ordinary vanilla offhand items are classified; unclassified offhand patches remain unknown. | Original component default and axe branch; real packet-populated offhand cases, including unsupported patches. |
+| 1.19.3/761–777 | A disabled nonempty held item rejects before sending, even before terrain is available. A disabled target produces a post-send failure before activation, unless native secondary use suppresses that target/activation phase. | Matching original `Minecraft.startUseItem`, `MultiPlayerGameMode`, `ItemStack` and feature-registry sources; positive, negative, unknown, activation, terrain-order and protocol-777 controls. |
+| Play 761–763; configuration from 764 | The original feature announcement reaches the connection-owned feature state in its actual phase. Existing public packet construction retains the configuration identity. | Unmodified original writers/readers at 761, 763 and 764, fifteen bound-codec body/phase tests and all protocol/conformance gates. |
+
+`VanillaAxeUse` supplies only the prediction. The existing owner still controls activation, cooldown, Adventure uncertainty, captured session lifetime, packet order and cancellation. The predictor requires packet-established terrain; a column synthesized by a block update does not prove native chunk availability. The helper accepts the proven damage/legacy-NBT forms and retains unknown results for other effective component changes. Native blocks, tool damage, drops and other server effects remain server-owned.
+
+`EnabledFeatureState` starts at native `DEFAULT_FLAGS = VANILLA_SET`. A packet replaces the set and ignores names absent from that native flag registry. Respawn/world replacement and configuration transitions retain the set; session end resets it. A known empty stack bypasses the held-item feature test, matching native `ItemStack.isItemEnabled`. Without Inventory, permission is known only if the active registry is canonical, or every active entry matches the canonical identity, network ID and definition, and all possible native requirements are enabled. A custom or unclassified registry remains unknown.
+
+The compact feature predicates were compared with every native block registration, inherited property copy, explicit item override and spawn-egg requirement across all 25 supported named releases from 1.19.3 through 26.2. The separate 26.3 audit proves vanilla defaults and registered requirements there; it does not establish data-driven item-use results. Unknown requirements are never interpreted as enabled.
+
+## Source and original writer evidence
+
+All raw sources, artifacts, logs, scripts and receipts remain outside Git under `/home/anon/Projects/MinecraftOfficial/runs/axe-work-20261022-v1/`. `audit.py`, `feature-audit.py` and `audit-feature-777.py` verify original artifact SHA-1/SHA-256 and matching decompilation completion receipts before using source. The axe audit covers 74 named releases and 49 datasets through protocol 776. This is a static source audit, not 74 native executions.
+
+| Receipt | SHA-256 | Scope |
+| --- | --- | --- |
+| `evidence/native-source-audit.json` | `b3007f6c06d097f94aeec7090b46fcdd118575988ef94c1555777c976f21c77d` | Original axe/item/controller inheritance, maps, registered materials, blocking-intent boundaries and protocol-777 exclusion. |
+| `evidence/feature-native-source-audit.json` | `9deb2d1e6ca20094ee64249ea4c7ea6e4bebcfa6cfbddd49a59b6591405fba51` | All 25 feature-bearing releases through 26.2; native flag names, requirements, defaults, replace/reset semantics, listener ownership and empty-stack bypass. |
+| `evidence/feature-777-native-source-audit.json` | `c3f1269a19101d0c3ee452ce5de53b297c94daf52648c9053525dfc86d3a15cd` | Verified 26.3 jar/completion/source hashes; permission/default/lifetime scope only. |
+| `native-feature-writer/results.json` | `8bd3347bc01856464589c3d26ab6b0b0b4234f901b244be99880ce00890f23f7` | Nine original writer/read-constructor body observations, in three owned JVMs at 1.19.3, 1.20.1 and 1.20.2. |
+
+`native-feature-writer/FeatureWriter.java` loads unmodified original packet classes, asserts their code-source jar and class hashes, invokes the original writer, then reads the result with the original constructor and asserts the decoded set and complete body consumption. Each release supplies empty, vanilla-only and multi-feature bodies. All three owned Java processes exit zero. The driver uses previously downloaded, hash-verified client libraries or matching original server-bundle entries and performs no downloads. Protocol 762 reuses the 761 native body only after matching source establishes the identical wire form; the report does not claim a separate 762 JVM measurement.
+
+`EnabledFeatureNativeBodyTests` embeds those original bodies and asserts decoded feature IDs, actual phase/flow/identifier, the unchanged default public configuration identity and byte-identical bound-codec encoding. Three adjacent-phase controls reject leakage at 760/Play, 764/Play and 763/Configuration. The existing protocol-763 corpus also contains the newly implemented packet; no capture was re-recorded.
+
+## Tests and retained failures
+
+The recovered initial failing proof is immutable at `/home/anon/Projects/MinecraftOfficial/runs/axe-recovery-red-20261022-v1/manifest.json`, SHA-256 `f4ca403fffe891ab79ff5ffcc95fee6548ffe8495a4ed8ade0c7a1539e845ed6`. It binds 677 files and the executed 275-case proof: 225 failures and 50 controls passed. The former `/tmp/umpk-axe-20261021-v1` disappeared before recovery; its unpublished 244/54-case results and files are lost and do not count. `recovery.json` records that loss and the fresh durable reconstruction.
+
+| Stage | Executed result | Meaning |
+| --- | --- | --- |
+| Reconstructed initial red | 275: 225 failed, 50 passed | Existing action owner lacks axe success/swing and Play feature ownership. |
+| Expanded red, then helper without its caller | 454: 301 failed, 153 passed in each | The helper alone closes no runtime behavior. |
+| Axe caller connected | 454: 39 failed, 415 passed | Native axe decisions reach actual use/swing packets; feature context still fails. |
+| Internal Play codec added | 454: 33 failed, 421 passed | The correct bound phase decodes; feature-state/caller integration still fails. |
+| Feature guards connected | 457: 456 passed, one failed fixture assumption | An enabled copper door runs activation before axe use. The original failed attempt and native source are retained. |
+| Feature and adjacent regressions after native context repairs | 5,429 passed | Empty-stack bypass, complete native requirements with Inventory off, custom-registry uncertainty and existing experimental-button assertions all hold. |
+| Disabled held item with unavailable terrain, before ordering repair | 12: four failed, eight passed | The pre-send item gate must precede terrain queries. |
+| Valid protocol-777 permission red | Eight: four failed, four existing controls passed | Known native feature rejection must survive an unknown transformer result. |
+| Final focused runtime | 490 passed | All added Client cases execute through the owned caller, real bound codecs and decoded-value/byte-round-trip assertions. |
+| Final full Client | 26,540 passed, zero skips | Base Client count 26,050 plus 490 deliberate cases. |
+| Final full Protocol.Java | 6,401 passed, zero skips | Base count 6,385 plus fifteen original-body/phase cases and one newly measured allocation-family case. |
+| Final full Conformance | 892 passed, zero skips | Binding, identity, timeline, corpus, witness, marker, source-tree and neighboring-band checks; count unchanged. |
+| Owned-file format verification | Exit zero | `dotnet format` verifies all twelve owned C# files. |
+
+The existing experimental-button fixture now receives genuine enabled-feature packets at protocols 761, 762 and 768 before its original assertions. All assertions and case counts remain intact. The Inventory-off spectator fixture also retains its original assertion; production now uses the bounded complete-registry proof instead of assuming a held item.
+
+The first full Protocol/Conformance driver used `--no-restore` without those project assets, returned zero with no TRX and executed nothing. `evidence/repository-checks.json` records these as harness prerequisite failures. The corrected driver restored the projects and required an executed TRX. Before approved evidence updates it observed Protocol 6,399/6,400 and Conformance 881/892. After removing the resolved feature marker, the first final Conformance run observed 891/892 because its explicit reason tally was stale. That original failure is retained; its final hard equalities are 66 marker identities, 1,052 protocol memberships and 46 KnownGaps. Every other reason count remains unchanged.
+
+The failed door assumption remains at `evidence/feature-door-activation-assumption-failed.cs` and `evidence/door-activation-limit.json`. Native `DoorBlock` activates before axe use; existing door activation remains unknown. The tool/feature fixture uses an equally gated passive copper bulb, retains an enabled-door unknown control and still tests secondary-use door transformations. The early 777 source-audit assumption that `EntityType` should contain no `FeatureFlags` references was also wrong: its references supply defaults/API, not experimental registrations. That failed audit and the nonqualifying earlier run are retained separately; only `feature-777-valid-red` counts as the new failing proof.
+
+## Generated evidence and allocations
+
+The approved generators changed exactly ten fixture files: registration, codec identity and witness for protocols 761, 762 and 763, plus the single Play feature timeline row. The three registration rows change marker to codec; codec identity becomes `PlayUpdateEnabledFeatures read:1`; witness files gain the implemented entry and adjust their implemented denominators without changing existing witnesses or reject clauses. The timeline retains exactly the 761–763 band. No other fixture byte changes. The resolved marker ledger entry is removed and its exact tally decreases by one identity and three protocol memberships.
+
+The allocation generator ran with both `UMPK_UPDATE_ALLOCATION_BUDGETS=1` and `UMPK_PRESERVE_EXISTING_ALLOCATION_BUDGETS=1`. It measured the newly covered protocol-763 Play feature packet from `chunk-join.umpkcap`, frame three, wire ID 107, body length 19: 208 bytes per frame, with the existing standard headroom rule producing a 219-byte budget. All 72 previous rows retain identical serialized bytes and values. Metadata changes from 7,480 to 7,483 implemented bindings, 1,844 to 1,847 exercised bindings and 72 to 73 covered families. `evidence/pin-review.json` records every changed field and the complete fixture-tree comparison.
+
+Exact top-level commands were `python3 run-focused.py <stage> [filter]`, `python3 run-complete-projects.py`, `python3 run-pin-updates.py`, `python3 run-final-projects.py` and `python3 run-conformance-final.py`, executed from the durable run directory. Their receipts retain each complete command argument array, environment override, working directory, exit, elapsed time, log and TRX. The final commands use the official .NET SDK 10.0.401, Release, `-m:2 -nr:false -p:SourceRevisionId=53c6f97418d5f377fee5f03338149dee62fc46ec`. That assembly revision records the archive base; the delivery manifest separately identifies the changed source overlay. Every final test runs with the pin/allocation update switches absent.
+
+`run-pin-updates.py` executes exactly three cases for each of `RegistrationTable_MatchesFrozenFixture`, `CodecIdentityTable_MatchesFrozenFixture` and `WitnessTable_MatchesFrozenFixture`, filtered to display names containing 761, 762 or 763, using only each documented update environment variable. It then executes exactly one timeline generator and exactly one preserve-existing allocation generator. All eleven generator cases pass. The subsequent full suites run without those switches and pass.
+
+## Remaining acceptance
+
+Native live axe acceptance is not executed by this local slice. A dedicated nine-boundary draft covers 1.12.2/340, 1.13/393, 1.17/755, 1.20.4/765, 1.20.6/766, 1.21.1/767, 1.21.5/770, 1.21.10/773 and 26.2/776. It will use the exact combined producer, enabled physics, grounded survival actions, native block/tool-damage observations, single-action packet ordering, frame replay and owned cleanup. Default-world live targets exclude the pre-1.21 experimental copper families; their enabled/disabled/unknown cases already have explicit source and framed-runtime coverage. This draft has not changed Integration discovery or its baseline.
+
+The combined producer still requires native live acceptance, the full repository/count/generation/package gates, producer-matched DMCBK/MCC checks, Native AOT and published-head CI. No sibling source or Git state was changed by this private work. No dataset, package version, dependency, public constructor/signature or DI lifetime changed. Protocol-777 transformations, complete component semantics, door activation and the other interaction families remain unfinished where the acceptance ledger requires them.
+
+## Root integration
+
+The frozen delivery is `runs/axe-feature-delivery-20261022-v1`, manifest SHA-256 `258ba949c1cbfd516812a9302a7bf99d3677a1933e42e0730d5869a786d4764f`. Its 24-file patch has SHA-256 `9f410a86e12a71f120c623c4d9b2d2256c344e1c2e6eb23f100415d2ea241bcd`. Root verified every one of the 1,414 manifest entries and reviewed every changed fixture line, the resolved marker and all existing allocation rows before integration.
+
+The combined source over `03fabffd30c774b0a668bf8a3bd8d05bbc71ff15` preserves the charge, modern motion and protocol-47 falling changes. All 722 focused cases, 26,736 Client cases, 6,401 Protocol cases and 892 Conformance cases execute and pass without skips. Release solution build and full format verification pass. Deliberate count changes are exactly 490 Client cases and sixteen Protocol cases. The final checks run with all evidence-update switches disabled.
+
+The first root Conformance attempt passed 891 cases and skipped the citation guard because its private archive lacked an Oracle path. The strict executed-count guard rejected that attempt. The corrected driver supplies the retained Oracle explicitly, reruns only the affected suite and requires all 892 cases to execute; completed Client and Protocol checks remain intact. The original skipped attempt remains a harness prerequisite failure.
+
+`runs/axe-modern-falling-integrated-20261022-v1/manifest.json` has SHA-256 `818b2f690aee3c18eb3458913b7651e53fb941b1a3706ff244938620c056a1be`. It binds commands, logs, TRX files, source identity and sixteen own producer DLL hashes. The audit preserves 4,177 of 4,197 original blobs, with twenty modified and five added files, including the deliberate baseline changes. This remains source-overlay evidence. Fresh immutable, native live, consumer, package, AOT and published-head CI results are still required.

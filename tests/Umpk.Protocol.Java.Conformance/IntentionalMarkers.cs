@@ -157,9 +157,6 @@ internal static class IntentionalMarkers
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "test_instance_block_status", MarkerReason.NoConsumerWorthWriting, From(770),
             "Part of the 1.21.5 game-test instance-block tooling, which only a developer running the test framework drives. No gameplay consumer would read it."),
 
-        new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_enabled_features", MarkerReason.KnownGap, Between(761, 763),
-            "The 1.19.3 through 1.20.1 feature-flag announcement, moved into the configuration phase at 1.20.2. Unbound on the three protocols that carry it in play, so a consumer cannot tell which experimental packs are enabled there."),
-
         new(ProtocolPhase.Play, PacketFlow.Clientbound, "update_entity_nbt", MarkerReason.KnownGap, Only(47),
             "A 1.8-only entity NBT update, removed at 1.9. Unbound, and no consumer stores entity NBT on any protocol, so there is nothing for a decoded value to reach."),
 

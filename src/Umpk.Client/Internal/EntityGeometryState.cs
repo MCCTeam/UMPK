@@ -76,7 +76,7 @@ internal sealed class EntityGeometryState
             ReapplyPosition(entity, geometry);
         box = geometry.Bounds.Box;
         blocksBuilding = geometry.Dimensions.BlocksBuilding;
-        return geometry.Known;
+        return geometry.Known && geometry.PositionKnown;
     }
 
     public void ObserveMetadata(Entity entity, int index)
@@ -116,10 +116,29 @@ internal sealed class EntityGeometryState
             ReapplyPosition(entity, geometry);
     }
 
+    /// <summary>Returns the native float dimensions without reconstructing them from rounded box endpoints.</summary>
+    public bool TryGetDimensions(Entity entity, out EntityGeometryDimensions dimensions)
+    {
+        dimensions = default;
+        if (!_entities.TryGetValue(entity, out Geometry? geometry))
+            return false;
+        ObserveDimensions(entity, geometry);
+        dimensions = geometry.Dimensions;
+        return geometry.Known;
+    }
+
+    /// <summary>A missing collision decision makes subsequent arithmetic positions unproven until this actor is replaced.</summary>
+    public void InvalidatePosition(Entity entity)
+    {
+        if (_entities.TryGetValue(entity, out Geometry? geometry))
+            geometry.PositionKnown = false;
+    }
+
     public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
 
     public bool IsPositionKnown(Entity entity)
-        => (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
+        => (!_entities.TryGetValue(entity, out Geometry? geometry) || geometry.PositionKnown)
+            && (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
             && (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling) || falling.Known);
 
     public void RegisterFallingBlock(Entity entity) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity));
@@ -349,6 +368,7 @@ internal sealed class EntityGeometryState
         public IEntityGeometrySource Source { get; } = source;
         public EntityGeometryRule Rule { get; } = rule;
         public bool Known { get; set; }
+        public bool PositionKnown { get; set; } = true;
         public bool HasDimensions { get; set; }
         public bool Selector { get; set; }
         public EntityPose Pose { get; set; }

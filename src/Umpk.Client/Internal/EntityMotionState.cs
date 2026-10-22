@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
 using Umpk.Client.Navigation;
+using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
 using Umpk.Game.Registries;
@@ -25,10 +26,7 @@ internal sealed class EntityMotionState
             entity.Velocity = Vec3d.Zero;
         var velocity = new VanillaEntityVelocity(profile.VelocitySteps);
         velocity.SetCurrent(entity.Velocity);
-        // Handler-era position controllers need the native world-collision query before they can join this owner.
-        VanillaEntityInterpolation? position = protocol < 770
-            ? VanillaEntityInterpolation.CreateRemotePlayer(protocol, entity.Position, entity.Yaw, entity.Pitch, 0.6F, 1.8F)
-            : null;
+        VanillaEntityInterpolation position = VanillaEntityInterpolation.CreateRemotePlayer(protocol, entity.Position, entity.Yaw, entity.Pitch, 0.6F, 1.8F);
         _remotePlayers.Add(entity, new RemotePlayerMotion(protocol, profile, position, velocity));
     }
 
@@ -127,6 +125,15 @@ internal sealed class EntityMotionState
         return true;
     }
 
+    public bool TryObservePath(Entity entity, ReadOnlySpan<VanillaPositionStep> path, float? yaw, float? pitch)
+    {
+        if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Protocol != 777 || motion.Position is not { } position || path.IsEmpty)
+            return false;
+        PullPosition(entity, position);
+        position.SetPath(path, yaw, pitch);
+        return true;
+    }
+
     public bool TryObserveLegacyTeleport(Entity entity, Vec3d target, float yaw, float pitch)
     {
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
@@ -155,7 +162,7 @@ internal sealed class EntityMotionState
         return true;
     }
 
-    public bool TryObservePositionSync(Entity entity, PositionMoveRotation values)
+    public bool TryObservePositionSync(Entity entity, PositionMoveRotation values, ReadOnlySpan<VanillaPositionStep> path = default)
     {
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
@@ -167,6 +174,8 @@ internal sealed class EntityMotionState
             position.SetCurrentRotation(values.YRot, values.XRot);
             PushPosition(entity, position);
         }
+        else if (!path.IsEmpty && motion.Protocol == 777)
+            position.SetPath(path, values.YRot, values.XRot);
         else
             position.SetTarget(values.Position, values.YRot, values.XRot);
         return true;
@@ -180,7 +189,7 @@ internal sealed class EntityMotionState
             TickEntity(entity, moved, geometry, players);
     }
 
-    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null)
+    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null, float tickRate = 20F)
     {
         if (_fallingBlocks.TryGetValue(entity, out FallingBlockMotion? falling))
         {
@@ -197,7 +206,30 @@ internal sealed class EntityMotionState
             PullPosition(entity, position);
             bool reappliesPosition = position.HasActiveInterpolation;
             bool positionKnown = geometry?.IsPositionKnown(entity) != false;
-            position.Tick(static _ => throw new InvalidOperationException("Legacy interpolation must not request world collisions."));
+            if (motion.Profile.UsesWorldCollision && reappliesPosition)
+            {
+                if (world is null || shapes is null || membership is null || entities is null || geometry is null || !positionKnown
+                    || entity.Pose != EntityPose.Standing || entity.Vehicle is not null || entity.Passengers.Count != 0 || IsLocalMountUnresolved
+                    || !geometry.TryGetDimensions(entity, out EntityGeometryDimensions dimensions))
+                    positionKnown = false;
+                else
+                {
+                    position.RefreshDimensions(dimensions.Width, dimensions.Height, recenter: true);
+                    motion.Collision ??= new ModernPlayerCollision(entity, entities, membership, this, geometry, JavaGameData.EntityGeometryData(motion.Protocol), motion.Protocol, world, shapes);
+                    try
+                    {
+                        position.Tick(motion.Collision.NoCollision, tickRate > 20F ? tickRate / 20F : 1F);
+                    }
+                    catch (UnknownEntityCollisionContextException)
+                    {
+                        positionKnown = false;
+                    }
+                }
+                if (!positionKnown)
+                    geometry?.InvalidatePosition(entity);
+            }
+            else
+                position.Tick(static _ => throw new InvalidOperationException("Legacy interpolation must not request world collisions."));
             if (positionKnown)
                 PushPosition(entity, position);
             else
@@ -294,6 +326,7 @@ internal sealed class EntityMotionState
     private sealed record RemotePlayerMotion(int Protocol, RemotePlayerProfile Profile, VanillaEntityInterpolation? Position, VanillaEntityVelocity Velocity)
     {
         public TabListEntry? PlayerInfo { get; set; }
+        public ModernPlayerCollision? Collision { get; set; }
     }
 
     private sealed class FallingBlockMotion(int? objectData)
@@ -303,10 +336,10 @@ internal sealed class EntityMotionState
         public LegacyFallingBlockCollision? Collision { get; set; }
     }
 
-    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo)
+    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo, bool UsesWorldCollision)
     {
         // Actual RemotePlayer traces cover all 75 releases; generic spawn starts carrying players in 1.20.2, before Entity.recreateFromPacket applies their velocity in 1.21.5.
         public static RemotePlayerProfile ForProtocol(int protocol)
-            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498, protocol >= 761);
+            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498, protocol >= 761, ModernHardCollisionProfile.Supports(protocol));
     }
 }

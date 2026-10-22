@@ -1,0 +1,83 @@
+# Modern remote-player motion runtime
+
+This slice connects standing, unmounted remote players at their default attribute scale to native interpolation for protocols 770–777. Movement packets retain a target, the session clock advances the current position, and placement reads the resulting cached bounds. Protocol 769 remains the adjacent control. This is a bounded runtime acceptance result; it does not complete the full modern motion, passenger, scaling, or live acceptance milestones.
+
+## Producer and evidence
+
+The private producer starts at `e65329e5021278771610755dccd75ad2d39d7cf6`. Its source archive is unchanged outside the seven listed C# files and this report. The subsequent published `53c6f97` changes documentation only; this slice does not include the separate attack-charge change in `a643098`. No shared checkout builds, dataset changes, dependency changes, public API additions, DI lifetime changes, generated edits, fixture rewrites, package publication, or sibling source changes belong to this run.
+
+Durable raw evidence is `/home/anon/Projects/MinecraftOfficial/runs/modern-player-motion-20261022-v2`. `manifest.json` records the final file hashes, producer identity, commands, native artifacts, and result counters. `overlay.patch` contains the reviewed integration patch. `native/verified-evidence.json` identifies the original client/server artifacts, source completion records, mappings, loaded native class origins, bundled dependency hashes, observations, and owned probe source. Raw evidence remains outside Git.
+
+The previous `/tmp/umpk-modern-player-motion-20261021-v1` directory disappeared during an environment reset before it was copied to durable storage. Its reported 121-case green and 26,171-case full result are historical observations with missing receipts and are not accepted as proof for this producer. The code, tests, and missing joined witness were recovered into the durable v2 run and executed again. The v2 receipts below are the acceptance evidence.
+
+## Native facts reused and measured
+
+The existing `hard-entity-collision-20261021-v1` audit classifies 2,005 canonical entity registrations across 13 named releases at protocols 769–777 by their actual inherited native methods. It keeps placement obstruction, picking, hard collision, and pushability separate. The retained `handler-collision-all-20261016-v1`, `handler-entity-edges-all-20261016-v1`, `relative-listener-mapped-20261015-v2`, and `teleport-controller-all-20261015-v2` campaigns supply the existing collision, path, packet-coordinate, partial-update, and teleport arithmetic. Their jars, datasets, and completed measurements were reused.
+
+The missing joined fact was whether a real far position-sync packet changes the current position while preserving a pending interpolation target, so the next native handler phase must ask the actual world whether it can carry that target. The fresh probe executes original movement and position-sync stream codecs, byte-identical round trips, original listener dispatch, original RemotePlayer construction and interpolation phases, and original block, border, and hard-entity query methods. It asserts decoded movement flags and packet-base endpoints. All nine protocol representatives execute seven native phases per scenario.
+
+| Protocol | Native release | Fresh joined scenarios |
+|---|---|---:|
+| 769 | 1.21.4 | 6 |
+| 770 | 1.21.5 | 6 |
+| 771 | 1.21.6 | 6 |
+| 772 | 1.21.8 | 6 |
+| 773 | 1.21.9 | 6 |
+| 774 | 1.21.11 | 6 |
+| 775 | 26.1 | 6 |
+| 776 | 26.2 | 6 |
+| 777 | 26.3 | 10 |
+
+The 58 scenarios execute 406 original native tick phases. Each profile covers empty space, stone, a Shulker, a boat, a cow, and the border. Protocol 777 also covers all relative path knots and absolute stepped paths at 5, 20, and 40 TPS. The verifier compares every measured trajectory, rather than accepting process exit alone.
+
+The actor starts at `(0.5,65,0.5)`, receives a relative target `(1.5,65,0.5)`, then a far sync to `(100.5,65,0.5)`. Protocol 769 retains the original target. Modern empty/cow queries carry the target to X=101.5; stone, Shulker, boat, and border queries retain X=1.5. Protocol 770 preserves its offset-box query around X=202,Y=130; later handlers query around X=101.5,Y=65. The runtime accepts the owned Shulker geometry and retains an unowned boat as unknown.
+
+Original source establishes the remaining ownership decisions: `ClientPacketListener.handleMoveEntity` and `handleEntityPositionSync` preserve the packet base separately from interpolation; `EntityGetter.getEntityCollisions` returns empty for mean box size below `1e-7`, inflates candidates by `1e-7`, excludes the source and spectators, and applies the source's `canCollideWith`; the ordinary Entity predicate uses the target's hard-collision predicate and shared-vehicle exclusion. A Shulker participates when alive. Boats and Happy Ghasts require additional owned context. All audited families inheriting the base false hard-target predicate are proven nonparticipants, including minecarts as targets for this ordinary source. Unknown identifiers are not assigned that disposition.
+
+`LivingEntity.handleEntityEvent(3)` sets non-player health to zero before death effects, while `isAlive` tests removal and positive health. The new projection is limited to the tracked modern Shulker family and happens before `EntityStatusChanged`. Health metadata remains a separate packet path; neither path changes the placement-obstruction predicate. Source hashes for Entity, LivingEntity, RemotePlayer, ClientPacketListener, ClientLevel, EntityGetter, CollisionGetter, the handlers, and TickRateManager are retained per release.
+
+Protocol 777 advances interpolation in original `Entity.commonTick` before its AI phase. `ClientLevel.getRelativeTickSpeed` returns `tickrate > 20 ? tickrate / 20 : 1`. The probe supplies that source-established relative-speed input to the existing owned world adapter. Runtime tests instead supply real ticking-state/step packets to the existing session clock and verify the value reaches the controller. There is no new timer.
+
+The probe controls world/chunk/block/peer lookups, ticking eligibility, current-thread identity, and relative speed. World, Minecraft, and listener constructors are bypassed. A non-null LocalPlayer identity is allocated solely for the listener's passenger check; only its default null vehicle is read. Original RemotePlayer constructors and the named native methods execute. This is not full world traversal, a graphical client, or proof of local-player construction or behavior.
+
+## Connected runtime path
+
+Framed packets enter the normal bound codec, dispatcher, EntityApplier, and session owner. EntityMotionState creates the existing modern controllers, retains sync and teleport distinctions, and advances them through ClientState.TickEntities. The additional clock argument is exactly `WorldTicks.TickRate` on the existing TickEntity call, preserving the falling-block context and both cooldown lifetime clears.
+
+ModernPlayerCollision reuses PhysicsCollisionQuery, exact generated grids and offsets, the existing border implementation, and source-specific block context. Native chunk availability comes from EntityMembershipState; a synthetic storage column does not establish a collision chunk. Unloaded columns are skipped as native air. Missing retained terrain or an invalid received state remains unknown. Block collision runs before entity and border queries, so a proven block hit can close the decision without guessing missing hard-peer bounds.
+
+WorldPhysicsView collects eligible modern Shulker boxes from EntityGeometryState and the native hard-target predicate. It excludes the source and a known shared root and preserves the native tiny-query and candidate inflation rules. A distant-looking boat packet position does not prove that its unowned moving bounds are irrelevant. Its query remains unknown until a production owner establishes those bounds. The 1.9 falling-block branch and the default local-player adapter remain separate. Original RemotePlayer constructors set noPhysics=true, including 1.21.5 and 26.3 at RemotePlayer.java:17; this does not bypass the interpolation handler's noCollision query. The ordinary source canCollideWith predicate does not inspect source spectator or noPhysics state, while NO_SPECTATORS filters target candidates. Native Shulker inherits non-spectator state and its hard-target predicate reads health, not noPhysics. The 58 original-constructor native scenarios therefore also protect this distinction.
+
+EntityGeometryState keeps float dimensions, cached bounds, and position validity distinct. An unknown collision branch invalidates the generic actor's position proof. Completing arithmetic, receiving further relative endpoints, removing the original unknown peer, or reapplying the cached position does not turn that unknown into a proven position. Removing or replacing the actor creates a fresh owner. Placement therefore retains packet-only unknown behavior after the unresolved branch. The cached collision adapter is a field of the per-actor RemotePlayerMotion value: EntityMotionState.Remove removes that value, and the existing InstallWorld, configuration reentry, and session-reset paths call EntityMotionState.Clear together with geometry clearing. The adapter owns managed query scratch only; no timer, transport, server, port, or disposable resource is added.
+
+Protocol 777 relative packets decode every knot in order, including quantization between opposing deltas, and forward each native tick offset. Absolute position-sync paths also retain every knot. The packet base is updated to the endpoint once and remains independent of the animated position. Rotation-only tests protect the current-component behavior in 770–772 and pending-component behavior in 773–777, with 769 as a control.
+
+## Executed validation
+
+All commands use the official .NET SDK 10.0.401 in the private source archive with Release configuration, `-m:2`, `-nodeReuse:false`, and SourceRevisionId `e65329e5021278771610755dccd75ad2d39d7cf6`. The command receipts retain exact arguments, working directories, exit codes, and source hashes.
+
+| Check | Observed result |
+|---|---|
+| Untouched e653 plus the new 130 scenario tests | 108 expected failures, 22 passing controls, zero skips |
+| Geometry, world adapter, query owner, and motion integration | Focused rerun after each production file; arithmetic/geometry cases turn green while unconnected path/death/rate cases remain red |
+| Path and Shulker death caller integration | 128 passing, only the two 777 40-TPS clock cases fail |
+| Existing world-clock caller argument | 130 passing, zero failures or skips |
+| Final strengthened decoded-value and placement-unknown assertions | 130 passing, zero failures or skips |
+| Fresh native witness | 58 scenarios and 406 native phases verified |
+| Final formatted focused run | 130 passing, zero failures or skips |
+| Final unfiltered Client suite | 26,180 passing, zero failures or skips (26,050 base + 130 deliberate additions) |
+| Format verification | Exit 0; no formatting changes required; the existing workspace-load warning is retained |
+
+The 130 deliberate test additions cover all nine profiles, animated placement bounds, genuine empty/block/border/hard-peer decisions, synthetic/full/unload/reload chunks, terrain-storage-disabled composition, unknown hard peers before and after removal, ID replacement, Shulker health versus death ordering and placement obstruction, both path forms, source pose/scale/mount uncertainty, rotation-only partial updates, player freeze exemptions, and exact step grants. Bound context frames assert decoded semantic values and byte-identical re-encoding. Metadata assertions also verify the native resolved serializer IDs rather than comparing the constructor's unspecified `-1` serializer placeholder with a decoded wire ID.
+
+Retained invalid attempts are not passes: the first recovered rotation test omitted the generic InvokeAsync lambda return value; the intermediate recovery coordinator expected eight failures before all six clock/path scenarios had been routed and stopped at the actual twelve, which were inspected before continuing; and a strengthened metadata comparison initially compared the unspecified constructor serializer field with its resolved wire field. No production assertion, packet count, budget, pin, baseline, or source observation was weakened to repair these harness mistakes.
+
+## Remaining acceptance and limits
+
+This slice accepts standing, unmounted, default-scale remote-player motion. Nonstanding source poses, unsupported scale changes, unresolved local authority, passenger placement, other moving hard families, Happy Ghast context, and native push displacement remain unknown. Attribute clamping, general dimension changes, all rider layouts, local-player authority, and predicted physical displacement still need their own connected runtime acceptance. The probe and new joined session cases use ordinary default block context; the retained contextual collision campaigns do not by themselves close every new context-dependent motion scenario.
+
+Dedicated live vanilla legs, all named-release acceptance, final package/consumer checks, strict Native AOT size and smoke validation, the final full repository gates, and CI for the integrated producer are not executed by this private slice. The source base's pre-position attack-charge phase is a separate root-owned repair; this report does not include or validate it. The full modern milestone and the original mining/placement objective remain open until the maintained acceptance ledger and final gates are complete.
+
+## Root integration with attack charge
+
+The combined source overlay over `a6430986244768cc97fd473d36127c9b7905ad9f` passes 162 focused motion/charge cases, all 26,212 Client cases, Release solution build and full format verification. Native AOT is 25,042,112 bytes under the unchanged strict 25,165,824-byte limit; exactly one smoke test executes and passes. All sixteen own project DLLs, including the meta assembly, remain unchanged after publishing. The source and receipt index is `/home/anon/Projects/MinecraftOfficial/runs/modern-charge-integrated-20261022-v1/manifest.json`, SHA-256 `79fb2233cfe44221e35052e8c509bb14738888d5093ee040071e6cec9c8234e6`. Two initial AOT preflight attempts miscounted copied dependency DLLs and then the meta assembly; neither executed a publish. Their harness failures remain recorded, and only the unexecuted AOT checks were resumed. Final immutable repository, consumer/package, live and published-head CI acceptance remains separate.

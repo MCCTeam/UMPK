@@ -1,6 +1,7 @@
 using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
+using Umpk.Client.Navigation;
 using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
@@ -70,8 +71,9 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosPacket move:
                 if (store.TryGet(move.EntityId, out Entity? posEntity) && posEntity is not null)
                 {
-                    Vec3d target = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
-                    bool deferred = context.State.EntityMotion.TryObserveInterpolation(posEntity, target, null, null);
+                    Vec3d target = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ, out VanillaPositionStep[] movePath);
+                    bool deferred = (movePath.Length != 0 && context.State.EntityMotion.TryObservePath(posEntity, movePath, null, null))
+                        || context.State.EntityMotion.TryObserveInterpolation(posEntity, target, null, null);
                     if (!deferred)
                     {
                         posEntity.Position = target;
@@ -115,8 +117,9 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosRotPacket posRot:
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
-                    Vec3d target = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
-                    bool deferred = context.State.EntityMotion.TryObserveInterpolation(prEntity, target, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch));
+                    Vec3d target = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ, out VanillaPositionStep[] rotationPath);
+                    bool deferred = (rotationPath.Length != 0 && context.State.EntityMotion.TryObservePath(prEntity, rotationPath, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch)))
+                        || context.State.EntityMotion.TryObserveInterpolation(prEntity, target, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch));
                     if (!deferred)
                     {
                         prEntity.Position = target;
@@ -179,7 +182,7 @@ internal sealed class EntityApplier : IApplier
                 {
                     Vec3d previous = syncEntity.Position;
                     context.State.PacketBases.Set(syncEntity, sync.Values.Position);
-                    bool deferred = context.State.EntityMotion.TryObservePositionSync(syncEntity, sync.Values);
+                    bool deferred = context.State.EntityMotion.TryObservePositionSync(syncEntity, sync.Values, DecodePath(sync.Path));
                     if (!deferred)
                     {
                         syncEntity.Position = sync.Values.Position;
@@ -316,6 +319,11 @@ internal sealed class EntityApplier : IApplier
                         context.State.EntityGeometry.ObserveMetadata(dyingPlayer, 0);
                     }
                 }
+                if (entityEvent.EventId == 3 && ModernHardCollisionProfile.Supports(context.Version.Version.Protocol)
+                    && store.TryGet(entityEvent.EntityId, out Entity? dyingShulker) && dyingShulker is not null && dyingShulker.Type.Id == Identifier.Minecraft("shulker")
+                    && context.MetadataKeys.TryResolveIndex(dyingShulker.Type, EntityMetadataKeys.Health, out int shulkerHealth))
+                    // Original LivingEntity.handleEntityEvent(3) sets non-player health to zero before publishing the death effects. The hard-box predicate reads that health independently of placement obstruction.
+                    dyingShulker.Metadata.Set(shulkerHealth, MetadataValue.Float(0));
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 
@@ -362,11 +370,35 @@ internal sealed class EntityApplier : IApplier
         return true;
     }
 
-    private static Vec3d DecodeRelative(Entity entity, ApplierContext context, IReadOnlyList<EntityMoveStep> steps, short x, short y, short z)
+    private static Vec3d DecodeRelative(Entity entity, ApplierContext context, IReadOnlyList<EntityMoveStep> steps, short x, short y, short z, out VanillaPositionStep[] path)
     {
-        Vec3d position = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).Decode(context.State.PacketBases.Get(entity), steps, x, y, z);
+        EntityPacketPosition profile = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol);
+        Vec3d position = context.State.PacketBases.Get(entity);
+        path = [];
+        if (steps.Count != 0 && context.Version.Version.Protocol == 777)
+        {
+            path = new VanillaPositionStep[steps.Count];
+            for (int index = 0; index < steps.Count; index++)
+            {
+                EntityMoveStep step = steps[index];
+                position = profile.Decode(position, step.DeltaX, step.DeltaY, step.DeltaZ);
+                path[index] = new(position, step.Ticks);
+            }
+        }
+        else
+            position = profile.Decode(position, steps, x, y, z);
         context.State.PacketBases.Set(entity, position);
         return position;
+    }
+
+    private static VanillaPositionStep[] DecodePath(EntityPositionPath? path)
+    {
+        if (path is not EntityPositionPath.Stepped stepped)
+            return [];
+        var result = new VanillaPositionStep[stepped.Steps.Count];
+        for (int index = 0; index < result.Length; index++)
+            result[index] = new(stepped.Steps[index].Position, stepped.Steps[index].TickOffset);
+        return result;
     }
 
     // 1.8.9-client-decompiled gv.java and 26.3-client-decompiled ClientboundMoveEntityPacket.java expose signed angles; PacketReader.ReadAngle intentionally exposes unsigned degrees.

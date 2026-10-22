@@ -61,9 +61,13 @@ public static class LiveMatrix
         ("26.3", 777),
     ];
 
-    /// <summary>The point releases collapsed onto each tested representative (same protocol, wire-identical). This is documentation of what one leg implicitly covers, not an assertion input.</summary>
+    /// <summary>The supported release names that share each wire protocol. This index does not establish live-server acceptance or exact native client-profile parity; protocol 47 retains the 1.8.9 client profile.</summary>
     public static readonly IReadOnlyDictionary<int, string[]> Collapsed = new Dictionary<int, string[]>
     {
+        [47] = ["1.8", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8", "1.8.9"],
+        [110] = ["1.9.3", "1.9.4"],
+        [210] = ["1.10", "1.10.1", "1.10.2"],
+        [316] = ["1.11.1", "1.11.2"],
         [754] = ["1.16.4", "1.16.5"],
         [757] = ["1.18", "1.18.1"],
         [760] = ["1.19.1", "1.19.2"],
@@ -74,6 +78,7 @@ public static class LiveMatrix
         [768] = ["1.21.2", "1.21.3"],
         [772] = ["1.21.7", "1.21.8"],
         [773] = ["1.21.9", "1.21.10"],
+        [775] = ["26.1", "26.1.1", "26.1.2"],
     };
 
     /// <summary>True when chunk decoding supplies a queryable block-state grid. Every supported protocol does, including legacy per-block, pre-flattening palette, padded palette, and full-column layouts.</summary>

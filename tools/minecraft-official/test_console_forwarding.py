@@ -91,7 +91,7 @@ def wait_for(predicate, timeout=3):
 
 
 class OwnedLauncher:
-    def __init__(self, root, *, keep_alive=False, smoke=False):
+    def __init__(self, root, *, keep_alive=False, smoke=False, arguments=()):
         seed = root / 'downloads' / '1.8.9'
         seed.mkdir(parents=True)
         (seed / 'server.jar').write_bytes(b'owned non-Java fixture')
@@ -109,6 +109,7 @@ class OwnedLauncher:
             environment.pop(name, None)
         environment['CONSOLE_FIXTURE_KEEP_ALIVE'] = '1' if keep_alive else '0'
         command = [sys.executable, str(Path(__file__).with_name('server.py')), '1.8.9', '--root', str(root), '--run-dir', str(self.directory), '--port', str(self.ports[0]), '--rcon-port', str(self.ports[1]), '--java', str(executable), '--timeout', '8']
+        command.extend(arguments)
         if smoke:
             command.append('--smoke')
         self.process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=environment)

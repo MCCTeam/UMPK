@@ -118,6 +118,9 @@ def run(args: argparse.Namespace) -> None:
         'spawn-protection': '0', 'view-distance': str(args.view_distance), 'simulation-distance': '4',
         'max-players': '5', 'level-name': 'world', 'max-tick-time': '-1',
     }
+    if args.flat_world_settings is not None:
+        properties['level-type'] = 'minecraft:flat'
+        properties['generator-settings'] = json.dumps(args.flat_world_settings, separators=(',', ':'))
     (directory / 'server.properties').write_text(''.join(f'{key}={value}\n' for key, value in properties.items()), encoding='utf-8')
     (directory / 'rcon-password.txt').write_text(password + '\n', encoding='utf-8')
     (directory / 'rcon-password.txt').chmod(0o600)
@@ -172,6 +175,16 @@ def view_distance(value: str) -> int:
     return distance
 
 
+def flat_world_settings(value: str) -> dict[str, object]:
+    try:
+        settings = json.loads(value)
+    except json.JSONDecodeError as error:
+        raise argparse.ArgumentTypeError('Flat world settings must be a JSON object') from error
+    if not isinstance(settings, dict):
+        raise argparse.ArgumentTypeError('Flat world settings must be a JSON object')
+    return settings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('version', nargs='?')
@@ -181,6 +194,7 @@ def main() -> int:
     parser.add_argument('--rcon-port', type=int, default=25575)
     parser.add_argument('--java')
     parser.add_argument('--view-distance', type=view_distance, default=4, help='native chunk view distance from 2 through 32; isolated default: 4')
+    parser.add_argument('--flat-world-settings', type=flat_world_settings, help='opt in to minecraft:flat with this JSON generator-settings object; omitted: preserve vanilla world defaults')
     parser.add_argument('--accept-eula', action='store_true')
     parser.add_argument('--timeout', type=int, default=180)
     parser.add_argument('--smoke', action='store_true', help='prove server and RCON readiness, then stop')

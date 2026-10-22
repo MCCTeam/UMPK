@@ -35,7 +35,7 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
     public int RconPort { get; }
     public string ServerLog => File.Exists(Path.Combine(DirectoryPath, "server.log")) ? File.ReadAllText(Path.Combine(DirectoryPath, "server.log")) : string.Empty;
 
-    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null)
+    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null, string? flatWorldSettings = null)
     {
         if (viewDistance is { } requestedDistance)
         {
@@ -70,6 +70,11 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
             start.ArgumentList.Add("--view-distance");
             start.ArgumentList.Add(distance.ToString(CultureInfo.InvariantCulture));
         }
+        if (flatWorldSettings is not null)
+        {
+            start.ArgumentList.Add("--flat-world-settings");
+            start.ArgumentList.Add(flatWorldSettings);
+        }
         start.RedirectStandardInput = true;
         gameReservation.Stop();
         rconReservation.Stop();
@@ -94,6 +99,7 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 rconPort,
                 serverSha256 = jarHash,
                 viewDistance = viewDistance ?? 4,
+                flatWorldSettings,
                 testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceLiveTests.Scale.cs", "VanillaInteractionAcceptanceLiveTests.Menu.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),

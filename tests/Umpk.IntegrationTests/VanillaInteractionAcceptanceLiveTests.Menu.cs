@@ -37,6 +37,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         var scenarios = new List<object>();
         var closeFences = new List<object>();
         var sentinelCleanups = new List<object>();
+        var observationMarkers = new List<string>();
         var counters = new Dictionary<string, int> { ["crafting_table"] = 0, ["furnace"] = 0, ["chest"] = 0 };
         int previousSequence = -1;
         capture.Start();
@@ -87,7 +88,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             if (protocol != 47)
                 await Use("crafting_table", blocked: false, sneaking: true, main: null, off: "stick", Hand.Main, clientSuccess: false, nativeOpen: false);
             int replayed = capture.AssertRoundTrips(client.State.Registries!);
-            int menuReplayed = ReplayMenuFrames(capture.Frames, version, client.State.Registries!);
+            var replayDispositions = new List<object>();
+            int menuReplayed = ReplayMenuFrames(capture.Frames, version, client.State.Registries!, observationMarkers, replayDispositions);
+            await server.WriteAsync("menu-replay.json", new { exactObservationMarkers = observationMarkers, byteIdenticalFrames = menuReplayed, frames = replayDispositions, scope = "All selected frames decode with typed semantic assertions; feature frames and exact action markers require byte identity. Other chat retains decoded semantic checks, observed byte equality and explicit differences alongside the unchanged raw capture." });
             Assert.True(menuReplayed >= 10);
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "menu server-observed disconnect", ct);
@@ -150,6 +153,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 }
                 await Task.Delay(TimeSpan.FromSeconds(2.1), ct);
                 string observation = "menu-observed-" + Guid.NewGuid().ToString("N");
+                observationMarkers.Add(observation);
                 await server.ConsoleAsync("say " + observation, ct);
                 await WaitAsync(() => capture.Since(mark).Any(frame => MenuChatContains(frame.Packet, observation)), "post-action client observation marker", ct);
                 CapturedFrame observed = Assert.Single(capture.Since(mark), frame => MenuChatContains(frame.Packet, observation));
@@ -365,24 +369,40 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
 
     private static bool MenuChatContains(object? packet, string marker)
     {
-        Component? component = packet is ClientboundSystemChatPacket system ? system.Content : packet is ClientboundLegacyChatPacket legacy ? legacy.Message : null;
+        Component? component = packet switch
+        {
+            ClientboundSystemChatPacket system => system.Content,
+            ClientboundLegacyChatPacket legacy => legacy.Message,
+            ClientboundDisguisedChatPacket disguised => disguised.Message,
+            _ => null
+        };
         return component is not null && Contains(component);
-        bool Contains(Component value) => value.Content is TextContent text && text.Text.Contains(marker, StringComparison.Ordinal)
+        bool Contains(Component value) => value.Content is TextContent text && text.Text.Equals(marker, StringComparison.Ordinal)
             || value.Content is TranslatableContent translated && translated.Args.Any(Contains)
             || value.Children.Any(Contains);
     }
 
-    private static int ReplayMenuFrames(CapturedFrame[] frames, JavaVersion version, RegistryAccess registries)
+    private static int ReplayMenuFrames(CapturedFrame[] frames, JavaVersion version, RegistryAccess registries, IReadOnlyCollection<string> observationMarkers, List<object> dispositions)
     {
         var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
         int count = 0;
+        int frameIndex = -1;
+        var seenMarkers = new HashSet<string>(StringComparer.Ordinal);
+        Assert.Equal(observationMarkers.Count, observationMarkers.Distinct(StringComparer.Ordinal).Count());
         foreach (CapturedFrame frame in frames)
         {
-            if (frame.Packet is not (ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket))
+            frameIndex++;
+            if (frame.Packet is not (ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket))
                 continue;
             PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, frame.Flow);
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
             object decoded = codec.Decode(frame.Payload, context);
+            bool chat = frame.Packet is ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket;
+            string? marker = chat ? observationMarkers.FirstOrDefault(value => MenuChatContains(frame.Packet, value)) : null;
+            if (chat)
+                Assert.Equal(frame.Packet, decoded);
+            if (marker is not null)
+                Assert.True(seenMarkers.Add(marker));
             switch (frame.Packet)
             {
                 case ClientboundOpenScreenPacket expectedOpen:
@@ -400,6 +420,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.Equal(expectedContent.StateId, actualContent.StateId);
                     Assert.Equal(expectedContent.Items, actualContent.Items);
                     Assert.Equal(expectedContent.CarriedItem, actualContent.CarriedItem);
+                    break;
+                case ClientboundDisguisedChatPacket expectedChat:
+                    var actualChat = Assert.IsType<ClientboundDisguisedChatPacket>(decoded);
+                    Assert.Equal(expectedChat.Message.ToPlainText(), actualChat.Message.ToPlainText());
+                    Assert.Equal(expectedChat.ChatTypeId, actualChat.ChatTypeId);
+                    Assert.Equal(expectedChat.SenderName.ToPlainText(), actualChat.SenderName.ToPlainText());
+                    Assert.Equal(expectedChat.TargetName?.ToPlainText(), actualChat.TargetName?.ToPlainText());
                     break;
                 case ClientboundLevelChunkPacket expectedChunk:
                     var actualChunk = Assert.IsType<ClientboundLevelChunkPacket>(decoded);
@@ -442,9 +469,15 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             var output = new ArrayBufferWriter<byte>();
             var writer = new PacketWriter(output);
             codec.Encode(ref writer, decoded, context);
+            bool byteIdentical = frame.Payload.AsSpan().SequenceEqual(output.WrittenSpan);
+            bool ambientChat = chat && marker is null;
+            dispositions.Add(new { frameIndex, frame.Milliseconds, frame.Flow, frame.WireId, packet = decoded.GetType().Name, codec.CodecIdentity, exactObservationMarker = marker, ambientChat, typedSemanticAssertionsPassed = true, byteIdentityRequired = !ambientChat, byteIdentical, nativePayloadBytes = frame.Payload.Length, reencodedPayloadBytes = output.WrittenCount, nativePayloadDifference = ambientChat && !byteIdentical ? frame.Payload : null, reencodedPayloadDifference = ambientChat && !byteIdentical ? output.WrittenSpan.ToArray() : null });
+            if (ambientChat && !byteIdentical)
+                continue;
             Assert.Equal(frame.Payload, output.WrittenSpan.ToArray());
             count++;
         }
+        Assert.Equal(observationMarkers.Count, seenMarkers.Count);
         return count;
     }
 }

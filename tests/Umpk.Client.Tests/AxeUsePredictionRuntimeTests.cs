@@ -4,6 +4,7 @@ using Umpk.Client.Actions;
 using Umpk.Client.Internal;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
+using Umpk.Game.Blocks;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Players;
@@ -371,7 +372,7 @@ public sealed class AxeUsePredictionRuntimeTests
     }
 
     [Fact]
-    public async Task EnabledDoorActivationRemainsUnknownBeforeTheAxePhase()
+    public async Task EnabledDoorActivationConsumesBeforeTheAxePhase()
     {
         await using var harness = new Harness(766);
         await harness.ReceiveTerrain();
@@ -379,8 +380,24 @@ public sealed class AxeUsePredictionRuntimeTests
         await harness.Block(harness.Target, "waxed_weathered_copper_door");
         Assert.True(harness.State.Registries!.Items.TryGet(Identifier.Minecraft("diamond_axe"), out var item));
         await harness.Slot(Hand.Main, new ItemStack(item, 1));
+        BlockState beforeBlock = harness.State.World.GetBlock(harness.Target);
+        ItemStack beforeStack = harness.State.Inventory.GetSlot(36);
+        Assert.Equal(Identifier.Minecraft("waxed_weathered_copper_door"), beforeBlock.Block.Id);
+        Assert.True(beforeStack.Components.HasNoPatch);
+
         await harness.Use(Direction.Up, Hand.Main);
-        harness.AssertUse(Assert.Single(harness.Sent), Direction.Up, Hand.Main, item.Id);
+
+        Assert.Equal(2, harness.Sent.Count);
+        harness.AssertUse(harness.Sent[0], Direction.Up, Hand.Main, item.Id);
+        Assert.Equal((int)Hand.Main, Assert.IsType<ServerboundSwingPacket>(harness.Sent[1]).Hand);
+        Assert.Equal(beforeBlock.StateId, harness.State.World.GetBlock(harness.Target).StateId);
+        ItemStack afterStack = harness.State.Inventory.GetSlot(36);
+        Assert.Equal(beforeStack, afterStack);
+        Assert.Equal(item.Id, afterStack.Item.Id);
+        Assert.Equal(1, afterStack.Count);
+        Assert.Equal(beforeStack.Damage, afterStack.Damage);
+        Assert.Same(beforeStack.Components, afterStack.Components);
+        Assert.True(afterStack.Components.HasNoPatch);
     }
 
     [Theory]

@@ -30,21 +30,35 @@ internal readonly record struct BlockUsePrediction(bool SendPacket, BlockUseResu
     public static BlockUsePrediction Success(bool localSwing) => new(true, BlockUseResult.Success, localSwing ? BlockUseSwing.Local : BlockUseSwing.Packet);
 }
 
-internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules)
+internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse)
 {
     // 1.14.4-client-decompiled net/minecraft/world/level/block/LeverBlock.java:75 returns true on the client. Later LeverBlock.use/useWithoutItem returns SUCCESS on the client. MultiPlayerGameMode introduces main-hand-only useWithoutItem fallback in 1.20.5; the source audit covers every release through 26.3.
-    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777);
+    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210);
 
     public bool RequiresNativeTerrain(BlockState block)
-        => HasMenuActivationRules && block.Block.Id.IsMinecraft && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace";
+        => block.Block.Id.IsMinecraft && (HasMenuActivationRules && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace" || HasDoorActivationRules && IsDoor(block));
 
-    public bool TryPredict(BlockState block, out BlockUseResult result)
+    public bool RequiresLowerCell(BlockState block)
+        => HasDoorActivationRules && LegacyDoorLowerCell && IsDoor(block) && block.Block.Id.Path != "iron_door" && (block.LegacyMeta & 8) != 0;
+
+    public bool TryPredict(BlockState block, out BlockUseResult result, BlockState lower = default)
     {
         result = BlockUseResult.Unknown;
         if (!block.Block.Id.IsMinecraft)
             return false;
+        // 1.8.9–1.10.2 iron doors handle use without opening; 1.11 introduces PASS. Through1.12.2 a wooden upper half checks only the lower block identity, including a lower cell whose own half is upper. From1.13 the clicked state is toggled directly. Blocks/BlockSetType registrations prove this exact door family through26.3, including all waxed/weathered copper variants.
+        if (HasDoorActivationRules && IsDoor(block))
+        {
+            if (block.Block.Id.Path == "iron_door")
+                result = IronDoorConsumesUse ? BlockUseResult.Success : BlockUseResult.Pass;
+            else if (!RequiresLowerCell(block))
+                result = BlockUseResult.Success;
+            else if (lower.IsValid)
+                result = lower.Block.Id == block.Block.Id ? BlockUseResult.Success : BlockUseResult.Pass;
+            return true;
+        }
         // These native menu blocks return true/SUCCESS on the client before server menu, lock, or chest-obstruction checks. The legacy lit_furnace registry entry shares the furnace implementation; the caller already requires a known native block entry.
-        if (RequiresNativeTerrain(block))
+        if (HasMenuActivationRules && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace")
         {
             result = BlockUseResult.Success;
             return true;
@@ -63,4 +77,6 @@ internal readonly record struct BlockUseActivationProfile(bool HasActivationRule
             result = PoweredButtonConsumes && powered == "true" ? BlockUseResult.Consume : BlockUseResult.Success;
         return true;
     }
+    private static bool IsDoor(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "wooden_door" or "oak_door" or "iron_door" or "spruce_door" or "birch_door" or "jungle_door" or "acacia_door" or "dark_oak_door" or "crimson_door" or "warped_door" or "mangrove_door" or "bamboo_door" or "cherry_door" or "pale_oak_door" or "poplar_door" or "copper_door" or "exposed_copper_door" or "weathered_copper_door" or "oxidized_copper_door" or "waxed_copper_door" or "waxed_exposed_copper_door" or "waxed_weathered_copper_door" or "waxed_oxidized_copper_door";
+
 }

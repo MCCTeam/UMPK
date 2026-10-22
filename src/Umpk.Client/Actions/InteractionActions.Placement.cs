@@ -83,20 +83,22 @@ public sealed partial class InteractionActions
                 return blockEnabled is false ? BlockUsePrediction.Fail : BlockUsePrediction.Unknown;
         }
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
-        bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult);
+        BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? world.GetBlock(position.Below()) : default;
+        bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
         bool activationPassesOffhand = hasActivation && activation.EmptyHandActivationIsMainHandOnly && hand == Hand.Off;
         if (!suppressActivation && hasActivation && !activationPassesOffhand)
         {
             if (activation.RequiresNativeTerrain(clicked) && !_services.State.EntityMembership.HasColumn(position))
                 return BlockUsePrediction.Unknown;
-            return activationResult switch
-            {
-                BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),
-                BlockUseResult.Consume => BlockUsePrediction.Consume,
-                _ => BlockUsePrediction.Unknown,
-            };
+            if (activationResult != BlockUseResult.Pass)
+                return activationResult switch
+                {
+                    BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),
+                    BlockUseResult.Consume => BlockUsePrediction.Consume,
+                    _ => BlockUsePrediction.Unknown,
+                };
         }
-        if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand)
+        if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass))
             return BlockUsePrediction.Unknown;
         if (!inventoryKnown)
             return BlockUsePrediction.Unknown;

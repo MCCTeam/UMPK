@@ -66,3 +66,24 @@ These are source-backed full-session runtime tests over an in-memory transport. 
 ## Merged immutable checkpoint
 
 The merged [menu and view-targeting checkpoint](menu-pick-checkpoint-20261022.md) at `e60c36047d168660b8ffd758f489e300e6836a91` now passes all 25 repository gates, fresh 1,999 DMCBK/918 MCC consumer tests with 33 matching dependencies and unchanged siblings, strict Native AOT with one executed passing smoke at 25,079,072 bytes, and thirteen exact package/isolated-consumer libraries. All 22 locked runtime DLL/PDB files remain unchanged. The earlier overlay results above retain their original sources and counts. Native menu/picking acceptance, broader inventory and published-head CI remain separate.
+
+## Four native menu boundaries
+
+Dedicated native-server acceptance now passes on exact runtime producer `e60c36047d168660b8ffd758f489e300e6836a91`, with separately pinned test-only harness revisions. Each row executes one real opt-in test with physics enabled, packet-established usable terrain, public block-use calls and independent server menu/storage observations. These results supersede the pending menu acceptance for that producer; they do not identify later runtime commits as tested.
+
+| Native release | Scenarios | Menu openings / close fences | Use / swing packets | Action/block exact round trips | Menu observed exact round trips |
+| --- | --- | --- | --- | --- | --- |
+| 1.8.9 / 47 | 7 | 4 / 4 | 10 / 5 | 136 | 124 |
+| 1.14.4 / 498 | 8 | 5 / 5 | 13 / 6 | 280 | 258 |
+| 1.20.6 / 766 | 8 | 4 / 4 | 12 / 5 | 370 | 241 |
+| 26.3 / 777 | 8 | 4 / 4 | 12 / 0 | 560 | 249 |
+
+All four actual TRX results pass with zero skips. The 31 scenarios establish successful activation, native refusal and secondary-use controls, processing order, close fences and sixteen sentinel cleanups. The protocol-47 path uses its actual legacy packet and reply-pair witness; modern paths use sequence acknowledgments. Protocol 777 retains its native local-only swing. Every capture remains below the unchanged 20 MiB limit, with payload totals 5,503,914, 3,621,060, 4,129,460 and 5,354,641 bytes respectively.
+
+The accepted rows are indexed by `/home/anon/Projects/MinecraftOfficial/runs/menu-activation-native-acceptance-index-20261022-v1/proof.json`, SHA-256 `825df998bab0c6e816f0802a3c4571b7b135b5e462c19907f28e9ba2649a7454`. Its nine-file manifest has SHA-256 `d71289a025e1c0287211a713fdd2734e6c650dd9a74f28543610c91222d42ac2`. Per-row receipts retain exact command arrays, release artifacts, harness and producer hashes, complete raw traffic, native observations and cleanup. The runtime lock is `1632c8220370f635ff159338c7d4189169c44dcb114bb77f14f2c7cab921af2f`.
+
+The 47 and 498 rows require byte-identical re-encoding for every selected frame. The 766 and 777 rows decode all selected frames and preserve byte-identical assertions for every feature frame and exact causal marker. Their noncausal translated setup notices also receive full typed content/style/children/overlay checks. Each row records one semantically equal setup notice whose reconstructed NBT root-key order differs; raw bytes remain retained. This exception does not cover action, menu, storage, terrain or causal-marker frames. Exact marker matching, uniqueness and completeness checks reject prefix/suffix impostors, semantic changes and altered required marker bytes. The maintained test-only source is pinned by SHA-256 `cde92a7884e682178edfeaaf1123701d61278646640e2c949dc641b5a1ed51fa`.
+
+All five earlier failed campaigns retain their failed outcomes, including incorrect slot syntax, counted command feedback, the typed disguised-chat marker and the unrelated setup-notice byte ordering. The accepted 498 row has its own passing TRX inside a campaign whose subsequent 766 row failed. No entire failed campaign is relabeled as passing.
+
+Independent review checks all 1,025 campaign evidence files and all nine index files, the actual four TRXs, payload totals, runtime comparisons and host cleanup. Its receipt is `runs/scale-creative-root-integration-review-20261022-v1/menu-four-boundary-root-review.json`, SHA-256 `8934c1718199771824a8ef2d4a5a3624f9f273125184a97f2443e801785ddbe9`. All four owned servers exit normally with code zero, their PIDs are absent and all eight game/RCON ports refuse connections. Seeds, sibling source/Git state and the locked runtime remain unchanged. Native menu acceptance on a later final producer, other block-use families and the complete fifty-protocol/seventy-five-release matrix remain open.

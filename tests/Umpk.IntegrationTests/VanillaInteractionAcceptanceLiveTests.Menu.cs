@@ -131,7 +131,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 if (rejectHand)
                 {
                     await Assert.ThrowsAsync<ActionNotSupportedException>(() => client.Actions.Interaction.PlaceBlockAsync(target, face, cursor, hand, ct: ct));
-                    Assert.Empty(capture.Since(mark).Where(IsUseOrAnimation));
+                    Assert.DoesNotContain(capture.Since(mark), IsUseOrAnimation);
                 }
                 else
                 {
@@ -142,7 +142,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 string observation = "menu-observed-" + Guid.NewGuid().ToString("N");
                 await server.ConsoleAsync("say " + observation, ct);
                 await WaitAsync(() => capture.Since(mark).Any(frame => MenuChatContains(frame.Packet, observation)), "post-action client observation marker", ct);
-                CapturedFrame observed = Assert.Single(capture.Since(mark).Where(frame => MenuChatContains(frame.Packet, observation)));
+                CapturedFrame observed = Assert.Single(capture.Since(mark), frame => MenuChatContains(frame.Packet, observation));
                 if (processing is not null)
                     Assert.True(observed.Milliseconds - processing.Milliseconds >= 2000, "Keep native traffic after the specific use-processing witness.");
                 CapturedFrame[] frames = capture.Since(mark);
@@ -241,10 +241,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await client.Actions.Interaction.PlaceBlockAsync(floor, Direction.Up, new Vec3d(.5, 1, .5), ct: ct);
                 CapturedFrame processing = await ProcessingWitness(mark, floor, floor.Above(), floorState, upperState);
                 CapturedFrame[] frames = capture.Since(mark);
-                Assert.Equal(windowId, Assert.IsType<ServerboundContainerClosePacket>(Assert.Single(frames.Where(frame => frame.Packet is ServerboundContainerClosePacket)).Packet).ContainerId);
-                CapturedFrame action = Assert.Single(frames.Where(IsUseOrAnimation));
+                Assert.Equal(windowId, Assert.IsType<ServerboundContainerClosePacket>(Assert.Single(frames, frame => frame.Packet is ServerboundContainerClosePacket).Packet).ContainerId);
+                CapturedFrame action = Assert.Single(frames, IsUseOrAnimation);
                 AssertMenuUse(action, floor, Direction.Up, new Vec3d(.5, 1, .5), Hand.Main, null, allowHeldStick: true);
-                Assert.Empty(frames.Where(frame => frame.Packet is ClientboundOpenScreenPacket));
+                Assert.DoesNotContain(frames, frame => frame.Packet is ClientboundOpenScreenPacket);
                 closeFences.Add(new { windowId, packets = 1, kind = "ordered close followed by an explicit pass use on stone; native processing reply proves the close was handled before inventory setup", processingMilliseconds = processing.Milliseconds });
                 await server.WriteAsync("menu-close-fences.json", closeFences);
             }
@@ -259,13 +259,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.True(sequence > previousSequence);
                     previousSequence = sequence;
                     await WaitAsync(() => capture.Since(mark).Any(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockChangedAckPacket ack && ack.Sequence == sequence), "matching native use acknowledgment", ct);
-                    CapturedFrame acknowledgment = Assert.Single(capture.Since(mark).Where(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockChangedAckPacket ack && ack.Sequence == sequence));
+                    CapturedFrame acknowledgment = Assert.Single(capture.Since(mark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockChangedAckPacket ack && ack.Sequence == sequence);
                     Assert.True(acknowledgment.Milliseconds >= useFrame.Milliseconds);
                     return acknowledgment;
                 }
                 await WaitAsync(() => capture.Since(mark).Any(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == neighbor && update.BlockStateId == neighborState), "native adjacent-cell response after use", ct);
-                CapturedFrame first = Assert.Single(capture.Since(mark).Where(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == clicked && update.BlockStateId == clickedState));
-                CapturedFrame second = Assert.Single(capture.Since(mark).Where(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == neighbor && update.BlockStateId == neighborState));
+                CapturedFrame first = Assert.Single(capture.Since(mark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == clicked && update.BlockStateId == clickedState);
+                CapturedFrame second = Assert.Single(capture.Since(mark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == neighbor && update.BlockStateId == neighborState);
                 Assert.True(first.Milliseconds >= useFrame.Milliseconds && second.Milliseconds >= first.Milliseconds);
                 return second;
             }

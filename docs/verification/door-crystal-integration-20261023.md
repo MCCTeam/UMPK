@@ -1,0 +1,26 @@
+# Door, feature and fixed-crystal runtime integration
+
+Three separate commits connect the reviewed production changes: `c06dc8f` forwards Configuration enabled-feature frames to their existing state owner, `486683b` predicts native door activation and PASS continuation, and `a64a0ba` connects fixed modern End Crystal picking/bounds with explicit position uncertainty. Their [Configuration](configuration-enabled-features-runtime.md), [door](door-activation-runtime.md) and [crystal](end-crystal-picking.md) reports retain the original native/source boundaries, private producers, failed attempts and unexecuted work.
+
+The combined preview starts from exact committed `9b035c413a67e9aa3aed3e74dac610030b0505fd` and applies the three reviewed patches in order. The door activation and crystal uncertainty hunks merge independently in `InteractionActions.Placement.cs`. All twelve resulting production files, test files and reports match the integrated checkout byte for byte. The only report clarification describes the existing eight-row direct-insertion fixture accurately: it seeds membership through the real owner; the 115 primary crystal cases receive actual framed chunks. No assertion, input, test count or production behavior changed for that clarification.
+
+| Combined private check | Actual result |
+| --- | --- |
+| Release restore and builds | Passed for the exact archived base plus declared overlays |
+| Focused interaction checks | 482 executed passes, zero skips |
+| Full Client | 29,598 executed passes, zero skips |
+| Normal Integration | 56 total: 41 executed passes and fifteen exact named opt-in skips |
+| Scoped format | Passed |
+| Integrity | Reviewed source hashes and all unowned archived entries unchanged; shared working tree unchanged during validation |
+
+The Client baseline additions are deliberate and split by intent: 31 Configuration cases, 327 door cases and 115 crystal cases, totaling 473. Two existing fixture/control repairs preserve their counts. The maintained Adventure theory already accounts for Integration's 55-to-56 change; no new live test is included in this runtime integration. Normal skips are not native or AOT acceptance.
+
+Exact commands, working directory, source archive/patch hashes, raw logs and actual TRXs are under `/home/anon/Projects/MinecraftOfficial/runs/door-crystal-root-integration-20261022-v1`. `identity.json` binds the base and every changed source; `root-review.json` has SHA-256 `1975c0e215db01275a1b371dc3e351bfa496599438bbd04c264be10c4f0d3cad`. `integrated-commits.json` records the three commits and the comparison with the tested preview. This preview is an explicit overlay, not the later immutable commit's full repository certificate.
+
+Independent root review checks all 134 corrected-crystal manifest entries and thirteen source files, all 93 door/Configuration manifest entries and seven source files, and the actual focused/adjacent/full-suite TRXs. It also rechecks all 143 original crystal Java sources and 1,588 physical compiled-source documents. The eighteen original embedded documents retain the pinned inspector and corruption-control evidence. The crystal V2 guard prevents the generic fixed-dimension fallback from turning an owned unknown position into clear placement. Earlier V1 evidence and the genuine two-case placement regression remain unchanged. The initial 13,545-case run's three missing-context fixture failures remain failed, followed by the repaired 123-case result and successful final adjacency/full suite.
+
+The door source audit covers all fifty profiles and 573 registered rows. Native iron handling changes at protocol 315, legacy wooden upper halves read the lower cell through 340, and modern hand/swing/feature rules retain their separate profiles. The actual Configuration observer fix forwards only the registered enabled-feature ID through the existing awaited arm; it adds no codec or state owner. The separate 31-case Configuration-only success and 205-failure/122-control door red remain available. The prior axe control's use-only expectation is replaced with exact door-handled use/swing and unchanged state/stack/component assertions; its original failing receipt remains separate.
+
+Separate private AOT checks pass at 25,132,640 bytes for the corrected crystal overlay and 25,124,400 for the door/Configuration overlay, each with exactly one executed passing smoke and unchanged tested producer hashes. Neither is the combined producer's AOT result. The eventual immutable producer still requires all repository/count/data/language/generation/conformance/performance/package gates, fresh DMCBK/MCC compatibility and frozen binaries, strict combined AOT and actual published-head CI. The older certified `ebbf545` checkpoint retains its own counts and producer.
+
+Dedicated End Crystal and door native-server fixtures are being prepared separately. They have not executed on this integrated producer. Broad crystal participation, earlier eras, relevant piston/push ownership, riders, remaining block/item families and the final fifty-protocol/seventy-five-release acceptance matrix remain open. Conservative global piston and body-cell guards keep uncertain crystal positions unknown; this integration does not claim spatially complete push behavior or `EndCrystalItem.useOn`.

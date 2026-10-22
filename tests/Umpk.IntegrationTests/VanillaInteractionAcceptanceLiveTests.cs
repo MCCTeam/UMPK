@@ -309,7 +309,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             ? $"testforblock {position.X} {position.Y} {position.Z} minecraft:{block}" + (legacyData is int value ? $" {value}" : "")
             : $"execute if block {position.X} {position.Y} {position.Z} minecraft:{block}";
         string response = await server.CommandAsync(command, ct);
-        Assert.Equal(protocol < 393 ? $"Successfully found the block at {position.X},{position.Y},{position.Z}." : "Test passed", response);
+        string expected = protocol >= 393 ? "Test passed"
+            : protocol >= 210 ? $"Successfully found the block at {position.X}, {position.Y}, {position.Z}"
+            : $"Successfully found the block at {position.X},{position.Y},{position.Z}.";
+        Assert.Equal(expected, response);
     }
 
     private static async Task AssertCountAsync(VanillaInteractionAcceptanceHarness server, int protocol, int count, CancellationToken ct)

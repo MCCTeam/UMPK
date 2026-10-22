@@ -40,9 +40,9 @@ internal sealed class EntityMotionState
     {
         if (!LegacyFallingBlockProfile.Supports(entity, protocol))
             return false;
-        geometry.RegisterFallingBlock(entity);
+        geometry.RegisterFallingBlock(entity, protocol);
         entity.Velocity = Vec3d.Zero;
-        _fallingBlocks.Add(entity, new FallingBlockMotion(objectData));
+        _fallingBlocks.Add(entity, new FallingBlockMotion(protocol, objectData));
         if (objectData is null)
             geometry.InvalidateFallingBlock(entity);
         return true;
@@ -261,7 +261,7 @@ internal sealed class EntityMotionState
             return;
         }
         motion.Collision ??= new LegacyFallingBlockCollision(world, new WorldPhysicsView(world, shapes, WorldBorderContainmentEra.Legacy,
-            entityContext: new EntityCollisionContext(entity, entities, membership, this, 107)));
+            entityContext: new EntityCollisionContext(entity, entities, membership, this, motion.Protocol)), motion.Protocol);
         if (!motion.HasTicked)
         {
             motion.HasTicked = true;
@@ -329,8 +329,9 @@ internal sealed class EntityMotionState
         public ModernPlayerCollision? Collision { get; set; }
     }
 
-    private sealed class FallingBlockMotion(int? objectData)
+    private sealed class FallingBlockMotion(int protocol, int? objectData)
     {
+        public int Protocol { get; } = protocol;
         public int? ObjectData { get; } = objectData;
         public bool HasTicked { get; set; }
         public LegacyFallingBlockCollision? Collision { get; set; }

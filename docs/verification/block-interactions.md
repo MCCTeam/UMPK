@@ -4,7 +4,15 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
-## Current checkpoint, 2026-10-21
+## Current work, 2026-10-22
+
+The local continuation connects [eligible pre-position attack charge](attack-charge-readiness.md), [standing modern remote-player motion](modern-player-motion-runtime.md) across protocols 770–777, and [protocol-47 falling-block motion](protocol47-falling-blocks.md) through the existing session owners. The combined falling/modern/charge source over `d7ba0c9` passes 232 focused and all 26,246 Client cases, Release solution build and full format verification. The preceding modern/charge overlay also passes strict Native AOT at 25,042,112 bytes with exactly one executed passing smoke; that result does not cover the subsequent falling changes.
+
+Controlled protocol-47 live comparisons reproduce the missing placement swing on the old producer and pass with owned falling bounds, including three surviving moving actors after eleven native removals. The original wider-matrix 1.8.4 failure remains historical. Fresh combined-producer version acceptance is pending. Axe/feature-permission rules, broader geometry/targeting/placement and the remaining ledger items are unfinished.
+
+The published draft PR remains at `53c6f97`, with all seven jobs passing in run `39649918752`. The local continuation requires fresh immutable repository, consumer, package, AOT, live and published-head CI checks. Historical results below keep their original producers and scope.
+
+## Retained checkpoint, 2026-10-21
 
 The [combined interaction checkpoint](interaction-checkpoint-20261021.md) freezes producer `e65329e5021278771610755dccd75ad2d39d7cf6`. All 25 repository/reconstruction gates pass: 39,506 .NET passes, ten normal opt-in skips, 375 Python passes, seventeen matching suite totals, 61 identical generated files and 4,188 unchanged source blobs. Local package verification and the fresh-cache consumer match all thirteen libraries. Native AOT passes at 25,017,504 bytes under the unchanged strict limit, with exactly one executed passing smoke and unchanged producer DLLs.
 

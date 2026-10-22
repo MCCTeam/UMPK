@@ -141,7 +141,7 @@ internal sealed class EntityGeometryState
             && (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
             && (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling) || falling.Known);
 
-    public void RegisterFallingBlock(Entity entity) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity));
+    public void RegisterFallingBlock(Entity entity, int protocol = 107) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity, protocol));
 
     public bool TryGetFallingBlock(Entity entity, out Aabb box)
     {

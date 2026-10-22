@@ -55,11 +55,11 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
             return true;
         if (ModernHardCollisionProfile.Supports(context.Protocol))
             return TryCollectModern(context, region, into);
-        if (context.Protocol != 107 || !LegacyFallingBlockProfile.Supports(context.Source, context.Protocol))
+        if (!LegacyFallingBlockProfile.Supports(context.Source, context.Protocol))
             return false;
         foreach (Entity peer in context.Entities.All)
         {
-            if (ReferenceEquals(peer, context.Source) || context.Motion.IsTrackedPlayer(peer) || LegacyFallingBlockProfile.HasNoHardPeerBox(peer.Type.Id))
+            if (ReferenceEquals(peer, context.Source) || context.Motion.IsTrackedPlayer(peer) || LegacyFallingBlockProfile.HasNoHardPeerBox(peer.Type.Id, context.Protocol))
                 continue;
             bool? member = context.Membership.IsWorldQueryMember(peer);
             if (member == false)
@@ -68,7 +68,7 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
                 return false;
             if (SharedRoot(context.Source, peer))
                 continue;
-            // The 1.9 boat and Shulker peer boxes need their own owned moving geometry. Their missing bounds cannot prove that a distant-looking packet position is irrelevant.
+            // The legacy boat and 1.9 Shulker peer boxes need their own owned moving geometry. Their missing bounds cannot prove that a distant-looking packet position is irrelevant.
             return false;
         }
         return true;

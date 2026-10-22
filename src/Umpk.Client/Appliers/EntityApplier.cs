@@ -266,6 +266,8 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundSetEntityLinkPacket link:
+                if (link.LegacyLeash == false && store.TryGet(link.SourceId, out Entity? linkedActor) && linkedActor is not null && store.TryGet(link.DestId, out _))
+                    context.State.EntityGeometry.InvalidateFallingBlock(linkedActor);
                 context.State.EntityMotion.ObserveLocalLegacyMount(context.State.Self.EntityId, link.SourceId, link.DestId, link.LegacyLeash);
                 return true;
 

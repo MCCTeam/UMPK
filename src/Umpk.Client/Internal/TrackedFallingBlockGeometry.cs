@@ -4,7 +4,7 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>Owns the measured 1.9 falling-block constructor box and preserves translations separately from explicit position setters.</summary>
+/// <summary>Owns the measured legacy falling-block constructor box and preserves translations separately from explicit position setters.</summary>
 internal sealed class TrackedFallingBlockGeometry
 {
     private const float Size = .98F;
@@ -12,9 +12,9 @@ internal sealed class TrackedFallingBlockGeometry
     public bool Known { get; private set; } = true;
     public Vec3d ObservedPosition { get; private set; }
 
-    public TrackedFallingBlockGeometry(Entity entity)
+    public TrackedFallingBlockGeometry(Entity entity, int protocol = 107)
     {
-        entity.Position = entity.Position.Add(0, (1.0F - Size) / 2.0F, 0);
+        entity.Position = entity.Position.Add(0, LegacyFallingBlockProfile.SpawnYOffset(protocol), 0);
         ObservePosition(entity);
     }
 

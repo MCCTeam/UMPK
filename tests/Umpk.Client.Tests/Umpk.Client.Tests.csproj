@@ -37,6 +37,7 @@
     <EmbeddedResource Include="Fixtures/LegacyPlayerWake.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyBedOccupied.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerTraversal.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/Protocol47FallingBlock.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerBedAvailability.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerSpawn.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerDeath.native.json.gz" />

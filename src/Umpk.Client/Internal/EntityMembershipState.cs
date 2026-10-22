@@ -21,7 +21,7 @@ internal sealed class EntityMembershipState
             return;
         var membership = new Membership(entity, protocol == 47, healthIndex, isPlayer)
         {
-            InEntityList = isPlayer || HasColumn(new BlockPos((int)Math.Floor(entity.Position.X), 64, (int)Math.Floor(entity.Position.Z))),
+            InEntityList = protocol == 47 || isPlayer || HasColumn(new BlockPos((int)Math.Floor(entity.Position.X), 64, (int)Math.Floor(entity.Position.Z))),
         };
         _players.Add(entity, membership);
         TryAddToColumn(membership);
@@ -152,7 +152,7 @@ internal sealed class EntityMembershipState
             Membership player = _reentry[selected];
             _reentry.RemoveAt(selected);
             (int x, _, int z) = Chunk(player.Entity.Position);
-            if (player.IsPlayer || _columns.Contains(new ChunkPos(x, z)))
+            if (player.SetsAddedForEmptyChunk || player.IsPlayer || _columns.Contains(new ChunkPos(x, z)))
             {
                 player.InEntityList = true;
                 TryAddToColumn(player);

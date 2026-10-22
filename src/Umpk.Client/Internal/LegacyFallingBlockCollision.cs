@@ -5,8 +5,8 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>The measured 1.9 falling-block movement query. Unclassified shapes, callbacks and border transitions keep the result unknown.</summary>
-internal sealed class LegacyFallingBlockCollision(World world, WorldPhysicsView view)
+/// <summary>The measured legacy falling-block movement query. Unclassified shapes, callbacks and border transitions keep the result unknown.</summary>
+internal sealed class LegacyFallingBlockCollision(World world, WorldPhysicsView view, int protocol = 107)
 {
     private readonly List<Aabb> _colliders = [];
 
@@ -22,13 +22,14 @@ internal sealed class LegacyFallingBlockCollision(World world, WorldPhysicsView 
             || region.MinZ <= world.Border.MinZ + 2 || region.MaxZ >= world.Border.MaxZ - 2)
             return false;
         _colliders.Clear();
-        int minX = (int)Math.Floor(region.MinX) - 1, maxX = (int)Math.Ceiling(region.MaxX) + 1;
-        int minY = (int)Math.Floor(region.MinY) - 1, maxY = (int)Math.Ceiling(region.MaxY) + 1;
-        int minZ = (int)Math.Floor(region.MinZ) - 1, maxZ = (int)Math.Ceiling(region.MaxZ) + 1;
+        bool classic = LegacyFallingBlockProfile.UsesClassicCollisionQuery(protocol);
+        int minX = (int)Math.Floor(region.MinX) - (classic ? 0 : 1), maxX = classic ? (int)Math.Floor(region.MaxX + 1) : (int)Math.Ceiling(region.MaxX) + 1;
+        int minY = (int)Math.Floor(region.MinY) - 1, maxY = classic ? (int)Math.Floor(region.MaxY + 1) : (int)Math.Ceiling(region.MaxY) + 1;
+        int minZ = (int)Math.Floor(region.MinZ) - (classic ? 0 : 1), maxZ = classic ? (int)Math.Floor(region.MaxZ + 1) : (int)Math.Ceiling(region.MaxZ) + 1;
         for (int x = minX; x < maxX; x++)
             for (int z = minZ; z < maxZ; z++)
             {
-                int sides = (x == minX || x == maxX - 1 ? 1 : 0) + (z == minZ || z == maxZ - 1 ? 1 : 0);
+                int sides = classic ? 0 : (x == minX || x == maxX - 1 ? 1 : 0) + (z == minZ || z == maxZ - 1 ? 1 : 0);
                 if (sides == 2 || !view.IsChunkLoaded(new BlockPos(x, 64, z)))
                     continue;
                 for (int y = minY; y < maxY; y++)
@@ -41,13 +42,13 @@ internal sealed class LegacyFallingBlockCollision(World world, WorldPhysicsView 
                         return false;
                     if (block.IsAir)
                         continue;
-                    if (LegacyFallingBlockProfile.HasBaseCallbacksAndEmptyCollision(block.Block.NetworkId))
+                    if (LegacyFallingBlockProfile.HasBaseCallbacksAndEmptyCollision(block.Block.NetworkId, protocol))
                     {
                         if (!view.GetCollisionShapes(block).IsEmpty)
                             return false;
                         continue;
                     }
-                    if (!LegacyFallingBlockProfile.HasBaseCollisionAndCallbacks(block.Block.NetworkId))
+                    if (!LegacyFallingBlockProfile.HasBaseCollisionAndCallbacks(block.Block.NetworkId, protocol))
                         return false;
                     ReadOnlySpan<Aabb> shapes = view.GetCollisionShapes(block);
                     if (shapes.Length != 1 || shapes[0] != Aabb.BlockAt(0, 0, 0))

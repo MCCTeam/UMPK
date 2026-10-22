@@ -44,7 +44,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(8));
         CancellationToken ct = deadline.Token;
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, viewDistance: 8);
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, viewDistance: 8, flatWorldSettings: """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""");
         output.WriteLine($"Motion evidence: {server.DirectoryPath}");
         var ticks = new MotionTickSource();
         await using UmpkClient observer = MotionClient(version, Username, ticks);
@@ -70,14 +70,12 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await server.ConsoleAsync("difficulty peaceful", ct);
             await server.ConsoleAsync(protocol < 774 ? "gamerule doMobSpawning false" : "gamerule minecraft:spawn_mobs false", ct);
             await server.ConsoleAsync(protocol < 774 ? "gamerule doMobLoot false" : "gamerule minecraft:mob_drops false", ct);
-            await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
-            await server.ConsoleAsync("fill -4 99 -4 110 99 6 minecraft:stone", ct);
-            await server.ConsoleAsync("fill -4 100 -4 110 104 6 minecraft:air", ct);
+            await PrepareNativeMotionFixtureAsync(server, ct);
             await server.ConsoleAsync($"gamemode survival {Username}", ct);
             await server.ConsoleAsync($"gamemode survival {MotionPeer}", ct);
             await server.ConsoleAsync($"tp {Username} 2.5 100 2.5", ct);
             await server.ConsoleAsync($"tp {MotionPeer} 0.5 100 1.5", ct);
-            await DriveUntilAsync(observer, ticks, c => c.State.Self.OnGround && Near(c.State.Self.Position, new Vec3d(2.5, 100, 2.5)) && Near(c.State.Entities.Get(peerId)!.Position, new Vec3d(.5, 100, 1.5)), "grounded observer and initial peer", ct);
+            await DriveUntilAsync(observer, ticks, c => c.State.Entities.Get(peerId) is { } initialPeer && c.State.Self.OnGround && Near(c.State.Self.Position, new Vec3d(2.5, 100, 2.5)) && Near(initialPeer.Position, new Vec3d(.5, 100, 1.5)), "grounded observer and actual tracked initial peer", ct);
             await MotionWaitAsync(peer, c => c.State.Self.OnGround && Near(c.State.Self.Position, new Vec3d(.5, 100, 1.5)), "grounded physics peer", ct);
             for (int i = 0; i < 5; i++)
                 await ticks.FireAsync(ct);
@@ -85,15 +83,28 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             var destination = support.Above();
             await AssertNativeColumnAsync(observer, terrain, new ChunkPos(0, 0), ct);
             await server.ConsoleAsync($"clear {Username}", ct);
+            capture.Start();
+            int giveMark = capture.Mark();
             await server.ConsoleAsync($"give {Username} minecraft:stone 32", ct);
             await observer.Actions.Inventory.SelectHeldSlotAsync(0, ct);
             await MotionWaitAsync(observer, c => c.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft("stone") && c.State.Inventory.GetSlot(36).Count == 32, "observer placement stack", ct);
-            capture.Start();
+            if (protocol is 775 or 776)
+                await AwaitNativeGiveVisualItemAsync(observer, server, capture, giveMark, ct);
+            await PrepareControlledMotionActorsAsync(observer, server, capture, peerId, "ordinary-initial", ct);
 
             Vec3d before = await RemotePositionAsync();
             int movementMark = capture.Mark();
             await peer.Actions.Movement.MoveToAsync(new Vec3d(1.5, 100, 1.5), ct);
             await MotionWaitAsync(() => capture.Since(movementMark).Any(frame => IsPositionFrame(frame, peerId)), "native ordinary movement packet", ct);
+            Vec3d entered = Vec3d.Zero;
+            await MotionWaitAsync(async () =>
+            {
+                entered = await ServerPositionAsync(server, MotionPeer, ct);
+                return BlockPos.Containing(entered) == new BlockPos(1, 100, 1);
+            }, "server-confirmed public move destination block", ct);
+            Assert.Equal(new BlockPos(1, 100, 1), BlockPos.Containing(entered));
+            await server.WriteAsync("ordinary-peer-block-entry.json", new { entered, caller = "public MoveToAsync enters the destination block; the same-block request below approaches its point" });
+            await peer.Actions.Movement.MoveToAsync(new Vec3d(1.5, 100, 1.5), ct);
             await Task.Delay(150, ct);
             Vec3d serverPeer = await ServerPositionAsync(server, MotionPeer, ct);
             Assert.InRange(serverPeer.X, 1.2, 1.8);
@@ -139,7 +150,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await AssertCountAsync(server, protocol, 31, ct);
             await MotionTailAsync(capture, server, successfulUseMark, ct);
             AssertPlacement(capture.Since(successfulUseMark), protocol, support);
-            scenarios.Add(new { name = "ordinary-motion-placement", before, serverPeer, animated, ordinaryPhases, phaseMark, oldVisibleBounds = "use and native success policy; server rejects actual occupied destination", newVisibleBounds = "use without predicted packet swing", cleared = "server stone and stack32-to31", packetSwingObservable = protocol != 777 });
+            scenarios.Add(new { name = "ordinary-motion-placement", before, entered, serverPeer, animated, ordinaryPhases, phaseMark, oldVisibleBounds = "use and native success policy; server rejects actual occupied destination", newVisibleBounds = "use without predicted packet swing", cleared = "server stone and stack32-to31", packetSwingObservable = protocol != 777 });
 
             await server.ConsoleAsync($"tp {Username} 100.5 100 2.5", ct);
             await DriveUntilAsync(observer, ticks, c => c.State.Self.OnGround && Near(c.State.Self.Position, new Vec3d(100.5, 100, 2.5)), "observer far-query platform", ct);
@@ -152,14 +163,14 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             {
                 if (scenario == "unknown-boat" && protocol == 769)
                     continue;
-                await server.ConsoleAsync("worldborder center 0 0", ct);
+                await server.ConsoleAsync("worldborder center 0.0 0.0", ct);
                 await server.ConsoleAsync("worldborder set 59999968", ct);
-                await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
-                await MotionWaitAsync(observer, c => c.State.Entities.All.All(entity => entity.Type.Id == Identifier.Minecraft("player")), "owned context actors removed", ct);
+                await PrepareControlledMotionActorsAsync(observer, server, capture, peerId, "context-" + scenario, ct);
                 await server.ConsoleAsync($"fill {queryX - 2} {queryY} -2 {queryX + 2} {queryY + 3} 2 minecraft:air", ct);
                 await server.ConsoleAsync($"setblock {queryX} {queryY - 1} 0 minecraft:stone", ct);
+                await DriveUntilAsync(observer, ticks, c => c.State.Entities.Get(peerId) is not null && !StoredInterpolationActive(c, peerId), $"{scenario}: drain every prior native path before explicit reset", ct);
                 await server.ConsoleAsync($"tp {MotionPeer} 0.5 100 0.5", ct);
-                await DriveUntilAsync(observer, ticks, c => Near(c.State.Entities.Get(peerId)!.Position, new Vec3d(.5, 100, .5)) && !StoredInterpolationActive(c, peerId), $"{scenario}: initial remote pose and drained prior native path", ct);
+                await DriveUntilAsync(observer, ticks, c => c.State.Entities.Get(peerId) is { } initialPeer && Near(initialPeer.Position, new Vec3d(.5, 100, .5)) && !StoredInterpolationActive(c, peerId), $"{scenario}: actual tracked initial remote pose and drained prior native path", ct);
                 for (int i = 0; i < 5; i++)
                     await ticks.FireAsync(ct);
                 await ServerPositionNearAsync(server, MotionPeer, new Vec3d(.5, 100, .5), .01, ct);
@@ -175,24 +186,69 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await MotionWaitAsync(observer, c => c.State.Entities.All.Any(entity => entity.Type.Id == Identifier.Minecraft(scenario)), "native collision actor spawn", ct);
                     await ServerPositionNearAsync(server, "@e[tag=motion-context,limit=1]", new Vec3d(queryX + .5, queryY, .5), .01, ct);
                 }
-                else if (scenario == "unknown-boat")
-                {
-                    await server.ConsoleAsync("summon minecraft:oak_boat 125.5 100 0.5 {NoGravity:1b,Invulnerable:1b,Tags:[\"motion-context\"]}", ct);
-                    await MotionWaitAsync(observer, c => c.State.Entities.All.Any(entity => entity.Type.Id == Identifier.Minecraft("oak_boat")), "native unowned hard boat spawn", ct);
-                    await ServerPositionNearAsync(server, "@e[tag=motion-context,limit=1]", new Vec3d(125.5, 100, .5), .01, ct);
-                }
                 await MotionWaitAsync(observer, c => c.State.World.GetBlock(queryCell).Block.Id == Identifier.Minecraft(scenario == "stone" ? "stone" : "air"), $"{scenario}: known native query cell", ct);
+                await MotionWaitAsync(peer, c => c.State.Self.OnGround && c.State.Self.Velocity.X == 0 && c.State.Self.Velocity.Z == 0 && Near(c.State.Self.Position, new Vec3d(.5, 100, .5)), $"{scenario}: grounded settled public movement owner before relative witness", ct);
+                await MotionWaitAsync(async () => (await server.CommandAsync($"data get entity {MotionPeer} OnGround", ct)).EndsWith(": 1b", StringComparison.Ordinal)
+                    && PositionFrameOnGround(capture.Frames.Last(frame => IsPositionFrame(frame, peerId))), $"{scenario}: native ground and tracker ground agree before relative witness", ct);
+                await peer.Actions.Movement.SetRotationAsync(-90, 0, ct);
+                await DriveUntilAsync(observer, ticks, c => c.State.Entities.Get(peerId) is { } resetPeer && Near(resetPeer.Position, new Vec3d(.5, 100, .5)) && resetPeer.Yaw == -90 && resetPeer.Pitch == 0 && !StoredInterpolationActive(c, peerId), $"{scenario}: drain the final native reset target and public rotation before the fresh near packet", ct);
                 Assert.False(await observer.InvokeAsync(c => StoredInterpolationActive(c, peerId), ct), $"Harness precondition {scenario}: a prior native path must be inactive before the fresh near packet.");
                 Assert.Equal(new Vec3d(.5, 100, .5), await RemotePositionAsync());
                 float initialYaw = await observer.InvokeAsync(c => c.State.Entities.Get(peerId)!.Yaw, ct);
                 float initialPitch = await observer.InvokeAsync(c => c.State.Entities.Get(peerId)!.Pitch, ct);
                 int mark = capture.Mark();
-                await server.ConsoleAsync($"tp {MotionPeer} 1.5 100 0.5", ct);
-                await MotionWaitAsync(() => capture.Since(mark).Any(frame => IsPositionFrame(frame, peerId)), $"{scenario}: native near movement packet", ct);
+                await peer.Actions.Movement.MoveToAsync(new Vec3d(1.5, 100, .5), ct);
+                await MotionWaitAsync(async () => BlockPos.Containing(await ServerPositionAsync(server, MotionPeer, ct)) == new BlockPos(1, 100, 0), $"{scenario}: native public move enters the requested block", ct);
+                await peer.Actions.Movement.MoveToAsync(new Vec3d(1.5, 100, .5), ct);
+                await MotionWaitAsync(peer, c => c.State.Self.OnGround && c.State.Self.Velocity.X == 0 && c.State.Self.Velocity.Z == 0, $"{scenario}: actual public movement stops before captured trajectory", ct);
+                Vec3d nearNativePosition = Vec3d.Zero;
+                Vec3d nearWirePosition = Vec3d.Zero;
+                await MotionWaitAsync(async () =>
+                {
+                    nearNativePosition = await ServerPositionAsync(server, MotionPeer, ct);
+                    CapturedFrame[] relativeFrames = capture.Since(mark).Where(frame => IsPositionFrame(frame, peerId)).ToArray();
+                    Assert.All(relativeFrames, frame => Assert.True(frame.Packet is ClientboundMoveEntityPosPacket or ClientboundMoveEntityPosRotPacket, $"Harness precondition {scenario}: actual grounded public motion requires relative packets, got {frame.Packet?.GetType().Name}."));
+                    nearWirePosition = relativeFrames.Aggregate(new Vec3d(.5, 100, .5), (position, frame) => position.Add(RelativeDelta(frame.Packet!, protocol)));
+                    return relativeFrames.Length != 0 && nearWirePosition == NativeQuantizedPosition(nearNativePosition);
+                }, $"{scenario}: every actual relative delta reaches the independently read native endpoint on its exact 1/4096 grid", ct);
+                Assert.InRange(nearNativePosition.X, 1.2, 1.8);
+                Assert.Equal(100, nearNativePosition.Y);
+                Assert.Equal(.5, nearNativePosition.Z);
                 Assert.Equal(new Vec3d(.5, 100, .5), await RemotePositionAsync());
                 CapturedFrame near = capture.Since(mark).Last(frame => IsPositionFrame(frame, peerId));
-                Assert.True(near.Packet is ClientboundMoveEntityPosPacket or ClientboundMoveEntityPosRotPacket, $"Harness precondition {scenario}: near target requires a native relative movement packet, got {near.Packet?.GetType().Name}.");
-                Assert.Equal(new Vec3d(1, 0, 0), RelativeDelta(near.Packet!, protocol));
+                Assert.Equal(NativeQuantizedPosition(nearNativePosition), nearWirePosition);
+                AssertNoPeerReplacement(capture.Since(mark), peerId, scenario);
+                await server.WriteAsync($"near-{scenario}-public-movement.json", new { requested = new Vec3d(1.5, 100, .5), nearNativePosition, nearWirePosition, initialPosition = new Vec3d(.5, 100, .5), initialYaw, initialPitch, ground = true, caller = "two public MoveToAsync calls: enter block, then approach its point; settled native endpoint is independently quantized using original VecDeltaCodec arithmetic", packets = capture.Since(mark).Where(frame => IsPositionFrame(frame, peerId) || frame.Packet is ClientboundMoveEntityRotPacket rotation && rotation.EntityId == peerId).Select(frame => new { kind = ((IPacket)frame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(frame.Payload) }).ToArray() });
+                await MotionWaitAsync(peer, c => c.State.Self.OnGround && c.State.Self.Velocity.X == 0 && c.State.Self.Velocity.Z == 0, $"{scenario}: settled public owner before native far teleport", ct);
+                string nearGround = string.Empty;
+                await MotionWaitAsync(async () => (nearGround = await server.CommandAsync($"data get entity {MotionPeer} OnGround", ct)).EndsWith(": 1b", StringComparison.Ordinal)
+                    && PositionFrameOnGround(capture.Frames.Last(frame => IsPositionFrame(frame, peerId))), $"{scenario}: independent native and received near ground before far teleport", ct);
+                await server.WriteAsync($"pre-far-{scenario}-native-ground.json", new { nearNativePosition, nearWirePosition, nativeGround = nearGround, receivedGround = true, physics = true });
+                if (scenario == "border")
+                {
+                    int borderMark = capture.Mark();
+                    await server.ConsoleAsync("worldborder center 96.0 0.0", ct);
+                    await server.ConsoleAsync("worldborder set 10", ct);
+                    await MotionWaitAsync(observer, c => c.State.World.Border.CenterX == 96 && c.State.World.Border.CenterZ == 0 && c.State.World.Border.Size == 10
+                        && capture.Since(borderMark).Any(frame => frame.Packet is ClientboundSetBorderCenterPacket center && center.CenterX == 96 && center.CenterZ == 0)
+                        && capture.Since(borderMark).Any(frame => frame.Packet is ClientboundSetBorderSizePacket size && size.Size == 10), "exact native decimal border packets and applied world context", ct);
+                    CapturedFrame centerFrame = Assert.Single(capture.Since(borderMark), frame => frame.Packet is ClientboundSetBorderCenterPacket);
+                    CapturedFrame sizeFrame = Assert.Single(capture.Since(borderMark), frame => frame.Packet is ClientboundSetBorderSizePacket);
+                    Assert.Equal(new ClientboundSetBorderCenterPacket(96, 0), centerFrame.Packet);
+                    Assert.Equal(new ClientboundSetBorderSizePacket(10), sizeFrame.Packet);
+                    var border = await observer.InvokeAsync(c => new { c.State.World.Border.CenterX, c.State.World.Border.CenterZ, c.State.World.Border.Size, c.State.World.Border.MinX, c.State.World.Border.MaxX, c.State.World.Border.MinZ, c.State.World.Border.MaxZ }, ct);
+                    Assert.Equal(91, border.MinX);
+                    Assert.Equal(101, border.MaxX);
+                    Assert.Equal(-5, border.MinZ);
+                    Assert.Equal(5, border.MaxZ);
+                    await server.WriteAsync("border-context-native-packets.json", new { border, center = new { kind = ((IPacket)centerFrame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(centerFrame.Payload) }, size = new { kind = ((IPacket)sizeFrame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(sizeFrame.Payload) }, originalNativeComparisonContext = "center96,0; size10; exact original codec/listener replay and border collision rounding; decimal coordinates prevent native integer centering" });
+                }
+                if (scenario == "unknown-boat")
+                {
+                    await server.ConsoleAsync("summon minecraft:oak_boat 125.5 100 0.5 {NoGravity:1b,Invulnerable:1b,Tags:[\"motion-context\"]}", ct);
+                    await MotionWaitAsync(observer, c => c.State.Entities.All.Any(entity => entity.Type.Id == Identifier.Minecraft("oak_boat")), "native unowned hard boat spawn", ct);
+                    await ServerPositionNearAsync(server, "@e[tag=motion-context,limit=1]", new Vec3d(125.5, 100, .5), .01, ct);
+                }
                 int farMark = capture.Mark();
                 await server.ConsoleAsync($"tp {MotionPeer} 100.5 100 0.5", ct);
                 await MotionWaitAsync(() => capture.Since(farMark).Any(frame => frame.Packet is ClientboundEntityPositionSyncPacket sync && sync.EntityId == peerId), $"{scenario}: native far position sync", ct);
@@ -207,22 +263,14 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 }
                 await MotionWaitAsync(observer, c => c.State.Entities.Get(peerId)!.Position == sync.Values.Position, "native far sync applied before controlled ticks", ct);
                 Assert.Equal(sync.Values.Position, await RemotePositionAsync());
-                if (scenario == "border")
-                {
-                    await server.ConsoleAsync("worldborder center 96 0", ct);
-                    await server.ConsoleAsync("worldborder set 10", ct);
-                    await MotionWaitAsync(() => capture.Since(farMark).Any(frame => frame.Packet is ClientboundSetBorderSizePacket size && size.Size == 10), "native border size frame", ct);
-                }
-                AssertNoRetarget(capture.Since(farMark).SkipWhile(frame => !ReferenceEquals(frame, far)).Skip(1).ToArray(), peerId, scenario);
-                int controlledMark = capture.Mark();
+                CapturedFrame[] preTickCapture = capture.Frames;
+                int controlledMark = preTickCapture.Length;
+                CapturedFrame[] preTickPackets = preTickCapture.Skip(mark).Where(frame => IsPositionFrame(frame, peerId) || frame.Packet is ClientboundMoveEntityRotPacket rotation && rotation.EntityId == peerId).ToArray();
+                Assert.True(preTickPackets.Length >= 2, $"Harness precondition {scenario}: retain every actual public near and native far update before controlled ticks.");
+                Assert.Contains(preTickPackets, frame => ReferenceEquals(frame, far));
                 var phases = new List<Vec3d>();
                 var phaseBounds = new List<double[]>();
-                bool blocked = scenario is "stone" or "shulker" or "border";
-                double[] expected = protocol == 769 ? [67.5, 34.5, 1.5]
-                    : scenario == "unknown-boat" ? [100.5, 100.5, 100.5]
-                    : blocked ? protocol == 777 ? [1, 1.5, 1.5] : [67.5, 34.5, 1.5]
-                    : protocol == 777 ? [101, 101.5, 101.5] : [100.83333333333333, 101.16666666666666, 101.5];
-                foreach (double x in expected)
+                for (int phase = 0; phase < 3; phase++)
                 {
                     await ticks.FireAsync(ct);
                     Vec3d actual = await RemotePositionAsync();
@@ -232,10 +280,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     if (scenario != "unknown-boat")
                         Assert.Equal(AabbForStandingPlayer(actual), cached);
                     AssertNoRetarget(capture.Since(controlledMark), peerId, scenario);
-                    if (protocol != 777)
-                        Assert.Equal(new Vec3d(x, 100, .5), actual);
-                    else
-                        Assert.True(double.IsFinite(actual.X) && actual.Y == 100 && actual.Z == .5, "Live777 phases require the original-codec replay below; no knot may be replaced with a guessed linear path.");
+                    Assert.True(double.IsFinite(actual.X) && actual.Y == 100 && actual.Z == .5, "Every live phase requires the exact original-method packet replay below; no relative frame or 777 path knot may be replaced with a guessed linear path.");
+                    if (scenario == "unknown-boat")
+                        Assert.Equal(new Vec3d(100.5, 100, .5), actual);
                 }
                 Vec3d nativePosition = await ServerPositionAsync(server, MotionPeer, ct);
                 Assert.True(Near(nativePosition, new Vec3d(100.5, 100, .5)), $"Native peer moved unexpectedly in {scenario}: {nativePosition}.");
@@ -244,7 +291,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.False(await observer.InvokeAsync(c => StoredPositionKnown(c, peerId), ct));
                 else
                     Assert.True(await observer.InvokeAsync(c => StoredPositionKnown(c, peerId), ct));
-                scenarios.Add(new { name = "far-sync-" + scenario, queryCell, near = near.Packet!.GetType().Name, far = far.Packet!.GetType().Name, phases, phaseBounds, nativePosition, expected = protocol == 777 ? null : expected, nativeQueryColumnReceived = true, conservativeUnknown = scenario == "unknown-boat", pre770Control = protocol == 769 });
+                AssertNoPeerReplacement(capture.Since(mark), peerId, scenario);
+                scenarios.Add(new { name = "far-sync-" + scenario, queryCell, near = near.Packet!.GetType().Name, nearNativePosition, nearWirePosition, far = far.Packet!.GetType().Name, phases, phaseBounds, nativePosition, expected = "required exact original-method replay from every actual received relative/rotation/path frame and the far sync", nativeQueryColumnReceived = true, conservativeUnknown = scenario == "unknown-boat", pre770Control = protocol == 769 });
                 await server.WriteAsync($"far-{scenario}-native-input.json", new
                 {
                     release,
@@ -253,8 +301,11 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     initialPosition = new[] { .5, 100, .5 },
                     initialYaw,
                     initialPitch,
-                    packets = capture.Since(mark).TakeWhile(frame => !ReferenceEquals(frame, far)).Append(far).Where(frame => IsPositionFrame(frame, peerId) || frame.Packet is ClientboundMoveEntityRotPacket rotation && rotation.EntityId == peerId)
-                        .Select(frame => new { kind = ((IPacket)frame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(frame.Payload) }).ToArray(),
+                    captureStartIndex = mark,
+                    captureBeforeTickIndex = controlledMark,
+                    firstFarCaptureIndex = Array.FindIndex(preTickCapture, frame => ReferenceEquals(frame, far)),
+                    everyPreTickPositionFrameIncluded = true,
+                    packets = preTickPackets.Select(frame => new { kind = ((IPacket)frame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(frame.Payload) }).ToArray(),
                     phases = phases.Select(position => new[] { position.X, position.Y, position.Z }).ToArray(),
                     phaseBounds,
                     nativeComparisonRequired = scenario != "unknown-boat",
@@ -291,6 +342,124 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         }
 
         Task<Vec3d> RemotePositionAsync() => observer.InvokeAsync(c => c.State.Entities.Get(peerId)!.Position, ct);
+    }
+
+    private static async Task AwaitNativeGiveVisualItemAsync(UmpkClient observer, VanillaInteractionAcceptanceHarness server, Capture capture, int giveMark, CancellationToken ct)
+    {
+        int itemType = observer.State.Registries!.EntityTypes[Identifier.Minecraft("item")].NetworkId;
+        await MotionWaitAsync(() => capture.Since(giveMark).Any(frame => frame.Packet is ClientboundAddEntityPacket added && added.TypeId == itemType), "the native give command's actual visual item add", ct);
+        CapturedFrame addFrame = Assert.Single(capture.Since(giveMark), frame => frame.Packet is ClientboundAddEntityPacket added && added.TypeId == itemType);
+        int itemId = Assert.IsType<ClientboundAddEntityPacket>(addFrame.Packet).EntityId;
+        await MotionWaitAsync(() => capture.Since(giveMark).Any(frame => frame.Packet is ClientboundSetEntityDataPacket metadata && metadata.EntityId == itemId && metadata.Metadata.Entries.Any(entry => entry.Index == 8 && entry.Value.Kind == MetadataValueKind.Slot && entry.Value.AsSlot() is ItemStack item && item.Item.Id == Identifier.Minecraft("stone") && item.Count == 1)), "native give visual item metadata: one stone", ct);
+        await MotionWaitAsync(() => capture.Since(giveMark).Any(frame => frame.Packet is ClientboundRemoveEntitiesPacket removed && removed.EntityIds.Contains(itemId)), "the same native give visual item's actual removal", ct);
+        await MotionWaitAsync(observer, client => client.State.Entities.Get(itemId) is null, "native give visual item removed from the client owner", ct);
+        string nativeAbsence = await server.CommandAsync("execute unless entity @e[type=minecraft:item]", ct);
+        Assert.Equal("Test passed", nativeAbsence);
+        CapturedFrame[] itemFrames = capture.Since(giveMark).Where(frame => frame.Packet is ClientboundAddEntityPacket added && added.EntityId == itemId || frame.Packet is ClientboundSetEntityDataPacket metadata && metadata.EntityId == itemId || frame.Packet is ClientboundRemoveEntitiesPacket removed && removed.EntityIds.Contains(itemId)).ToArray();
+        Assert.Single(itemFrames, frame => frame.Packet is ClientboundAddEntityPacket);
+        Assert.True(itemFrames[0].Packet is ClientboundAddEntityPacket);
+        Assert.True(itemFrames[^1].Packet is ClientboundRemoveEntitiesPacket);
+        await server.WriteAsync("native-give-visual-item-fence.json", new { giveMark, itemId, nativeAbsence, actualClientRemoval = true, packetFrames = itemFrames.Select(frame => new { frame.Milliseconds, frame.WireId, kind = ((IPacket)frame.Packet!).Type.Id.Path, bodyHex = Convert.ToHexStringLower(frame.Payload) }), source = "GiveCommand creates one fake item; makeFakeItem sets age5999 and native tick discards at6000; no guessed delay or synthetic removal", unchangedAmbientCleanup = true });
+    }
+
+    private static async Task PrepareControlledMotionActorsAsync(UmpkClient observer, VanillaInteractionAcceptanceHarness server, Capture capture, int peerId, string purpose, CancellationToken ct)
+    {
+        var passes = new List<object>();
+        bool settled = false;
+        for (int pass = 0; pass < 8; pass++)
+        {
+            int mark = capture.Mark();
+            int[] ambientIds = await observer.InvokeAsync(c => c.State.Entities.All.Where(entity => entity.Type.Id != Identifier.Minecraft("player")).Select(entity => entity.Id).ToArray(), ct);
+            await server.WriteAsync($"{purpose}-native-cleanup-pass-{pass}-start.json", new { ambientIds, peerId, mark });
+            string nativeBefore = await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct);
+            string? nativeStaging = null;
+            if (!NativeActorsEmpty(nativeBefore))
+            {
+                nativeStaging = await server.CommandAsync("tp @e[type=!minecraft:player] 8.5 100 4.5", ct);
+                Assert.StartsWith("Teleported ", nativeStaging, StringComparison.Ordinal);
+            }
+            await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
+            string cleanupMarker = "motion-native-cleanup-" + Guid.NewGuid().ToString("N");
+            await server.ConsoleAsync("say " + cleanupMarker, ct);
+            await MotionWaitAsync(() => capture.Since(mark).Any(frame => frame.Packet is ClientboundDisguisedChatPacket chat && chat.Message.ToPlainText().Contains(cleanupMarker, StringComparison.Ordinal)), $"cleanup pass{pass}: ordered native marker", ct);
+            await MotionWaitAsync(() => ambientIds.All(id => capture.Since(mark).Any(frame => frame.Packet is ClientboundRemoveEntitiesPacket removed && removed.EntityIds.Contains(id))), $"cleanup pass{pass}: actual removal of every snapshotted ambient actor; dead or missing IDs cannot be skipped", ct);
+            int[] remaining = await observer.InvokeAsync(c => c.State.Entities.All.Select(entity => entity.Id).ToArray(), ct);
+            string nativeAfter = await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct);
+            int[] quietArrivals = [];
+            string? nativeQuiet = null;
+            if (remaining.Length == 1 && remaining[0] == peerId && NativeActorsEmpty(nativeAfter))
+            {
+                int quietMark = capture.Mark();
+                await MotionTailAsync(capture, server, null, ct);
+                quietArrivals = capture.Since(quietMark).Where(frame => frame.Packet is ClientboundAddEntityPacket added && added.EntityId != peerId).Select(frame => ((ClientboundAddEntityPacket)frame.Packet!).EntityId).ToArray();
+                remaining = await observer.InvokeAsync(c => c.State.Entities.All.Select(entity => entity.Id).ToArray(), ct);
+                nativeQuiet = await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct);
+                settled = remaining.Length == 1 && remaining[0] == peerId && quietArrivals.Length == 0 && NativeActorsEmpty(nativeQuiet);
+            }
+            int[] removedIds = capture.Since(mark).Where(frame => frame.Packet is ClientboundRemoveEntitiesPacket).SelectMany(frame => ((ClientboundRemoveEntitiesPacket)frame.Packet!).EntityIds).Distinct().Order().ToArray();
+            passes.Add(new { pass, ambientIds, removedIds, cleanupMarker, nativeStaging, nativeBefore, nativeAfter, nativeQuiet, remaining, quietArrivals, settled });
+            await server.WriteAsync($"{purpose}-native-cleanup-passes.json", passes);
+            if (settled)
+                break;
+        }
+        Assert.True(settled, "Harness precondition: controlled two-player fixture must survive a measured native traffic tail with no ambient arrivals within eight cleanup passes.");
+        string nativePlayers = await server.CommandAsync("list", ct);
+        Assert.Contains(Username, nativePlayers, StringComparison.Ordinal);
+        Assert.Contains(MotionPeer, nativePlayers, StringComparison.Ordinal);
+        Assert.StartsWith("There are 2 of a max of", nativePlayers, StringComparison.Ordinal);
+        Assert.Equal(Identifier.Minecraft("player"), await observer.InvokeAsync(c => c.State.Entities.Get(peerId)!.Type.Id, ct));
+        await server.WriteAsync($"{purpose}-native-cleanup.json", new { passes, nativePlayers, remainingIds = await observer.InvokeAsync(c => c.State.Entities.All.Select(entity => entity.Id).ToArray(), ct), measuredIntervalStartsAfterCleanup = true, unchangedTrafficTailSeconds = 2.1 });
+
+        static bool NativeActorsEmpty(string response)
+        {
+            if (response == "Test passed")
+                return true;
+            Assert.Matches(@"^Test failed(?:, count: |\. Count: )[1-9][0-9]*$", response);
+            return false;
+        }
+    }
+
+    private static async Task PrepareNativeMotionFixtureAsync(VanillaInteractionAcceptanceHarness server, CancellationToken ct)
+    {
+        string forced = await server.CommandAsync("forceload add -16 -16 207 15", ct);
+        Assert.StartsWith("Marked 28 chunks", forced, StringComparison.Ordinal);
+        var availability = new List<object>();
+        for (int x = -1; x <= 12; x++)
+            for (int z = -1; z <= 0; z++)
+            {
+                var responses = new List<string>();
+                await MotionWaitAsync(async () =>
+                {
+                    string response = await server.CommandAsync($"execute if loaded {x * 16} 100 {z * 16}", ct);
+                    responses.Add(response);
+                    Assert.True(response is "Test passed" or "Test failed", $"Unexpected native loaded predicate: {response}");
+                    return response == "Test passed";
+                }, $"native entity-ticking chunk and loaded entities at {x},{z}", ct);
+                Assert.Equal("Test passed", responses[^1]);
+                availability.Add(new { x, z, responses });
+            }
+
+        var generatorChecks = new Dictionary<string, string>();
+        foreach (string command in new[] { "execute if biome 0 100 0 minecraft:the_void", "execute if block 0 -64 0 minecraft:stone", "execute if block 0 99 0 minecraft:stone", "execute if block 0 100 0 minecraft:air", "execute if block 202 99 0 minecraft:stone" })
+        {
+            string response = await server.CommandAsync(command, ct);
+            Assert.Equal("Test passed", response);
+            generatorChecks.Add(command, response);
+        }
+        await server.WriteAsync("native-flat-generator-checks.json", new { levelType = "minecraft:flat", layers = 164, block = "minecraft:stone", biome = "minecraft:the_void", minY = -64, nativeFloorY = 99, features = false, lakes = false, structures = false, generatorChecks, substitution = "declared isolated vanilla generator before process startup; original JAR and shared seeds unchanged" });
+
+        // A staging cell makes each fill report an actual successful write even when its volume already has the desired material.
+        string floorStage = await server.CommandAsync("setblock -4 99 -4 minecraft:barrier", ct);
+        Assert.StartsWith("Changed the block at", floorStage, StringComparison.Ordinal);
+        string floor = await server.CommandAsync("fill -4 99 -4 110 99 6 minecraft:stone", ct);
+        Assert.StartsWith("Successfully filled ", floor, StringComparison.Ordinal);
+        Assert.Equal("Test passed", await server.CommandAsync("execute if block -4 99 -4 minecraft:stone", ct));
+        string airStage = await server.CommandAsync("setblock -4 100 -4 minecraft:barrier", ct);
+        Assert.StartsWith("Changed the block at", airStage, StringComparison.Ordinal);
+        string air = await server.CommandAsync("fill -4 100 -4 110 104 6 minecraft:air", ct);
+        Assert.StartsWith("Successfully filled ", air, StringComparison.Ordinal);
+        Assert.Equal("Test passed", await server.CommandAsync("execute if block -4 100 -4 minecraft:air", ct));
+        await server.WriteAsync("native-fixture-availability.json", new { forced, availability, floorStage, floor, airStage, air, clientFullChunkReceiptStillRequired = true });
     }
 
     private static UmpkClient MotionClient(JavaVersion version, string name, ITickSource? ticks)
@@ -399,15 +568,29 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             var both = Assert.IsType<ClientboundMoveEntityPosRotPacket>(packet);
             (x, y, z, steps) = (both.DeltaX, both.DeltaY, both.DeltaZ, both.Steps);
         }
-        if (protocol == 777)
+        if (protocol == 777 && steps.Count != 0)
         {
-            Assert.NotEmpty(steps);
             Assert.All(steps, step => Assert.True(step.Ticks >= 0));
             return new Vec3d(steps.Sum(step => (double)step.DeltaX) / 4096.0, steps.Sum(step => (double)step.DeltaY) / 4096.0, steps.Sum(step => (double)step.DeltaZ) / 4096.0);
         }
         Assert.Empty(steps);
         return new Vec3d(x / 4096.0, y / 4096.0, z / 4096.0);
     }
+
+    private static Vec3d NativeQuantizedPosition(Vec3d position)
+        => new(Math.Floor(position.X * 4096.0 + .5) / 4096.0, Math.Floor(position.Y * 4096.0 + .5) / 4096.0, Math.Floor(position.Z * 4096.0 + .5) / 4096.0);
+
+    private static bool PositionFrameOnGround(CapturedFrame frame) => frame.Packet switch
+    {
+        ClientboundMoveEntityPosPacket packet => packet.OnGround,
+        ClientboundMoveEntityPosRotPacket packet => packet.OnGround,
+        ClientboundEntityPositionSyncPacket packet => packet.OnGround,
+        ClientboundTeleportEntityPacket packet => packet.OnGround,
+        _ => false,
+    };
+
+    private static void AssertNoPeerReplacement(CapturedFrame[] frames, int peerId, string scenario)
+        => Assert.DoesNotContain(frames, frame => frame.Packet is ClientboundAddEntityPacket added && added.EntityId == peerId || frame.Packet is ClientboundRemoveEntitiesPacket removed && removed.EntityIds.Contains(peerId));
 
     private static void AssertNoRetarget(CapturedFrame[] frames, int peerId, string scenario)
     {
@@ -456,7 +639,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         int count = 0;
         foreach (CapturedFrame frame in frames)
         {
-            if (frame.Packet is not (ClientboundMoveEntityPosPacket or ClientboundMoveEntityPosRotPacket or ClientboundMoveEntityRotPacket or ClientboundEntityPositionSyncPacket or ClientboundTeleportEntityPacket or ClientboundAddEntityPacket or ClientboundSetEntityDataPacket or ClientboundRemoveEntitiesPacket or ClientboundLevelChunkPacket or ClientboundBlockUpdatePacket or ClientboundInitializeBorderPacket or ClientboundSetBorderCenterPacket or ClientboundSetBorderSizePacket or ServerboundUseItemOnPacket or ServerboundSwingPacket or ServerboundPunchPacket))
+            if (frame.Packet is not (ClientboundDisguisedChatPacket or ClientboundMoveEntityPosPacket or ClientboundMoveEntityPosRotPacket or ClientboundMoveEntityRotPacket or ClientboundEntityPositionSyncPacket or ClientboundTeleportEntityPacket or ClientboundAddEntityPacket or ClientboundSetEntityDataPacket or ClientboundRemoveEntitiesPacket or ClientboundLevelChunkPacket or ClientboundBlockUpdatePacket or ClientboundInitializeBorderPacket or ClientboundSetBorderCenterPacket or ClientboundSetBorderSizePacket or ServerboundUseItemOnPacket or ServerboundSwingPacket or ServerboundPunchPacket))
                 continue;
             Assert.True(version.Protocol.GetRegistry(ProtocolPhase.Play, frame.Flow).TryGetInbound(frame.WireId, out BoundPacketCodec codec));
             object decoded = codec.Decode(frame.Payload, context);

@@ -102,7 +102,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 if (main is not null)
                     await server.ConsoleAsync($"give {Username} minecraft:{main} 1", ct);
                 if (off is not null)
-                    await server.ConsoleAsync(protocol >= 755 ? $"item replace entity {Username} weapon.offhand with minecraft:{off}" : $"replaceitem entity {Username} slot.weapon.offhand minecraft:{off}", ct);
+                    await server.ConsoleAsync(protocol >= 755 ? $"item replace entity {Username} weapon.offhand with minecraft:{off}" : $"replaceitem entity {Username} {MenuCommandSlot(protocol, "weapon.offhand")} minecraft:{off}", ct);
                 await client.Actions.Inventory.SelectHeldSlotAsync(0, ct);
                 await WaitAsync(client, c => Matches(c.State.Inventory.GetSlot(36), main) && (protocol == 47 || Matches(c.State.Inventory.GetSlot(45), off)), "menu selected stacks", ct);
                 // Each transition must be observed before the action mark, so old setup traffic cannot stand in for the native handler's reply pair.
@@ -119,7 +119,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     int count = block == "chest" ? 3 : 7;
                     await server.ConsoleAsync(protocol >= 755
                         ? $"item replace block {target.X} {target.Y} {target.Z} container.{slot} with minecraft:{item} {count}"
-                        : $"replaceitem block {target.X} {target.Y} {target.Z} slot.container.{slot} minecraft:{item} {count}", ct);
+                        : $"replaceitem block {target.X} {target.Y} {target.Z} {MenuCommandSlot(protocol, "container." + slot)} minecraft:{item} {count}", ct);
                     await AssertStored(block);
                 }
                 await AssertBlockAsync(server, protocol, target, block, ct);
@@ -229,7 +229,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 int slot = block == "chest" ? 0 : 2;
                 string command = protocol >= 755
                     ? $"item replace block {target.X} {target.Y} {target.Z} container.{slot} with minecraft:air"
-                    : $"replaceitem block {target.X} {target.Y} {target.Z} slot.container.{slot} minecraft:air";
+                    : $"replaceitem block {target.X} {target.Y} {target.Z} {MenuCommandSlot(protocol, "container." + slot)} minecraft:air";
                 await server.ConsoleAsync(command, ct);
                 string predicate = protocol == 47
                     ? $"testforblock {target.X} {target.Y} {target.Z} minecraft:{block} -1 {{Items:[]}}"
@@ -353,6 +353,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             }
         }
     }
+
+    private static string MenuCommandSlot(int protocol, string slot) => protocol == 47 ? "slot." + slot : slot;
 
     private static bool MenuChatContains(object? packet, string marker)
     {

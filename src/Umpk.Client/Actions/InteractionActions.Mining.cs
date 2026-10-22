@@ -19,6 +19,7 @@ public sealed partial class InteractionActions
     private readonly VanillaAttackCharge _attackCharge = new();
     private readonly VanillaCreativeMiningRestriction _creativeMiningRestriction = new();
     private readonly VanillaFlattenedMiningPermission _flattenedMiningPermission = new();
+    private readonly VanillaComponentMiningPermission _componentMiningPermission = new();
     private long? _interactionLifetime;
     private int _destroyDelay;
 
@@ -98,7 +99,8 @@ public sealed partial class InteractionActions
             if (_services.Self.GameMode == GameMode.Spectator
                 || _services.Self.GameMode == GameMode.Adventure
                 && !VanillaLegacyMiningPermission.Supports(_services.Version.Version.Protocol)
-                && !VanillaFlattenedMiningPermission.Supports(_services.Version.Version.Protocol))
+                && !VanillaFlattenedMiningPermission.Supports(_services.Version.Version.Protocol)
+                && !VanillaComponentMiningPermission.Supports(_services.Version.Version.Protocol))
                 throw new MiningUnavailableException("This game mode requires an allowed block interaction before mining.");
 
             if (request.ViewDistance is double distance)
@@ -263,7 +265,9 @@ public sealed partial class InteractionActions
             BlockState block = request.World!.GetBlock(request.Position);
             bool? allowed = VanillaLegacyMiningPermission.Supports(protocol)
                 ? VanillaLegacyMiningPermission.Allows(item, block, protocol)
-                : _flattenedMiningPermission.Allows(item, block, (_services.State.Registries ?? JavaGameData.Registries(protocol)).Blocks, _services.State.RegistryTags, protocol);
+                : VanillaFlattenedMiningPermission.Supports(protocol)
+                    ? _flattenedMiningPermission.Allows(item, block, (_services.State.Registries ?? JavaGameData.Registries(protocol)).Blocks, _services.State.RegistryTags, protocol)
+                    : _componentMiningPermission.Allows(item, block, _services.State.RegistryTags, protocol);
             if (allowed is null)
                 throw new MiningUnavailableException("The Adventure permission requires unavailable tag, property-kind or block-entity facts.");
             if (!allowed.Value)

@@ -191,7 +191,6 @@ public sealed class LegacyAdventureMiningRuntimeTests
     }
 
     [Theory]
-    [InlineData(766)]
     [InlineData(770)]
     [InlineData(777)]
     public async Task UnsupportedAdventurePredicateErasRemainExplicitFailures(int protocol)
@@ -203,6 +202,27 @@ public sealed class LegacyAdventureMiningRuntimeTests
         await fixture.TickAsync();
         await Assert.ThrowsAnyAsync<InvalidOperationException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
         Assert.Empty(fixture.Sent);
+    }
+
+    [Fact]
+    public async Task ComponentEraMissingPermissionIsKnownDenialRatherThanAnUnsupportedEra()
+    {
+        await using var fixture = new Fixture(766);
+        await SetModeAsync(fixture, GameMode.Adventure);
+        await fixture.HoldAsync("diamond_pickaxe", 0);
+        using var caller = new CancellationTokenSource();
+        Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North, caller.Token);
+        try
+        {
+            await fixture.TickAsync();
+            Assert.Empty(fixture.ActionsSent);
+            Assert.Equal(1, Swings(fixture));
+            Assert.False(mining.IsCompleted);
+        }
+        finally
+        {
+            await ReleaseAsync(caller, mining);
+        }
     }
 
     private static Task SetModeAsync(Fixture fixture, GameMode mode)

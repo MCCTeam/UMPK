@@ -86,11 +86,12 @@ public sealed partial class InteractionActions
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? world.GetBlock(position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
+        // Cached block updates do not establish the native terrain required by supported activation families or their item continuation.
+        if (hasActivation && activation.RequiresNativeTerrain(clicked) && !_services.State.EntityMembership.HasColumn(position))
+            return BlockUsePrediction.Unknown;
         bool activationPassesOffhand = hasActivation && activation.EmptyHandActivationIsMainHandOnly && hand == Hand.Off;
         if (!suppressActivation && hasActivation && !activationPassesOffhand)
         {
-            if (activation.RequiresNativeTerrain(clicked) && !_services.State.EntityMembership.HasColumn(position))
-                return BlockUsePrediction.Unknown;
             if (activationResult != BlockUseResult.Pass)
                 return activationResult switch
                 {

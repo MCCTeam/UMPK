@@ -160,7 +160,7 @@ internal sealed partial class EntityMotionState
         }
         if (!CowBodyIsDry(world, membership, position.Bounds)
             || !CowLocalPushIsIrrelevant(self, localBody, position.Bounds, JavaGameData.EntityGeometryData(cow.Protocol))
-            || !CowExpansionPushIsIrrelevant(entity, entities, geometry, cow.Protocol, beforeBounds, position.Bounds))
+            || !EntityGeometryState.ExpansionPushIsIrrelevant(entity, entities, geometry, cow.Protocol, beforeBounds, position.Bounds))
         {
             geometry.InvalidatePosition(entity);
             return;
@@ -201,22 +201,6 @@ internal sealed partial class EntityMotionState
                     if (!state.IsValid || state.IsFluid || state.IsWaterlogged || state.IsPowderSnow || state.Block.Id == Identifier.Minecraft("moving_piston"))
                         return false;
                 }
-        return true;
-    }
-
-    private static bool CowExpansionPushIsIrrelevant(Entity source, EntityStore entities, EntityGeometryState geometry, int protocol, Aabb before, Aabb after)
-    {
-        foreach (Entity peer in entities.All)
-        {
-            if (ReferenceEquals(source, peer) || peer.Type.Id != Identifier.Minecraft("shulker"))
-                continue;
-            if (!geometry.TryGet(peer, JavaGameData.EntityGeometryData(protocol), out Aabb bounds, out _, protocol))
-                return false;
-            // Expansion pushes are not owned yet. A full current body width/height conservatively encloses every possible remaining half-body lid extension on all faces.
-            Aabb swept = bounds.Inflate(Math.Max(bounds.XSize, bounds.YSize));
-            if (swept.Intersects(before) || swept.Intersects(after))
-                return false;
-        }
         return true;
     }
 

@@ -431,8 +431,14 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>Records one block event, which is the ONLY notice a client gets that a piston is moving: <c>piston structure movement</c> writes the <c>moving_piston</c> blocks without <c>UPDATE_CLIENTS</c>, so they are never sent. See <see cref="MovingPistonTracker"/>.</summary>
-    public void OnBlockEvent(BlockPos position, int action, int param) =>
+    public void OnBlockEvent(BlockPos position, int action, int param)
+    {
         _pistons.OnBlockEvent(position, action, param);
+        _services.State.EntityGeometry.RefreshFixedPositions(_services.State.EntitiesOrNull);
+    }
+
+    internal bool HasCompletePistonContext => _engine is not null && ReferenceEquals(_installedWorld, _services.State.WorldOrNull)
+        && _pistons.ContextComplete && _pistons.ActiveCount == 0;
 
     /// <summary>Ticks the live moving pistons and publishes any displacement into self state.</summary>
     /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>

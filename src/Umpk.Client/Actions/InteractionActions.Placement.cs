@@ -1,3 +1,4 @@
+using Umpk.Client.Internal;
 using Umpk.Data.Java;
 using Umpk.Game.Blocks;
 using Umpk.Game.Items;
@@ -160,6 +161,8 @@ public sealed partial class InteractionActions
                 if (!blocksBuilding)
                     continue;
             }
+            else if (EntityGeometryState.IsFixedCrystal(entity, _services.Version.Version.Protocol))
+                return BlockUsePrediction.Unknown;
             else if (data.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
                 bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
             else

@@ -140,6 +140,8 @@ public sealed class UmpkClient : IAsyncDisposable
                 settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(settings.Version.Version.Protocol),
                 _logger)
             : null;
+        State.EntityGeometry.FixedPositionContext = (entity, bounds) => State.EntityGeometry.FixedContextIsKnown(
+            entity, bounds, State.EntitiesOrNull, State.WorldOrNull, State.EntityMembership, settings.Version.Version.Protocol, _physics?.HasCompletePistonContext is true);
         _movementReporter = new MovementReporter(_services);
         _navigator = _physics is not null
             ? new Navigator(_services, _physics, _leases, _logger, () => Actions?.Interaction)
@@ -861,6 +863,8 @@ public sealed class UmpkClient : IAsyncDisposable
         if (State.WorldDimension is not null)
             State.WorldTicks.BeginTick();
 
+        State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+
         // Held block input runs on the same clock as locomotion, before the movement report. A request never waits for a future tick or a server acknowledgment inside this loop.
         await Actions.Interaction.TickMiningOnLoopAsync(ct).ConfigureAwait(false);
 
@@ -925,6 +929,7 @@ public sealed class UmpkClient : IAsyncDisposable
             // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
             if (State.WorldTicks.RunsNormally)
                 State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);
+            State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
             foreach (int entityId in _interpolatedEntityMoves)
                 await _eventBus.PublishAsync(new EntityMoved(entityId)).ConfigureAwait(false);
         }

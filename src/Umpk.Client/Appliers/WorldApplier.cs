@@ -85,7 +85,10 @@ internal sealed class WorldApplier : IApplier
 
             case ClientboundBlockEntityDataPacket blockEntity:
                 if (blockEntity.Nbt is NbtCompound nbt)
+                {
                     world.SetBlockEntityNbt(blockEntity.Position, nbt);
+                    context.State.EntityGeometry.RefreshFixedPositions(context.State.EntitiesOrNull);
+                }
 
                 return true;
 

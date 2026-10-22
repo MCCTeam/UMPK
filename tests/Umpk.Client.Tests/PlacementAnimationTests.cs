@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Umpk.Client.Actions;
 using Umpk.Client.Internal;
+using Umpk.Client.Navigation;
 using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Entities;
@@ -495,7 +496,7 @@ public sealed class PlacementAnimationTests
     [InlineData(770, 2.99999995, true)]
     public async Task FixedEntityBoundsOnlySuppressSwingWhenTheyObstruct(int protocol, double x, bool swings)
     {
-        await using var harness = new Harness(protocol);
+        await using var harness = new Harness(protocol, fixedCrystalContext: true);
         Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("end_crystal"), out RegistryEntry<EntityTypeDefinition> type));
         harness.State.Entities.Add(new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(x, 65, 1.5) });
 
@@ -736,7 +737,7 @@ public sealed class PlacementAnimationTests
         public bool Connected { get; set; } = true;
         private readonly SequenceTracker _sequences = new();
 
-        public Harness(int protocol, ClientFeatures? features = null)
+        public Harness(int protocol, ClientFeatures? features = null, bool fixedCrystalContext = false)
         {
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
             State = new ClientState((features ?? new ClientFeatures()).Normalized());
@@ -752,6 +753,16 @@ public sealed class PlacementAnimationTests
                 State.Inventory.SetSlot(0, 36, new ItemStack(item, 32));
             var services = new ClientSessionServices { Version = version!, Options = new(), Policies = new(), State = State, Wire = new(version!), Logger = NullLogger.Instance, Scheduler = Scheduler, ReadPhysicsState = () => Physics, CurrentSessionCancellation = () => Connected ? SessionLifetime.Token : null };
             Actions = new InteractionActions(Sink, services, _sequences);
+            if (fixedCrystalContext && protocol is >= 769 and <= 777)
+            {
+                State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+                var physics = new PhysicsEngineHolder(services, JavaGameData.BlockShapes(protocol), NullLogger.Instance);
+                physics.EnsureEngine();
+                Assert.True(physics.HasCompletePistonContext);
+                Assert.True(State.EntityMembership.HasColumn(Target));
+                State.EntityGeometry.FixedPositionContext = (entity, bounds) => State.EntityGeometry.FixedContextIsKnown(
+                    entity, bounds, State.Entities, State.World, State.EntityMembership, protocol, physics.HasCompletePistonContext);
+            }
         }
 
         public void Acknowledge() => _sequences.Acknowledge(Assert.IsType<ServerboundUseItemOnPacket>(Sink.Packets[0]).Sequence);

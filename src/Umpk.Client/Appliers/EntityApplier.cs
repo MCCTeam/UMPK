@@ -77,7 +77,7 @@ internal sealed class EntityApplier : IApplier
                     if (!deferred)
                     {
                         posEntity.Position = target;
-                        context.State.EntityGeometry.ObservePosition(posEntity);
+                        context.State.EntityGeometry.ObservePosition(posEntity, independent: true);
                     }
                     posEntity.OnGround = move.OnGround;
                     if (!deferred)
@@ -125,7 +125,7 @@ internal sealed class EntityApplier : IApplier
                         prEntity.Position = target;
                         prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
                         prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
-                        context.State.EntityGeometry.ObservePosition(prEntity);
+                        context.State.EntityGeometry.ObservePosition(prEntity, independent: true);
                     }
                     prEntity.OnGround = posRot.OnGround;
                     if (!deferred)
@@ -170,7 +170,7 @@ internal sealed class EntityApplier : IApplier
                     tpEntity.OnGround = teleport.OnGround;
                     if (!deferred || tpEntity.Position != previous)
                     {
-                        context.State.EntityGeometry.ObservePosition(tpEntity);
+                        context.State.EntityGeometry.ObservePosition(tpEntity, independent: teleport.ModernValues is null || (teleport.Relatives & 7) == 0);
                         await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
                     }
                 }
@@ -192,7 +192,7 @@ internal sealed class EntityApplier : IApplier
                     syncEntity.OnGround = sync.OnGround;
                     if (!deferred || syncEntity.Position != previous)
                     {
-                        context.State.EntityGeometry.ObservePosition(syncEntity);
+                        context.State.EntityGeometry.ObservePosition(syncEntity, independent: true);
                         await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
                     }
                 }

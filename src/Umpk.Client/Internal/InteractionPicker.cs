@@ -92,7 +92,8 @@ internal static class InteractionPicker
                 continue;
             bool player = state.EntityMotion.IsTrackedPlayer(entity);
             bool cow = entity.Type.Id.IsMinecraft && entity.Type.Id.Path == "cow";
-            if (!player && !cow)
+            bool crystal = EntityGeometryState.IsFixedCrystal(entity, protocol);
+            if (!player && !cow && !crystal)
             {
                 unknown = true;
                 continue;

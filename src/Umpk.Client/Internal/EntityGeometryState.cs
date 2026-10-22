@@ -20,6 +20,12 @@ internal sealed class EntityGeometryState
     private LegacyEmptyChunkState? _legacyEmptyChunk;
     private bool _hasLivingTickRules;
     private bool _hasShulkers;
+    private bool _hasFixedCrystals;
+    internal Func<Entity, Aabb, bool>? FixedPositionContext { get; set; }
+
+    internal static bool IsFixedCrystal(Entity entity, int protocol)
+        => protocol is >= 769 and <= 777 && entity.Type.Id.IsMinecraft && entity.Type.Id.Path == "end_crystal";
+
 
     public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
     {
@@ -37,12 +43,18 @@ internal sealed class EntityGeometryState
             _hasShulkers = true;
             return;
         }
+        bool fixedCrystal = IsFixedCrystal(entity, protocol);
+        if (fixedCrystal)
+            source = FixedCrystalSource.Instance;
         if (!source.TryGetRule(entity.Type.Id, out EntityGeometryRule rule))
             return;
-        var geometry = new Geometry(source, rule, rule.ScaleAttribute is not null && LivingScaleProfile.Supports(protocol) ? LivingScaleProfile.ForProtocol(protocol) : null, isPlayer);
+        var geometry = new Geometry(source, rule, rule.ScaleAttribute is not null && LivingScaleProfile.Supports(protocol) ? LivingScaleProfile.ForProtocol(protocol) : null, isPlayer) { FixedCrystal = fixedCrystal };
         _entities.Add(entity, geometry);
         _hasLivingTickRules |= rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick;
         ReapplyPosition(entity, geometry);
+        _hasFixedCrystals |= fixedCrystal;
+        if (fixedCrystal)
+            _ = PositionKnown(entity, geometry);
     }
 
     public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
@@ -95,7 +107,7 @@ internal sealed class EntityGeometryState
             ObserveDimensions(entity, geometry, refreshScale: true, forceRefresh: geometry.ScaleProfile is not null);
     }
 
-    public void ObservePosition(Entity entity)
+    public void ObservePosition(Entity entity, bool independent = false)
     {
         if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
         {
@@ -113,7 +125,12 @@ internal sealed class EntityGeometryState
             return;
         }
         if (_entities.TryGetValue(entity, out Geometry? geometry))
+        {
             ReapplyPosition(entity, geometry);
+            if (geometry.FixedCrystal && independent)
+                geometry.PositionKnown = FixedPositionContext?.Invoke(entity, geometry.Bounds.Box) is true;
+            _ = PositionKnown(entity, geometry);
+        }
     }
 
     /// <summary>Returns the native float dimensions without reconstructing them from rounded box endpoints.</summary>
@@ -127,7 +144,7 @@ internal sealed class EntityGeometryState
         return geometry.Known && (!geometry.CowMotionActive || PositionKnown(entity, geometry));
     }
 
-    /// <summary>A missing collision decision makes subsequent arithmetic positions unproven until this actor is replaced.</summary>
+    /// <summary>A missing displacement decision makes the position unproven until the owning profile observes a supported recovery event.</summary>
     public void InvalidatePosition(Entity entity)
     {
         if (_entities.TryGetValue(entity, out Geometry? geometry))
@@ -150,11 +167,65 @@ internal sealed class EntityGeometryState
         }
     }
 
-    private static bool PositionKnown(Entity entity, Geometry geometry)
+    private bool PositionKnown(Entity entity, Geometry geometry)
     {
+        if (geometry.FixedCrystal && FixedPositionContext?.Invoke(entity, geometry.Bounds.Box) is not true)
+            geometry.PositionKnown = false;
         if (geometry.CowMotionActive && !CowMotionProfile.IsKnownState(entity, geometry.Rule))
             geometry.PositionKnown = false;
         return geometry.PositionKnown;
+    }
+
+    /// <summary>Records uncertainty at the event or tick that can move an otherwise stationary actor. Removing a displacement source cannot restore its earlier position.</summary>
+    internal void RefreshFixedPositions(EntityStore? entities)
+    {
+        if (!_hasFixedCrystals || entities is null)
+            return;
+        foreach (Entity entity in entities.All)
+            if (_entities.TryGetValue(entity, out Geometry? geometry) && geometry.FixedCrystal)
+                _ = PositionKnown(entity, geometry);
+    }
+
+    internal bool FixedContextIsKnown(Entity entity, Aabb bounds, EntityStore? entities, World? world, EntityMembershipState membership, int protocol, bool pistonsClear)
+    {
+        if (!pistonsClear || entities is null || world is null || entity.Vehicle is not null || entity.Passengers.Count != 0
+            || !double.IsFinite(bounds.MinX) || !double.IsFinite(bounds.MaxX) || !double.IsFinite(bounds.MinY) || !double.IsFinite(bounds.MaxY)
+            || !double.IsFinite(bounds.MinZ) || !double.IsFinite(bounds.MaxZ) || bounds.MinX <= int.MinValue || bounds.MaxX >= int.MaxValue
+            || bounds.MinZ <= int.MinValue || bounds.MaxZ >= int.MaxValue || bounds.MinY < world.Dimension.MinY || bounds.MaxY >= world.Dimension.MinY + world.Dimension.Height
+            || !ExpansionPushIsIrrelevant(entity, entities, this, protocol, bounds, bounds))
+            return false;
+        // The fixed actor has no travel phase. Non-air block callbacks and untracked block entities remain outside the proven empty-body context.
+        for (int x = (int)Math.Floor(bounds.MinX); x <= (int)Math.Floor(bounds.MaxX); x++)
+            for (int y = (int)Math.Floor(bounds.MinY); y <= (int)Math.Floor(bounds.MaxY); y++)
+                for (int z = (int)Math.Floor(bounds.MinZ); z <= (int)Math.Floor(bounds.MaxZ); z++)
+                {
+                    var cell = new BlockPos(x, y, z);
+                    if (membership.HasColumn(cell) && (world.GetColumn(cell) is null || !world.GetBlock(cell).IsValid || !world.GetBlock(cell).IsAir))
+                        return false;
+                }
+        foreach (var pair in world.BlockEntityNbt)
+            if (!world.GetBlock(pair.Key).IsValid || world.GetBlock(pair.Key).Block.Id == Identifier.Minecraft("moving_piston")
+                || pair.Value.GetString("id") is "minecraft:piston" or "piston")
+                return false;
+        return true;
+    }
+
+    internal static bool ExpansionPushIsIrrelevant(Entity source, EntityStore entities, EntityGeometryState geometry, int protocol, Aabb before, Aabb after)
+    {
+        foreach (Entity peer in entities.All)
+        {
+            if (ReferenceEquals(source, peer) || peer.Type.Id != Identifier.Minecraft("shulker"))
+                continue;
+            if (peer.Vehicle is not null && IsFixedCrystal(source, protocol))
+                return false;
+            if (!geometry.TryGet(peer, Umpk.Data.Java.JavaGameData.EntityGeometryData(protocol), out Aabb bounds, out _, protocol))
+                return false;
+            // The existing all-face envelope includes every remaining half-body lid extension without simulating a push.
+            Aabb swept = bounds.Inflate(Math.Max(bounds.XSize, bounds.YSize));
+            if (swept.Intersects(before) || swept.Intersects(after))
+                return false;
+        }
+        return true;
     }
 
     public void RegisterFallingBlock(Entity entity, int protocol = 107) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity, protocol));
@@ -318,6 +389,7 @@ internal sealed class EntityGeometryState
         _legacyEmptyChunk = null;
         _hasLivingTickRules = false;
         _hasShulkers = false;
+        _hasFixedCrystals = false;
     }
 
     private static bool Resolve(Entity entity, Geometry geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions)
@@ -426,6 +498,21 @@ internal sealed class EntityGeometryState
         geometry.Bounds = geometry.Known ? VanillaEntityBounds.Create(entity.Position, dimensions.Width, dimensions.Height) : default;
     }
 
+    private sealed class FixedCrystalSource : IEntityGeometrySource
+    {
+        internal static FixedCrystalSource Instance { get; } = new();
+        public bool TryGetRule(Identifier entityType, out EntityGeometryRule rule)
+        {
+            rule = new(-1, -1, EntityDimensionsRefresh.Recenter, null);
+            return entityType.IsMinecraft && entityType.Path == "end_crystal";
+        }
+        public bool TryGetDimensions(Identifier entityType, bool selector, EntityPose pose, out EntityGeometryDimensions dimensions)
+        {
+            dimensions = new(2F, 2F, true, true);
+            return entityType.IsMinecraft && entityType.Path == "end_crystal";
+        }
+    }
+
     private sealed class Geometry(IEntityGeometrySource source, EntityGeometryRule rule, LivingScaleProfile? scaleProfile, bool isPlayer)
     {
         public IEntityGeometrySource Source { get; } = source;
@@ -439,6 +526,7 @@ internal sealed class EntityGeometryState
         public bool PositionKnown { get; set; } = true;
         public bool HasDimensions { get; set; }
         public bool CowMotionActive { get; set; }
+        public bool FixedCrystal { get; init; }
         public bool Selector { get; set; }
         public EntityPose Pose { get; set; }
         public EntityGeometryDimensions Dimensions { get; set; }

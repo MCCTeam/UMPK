@@ -94,7 +94,10 @@ internal sealed class ApplierContext
     /// <summary>Publishes an event on the loop (fire-and-await inline).</summary>
     public ValueTask PublishAsync<TEvent>(TEvent evt)
         where TEvent : IClientEvent
-        => Events.PublishAsync(evt);
+    {
+        State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+        return Events.PublishAsync(evt);
+    }
 }
 
 /// <summary>The dimension facts an applier hands to the world builder when creating/replacing the world.</summary>

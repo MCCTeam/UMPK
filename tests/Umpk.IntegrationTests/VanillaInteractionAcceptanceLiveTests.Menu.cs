@@ -60,7 +60,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await server.ConsoleAsync($"tp {Username} {x + .5:R} 100 {z + .5:R}", ct);
             await server.ConsoleAsync($"gamemode survival {Username}", ct);
             await WaitAsync(client, c => c.State.Self.GameMode == GameMode.Survival && c.State.Self.OnGround && Math.Abs(c.State.Self.Position.Y - 100) < .01, "grounded menu owner", ct);
-            await WaitAsync(() => capture.Frames.Any(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundLevelChunkPacket chunk && chunk.FullChunk && chunk.ChunkX == target.X >> 4 && chunk.ChunkZ == target.Z >> 4), "actual native full-column packet", ct);
+            await WaitAsync(() => capture.Frames.Any(frame => frame.Flow == PacketFlow.Clientbound && (frame.Packet is ClientboundLevelChunkPacket chunk && chunk.FullChunk && chunk.ChunkX == target.X >> 4 && chunk.ChunkZ == target.Z >> 4 || protocol == 47 && frame.Packet is ClientboundMapChunkBulkPacket bulk && bulk.Columns.Any(column => column.Position.X == target.X >> 4 && column.Position.Z == target.Z >> 4))), "actual native full-column packet", ct);
             foreach (string block in counters.Keys)
             {
                 await server.ConsoleAsync($"scoreboard objectives add {Objective(block)} {Criterion(block)}", ct);
@@ -359,7 +359,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         int count = 0;
         foreach (CapturedFrame frame in frames)
         {
-            if (frame.Packet is not (ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket))
+            if (frame.Packet is not (ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket))
                 continue;
             PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, frame.Flow);
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
@@ -388,6 +388,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.Equal(expectedChunk.ChunkZ, actualChunk.ChunkZ);
                     Assert.Equal(expectedChunk.FullChunk, actualChunk.FullChunk);
                     Assert.Equal(expectedChunk.RawBody, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(actualChunk)));
+                    break;
+                case ClientboundMapChunkBulkPacket expectedBulk:
+                    var actualBulk = Assert.IsType<ClientboundMapChunkBulkPacket>(decoded);
+                    Assert.Equal(expectedBulk.SkyLight, actualBulk.SkyLight);
+                    Assert.Equal(expectedBulk.Columns.Count, actualBulk.Columns.Count);
+                    Assert.Equal(expectedBulk.Columns.Select(column => column.Position), actualBulk.Columns.Select(column => column.Position));
+                    Assert.All(actualBulk.Columns, column =>
+                    {
+                        Assert.Equal(0, column.MinY);
+                        Assert.Equal(256, column.MaxY);
+                    });
+                    Assert.Equal(expectedBulk.RawBody, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(actualBulk)));
                     break;
                 default:
                     Assert.Equal(frame.Packet, decoded);

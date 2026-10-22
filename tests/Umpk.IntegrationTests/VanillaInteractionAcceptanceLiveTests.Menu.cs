@@ -61,6 +61,16 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await server.ConsoleAsync($"gamemode survival {Username}", ct);
             await WaitAsync(client, c => c.State.Self.GameMode == GameMode.Survival && c.State.Self.OnGround && Math.Abs(c.State.Self.Position.Y - 100) < .01, "grounded menu owner", ct);
             await WaitAsync(() => capture.Frames.Any(frame => frame.Flow == PacketFlow.Clientbound && (frame.Packet is ClientboundLevelChunkPacket chunk && chunk.FullChunk && chunk.ChunkX == target.X >> 4 && chunk.ChunkZ == target.Z >> 4 || protocol == 47 && frame.Packet is ClientboundMapChunkBulkPacket bulk && bulk.Columns.Any(column => column.Position.X == target.X >> 4 && column.Position.Z == target.Z >> 4))), "actual native full-column packet", ct);
+            if (protocol == 47)
+                await client.InvokeAsync(c =>
+                {
+                    var column = c.State.World.GetColumn(target);
+                    Assert.NotNull(column);
+                    Assert.Same(c.State.World.Dimension, column.Dimension);
+                    Assert.Equal(0, column.MinY);
+                    Assert.Equal(256, column.MaxY);
+                    return true;
+                }, ct);
             foreach (string block in counters.Keys)
             {
                 await server.ConsoleAsync($"scoreboard objectives add {Objective(block)} {Criterion(block)}", ct);
@@ -394,12 +404,27 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.Equal(expectedBulk.SkyLight, actualBulk.SkyLight);
                     Assert.Equal(expectedBulk.Columns.Count, actualBulk.Columns.Count);
                     Assert.Equal(expectedBulk.Columns.Select(column => column.Position), actualBulk.Columns.Select(column => column.Position));
-                    Assert.All(actualBulk.Columns, column =>
+                    var bulkWire = Assert.IsType<MapChunkBulkWireBody>(ChunkCodecs.DecodeStructure(actualBulk));
+                    Assert.Equal(actualBulk.SkyLight, bulkWire.SkyLight);
+                    Assert.Equal(actualBulk.Columns.Count, bulkWire.Chunks.Count);
+                    for (int i = 0; i < bulkWire.Chunks.Count; i++)
                     {
+                        var column = actualBulk.Columns[i];
+                        LegacyChunkWireBody chunkWire = bulkWire.Chunks[i];
+                        Assert.True(chunkWire.GroundUp);
+                        Assert.Equal((chunkWire.X, chunkWire.Z), (column.Position.X, column.Position.Z));
                         Assert.Equal(0, column.MinY);
-                        Assert.Equal(256, column.MaxY);
-                    });
-                    Assert.Equal(expectedBulk.RawBody, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(actualBulk)));
+                        int expectedWireHeight = 16;
+                        for (int section = 0; section < 16; section++)
+                        {
+                            bool present = (chunkWire.PrimaryMask & (1 << section)) != 0;
+                            Assert.Equal(present, column.GetSection(section) is not null);
+                            if (present)
+                                expectedWireHeight = (section + 1) * 16;
+                        }
+                        Assert.Equal(expectedWireHeight, column.MaxY);
+                    }
+                    Assert.Equal(expectedBulk.RawBody, ChunkCodecs.EncodeStructural(bulkWire));
                     break;
                 default:
                     Assert.Equal(frame.Packet, decoded);

@@ -17,6 +17,7 @@ public sealed partial class InteractionActions
     private MiningRequest? _mining;
     private MiningTarget? _destroyTarget;
     private readonly VanillaAttackCharge _attackCharge = new();
+    private readonly VanillaCreativeMiningRestriction _creativeMiningRestriction = new();
     private readonly VanillaFlattenedMiningPermission _flattenedMiningPermission = new();
     private long? _interactionLifetime;
     private int _destroyDelay;
@@ -31,6 +32,8 @@ public sealed partial class InteractionActions
         public TaskCompletionSource<int?> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public World? World { get; set; }
         public bool InitialAttackPending { get; set; } = true;
+        public bool CompleteAfterInitialContinuation { get; set; }
+        public int? InitialCompletionSequence { get; set; }
     }
 
     // The game mode retains its target/item after stopDestroyBlock. Its active flag is separate from the held request and from this cached identity.
@@ -137,7 +140,7 @@ public sealed partial class InteractionActions
 
                     if (_blockProfile.InitialSwingBeforeStart)
                         await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
-                    await StartMiningTargetOnLoopAsync(request, item, ReadMiningProgress(initialBlock, item), ct).ConfigureAwait(false);
+                    await StartMiningTargetOnLoopAsync(request, item, ReadMiningProgress(initialBlock, item), ct, initialAttack: true).ConfigureAwait(false);
                     if (!_blockProfile.InitialSwingBeforeStart)
                         await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
                     if (!ReferenceEquals(_mining, request))
@@ -166,6 +169,8 @@ public sealed partial class InteractionActions
             {
                 _destroyDelay--;
                 await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
+                if (request.CompleteAfterInitialContinuation)
+                    CompleteMining(request, request.InitialCompletionSequence);
                 return;
             }
 
@@ -186,6 +191,7 @@ public sealed partial class InteractionActions
             {
                 target.Active = false;
                 finished = NextSequence();
+                _creativeMiningRestriction.PreventsLocalRemoval(item, _services.State, _services.Version.Version.Protocol);
                 await _sink.SendAsync(new ServerboundPlayerActionPacket(_blockProfile.StopDestroyAction, request.Position, (byte)request.Face, finished), ct).ConfigureAwait(false);
                 target.Progress = 0;
                 target.DestroyDirection = null;
@@ -234,6 +240,7 @@ public sealed partial class InteractionActions
 
     private void SynchronizeMiningOwner()
     {
+        _creativeMiningRestriction.Synchronize(_services.State);
         _flattenedMiningPermission.Synchronize(_services.State.InteractionLifetime, _services.State.PlayerLifetime, _services.State.WorldOrNull);
         if (_interactionLifetime != _services.State.InteractionLifetime)
         {
@@ -247,7 +254,7 @@ public sealed partial class InteractionActions
             _destroyTarget = null;
     }
 
-    private async ValueTask<bool> StartMiningTargetOnLoopAsync(MiningRequest request, ItemStack item, float progress, CancellationToken ct)
+    private async ValueTask<bool> StartMiningTargetOnLoopAsync(MiningRequest request, ItemStack item, float progress, CancellationToken ct, bool initialAttack = false)
     {
         // Native checks Adventure permission before aborting an old target or sending START. Ordinary same-target continuation does not repeat this check.
         if (_services.Self.GameMode == GameMode.Adventure)
@@ -270,13 +277,23 @@ public sealed partial class InteractionActions
             await SendAbortMiningAsync(previous.Position, request.Face, ct).ConfigureAwait(false);
         }
 
+        bool localRemovalFailed = (instantBuild || progress >= 1.0F)
+            && _creativeMiningRestriction.PreventsLocalRemoval(item, _services.State, _services.Version.Version.Protocol) == true;
+        bool initialItemEnabled = item.IsEmpty || _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol) == true;
         int? sequence = NextSequence();
         await _sink.SendAsync(new ServerboundPlayerActionPacket(0, request.Position, (byte)request.Face, sequence), ct).ConfigureAwait(false);
         if (instantBuild || progress >= 1.0F)
         {
             if (instantBuild)
                 _destroyDelay = 5;
-            CompleteMining(request, sequence);
+            if (initialAttack && instantBuild && localRemovalFailed && initialItemEnabled)
+            {
+                // A failed local destroy leaves the target for this input phase's held continuation. Finish the public request after that captured packet group, without predicting server-owned terrain or holding another request.
+                request.CompleteAfterInitialContinuation = true;
+                request.InitialCompletionSequence = sequence;
+            }
+            else
+                CompleteMining(request, sequence);
         }
         else
             _destroyTarget = new MiningTarget(request, item);

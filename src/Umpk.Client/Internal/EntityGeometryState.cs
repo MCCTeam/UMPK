@@ -39,7 +39,7 @@ internal sealed class EntityGeometryState
         }
         if (!source.TryGetRule(entity.Type.Id, out EntityGeometryRule rule))
             return;
-        var geometry = new Geometry(source, rule);
+        var geometry = new Geometry(source, rule, rule.ScaleAttribute is not null && LivingScaleProfile.Supports(protocol) ? LivingScaleProfile.ForProtocol(protocol) : null, isPlayer);
         _entities.Add(entity, geometry);
         _hasLivingTickRules |= rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick;
         ReapplyPosition(entity, geometry);
@@ -92,7 +92,7 @@ internal sealed class EntityGeometryState
             return;
         }
         if (_entities.TryGetValue(entity, out Geometry? geometry) && (index == geometry.Rule.MetadataIndex || index == geometry.Rule.PoseMetadataIndex))
-            ObserveDimensions(entity, geometry);
+            ObserveDimensions(entity, geometry, refreshScale: true, forceRefresh: geometry.ScaleProfile is not null);
     }
 
     public void ObservePosition(Entity entity)
@@ -220,7 +220,7 @@ internal sealed class EntityGeometryState
             shulker.ObserveMount(entity);
     }
 
-    public void ObserveAttributes(Entity entity)
+    public void ObserveAttributes(Entity entity, bool scaleDirty = false)
     {
         if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker))
         {
@@ -228,7 +228,32 @@ internal sealed class EntityGeometryState
             return;
         }
         if (_entities.TryGetValue(entity, out Geometry? geometry))
-            ObserveDimensions(entity, geometry);
+        {
+            if (geometry.ScaleProfile is not null)
+                geometry.ScaleDirty |= scaleDirty;
+            else
+                ObserveDimensions(entity, geometry);
+        }
+    }
+
+    /// <summary>Applies scale at the end of this eligible native living tick, after inherited movement. Bounds reads and explicit position reapplication keep cached dimensions.</summary>
+    public void TickLivingScale(Entity entity, bool runsNormally, bool columnAvailable)
+    {
+        if (!_entities.TryGetValue(entity, out Geometry? geometry) || geometry.ScaleProfile is not { } profile
+            || geometry.Rule.ScaleAttribute is not { } attribute || !geometry.IsPlayer && (!runsNormally || !columnAvailable))
+            return;
+        float scale = (float)entity.Attributes.GetValueOrDefault(attribute, 1.0);
+        if (!float.IsFinite(scale) || scale <= 0F)
+        {
+            geometry.Known = false;
+            return;
+        }
+        if (profile.NeedsRefresh(geometry.AppliedScale, scale, geometry.ScaleDirty))
+        {
+            geometry.AppliedScale = scale;
+            ObserveDimensions(entity, geometry, refreshScale: true, forceRefresh: true);
+        }
+        geometry.ScaleDirty = false;
     }
 
     public void TickLivingDimensions(EntityStore? entities, World? world)
@@ -302,14 +327,26 @@ internal sealed class EntityGeometryState
         }
         if (!geometry.Source.TryGetDimensions(entity.Type.Id, selector, pose, out dimensions))
             return false;
-        // Attribute-scale transitions need their own native sweep. Keep that state unknown rather than using default dimensions for a scaled entity.
+        if (geometry.ScaleProfile is not null)
+        {
+            if (!float.IsFinite(geometry.DimensionsScale) || geometry.DimensionsScale <= 0F)
+                return false;
+            dimensions = LivingScaleProfile.Apply(dimensions, geometry.DimensionsScale);
+            return true;
+        }
         return dimensions.Fixed || geometry.Rule.ScaleAttribute is not { } scale || entity.Attributes.GetValueOrDefault(scale, 1.0) == 1.0;
     }
 
-    private static void ObserveDimensions(Entity entity, Geometry geometry, bool livingTick = false)
+    private static void ObserveDimensions(Entity entity, Geometry geometry, bool livingTick = false, bool refreshScale = false, bool forceRefresh = false)
     {
         if (geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick && !livingTick)
             return;
+        if (geometry.ScaleProfile is not null)
+        {
+            if (!refreshScale)
+                return;
+            geometry.DimensionsScale = (float)entity.Attributes.GetValueOrDefault(geometry.Rule.ScaleAttribute!.Value, 1.0);
+        }
         if (!Resolve(entity, geometry, out bool selector, out EntityPose pose, out EntityGeometryDimensions dimensions))
         {
             geometry.Known = false;
@@ -317,7 +354,12 @@ internal sealed class EntityGeometryState
         }
         if (!geometry.Known)
         {
-            if (livingTick && geometry.HasDimensions)
+            if (geometry.ScaleProfile is not null && !geometry.HasDimensions)
+            {
+                ReapplyPosition(entity, geometry);
+                return;
+            }
+            if ((livingTick || geometry.ScaleProfile is not null) && geometry.HasDimensions)
                 geometry.Known = true;
             else
             {
@@ -326,7 +368,7 @@ internal sealed class EntityGeometryState
                 return;
             }
         }
-        if (geometry.Selector == selector && geometry.Pose == pose && geometry.Dimensions == dimensions)
+        if (!forceRefresh && geometry.Selector == selector && geometry.Pose == pose && geometry.Dimensions == dimensions)
             return;
         VanillaEntityBounds previous = geometry.Bounds;
         geometry.Bounds = geometry.Rule.Refresh == EntityDimensionsRefresh.RetainMinimum
@@ -339,6 +381,11 @@ internal sealed class EntityGeometryState
 
     private static void ReapplyPosition(Entity entity, Geometry geometry)
     {
+        if (geometry.ScaleProfile is not null && geometry.HasDimensions)
+        {
+            geometry.Bounds = VanillaEntityBounds.Create(entity.Position, geometry.Dimensions.Width, geometry.Dimensions.Height);
+            return;
+        }
         if (geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick)
         {
             if (!geometry.HasDimensions)
@@ -363,10 +410,15 @@ internal sealed class EntityGeometryState
         geometry.Bounds = geometry.Known ? VanillaEntityBounds.Create(entity.Position, dimensions.Width, dimensions.Height) : default;
     }
 
-    private sealed class Geometry(IEntityGeometrySource source, EntityGeometryRule rule)
+    private sealed class Geometry(IEntityGeometrySource source, EntityGeometryRule rule, LivingScaleProfile? scaleProfile, bool isPlayer)
     {
         public IEntityGeometrySource Source { get; } = source;
         public EntityGeometryRule Rule { get; } = rule;
+        public LivingScaleProfile? ScaleProfile { get; } = scaleProfile;
+        public bool IsPlayer { get; } = isPlayer;
+        public float AppliedScale { get; set; } = 1F;
+        public float DimensionsScale { get; set; } = 1F;
+        public bool ScaleDirty { get; set; }
         public bool Known { get; set; }
         public bool PositionKnown { get; set; } = true;
         public bool HasDimensions { get; set; }

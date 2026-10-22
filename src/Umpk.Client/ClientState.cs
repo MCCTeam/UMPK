@@ -136,6 +136,7 @@ public sealed class ClientState
                 EntityMembership.BeginPlayerTick(entity);
                 EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate);
                 EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol, EntityMembership);
+                EntityGeometry.TickLivingScale(entity, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(entity.Position)));
             }
             EntityMembership.AfterEntityPhase(entity);
         }
@@ -147,10 +148,13 @@ public sealed class ClientState
 
     internal long PlayerLifetime { get; private set; }
 
+    internal bool SelfScaleDirty { get; set; }
+
     internal void AdvancePlayerLifetime()
     {
         PlayerLifetime++;
         Self.ClearItemCooldowns();
+        SelfScaleDirty = false;
         EntityMotion.ResetLocalMount();
     }
 

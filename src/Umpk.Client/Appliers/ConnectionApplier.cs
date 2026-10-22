@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.State;
+using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
@@ -341,6 +342,12 @@ internal sealed class ConnectionApplier : IApplier
     private static async ValueTask ApplyRespawnAsync(
         ClientboundRespawnPacket respawn, ApplierContext context, CancellationToken ct)
     {
+        AttributeInstance? previousScale = null;
+        bool keepScaleModifiers = (respawn.DataToKeep & 1) != 0;
+        bool scaleWasServerStated = context.State.Self.Attributes.IsServerStated(ScaleAttributeId);
+        int protocol = context.Version.Version.Protocol;
+        if (LivingScaleProfile.Supports(protocol) && (keepScaleModifiers || LivingScaleProfile.ForProtocol(protocol).KeepsRespawnBaseValue))
+            context.State.Self.Attributes.Map.TryGet(ScaleAttributeId, out previousScale);
         Game.Players.GameMode? gameMode = null;
         if (respawn.SpawnInfo is { } spawn)
         {
@@ -364,6 +371,7 @@ internal sealed class ConnectionApplier : IApplier
         ClearSprintLatch(context.State.Self);
         ClearEffectsIfThePlayerEntityWasDestroyed(respawn, context);
         SeedSelfAttributes(context);
+        RestoreRespawnScale(context, previousScale, keepScaleModifiers, scaleWasServerStated);
         if (gameMode is { } resolvedGameMode)
             context.State.Self.GameMode = resolvedGameMode;
 
@@ -398,13 +406,25 @@ internal sealed class ConnectionApplier : IApplier
 
     }
 
-    /// <summary>Drops the local player's attribute map and re-seeds the standard player defaults on login and every respawn.</summary>
-    /// <remarks>
-    /// <para>The respawn reset is unconditional, unlike <see cref="ClearEffectsIfThePlayerEntityWasDestroyed"/>, which gates on <c>DataToKeep == 0</c>. The keep flags govern what the server restores and sends; client attributes return to player defaults on both respawn branches.</para>
-    /// <para>The two failure directions are not symmetric, which is the same argument <see cref="ClearSprintLatch"/> makes. Failing to clear leaves a dead player's soul-speed or powder-snow modifier on the map forever, and nothing on the wire ever contradicts it. Clearing when vanilla would have kept costs one stale tick until the server's next dirty broadcast.</para>
-    /// <para>This does NOT depend on <c>DataToKeep</c> being zero by accident on the legacy codecs, and that matters: 47-404 have no such field on the wire and <c>WorldStateCodecs</c> writes the literal <c>DataToKeep: 0</c> for them, while 735-758 map their single <c>keepAllPlayerData</c> bool onto 1/0. An unconditional reset is correct on all three shapes without reading the field at all.</para>
-    /// <para><c>Known</c> is answered STRUCTURALLY, exactly as <c>CapabilityCapture</c> answers <c>EffectsKnown</c>: the entity applier is the only writer of self attributes and <c>ClientState</c> creates the entity store only when the feature is on, so a null store is precisely "this session can never observe an attribute". A protocol with no <c>minecraft:attribute</c> registry is the same claim for a different reason, and gets the same answer.</para>
-    /// </remarks>
+    private static readonly Identifier ScaleAttributeId = Identifier.Minecraft("scale");
+
+    /// <summary>Transfers the measured scale attribute into the new local owner. Protocol 766 copies only for keep bit1; from 767 the other branch copies its base without modifiers.</summary>
+    private static void RestoreRespawnScale(ApplierContext context, AttributeInstance? previous, bool keepModifiers, bool wasServerStated)
+    {
+        if (previous is null || !context.State.Self.Attributes.Map.TryGet(ScaleAttributeId, out AttributeInstance target))
+            return;
+        // replaceFrom always dirties the native instance; assignBaseValues dirties only a changed double.
+        context.State.SelfScaleDirty = keepModifiers || target.BaseValue != previous.BaseValue;
+        target.BaseValue = previous.BaseValue;
+        if (keepModifiers)
+            foreach (AttributeModifier modifier in previous.Modifiers)
+                target.AddOrReplaceModifier(modifier);
+        if (wasServerStated)
+            context.State.Self.Attributes.MarkServerStated(ScaleAttributeId);
+    }
+
+    /// <summary>Re-seeds the existing local attribute policy on login and respawn. The measured scale transfer is applied separately after this reset.</summary>
+    /// <remarks>Attribute observability still requires entity tracking and the session attribute registry. Other attribute transfer rules retain their existing policy here.</remarks>
     private static void SeedSelfAttributes(ApplierContext context)
     {
         Game.Registries.RegistryAccess? registries = context.State.Registries;

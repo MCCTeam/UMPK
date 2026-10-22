@@ -343,3 +343,9 @@ Umpk.Physics.IPhysicsWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollis
 Umpk.Physics.IPhysicsWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
 static Umpk.Physics.PhysicsProfile.BlockCollisionQueryForProtocol(int protocol) -> Umpk.Physics.BlockCollisionQueryEra
 static Umpk.Physics.PhysicsProfile.PoseDimensionsForProtocol(int protocol) -> Umpk.Physics.PoseDimensionsEra
+Umpk.Physics.PhysicsConditions.Scale.get -> float?
+Umpk.Physics.PhysicsConditions.Scale.init -> void
+Umpk.Physics.PhysicsConditions.RefreshScaleDimensions.get -> bool
+Umpk.Physics.PhysicsConditions.RefreshScaleDimensions.init -> void
+Umpk.Physics.PhysicsState.DimensionsScale.get -> float?
+Umpk.Physics.PhysicsState.DimensionsScale.init -> void

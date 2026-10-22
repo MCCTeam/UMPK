@@ -18,6 +18,8 @@ internal sealed class PhysicsEngineHolder
 {
     private readonly ClientSessionServices _services;
     private readonly PhysicsProfile _profile;
+    private readonly LivingScaleProfile? _scaleProfile;
+    private float _appliedScale = 1F;
     private readonly IBlockShapeSource _shapes;
     private readonly ILogger _logger;
     private PlayerPhysics? _engine;
@@ -83,6 +85,7 @@ internal sealed class PhysicsEngineHolder
         _shapes = shapes;
         _logger = logger;
         _profile = PhysicsProfileFactory.FromJavaVersion(services.Version);
+        _scaleProfile = LivingScaleProfile.Supports(services.Version.Version.Protocol) ? LivingScaleProfile.ForProtocol(services.Version.Version.Protocol) : null;
         _supervisor = new LifeSafetySupervisor(_profile);
 
         // The piston table is looked up here rather than threaded through UmpkClient: it is a pure function of the protocol, and a version the dataset never measured yields a source whose HasData is false, which MovingPistonTracker reads as "model the head and base only". The world-border containment era is the same kind of pure protocol function (see WorldBorderState.ContainmentEraForProtocol), computed here for the same reason.
@@ -107,6 +110,7 @@ internal sealed class PhysicsEngineHolder
 
         _installedWorld = world;
         _installedPlayerLifetime = _services.State.PlayerLifetime;
+        _appliedScale = 1F;
         _holdClimbable = false;
         _holdAgainstCurrent = null;
         LastRequestedInput = MovementInput.None;
@@ -128,10 +132,21 @@ internal sealed class PhysicsEngineHolder
     {
         if (_engine is null)
             return;
+        if (_installedPlayerLifetime != _services.State.PlayerLifetime || !ReferenceEquals(_installedWorld, _services.State.WorldOrNull))
+        {
+            // A respawn's pending attribute refresh belongs to the newly constructed body, never to the outgoing engine.
+            EnsureEngine();
+            return;
+        }
 
         SelfState self = _services.State.Self;
+        float? scale = _scaleProfile is not null ? (float)self.Attributes.Value(ScaleAttributeId, 1D) : null;
+        bool refreshScale = scale is { } current && _scaleProfile!.Value.NeedsRefresh(_appliedScale, current, _services.State.SelfScaleDirty);
+        _services.State.SelfScaleDirty = false;
         var conditions = new PhysicsConditions
         {
+            Scale = scale,
+            RefreshScaleDimensions = refreshScale,
             CreativeFlying = self.Flying,
             MayFly = self.MayFly,
             GameMode = self.GameMode,
@@ -925,6 +940,8 @@ internal sealed class PhysicsEngineHolder
         MovementInput applied = requested with { Sprint = ResolveActualSprint(requested, _engine.State) };
         LastAppliedInput = applied;
         StepResult result = _engine.Step(applied);
+        if (_engine.Conditions.Scale is { } scale)
+            _appliedScale = scale;
         StepSequence++;
         SyncSelf(result.State);
     }
@@ -980,6 +997,8 @@ internal sealed class PhysicsEngineHolder
 
     /// <summary>The transient sprint modifier's id, which this read must exclude; see the method.</summary>
     private static readonly Identifier SprintingModifierId = Identifier.Minecraft("sprinting");
+
+    private static readonly Identifier ScaleAttributeId = Identifier.Minecraft("scale");
 
     /// <summary>The movement-speed attribute WITHOUT the sprint modifier, which is what <see cref="PhysicsConditions.BaseMovementSpeedAttribute"/> is defined to carry: the engine applies the sprint multiply itself, from the tick's input.</summary>
     /// <remarks>

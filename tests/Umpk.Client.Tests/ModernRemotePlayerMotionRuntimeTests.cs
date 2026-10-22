@@ -208,7 +208,7 @@ public sealed class ModernRemotePlayerMotionRuntimeTests
     [InlineData(777, "scale")]
     [InlineData(770, "mount")]
     [InlineData(777, "mount")]
-    public async Task UnownedSourceGeometryAndRiderContextStayUnknown(int protocol, string scenario)
+    public async Task ScaleIsOwnedWhileUnownedPoseAndRiderContextStayUnknown(int protocol, string scenario)
     {
         await using var session = await Session.Create(protocol);
         await session.SpawnPeer();
@@ -226,7 +226,15 @@ public sealed class ModernRemotePlayerMotionRuntimeTests
             await session.Send(new ClientboundSetPassengersPacket(43, [42]));
         }
         await session.Tick();
-        Assert.False(await session.GeometryKnown());
+        if (scenario == "scale")
+        {
+            Assert.True(await session.GeometryKnown());
+            double x = protocol == 777 ? 1 : .5 + 1d / 3;
+            Assert.Equal(new Vec3d(x, 65, .5), await session.Position());
+            Assert.Equal(new Aabb(x - (double)(1.2f / 2f), 65, .5 - (double)(1.2f / 2f), x + (double)(1.2f / 2f), 65 + (double)3.6f, .5 + (double)(1.2f / 2f)), await session.Bounds());
+        }
+        else
+            Assert.False(await session.GeometryKnown());
     }
 
     public static IEnumerable<object[]> TerrainCases()

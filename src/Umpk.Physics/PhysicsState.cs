@@ -36,6 +36,9 @@ public readonly record struct PhysicsState
     /// <summary>The pose-dimension era for eye-height resolution. Null selects the modern default.</summary>
     public PoseDimensionsEra? PoseDimensions { get; init; }
 
+    /// <summary>The scale already applied to the cached body and eye dimensions. Null preserves the default unscaled snapshot contract; the current prospective scale belongs to PhysicsConditions.</summary>
+    public float? DimensionsScale { get; init; }
+
     /// <summary>The bounding box for the current position and pose.</summary>
     public Aabb BoundingBox { get; init; }
 
@@ -65,5 +68,12 @@ public readonly record struct PhysicsState
     public Vec3d EyePosition => new(Position.X, Position.Y + EyeHeight, Position.Z);
 
     /// <summary>The eye height for the current pose.</summary>
-    public double EyeHeight => PhysicsProfile.EyeHeightForPose(Pose, PoseDimensions ?? PoseDimensionsEra.ModernCrawl);
+    public double EyeHeight => DimensionsScale is { } scale
+        ? Pose switch
+        {
+            EntityPose.Sleeping => .2F,
+            EntityPose.Dying => 1.62F,
+            _ => (float)PhysicsProfile.EyeHeightForPose(Pose, PoseDimensions ?? PoseDimensionsEra.ModernCrawl) * scale,
+        }
+        : PhysicsProfile.EyeHeightForPose(Pose, PoseDimensions ?? PoseDimensionsEra.ModernCrawl);
 }

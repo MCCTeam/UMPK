@@ -566,6 +566,7 @@ internal sealed class EntityApplier : IApplier
         }
 
         bool appliedAny = false;
+        bool scaleDirty = false;
         foreach (AttributeSnapshot snapshot in packet.Attributes)
         {
             if (!TryResolveAttribute(registries, snapshot, out RegistryEntry<Game.Registries.AttributeDefinition> attribute))
@@ -576,6 +577,9 @@ internal sealed class EntityApplier : IApplier
                 ? context.State.Self.Attributes.GetOrCreate(canonical, attribute)
                 : entity!.Attributes.GetOrCreate(canonical, attribute);
 
+            // Native setBaseValue dirties only a changed double; removing or adding any modifier also dirties, even when the final float remains the same.
+            if (canonical == Identifier.Minecraft("scale"))
+                scaleDirty |= instance.BaseValue != snapshot.BaseValue || instance.Modifiers.Count != 0 || snapshot.Modifiers.Count != 0;
             instance.BaseValue = snapshot.BaseValue;
             instance.ClearModifiers();
             foreach (AttributeModifierEntry modifier in snapshot.Modifiers)
@@ -591,9 +595,12 @@ internal sealed class EntityApplier : IApplier
         }
 
         if (isSelf && appliedAny)
+        {
+            context.State.SelfScaleDirty |= scaleDirty;
             context.PhysicsConditionsDirty();
+        }
         else if (appliedAny && entity is not null)
-            context.State.EntityGeometry.ObserveAttributes(entity);
+            context.State.EntityGeometry.ObserveAttributes(entity, scaleDirty);
 
     }
 

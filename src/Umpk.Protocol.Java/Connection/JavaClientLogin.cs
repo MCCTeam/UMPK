@@ -300,6 +300,9 @@ public static class JavaClientLogin
         int storeCookieId = WireIdOf(configIn, Identifier.Minecraft("store_cookie"));
         int transferId = WireIdOf(configIn, Identifier.Minecraft("transfer"));
         int resourcePackPushId = WireIdOf(configIn, Identifier.Minecraft("resource_pack_push"));
+        int enabledFeaturesId = options.PacketObserver is null
+            ? -1
+            : WireIdOf(configIn, Identifier.Minecraft("update_enabled_features"));
         int updateTagsId = options.PacketObserver is null
             ? -1
             : WireIdOf(configIn, Identifier.Minecraft("update_tags"));
@@ -387,6 +390,7 @@ public static class JavaClientLogin
                 || (frame.WireId == customPayloadId && customPayloadId >= 0)
                 || (frame.WireId == registryDataId && registryDataId >= 0)
                 || (frame.WireId == updateTagsId && updateTagsId >= 0)
+                || (frame.WireId == enabledFeaturesId && enabledFeaturesId >= 0)
                 || (frame.WireId == transferId && transferId >= 0)
                 || (frame.WireId == resourcePackPushId && resourcePackPushId >= 0))
             {

@@ -76,7 +76,7 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
 
     private static bool TryCollectModern(EntityCollisionContext context, in Aabb region, ICollection<Aabb> into)
     {
-        if (!context.Motion.IsTrackedPlayer(context.Source) || context.Geometry is null || context.GeometrySource is null)
+        if ((!context.Motion.IsTrackedPlayer(context.Source) && !context.Motion.IsTrackedCowSource(context.Source)) || context.Geometry is null || context.GeometrySource is null)
             return false;
         // EntityGetter checks the mean size before resolving any candidates, then inflates its candidate query by exactly one epsilon.
         if ((region.XSize + region.YSize + region.ZSize) / 3.0 < 1.0E-7)

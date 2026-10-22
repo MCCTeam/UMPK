@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
 using Umpk.Game.Entities;
 using Umpk.Geometry;
@@ -8,6 +9,8 @@ namespace Umpk.Client.Internal;
 internal sealed class EntityMembershipState
 {
     private readonly HashSet<ChunkPos> _columns = [];
+    private readonly ConditionalWeakTable<Entity, object> _cows = new();
+    private static readonly object CowMarker = new();
     private readonly Dictionary<Entity, Membership> _players = [];
     private readonly List<Membership> _reentry = [];
     private int _reentryCapacity = 16;
@@ -16,6 +19,11 @@ internal sealed class EntityMembershipState
 
     public void Register(Entity entity, int protocol, bool isPlayer, int? healthIndex = null)
     {
+        if (CowMotionProfile.Supports(entity, protocol))
+        {
+            _cows.Add(entity, CowMarker);
+            return;
+        }
         bool falling = LegacyFallingBlockProfile.Supports(entity, protocol);
         if ((!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol)) && !falling)
             return;
@@ -71,7 +79,14 @@ internal sealed class EntityMembershipState
             }
     }
 
-    public bool CanTick(Entity entity) => !_players.TryGetValue(entity, out Membership? player) || player.MembershipKnown && player.InEntityList && player.Added && !player.Removed;
+    public bool CanTick(Entity entity, bool runsNormally = true)
+    {
+        if (_cows.TryGetValue(entity, out _))
+            return runsNormally && double.IsFinite(entity.Position.X) && double.IsFinite(entity.Position.Z)
+                && entity.Position.X is > int.MinValue and < int.MaxValue && entity.Position.Z is > int.MinValue and < int.MaxValue
+                && HasColumn(BlockPos.Containing(entity.Position));
+        return !_players.TryGetValue(entity, out Membership? player) || player.MembershipKnown && player.InEntityList && player.Added && !player.Removed;
+    }
 
     /// <summary>Runs the inherited living death phase on the existing eligible actor tick, before remote interpolation and the player size phase.</summary>
     public void BeginPlayerTick(Entity entity)
@@ -193,6 +208,7 @@ internal sealed class EntityMembershipState
 
     public void Remove(Entity entity)
     {
+        _cows.Remove(entity);
         if (_players.Remove(entity, out Membership? player))
             _reentry.Remove(player);
     }
@@ -200,6 +216,7 @@ internal sealed class EntityMembershipState
     public void Clear()
     {
         _players.Clear();
+        _cows.Clear();
         _columns.Clear();
         _reentry.Clear();
         _reentryCapacity = 16;

@@ -181,6 +181,7 @@ internal sealed class SelfApplier : IApplier
         self.Yaw = yaw;
         self.Pitch = pitch;
         self.HasSpawned = true;
+        context.State.EntityMotion.ObserveLocalPushPosition(context.Version.Version.Protocol, self.Position, (flags & (RelativeX | RelativeY | RelativeZ)) == 0);
 
         // Re-seed the physics engine at the absolute position resolved above (never at the raw packet fields, which may be relative offsets). The engine steps from its own position and syncs the result back into SelfState every tick, so without this the teleport survives less than one tick and the client reports the engine's stale position instead of the server's. The resolved velocity rides along, so a teleport that hands the client momentum keeps it.
         context.PhysicsPositionDirty();
@@ -232,6 +233,7 @@ internal sealed class SelfApplier : IApplier
     {
         RegistryEntry<EntityTypeDefinition> playerType =
             context.EntityTypes.ResolveByKey(context.State.Registries, PlayerType);
+        context.State.EntityMotion.ObserveLocalPushMetadata(context.Version.Version.Protocol, packet.Metadata);
         if (!context.MetadataKeys.TryResolveIndex(playerType, EntityMetadataKeys.AirSupply, out int airIndex))
             return;
 

@@ -124,17 +124,17 @@ public sealed class ClientState
 
     internal Internal.EntityMembershipState EntityMembership { get; } = new();
 
-    internal void TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved)
+    internal void TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
     {
         if (_entities is null)
             return;
         EntityMembership.BeginEntityPhase();
         foreach (Entity entity in _entities.All)
         {
-            if (EntityMembership.CanTick(entity))
+            if (EntityMembership.CanTick(entity, WorldTicks.RunsNormally))
             {
                 EntityMembership.BeginPlayerTick(entity);
-                EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate);
+                EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate, Self, localBody);
                 EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol, EntityMembership);
                 EntityGeometry.TickLivingScale(entity, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(entity.Position)));
             }

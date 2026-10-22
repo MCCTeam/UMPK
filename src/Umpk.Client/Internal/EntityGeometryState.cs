@@ -76,7 +76,7 @@ internal sealed class EntityGeometryState
             ReapplyPosition(entity, geometry);
         box = geometry.Bounds.Box;
         blocksBuilding = geometry.Dimensions.BlocksBuilding;
-        return geometry.Known && geometry.PositionKnown;
+        return geometry.Known && PositionKnown(entity, geometry);
     }
 
     public void ObserveMetadata(Entity entity, int index)
@@ -124,7 +124,7 @@ internal sealed class EntityGeometryState
             return false;
         ObserveDimensions(entity, geometry);
         dimensions = geometry.Dimensions;
-        return geometry.Known;
+        return geometry.Known && (!geometry.CowMotionActive || PositionKnown(entity, geometry));
     }
 
     /// <summary>A missing collision decision makes subsequent arithmetic positions unproven until this actor is replaced.</summary>
@@ -137,9 +137,25 @@ internal sealed class EntityGeometryState
     public bool IgnoresVelocity(Entity entity) => _shulkers.TryGetValue(entity, out _);
 
     public bool IsPositionKnown(Entity entity)
-        => (!_entities.TryGetValue(entity, out Geometry? geometry) || geometry.PositionKnown)
+        => (!_entities.TryGetValue(entity, out Geometry? geometry) || PositionKnown(entity, geometry))
             && (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
             && (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling) || falling.Known);
+
+    public void BeginCowMotion(Entity entity)
+    {
+        if (_entities.TryGetValue(entity, out Geometry? geometry))
+        {
+            geometry.CowMotionActive = true;
+            _ = PositionKnown(entity, geometry);
+        }
+    }
+
+    private static bool PositionKnown(Entity entity, Geometry geometry)
+    {
+        if (geometry.CowMotionActive && !CowMotionProfile.IsKnownState(entity, geometry.Rule))
+            geometry.PositionKnown = false;
+        return geometry.PositionKnown;
+    }
 
     public void RegisterFallingBlock(Entity entity, int protocol = 107) => _fallingBlocks.Add(entity, new TrackedFallingBlockGeometry(entity, protocol));
 
@@ -422,6 +438,7 @@ internal sealed class EntityGeometryState
         public bool Known { get; set; }
         public bool PositionKnown { get; set; } = true;
         public bool HasDimensions { get; set; }
+        public bool CowMotionActive { get; set; }
         public bool Selector { get; set; }
         public EntityPose Pose { get; set; }
         public EntityGeometryDimensions Dimensions { get; set; }

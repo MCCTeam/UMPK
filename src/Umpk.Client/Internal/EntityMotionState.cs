@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Umpk.Client.Actions;
 using Umpk.Client.Navigation;
+using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
@@ -12,7 +13,7 @@ using Umpk.Protocol.Java.Packets;
 namespace Umpk.Client.Internal;
 
 /// <summary>Instance-owned native motion controllers. Observations and ticks run on the session loop.</summary>
-internal sealed class EntityMotionState
+internal sealed partial class EntityMotionState
 {
     private readonly ConditionalWeakTable<Entity, RemotePlayerMotion> _remotePlayers = new();
     private readonly ConditionalWeakTable<Entity, object> _immovable = new();
@@ -101,6 +102,8 @@ internal sealed class EntityMotionState
 
     public void ObserveVelocity(Entity entity, Vec3d value)
     {
+        if (_cows.TryGetValue(entity, out CowMotion? cow))
+            BeginCowMotion(entity, cow);
         if (_immovable.TryGetValue(entity, out _))
             return;
         if (_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
@@ -116,6 +119,8 @@ internal sealed class EntityMotionState
 
     public bool TryObserveInterpolation(Entity entity, Vec3d? target, float? yaw, float? pitch)
     {
+        if (TryObserveCowInterpolation(entity, target, yaw, pitch))
+            return true;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
         PullPosition(entity, position);
@@ -136,6 +141,8 @@ internal sealed class EntityMotionState
 
     public bool TryObserveLegacyTeleport(Entity entity, Vec3d target, float yaw, float pitch)
     {
+        if (InvalidateCowContext(entity))
+            return false;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
         PullPosition(entity, position);
@@ -152,6 +159,8 @@ internal sealed class EntityMotionState
 
     public bool TryObserveTeleport(Entity entity, PositionMoveRotation change, int flags)
     {
+        if (InvalidateCowContext(entity))
+            return false;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
         PullPosition(entity, position);
@@ -164,6 +173,8 @@ internal sealed class EntityMotionState
 
     public bool TryObservePositionSync(Entity entity, PositionMoveRotation values, ReadOnlySpan<VanillaPositionStep> path = default)
     {
+        if (TryObserveCowSync(entity, values))
+            return true;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
         PullPosition(entity, position);
@@ -189,8 +200,13 @@ internal sealed class EntityMotionState
             TickEntity(entity, moved, geometry, players);
     }
 
-    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null, float tickRate = 20F)
+    public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null, float tickRate = 20F, SelfState? self = null, Aabb? localBody = null)
     {
+        if (_cows.TryGetValue(entity, out CowMotion? cow))
+        {
+            TickCow(entity, cow, moved, world, shapes, entities, self, localBody);
+            return;
+        }
         if (_fallingBlocks.TryGetValue(entity, out FallingBlockMotion? falling))
         {
             TickFallingBlock(entity, falling, moved, geometry, world, shapes, membership, entities);
@@ -292,6 +308,7 @@ internal sealed class EntityMotionState
     public void Remove(Entity entity)
     {
         _remotePlayers.Remove(entity);
+        _cows.Remove(entity);
         _immovable.Remove(entity);
         _fallingBlocks.Remove(entity);
     }
@@ -299,6 +316,7 @@ internal sealed class EntityMotionState
     public void Clear()
     {
         _remotePlayers.Clear();
+        _cows.Clear();
         _immovable.Clear();
         _fallingBlocks.Clear();
         ResetLocalMount();
@@ -308,6 +326,9 @@ internal sealed class EntityMotionState
     {
         _localMountUnresolved = false;
         _localMountVehicle = null;
+        _localPushPositionKnown = false;
+        _localPushPoseUnsupported = false;
+        _localPushBedUnsupported = false;
     }
 
     private static void PullPosition(Entity entity, VanillaEntityInterpolation position)

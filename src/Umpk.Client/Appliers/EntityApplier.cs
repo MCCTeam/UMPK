@@ -326,6 +326,8 @@ internal sealed class EntityApplier : IApplier
                     && context.MetadataKeys.TryResolveIndex(dyingShulker.Type, EntityMetadataKeys.Health, out int shulkerHealth))
                     // Original LivingEntity.handleEntityEvent(3) sets non-player health to zero before publishing the death effects. The hard-box predicate reads that health independently of placement obstruction.
                     dyingShulker.Metadata.Set(shulkerHealth, MetadataValue.Float(0));
+                if (store.TryGet(entityEvent.EntityId, out Entity? statusCow) && statusCow is not null)
+                    context.State.EntityMotion.ObserveCowStatus(statusCow, entityEvent.EventId);
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 
@@ -458,6 +460,7 @@ internal sealed class EntityApplier : IApplier
         context.State.EntityMotion.RegisterFallingBlock(entity, context.Version.Version.Protocol, objectData, context.State.EntityGeometry);
         int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
         context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
+        context.State.EntityMotion.RegisterCow(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)

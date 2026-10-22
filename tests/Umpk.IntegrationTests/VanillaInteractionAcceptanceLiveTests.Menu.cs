@@ -330,7 +330,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 string command = protocol == 47
                     ? $"testforblock {target.X} {target.Y} {target.Z} minecraft:{block} -1 {{Items:[{stack}]}}"
                     : $"execute if data block {target.X} {target.Y} {target.Z} Items[{stack}]";
-                string expected = protocol == 47 ? $"Successfully found the block at {target.X},{target.Y},{target.Z}." : "Test passed";
+                string expected = protocol == 47 ? $"Successfully found the block at {target.X},{target.Y},{target.Z}." : MenuStorageMatchFeedback(protocol);
                 Assert.Equal(expected, await server.CommandAsync(command, ct));
             }
 
@@ -355,6 +355,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     }
 
     private static string MenuCommandSlot(int protocol, string slot) => protocol == 47 ? "slot." + slot : slot;
+
+    private static string MenuStorageMatchFeedback(int protocol) => protocol switch
+    {
+        498 or 766 => "Test passed, count: 1",
+        777 => "Test passed. Count: 1",
+        _ => throw new InvalidOperationException("No native storage feedback binding for this protocol.")
+    };
 
     private static bool MenuChatContains(object? packet, string marker)
     {

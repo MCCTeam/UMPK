@@ -39,6 +39,9 @@ public readonly record struct PhysicsState
     /// <summary>The scale already applied to the cached body and eye dimensions. Null preserves the default unscaled snapshot contract; the current prospective scale belongs to PhysicsConditions.</summary>
     public float? DimensionsScale { get; init; }
 
+    /// <summary>Optional host-owned cached dimensions. Null preserves pose-derived dimensions; the cached box can be offset from the observed position.</summary>
+    public PhysicsBodyDimensions? BodyDimensions { get; init; }
+
     /// <summary>The bounding box for the current position and pose.</summary>
     public Aabb BoundingBox { get; init; }
 
@@ -68,7 +71,7 @@ public readonly record struct PhysicsState
     public Vec3d EyePosition => new(Position.X, Position.Y + EyeHeight, Position.Z);
 
     /// <summary>The eye height for the current pose.</summary>
-    public double EyeHeight => DimensionsScale is { } scale
+    public double EyeHeight => BodyDimensions is { } body ? body.EyeHeight : DimensionsScale is { } scale
         ? Pose switch
         {
             EntityPose.Sleeping => .2F,

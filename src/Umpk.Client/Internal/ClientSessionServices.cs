@@ -38,8 +38,8 @@ internal sealed class ClientSessionServices
     /// <summary>The existing physics owner's current pose and eye-water observation. Hand-built action harnesses can supply their own snapshot.</summary>
     public Func<Umpk.Physics.PhysicsState?> ReadPhysicsState { get; init; } = static () => null;
 
-    /// <summary>The physics owner's pose eye height, or the standing height when physics is unavailable. Read on the session loop.</summary>
-    public double EyeHeight => ReadPhysicsState()?.EyeHeight ?? PlayerReach.StandingEyeHeight;
+    /// <summary>The local lifecycle owner's last observed native eye height, otherwise the physics pose or default standing height. An unknown lifecycle remains unusable for interaction picking. Read on the session loop.</summary>
+    public double EyeHeight => State.LegacySelfGeometry?.EyeHeight ?? ReadPhysicsState()?.EyeHeight ?? PlayerReach.StandingEyeHeight;
 
     /// <summary>The current tracked feet position plus the observed eye height. Read on the session loop.</summary>
     public Vec3d EyePosition => Self.Position.Add(0, EyeHeight, 0);

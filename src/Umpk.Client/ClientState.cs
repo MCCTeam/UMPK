@@ -150,9 +150,18 @@ public sealed class ClientState
 
     internal bool SelfScaleDirty { get; set; }
 
+    internal Internal.TrackedLegacySelfGeometry? LegacySelfGeometry { get; private set; }
+
+    internal Internal.TrackedLegacySelfGeometry? GetLegacySelfGeometry(int protocol)
+        => Actions.LegacyPlayerGeometryProfile.Supports(protocol)
+            ? LegacySelfGeometry ??= new Internal.TrackedLegacySelfGeometry(this, protocol)
+            : null;
+
+
     internal void AdvancePlayerLifetime()
     {
         PlayerLifetime++;
+        LegacySelfGeometry = null;
         Self.ClearItemCooldowns();
         SelfScaleDirty = false;
         EntityMotion.ResetLocalMount();
@@ -167,6 +176,7 @@ public sealed class ClientState
 
     internal void InstallWorld(Identifier dimension, World? world)
     {
+        LegacySelfGeometry = null;
         _world = world;
         _worldDimension = dimension;
         _entities?.Clear();
@@ -228,6 +238,7 @@ public sealed class ClientState
     internal bool ResetForSessionEnd()
     {
         bool wasShowing = Dialogs.IsShowing;
+        LegacySelfGeometry = null;
         Dialogs.Clear();
         Self.ClearItemCooldowns();
         Server.ResetForSessionEnd();

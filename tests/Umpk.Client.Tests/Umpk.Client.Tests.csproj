@@ -33,6 +33,7 @@
     <EmbeddedResource Include="Fixtures/LegacyPlayerClearance.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyCompositeClearance.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerLifecycle.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyLocalPlayerLifecycle.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerSizePhase.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyPlayerWake.native.json.gz" />
     <EmbeddedResource Include="Fixtures/LegacyBedOccupied.native.json.gz" />

@@ -8,10 +8,22 @@ using Umpk.Geometry;
 namespace Umpk.Client.Internal;
 
 /// <summary>Owns the legacy player's cached box and explicit lifecycle callbacks on the session loop.</summary>
-internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
+internal sealed class TrackedLegacyPlayerGeometry
 {
-    private readonly VanillaLegacyPlayerGeometry _geometry = new(protocol, entity.Position);
-    private readonly LegacyPlayerGeometryProfile _profile = LegacyPlayerGeometryProfile.ForProtocol(protocol);
+    private readonly int _protocol;
+    private readonly VanillaLegacyPlayerGeometry _geometry;
+    private readonly LegacyPlayerGeometryProfile _profile;
+
+    public TrackedLegacyPlayerGeometry(Entity entity, int protocol) : this(protocol, entity.Position) { }
+
+    public TrackedLegacyPlayerGeometry(int protocol, Vec3d position)
+    {
+        _protocol = protocol;
+        _geometry = new(protocol, position);
+        _profile = LegacyPlayerGeometryProfile.ForProtocol(protocol);
+    }
+
+    public VanillaLegacyPlayerGeometry Geometry => _geometry;
     private BlockPos? _bed;
     private bool _positionKnown = true;
     private bool _dimensionsKnown = true;
@@ -22,6 +34,27 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
     private Func<Aabb, bool>? _noCollision;
 
     public bool IsPositionKnown => _positionKnown;
+
+    public bool TryGet(out Aabb bounds)
+    {
+        bounds = _geometry.Bounds;
+        return _positionKnown && _dimensionsKnown && _metadataKnown;
+    }
+
+    public void ObserveFlags(byte flags, bool spinAttack) => _geometry.ObserveFlags(flags, spinAttack);
+
+    public void InvalidateMetadata()
+    {
+        _metadataKnown = _dimensionsKnown = _lifecycleKnown = false;
+    }
+
+    public void ObservePosition(Vec3d position)
+    {
+        _geometry.SetPosition(position);
+        _positionKnown = true;
+    }
+
+    public void ObserveMovement(Vec3d position, Aabb bounds) => _geometry.ObserveMovement(position, bounds);
 
     public void Tick(LegacyPlayerResizeClearance? clearance)
     {
@@ -71,11 +104,18 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
 
     public void ObservePosition(Entity entity)
     {
-        _geometry.SetPosition(entity.Position);
-        _positionKnown = true;
+        ObservePosition(entity.Position);
     }
 
     public bool BeginSleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        bool applied = BeginSleep(world, source, bed, membership, emptyChunk);
+        if (applied)
+            entity.Position = _geometry.Position;
+        return applied;
+    }
+
+    public bool BeginSleep(World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
     {
         _bed = bed;
         if (world is null)
@@ -95,12 +135,18 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
             }
             _geometry.BeginSleep(bed, facing);
         }
-        entity.Position = _geometry.Position;
         _positionKnown = _dimensionsKnown = _lifecycleKnown = true;
         return true;
     }
 
     public void Wake(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        Wake(world, source, membership, emptyChunk);
+        if (_positionKnown)
+            entity.Position = _geometry.Position;
+    }
+
+    public void Wake(World? world, IBlockInteractionSource source, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
     {
         if (_bed is not { } bed || world is null)
         {
@@ -131,12 +177,10 @@ internal sealed class TrackedLegacyPlayerGeometry(Entity entity, int protocol)
                 emptyChunk!.ObserveWrite(membership!, bed, unoccupied);
             else
                 world.SetBlockStateId(bed, unoccupied);
-            var query = new LegacyBedExitQuery(protocol, source, cell => ReadState(world, cell, membership, emptyChunk));
+            var query = new LegacyBedExitQuery(_protocol, source, cell => ReadState(world, cell, membership, emptyChunk));
             _positionKnown = _geometry.TryWakeFromIntactBed(bed, facing, query.TryCanStand, out _);
             _dimensionsKnown = _lifecycleKnown = true;
-            if (_positionKnown)
-                entity.Position = _geometry.Position;
-            else
+            if (!_positionKnown)
                 _geometry.WakeAfterBedRemoval();
         }
         else

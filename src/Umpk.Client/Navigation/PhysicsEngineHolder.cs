@@ -23,6 +23,7 @@ internal sealed class PhysicsEngineHolder
     private readonly IBlockShapeSource _shapes;
     private readonly ILogger _logger;
     private PlayerPhysics? _engine;
+    private TrackedLegacySelfGeometry? _legacySelf;
     private WorldPhysicsView? _view;
     private Umpk.Game.World.World? _installedWorld;
     private long _installedPlayerLifetime;
@@ -124,6 +125,7 @@ internal sealed class PhysicsEngineHolder
         SelfState self = _services.State.Self;
         _engine.Reset(self.Position, self.Yaw, self.Pitch);
         _engine.SetVelocity(self.Velocity);
+        _legacySelf = _services.State.GetLegacySelfGeometry(_services.Version.Version.Protocol);
         PushConditions();
     }
 
@@ -169,6 +171,12 @@ internal sealed class PhysicsEngineHolder
         };
 
         _engine.SetConditions(in conditions);
+        if (_legacySelf is not null && _legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+        {
+            // Lifecycle callbacks can change observed position and a noncentered cached box independently. Restore the exact callback box after synchronizing the owner's position and velocity.
+            _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
+            _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
     }
 
     /// <summary>Whether the installed world's dimension TYPE is the one vanilla marks <c>ultrawarm</c>, which is the only thing the fluid-push scale needs from the dimension (<c>water-contact processing</c>: 0.007 there, 0.0023333333333333335 elsewhere).</summary>
@@ -189,7 +197,7 @@ internal sealed class PhysicsEngineHolder
     public void TickAirSupply()
     {
         EnsureEngine();
-        if (_engine is null)
+        if (_engine is null || _legacySelf is { IsKnown: false })
             return;
 
         SelfState self = _services.State.Self;
@@ -430,7 +438,7 @@ internal sealed class PhysicsEngineHolder
     /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>
     public void TickPistons()
     {
-        if (!_services.State.WorldTicks.RunsNormally || _engine is null || _pistons.ActiveCount == 0)
+        if (!_services.State.WorldTicks.RunsNormally || _engine is null || _pistons.ActiveCount == 0 || _legacySelf is { IsKnown: false })
             return;
 
         _pistons.Tick(_engine);
@@ -903,6 +911,7 @@ internal sealed class PhysicsEngineHolder
         // A server teleport ends any hold: the player is no longer where it was holding station.
         _holdClimbable = false;
         _holdAgainstCurrent = null;
+        _legacySelf?.ObservePosition(self.Position);
         _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
     }
@@ -919,7 +928,7 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>The engine's current snapshot, or null when no engine exists yet. Exposed because the engine holds state the client does not surface on <c>SelfState</c> (fall distance, collision flags, pose), and that is precisely the state a test needs to tell a velocity PUSH apart from an engine RESET.</summary>
-    public PhysicsState? EngineState => _engine?.State;
+    public PhysicsState? EngineState => _legacySelf is not null && (!ReferenceEquals(_legacySelf, _services.State.LegacySelfGeometry) || !_legacySelf.IsKnown) ? null : _engine?.State;
 
     /// <summary>The conditions currently pushed into the engine, or null before it exists.</summary>
     public PhysicsConditions? EngineConditions => _engine?.Conditions;
@@ -937,13 +946,29 @@ internal sealed class PhysicsEngineHolder
             Sprint = requested.Sprint || self.SprintRequested,
         };
         LastRequestedInput = requested;
-        MovementInput applied = requested with { Sprint = ResolveActualSprint(requested, _engine.State) };
+        if (_legacySelf is not null)
+        {
+            _legacySelf.ObserveInput(requested.Sneak);
+            if (!_legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+                return;
+            _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
+        MovementInput applied = _legacySelf is { BlocksInput: true }
+            ? new MovementInput { Sneak = _legacySelf.IsSneaking }
+            : requested with { Sprint = ResolveActualSprint(requested, _engine.State) };
         LastAppliedInput = applied;
         StepResult result = _engine.Step(applied);
         if (_engine.Conditions.Scale is { } scale)
             _appliedScale = scale;
         StepSequence++;
-        SyncSelf(result.State);
+        if (_legacySelf is not null)
+        {
+            _legacySelf.ObserveMovement(result.State);
+            _legacySelf.TickSize(_shapes);
+            if (_legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+                _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
+        SyncSelf(_engine.State);
     }
 
     /// <summary>The supported subset of vanilla's entity sprint gate. Direction, hunger/flight and a blocking horizontal collision are all represented in tracked state. Item-use slowdown is not currently modeled by SelfState, so no synthetic answer is invented for it.</summary>

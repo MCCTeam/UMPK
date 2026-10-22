@@ -2,6 +2,7 @@ using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.State;
+using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
@@ -40,6 +41,41 @@ internal sealed class SelfApplier : IApplier
 
             case ClientboundPlayerPositionPacket pos:
                 await ApplyPositionAsync(pos, context, ct).ConfigureAwait(false);
+                return true;
+
+            case ClientboundSetEntityMotionPacket motion when motion.EntityId == self.EntityId:
+                self.Velocity = motion.ModernVelocityRaw is { } raw
+                    ? LowPrecisionVelocity.Decode(raw)
+                    : new Vec3d(motion.VelocityX / 8000D, motion.VelocityY / 8000D, motion.VelocityZ / 8000D);
+                context.PhysicsVelocityDirty();
+                return true;
+
+            case ClientboundUseBedPacket bed when bed.PlayerId == self.EntityId && LegacyPlayerGeometryProfile.Supports(context.Version.Version.Protocol):
+                Vec3d beforeSleep = self.Position;
+                TrackedLegacySelfGeometry sleeping = context.State.GetLegacySelfGeometry(context.Version.Version.Protocol)!;
+                sleeping.ObserveInput(self.Sneaking);
+                sleeping.BeginSleep(JavaGameData.BedInteractionData(context.Version.Version.Protocol), bed.Position);
+                context.PhysicsConditionsDirty();
+                context.PhysicsVelocityDirty();
+                if (self.Position != beforeSleep)
+                    await context.PublishAsync(new EntityMoved(self.EntityId)).ConfigureAwait(false);
+                return true;
+
+            case ClientboundAnimatePacket { Action: 2 } wake when wake.EntityId == self.EntityId && LegacyPlayerGeometryProfile.Supports(context.Version.Version.Protocol):
+                Vec3d beforeWake = self.Position;
+                TrackedLegacySelfGeometry waking = context.State.GetLegacySelfGeometry(context.Version.Version.Protocol)!;
+                waking.ObserveInput(self.Sneaking);
+                waking.Wake(JavaGameData.BedInteractionData(context.Version.Version.Protocol));
+                context.PhysicsConditionsDirty();
+                if (self.Position != beforeWake)
+                    await context.PublishAsync(new EntityMoved(self.EntityId)).ConfigureAwait(false);
+                return true;
+
+            case ClientboundEntityEventPacket { EventId: 3 } death when death.EntityId == self.EntityId && LegacyPlayerGeometryProfile.Supports(context.Version.Version.Protocol):
+                context.State.GetLegacySelfGeometry(context.Version.Version.Protocol)!.HandleDeath();
+                context.PhysicsConditionsDirty();
+                context.PhysicsVelocityDirty();
+                await context.PublishAsync(new EntityStatusChanged(death.EntityId, death.EventId)).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetExperiencePacket xp:
@@ -186,10 +222,10 @@ internal sealed class SelfApplier : IApplier
     /// <summary>The entity type the local player is, for tier-2 metadata index resolution.</summary>
     private static readonly Identifier PlayerType = Identifier.Minecraft("player");
 
-    /// <summary>Applies the fields of a self <c>set_entity_data</c> frame that <see cref="SelfState"/> tracks. Today that is the air supply alone; every other index stays where the entity store would have put it, which for self is nowhere.</summary>
+    /// <summary>Applies the fields of a self <c>set_entity_data</c> frame that <see cref="SelfState"/> tracks. Air and the measured legacy health field use semantic keys; legacy body flags go to the always-present self lifecycle owner.</summary>
     /// <remarks>
     /// <para>The index is resolved through the version's tier-2 key table rather than written as a literal. It is 1 on all 50 protocols because air is the second field and nothing has ever been inserted above it, but that is the TABLE's fact to state, not this applier's.</para>
-    /// <para>Only a <see cref="MetadataValueKind.VarInt"/> is taken. On 1.8 the field is a 16-bit short rather than a VarInt, and the legacy metadata decoder already normalises both onto that one kind (<c>EntityMetadataCodec.ReadLegacy</c>: type 1 short and type 2 int both build <c>MetadataValue.VarInt</c>), so the check costs nothing on any era and refuses a value whose shape says the index does not mean what this table thinks it means.</para>
+    /// <para>Air accepts only <see cref="MetadataValueKind.VarInt"/>. On 1.8 the field is a 16-bit short rather than a VarInt, and the legacy metadata decoder already normalises both onto that one kind (<c>EntityMetadataCodec.ReadLegacy</c>: type 1 short and type 2 int both build <c>MetadataValue.VarInt</c>), so the check costs nothing on any era and refuses a value whose shape says the index does not mean what this table thinks it means.</para>
     /// <para>A frame carries only dirty metadata entries, so "this frame has no air in it" is the ordinary case and must leave the tracked value alone rather than reset it.</para>
     /// </remarks>
     private static void ApplySelfMetadata(ClientboundSetEntityDataPacket packet, ApplierContext context, SelfState self)
@@ -199,9 +235,20 @@ internal sealed class SelfApplier : IApplier
         if (!context.MetadataKeys.TryResolveIndex(playerType, EntityMetadataKeys.AirSupply, out int airIndex))
             return;
 
+        TrackedLegacySelfGeometry? legacy = context.State.GetLegacySelfGeometry(context.Version.Version.Protocol);
+        bool hasHealth = context.MetadataKeys.TryResolveIndex(playerType, EntityMetadataKeys.Health, out int healthIndex);
         foreach (EntityDataEntry entry in packet.Metadata.Entries)
+        {
             if (entry.Index == airIndex && entry.Value.Kind == MetadataValueKind.VarInt)
                 self.AirSupply = entry.Value.AsVarInt();
+            if (legacy is not null && hasHealth && entry.Index == healthIndex && entry.Value.Kind == MetadataValueKind.Float)
+                self.Health = entry.Value.AsFloat();
+        }
+        if (legacy is not null)
+        {
+            legacy.ObserveMetadata(packet.Metadata);
+            context.PhysicsConditionsDirty();
+        }
 
     }
 

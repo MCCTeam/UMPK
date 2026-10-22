@@ -24,6 +24,9 @@ internal sealed class VanillaLegacyPlayerGeometry
     public bool SpinAttack { get; private set; }
 
     public void SetPosition(Vec3d value) => _bounds = _bounds.AtPosition(value);
+
+    /// <summary>Accepts the existing movement owner's translated cached box and derived center/minY without running an explicit native position setter.</summary>
+    public void ObserveMovement(Vec3d position, Aabb bounds) => _bounds = new VanillaEntityBounds(position, Width, Height, bounds);
     public void ObserveFlags(byte value, bool spinAttack = false)
     {
         SharedFlags = value;

@@ -200,7 +200,7 @@ internal sealed class EntityGeometryState
         => _legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy)
             ? legacy.ReadState(world, cell, membership, _legacyEmptyChunk) : -1;
 
-    private LegacyEmptyChunkState? EmptyChunkFor(int protocol)
+    internal LegacyEmptyChunkState? EmptyChunkFor(int protocol)
         => LegacyPlayerGeometryProfile.Supports(protocol) && LegacyPlayerGeometryProfile.ForProtocol(protocol).RetainsEmptyChunkWrites
             ? _legacyEmptyChunk ??= new LegacyEmptyChunkState() : null;
 

@@ -349,3 +349,22 @@ Umpk.Physics.PhysicsConditions.RefreshScaleDimensions.get -> bool
 Umpk.Physics.PhysicsConditions.RefreshScaleDimensions.init -> void
 Umpk.Physics.PhysicsState.DimensionsScale.get -> float?
 Umpk.Physics.PhysicsState.DimensionsScale.init -> void
+Umpk.Physics.PhysicsBodyDimensions
+Umpk.Physics.PhysicsBodyDimensions.Deconstruct(out float Width, out float Height, out float EyeHeight) -> void
+Umpk.Physics.PhysicsBodyDimensions.Equals(Umpk.Physics.PhysicsBodyDimensions other) -> bool
+Umpk.Physics.PhysicsBodyDimensions.EyeHeight.get -> float
+Umpk.Physics.PhysicsBodyDimensions.EyeHeight.init -> void
+Umpk.Physics.PhysicsBodyDimensions.Height.get -> float
+Umpk.Physics.PhysicsBodyDimensions.Height.init -> void
+Umpk.Physics.PhysicsBodyDimensions.PhysicsBodyDimensions() -> void
+Umpk.Physics.PhysicsBodyDimensions.PhysicsBodyDimensions(float Width, float Height, float EyeHeight) -> void
+Umpk.Physics.PhysicsBodyDimensions.Width.get -> float
+Umpk.Physics.PhysicsBodyDimensions.Width.init -> void
+override Umpk.Physics.PhysicsBodyDimensions.GetHashCode() -> int
+static Umpk.Physics.PhysicsBodyDimensions.operator !=(Umpk.Physics.PhysicsBodyDimensions left, Umpk.Physics.PhysicsBodyDimensions right) -> bool
+static Umpk.Physics.PhysicsBodyDimensions.operator ==(Umpk.Physics.PhysicsBodyDimensions left, Umpk.Physics.PhysicsBodyDimensions right) -> bool
+~override Umpk.Physics.PhysicsBodyDimensions.Equals(object obj) -> bool
+~override Umpk.Physics.PhysicsBodyDimensions.ToString() -> string
+Umpk.Physics.PhysicsState.BodyDimensions.get -> Umpk.Physics.PhysicsBodyDimensions?
+Umpk.Physics.PhysicsState.BodyDimensions.init -> void
+Umpk.Physics.PlayerPhysics.ApplyBodyGeometry(Umpk.Geometry.Aabb bounds, Umpk.Physics.PhysicsBodyDimensions? dimensions) -> void

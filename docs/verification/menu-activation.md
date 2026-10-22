@@ -62,3 +62,7 @@ The accepted Client DLL SHA-256 is `3285cd2d629b053e9f3aff327f08b1ed715c8e50ccc7
 ## Remaining acceptance
 
 These are source-backed full-session runtime tests over an in-memory transport. They make no native live-server, graphical menu, movement-phase, TCP, or server menu-opening claim. No shared checkout, sibling source/Git state, shared seed, game port, or RCON port is written or used. The final combined immutable producer still needs repository gates, fresh consumer and Native AOT/package checks, published-head CI, and the scoped live interaction acceptance. The broader placement and activation inventory remains open.
+
+## Merged immutable checkpoint
+
+The merged [menu and view-targeting checkpoint](menu-pick-checkpoint-20261022.md) at `e60c36047d168660b8ffd758f489e300e6836a91` now passes all 25 repository gates, fresh 1,999 DMCBK/918 MCC consumer tests with 33 matching dependencies and unchanged siblings, strict Native AOT with one executed passing smoke at 25,079,072 bytes, and thirteen exact package/isolated-consumer libraries. All 22 locked runtime DLL/PDB files remain unchanged. The earlier overlay results above retain their original sources and counts. Native menu/picking acceptance, broader inventory and published-head CI remain separate.

@@ -30,15 +30,26 @@ internal readonly record struct BlockUsePrediction(bool SendPacket, BlockUseResu
     public static BlockUsePrediction Success(bool localSwing) => new(true, BlockUseResult.Success, localSwing ? BlockUseSwing.Local : BlockUseSwing.Packet);
 }
 
-internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes)
+internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules)
 {
     // 1.14.4-client-decompiled net/minecraft/world/level/block/LeverBlock.java:75 returns true on the client. Later LeverBlock.use/useWithoutItem returns SUCCESS on the client. MultiPlayerGameMode introduces main-hand-only useWithoutItem fallback in 1.20.5; the source audit covers every release through 26.3.
-    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573);
+    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777);
+
+    public bool RequiresNativeTerrain(BlockState block)
+        => HasMenuActivationRules && block.Block.Id.IsMinecraft && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace";
 
     public bool TryPredict(BlockState block, out BlockUseResult result)
     {
         result = BlockUseResult.Unknown;
-        if (!HasActivationRules || !block.Block.Id.IsMinecraft)
+        if (!block.Block.Id.IsMinecraft)
+            return false;
+        // These native menu blocks return true/SUCCESS on the client before server menu, lock, or chest-obstruction checks. The legacy lit_furnace registry entry shares the furnace implementation; the caller already requires a known native block entry.
+        if (RequiresNativeTerrain(block))
+        {
+            result = BlockUseResult.Success;
+            return true;
+        }
+        if (!HasActivationRules)
             return false;
         if (block.Block.Id.Path == "lever")
         {

@@ -86,12 +86,16 @@ public sealed partial class InteractionActions
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult);
         bool activationPassesOffhand = hasActivation && activation.EmptyHandActivationIsMainHandOnly && hand == Hand.Off;
         if (!suppressActivation && hasActivation && !activationPassesOffhand)
+        {
+            if (activation.RequiresNativeTerrain(clicked) && !_services.State.EntityMembership.HasColumn(position))
+                return BlockUsePrediction.Unknown;
             return activationResult switch
             {
                 BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),
                 BlockUseResult.Consume => BlockUsePrediction.Consume,
                 _ => BlockUsePrediction.Unknown,
             };
+        }
         if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand)
             return BlockUsePrediction.Unknown;
         if (!inventoryKnown)

@@ -65,6 +65,8 @@ python3 tools/minecraft-official/server.py --rcon-port 26481 --password-file /ab
 
 The launcher selects Java 11 through 1.16.5 and Java 25 from 1.17 onward. `--java`, `UMPK_JAVA11`, and `UMPK_JAVA25` can override the selected executables. `UMPK_JAVA` overrides both eras. Use version-compatible installed runtimes when this workstation's private runtimes are unavailable.
 
+`--view-distance <2–32>` changes the isolated server's chunk view distance. The default remains four, and simulation distance remains four. `ready.json` records the selected value. The dedicated modern-motion acceptance leg requests eight so the native server sends every required collision column and continues tracking its peer.
+
 ## UMPK live harness
 
 ```bash

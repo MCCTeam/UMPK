@@ -115,7 +115,7 @@ def run(args: argparse.Namespace) -> None:
         'enable-rcon': 'true', 'rcon.port': str(args.rcon_port), 'rcon.password': password,
         'enable-query': 'false', 'broadcast-rcon-to-ops': 'false', 'gamemode': 'creative',
         'use-native-transport': 'false',
-        'spawn-protection': '0', 'view-distance': '4', 'simulation-distance': '4',
+        'spawn-protection': '0', 'view-distance': str(args.view_distance), 'simulation-distance': '4',
         'max-players': '5', 'level-name': 'world', 'max-tick-time': '-1',
     }
     (directory / 'server.properties').write_text(''.join(f'{key}={value}\n' for key, value in properties.items()), encoding='utf-8')
@@ -141,7 +141,7 @@ def run(args: argparse.Namespace) -> None:
                     except (OSError, ValueError):
                         pass
                 time.sleep(0.5)
-            result = {'version': args.version, 'pid': process.pid, 'java': java, 'port': args.port, 'rcon_port': args.rcon_port, 'run_dir': str(directory), 'rcon_list': response, 'command': command}
+            result = {'version': args.version, 'pid': process.pid, 'java': java, 'port': args.port, 'rcon_port': args.rcon_port, 'run_dir': str(directory), 'rcon_list': response, 'command': command, 'view_distance': args.view_distance}
             (directory / 'ready.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
             print(f'READY {args.version} port={args.port} rcon={args.rcon_port}: {response}', flush=True)
             if not args.smoke:
@@ -165,6 +165,13 @@ def run(args: argparse.Namespace) -> None:
     print(f'STOPPED {args.version} exit_code={process.returncode}', flush=True)
 
 
+def view_distance(value: str) -> int:
+    distance = int(value)
+    if not 2 <= distance <= 32:
+        raise argparse.ArgumentTypeError('Select a view distance from 2 through 32')
+    return distance
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('version', nargs='?')
@@ -173,6 +180,7 @@ def main() -> int:
     parser.add_argument('--port', type=int, default=25565)
     parser.add_argument('--rcon-port', type=int, default=25575)
     parser.add_argument('--java')
+    parser.add_argument('--view-distance', type=view_distance, default=4, help='native chunk view distance from 2 through 32; isolated default: 4')
     parser.add_argument('--accept-eula', action='store_true')
     parser.add_argument('--timeout', type=int, default=180)
     parser.add_argument('--smoke', action='store_true', help='prove server and RCON readiness, then stop')

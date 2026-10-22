@@ -35,8 +35,13 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
     public int RconPort { get; }
     public string ServerLog => File.Exists(Path.Combine(DirectoryPath, "server.log")) ? File.ReadAllText(Path.Combine(DirectoryPath, "server.log")) : string.Empty;
 
-    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct)
+    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null)
     {
+        if (viewDistance is { } requestedDistance)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(requestedDistance, 2, nameof(viewDistance));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(requestedDistance, 32, nameof(viewDistance));
+        }
         string producer = Environment.GetEnvironmentVariable("UMPK_INTERACTION_PRODUCER") ?? string.Empty;
         if (string.IsNullOrWhiteSpace(producer))
             throw new InvalidOperationException("Set UMPK_INTERACTION_PRODUCER to the immutable source snapshot identity before accepting a live leg.");
@@ -60,6 +65,11 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
         int port = ((IPEndPoint)gameReservation.LocalEndpoint).Port;
         int rconPort = ((IPEndPoint)rconReservation.LocalEndpoint).Port;
         var start = Python(script, release, "--root", oracle, "--run-dir", directory, "--java", JavaRuntimes.ForProtocol(protocol), "--port", port.ToString(CultureInfo.InvariantCulture), "--rcon-port", rconPort.ToString(CultureInfo.InvariantCulture), "--timeout", "180");
+        if (viewDistance is { } distance)
+        {
+            start.ArgumentList.Add("--view-distance");
+            start.ArgumentList.Add(distance.ToString(CultureInfo.InvariantCulture));
+        }
         start.RedirectStandardInput = true;
         gameReservation.Stop();
         rconReservation.Stop();
@@ -83,7 +93,8 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 port,
                 rconPort,
                 serverSha256 = jarHash,
-                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
+                viewDistance = viewDistance ?? 4,
+                testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),
             });

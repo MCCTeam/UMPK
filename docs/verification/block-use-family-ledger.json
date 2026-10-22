@@ -1,0 +1,1356 @@
+{
+  "sourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
+  "scope": "Finite existing50datasets/75named releases; source/evidence audit only; candidate labels are not native implementation claims",
+  "protocols": [
+    {
+      "protocol": 47,
+      "namedReleases": [
+        "1.8",
+        "1.8.1",
+        "1.8.2",
+        "1.8.3",
+        "1.8.4",
+        "1.8.5",
+        "1.8.6",
+        "1.8.7",
+        "1.8.8",
+        "1.8.9"
+      ],
+      "itemRows": 338,
+      "nativeDefaultKinds": {
+        "unknown": 149,
+        "pass": 129,
+        "simple_cube": 60
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/47/block-interactions.json",
+        "bytes": 45554,
+        "sha256": "716b78d1910a2bedb6570bcf672150f632a226fd3cce02c98ab86b5806349c4b"
+      }
+    },
+    {
+      "protocol": 107,
+      "namedReleases": [
+        "1.9"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/107/block-interactions.json",
+        "bytes": 29525,
+        "sha256": "422972946ed70ef25588ddd9f6807387ca119058f49653a06ab4f75847e3945d"
+      }
+    },
+    {
+      "protocol": 108,
+      "namedReleases": [
+        "1.9.1"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/108/block-interactions.json",
+        "bytes": 29529,
+        "sha256": "fb9b999d9f496f69fe89ac3794130d3a20bfc85d719145c17e8410d7ed9eeb1a"
+      }
+    },
+    {
+      "protocol": 109,
+      "namedReleases": [
+        "1.9.2"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/109/block-interactions.json",
+        "bytes": 29529,
+        "sha256": "d6a104885db42fee8f9ec875f5789ec1b930cc0a4b4cf4818eb00b72e1c17b87"
+      }
+    },
+    {
+      "protocol": 110,
+      "namedReleases": [
+        "1.9.3",
+        "1.9.4"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/110/block-interactions.json",
+        "bytes": 31526,
+        "sha256": "ab4da59bc82ff800c504c3b340b57f64f4b74ab762f359bda975350f405baeec"
+      }
+    },
+    {
+      "protocol": 210,
+      "namedReleases": [
+        "1.10",
+        "1.10.1",
+        "1.10.2"
+      ],
+      "itemRows": 372,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 168,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/210/block-interactions.json",
+        "bytes": 34066,
+        "sha256": "83cd136915eae3e5b820e6362270057bae77dd03312d58a896e2b122e66273c4"
+      }
+    },
+    {
+      "protocol": 315,
+      "namedReleases": [
+        "1.11"
+      ],
+      "itemRows": 391,
+      "nativeDefaultKinds": {
+        "pass": 142,
+        "unknown": 184,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/315/block-interactions.json",
+        "bytes": 31934,
+        "sha256": "bef075aed4543e3b522f4989ece378d74f8ca66035096599cb17aece9f0c109a"
+      }
+    },
+    {
+      "protocol": 316,
+      "namedReleases": [
+        "1.11.1",
+        "1.11.2"
+      ],
+      "itemRows": 392,
+      "nativeDefaultKinds": {
+        "pass": 143,
+        "unknown": 184,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/316/block-interactions.json",
+        "bytes": 33999,
+        "sha256": "68731cef87bb28308a69fff659ccb68af058c4458ddfb1934662ba2ba263a87e"
+      }
+    },
+    {
+      "protocol": 335,
+      "namedReleases": [
+        "1.12"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/335/block-interactions.json",
+        "bytes": 34215,
+        "sha256": "25831b8df2095ac07599b27ba0041eadae8817189318c84588e089d49199ff03"
+      }
+    },
+    {
+      "protocol": 338,
+      "namedReleases": [
+        "1.12.1"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/338/block-interactions.json",
+        "bytes": 34219,
+        "sha256": "ed2397abd188296f87ba27b5b6d814517f91b6a61f428365bfbc6746930a3cb3"
+      }
+    },
+    {
+      "protocol": 340,
+      "namedReleases": [
+        "1.12.2"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/340/block-interactions.json",
+        "bytes": 34219,
+        "sha256": "1d319d29deaee1aa1312fc32fdb8e8e585ccabb4ce75e30ad4591bd7e7a4cd8a"
+      }
+    },
+    {
+      "protocol": 393,
+      "namedReleases": [
+        "1.13"
+      ],
+      "itemRows": 785,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 454,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/393/block-interactions.json",
+        "bytes": 89922,
+        "sha256": "578d430caec8b799c060e14cd711027dbda112cf8f2dad512f459adfce6f71f0"
+      }
+    },
+    {
+      "protocol": 401,
+      "namedReleases": [
+        "1.13.1"
+      ],
+      "itemRows": 790,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 459,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/401/block-interactions.json",
+        "bytes": 90578,
+        "sha256": "f174fd21164b13eb07f8abad8047df466ea35492ab28dec5d5f6e6b3a50d5fc7"
+      }
+    },
+    {
+      "protocol": 404,
+      "namedReleases": [
+        "1.13.2"
+      ],
+      "itemRows": 790,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 459,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/404/block-interactions.json",
+        "bytes": 90578,
+        "sha256": "c1415fdf7814bf8e200dbff269935ef6c794f19684dfafb57dd99e353b6f2224"
+      }
+    },
+    {
+      "protocol": 477,
+      "namedReleases": [
+        "1.14"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/477/block-interactions.json",
+        "bytes": 101348,
+        "sha256": "0a4ca2eb1b711a30aa7f3b37a7b5250ba165f2aafaa62a692be338ab01d2f7c9"
+      }
+    },
+    {
+      "protocol": 480,
+      "namedReleases": [
+        "1.14.1"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/480/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "bd1577409f7938268ca7ae6dfb5dcdad23de57a7e34669ccabe9eced5b69e09d"
+      }
+    },
+    {
+      "protocol": 485,
+      "namedReleases": [
+        "1.14.2"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/485/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "382f8f03bee5aee03840d3ca7eb6879914f43b7bac1dc532f51f6cca118903d2"
+      }
+    },
+    {
+      "protocol": 490,
+      "namedReleases": [
+        "1.14.3"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/490/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "a1a7a7fcdda9f5b845f061a08ff0bae2e4bb47ef1db0ad5c30edd8205336f2c0"
+      }
+    },
+    {
+      "protocol": 498,
+      "namedReleases": [
+        "1.14.4"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/498/block-interactions.json",
+        "bytes": 98815,
+        "sha256": "464d0b5d21fd39f4e68e576b30056772622126182b7607cb19b382ef8f1a3b0e"
+      }
+    },
+    {
+      "protocol": 573,
+      "namedReleases": [
+        "1.15"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/573/block-interactions.json",
+        "bytes": 99463,
+        "sha256": "f30a8a15933515d56923c904ef7c7d363d1bc8961c0d65dceb995b9061428036"
+      }
+    },
+    {
+      "protocol": 575,
+      "namedReleases": [
+        "1.15.1"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/575/block-interactions.json",
+        "bytes": 99465,
+        "sha256": "e22c2b0d732f2815d18421395af3bd5a873de6fe254c22e92cc6bc2961ffff74"
+      }
+    },
+    {
+      "protocol": 578,
+      "namedReleases": [
+        "1.15.2"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/578/block-interactions.json",
+        "bytes": 99465,
+        "sha256": "546e3b643987dcbeb7b0f90868b68ec450f21c98203be4c600602da2042d79e9"
+      }
+    },
+    {
+      "protocol": 735,
+      "namedReleases": [
+        "1.16"
+      ],
+      "itemRows": 975,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 596,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/735/block-interactions.json",
+        "bytes": 110871,
+        "sha256": "daf67337064c202f2137c8c3c74deaa9b0b4bd318e75c97e87c4b70476d7840f"
+      }
+    },
+    {
+      "protocol": 736,
+      "namedReleases": [
+        "1.16.1"
+      ],
+      "itemRows": 975,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 596,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/736/block-interactions.json",
+        "bytes": 110873,
+        "sha256": "96107c15418f16f7a9fdcd08b74fe453e74c44764aaf2d7ec7a747672b87adbf"
+      }
+    },
+    {
+      "protocol": 751,
+      "namedReleases": [
+        "1.16.2"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/751/block-interactions.json",
+        "bytes": 110948,
+        "sha256": "f56ac21404e4231359bc012033153782b79d30df3cba57de1bdace971b26f2a7"
+      }
+    },
+    {
+      "protocol": 753,
+      "namedReleases": [
+        "1.16.3"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/753/block-interactions.json",
+        "bytes": 110948,
+        "sha256": "125cfdf53fcbe9d6d6dca8a02ccf9e38bd299b5bdbcfd4277ec7faec3bdc8ae6"
+      }
+    },
+    {
+      "protocol": 754,
+      "namedReleases": [
+        "1.16.4",
+        "1.16.5"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/754/block-interactions.json",
+        "bytes": 112186,
+        "sha256": "610e2cab03d330daa873c8e8a157d6afa6442a0a1fdee16243745f2ca1e37aea"
+      }
+    },
+    {
+      "protocol": 755,
+      "namedReleases": [
+        "1.17"
+      ],
+      "itemRows": 1100,
+      "nativeDefaultKinds": {
+        "pass": 198,
+        "unknown": 669,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/755/block-interactions.json",
+        "bytes": 127944,
+        "sha256": "25939e431997d59994e1828d8d668a8ec35c33d9f5c39ce3326c364aa9f50f89"
+      }
+    },
+    {
+      "protocol": 756,
+      "namedReleases": [
+        "1.17.1"
+      ],
+      "itemRows": 1100,
+      "nativeDefaultKinds": {
+        "pass": 198,
+        "unknown": 669,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/756/block-interactions.json",
+        "bytes": 127946,
+        "sha256": "e52562bc55b348698caea70d0cb51a6a329db32aad0471f22a007a5c365f667d"
+      }
+    },
+    {
+      "protocol": 757,
+      "namedReleases": [
+        "1.18",
+        "1.18.1"
+      ],
+      "itemRows": 1101,
+      "nativeDefaultKinds": {
+        "pass": 197,
+        "unknown": 671,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/757/block-interactions.json",
+        "bytes": 129258,
+        "sha256": "a1f1135b5996210ad6d2d02477a452dd137da913c7725cfdd7d848a122a48ecb"
+      }
+    },
+    {
+      "protocol": 758,
+      "namedReleases": [
+        "1.18.2"
+      ],
+      "itemRows": 1101,
+      "nativeDefaultKinds": {
+        "pass": 197,
+        "unknown": 671,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/758/block-interactions.json",
+        "bytes": 128022,
+        "sha256": "a44a928898062246f22dfd4e43cf8f9bb580db0b7aabdc1a7ff9b9b51c8112ba"
+      }
+    },
+    {
+      "protocol": 759,
+      "namedReleases": [
+        "1.19"
+      ],
+      "itemRows": 1152,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 706,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/759/block-interactions.json",
+        "bytes": 133547,
+        "sha256": "4e83b6c1de59ca3ddabdbc1305f7d377e8abb1efeccc0c41342edb8e3c5ee584"
+      }
+    },
+    {
+      "protocol": 760,
+      "namedReleases": [
+        "1.19.1",
+        "1.19.2"
+      ],
+      "itemRows": 1152,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 706,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/760/block-interactions.json",
+        "bytes": 134787,
+        "sha256": "d1f1ed97ca7a575e85685352cf60ba44a3361025b23f718d06e1110cd99f5b75"
+      }
+    },
+    {
+      "protocol": 761,
+      "namedReleases": [
+        "1.19.3"
+      ],
+      "itemRows": 1186,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 740,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/761/block-interactions.json",
+        "bytes": 138157,
+        "sha256": "0c254b929fe50a1bf7c19639cf50028c90674b026914a7f914b4bbf077ea7e9b"
+      }
+    },
+    {
+      "protocol": 762,
+      "namedReleases": [
+        "1.19.4"
+      ],
+      "itemRows": 1228,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 782,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/762/block-interactions.json",
+        "bytes": 142685,
+        "sha256": "57bd5112a6a3b7ee4959f1cfc0af06cb13fe925e014fc70194bed31b0f122e65"
+      }
+    },
+    {
+      "protocol": 763,
+      "namedReleases": [
+        "1.20",
+        "1.20.1"
+      ],
+      "itemRows": 1255,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 763,
+        "simple_cube": 244
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/763/block-interactions.json",
+        "bytes": 146143,
+        "sha256": "e812b2527e27aaea872dc154c3ab411c7217bcd718aa92963ff213dc930dd1b4"
+      }
+    },
+    {
+      "protocol": 764,
+      "namedReleases": [
+        "1.20.2"
+      ],
+      "itemRows": 1255,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 764,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/764/block-interactions.json",
+        "bytes": 144903,
+        "sha256": "357fe298c7040e99b0ea31d9ea2018cec1c00fd333c06e3e26e22c9650d3be16"
+      }
+    },
+    {
+      "protocol": 765,
+      "namedReleases": [
+        "1.20.3",
+        "1.20.4"
+      ],
+      "itemRows": 1312,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 821,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/765/block-interactions.json",
+        "bytes": 154243,
+        "sha256": "13a8966c01dfd8cd5c899df49b90275098097db6d6c1935db5a0d8b207dc789f"
+      }
+    },
+    {
+      "protocol": 766,
+      "namedReleases": [
+        "1.20.5",
+        "1.20.6"
+      ],
+      "itemRows": 1330,
+      "nativeDefaultKinds": {
+        "pass": 252,
+        "unknown": 835,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/766/block-interactions.json",
+        "bytes": 155579,
+        "sha256": "cb7634f922d10dab0064f2a73e594a35ca7da365c21e9181b980358477b88fbd"
+      }
+    },
+    {
+      "protocol": 767,
+      "namedReleases": [
+        "1.21",
+        "1.21.1"
+      ],
+      "itemRows": 1333,
+      "nativeDefaultKinds": {
+        "pass": 284,
+        "unknown": 785,
+        "simple_cube": 264
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/767/block-interactions.json",
+        "bytes": 155790,
+        "sha256": "c523b634e38733c886f01957394c44df63626c1ed8971726ae89b0db046ee6d1"
+      }
+    },
+    {
+      "protocol": 768,
+      "namedReleases": [
+        "1.21.2",
+        "1.21.3"
+      ],
+      "itemRows": 1375,
+      "nativeDefaultKinds": {
+        "pass": 302,
+        "unknown": 809,
+        "simple_cube": 264
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/768/block-interactions.json",
+        "bytes": 160071,
+        "sha256": "2e5d07fd17567132c389cbef3283e77afaea25f833baf12ac31a10bcbed384ed"
+      }
+    },
+    {
+      "protocol": 769,
+      "namedReleases": [
+        "1.21.4"
+      ],
+      "itemRows": 1385,
+      "nativeDefaultKinds": {
+        "pass": 305,
+        "unknown": 811,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/769/block-interactions.json",
+        "bytes": 160163,
+        "sha256": "2e461bb6bf85d6bc293e134cb4b4886bd91ae320f62498153d5fa385bbb452d2"
+      }
+    },
+    {
+      "protocol": 770,
+      "namedReleases": [
+        "1.21.5"
+      ],
+      "itemRows": 1396,
+      "nativeDefaultKinds": {
+        "pass": 307,
+        "unknown": 820,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/770/block-interactions.json",
+        "bytes": 161363,
+        "sha256": "3514355db14f00dfae265ab67e46996831eef4c1f05972c8eabcc1213d26d708"
+      }
+    },
+    {
+      "protocol": 771,
+      "namedReleases": [
+        "1.21.6"
+      ],
+      "itemRows": 1415,
+      "nativeDefaultKinds": {
+        "pass": 324,
+        "unknown": 822,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/771/block-interactions.json",
+        "bytes": 162636,
+        "sha256": "c0cc6b760e6a31176dc1a6f59a449f1486bc594fec4b6f9a02a764888c31e509"
+      }
+    },
+    {
+      "protocol": 772,
+      "namedReleases": [
+        "1.21.7",
+        "1.21.8"
+      ],
+      "itemRows": 1416,
+      "nativeDefaultKinds": {
+        "pass": 325,
+        "unknown": 822,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/772/block-interactions.json",
+        "bytes": 163947,
+        "sha256": "d1a1cce1a13395e33621768a7eabe2f08d4ed36d9442a22b6bc2b329a12d2189"
+      }
+    },
+    {
+      "protocol": 773,
+      "namedReleases": [
+        "1.21.9",
+        "1.21.10"
+      ],
+      "itemRows": 1488,
+      "nativeDefaultKinds": {
+        "pass": 333,
+        "unknown": 886,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/773/block-interactions.json",
+        "bytes": 173608,
+        "sha256": "35d73e3fcb0953bc9e912ecb3f99c55f7c4ebfd0605f0cd6bc6f722a9c1ff9ef"
+      }
+    },
+    {
+      "protocol": 774,
+      "namedReleases": [
+        "1.21.11"
+      ],
+      "itemRows": 1505,
+      "nativeDefaultKinds": {
+        "pass": 346,
+        "unknown": 890,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/774/block-interactions.json",
+        "bytes": 173526,
+        "sha256": "8521eb8839b80b7dc78e295de8184209415b73d859b078d2dc751b2e7c0d975c"
+      }
+    },
+    {
+      "protocol": 775,
+      "namedReleases": [
+        "26.1",
+        "26.1.1",
+        "26.1.2"
+      ],
+      "itemRows": 1506,
+      "nativeDefaultKinds": {
+        "pass": 346,
+        "unknown": 891,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/775/block-interactions.json",
+        "bytes": 175979,
+        "sha256": "4738a184effc2bfa7e58c3b67dba8c3f26efabd0eacbac67cee3afd7e88495f2"
+      }
+    },
+    {
+      "protocol": 776,
+      "namedReleases": [
+        "26.2"
+      ],
+      "itemRows": 1537,
+      "nativeDefaultKinds": {
+        "pass": 348,
+        "unknown": 912,
+        "simple_cube": 277
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/776/block-interactions.json",
+        "bytes": 177573,
+        "sha256": "05ee9836b04670eb56342ba6bc3757182cd24f80dc780cab3f4631b8554c0d3a"
+      }
+    },
+    {
+      "protocol": 777,
+      "namedReleases": [
+        "26.3"
+      ],
+      "itemRows": 1658,
+      "nativeDefaultKinds": {
+        "unknown": 1030,
+        "pass": 350,
+        "simple_cube": 278
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/777/block-interactions.json",
+        "bytes": 191895,
+        "sha256": "c110557dbfe515e7373ad47924c4e4182ef94e138403dd06a73c5ce55592278d"
+      }
+    }
+  ],
+  "familyRowCounts": {
+    "legacy-special-placement": 306,
+    "specialized-block-placement": 23334,
+    "native-default-on-block-pass": 10620,
+    "armor-stand-use": 50,
+    "ordinary-cube-placement": 9285,
+    "rail-vehicle-use": 300,
+    "hoe": 283,
+    "growth-dye": 53,
+    "participation-not-yet-proven": 164,
+    "ignition": 100,
+    "hanging-entity-use": 123,
+    "lead": 50,
+    "item-on-block-activation-context": 555,
+    "spawn-egg": 2744,
+    "shovel": 278,
+    "end-crystal-use": 49,
+    "debug-stick": 39,
+    "axe": 228,
+    "map-use": 55,
+    "compass": 28,
+    "honeycomb": 23,
+    "potion-use": 57,
+    "brush": 16,
+    "cushion-use": 16
+  },
+  "families": [
+    {
+      "id": "native-default-on-block-pass",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Item.useOn inherits native default PASS with no transformer and proven ordinary feature context.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "No missing native useOn behavior within the extracted default-stack scope. Air-use/entity-use and component overrides remain separate.",
+      "acceptance": "Retain canonical table and current packet-only regression controls; do not create a missing implementation for each item."
+    },
+    {
+      "id": "ordinary-cube-placement",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Native BlockItem and block placement/survival/shape methods inherit the measured simple full-cube contract.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Complete final-release pack, custom components and broader obstruction geometry remain open; specialized subclasses are excluded.",
+      "acceptance": "Reuse existing replacement/source data and survival/native pilots; final exact-producer matrix remains.",
+      "statusDetail": "passed bounded scope"
+    },
+    {
+      "id": "hoe-shovel-axe",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Existing source-bound helpers cover the accepted soil/path/rooted-dirt, extinguish, strip/scrape/wax and intent branches. Native legacy axes are proven pass.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "777 transformer components, unsupported modern patches, standing campfire recipe activation and some missing-column aliases.",
+      "acceptance": "Reuse completed all-applicable-dataset session cases and7hoe/5shovel/9axe live boundaries; do not rerun them merely to audit.",
+      "statusDetail": "passed through776 bounded scope"
+    },
+    {
+      "id": "known-menus-and-switches",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Crafting table/chest/furnace profiles47\u2013777; lever/button498\u2013777 with powered consume and766 main-hand fallback boundaries.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Other menus, older switches and item-dependent block activation remain separate.",
+      "acceptance": "Reuse93actual-session menu cases and4native menu boundaries; preserve activation before cooldown/placement permission.",
+      "statusDetail": "passed bounded scope"
+    },
+    {
+      "id": "door-activation",
+      "priority": 1,
+      "status": "not run",
+      "nativeDecision": "Original1.14.4 DoorBlock returns true for nonmetal;1.21.5/26.3 hand-openable DoorBlock returns SUCCESS, non-openable returns PASS.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
+      "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
+      "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated."
+    },
+    {
+      "id": "other-hand-activated-blocks",
+      "priority": 2,
+      "status": "not run",
+      "nativeDecision": "Trapdoor/fence-gate and other block overrides require their own result/registration audit; a table override is not proof of consumption.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Exact native type/era/result rather than suffix-based assumptions.",
+      "focusedFailingPublicSession": "Only after native success/pass is proven, drive framed block/property/hand state through PlaceBlockAsync and assert exact packet group.",
+      "nativeLiveNeed": "Reuse door setup only where contracts match; separate original boundaries and native state observations."
+    },
+    {
+      "id": "other-menus-and-item-activation",
+      "priority": 3,
+      "status": "not run",
+      "nativeDecision": "Barrel, smoker/blast furnace, lectern, jukebox, campfire, cake/candle and other use overrides can inspect inventory/state/recipes.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Per-family native client result and unknown-context boundary; do not assume every override succeeds.",
+      "focusedFailingPublicSession": "A source-proven client success/consume/pass branch with decoded inventory and block state, plus unavailable recipe/NBT controls.",
+      "nativeLiveNeed": "Native menu/block/item observations and exact use/swing at each actual boundary."
+    },
+    {
+      "id": "specialized-block-placement",
+      "priority": 4,
+      "status": "not run",
+      "nativeDecision": "Unknown BlockItem subclasses have placement/state/survival/shape or feature differences; raw unknown does not identify which decision differs.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Slab stacking, orientation, attachments/support, multi-cell placement, block-entity data and material/survival contexts. PredictBlockUse currently receives no cursor/inside-block argument even though public caller has them.",
+      "focusedFailingPublicSession": "Start with one source-proven slab merge/top/bottom/cursor case, then attachments/multicell in separate slices; preserve explicit-coordinate API.",
+      "nativeLiveNeed": "Original placement context and independent server states/stacks with genuine session callers; no whole rendering model."
+    },
+    {
+      "id": "777-transformers",
+      "priority": 5,
+      "status": "not run",
+      "nativeDecision": "Native777 Item.useOn dispatches BLOCK_TRANSFORMER; default hoe/shovel/axe and other transformer items are excluded from inherited-PASS extraction.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Effective transformer data, predicates, ordering and context are unowned; native feature permission alone is not a use result.",
+      "focusedFailingPublicSession": "A retained default transformer success/pass through framed effective components and current owner, with unknown custom transformer control.",
+      "nativeLiveNeed": "Pin original codec/default registrations and transformBlock branch; measure missing transitions only."
+    },
+    {
+      "id": "entity-placement-items",
+      "priority": 6,
+      "status": "not run",
+      "nativeDecision": "End crystal, armor stand, hanging entity, minecart, spawn egg and new cushion families require separate native useOn predicates. Boats/buckets with default-pass entries are not moved into this row merely because they create entities/fluids through air-use.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Source-specific prechecks, eligible geometry, context and success/swing result; EndCrystalItem.useOn placement remains pending. The other active EndCrystal slice owns ENTITY picking/current bounds only; it does not implement or accept the item useOn axis.",
+      "focusedFailingPublicSession": "One family per red: exact support/face/clearance/unknown context plus actual public action and teardown.",
+      "nativeLiveNeed": "Original family method plus independent native entity/block/stack observations; exclude general AI/combat/server-owned effects."
+    },
+    {
+      "id": "growth-ignition-wax",
+      "priority": 7,
+      "status": "not run",
+      "nativeDecision": "Bone meal/legacy dye, flint-and-steel/fire-charge and honeycomb contain native useOn success/pass branches.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Exact target/material/face/world/client branch and known recipe/growth conditions; do not treat server-owned growth/drop simulation as necessary.",
+      "focusedFailingPublicSession": "One deterministic original-client result branch with inventory/world packets; unknown world context remains packet-only.",
+      "nativeLiveNeed": "Source-bound original method and native block/durability observations on relevant boundaries."
+    },
+    {
+      "id": "other-nonblock-overrides",
+      "priority": 8,
+      "status": "not run",
+      "nativeDecision": "Maps/compass/lead/brush/potions/debug-stick and feature-gated items have distinct useOn/use/other interaction channels.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Prove native on-block participation/default pass first; identical no-swing outcomes can already match while typed knowledge remains unavailable.",
+      "focusedFailingPublicSession": "Propose only after a native send/result/swing mismatch is established; an unknown entry alone is insufficient.",
+      "nativeLiveNeed": "Read exact inherited methods/components and existing feature audit before any new experiment.",
+      "statusDetail": "not run participation audit"
+    },
+    {
+      "id": "air-use-and-active-use",
+      "priority": 9,
+      "status": "not run",
+      "nativeDecision": "Bucket/boat/consumable/charged items can use Item.use after on-block PASS. Public UseItemAsync currently directly sends its dedicated era packet.",
+      "caller": "InteractionActions.UseItemAsync; no automatic fallback added to explicit-coordinate PlaceBlockAsync",
+      "missing": "Exact current public contract versus native input fallback/result/swing and active-use ownership needs a bounded decision; server-owned item effects remain out of scope.",
+      "focusedFailingPublicSession": "A source-proven air-use result branch through actual packet-populated inventory/view/world; preserve47sentinel andhand limits.",
+      "nativeLiveNeed": "Pin original input/controller/result caller before predicting packet groups; do not infer missing behavior from graphical effects.",
+      "statusDetail": "not run full input acceptance"
+    },
+    {
+      "id": "mining-permissions",
+      "priority": 4,
+      "status": "not run",
+      "nativeDecision": "Legacy47\u2013340 and bounded flattened393\u2013765 permissions; typed component766\u2013769 cache/identity are connected.",
+      "caller": "InteractionActions mining initial/held owner on existing session tick",
+      "missing": "Property/range/full block-entity save context, missing tags and770+ extended predicates remain unknown.",
+      "focusedFailingPublicSession": "Next unsupported native predicate kind with actual can_break inventory/tag/mode packets and exact held START/swing order.",
+      "nativeLiveNeed": "Reuse completed56native component cases and98input-order bindings; measure only missing branch.",
+      "statusDetail": "passed bounded eras; remainder not run"
+    },
+    {
+      "id": "mining-equipment-and-modifiers",
+      "priority": 8,
+      "status": "not run",
+      "nativeDecision": "Existing ability/tool, legacy identity, Aqua Affinity, water arithmetic, attributes/effects, creative restrictions and pre-position charge owners are retained.",
+      "caller": "InteractionActions mining initial/held owner on existing session tick",
+      "missing": "Complete source-bound active-use/equipment/effect matrix and broad live acceptance; unrelated structured component identity families remain separate.",
+      "focusedFailingPublicSession": "Only a named missing modifier/native identity branch, through actual state packets and session clock.",
+      "nativeLiveNeed": "Reuse completed measurements and focused/native/session proofs; do not reopen them as unknown backlog.",
+      "statusDetail": "passed focused branches; final matrix not run"
+    }
+  ],
+  "limits": "The inventory is finite and every existing row is accounted for. Unclassified participation is unfinished evidence, not automatically a production defect. The next proposed production change is door activation after the full native profile/registration audit.",
+  "sourceInputs": [
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/47/block-interactions.json",
+      "bytes": 45554,
+      "sha256": "716b78d1910a2bedb6570bcf672150f632a226fd3cce02c98ab86b5806349c4b"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/107/block-interactions.json",
+      "bytes": 29525,
+      "sha256": "422972946ed70ef25588ddd9f6807387ca119058f49653a06ab4f75847e3945d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/108/block-interactions.json",
+      "bytes": 29529,
+      "sha256": "fb9b999d9f496f69fe89ac3794130d3a20bfc85d719145c17e8410d7ed9eeb1a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/109/block-interactions.json",
+      "bytes": 29529,
+      "sha256": "d6a104885db42fee8f9ec875f5789ec1b930cc0a4b4cf4818eb00b72e1c17b87"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/110/block-interactions.json",
+      "bytes": 31526,
+      "sha256": "ab4da59bc82ff800c504c3b340b57f64f4b74ab762f359bda975350f405baeec"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/210/block-interactions.json",
+      "bytes": 34066,
+      "sha256": "83cd136915eae3e5b820e6362270057bae77dd03312d58a896e2b122e66273c4"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/315/block-interactions.json",
+      "bytes": 31934,
+      "sha256": "bef075aed4543e3b522f4989ece378d74f8ca66035096599cb17aece9f0c109a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/316/block-interactions.json",
+      "bytes": 33999,
+      "sha256": "68731cef87bb28308a69fff659ccb68af058c4458ddfb1934662ba2ba263a87e"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/335/block-interactions.json",
+      "bytes": 34215,
+      "sha256": "25831b8df2095ac07599b27ba0041eadae8817189318c84588e089d49199ff03"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/338/block-interactions.json",
+      "bytes": 34219,
+      "sha256": "ed2397abd188296f87ba27b5b6d814517f91b6a61f428365bfbc6746930a3cb3"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/340/block-interactions.json",
+      "bytes": 34219,
+      "sha256": "1d319d29deaee1aa1312fc32fdb8e8e585ccabb4ce75e30ad4591bd7e7a4cd8a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/393/block-interactions.json",
+      "bytes": 89922,
+      "sha256": "578d430caec8b799c060e14cd711027dbda112cf8f2dad512f459adfce6f71f0"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/401/block-interactions.json",
+      "bytes": 90578,
+      "sha256": "f174fd21164b13eb07f8abad8047df466ea35492ab28dec5d5f6e6b3a50d5fc7"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/404/block-interactions.json",
+      "bytes": 90578,
+      "sha256": "c1415fdf7814bf8e200dbff269935ef6c794f19684dfafb57dd99e353b6f2224"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/477/block-interactions.json",
+      "bytes": 101348,
+      "sha256": "0a4ca2eb1b711a30aa7f3b37a7b5250ba165f2aafaa62a692be338ab01d2f7c9"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/480/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "bd1577409f7938268ca7ae6dfb5dcdad23de57a7e34669ccabe9eced5b69e09d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/485/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "382f8f03bee5aee03840d3ca7eb6879914f43b7bac1dc532f51f6cca118903d2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/490/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "a1a7a7fcdda9f5b845f061a08ff0bae2e4bb47ef1db0ad5c30edd8205336f2c0"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/498/block-interactions.json",
+      "bytes": 98815,
+      "sha256": "464d0b5d21fd39f4e68e576b30056772622126182b7607cb19b382ef8f1a3b0e"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/573/block-interactions.json",
+      "bytes": 99463,
+      "sha256": "f30a8a15933515d56923c904ef7c7d363d1bc8961c0d65dceb995b9061428036"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/575/block-interactions.json",
+      "bytes": 99465,
+      "sha256": "e22c2b0d732f2815d18421395af3bd5a873de6fe254c22e92cc6bc2961ffff74"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/578/block-interactions.json",
+      "bytes": 99465,
+      "sha256": "546e3b643987dcbeb7b0f90868b68ec450f21c98203be4c600602da2042d79e9"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/735/block-interactions.json",
+      "bytes": 110871,
+      "sha256": "daf67337064c202f2137c8c3c74deaa9b0b4bd318e75c97e87c4b70476d7840f"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/736/block-interactions.json",
+      "bytes": 110873,
+      "sha256": "96107c15418f16f7a9fdcd08b74fe453e74c44764aaf2d7ec7a747672b87adbf"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/751/block-interactions.json",
+      "bytes": 110948,
+      "sha256": "f56ac21404e4231359bc012033153782b79d30df3cba57de1bdace971b26f2a7"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/753/block-interactions.json",
+      "bytes": 110948,
+      "sha256": "125cfdf53fcbe9d6d6dca8a02ccf9e38bd299b5bdbcfd4277ec7faec3bdc8ae6"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/754/block-interactions.json",
+      "bytes": 112186,
+      "sha256": "610e2cab03d330daa873c8e8a157d6afa6442a0a1fdee16243745f2ca1e37aea"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/755/block-interactions.json",
+      "bytes": 127944,
+      "sha256": "25939e431997d59994e1828d8d668a8ec35c33d9f5c39ce3326c364aa9f50f89"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/756/block-interactions.json",
+      "bytes": 127946,
+      "sha256": "e52562bc55b348698caea70d0cb51a6a329db32aad0471f22a007a5c365f667d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/757/block-interactions.json",
+      "bytes": 129258,
+      "sha256": "a1f1135b5996210ad6d2d02477a452dd137da913c7725cfdd7d848a122a48ecb"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/758/block-interactions.json",
+      "bytes": 128022,
+      "sha256": "a44a928898062246f22dfd4e43cf8f9bb580db0b7aabdc1a7ff9b9b51c8112ba"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/759/block-interactions.json",
+      "bytes": 133547,
+      "sha256": "4e83b6c1de59ca3ddabdbc1305f7d377e8abb1efeccc0c41342edb8e3c5ee584"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/760/block-interactions.json",
+      "bytes": 134787,
+      "sha256": "d1f1ed97ca7a575e85685352cf60ba44a3361025b23f718d06e1110cd99f5b75"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/761/block-interactions.json",
+      "bytes": 138157,
+      "sha256": "0c254b929fe50a1bf7c19639cf50028c90674b026914a7f914b4bbf077ea7e9b"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/762/block-interactions.json",
+      "bytes": 142685,
+      "sha256": "57bd5112a6a3b7ee4959f1cfc0af06cb13fe925e014fc70194bed31b0f122e65"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/763/block-interactions.json",
+      "bytes": 146143,
+      "sha256": "e812b2527e27aaea872dc154c3ab411c7217bcd718aa92963ff213dc930dd1b4"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/764/block-interactions.json",
+      "bytes": 144903,
+      "sha256": "357fe298c7040e99b0ea31d9ea2018cec1c00fd333c06e3e26e22c9650d3be16"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/765/block-interactions.json",
+      "bytes": 154243,
+      "sha256": "13a8966c01dfd8cd5c899df49b90275098097db6d6c1935db5a0d8b207dc789f"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/766/block-interactions.json",
+      "bytes": 155579,
+      "sha256": "cb7634f922d10dab0064f2a73e594a35ca7da365c21e9181b980358477b88fbd"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/767/block-interactions.json",
+      "bytes": 155790,
+      "sha256": "c523b634e38733c886f01957394c44df63626c1ed8971726ae89b0db046ee6d1"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/768/block-interactions.json",
+      "bytes": 160071,
+      "sha256": "2e5d07fd17567132c389cbef3283e77afaea25f833baf12ac31a10bcbed384ed"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/769/block-interactions.json",
+      "bytes": 160163,
+      "sha256": "2e461bb6bf85d6bc293e134cb4b4886bd91ae320f62498153d5fa385bbb452d2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/770/block-interactions.json",
+      "bytes": 161363,
+      "sha256": "3514355db14f00dfae265ab67e46996831eef4c1f05972c8eabcc1213d26d708"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/771/block-interactions.json",
+      "bytes": 162636,
+      "sha256": "c0cc6b760e6a31176dc1a6f59a449f1486bc594fec4b6f9a02a764888c31e509"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/772/block-interactions.json",
+      "bytes": 163947,
+      "sha256": "d1a1cce1a13395e33621768a7eabe2f08d4ed36d9442a22b6bc2b329a12d2189"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/773/block-interactions.json",
+      "bytes": 173608,
+      "sha256": "35d73e3fcb0953bc9e912ecb3f99c55f7c4ebfd0605f0cd6bc6f722a9c1ff9ef"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/774/block-interactions.json",
+      "bytes": 173526,
+      "sha256": "8521eb8839b80b7dc78e295de8184209415b73d859b078d2dc751b2e7c0d975c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/775/block-interactions.json",
+      "bytes": 175979,
+      "sha256": "4738a184effc2bfa7e58c3b67dba8c3f26efabd0eacbac67cee3afd7e88495f2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/776/block-interactions.json",
+      "bytes": 177573,
+      "sha256": "05ee9836b04670eb56342ba6bc3757182cd24f80dc780cab3f4631b8554c0d3a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/777/block-interactions.json",
+      "bytes": 191895,
+      "sha256": "c110557dbfe515e7373ad47924c4e4182ef94e138403dd06a73c5ce55592278d"
+    }
+  ],
+  "existingLedger": {
+    "path": "/home/anon/Projects/UMPK/docs/verification/interaction-completion.md",
+    "bytes": 58689,
+    "sha256": "2c14372d3b21de0e146ec841102947cc1b142b1ded21b0e2c4bdeb17897f0572"
+  },
+  "productionInputs": [
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/InteractionActions.Placement.cs",
+      "bytes": 11440,
+      "sha256": "53f1885e07f3cfe8ad5f88c11ccb8f06707cda1d1bb6aed65fa76ce2b00cab28"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/BlockUsePrediction.cs",
+      "bytes": 3750,
+      "sha256": "d8adc8bc4ab06de70120de93623588805c397d6eae56a860163cfd5210bf6d7c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/InteractionActions.Mining.cs",
+      "bytes": 22297,
+      "sha256": "b65e248ca363a201e394085361319040aa5d6f45e7c0943689c519c6d34e4f2c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/tools/extraction/shape-extractor/BlockInteractionDump.java",
+      "bytes": 10398,
+      "sha256": "4684f11336ca888251013bfa876e93e4b6c9da2a276da13606dbadda7375644e"
+    }
+  ],
+  "auditEvidence": {
+    "originalFamilyLedger": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-family-inventory-20261022-v1/family-ledger.json",
+      "sha256": "7472b1c976184af43326dea53df8ef31268025a5dafc74ae785d418a10f65a8b"
+    },
+    "correction": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-family-inventory-correction-20261022-v1/correction.json",
+      "sha256": "75050b074f4f17e811eb38b792bdfbc16e2733d9a7aa52102904f8b6ff5234c4"
+    },
+    "rawInventoriesRemainOutsideGit": true,
+    "allCanonicalItemRowsVerified": 48756,
+    "allCanonicalBlockRowsVerified": 37618,
+    "noNewNativeMeasurements": true
+  }
+}

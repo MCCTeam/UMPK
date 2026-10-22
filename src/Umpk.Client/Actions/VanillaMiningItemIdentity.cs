@@ -9,9 +9,17 @@ internal static class VanillaMiningItemIdentity
 {
     public static bool Matches(ItemStack current, ItemStack previous, int protocol)
     {
+        if (ReferenceEquals(current, previous))
+            return true;
         // The flattening moved damage into the compared tag. Component-era clients compare the complete effective component map.
         if (protocol >= 393)
-            return current.IsSameItemSameComponents(previous);
+        {
+            if (current.IsSameItemSameComponents(previous))
+                return true;
+            if (!VanillaComponentMiningPermission.Supports(protocol) || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
+                return false;
+            return ComponentMapsMatch(current.Components, previous.Components);
+        }
         if (current.IsEmpty || previous.IsEmpty)
             return current.IsEmpty && previous.IsEmpty;
         if (!current.Item.Equals(previous.Item))
@@ -24,6 +32,57 @@ internal static class VanillaMiningItemIdentity
             return false;
         return IsLegacyDamageableItem(current.Item.Id) && !(currentTag?.GetBool("Unbreakable") ?? false)
             || Math.Max(0, current.Damage) == Math.Max(0, previous.Damage);
+    }
+
+    private static bool ComponentMapsMatch(DataComponentMap current, DataComponentMap previous)
+    {
+        if (current.Count != previous.Count)
+            return false;
+        foreach (DataComponentEntry entry in current.Effective)
+        {
+            bool match = false;
+            foreach (DataComponentEntry other in previous.Effective)
+            {
+                if (!entry.Type.Equals(other.Type))
+                    continue;
+                // Native AdventureModePredicate, HolderSet.Direct and StatePropertiesPredicate compare ordered values. Their public wire models retain IReadOnlyList without structural record equality.
+                match = entry.Value is AdventureModePredicateComponent predicate && other.Value is AdventureModePredicateComponent otherPredicate
+                    ? PredicateValuesMatch(predicate, otherPredicate)
+                    : Equals(entry.Value, other.Value);
+                break;
+            }
+            if (!match)
+                return false;
+        }
+        return true;
+    }
+
+    private static bool PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous)
+    {
+        if (current.ShowInTooltip != previous.ShowInTooltip || current.Predicates.Count != previous.Predicates.Count)
+            return false;
+        for (int index = 0; index < current.Predicates.Count; index++)
+        {
+            BlockPredicateEntry entry = current.Predicates[index];
+            BlockPredicateEntry other = previous.Predicates[index];
+            if (entry.Blocks is { } blocks)
+            {
+                if (other.Blocks is not { } otherBlocks || blocks.Tag != otherBlocks.Tag || !blocks.Ids.SequenceEqual(otherBlocks.Ids))
+                    return false;
+            }
+            else if (other.Blocks is not null)
+                return false;
+            if (entry.Properties is { } properties)
+            {
+                if (other.Properties is not { } otherProperties || !properties.SequenceEqual(otherProperties))
+                    return false;
+            }
+            else if (other.Properties is not null)
+                return false;
+            if (entry.Nbt is null ? other.Nbt is not null : !entry.Nbt.Equals(other.Nbt))
+                return false;
+        }
+        return true;
     }
 
     // Original item-registry/max-damage calls cover every item in all eleven pre-flattening datasets. There are 50 damageable item types in 1.8 and 52 after shield/elytra arrive; horse armor, buckets and block subtypes are not damageable.

@@ -133,10 +133,10 @@ public sealed class ComponentAdventureMiningSessionTests
         await session.Tags(!initiallyAllowed);
         await AssertInitialPermission(session, initiallyAllowed);
         await session.HoldPermission("tag");
-        await AssertInitialPermission(session, !initiallyAllowed);
+        await AssertInitialPermission(session, !initiallyAllowed, sameCachedTarget: initiallyAllowed);
     }
 
-    private static async Task AssertInitialPermission(Session session, bool allowed)
+    private static async Task AssertInitialPermission(Session session, bool allowed, bool sameCachedTarget = false)
     {
         using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
         Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, caller.Token);
@@ -145,10 +145,11 @@ public sealed class ComponentAdventureMiningSessionTests
             await session.Client.InvokeAsync(_ => true, session.Token);
             List<IPacket> sent = await session.Tick();
             if (allowed)
-                AssertAction(Assert.Single(sent.OfType<ServerboundPlayerActionPacket>()), session.Protocol, 0);
+                Assert.Collection(sent, packet => AssertAction(Assert.IsType<ServerboundPlayerActionPacket>(packet), session.Protocol, 0), AssertMainHandSwing, AssertMainHandSwing);
+            else if (sameCachedTarget)
+                Assert.Collection(sent, AssertMainHandSwing, AssertMainHandSwing);
             else
-                Assert.Empty(sent.OfType<ServerboundPlayerActionPacket>());
-            Assert.Equal(allowed ? 2 : 1, sent.OfType<ServerboundSwingPacket>().Count());
+                AssertMainHandSwing(Assert.Single(sent));
             Assert.False(action.IsCompleted);
         }
         finally
@@ -157,6 +158,13 @@ public sealed class ComponentAdventureMiningSessionTests
             await session.Tick();
             await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await action.WaitAsync(session.Token));
         }
+    }
+
+    private static void AssertMainHandSwing(IPacket packet)
+    {
+        ServerboundSwingPacket swing = Assert.IsType<ServerboundSwingPacket>(packet);
+        Assert.Equal(0, swing.Hand);
+        Assert.True(swing.HasHand);
     }
 
     public static IEnumerable<object[]> UnsupportedContexts()

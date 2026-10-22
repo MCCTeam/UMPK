@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Umpk.Client.Tests;
 
-public sealed class AttackInputTickPipelineTests
+public sealed partial class AttackInputTickPipelineTests
 {
     [Theory]
     [InlineData(774, false)]

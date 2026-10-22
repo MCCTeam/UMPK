@@ -912,7 +912,7 @@ public sealed class UmpkClient : IAsyncDisposable
         }
 
         // Native Player.tick advances attack strength after input and movement simulation, before LocalPlayer publishes its movement. Player loading gates this phase; disabling physics does not disable the player's charge counter.
-        Actions.Interaction.TickAttackChargeOnLoop(readiness.MovementEligible);
+        Actions.Interaction.TickAttackChargeOnLoop(_movementReadiness.PlayerTickEligible);
         if (_movementReadiness.PlayerTickEligible)
             State.Self.TickItemCooldowns();
 

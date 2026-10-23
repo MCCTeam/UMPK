@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Buffers.Binary;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
@@ -251,6 +252,8 @@ internal sealed class BlockUseSession : IAsyncDisposable
         Assert.Empty(await Barrier());
     }
 
+    internal Task Tick() => Ticks.Fire(Token);
+
     internal async Task<List<IPacket>> Use(Hand hand)
     {
         Task action = Client.Actions.Interaction.PlaceBlockAsync(Target, Direction.Up, new Vec3d(.5, 1, .5), hand, ct: Token);
@@ -267,7 +270,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
         return packets;
     }
 
-    internal async Task Terrain()
+    internal async Task Terrain(int chunkX = 0, int chunkZ = 0)
     {
         byte[] bytes;
         if (_protocol == 47)
@@ -324,18 +327,21 @@ internal sealed class BlockUseSession : IAsyncDisposable
                 writer.WriteVarInt(0);
             bytes = output.WrittenSpan.ToArray();
         }
+        BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(0, 4), chunkX);
+        BinaryPrimitives.WriteInt32BigEndian(bytes.AsSpan(4, 4), chunkZ);
         BoundPacketCodec codec = BoundDescriptorCodec.Clientbound(_protocol, "level_chunk_with_light");
         var packet = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(bytes, Context));
         Assert.True(packet.FullChunk);
-        Assert.Equal(0, packet.ChunkX);
-        Assert.Equal(0, packet.ChunkZ);
+        Assert.Equal(chunkX, packet.ChunkX);
+        Assert.Equal(chunkZ, packet.ChunkZ);
         Assert.Equal(0, packet.Column.GetBlockStateId(Target.X, Target.Y, Target.Z));
         Assert.Equal(bytes, Encode(codec, packet));
         Assert.Equal(bytes, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(packet)));
         await Send(packet);
         Assert.Empty(await Barrier());
-        Assert.NotNull(Client.State.World.GetColumn(Target));
-        Assert.True(Client.State.EntityMembership.HasColumn(Target));
+        var cell = new BlockPos(chunkX * 16 + 1, 65, chunkZ * 16 + 1);
+        Assert.NotNull(Client.State.World.GetColumn(cell));
+        Assert.True(Client.State.EntityMembership.HasColumn(cell));
     }
 
     private async Task Send(IPacket packet)

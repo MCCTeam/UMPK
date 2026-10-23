@@ -119,6 +119,8 @@ internal sealed partial class EntityMotionState
 
     public bool TryObserveInterpolation(Entity entity, Vec3d? target, float? yaw, float? pitch)
     {
+        if (TryObserveLegacyAmbientInterpolation(entity, target, yaw, pitch))
+            return true;
         if (TryObserveCowInterpolation(entity, target, yaw, pitch))
             return true;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
@@ -141,6 +143,8 @@ internal sealed partial class EntityMotionState
 
     public bool TryObserveLegacyTeleport(Entity entity, Vec3d target, float yaw, float pitch)
     {
+        if (TryObserveLegacyAmbientTeleport(entity, target, yaw, pitch))
+            return true;
         if (InvalidateCowContext(entity))
             return false;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
@@ -202,6 +206,11 @@ internal sealed partial class EntityMotionState
 
     public void TickEntity(Entity entity, List<int>? moved = null, EntityGeometryState? geometry = null, TabList? players = null, World? world = null, IBlockShapeSource? shapes = null, EntityMembershipState? membership = null, EntityStore? entities = null, float tickRate = 20F, SelfState? self = null, Aabb? localBody = null)
     {
+        if (_legacyAmbient.TryGetValue(entity, out LegacyAmbientMotion? ambient))
+        {
+            TickLegacyAmbient(entity, ambient, moved, world, shapes, membership, entities, localBody);
+            return;
+        }
         if (_cows.TryGetValue(entity, out CowMotion? cow))
         {
             TickCow(entity, cow, moved, world, shapes, entities, self, localBody);
@@ -311,6 +320,7 @@ internal sealed partial class EntityMotionState
         _cows.Remove(entity);
         _immovable.Remove(entity);
         _fallingBlocks.Remove(entity);
+        _legacyAmbient.Remove(entity);
     }
 
     public void Clear()
@@ -319,6 +329,7 @@ internal sealed partial class EntityMotionState
         _cows.Clear();
         _immovable.Clear();
         _fallingBlocks.Clear();
+        _legacyAmbient.Clear();
         ResetLocalMount();
     }
 

@@ -14,6 +14,7 @@ internal sealed class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
     private readonly ConditionalWeakTable<Entity, TrackedFallingBlockGeometry> _fallingBlocks = new();
+    private readonly ConditionalWeakTable<Entity, TrackedLegacyAmbientGeometry> _legacyAmbient = new();
     private World? _legacyWorld;
     private EntityMembershipState? _legacyMembership;
     private LegacyPlayerResizeClearance? _legacyClearance;
@@ -29,8 +30,13 @@ internal sealed class EntityGeometryState
 
     public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
     {
-        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _) || _legacyPlayers.TryGetValue(entity, out _) || _fallingBlocks.TryGetValue(entity, out _))
+        if (_entities.TryGetValue(entity, out _) || _shulkers.TryGetValue(entity, out _) || _legacyPlayers.TryGetValue(entity, out _) || _fallingBlocks.TryGetValue(entity, out _) || _legacyAmbient.TryGetValue(entity, out _))
             return;
+        if (LegacyAmbientMobProfile.TryGet(entity, protocol, out LegacyAmbientMobProfile ambient))
+        {
+            _legacyAmbient.Add(entity, new TrackedLegacyAmbientGeometry(entity, ambient));
+            return;
+        }
         if (isPlayer && LegacyPlayerGeometryProfile.Supports(protocol))
         {
             _legacyPlayers.Add(entity, new TrackedLegacyPlayerGeometry(entity, protocol));
@@ -60,6 +66,12 @@ internal sealed class EntityGeometryState
     public bool TryGet(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
     {
         Register(entity, source, protocol);
+        if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
+        {
+            box = ambient.Bounds;
+            blocksBuilding = true;
+            return ambient.Known;
+        }
         if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
         {
             if (falling.ObservedPosition != entity.Position)
@@ -109,6 +121,11 @@ internal sealed class EntityGeometryState
 
     public void ObservePosition(Entity entity, bool independent = false)
     {
+        if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
+        {
+            ambient.ObservePosition(entity);
+            return;
+        }
         if (_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling))
         {
             falling.ObservePosition(entity);
@@ -136,6 +153,11 @@ internal sealed class EntityGeometryState
     /// <summary>Returns the native float dimensions without reconstructing them from rounded box endpoints.</summary>
     public bool TryGetDimensions(Entity entity, out EntityGeometryDimensions dimensions)
     {
+        if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
+        {
+            dimensions = ambient.Profile.Dimensions;
+            return true;
+        }
         dimensions = default;
         if (!_entities.TryGetValue(entity, out Geometry? geometry))
             return false;
@@ -147,6 +169,8 @@ internal sealed class EntityGeometryState
     /// <summary>A missing displacement decision makes the position unproven until the owning profile observes a supported recovery event.</summary>
     public void InvalidatePosition(Entity entity)
     {
+        if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
+            ambient.Known = false;
         if (_entities.TryGetValue(entity, out Geometry? geometry))
             geometry.PositionKnown = false;
     }
@@ -156,7 +180,10 @@ internal sealed class EntityGeometryState
     public bool IsPositionKnown(Entity entity)
         => (!_entities.TryGetValue(entity, out Geometry? geometry) || PositionKnown(entity, geometry))
             && (!_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy) || legacy.IsPositionKnown)
+            && (!_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient) || ambient.Known)
             && (!_fallingBlocks.TryGetValue(entity, out TrackedFallingBlockGeometry? falling) || falling.Known);
+
+    public bool TryGetLegacyAmbient(Entity entity, out TrackedLegacyAmbientGeometry? geometry) => _legacyAmbient.TryGetValue(entity, out geometry);
 
     public void BeginCowMotion(Entity entity)
     {
@@ -376,6 +403,7 @@ internal sealed class EntityGeometryState
         _shulkers.Remove(entity);
         _legacyPlayers.Remove(entity);
         _fallingBlocks.Remove(entity);
+        _legacyAmbient.Remove(entity);
     }
     public void Clear()
     {
@@ -383,6 +411,7 @@ internal sealed class EntityGeometryState
         _shulkers.Clear();
         _legacyPlayers.Clear();
         _fallingBlocks.Clear();
+        _legacyAmbient.Clear();
         _legacyWorld = null;
         _legacyMembership = null;
         _legacyClearance = null;

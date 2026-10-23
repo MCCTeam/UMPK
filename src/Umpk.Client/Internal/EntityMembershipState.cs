@@ -5,7 +5,7 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>Session-owned packet chunk availability and measured legacy player/falling-block list and chunk membership.</summary>
+/// <summary>Session-owned packet chunk availability and measured legacy actor list and chunk membership.</summary>
 internal sealed class EntityMembershipState
 {
     private readonly HashSet<ChunkPos> _columns = [];
@@ -25,9 +25,10 @@ internal sealed class EntityMembershipState
             return;
         }
         bool falling = LegacyFallingBlockProfile.Supports(entity, protocol);
-        if ((!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol)) && !falling)
+        bool ambient = LegacyAmbientMobProfile.TryGet(entity, protocol, out LegacyAmbientMobProfile ambientProfile);
+        if ((!isPlayer || !LegacyPlayerGeometryProfile.Supports(protocol)) && !falling && !ambient)
             return;
-        var membership = new Membership(entity, protocol == 47, healthIndex, isPlayer)
+        var membership = new Membership(entity, protocol == 47, healthIndex, isPlayer, ambient ? ambientProfile : null)
         {
             InEntityList = protocol == 47 || isPlayer || HasColumn(new BlockPos((int)Math.Floor(entity.Position.X), 64, (int)Math.Floor(entity.Position.Z))),
         };
@@ -41,7 +42,7 @@ internal sealed class EntityMembershipState
     {
         // A replacing packet installs a new native chunk. Existing added-to-chunk flags survive, but the new chunk has no old entity list.
         foreach (Membership player in _players.Values)
-            if (player.Column == column)
+            if (player.Column == column && (player.AmbientProfile is null || player.MembershipKnown))
                 player.Column = null;
         _columns.Add(column);
     }
@@ -53,7 +54,7 @@ internal sealed class EntityMembershipState
     {
         _columns.Remove(column);
         foreach (Membership player in _players.Values)
-            if (player.Column == column)
+            if (player.Column == column && (player.AmbientProfile is null || player.MembershipKnown))
             {
                 player.Column = null;
                 player.PendingUnload = true;
@@ -88,10 +89,10 @@ internal sealed class EntityMembershipState
         return !_players.TryGetValue(entity, out Membership? player) || player.MembershipKnown && player.InEntityList && player.Added && !player.Removed;
     }
 
-    /// <summary>Runs the inherited living death phase on the existing eligible actor tick, before remote interpolation and the player size phase.</summary>
+    /// <summary>Runs the inherited living death phase on the existing eligible actor tick, before remote interpolation and geometry phases.</summary>
     public void BeginPlayerTick(Entity entity)
     {
-        if (!_players.TryGetValue(entity, out Membership? player) || !player.IsPlayer)
+        if (!_players.TryGetValue(entity, out Membership? player) || !player.IsLiving)
             return;
         if (!TryGetHealth(player, out float health))
             player.LifetimeKnown = false;
@@ -106,18 +107,25 @@ internal sealed class EntityMembershipState
             return true;
         if (player.Removed)
             return false;
-        if (!player.IsPlayer)
+        if (!player.IsLiving)
             return player.MembershipKnown ? player.Column is not null : null;
         if (!player.MembershipKnown || !player.LifetimeKnown || !TryGetHealth(player, out _))
             return null;
         return player.Column is not null;
     }
 
+    /// <summary>Retains the last proven ambient membership snapshot without using it as current post-travel registration evidence.</summary>
+    public void InvalidateAmbientRegistration(Entity entity)
+    {
+        if (_players.TryGetValue(entity, out Membership? member) && member.AmbientProfile is not null)
+            member.MembershipKnown = false;
+    }
+
     private static bool TryGetHealth(Membership player, out float health)
     {
-        // Original constructors provide health 20 until a metadata frame supplies its value. A malformed stored kind cannot prove a lifetime or reentry decision.
-        health = 20;
-        if (!player.IsPlayer)
+        // Original constructors supply family health (bat 6, squid 10, player 20) until metadata supplies its value. A malformed kind cannot prove lifetime or reentry.
+        health = player.AmbientProfile?.DefaultHealth ?? 20;
+        if (!player.IsLiving)
             return true;
         if (player.HealthIndex is not { } index)
             return false;
@@ -126,6 +134,17 @@ internal sealed class EntityMembershipState
         if (value.Kind != MetadataValueKind.Float)
             return false;
         health = value.AsFloat();
+        return true;
+    }
+
+    internal bool TryGetLegacyMembership(Entity entity, out LegacyMembershipSnapshot snapshot)
+    {
+        snapshot = default;
+        if (!_players.TryGetValue(entity, out Membership? member))
+            return false;
+        bool healthKnown = TryGetHealth(member, out float health);
+        snapshot = new(member.InEntityList, member.Added, member.Removed, member.X, member.Y, member.Z,
+            member.Column is not null ? member.Y : null, healthKnown, health, member.DeathTime, member.MembershipKnown);
         return true;
     }
 
@@ -140,6 +159,8 @@ internal sealed class EntityMembershipState
             _reentry.Remove(player);
             return;
         }
+        if (player.AmbientProfile is not null && !player.MembershipKnown)
+            return;
         (int x, int y, int z) = Chunk(entity.Position);
         if (player.Added && player.X == x && player.Y == y && player.Z == z)
             return;
@@ -166,6 +187,8 @@ internal sealed class EntityMembershipState
             }
             Membership player = _reentry[selected];
             _reentry.RemoveAt(selected);
+            if (player.AmbientProfile is not null && !player.MembershipKnown)
+                continue;
             (int x, _, int z) = Chunk(player.Entity.Position);
             if (player.SetsAddedForEmptyChunk || player.IsPlayer || _columns.Contains(new ChunkPos(x, z)))
             {
@@ -222,12 +245,14 @@ internal sealed class EntityMembershipState
         _reentryCapacity = 16;
     }
 
-    private sealed class Membership(Entity entity, bool setsAddedForEmptyChunk, int? healthIndex, bool isPlayer)
+    private sealed class Membership(Entity entity, bool setsAddedForEmptyChunk, int? healthIndex, bool isPlayer, LegacyAmbientMobProfile? ambientProfile = null)
     {
         public Entity Entity { get; } = entity;
         public int? HealthIndex { get; } = healthIndex;
         public bool SetsAddedForEmptyChunk { get; } = setsAddedForEmptyChunk;
         public bool IsPlayer { get; } = isPlayer;
+        public LegacyAmbientMobProfile? AmbientProfile { get; } = ambientProfile;
+        public bool IsLiving => IsPlayer || AmbientProfile is not null;
         public bool InEntityList { get; set; } = true;
         public bool Added { get; set; }
         public bool PendingUnload { get; set; }
@@ -240,4 +265,7 @@ internal sealed class EntityMembershipState
         public int Z { get; set; }
         public ChunkPos? Column { get; set; }
     }
+
+    /// <summary>Membership fields are the last proven snapshot when post-travel registration is unknown.</summary>
+    internal readonly record struct LegacyMembershipSnapshot(bool InEntityList, bool Added, bool Removed, int X, int Y, int Z, int? ActualSection, bool HealthKnown, float Health, int DeathTime, bool RegistrationKnown);
 }

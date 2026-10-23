@@ -6,6 +6,7 @@
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/LegacyAmbientMob315.native.json.gz" />
     <EmbeddedResource Include="Fixtures/PlacementCollision.native.json" />
     <EmbeddedResource Include="Fixtures/SpawnMetadata.native.json" />
     <EmbeddedResource Include="Fixtures/EntityPacketPosition.native.json" />

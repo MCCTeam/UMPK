@@ -50,6 +50,7 @@ internal sealed class VanillaEntityInterpolation
     public Vec3d TargetPosition => HasActiveInterpolation ? _target.Position : Position;
     public float TargetYaw => HasActiveInterpolation ? _target.Yaw : Yaw;
     public float TargetPitch => HasActiveInterpolation ? _target.Pitch : Pitch;
+    internal (Vec3d Target, int RemainingSteps) LegacyPending => (_target.Position, _remaining);
 
     private Pose Current => new(Position, Yaw, Pitch);
     private bool UsesHandler => _profile >= VanillaInterpolationProfile.HandlerOffsetBox;

@@ -32,6 +32,7 @@ internal sealed class EntityApplier : IApplier
 
             case ClientboundAddMobPacket mob:
                 Vec3d mobVelocity = SpawnVelocity(mob.VelocityX, mob.VelocityY, mob.VelocityZ, modernVelocityRaw: null);
+                mobVelocity = LegacyAmbientMobProfile.SpawnVelocity(context.Version.Version.Protocol, mob.TypeId, mob.VelocityX, mob.VelocityY, mob.VelocityZ, mobVelocity);
                 await SpawnAsync(store, context, mob.EntityId, mob.Uuid, mob.TypeId, EntitySpawnSpace.Living,
                     mob.X, mob.Y, mob.Z, mob.Yaw, mob.Pitch, mob.HeadPitch, mobVelocity, mob.Metadata).ConfigureAwait(false);
                 TryApplySelfVelocity(context, mob.EntityId, mobVelocity);
@@ -327,7 +328,10 @@ internal sealed class EntityApplier : IApplier
                     // Original LivingEntity.handleEntityEvent(3) sets non-player health to zero before publishing the death effects. The hard-box predicate reads that health independently of placement obstruction.
                     dyingShulker.Metadata.Set(shulkerHealth, MetadataValue.Float(0));
                 if (store.TryGet(entityEvent.EntityId, out Entity? statusCow) && statusCow is not null)
+                {
                     context.State.EntityMotion.ObserveCowStatus(statusCow, entityEvent.EventId);
+                    _ = context.State.EntityMotion.ObserveLegacyAmbientStatus(statusCow, entityEvent.EventId);
+                }
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 
@@ -461,6 +465,7 @@ internal sealed class EntityApplier : IApplier
         int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
         context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
         context.State.EntityMotion.RegisterCow(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership);
+        context.State.EntityMotion.RegisterLegacyAmbient(entity, context.State.EntityGeometry);
         if (initialMetadata is not null)
             ApplyMetadata(entity, initialMetadata, context);
         if (isPlayer)

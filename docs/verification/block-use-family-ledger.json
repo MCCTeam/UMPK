@@ -1376,10 +1376,10 @@
     "noNewNativeMeasurements": true
   },
   "currentRuntimeReconciliation": {
-    "codeCommit": "efad22a",
+    "codeCommit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
     "publishedEvidenceCommit": "2925b51",
     "historicalSourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
-    "scope": "Only current activation progress is reconciled; original source inputs, inventory partitions, row counts, family IDs and unfinished acceptance remain intact. Existing not-run family status describes complete native/session/live acceptance, not absence of the connected runtime.",
+    "scope": "Current activation, bounded legacy ordinary-cube pre-send and777slab collision progress only. Original source inputs, inventory partitions, row counts and family IDs remain intact; complete native/session/live family acceptance remains unfinished.",
     "trapdoorGate": {
       "newFocusedCases": 459,
       "privateAdjacentPasses": 6601,
@@ -1393,6 +1393,47 @@
       "protocol47": "passed ten bounded scenarios; one executed test/zero skips",
       "protocol315": "failed missing swing; one executed failure/zero passes; later rows not run",
       "diagnosis": "native bat/squid participation and cached-bounds/movement ownership gap; no unknown-to-clear substitution"
+    },
+    "priorCodeCommit": "efad22a",
+    "legacyCubePreSend": {
+      "commit": "5fd6b08c518cb005faf89bfaecbf3ffa4a222a79",
+      "profiles": "47,107,108,109,110,210,315,316,335,338,340;393post-send control",
+      "sourceNamedReleases": 24,
+      "rootFocusedPasses": 173,
+      "privateAdjacentPasses": 2945,
+      "privateFullClientPasses": 30230,
+      "evidence": "legacy-cube-presend.md",
+      "limits": "specialized/custom items, uncertain world/body and out-of-height context stayUnknown; finalnative/version acceptance remains open"
+    },
+    "slabCollision": {
+      "commit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "protocol": 777,
+      "families": 33,
+      "states": 198,
+      "wrongHalfSlabAabbsCorrected": 132,
+      "rootFocusedPasses": 210,
+      "newPythonGuards": 12,
+      "evidence": "slab-777-collision.md",
+      "limits": "general collision lookup only; specializedslab placement/merge/result/swing remains separate"
+    },
+    "combinedCheckpoint": {
+      "commit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "repositoryGates": 25,
+      "dotnetPasses": 43973,
+      "namedNormalOptInSkips": 16,
+      "pythonPasses": 394,
+      "sourceEntries": 4267,
+      "generatedIdentical": 61,
+      "consumerTests": [
+        1999,
+        918
+      ],
+      "dependencyDllComparisons": 33,
+      "aotBytes": 25132640,
+      "executedAotSmokes": 1,
+      "allSevenCiPassed": true,
+      "evidence": "slab-presend-checkpoint-20261023.md",
+      "scope": "compatibility checkpoint; broad native/session/live and finalversion acceptance remains open"
     }
   }
 }

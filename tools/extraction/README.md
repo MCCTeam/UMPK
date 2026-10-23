@@ -63,6 +63,15 @@ The fold step rejects a block when its states disagree instead of collapsing sta
 
 When jar-driven extraction is unavailable, `shape_extractor.py` maps the report's block-state ordering onto the repository-local bootstrap asset and marks the result with `curated-shape-bootstrap` provenance. This fallback does not invent data for unresolved blocks.
 
+For the 33 slab families added in 26.3, fold the retained original default collision grids into the existing AABB reference table after modern extraction. This supplements only those 198 states, reuses existing half/full pool entries, and preserves every other reference and unresolved family. It verifies the native measurement, official artifacts, unchanged probe and slab source, state schemas, exact grid planes/cells/boxes, singleton identity and canonical-grid provenance before writing. A changed existing reference is rejected. Add `--check` to reconstruct without writing:
+
+```bash
+python3 tools/extraction/shape_extractor.py --native-slab-refs \
+  --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/composite-grid-extraction-20261016-v1/native/standalone/all-v2"
+python3 -m unittest discover -s tools/extraction -p test_native_slab_shape_refs.py
+```
+
 ## Entity and world lifetime source audit
 
 From the repository root, audit the official client trees for same-dimension respawn retention and duplicate-ID entity replacement:

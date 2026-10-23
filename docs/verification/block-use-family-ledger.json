@@ -948,21 +948,43 @@
       "id": "door-activation",
       "priority": 1,
       "status": "not run",
-      "nativeDecision": "Original1.14.4 DoorBlock returns true for nonmetal;1.21.5/26.3 hand-openable DoorBlock returns SUCCESS, non-openable returns PASS.",
+      "nativeDecision": "The completed source and registration audit covers 75 named releases. The 327 framed-session cases connect native door Success/Pass, legacy lower-cell lookup, feature/hand/secondary-use ordering and protocol-777 local-only swing through the existing owner.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
+      "missing": "Native1.8.9/47 passes all10 scenarios on651ddcb. Native1.11/315 fails missing held-stone swing: unresolved bat/squid geometry becomes Unknown before spatial selection; same genuine framed regressions fail on651ddcb and2925b51. Later default and feature-enabled copper rows and final-producer acceptance remain open.",
       "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
-      "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated."
+      "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated.",
+      "historicalAuditAtSourceCommit": {
+        "nativeDecision": "Original1.14.4 DoorBlock returns true for nonmetal;1.21.5/26.3 hand-openable DoorBlock returns SUCCESS, non-openable returns PASS.",
+        "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
+        "status": "not run"
+      },
+      "statusDetail": "passed bounded runtime486683b and immutable checkpoints651ddcb/2925b51; native47passed, native315failed; complete family acceptance not run",
+      "currentEvidence": [
+        "door-activation-runtime.md",
+        "door-crystal-integration-20261023.md",
+        "interaction-completion.md#evidence-and-status",
+        "trapdoor-gate-checkpoint-20261023.md"
+      ]
     },
     {
       "id": "other-hand-activated-blocks",
       "priority": 2,
       "status": "not run",
-      "nativeDecision": "Trapdoor/fence-gate and other block overrides require their own result/registration audit; a table override is not proof of consumption.",
+      "nativeDecision": "Registered trapdoor and fence-gate results now have a source audit covering 75 named releases and 50 profiles, plus connected runtime. Wood/copper trapdoors and gates consume successfully; iron trapdoor consumes through protocol 210 and passes from 315. The existing caller retains protocol-766 main-hand activation fallback and protocol-777 local-only swing.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Exact native type/era/result rather than suffix-based assumptions.",
+      "missing": "Native executable/live acceptance for trapdoor/gate activation and other hand-activated block families remains open. Specialized placement/attachments and item-dependent effects are separate. Missing packet-established terrain stays Unknown during item continuation.",
       "focusedFailingPublicSession": "Only after native success/pass is proven, drive framed block/property/hand state through PlaceBlockAsync and assert exact packet group.",
-      "nativeLiveNeed": "Reuse door setup only where contracts match; separate original boundaries and native state observations."
+      "nativeLiveNeed": "Reuse door setup only where contracts match; separate original boundaries and native state observations.",
+      "historicalAuditAtSourceCommit": {
+        "nativeDecision": "Trapdoor/fence-gate and other block overrides require their own result/registration audit; a table override is not proof of consumption.",
+        "missing": "Exact native type/era/result rather than suffix-based assumptions.",
+        "status": "not run"
+      },
+      "statusDetail": "passed bounded trapdoor/gate runtime efad22a, published at 2925b51; complete family acceptance not run",
+      "currentEvidence": [
+        "trapdoor-gate-activation.md",
+        "interaction-completion.md#evidence-and-status"
+      ]
     },
     {
       "id": "other-menus-and-item-activation",
@@ -1352,5 +1374,25 @@
     "allCanonicalItemRowsVerified": 48756,
     "allCanonicalBlockRowsVerified": 37618,
     "noNewNativeMeasurements": true
+  },
+  "currentRuntimeReconciliation": {
+    "codeCommit": "efad22a",
+    "publishedEvidenceCommit": "2925b51",
+    "historicalSourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
+    "scope": "Only current activation progress is reconciled; original source inputs, inventory partitions, row counts, family IDs and unfinished acceptance remain intact. Existing not-run family status describes complete native/session/live acceptance, not absence of the connected runtime.",
+    "trapdoorGate": {
+      "newFocusedCases": 459,
+      "privateAdjacentPasses": 6601,
+      "privateFullClientPasses": 30057,
+      "rootFocusedPasses": 459,
+      "newImmutableCheckpoint": "passed exact2925b51:25gates;43590.NET+15namedskips;1999/918consumers+33DLLs;AOT25132640/exact1smoke;packages;all7CI;independent actual-file review",
+      "nativeLive": "not run"
+    },
+    "doorNative": {
+      "producer": "651ddcbe377a86fe2d4e5f1acde028571cc0d71a",
+      "protocol47": "passed ten bounded scenarios; one executed test/zero skips",
+      "protocol315": "failed missing swing; one executed failure/zero passes; later rows not run",
+      "diagnosis": "native bat/squid participation and cached-bounds/movement ownership gap; no unknown-to-clear substitution"
+    }
   }
 }

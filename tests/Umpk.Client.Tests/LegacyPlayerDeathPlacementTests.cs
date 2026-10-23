@@ -68,7 +68,8 @@ public sealed class LegacyPlayerDeathPlacementTests
         for (int tick = 0; tick < 19; tick++)
             Tick();
         await Place();
-        Assert.Single(sink.Packets);
+        int initialPackets = malformed || protocol >= 393 ? 1 : 0;
+        Assert.Equal(initialPackets, sink.Packets.Count);
 
         Tick();
         if (malformed)
@@ -84,9 +85,9 @@ public sealed class LegacyPlayerDeathPlacementTests
             Assert.False(harness.State.EntityMembership.IsWorldQueryMember(actor));
         }
         await Place();
-        Assert.Equal(malformed ? 2 : 3, sink.Packets.Count);
+        Assert.Equal(initialPackets + (malformed ? 1 : 2), sink.Packets.Count);
         if (!malformed)
-            Assert.IsType<ServerboundSwingPacket>(sink.Packets[2]);
+            Assert.IsType<ServerboundSwingPacket>(sink.Packets[initialPackets + 1]);
         Assert.Same(actor, harness.State.Entities.Get(42));
 
         await Spawn();
@@ -96,7 +97,7 @@ public sealed class LegacyPlayerDeathPlacementTests
         Assert.True(harness.State.EntityMembership.IsWorldQueryMember(replacement));
         int previous = sink.Packets.Count;
         await Place();
-        Assert.Equal(previous + 1, sink.Packets.Count);
+        Assert.Equal(previous + (protocol < 393 ? 0 : 1), sink.Packets.Count);
         foreach (object packet in sink.Packets)
         {
             byte[] body = BoundDescriptorCodec.EncodeServerbound(protocol, Assert.IsAssignableFrom<Umpk.Protocol.Java.IPacket>(packet));

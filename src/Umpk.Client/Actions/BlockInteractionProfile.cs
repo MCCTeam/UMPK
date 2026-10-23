@@ -4,7 +4,7 @@ using Umpk.Game.Players;
 namespace Umpk.Client.Actions;
 
 /// <summary>Client-side block input boundaries established by the matching vanilla client artifacts.</summary>
-internal readonly record struct BlockInteractionProfile(bool InitialSwingBeforeStart, bool InstantBreakUsesAbilities, bool ExponentialMiningFatigue, bool HasDestroyDirectionAction, bool ItemToolComponents, bool UseSwingIsLocal, bool VoxelPlacementObstruction, bool DiscardThinObstructionShapes, bool SpectatorUseSwings, bool ChargedPiercingAttack, bool TeleportStopsDestroying)
+internal readonly record struct BlockInteractionProfile(bool InitialSwingBeforeStart, bool InstantBreakUsesAbilities, bool ExponentialMiningFatigue, bool HasDestroyDirectionAction, bool ItemToolComponents, bool UseSwingIsLocal, bool VoxelPlacementObstruction, bool DiscardThinObstructionShapes, bool SpectatorUseSwings, bool ChargedPiercingAttack, bool TeleportStopsDestroying, bool PrechecksBlockItemPlacement)
 {
     private const int OffHandIntroduced = 107;
     private const int InstantBuildCriterionIntroduced = 770;
@@ -13,13 +13,14 @@ internal readonly record struct BlockInteractionProfile(bool InitialSwingBeforeS
     private const int ItemToolComponentIntroduced = 766;
     private const int LocalPredictedUseSwingIntroduced = 777;
     private const int VoxelPlacementObstructionIntroduced = 393;
+    private const int ItemBlockPlacementPrecheckRemoved = 393;
     private const int EmptyThinShapesIntroduced = 755;
     private const int SpectatorConsumeResultIntroduced = 768;
     private const int ChargedPiercingAttackIntroduced = 774;
     private const int TeleportStopsDestroyingIntroduced = 777;
 
     public static BlockInteractionProfile ForProtocol(int protocol)
-        => new(protocol < OffHandIntroduced, protocol >= InstantBuildCriterionIntroduced, protocol >= ExponentialMiningFatigueIntroduced, protocol >= DestroyDirectionActionIntroduced, protocol >= ItemToolComponentIntroduced, protocol >= LocalPredictedUseSwingIntroduced, protocol >= VoxelPlacementObstructionIntroduced, protocol >= EmptyThinShapesIntroduced, protocol < SpectatorConsumeResultIntroduced, protocol >= ChargedPiercingAttackIntroduced, protocol >= TeleportStopsDestroyingIntroduced);
+        => new(protocol < OffHandIntroduced, protocol >= InstantBuildCriterionIntroduced, protocol >= ExponentialMiningFatigueIntroduced, protocol >= DestroyDirectionActionIntroduced, protocol >= ItemToolComponentIntroduced, protocol >= LocalPredictedUseSwingIntroduced, protocol >= VoxelPlacementObstructionIntroduced, protocol >= EmptyThinShapesIntroduced, protocol < SpectatorConsumeResultIntroduced, protocol >= ChargedPiercingAttackIntroduced, protocol >= TeleportStopsDestroyingIntroduced, protocol < ItemBlockPlacementPrecheckRemoved);
 
     // 26.3 inserts CHANGE_DESTROY_DIRECTION after START; every following wire enum ordinal moves by one. The packet's public Action remains the actual wire ordinal.
     public int AbortDestroyAction => HasDestroyDirectionAction ? 2 : 1;

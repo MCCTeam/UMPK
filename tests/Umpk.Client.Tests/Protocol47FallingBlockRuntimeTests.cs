@@ -164,7 +164,7 @@ public sealed class Protocol47FallingBlockRuntimeTests
     [Theory]
     [InlineData(0, 2)]
     [InlineData(1, 2)]
-    [InlineData(2, 1)]
+    [InlineData(2, 0)]
     [InlineData(3, 2)]
     public async Task PlacementUsesKnownNativeBoundsAndRemoval(int scene, int expectedPackets)
     {
@@ -343,10 +343,13 @@ public sealed class Protocol47FallingBlockRuntimeTests
             var actions = new InteractionActions(sink, services, _applier.Sequences);
             await actions.PlaceBlockAsync(support, Direction.Up, new Vec3d(.5, 1, .5), ct: _lifetime.Token);
             Assert.Equal(expectedPackets, sink.Packets.Count);
-            var use = Assert.IsType<ServerboundLegacyBlockPlacePacket>(sink.Packets[0]);
-            Assert.Equal(support, use.Position);
-            Assert.Equal((int)Direction.Up, use.Face);
-            Assert.Equal(Identifier.Minecraft("stone"), use.HeldItem.Item.Id);
+            if (expectedPackets != 0)
+            {
+                var use = Assert.IsType<ServerboundLegacyBlockPlacePacket>(sink.Packets[0]);
+                Assert.Equal(support, use.Position);
+                Assert.Equal((int)Direction.Up, use.Face);
+                Assert.Equal(Identifier.Minecraft("stone"), use.HeldItem.Item.Id);
+            }
             if (expectedPackets == 2)
                 Assert.IsType<ServerboundSwingPacket>(sink.Packets[1]);
             Assert.Equal(32, State.Inventory.GetSlot(36).Count);

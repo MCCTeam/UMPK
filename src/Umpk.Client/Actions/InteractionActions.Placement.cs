@@ -104,6 +104,14 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Unknown;
         if (!inventoryKnown)
             return BlockUsePrediction.Unknown;
+        // The legacy controller checks ItemBlock placement before sending and before cooldown/Adventure item use. Only default ordinary cube items have their complete precheck represented here; specialized items keep their own result and unknown context.
+        if (_blockProfile.PrechecksBlockItemPlacement && !item.IsEmpty && item.Components.HasNoPatch
+            && data.TryGetItem(item.Item.Id, out ItemUseOnInfo legacyUse) && legacyUse.Kind == ItemUseOnKind.SimpleCubePlacement)
+        {
+            BlockUsePrediction precheck = PredictCubePlacement(preSend: true);
+            if (precheck.Result != BlockUseResult.Success)
+                return precheck;
+        }
         if (item.IsEmpty || _services.Self.IsItemOnCooldown(item, _services.Version.Version.Protocol))
             return BlockUsePrediction.Pass;
         if (_services.Self.GameMode == GameMode.Adventure)
@@ -126,54 +134,64 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Pass;
         if (use.Kind != ItemUseOnKind.SimpleCubePlacement || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
-        if (!TryReplacement(position, clicked, out BlockReplacementInfo replacement))
-            return BlockUsePrediction.Unknown;
-        BlockPos destination = replacement.ReplacesClickedBlock ? position : position.Offset(face);
-        if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
-            return BlockUsePrediction.Fail;
-        if (world.GetColumn(destination) is null)
-            return BlockUsePrediction.Unknown;
-        if (!replacement.ReplacesClickedBlock)
+        return PredictCubePlacement(preSend: false);
+
+        BlockUsePrediction PredictCubePlacement(bool preSend)
         {
-            BlockState previous = world.GetBlock(destination);
-            if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+            if (!_services.State.Features.Entities || preSend && !_services.State.EntityMembership.HasColumn(position))
                 return BlockUsePrediction.Unknown;
-        }
-        if (!replacement.AllowsPlacement)
-            return BlockUsePrediction.Fail;
-        if (_services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
-            return BlockUsePrediction.Unknown;
-        if (VanillaPlacementCollision.Intersects(destination, physics.BoundingBox, _blockProfile))
-            return BlockUsePrediction.Fail;
-        foreach (var entity in _services.State.Entities.All)
-        {
-            if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id))
-                continue;
-            bool? member = _services.State.EntityMembership.IsWorldQueryMember(entity);
-            if (member is false)
-                continue;
-            if (member is null)
+            if (!TryReplacement(position, clicked, out BlockReplacementInfo replacement))
                 return BlockUsePrediction.Unknown;
-            if (entity.Vehicle is not null)
+            // Legacy ItemBlock.canPlaceBlockOnSide keeps snow layers at the clicked cell and changes only its queried face. ItemBlock.onItemUse separately resolves its original face/destination, so a successful precheck must not substitute this cell for actual placement.
+            bool replacesClicked = replacement.ReplacesClickedBlock || preSend && clicked.Block.Id.Path == "snow_layer";
+            BlockPos destination = replacesClicked ? position : position.Offset(face);
+            // An out-of-height state/write is not a proven false ItemBlock precheck. Its original world/permission/write phases differ; retain packet-only uncertainty rather than turning a later failure into a pre-send rejection.
+            if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
+                return preSend ? BlockUsePrediction.Unknown : BlockUsePrediction.Fail;
+            if (world.GetColumn(destination) is null || preSend && !_services.State.EntityMembership.HasColumn(destination))
                 return BlockUsePrediction.Unknown;
-            Aabb bounds;
-            if (data is IEntityGeometrySource geometry && _services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding, _services.Version.Version.Protocol))
+            if (!replacesClicked)
             {
-                if (!blocksBuilding)
-                    continue;
+                BlockState previous = world.GetBlock(destination);
+                if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+                    return BlockUsePrediction.Unknown;
             }
-            else if (EntityGeometryState.IsFixedCrystal(entity, _services.Version.Version.Protocol))
+            if (!replacement.AllowsPlacement)
+                return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            if (_services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
                 return BlockUsePrediction.Unknown;
-            else if (data.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
-                bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
-            else
-                return BlockUsePrediction.Unknown;
-            if (Aabb.BlockAt(destination.X, destination.Y, destination.Z).Intersects(bounds)
-                && !_services.State.EntityMotion.IsSpectator(entity, _services.State.TabList)
-                && VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
-                return BlockUsePrediction.Fail;
+            if (VanillaPlacementCollision.Intersects(destination, physics.BoundingBox, _blockProfile))
+                return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            foreach (var entity in _services.State.Entities.All)
+            {
+                if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id))
+                    continue;
+                bool? member = _services.State.EntityMembership.IsWorldQueryMember(entity);
+                if (member is false)
+                    continue;
+                if (member is null)
+                    return BlockUsePrediction.Unknown;
+                if (entity.Vehicle is not null)
+                    return BlockUsePrediction.Unknown;
+                Aabb bounds;
+                if (data is IEntityGeometrySource geometry && _services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding, _services.Version.Version.Protocol))
+                {
+                    if (!blocksBuilding)
+                        continue;
+                }
+                else if (EntityGeometryState.IsFixedCrystal(entity, _services.Version.Version.Protocol))
+                    return BlockUsePrediction.Unknown;
+                else if (data.TryGetFixedEntityDimensions(entity.Type.Id, out float width, out float height))
+                    bounds = VanillaEntityBounds.Create(entity.Position, width, height).Box;
+                else
+                    return BlockUsePrediction.Unknown;
+                if (Aabb.BlockAt(destination.X, destination.Y, destination.Z).Intersects(bounds)
+                    && !_services.State.EntityMotion.IsSpectator(entity, _services.State.TabList)
+                    && VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
+                    return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            }
+            return BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal);
         }
-        return BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal);
 
         bool TryReplacement(BlockPos cell, BlockState state, out BlockReplacementInfo info)
         {

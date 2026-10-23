@@ -119,7 +119,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             int rejectedStart = capture.Mark();
             await client.Actions.Interaction.PlaceBlockAsync(support, Direction.Up, new Vec3d(0.5, 1, 0.5), ct: ct);
             await Task.Delay(TimeSpan.FromSeconds(2.1), ct);
-            AssertUsePacket(Assert.Single(capture.Since(rejectedStart), IsUseOrAnimation), protocol, support);
+            if (protocol < 393)
+                Assert.DoesNotContain(capture.Since(rejectedStart), IsUseOrAnimation);
+            else
+                AssertUsePacket(Assert.Single(capture.Since(rejectedStart), IsUseOrAnimation), protocol, support);
             await AssertBlockAsync(server, protocol, target, "stone", ct);
             await AssertCountAsync(server, protocol, 31, ct);
 
@@ -157,7 +160,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             Assert.Equal(ClientStatus.Playing, client.Status);
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "server-observed disconnect", ct);
-            await server.WriteAsync("acceptance.json", new { release, protocol, clientProfile = version.Version.Name, physics = true, mining = "server air and seven ordered animations", placement = "server stone and 32-to-31 stack", rejectedPlacement = "occupied stone remains and stack stays31 with use and no swing", unbreakableMining = "server bedrock survives held attack and ordered cancellation", replayed, peerObservedDisconnect = true });
+            await server.WriteAsync("acceptance.json", new { release, protocol, clientProfile = version.Version.Name, physics = true, mining = "server air and seven ordered animations", placement = "server stone and 32-to-31 stack", rejectedPlacement = protocol < 393 ? "occupied stone remains and stack stays31 with no use or swing" : "occupied stone remains and stack stays31 with use and no swing", unbreakableMining = "server bedrock survives held attack and ordered cancellation", replayed, peerObservedDisconnect = true });
             passed = true;
         }
         finally

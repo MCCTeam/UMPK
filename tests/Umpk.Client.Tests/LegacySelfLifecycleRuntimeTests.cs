@@ -195,7 +195,10 @@ public sealed class LegacySelfLifecycleRuntimeTests
         Assert.Equal(protocol != 47, swing.HasHand);
         await session.Send(new ClientboundAnimatePacket(session.Client.State.Self.EntityId, 2));
         List<object> waking = await session.Use(clicked);
-        AssertUse(Assert.Single(waking), protocol, clicked);
+        if (protocol < 393)
+            Assert.Empty(waking);
+        else
+            AssertUse(Assert.Single(waking), protocol, clicked);
         Assert.True((await session.Physics()).BoundingBox.Intersects(Aabb.BlockAt(1, 64, 1)));
     }
 

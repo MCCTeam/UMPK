@@ -170,6 +170,7 @@ public sealed class BlockUsePredictionRuntimeTests
     public async Task AvailableOffhandKeepsItsOwnStackAndPacketHand(int protocol)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
         harness.State.Inventory.SetSlot(0, 45, harness.State.Inventory.GetSlot(36));
         harness.State.Inventory.SetSlot(0, 36, ItemStack.Empty);
 
@@ -246,6 +247,15 @@ public sealed class BlockUsePredictionRuntimeTests
             codec.Encode(ref roundTrip, decoded, context);
             Assert.Equal(output.WrittenSpan.ToArray(), encoded.WrittenSpan.ToArray());
             return Scheduler.InvokeAsync(() => _applier.ApplyAsync(decoded), _session.Token);
+        }
+
+        public async Task ReceiveLegacyTerrain(int protocol)
+        {
+            if (protocol >= 393)
+                return;
+            int stone = State.World.GetBlock(Target).StateId;
+            await Support.LegacyPlacementTerrain.Receive(_applier, protocol);
+            State.World.SetBlockStateId(Target, stone);
         }
 
         public Task Use(Hand hand = Hand.Main) => Actions.PlaceBlockAsync(Target, Direction.Up, new Vec3d(.5, 1, .5), hand).WaitAsync(TimeSpan.FromSeconds(5));

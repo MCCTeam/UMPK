@@ -473,7 +473,7 @@ public sealed class FallingBlockPlacementRegressionTests
     [Theory]
     [InlineData(0, 2)]
     [InlineData(1, 2)]
-    [InlineData(2, 1)]
+    [InlineData(2, 0)]
     [InlineData(3, 2)]
     public async Task PlacementUsesRelevantFallingBlockBounds(int scene, int expectedPackets)
     {
@@ -523,9 +523,12 @@ public sealed class FallingBlockPlacementRegressionTests
         await actions.PlaceBlockAsync(target, Direction.Up, new Vec3d(.5, 1, .5), ct: lifetime.Token);
 
         Assert.Equal(expectedPackets, sink.Packets.Count);
-        var use = Assert.IsType<ServerboundUseItemOnPacket>(sink.Packets[0]);
-        Assert.Equal(target, use.Position);
-        Assert.Equal((int)Direction.Up, use.Face);
+        if (expectedPackets != 0)
+        {
+            var use = Assert.IsType<ServerboundUseItemOnPacket>(sink.Packets[0]);
+            Assert.Equal(target, use.Position);
+            Assert.Equal((int)Direction.Up, use.Face);
+        }
         if (expectedPackets == 2)
             Assert.IsType<ServerboundSwingPacket>(sink.Packets[1]);
         Assert.Equal(32, state.Inventory.GetSlot(36).Count);

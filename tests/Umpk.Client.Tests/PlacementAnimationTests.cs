@@ -61,7 +61,8 @@ public sealed class PlacementAnimationTests
 
         await actions.PlaceBlockAsync(target, Direction.Up, new Vec3d(.5, 1, .5), ct: lifetime.Token);
 
-        Assert.Equal(!blocked && protocol != 47 ? 2 : 1, sink.Packets.Count);
+        bool clear = !blocked && protocol != 47;
+        Assert.Equal(clear ? 2 : protocol < 393 ? 0 : 1, sink.Packets.Count);
         if (sink.Packets.Count == 2)
             Assert.IsType<ServerboundSwingPacket>(sink.Packets[1]);
         foreach (object sent in sink.Packets)
@@ -119,10 +120,8 @@ public sealed class PlacementAnimationTests
 
         await actions.PlaceBlockAsync(target, Direction.Up, new Vec3d(.5, 1, .5), ct: lifetime.Token);
 
-        Assert.Equal(shrinks ? 2 : 1, sink.Packets.Count);
-        if (protocol == 47)
-            Assert.IsType<ServerboundLegacyBlockPlacePacket>(sink.Packets[0]);
-        else
+        Assert.Equal(shrinks ? 2 : protocol < 393 ? 0 : 1, sink.Packets.Count);
+        if (sink.Packets.Count != 0)
             Assert.IsType<ServerboundUseItemOnPacket>(sink.Packets[0]);
         if (shrinks)
             Assert.IsType<ServerboundSwingPacket>(sink.Packets[1]);
@@ -272,19 +271,23 @@ public sealed class PlacementAnimationTests
     private static async Task PlaceWithEntityGeometryAsync(int protocol, string entityName, int babyIndex, bool baby, EntityPose pose, double x, double y, bool swings)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
         Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft(entityName), out RegistryEntry<EntityTypeDefinition> type));
         var entity = new Entity(42, Guid.NewGuid(), type) { Position = new Vec3d(x, y, 1.5), Pose = pose };
         if (babyIndex >= 0)
             entity.Metadata.Set(babyIndex, MetadataValue.Boolean(baby));
         harness.State.Entities.Add(entity);
 
+        bool rejected = protocol < 393 && !swings;
         Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
-        await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        if (!rejected)
+            await harness.Sink.UseWritten.Task.WaitAsync(TimeSpan.FromSeconds(5));
         await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
-        harness.Acknowledge();
+        if (!rejected)
+            harness.Acknowledge();
         await place.WaitAsync(TimeSpan.FromSeconds(5));
 
-        Assert.Equal(swings ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(rejected ? 0 : swings ? 2 : 1, harness.Sink.Packets.Count);
         Assert.Equal(new Vec3d(x, y, 1.5), entity.Position);
         Assert.Equal(pose, entity.Pose);
         if (babyIndex >= 0)
@@ -307,6 +310,7 @@ public sealed class PlacementAnimationTests
     public async Task LegacyItemDropsDoNotSuppressPlacementSwings(int protocol, double x)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
         Assert.True(harness.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("item"), out RegistryEntry<EntityTypeDefinition> type));
         var entity = new Entity(51, Guid.NewGuid(), type) { Position = new Vec3d(x, 65, 1.5) };
         harness.State.Entities.Add(entity);
@@ -324,18 +328,19 @@ public sealed class PlacementAnimationTests
     public async Task MetadataUpperPlantReplacementUsesTheActualLowerCell(int protocol, int lower)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
         harness.State.World.SetBlockStateId(harness.Target, 2808);
         harness.State.World.SetBlockStateId(harness.Target.Below(), lower);
         harness.State.World.SetBlockStateId(harness.Target.Above(), harness.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId);
 
         Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
         await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
-        if (protocol != 47)
+        if (protocol != 47 && harness.Sink.Packets.Count != 0)
             harness.Acknowledge();
         await place.WaitAsync(TimeSpan.FromSeconds(5));
 
         bool swing = lower is 2802 or 2803;
-        Assert.Equal(swing ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(swing ? 2 : 0, harness.Sink.Packets.Count);
         Assert.Equal(2808, harness.State.World.GetBlock(harness.Target).StateId);
         Assert.Equal(lower, harness.State.World.GetBlock(harness.Target.Below()).StateId);
         Assert.Equal(32, harness.State.Inventory.GetSlot(36).Count);
@@ -346,6 +351,7 @@ public sealed class PlacementAnimationTests
     public async Task OrdinaryCubePlacementUsesNativeReplacementRules(int protocol, string material, bool clicked)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
         string[] names = material != "plant" ? [material] : protocol < 393 ? ["tallgrass"] : ["short_grass", "grass"];
         BlockDefinition? block = null;
         foreach (string name in names)
@@ -357,13 +363,13 @@ public sealed class PlacementAnimationTests
 
         Task place = harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(.5, 1, .5));
         await harness.Scheduler.InvokeAsync(() => { }, CancellationToken.None);
-        if (protocol != 47)
+        if (protocol != 47 && harness.Sink.Packets.Count != 0)
             harness.Acknowledge();
         await place.WaitAsync(TimeSpan.FromSeconds(5));
 
         bool successful = clicked || material != "stone";
         bool swing = protocol < 777 && successful;
-        Assert.Equal(swing ? 2 : 1, harness.Sink.Packets.Count);
+        Assert.Equal(!successful && protocol < 393 ? 0 : swing ? 2 : 1, harness.Sink.Packets.Count);
         if (swing)
             Assert.Equal(0, Assert.IsType<ServerboundSwingPacket>(harness.Sink.Packets[1]).Hand);
         Assert.Equal(block.DefaultStateId, harness.State.World.GetBlock(replaced).StateId);
@@ -377,6 +383,7 @@ public sealed class PlacementAnimationTests
     public async Task MetadataEraPlacementWritesUseThenSwing(int protocol)
     {
         await using var harness = new Harness(protocol);
+        await harness.ReceiveLegacyTerrain(protocol);
 
         await harness.Actions.PlaceBlockAsync(harness.Target, Direction.Up, new Vec3d(0.5, 1, 0.5)).WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -726,6 +733,7 @@ public sealed class PlacementAnimationTests
 
     private sealed class Harness : IAsyncDisposable
     {
+        private readonly Support.ApplierHarness _applier;
         public ClientState State { get; }
         public ChannelSessionScheduler Scheduler { get; } = new();
         public RecordingSink Sink { get; } = new();
@@ -740,7 +748,8 @@ public sealed class PlacementAnimationTests
         public Harness(int protocol, ClientFeatures? features = null, bool fixedCrystalContext = false)
         {
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out var version));
-            State = new ClientState((features ?? new ClientFeatures()).Normalized());
+            _applier = new Support.ApplierHarness(version, (features ?? new ClientFeatures()).Normalized());
+            State = _applier.State;
             RegistryAccess registries = JavaGameData.Registries(protocol);
             Assert.True(registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
             StoneState = stone.DefaultStateId;
@@ -763,6 +772,14 @@ public sealed class PlacementAnimationTests
                 State.EntityGeometry.FixedPositionContext = (entity, bounds) => State.EntityGeometry.FixedContextIsKnown(
                     entity, bounds, State.Entities, State.World, State.EntityMembership, protocol, physics.HasCompletePistonContext);
             }
+        }
+
+        public async Task ReceiveLegacyTerrain(int protocol)
+        {
+            if (protocol >= 393)
+                return;
+            await Support.LegacyPlacementTerrain.Receive(_applier, protocol);
+            State.World.SetBlockStateId(Target, StoneState);
         }
 
         public void Acknowledge() => _sequences.Acknowledge(Assert.IsType<ServerboundUseItemOnPacket>(Sink.Packets[0]).Sequence);

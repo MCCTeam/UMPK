@@ -1379,7 +1379,7 @@
     "codeCommit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
     "publishedEvidenceCommit": "2925b51",
     "historicalSourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
-    "scope": "Current activation, bounded legacy ordinary-cube pre-send and777slab collision progress only. Original source inputs, inventory partitions, row counts and family IDs remain intact; complete native/session/live family acceptance remains unfinished.",
+    "scope": "Current activation, bounded legacy ordinary-cube pre-send,777 slab collision and modern default-slab placement progress only. Original source inputs, inventory partitions, row counts and family IDs remain intact; complete native/session/live family acceptance remains unfinished.",
     "trapdoorGate": {
       "newFocusedCases": 459,
       "privateAdjacentPasses": 6601,
@@ -1434,6 +1434,22 @@
       "allSevenCiPassed": true,
       "evidence": "slab-presend-checkpoint-20261023.md",
       "scope": "compatibility checkpoint; broad native/session/live and finalversion acceptance remains open"
+    },
+    "modernSlabPlacement": {
+      "baseCommit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "integratedAfterDocumentation": "6365be9f8fd30e1d692c6ed945518cde2c2cc8e6",
+      "patchSha256": "7600a88d1db957b757284dbf6c62e3a6576eb7696bf8ec790fd52ad340193234",
+      "profiles": 39,
+      "namedReleasesSourceAudited": 51,
+      "finiteNames": 101,
+      "itemProfileRows": 1924,
+      "rootFocusedPasses": 2344,
+      "privateAdjacentPasses": 6703,
+      "privateFullClientPasses": 32574,
+      "privateAotBytes": 25132640,
+      "privateExecutedAotSmokes": 1,
+      "evidence": "modern-slab-placement.md",
+      "limits": "Legacy slab precheck, arbitrary component patches and uncertain context stay Unknown. Native live and merged producer acceptance remain open."
     }
   }
 }

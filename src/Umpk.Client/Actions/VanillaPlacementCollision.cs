@@ -2,14 +2,24 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Actions;
 
-/// <summary>Vanilla's full-cube placement obstruction against an entity box. Other block shapes need their own voxel grid.</summary>
+/// <summary>Vanilla placement obstruction against an entity box, using the selected block collision boxes and native voxel grid.</summary>
 internal static class VanillaPlacementCollision
 {
     private const double Epsilon = 1.0E-7;
 
     public static bool Intersects(BlockPos block, Aabb entity, BlockInteractionProfile profile)
+        => Intersects(Aabb.BlockAt(block.X, block.Y, block.Z), entity, profile);
+
+    public static bool Intersects(BlockPos block, ReadOnlySpan<Aabb> shapes, Aabb entity, BlockInteractionProfile profile)
     {
-        Aabb cube = Aabb.BlockAt(block.X, block.Y, block.Z);
+        foreach (Aabb shape in shapes)
+            if (Intersects(new Aabb(block.X + shape.MinX, block.Y + shape.MinY, block.Z + shape.MinZ, block.X + shape.MaxX, block.Y + shape.MaxY, block.Z + shape.MaxZ), entity, profile))
+                return true;
+        return false;
+    }
+
+    private static bool Intersects(Aabb cube, Aabb entity, BlockInteractionProfile profile)
+    {
         if (!profile.VoxelPlacementObstruction)
             return cube.Intersects(entity);
         if (profile.DiscardThinObstructionShapes && (entity.XSize < Epsilon || entity.YSize < Epsilon || entity.ZSize < Epsilon))

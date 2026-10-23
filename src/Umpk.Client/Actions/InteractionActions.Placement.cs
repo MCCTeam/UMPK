@@ -16,7 +16,7 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
-        BlockUsePrediction prediction = PredictBlockUse(position, face, hand);
+        BlockUsePrediction prediction = PredictBlockUse(position, face, cursor, hand);
         if (!prediction.SendPacket)
             return null;
         ct.ThrowIfCancellationRequested();
@@ -43,7 +43,7 @@ public sealed partial class InteractionActions
             ItemPackets.Serverbound.UseItemOn.Id, "This version cannot use the offhand; the legacy packet always uses the main hand.");
     }
 
-    private BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Hand hand)
+    internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
     {
         bool inventoryKnown = _services.State.Features.Inventory;
         ItemStack main = HeldItem();
@@ -132,6 +132,9 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Unknown;
         if (use.Kind == ItemUseOnKind.Pass)
             return BlockUsePrediction.Pass;
+        VanillaSlabPlacement slab = VanillaSlabPlacement.ForProtocol(_services.Version.Version.Protocol);
+        if (slab.Supports(item.Item.Id, use))
+            return PredictSlabPlacement(slab, item.Item.Id);
         if (use.Kind != ItemUseOnKind.SimpleCubePlacement || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
         return PredictCubePlacement(preSend: false);
@@ -158,9 +161,60 @@ public sealed partial class InteractionActions
             }
             if (!replacement.AllowsPlacement)
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            return PredictPlacementObstruction(destination, preSend, [new(0, 0, 0, 1, 1, 1)]);
+        }
+
+        BlockUsePrediction PredictSlabPlacement(VanillaSlabPlacement slab, Identifier slabId)
+        {
+            if (!_services.State.Features.Entities || !_services.State.EntityMembership.HasColumn(position))
+                return BlockUsePrediction.Unknown;
+            bool replacesClicked;
+            if (clicked.Block.Id == slabId)
+            {
+                if (!VanillaSlabPlacement.TryGetType(clicked, out string clickedType))
+                    return BlockUsePrediction.Unknown;
+                replacesClicked = VanillaSlabPlacement.ReplacesClicked(clickedType, face, slab.AboveHalf(position, cursor));
+            }
+            else
+            {
+                if (!TryReplacement(position, clicked, out BlockReplacementInfo clickedReplacement))
+                    return BlockUsePrediction.Unknown;
+                replacesClicked = clickedReplacement.ReplacesClickedBlock;
+            }
+            BlockPos destination = replacesClicked ? position : position.Offset(face);
+            if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY
+                || world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
+                return BlockUsePrediction.Unknown;
+            BlockState previous = world.GetBlock(destination);
+            if (!previous.IsValid)
+                return BlockUsePrediction.Unknown;
+            string type;
+            if (previous.Block.Id == slabId)
+            {
+                if (!VanillaSlabPlacement.TryGetType(previous, out string previousType))
+                    return BlockUsePrediction.Unknown;
+                if (previousType == "double")
+                    return BlockUsePrediction.Fail;
+                type = "double";
+            }
+            else
+            {
+                if (!TryReplacement(destination, previous, out BlockReplacementInfo replacement))
+                    return BlockUsePrediction.Unknown;
+                if (!replacement.AllowsPlacement)
+                    return BlockUsePrediction.Fail;
+                type = face == Direction.Down || face != Direction.Up && slab.AboveHalf(position, cursor) ? "top" : "bottom";
+            }
+            if (!VanillaSlabPlacement.TryGetCollisionShape(previous.Source, slabId, type, JavaGameData.BlockShapes(_services.Version.Version.Protocol), out Aabb shape))
+                return BlockUsePrediction.Unknown;
+            return PredictPlacementObstruction(destination, preSend: false, [shape]);
+        }
+
+        BlockUsePrediction PredictPlacementObstruction(BlockPos destination, bool preSend, ReadOnlySpan<Aabb> shapes)
+        {
             if (_services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
                 return BlockUsePrediction.Unknown;
-            if (VanillaPlacementCollision.Intersects(destination, physics.BoundingBox, _blockProfile))
+            if (VanillaPlacementCollision.Intersects(destination, shapes, physics.BoundingBox, _blockProfile))
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
             foreach (var entity in _services.State.Entities.All)
             {
@@ -187,7 +241,7 @@ public sealed partial class InteractionActions
                     return BlockUsePrediction.Unknown;
                 if (Aabb.BlockAt(destination.X, destination.Y, destination.Z).Intersects(bounds)
                     && !_services.State.EntityMotion.IsSpectator(entity, _services.State.TabList)
-                    && VanillaPlacementCollision.Intersects(destination, bounds, _blockProfile))
+                    && VanillaPlacementCollision.Intersects(destination, shapes, bounds, _blockProfile))
                     return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
             }
             return BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal);

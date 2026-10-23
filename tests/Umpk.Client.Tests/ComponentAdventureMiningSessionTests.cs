@@ -5,6 +5,7 @@ using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
+using Umpk.Game.Blocks;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Players;
@@ -397,6 +398,39 @@ public sealed class ComponentAdventureMiningSessionTests
             }
         }
 
+        internal async Task HoldPredicates(IReadOnlyList<BlockPredicateEntry> predicates)
+        {
+            ItemStack stack = new(Client.State.Registries!.Items[Identifier.Minecraft("diamond_pickaxe")], 1);
+            stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent(predicates, true));
+            await Send(new ClientboundContainerSetSlotPacket(0, 0, 36, stack));
+            Assert.Empty(await Barrier());
+            AssertPredicates(predicates, Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!.Predicates);
+        }
+
+        private static void AssertPredicates(IReadOnlyList<BlockPredicateEntry> expected, IReadOnlyList<BlockPredicateEntry> actual)
+        {
+            Assert.Equal(expected.Count, actual.Count);
+            for (int index = 0; index < expected.Count; index++)
+            {
+                Assert.Equal(expected[index].Blocks?.Ids, actual[index].Blocks?.Ids);
+                Assert.Equal(expected[index].Blocks?.Tag, actual[index].Blocks?.Tag);
+                Assert.Equal(expected[index].Properties, actual[index].Properties);
+                Assert.Equal(expected[index].Nbt, actual[index].Nbt);
+            }
+        }
+
+        internal async Task State(string name, string property, string value)
+        {
+            BlockDefinition definition = Client.State.Registries!.Blocks[Identifier.Minecraft(name)].Value;
+            IBlockDataSource source = Client.State.World.GetBlock(Target).Source;
+            int id = Assert.Single(Enumerable.Range(definition.MinStateId, definition.StateCount), id => source.TryGetPropertyValue(id, property, out string actual) && actual == value && definition.Properties.All(other => other.Name == property || source.TryGetPropertyValue(id, other.Name, out string candidate) && source.TryGetPropertyValue(definition.DefaultStateId, other.Name, out string original) && candidate == original));
+            await Send(new ClientboundBlockUpdatePacket(Target, id));
+            Assert.Empty(await Barrier());
+            Assert.Equal(id, Client.State.World.GetBlock(Target).StateId);
+            Assert.True(Client.State.World.GetBlock(Target).TryGetProperty(property, out string observed));
+            Assert.Equal(value, observed);
+        }
+
         internal async Task Tags(bool allowed)
         {
             int stone = Client.State.Registries!.Blocks[Identifier.Minecraft("stone")].NetworkId;
@@ -511,12 +545,7 @@ public sealed class ComponentAdventureMiningSessionTests
                     {
                         AdventureModePredicateComponent actualPredicate = item.Components.Get(DataComponents.CanBreak)!;
                         Assert.Equal(expectedPredicate.ShowInTooltip, actualPredicate.ShowInTooltip);
-                        BlockPredicateEntry expectedBlock = Assert.Single(expectedPredicate.Predicates);
-                        BlockPredicateEntry actualBlock = Assert.Single(actualPredicate.Predicates);
-                        Assert.Equal(expectedBlock.Blocks!.Ids, actualBlock.Blocks!.Ids);
-                        Assert.Equal(expectedBlock.Blocks.Tag, actualBlock.Blocks.Tag);
-                        Assert.Equal(expectedBlock.Properties, actualBlock.Properties);
-                        Assert.Equal(expectedBlock.Nbt, actualBlock.Nbt);
+                        AssertPredicates(expectedPredicate.Predicates, actualPredicate.Predicates);
                     }
                     break;
                 case ClientboundBlockUpdatePacket block:

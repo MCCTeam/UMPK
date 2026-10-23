@@ -7,7 +7,7 @@ using Umpk.Game.Registries;
 
 namespace Umpk.Client.Actions;
 
-/// <summary>The typed 1.20.5–1.21.4 can_break predicates and their native component-owned last-state cache. Null retains missing tag, property-order or full block-entity context.</summary>
+/// <summary>The typed 1.20.5–1.21.4 can_break predicates and their native component-owned last-state cache. Null retains missing tag, native property-kind/range or full block-entity context.</summary>
 internal sealed class VanillaComponentMiningPermission
 {
     private const int ItemComponentsProtocol = 766;
@@ -33,12 +33,13 @@ internal sealed class VanillaComponentMiningPermission
             bool? matches = predicate.Blocks is not { } blocks ? true
                 : blocks.Tag is { } tag ? tags.Contains(RegistryIds.Block, tag, target.Block.NetworkId)
                 : blocks.Ids.Contains(target.Block.NetworkId);
-            if (matches is false)
+            bool? properties = MatchesProperties(predicate.Properties, target);
+            if (matches is false || properties is false)
                 continue;
             // BlockPredicate tests its state before block-entity NBT. A possible NBT match also leaves native cache invalidation unowned, even if a later predicate could grant this call.
             if (predicate.Nbt is not null)
                 return null;
-            if (matches is null || predicate.Properties is { Count: > 0 })
+            if (matches is null || properties is null)
             {
                 unknown = true;
                 continue;
@@ -51,4 +52,36 @@ internal sealed class VanillaComponentMiningPermission
         _cache.Add(component, new(target, false));
         return false;
     }
+
+    private static bool? MatchesProperties(IReadOnlyList<StatePropertyMatcher>? properties, BlockState target)
+    {
+        bool unknown = false;
+        if (properties is null)
+            return true;
+        foreach (StatePropertyMatcher property in properties)
+        {
+            if (!target.TryGetProperty(property.Name, out string actual))
+            {
+                if (!target.PropertyNames.Contains(property.Name))
+                    return false;
+                unknown = true;
+                continue;
+            }
+            if (!property.Exact)
+            {
+                unknown = true;
+                continue;
+            }
+            if (actual == property.Value)
+                continue;
+            // IntegerProperty accepts alternate Java decimal spellings. The canonical value domain does not identify the native property class or its range order.
+            if (property.Value is { } value && VanillaLegacyMiningPermission.TryReadJavaInteger(value, out int requested)
+                && VanillaLegacyMiningPermission.TryReadJavaInteger(actual, out int present) && requested == present)
+                unknown = true;
+            else
+                return false;
+        }
+        return unknown ? null : true;
+    }
+
 }

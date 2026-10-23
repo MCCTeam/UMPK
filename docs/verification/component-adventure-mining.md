@@ -60,3 +60,31 @@ Two earlier 1.20.6 whole-leg failures remain failed. The first fixture selected 
 The accepted v5 fixture fixes the phase/type selection and projects only phase, flow, wire id, raw payload and tag registries into evidence. Its compiled controls reject 52 incorrect tag/phase/byte cases and 22 causal-marker/gating mutations. The actual harness writer successfully serializes and reads all nine artifact shapes and rejects 21 missing/truncated/original-metadata cases. Generated offline controls are identified separately and never substituted for lost native bytes.
 
 This campaign proves UMPK's bounded public actions against original vanilla servers, supported by the earlier original client methods and source ordering. It does not execute the original Minecraft input/network loop, a custom tag reload or a protocol-770 predicate payload. Property/NBT permissions remain unavailable. The full item identity, movement/context and final version-matrix requirements remain open.
+
+## Canonical exact properties, 2026-10-23
+
+`VanillaComponentMiningPermission` now evaluates canonical exact `can_break` state properties on protocols 766–769, covering the seven named clients from 1.20.5 through 1.21.4. Received components and block-update state IDs supply the property names/values through existing codecs and owners. An exact canonical match grants that condition; a proven missing property or different parsed value denies it. A declared property whose value is unavailable stays unknown. This adds no dataset feature, public API, dependency, version or DI change.
+
+The source audit pins 67 original files, 21 jar/artifact/decompile receipts and fifteen runtime/wire/state bindings. `StatePropertiesPredicate` is byte-identical across the seven clients; their Boolean, Integer and Enum parsers establish the exact comparison. The current canonical data does not identify native property classes or enum comparison order. All ranges remain unknown, as do alternate Java decimal spellings that equal the current canonical integer. The existing Java integer parser preserves that uncertainty rather than falsely denying a possible numeric match.
+
+State is evaluated before block-entity NBT. A proven state mismatch rejects an entry even when it carries NBT; a possible NBT match remains unknown, including before a later unconditional grant, because full native block-entity saves and successful-NBT cache invalidation are not owned. Packet NBT does not stand in for a full native save. Existing component-reference/state caching, item identity, protocol-765 behavior and protocol-770 extended-payload unavailability remain intact.
+
+The exact private producer is `e3849e23c8b26426379a31113025f46e391b4e91` plus three files: the permission owner, the existing framed `ComponentAdventureMiningSessionTests.Session` helper and the new property session tests. Its retained directory is `/tmp/umpk-adventure-property-mining-20261023-xhg84kdb`. Patch SHA-256 is `f10b61e355313ee524352ead1b6c9ad6811502df8e9d0aa4179c7c860a863b9a`; the 129-artifact delivery manifest is `df670277bd541ac87e0d5de70cf49611df49de59bfc977a9cefd51457e2ba6d2`; review is `1e8e7edbea45a69e0a2d7d75f16996d07eb79ee1a4d06c9b435d7f3f8e708314`. Native/source bindings, exact commands, full logs/XML, source and binary manifests are retained there.
+
+| Check | Executed result |
+| --- | --- |
+| Unchanged-production real-session red | 96 expected failures and forty controls; genuine source/base proof retained |
+| Final property sessions | 148 passed, zero skipped |
+| Adjacent mining owners | 1,697 passed, zero skipped |
+| Exact-private full Client | 32,722 passed, zero skipped |
+| Scoped format in both owning projects | Passed with zero changes |
+| Separate exact-owner Native AOT | 25,132,656 bytes, strictly below 25,165,824; exactly one executed passing smoke |
+| Root combined property/entity/slab cases | 2,563 passed, zero skipped |
+
+The sessions call public `DigBlockAsync` with actual framed components and world state, bound-codec decoded assertions and byte-identical round trips. Known grants assert START and the measured initial swings; known denials retain the held request with an initial swing and no START. Unknown asserts the exact owner exception type/message and no invented action. STOP remains pending until its matching acknowledgment. State changes, fresh equivalent components, temporary denial, multiple/duplicate matchers, tag/NBT ordering, Survival controls and peer-observed disconnect are covered. Observed world and inventory remain unchanged by prediction.
+
+The isolated AOT binary SHA-256 is `a50408f695ff19d659c157c18080d5ace6fc9ae34f5ffbd71f0eb32b5a93a7fc`. All 138 then-protected normal DLL/PDB paths stayed unchanged during publish/smoke. The final 24 normal runtime/test files separately remain unchanged through the no-build full Client run; 22 runtime/TestKit paths still match the earlier AOT protection receipt, while the two test artifacts contain later deliberate coverage additions. The production overlay is identical. Initial compile/import/analyzer faults, corrected fixture expectations and a binary-count preflight failure retain their original failed receipts. The passing full run does not claim a before-start pin that was not recorded.
+
+Independent approval at `/tmp/umpk-property-mining-independent-review-20261023-oygj1vx7/review.json` has SHA-256 `87781f441265599284e66d048f1a8a8432a0f0c45e11a1555ce556f85271f385`, with manifest `a9c224bf33cac247a3bb408dd31f03e2544b6761183cef404f442eca5ddd7be5`. Root verifies all 129 delivery artifacts, three source files, actual private XML outcomes and the single executed AOT smoke before applying the exact patch over `7957be8`. The deliberate Client baseline increases by 148 from 32,645 to 32,793; Integration remains 58 with seventeen normal opt-in skips. Root results are `/tmp/umpk-property-mining-root-integration-20261023-v1`.
+
+No new Java, native measurement, server or source regeneration ran. The earlier four native boundaries still prove their original 36 scenarios on their original producer; they do not become exact-property live acceptance. Fresh merged repository/consumer/package/AOT/CI, new exact-property native acceptance, all ranges, full block-entity NBT and the remaining version/context inventory stay open.

@@ -135,6 +135,8 @@ public sealed partial class InteractionActions
                 : BlockUsePrediction.Unknown;
         if (!item.Components.HasNoPatch)
             return BlockUsePrediction.Unknown;
+        if (VanillaHoneycombUse.TryPredict(_services.Version.Version.Protocol, item.Item.Id, clicked, out BlockUsePrediction waxUse))
+            return _services.State.EntityMembership.HasColumn(position) ? waxUse : BlockUsePrediction.Unknown;
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use))
             return BlockUsePrediction.Unknown;
         if (use.Kind == ItemUseOnKind.Pass)

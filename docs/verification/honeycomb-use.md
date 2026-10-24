@@ -1,0 +1,21 @@
+# Honeycomb use on the original copper families
+
+The existing session-owned predictor now handles honeycomb on the sixteen original copper blocks, slabs and stairs across 22 datasets, protocols 755–776, and 33 named releases from 1.17 through 26.2. Unwaxed targets predict Success and packet swing; their already-waxed counterparts predict Pass without swing. Activation, permission and cooldown still run first. Missing packet-established terrain, unsupported components, other targets and protocol-777 transformers retain Unknown. Observed block and stack state remain server-owned.
+
+One internal helper and two caller lines connect this behavior after the existing component guard. Public signatures, ownership and packet/ACK lifetime are unchanged. Retained native maps establish all sixteen source blocks and exclude already-waxed counterparts. Source/artifact bindings are `/tmp/umpk-honeycomb-use-20261024-v1/native-source-bindings.json`, SHA-256 `fd33ef5367d63c97b1c564ae12ea0fb2ec1f7c02c200fe79277c675918f1cf92`. No new vanilla measurement is claimed.
+
+## Executed development proof
+
+The private producer is immutable `c977ff3d4dbd6ef7b3dcf318c8d36673d7ebba83` plus separately pinned honeycomb and [current-value range](component-adventure-mining.md#inclusive-current-value-ranges-2026-10-24) overlays. Honeycomb first executes 93 expected failures and 43 controls. The uncalled helper preserves those exact identities. Connecting the caller passes all 136 honeycomb cases while preserving 48 range failures; the range owner change then passes all 200. All 8,332 unchanged adjacent cases across sixteen classes pass. The deliberate honeycomb baseline addition is 136.
+
+The framed cases cover both hands, all admitted item/profile rows, block-state boundaries, faces/cursor fields, exact use/swing order, no Punch, ACK completion, unchanged observed blocks/stacks, cooldown/Adventure ordering, component Unknown, packet-established versus synthetic terrain, unload/respawn and earlier/777 controls. All three corrected int-parameter theory rows execute. Actual nine Client and eleven test compiler references and 223 PDB document hashes verify.
+
+Strict Native AOT with both overlays is 25,165,568 bytes, 256 below the unchanged 25,165,824 limit; ELF SHA-256 `1b9c47f802132a4f0d901f09b7a076c3373a7a137b869bc10b9e686bdc804f92`. Eleven native library inputs and the unchanged nine-package graph verify; exactly one smoke test executes and passes. All 117 original outputs, 270 tested outputs and two staged Client files remain unchanged. The original 4,290-entry archive is unchanged; the final overlay has 4,293 entries.
+
+Exact commands, XML, source/PDB/library and cleanup receipts are indexed at `/home/anon/Projects/MinecraftOfficial/runs/interaction-honeycomb-range-c977-20261024-v2`. Its `completion.json` has SHA-256 `883c31fcbd4e98803ddf7426a2270be8290a7446062fa5f6df32aa24c798d66c`. Independent actual-file review `/tmp/honeycomb-range-independent-actual-review-20261024-v2.json`, SHA-256 `8f90f2f7013a85b6d4a53588ae986ff4110bcf4cca9111d660325e09a9da0a0e`, verifies 695 current paths, source/native files and exact XML. The 76.16-second service peaks at 2,260,586,496 bytes and is stopped; no server or port starts. The integrated test file exactly matches tested SHA-256 `6435fb1d6f6389f8f0162893b1b0e2cb01e75e79ebfcec0a52cb5a5f5625400b`.
+
+## Retained failures and limits
+
+The first batch fails compilation on an internal enum exposed in a public test signature. The retry uses an int parameter with identical cases/assertions. The first generic root audit incorrectly compares intermediate and final hashes at reused build paths; independent review separates historical observations from final-file invariance. Integration then catches a delivery-patch-only redundant cast absent from the tested file and uses the actual tested bytes. These failed attempts remain recorded; none counts as a behavior pass.
+
+This is bounded Client development evidence using frozen dependencies. New native live honeycomb acceptance, other targets/sign waxing, 777 transformer components, custom components and final full-solution, consumer, package, combined protocol/AOT and published-head checks remain unfinished.

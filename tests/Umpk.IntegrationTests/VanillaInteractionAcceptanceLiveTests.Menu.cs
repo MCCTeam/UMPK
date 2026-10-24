@@ -3,6 +3,7 @@ using Umpk.Client;
 using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Data.Java;
+using Umpk.Game.Blocks;
 using Umpk.Game.Items;
 using Umpk.Game.Players;
 using Umpk.Game.Registries;
@@ -19,7 +20,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
 {
     [NightlyTheory]
     [InlineData("1.8.9", 47)]
+    [InlineData("1.14", 477)]
     [InlineData("1.14.4", 498)]
+    [InlineData("1.16", 735)]
+    [InlineData("1.20.4", 765)]
     [InlineData("1.20.6", 766)]
     [InlineData("26.3", 777)]
     public async Task MenuUseMatchesNativeOpeningRefusalAndSwing(string release, int protocol)
@@ -27,9 +31,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
+        string? initialEnabledPacks = protocol is 765 or 766 ? "vanilla,update_1_21" : null;
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, initialEnabledPacks: initialEnabledPacks);
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
-        var capture = new Capture(version);
+        var capture = new Capture(version, includeEnabledFeatures: protocol >= 765);
         client.PacketFrameObserved += capture.Observe;
         int opens = 0;
         using IDisposable opened = client.Events.Subscribe<ContainerOpened>(_ => Interlocked.Increment(ref opens));
@@ -45,6 +50,16 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         {
             await client.ConnectAsync(new ServerEndpoint("127.0.0.1", (ushort)server.Port), ct);
             Assert.True(await client.Spawned.WaitAsync(ct));
+            if (initialEnabledPacks is not null)
+            {
+                CapturedFrame featureFrame = Assert.Single(capture.Frames, frame => frame.Phase == ProtocolPhase.Configuration && frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundConfigUpdateEnabledFeaturesPacket);
+                var features = Assert.IsType<ClientboundConfigUpdateEnabledFeaturesPacket>(featureFrame.Packet);
+                Assert.Equal(new[] { "minecraft:update_1_21", "minecraft:vanilla" }, features.Features.Select(value => value.ToString()).Order(StringComparer.Ordinal));
+                string nativePacks = await server.CommandAsync("datapack list enabled", ct);
+                Assert.Equal("There are 2 data pack(s) enabled: [vanilla (built-in)], [update_1_21 (feature)]", nativePacks);
+                Assert.Contains("initial-enabled-packs=vanilla,update_1_21", await File.ReadAllLinesAsync(Path.Combine(server.DirectoryPath, "server.properties"), ct));
+                await server.WriteAsync("menu-native-feature-selection.json", new { requestedInitialEnabledPacks = initialEnabledPacks, observedFeatures = features.Features.Select(value => value.ToString()).ToArray(), nativePacks, featureFrame.WireId, featureFrame.Phase, featureFrame.Payload, purpose = "Observe the actual native world feature set and selected pack; registration alone is insufficient." });
+            }
             await WaitAsync(client, c => c.State.IsLocalChunkLoaded, "menu terrain", ct);
             Assert.True(client.State.Features.Physics);
             Vec3d spawn = await client.InvokeAsync(c => c.State.Self.Position, ct);
@@ -87,6 +102,15 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await Use("crafting_table", blocked: false, sneaking: false, main: "stick", off: null, Hand.Off, clientSuccess: protocol < 766 && protocol != 47, nativeOpen: protocol < 766 && protocol != 47, rejectHand: protocol == 47);
             if (protocol != 47)
                 await Use("crafting_table", blocked: false, sneaking: true, main: null, off: "stick", Hand.Main, clientSuccess: false, nativeOpen: false);
+            foreach (string block in AdditionalMenuBlocks(protocol))
+            {
+                bool succeeds = block != "smithing_table" || protocol >= 735;
+                await Use(block, blocked: false, sneaking: false, main: null, off: null, Hand.Main, clientSuccess: succeeds, nativeOpen: succeeds);
+            }
+            await Use("trapped_chest", blocked: true, sneaking: false, main: null, off: null, Hand.Main, clientSuccess: true, nativeOpen: false);
+            await Use("ender_chest", blocked: true, sneaking: false, main: null, off: null, Hand.Main, clientSuccess: true, nativeOpen: false);
+            if (protocol >= 477)
+                await Use("barrel", blocked: false, sneaking: false, main: "stick", off: null, Hand.Off, clientSuccess: protocol < 766, nativeOpen: protocol < 766);
             int replayed = capture.AssertRoundTrips(client.State.Registries!);
             var replayDispositions = new List<object>();
             int menuReplayed = ReplayMenuFrames(capture.Frames, version, client.State.Registries!, observationMarkers, replayDispositions);
@@ -94,7 +118,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             Assert.True(menuReplayed >= 10);
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "menu server-observed disconnect", ct);
-            await server.WriteAsync("menu-acceptance.json", new { release, protocol, physics = true, normalLauncher = true, captureStartsBeforePlay = true, target, face, cursor, nativeOpenCounters = counters, scenarios, closeFences, sentinelCleanups, replayed, menuReplayed, peerObservedDisconnect = true });
+            await server.WriteAsync("menu-acceptance.json", new { release, protocol, physics = true, normalLauncher = true, captureStartsBeforePlay = true, initialEnabledPacks, additionalMenuKeys = AdditionalMenuBlocks(protocol), target, face, cursor, nativeOpenCounters = counters, scenarios, closeFences, sentinelCleanups, replayed, menuReplayed, peerObservedDisconnect = true });
             passed = true;
 
             async Task Use(string block, bool blocked, bool sneaking, string? main, string? off, Hand hand, bool clientSuccess, bool nativeOpen, bool rejectHand = false)
@@ -126,6 +150,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await AssertStored(block);
                 }
                 await AssertBlockAsync(server, protocol, target, block, ct);
+                await AssertEmptyAdditionalStorage(block);
                 await AssertBlockAsync(server, protocol, target.Above(), blocked ? "stone" : "air", ct);
                 if (sneaking)
                     await client.Actions.Movement.SetSneakingAsync(true, ct);
@@ -138,7 +163,16 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 }, ct);
                 int beforeOpens = Volatile.Read(ref opens);
                 int mark = capture.Mark();
-                int targetState = await client.InvokeAsync(c => c.State.World.GetBlock(target).StateId, ct);
+                int targetState = await client.InvokeAsync(c =>
+                {
+                    BlockState state = c.State.World.GetBlock(target);
+                    if (block != "barrel" || !nativeOpen)
+                        return state.StateId;
+                    Assert.True(state.TryGetProperty("open", out string open));
+                    Assert.Equal("false", open);
+                    BlockDefinition definition = state.Block.Value;
+                    return Assert.Single(Enumerable.Range(definition.MinStateId, definition.StateCount), candidate => state.PropertyNames.All(name => state.Source.TryGetPropertyValue(candidate, name, out string value) && (name == "open" ? value == "true" : state.TryGetProperty(name, out string previous) && value == previous)));
+                }, ct);
                 int adjacentState = await client.InvokeAsync(c => c.State.World.GetBlock(adjacent).StateId, ct);
                 CapturedFrame? processing = null;
                 if (rejectHand)
@@ -175,21 +209,19 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     ClientboundOpenScreenPacket window = Assert.Single(windows);
                     windowId = window.ContainerId;
                     Assert.True(window.ContainerId > 0);
-                    string expectedKind = protocol == 47 ? block : block == "chest" ? "generic_9x3" : block == "crafting_table" ? "crafting" : "furnace";
-                    string titleKey = block == "crafting_table" ? protocol == 47 ? "tile.workbench.name" : "container.crafting" : "container." + block;
+                    (string expectedKind, string titleKey, int slots, int legacySlots) = MenuExpectation(block, protocol);
                     Assert.Equal(titleKey, Assert.IsType<TranslatableContent>(window.Title.Content).Key);
                     if (protocol == 47)
                     {
-                        Assert.Equal("minecraft:" + block, window.LegacyType);
+                        Assert.Equal("minecraft:" + expectedKind, window.LegacyType);
                         Assert.Equal(-1, window.MenuTypeId);
-                        Assert.Equal(block == "chest" ? 27 : block == "furnace" ? 3 : 0, window.LegacySlotCount);
+                        Assert.Equal(legacySlots, window.LegacySlotCount);
                     }
                     else
                     {
                         Assert.Null(window.LegacyType);
                         Assert.Equal(client.State.Registries!.MenuTypes[Identifier.Minecraft(expectedKind)].NetworkId, window.MenuTypeId);
                     }
-                    int slots = block == "crafting_table" ? 46 : block == "furnace" ? 39 : 63;
                     ClientboundContainerSetContentPacket[] contents = frames.Select(frame => frame.Packet).OfType<ClientboundContainerSetContentPacket>().Where(packet => packet.ContainerId == window.ContainerId).ToArray();
                     Assert.NotEmpty(contents);
                     Assert.All(contents, packet => Assert.Equal(slots, packet.Items.Count));
@@ -200,6 +232,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                         int count = block == "chest" ? 3 : 7;
                         AssertStack(contents[^1].Items[slot], item, count);
                     }
+                    if (main is null && off is null && block is not ("furnace" or "chest"))
+                        Assert.All(contents[^1].Items, stack => Assert.True(stack.IsEmpty));
                     await client.InvokeAsync(c =>
                     {
                         Assert.True(c.State.Inventory.HasOpenContainer);
@@ -211,7 +245,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                             AssertStack(c.State.Inventory.ContainerSlots[block == "chest" ? 0 : 2], block == "chest" ? "diamond" : "stone", block == "chest" ? 3 : 7);
                         return true;
                     }, ct);
-                    counters[block]++;
+                    if (counters.ContainsKey(block))
+                        counters[block]++;
                 }
                 else
                     Assert.False(await client.InvokeAsync(c => c.State.Inventory.HasOpenContainer, ct));
@@ -220,12 +255,35 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await AssertBlockAsync(server, protocol, target, block, ct);
                 if (block is "furnace" or "chest")
                     await AssertStored(block);
-                scenarios.Add(new { block, blocked, sneaking, main, off, hand, clientSuccess, nativeOpen, rejectHand, packets = actions.Length, windowId, nativeCounter = counters[block], processingKind = rejectHand ? "pre-send hand rejection; no native use" : protocol >= 759 ? "matching native block-change acknowledgment" : "ordered native clicked/adjacent block-change replies", processingMilliseconds = processing?.Milliseconds, postObservationMilliseconds = observed.Milliseconds, observationRole = "post-observation marker, never the use-processing witness" });
+                await AssertEmptyAdditionalStorage(block);
+                if (block == "barrel")
+                    Assert.Equal("Test passed", await server.CommandAsync($"execute if block {target.X} {target.Y} {target.Z} minecraft:barrel[open={(nativeOpen ? "true" : "false")}]", ct));
+                scenarios.Add(new { block, blocked, sneaking, main, off, hand, clientSuccess, nativeOpen, rejectHand, packets = actions.Length, windowId, nativeCounter = counters.TryGetValue(block, out int counter) ? (int?)counter : null, processingKind = rejectHand ? "pre-send hand rejection; no native use" : protocol >= 759 ? "matching native block-change acknowledgment" : "ordered native clicked/adjacent block-change replies", processingMilliseconds = processing?.Milliseconds, postObservationMilliseconds = observed.Milliseconds, observationRole = "post-observation marker, never the use-processing witness" });
                 await server.WriteAsync("menu-scenarios.json", scenarios);
                 if (nativeOpen)
                     await CloseWithNativeFence(windowId!.Value);
+                if (block == "barrel" && nativeOpen)
+                    await WaitAsync(client, c => c.State.World.GetBlock(target).TryGetProperty("open", out string open) && open == "false", "native barrel close recheck", ct);
                 if (block is "furnace" or "chest")
                     await ClearStored(block);
+            }
+
+            async Task AssertEmptyAdditionalStorage(string block)
+            {
+                if (block is not ("trapped_chest" or "ender_chest" or "dispenser" or "dropper" or "hopper" or "brewing_stand" or "barrel" or "smoker" or "blast_furnace" or "crafter"))
+                    return;
+                string command = block == "ender_chest"
+                    ? protocol == 47 ? $"testfor {Username} {{EnderItems:[]}}" : $"execute unless data entity {Username} EnderItems[0]"
+                    : protocol == 47 ? $"testforblock {target.X} {target.Y} {target.Z} minecraft:{block} -1 {{Items:[]}}" : $"execute unless data block {target.X} {target.Y} {target.Z} Items[0]";
+                string expected = protocol != 47 ? "Test passed" : block == "ender_chest" ? "Found " + Username : $"Successfully found the block at {target.X},{target.Y},{target.Z}.";
+                Assert.Equal(expected, await ObserveStoragePredicate(command));
+            }
+
+            Task<string> ObserveStoragePredicate(string command)
+            {
+                // The 1.14 through 1.14.2 RCON dispatcher runs outside the world owner, where native block-entity lookup returns null. Execute the unchanged predicate through the proven console queue and retain its exact feedback and completion marker.
+                bool blockEntity = command.StartsWith("execute if data block ", StringComparison.Ordinal) || command.StartsWith("execute unless data block ", StringComparison.Ordinal);
+                return (protocol is 477 or 480 or 485) && blockEntity ? server.ConsoleFeedbackAsync(command, ct) : server.CommandAsync(command, ct);
             }
 
             async Task ClearStored(string block)
@@ -239,7 +297,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     ? $"testforblock {target.X} {target.Y} {target.Z} minecraft:{block} -1 {{Items:[]}}"
                     : $"execute unless data block {target.X} {target.Y} {target.Z} Items[0]";
                 string expected = protocol == 47 ? $"Successfully found the block at {target.X},{target.Y},{target.Z}." : "Test passed";
-                string response = await server.CommandAsync(predicate, ct);
+                string response = await ObserveStoragePredicate(predicate);
                 Assert.Equal(expected, response);
                 sentinelCleanups.Add(new { block, slot, command, predicate, response, purpose = "remove the already asserted sentinel before native block replacement can drop it into later empty-hand controls" });
                 await server.WriteAsync("menu-sentinel-cleanup.json", sentinelCleanups);
@@ -277,11 +335,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.True(acknowledgment.Milliseconds >= useFrame.Milliseconds);
                     return acknowledgment;
                 }
-                await WaitAsync(() => capture.Since(mark).Any(frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == neighbor && update.BlockStateId == neighborState), "native adjacent-cell response after use", ct);
-                CapturedFrame first = Assert.Single(capture.Since(mark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == clicked && update.BlockStateId == clickedState);
-                CapturedFrame second = Assert.Single(capture.Since(mark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundBlockUpdatePacket update && update.Position == neighbor && update.BlockStateId == neighborState);
+                await WaitAsync(() => ReplyPairs().Length > 0, "native consecutive clicked/adjacent responses after use", ct);
+                (CapturedFrame first, CapturedFrame second) = Assert.Single(ReplyPairs());
                 Assert.True(first.Milliseconds >= useFrame.Milliseconds && second.Milliseconds >= first.Milliseconds);
                 return second;
+
+                (CapturedFrame First, CapturedFrame Second)[] ReplyPairs()
+                {
+                    CapturedFrame[] inbound = capture.Since(mark).Where(frame => frame.Flow == PacketFlow.Clientbound).ToArray();
+                    return Enumerable.Range(1, Math.Max(0, inbound.Length - 1))
+                        .Where(index => inbound[index - 1].Packet is ClientboundBlockUpdatePacket first && first.Position == clicked && first.BlockStateId == clickedState && inbound[index].Packet is ClientboundBlockUpdatePacket second && second.Position == neighbor && second.BlockStateId == neighborState)
+                        .Select(index => (inbound[index - 1], inbound[index])).ToArray();
+                }
             }
 
             void AssertMenuUse(CapturedFrame frame, BlockPos clicked, Direction clickedFace, Vec3d hit, Hand hand, string? main, bool allowHeldStick = false)
@@ -335,7 +400,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     ? $"testforblock {target.X} {target.Y} {target.Z} minecraft:{block} -1 {{Items:[{stack}]}}"
                     : $"execute if data block {target.X} {target.Y} {target.Z} Items[{stack}]";
                 string expected = protocol == 47 ? $"Successfully found the block at {target.X},{target.Y},{target.Z}." : MenuStorageMatchFeedback(protocol);
-                Assert.Equal(expected, await server.CommandAsync(command, ct));
+                Assert.Equal(expected, await ObserveStoragePredicate(command));
             }
 
             string Criterion(string block) => protocol == 47
@@ -358,11 +423,44 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         }
     }
 
+    private static string[] AdditionalMenuBlocks(int protocol)
+    {
+        List<string> blocks = ["trapped_chest", "ender_chest", "dispenser", "dropper", "hopper", "brewing_stand", "enchanting_table", "anvil"];
+        if (protocol >= 393)
+            blocks.AddRange(["chipped_anvil", "damaged_anvil"]);
+        if (protocol >= 477)
+            blocks.AddRange(["barrel", "smoker", "blast_furnace", "loom", "cartography_table", "stonecutter", "grindstone", "smithing_table"]);
+        if (protocol >= 765)
+            blocks.Add("crafter");
+        return [.. blocks];
+    }
+
+    private static (string Kind, string Title, int Slots, int LegacySlots) MenuExpectation(string block, int protocol) => block switch
+    {
+        "crafting_table" => (protocol == 47 ? "crafting_table" : "crafting", protocol == 47 ? "tile.workbench.name" : "container.crafting", 46, 0),
+        "chest" or "trapped_chest" => (protocol == 47 ? "chest" : "generic_9x3", "container.chest", 63, 27),
+        "ender_chest" => (protocol == 47 ? "container" : "generic_9x3", "container.enderchest", 63, 27),
+        "barrel" => ("generic_9x3", "container.barrel", 63, 27),
+        "furnace" or "smoker" or "blast_furnace" => (block, "container." + block, 39, 3),
+        "dispenser" or "dropper" => (protocol == 47 ? block : "generic_3x3", "container." + block, 45, 9),
+        "hopper" => ("hopper", "container.hopper", 41, 5),
+        "brewing_stand" => ("brewing_stand", "container.brewing", protocol == 47 ? 40 : 41, protocol == 47 ? 4 : 5),
+        "enchanting_table" => (protocol == 47 ? "enchanting_table" : "enchantment", "container.enchant", 38, 0),
+        "anvil" or "chipped_anvil" or "damaged_anvil" => ("anvil", protocol == 47 ? "tile.anvil.name" : "container.repair", 39, 0),
+        "loom" => ("loom", "container.loom", 40, 0),
+        "cartography_table" => (protocol < 735 ? "cartography" : "cartography_table", "container.cartography_table", 39, 0),
+        "stonecutter" => ("stonecutter", "container.stonecutter", 38, 0),
+        "grindstone" => ("grindstone", "container.grindstone_title", 39, 0),
+        "smithing_table" => ("smithing", "container.upgrade", protocol >= 763 ? 40 : 39, 0),
+        "crafter" => ("crafter_3x3", "container.crafter", 46, 9),
+        _ => throw new InvalidOperationException("No native menu expectation for " + block)
+    };
+
     private static string MenuCommandSlot(int protocol, string slot) => protocol == 47 ? "slot." + slot : slot;
 
     private static string MenuStorageMatchFeedback(int protocol) => protocol switch
     {
-        498 or 766 => "Test passed, count: 1",
+        477 or 498 or 735 or 765 or 766 => "Test passed, count: 1",
         777 => "Test passed. Count: 1",
         _ => throw new InvalidOperationException("No native storage feedback binding for this protocol.")
     };
@@ -392,9 +490,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         foreach (CapturedFrame frame in frames)
         {
             frameIndex++;
-            if (frame.Packet is not (ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket))
+            if (frame.Packet is not (ClientboundConfigUpdateEnabledFeaturesPacket or ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket))
                 continue;
-            PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, frame.Flow);
+            PhaseRegistry registry = version.Protocol.GetRegistry(frame.Phase, frame.Flow);
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
             object decoded = codec.Decode(frame.Payload, context);
             bool chat = frame.Packet is ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket;
@@ -405,6 +503,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 Assert.True(seenMarkers.Add(marker));
             switch (frame.Packet)
             {
+                case ClientboundConfigUpdateEnabledFeaturesPacket expectedFeatures:
+                    var actualFeatures = Assert.IsType<ClientboundConfigUpdateEnabledFeaturesPacket>(decoded);
+                    Assert.Equal(expectedFeatures.Features, actualFeatures.Features);
+                    break;
                 case ClientboundOpenScreenPacket expectedOpen:
                     var actualOpen = Assert.IsType<ClientboundOpenScreenPacket>(decoded);
                     Assert.Equal(expectedOpen.ContainerId, actualOpen.ContainerId);
@@ -471,7 +573,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             codec.Encode(ref writer, decoded, context);
             bool byteIdentical = frame.Payload.AsSpan().SequenceEqual(output.WrittenSpan);
             bool ambientChat = chat && marker is null;
-            dispositions.Add(new { frameIndex, frame.Milliseconds, frame.Flow, frame.WireId, packet = decoded.GetType().Name, codec.CodecIdentity, exactObservationMarker = marker, ambientChat, typedSemanticAssertionsPassed = true, byteIdentityRequired = !ambientChat, byteIdentical, nativePayloadBytes = frame.Payload.Length, reencodedPayloadBytes = output.WrittenCount, nativePayloadDifference = ambientChat && !byteIdentical ? frame.Payload : null, reencodedPayloadDifference = ambientChat && !byteIdentical ? output.WrittenSpan.ToArray() : null });
+            dispositions.Add(new { frameIndex, frame.Milliseconds, frame.Phase, frame.Flow, frame.WireId, packet = decoded.GetType().Name, codec.CodecIdentity, exactObservationMarker = marker, ambientChat, typedSemanticAssertionsPassed = true, byteIdentityRequired = !ambientChat, byteIdentical, nativePayloadBytes = frame.Payload.Length, reencodedPayloadBytes = output.WrittenCount, nativePayloadDifference = ambientChat && !byteIdentical ? frame.Payload : null, reencodedPayloadDifference = ambientChat && !byteIdentical ? output.WrittenSpan.ToArray() : null });
             if (ambientChat && !byteIdentical)
                 continue;
             Assert.Equal(frame.Payload, output.WrittenSpan.ToArray());

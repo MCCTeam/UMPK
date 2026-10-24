@@ -994,8 +994,8 @@
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
       "missing": "Lectern, jukebox, campfire recipe use, cake/candle and other conditional families still require their exact native client branch/context ownership; this slice does not classify them as successful.",
       "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
-      "nativeLiveNeed": "Reuse the existing dedicated menu leg with original single-action use/swing and independent server menu/storage observations. Add only relevant family/result boundaries47,477,735,765,766,777 and feature controls; retain the existing general smoke and exact producer/cleanup requirements.",
-      "statusDetail": "Source-backed runtime/AOT passes for nineteen exact additional menu keys in a private hybrid producer; current immutable/native family acceptance and the conditional remainder are not run. The overall private driver remains failed for an optional CPU observer after its functional gates passed.",
+      "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
+      "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
       "completedRuntimeSlice": {
         "behavior": "Original unconditional client menu success, with native smithing-table pass through 1.15.2 and success from 1.16",
         "protocols": "47–777 where the nineteen exact keys are natively registered; smithing pass477–578/success735+; main-hand default block use766+; local-only placement swing777",
@@ -1011,8 +1011,197 @@
         "focused": "213executed RED160failed/53controls -> same213GREEN; zero skips",
         "adjacent": "5933passed;18existingclasses",
         "nativeAot": "25165568bytes <25165824; exact1executedPASSsmoke; actual11ILCinputs and unchanged9packagegraph",
-        "nativeServerAcceptance": "not run",
-        "currentImmutableProducerAcceptance": "not run"
+        "nativeServerAcceptance": "passed: current-harness protocols 47/477/498/735/765/766/777, 194 scenarios and 119 new-key visits, seven actually executed passing opt-in TRX tests, exact packet/menu/swing and phase-aware replay, actual crafter features and saved-world facts, 32 owner-thread 477 predicates, unchanged producer/source/siblings/seeds and owned process/port cleanup. Historical v3/v4 failures remain failed.",
+        "currentImmutableProducerAcceptance": "passed for 8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed: 25 repository gates, 47,331 executed .NET passes and 17 normal skips, 1,999 DMCBK and 918 MCC tests, 33 DLL matches, 13 package/consumer libraries, strict 25,165,568-byte AOT and exactly one passing smoke, all 7 CI jobs on that published head.",
+        "currentImmutableCheckpoint": {
+          "producerCommit": "8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed",
+          "certificate": "/home/anon/Projects/MinecraftOfficial/runs/interaction-format-recovery-20261024-v1-validation/cross-certificate.json",
+          "sha256": "6581975d1b757921de3cc5d30b5a4fa17118004f4ec16d201e811dba5691a1ba",
+          "historicalPrivateProducerPreserved": true
+        }
+      },
+      "currentHarnessAcceptance": {
+        "status": "passed",
+        "runtimeProducer": "8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed",
+        "completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-csharp-20261024-v3/completion.json",
+        "sha256": "04dc149a52a0bed1115640e157f7f8b849588102e9a8fd60045c13426ca905ff",
+        "normalIntegrationIdentities": 58,
+        "executedPasses": 41,
+        "namedOptInSkips": 17,
+        "officialToolPythonTests": 41,
+        "deliberatePythonCasesAdded": 3,
+        "originalOfficialToolPythonTests": 38,
+        "actualUmpkCompilerReferences": 12,
+        "existingExternalRuntimeReferences": 6,
+        "checkedPdbFiles": 30,
+        "checkedPdbDocuments": 2335,
+        "embeddedSourceDocuments": 20,
+        "producerLibrariesRecompiled": false
+      },
+      "currentNativeAcceptance": {
+        "status": "passed",
+        "meaning": "All seven unique rows and the complete 194-scenario contract pass on identical current-harness sources/output and the normal 8efa producer; broader conditional activation remains unfinished.",
+        "scenarioContract": "/home/anon/Projects/MinecraftOfficial/runs/additional-menu-live-preparation-20261024-v1/menu-live-scenario-contract.json",
+        "scenarioContractSha256": "e8fc694b368aef3b54fff0d5bd915932c65bd43e76b83822bcd41feb83e89154",
+        "requiredRows": 7,
+        "requiredScenarios": 194,
+        "newKeyVisits": 119,
+        "rows": [
+          {
+            "protocol": 47,
+            "status": "passed",
+            "scenarios": 17,
+            "currentHarness": true,
+            "replay": {
+              "selected": 258,
+              "exact": 258,
+              "markers": 17,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 8
+          },
+          {
+            "protocol": 477,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 572,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 498,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 540,
+              "exact": 540,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 735,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 573,
+              "exact": 573,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 765,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 571,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          },
+          {
+            "protocol": 766,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 564,
+              "exact": 563,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          },
+          {
+            "protocol": 777,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 571,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          }
+        ],
+        "accepted477Completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/completion.json",
+        "accepted477CompletionSha256": "08e5ed901ea81f410231e2b969697e815f24f793722434c8f75bbaa5e3a63d1e",
+        "ownerThreadPredicateSubstitution": {
+          "applicableProtocols": [
+            477,
+            480,
+            485
+          ],
+          "scope": "Unchanged native block-entity storage predicates only; exact feedback and generated marker, original console queue/clock. Entity predicates and adjacent 490+ retain RCON.",
+          "required477Predicates": 32,
+          "positive": 8,
+          "negative": 24,
+          "sourceEvidence": "/home/anon/Projects/MinecraftOfficial/runs/additional-menu-console-predicate-preparation-20261024-v1/native-source-bindings.json"
+        },
+        "historicalV4": {
+          "campaignStatus": "failed",
+          "acceptedProtocol": 47,
+          "acceptedScenarios": 17,
+          "failedProtocol": 477,
+          "failure": "Native RCON setup query runs outside world owner and returns no block entity; failed before furnace action. No UMPK mismatch claimed.",
+          "completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v4/completion.json",
+          "sha256": "cfc2488ae08ea5e34d55243f72e948a011130827fa631e2b02e4b90558c136d0"
+        },
+        "combinedCertificate": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-combined-20261024-v1/completion.json",
+        "combinedCertificateSha256": "c89da23b7daee398a011bd7468e5f8421ab975d221eb9c2c4f5816f514b5b8fd",
+        "combinedEvidenceManifestSha256": "da1c62cfa32a4d64316332f2b111588650aa0994d8eae4f9fdbbb4ac70801858",
+        "campaigns": [
+          {
+            "completion": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/completion.json",
+              "bytes": 11989,
+              "sha256": "08e5ed901ea81f410231e2b969697e815f24f793722434c8f75bbaa5e3a63d1e"
+            },
+            "cleanupAndResources": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/cleanup-and-resources.json",
+              "bytes": 2260,
+              "sha256": "3f0cabada5edefb18f96c2d4ddfb3665037f973e504b89361dc709fec2e88ad3"
+            },
+            "selectedProtocols": [
+              477
+            ]
+          },
+          {
+            "completion": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5-rest/completion.json",
+              "bytes": 47214,
+              "sha256": "93255bcd993f699b01c77059f678017ffce3b43bbb0e2b4ab2a8c264a439f84f"
+            },
+            "cleanupAndResources": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5-rest/cleanup-and-resources.json",
+              "bytes": 5399,
+              "sha256": "1cfefd2b229130013acf45b06e0b34e93fae019c05f2296b6fd8554d55a627da"
+            },
+            "selectedProtocols": [
+              47,
+              498,
+              735,
+              765,
+              766,
+              777
+            ]
+          }
+        ]
       }
     },
     {

@@ -35,12 +35,14 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
     public int RconPort { get; }
     public string ServerLog => File.Exists(Path.Combine(DirectoryPath, "server.log")) ? File.ReadAllText(Path.Combine(DirectoryPath, "server.log")) : string.Empty;
 
-    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null, string? flatWorldSettings = null, string? levelDataSeed = null, string? levelDataSeedSha256 = null)
+    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null, string? flatWorldSettings = null, string? levelDataSeed = null, string? levelDataSeedSha256 = null, string? initialEnabledPacks = null)
     {
         if ((levelDataSeed is null) != (levelDataSeedSha256 is null))
             throw new ArgumentException("Supply the native level-data seed and its SHA256 together.");
         if (levelDataSeed is not null && flatWorldSettings is not null)
             throw new ArgumentException("The native level-data seed cannot be combined with Properties generation settings.");
+        if (levelDataSeed is not null && initialEnabledPacks is not null)
+            throw new ArgumentException("The native level-data seed cannot be combined with initial enabled packs.");
         if (viewDistance is { } requestedDistance)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(requestedDistance, 2, nameof(viewDistance));
@@ -86,6 +88,11 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
             start.ArgumentList.Add("--level-data-seed-sha256");
             start.ArgumentList.Add(levelDataSeedSha256!);
         }
+        if (initialEnabledPacks is not null)
+        {
+            start.ArgumentList.Add("--initial-enabled-packs");
+            start.ArgumentList.Add(initialEnabledPacks);
+        }
         start.RedirectStandardInput = true;
         gameReservation.Stop();
         rconReservation.Stop();
@@ -113,6 +120,7 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 flatWorldSettings,
                 levelDataSeed,
                 levelDataSeedSha256,
+                initialEnabledPacks,
                 testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceLiveTests.Scale.cs", "VanillaInteractionAcceptanceLiveTests.Menu.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),
@@ -163,6 +171,13 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
 
     public async Task ConsoleAsync(string command, CancellationToken ct)
     {
+        _ = await ConsoleCoreAsync(command, false, ct);
+    }
+
+    public Task<string> ConsoleFeedbackAsync(string command, CancellationToken ct) => ConsoleCoreAsync(command, true, ct);
+
+    private async Task<string> ConsoleCoreAsync(string command, bool collectFeedback, CancellationToken ct)
+    {
         // Legacy RCON executes on its own thread. World mutations must use the server's console queue.
         int before = ServerLog.Length;
         string marker = "interaction-console-" + Guid.NewGuid().ToString("N");
@@ -173,8 +188,24 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
         deadline.CancelAfter(TimeSpan.FromSeconds(15));
         while (!ServerLog.Contains(marker, StringComparison.Ordinal))
             await Task.Delay(25, deadline.Token);
-        _commands.Add(new { command, channel = "console", completionMarker = marker, response = ServerLog[before..] });
+        string response = ServerLog[before..];
+        _commands.Add(new { command, channel = "console", completionMarker = marker, response });
         await WriteAsync("commands.json", _commands);
+        if (!collectFeedback)
+            return string.Empty;
+        string[] lines = response.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(2, lines.Length);
+        Assert.Equal("[Server] " + marker, ReadConsoleMessage(lines[1]));
+        return ReadConsoleMessage(lines[0]);
+
+        static string ReadConsoleMessage(string line)
+        {
+            const string separator = "] [Server thread/INFO]: ";
+            Assert.StartsWith("[", line, StringComparison.Ordinal);
+            int index = line.IndexOf(separator, StringComparison.Ordinal);
+            Assert.Equal(9, index);
+            return line[(index + separator.Length)..];
+        }
     }
 
     public Task WriteAsync(string name, object value) => File.WriteAllTextAsync(Path.Combine(DirectoryPath, name), JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }) + "\n");

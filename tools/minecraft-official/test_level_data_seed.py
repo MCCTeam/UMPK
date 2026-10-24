@@ -110,6 +110,35 @@ class LevelDataSeedTests(unittest.TestCase):
         self.child.assert_not_called()
         self.assertFalse(self.run.exists())
 
+    def test_initial_enabled_packs_prepares_only_requested_native_property(self) -> None:
+        with self.assertRaises(PreparedLaunch):
+            self.invoke('--initial-enabled-packs', 'vanilla,update_1_21')
+        properties = (self.run / 'server.properties').read_text(encoding='utf-8')
+        self.assertIn('initial-enabled-packs=vanilla,update_1_21\n', properties)
+        self.assertNotIn('initial-disabled-packs=', properties)
+        self.assertNotIn('level-type=', properties)
+        self.assertFalse((self.run / 'world').exists())
+        self.assertEqual(b'owned launcher fixture', (self.seed / 'server.jar').read_bytes())
+        self.assertEqual(self.payload, self.metadata.read_bytes())
+        self.assertEqual(b'not metadata', (self.metadata.parent / 'region' / 'must-not-copy.mca').read_bytes())
+
+    def test_invalid_initial_enabled_packs_rejects_before_preparation(self) -> None:
+        for value in ('', 'vanilla,', ',update_1_21', 'vanilla,,update_1_21', 'vanilla,update 1_21', 'vanilla\nserver-ip=0.0.0.0', 'vanilla\rserver-ip=0.0.0.0', 'vanilla\\u000aserver-ip=0.0.0.0', 'file/custom.zip'):
+            with self.subTest(value=value), self.assertRaises(SystemExit) as error:
+                self.invoke('--initial-enabled-packs', value)
+            self.assertEqual(2, error.exception.code)
+            self.child.assert_not_called()
+            self.ports.assert_not_called()
+            self.assertFalse(self.run.exists())
+
+    def test_rejects_combining_metadata_with_initial_enabled_packs(self) -> None:
+        with self.assertRaisesRegex(ValueError, 'cannot be combined with --initial-enabled-packs'):
+            self.invoke(*self.seed_arguments(), '--initial-enabled-packs', 'vanilla,update_1_21')
+        self.child.assert_not_called()
+        self.ports.assert_not_called()
+        self.assertFalse(self.run.exists())
+        self.assertEqual(self.payload, self.metadata.read_bytes())
+
     def test_without_seed_preserves_default_preparation(self) -> None:
         with self.assertRaises(PreparedLaunch):
             self.invoke()
@@ -119,6 +148,7 @@ class LevelDataSeedTests(unittest.TestCase):
         self.assertNotIn('level-type=', properties)
         self.assertNotIn('generator-settings=', properties)
         self.assertIn('view-distance=4\n', properties)
+        self.assertNotIn('initial-enabled-packs=', properties)
 
 
 class FlatRegistryFailureTests(unittest.TestCase):

@@ -412,9 +412,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public object? Packet { get; init; }
+        public ProtocolPhase Phase { get; init; } = ProtocolPhase.Play;
     }
 
-    private sealed class Capture(JavaVersion version)
+    private sealed class Capture(JavaVersion version, bool includeEnabledFeatures = false)
     {
         private const int Limit = 20 * 1024 * 1024;
         private readonly Lock _gate = new();
@@ -431,7 +432,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
 
         public void Observe(PacketObservation observation)
         {
-            if (observation.Phase != ProtocolPhase.Play)
+            if (observation.Phase != ProtocolPhase.Play && !(includeEnabledFeatures && observation.Phase == ProtocolPhase.Configuration && observation.DecodedPacket is ClientboundConfigUpdateEnabledFeaturesPacket))
                 return;
             lock (_gate)
             {
@@ -443,7 +444,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
                     Overflowed = true;
                     return;
                 }
-                _frames.Add(new CapturedFrame(_clock.Elapsed.TotalMilliseconds, observation.Flow, observation.WireId, observation.CopyPayload()) { Packet = observation.DecodedPacket });
+                _frames.Add(new CapturedFrame(_clock.Elapsed.TotalMilliseconds, observation.Flow, observation.WireId, observation.CopyPayload()) { Packet = observation.DecodedPacket, Phase = observation.Phase });
             }
         }
 

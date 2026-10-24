@@ -104,6 +104,8 @@ def run(args: argparse.Namespace) -> None:
     if args.level_data_seed is not None:
         if args.flat_world_settings is not None:
             raise ValueError('A level-data seed cannot be combined with --flat-world-settings')
+        if args.initial_enabled_packs is not None:
+            raise ValueError('A level-data seed cannot be combined with --initial-enabled-packs')
         expected_hash = args.level_data_seed_sha256.lower()
         if len(expected_hash) != 64 or any(character not in '0123456789abcdef' for character in expected_hash):
             raise ValueError('The level-data seed SHA256 must contain 64 hexadecimal characters')
@@ -143,6 +145,8 @@ def run(args: argparse.Namespace) -> None:
     if args.flat_world_settings is not None:
         properties['level-type'] = 'flat'
         properties['generator-settings'] = json.dumps(args.flat_world_settings, separators=(',', ':'))
+    if args.initial_enabled_packs is not None:
+        properties['initial-enabled-packs'] = args.initial_enabled_packs
     (directory / 'server.properties').write_text(''.join(f'{key}={value}\n' for key, value in properties.items()), encoding='utf-8')
     (directory / 'rcon-password.txt').write_text(password + '\n', encoding='utf-8')
     (directory / 'rcon-password.txt').chmod(0o600)
@@ -212,6 +216,13 @@ def flat_world_settings(value: str) -> dict[str, object]:
     return settings
 
 
+def initial_enabled_packs(value: str) -> str:
+    names = value.split(',')
+    if any(not name or any(character not in 'abcdefghijklmnopqrstuvwxyz0123456789_.-' for character in name) for name in names):
+        raise argparse.ArgumentTypeError('Initial enabled packs must be comma-separated native built-in pack names')
+    return value
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('version', nargs='?')
@@ -222,6 +233,7 @@ def main() -> int:
     parser.add_argument('--java')
     parser.add_argument('--view-distance', type=view_distance, default=4, help='native chunk view distance from 2 through 32; isolated default: 4')
     parser.add_argument('--flat-world-settings', type=flat_world_settings, help='opt in to minecraft:flat with this JSON generator-settings object; omitted: preserve vanilla world defaults')
+    parser.add_argument('--initial-enabled-packs', type=initial_enabled_packs, help='opt in to these comma-separated native built-in packs for a fresh world; cannot be combined with --level-data-seed')
     parser.add_argument('--level-data-seed', type=Path, help='copy only this same-version native level.dat into the fresh world; requires --level-data-seed-sha256 and cannot be combined with --flat-world-settings')
     parser.add_argument('--level-data-seed-sha256', help='required SHA256 of --level-data-seed; the source metadata remains unchanged')
     parser.add_argument('--accept-eula', action='store_true')

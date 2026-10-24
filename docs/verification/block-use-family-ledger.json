@@ -1377,6 +1377,35 @@
             "rootAuditSha256": "379bbd932e7abcf39fd7ef44cf28d3053d5bb09eb3f03371f79bd58a8274d55b",
             "originalOverallAttempt": "failed:sole generated compiler-output receipt frozen as input;1169true inputs unchanged",
             "nativeWitness": "harness failure:no accepted observation rows"
+          },
+          "nativeWitnessCompleted": {
+            "status": "passed controlled original-method comparison; production and live acceptance remain open",
+            "protocols": [
+              759,
+              761,
+              775,
+              777
+            ],
+            "namedReleases": [
+              "1.19",
+              "1.19.3",
+              "26.1",
+              "26.3"
+            ],
+            "executed": 96,
+            "passed": 96,
+            "failed": 0,
+            "skipped": 0,
+            "perPilot": [
+              23,
+              23,
+              25,
+              25
+            ],
+            "report": "/home/anon/Projects/MinecraftOfficial/runs/native-block-prediction-completed-20261024-v1/REPORT.json",
+            "reportSha256": "4c435e2c4b6ce8ca7515257f66de0b362b0d552c5ddffffff0d49ccdeaaf9f34",
+            "rootAuditSha256": "344f3bb36154895fd6b83cf59d65ed5214d648bd7d159c0d12c40e965a06cd78",
+            "limits": "Unsafe Minecraft/ClientLevel bootstrap; originalLocalPlayer and measured state/ACK/collision methods; declared rendering/BE callbacks suppressed; no packetlistener/fullworldconstructor/live proof"
           }
         }
       }
@@ -1885,7 +1914,8 @@
       "rootActualAuditSha256": "73be68f68c5b7e9a04ab1a37c240b5c90110953571b69763273f8fe7784a7eda",
       "sharedSourceIntegrationSha256": "efbca47f6dcb3f6e58f7a55757da2de81e667c926cada8f9445dd28a5d4278b9",
       "report": "legacy-ambient-peers-315.md",
-      "remaining": "freshnative315wholeRow; finalcombinedrepository/consumer/package/AOT/CI/matrix"
+      "remaining": "freshnative315wholeRow; finalcombinedrepository/consumer/package/AOT/CI/matrix",
+      "latestNative": "10partial scenes passed including original iron-held-stone use/swing/worldstack; whole row FAILED before finalaction because obsolete weapon.offhand token; fixture-only slot.weapon.offhand correction and full11scene retry pending"
     }
   }
 }

@@ -30,13 +30,13 @@ internal readonly record struct BlockUsePrediction(bool SendPacket, BlockUseResu
     public static BlockUsePrediction Success(bool localSwing) => new(true, BlockUseResult.Success, localSwing ? BlockUseSwing.Local : BlockUseSwing.Packet);
 }
 
-internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse, bool HasTrapdoorGateRules)
+internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse, bool HasTrapdoorGateRules, bool SmithingTablePassesUse)
 {
     // 1.14.4-client-decompiled net/minecraft/world/level/block/LeverBlock.java:75 returns true on the client. Later LeverBlock.use/useWithoutItem returns SUCCESS on the client. MultiPlayerGameMode introduces main-hand-only useWithoutItem fallback in 1.20.5; the source audit covers every release through 26.3.
-    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777);
+    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735);
 
     public bool RequiresNativeTerrain(BlockState block)
-        => block.Block.Id.IsMinecraft && (HasMenuActivationRules && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace" || HasDoorActivationRules && IsDoor(block) || HasTrapdoorGateRules && (IsTrapdoor(block) || IsFenceGate(block)));
+        => block.Block.Id.IsMinecraft && (HasMenuActivationRules && IsMenuBlock(block) || HasDoorActivationRules && IsDoor(block) || HasTrapdoorGateRules && (IsTrapdoor(block) || IsFenceGate(block)));
 
     public bool RequiresLowerCell(BlockState block)
         => HasDoorActivationRules && LegacyDoorLowerCell && IsDoor(block) && block.Block.Id.Path != "iron_door" && (block.LegacyMeta & 8) != 0;
@@ -68,10 +68,10 @@ internal readonly record struct BlockUseActivationProfile(bool HasActivationRule
             result = BlockUseResult.Success;
             return true;
         }
-        // These native menu blocks return true/SUCCESS on the client before server menu, lock, or chest-obstruction checks. The legacy lit_furnace registry entry shares the furnace implementation; the caller already requires a known native block entry.
-        if (HasMenuActivationRules && block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace")
+        // Original registered menu classes return client true/SUCCESS regardless of server menu, lock, recipe or obstruction outcomes. Smithing tables instead return false/PASS through 1.15.2; 1.16 adds their menu. The caller requires a known native block entry and owns hand, secondary use and swing policy.
+        if (HasMenuActivationRules && IsMenuBlock(block))
         {
-            result = BlockUseResult.Success;
+            result = SmithingTablePassesUse && block.Block.Id.Path == "smithing_table" ? BlockUseResult.Pass : BlockUseResult.Success;
             return true;
         }
         if (!HasActivationRules)
@@ -88,6 +88,7 @@ internal readonly record struct BlockUseActivationProfile(bool HasActivationRule
             result = PoweredButtonConsumes && powered == "true" ? BlockUseResult.Consume : BlockUseResult.Success;
         return true;
     }
+    private static bool IsMenuBlock(BlockState block) => block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace" or "trapped_chest" or "ender_chest" or "dispenser" or "dropper" or "hopper" or "brewing_stand" or "enchanting_table" or "anvil" or "chipped_anvil" or "damaged_anvil" or "barrel" or "smoker" or "blast_furnace" or "loom" or "cartography_table" or "stonecutter" or "grindstone" or "smithing_table" or "crafter";
     private static bool IsTrapdoor(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "trapdoor" or "oak_trapdoor" or "iron_trapdoor" or "spruce_trapdoor" or "birch_trapdoor" or "jungle_trapdoor" or "acacia_trapdoor" or "dark_oak_trapdoor" or "crimson_trapdoor" or "warped_trapdoor" or "mangrove_trapdoor" or "bamboo_trapdoor" or "cherry_trapdoor" or "pale_oak_trapdoor" or "poplar_trapdoor" or "copper_trapdoor" or "exposed_copper_trapdoor" or "weathered_copper_trapdoor" or "oxidized_copper_trapdoor" or "waxed_copper_trapdoor" or "waxed_exposed_copper_trapdoor" or "waxed_weathered_copper_trapdoor" or "waxed_oxidized_copper_trapdoor";
     private static bool IsFenceGate(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "fence_gate" or "oak_fence_gate" or "spruce_fence_gate" or "birch_fence_gate" or "jungle_fence_gate" or "acacia_fence_gate" or "dark_oak_fence_gate" or "crimson_fence_gate" or "warped_fence_gate" or "mangrove_fence_gate" or "bamboo_fence_gate" or "cherry_fence_gate" or "pale_oak_fence_gate" or "poplar_fence_gate";
     private static bool IsDoor(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "wooden_door" or "oak_door" or "iron_door" or "spruce_door" or "birch_door" or "jungle_door" or "acacia_door" or "dark_oak_door" or "crimson_door" or "warped_door" or "mangrove_door" or "bamboo_door" or "cherry_door" or "pale_oak_door" or "poplar_door" or "copper_door" or "exposed_copper_door" or "weathered_copper_door" or "oxidized_copper_door" or "waxed_copper_door" or "waxed_exposed_copper_door" or "waxed_weathered_copper_door" or "waxed_oxidized_copper_door";

@@ -9,12 +9,12 @@ using Umpk.Protocol.Java;
 
 namespace Umpk.Data.Java.V775;
 
-/// <summary>Generated descriptor for protocol 775 (26.1).</summary>
+/// <summary>Generated descriptor for protocol 775 (26.1.2).</summary>
 internal static class Descriptor
 {
     public static JavaVersion Build()
     {
-        var gameVersion = new GameVersion(GameEdition.Java, "26.1", 775);
+        var gameVersion = new GameVersion(GameEdition.Java, "26.1.2", 775);
         ProtocolFeatures features = BuildFeatures();
         var builder = new ProtocolDescriptorBuilder(gameVersion, features);
 
@@ -352,8 +352,14 @@ internal static class Descriptor
     public static ReadOnlySpan<byte> MenuDefs => SharedTables.MenusV765;
     public static ReadOnlySpan<byte> CollisionShapes => SharedTables.CollisionShapesV773;
     public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.BlockShapeReferencesV775;
+    public static ReadOnlySpan<byte> BlockCollisionGrids => SharedTables.BlockCollisionGridsV775;
     public static ReadOnlySpan<byte> BlockAttrs => SharedTables.BlockAttributesV775;
     public static ReadOnlySpan<byte> BlockPush => SharedTables.BlockPushV775;
+    public static ReadOnlySpan<byte> BlockMining => SharedTables.BlockMiningV775;
+    public static ReadOnlySpan<byte> ItemAttackDefaults => SharedTables.ItemAttackDefaultsV775;
+    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.BlockInteractionsV775;
+    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.EntityGeometryV775;
+    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.BlockTargetingV775;
     public static ReadOnlySpan<byte> EnchantmentDefs => SharedTables.EnchantmentsV47;
     public static ReadOnlySpan<byte> MobEffectDefs => SharedTables.MobEffectsV774;
     public static ReadOnlySpan<byte> AttributeDefs => SharedTables.AttributesV771;

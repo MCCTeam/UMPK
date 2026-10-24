@@ -18,11 +18,15 @@ internal sealed class PhysicsEngineHolder
 {
     private readonly ClientSessionServices _services;
     private readonly PhysicsProfile _profile;
+    private readonly LivingScaleProfile? _scaleProfile;
+    private float _appliedScale = 1F;
     private readonly IBlockShapeSource _shapes;
     private readonly ILogger _logger;
     private PlayerPhysics? _engine;
+    private TrackedLegacySelfGeometry? _legacySelf;
     private WorldPhysicsView? _view;
     private Umpk.Game.World.World? _installedWorld;
+    private long _installedPlayerLifetime;
     private readonly MovingPistonTracker _pistons;
 
     /// <summary>The held key record requested by the controller on the most recent physical tick.</summary>
@@ -82,6 +86,7 @@ internal sealed class PhysicsEngineHolder
         _shapes = shapes;
         _logger = logger;
         _profile = PhysicsProfileFactory.FromJavaVersion(services.Version);
+        _scaleProfile = LivingScaleProfile.Supports(services.Version.Version.Protocol) ? LivingScaleProfile.ForProtocol(services.Version.Version.Protocol) : null;
         _supervisor = new LifeSafetySupervisor(_profile);
 
         // The piston table is looked up here rather than threaded through UmpkClient: it is a pure function of the protocol, and a version the dataset never measured yields a source whose HasData is false, which MovingPistonTracker reads as "model the head and base only". The world-border containment era is the same kind of pure protocol function (see WorldBorderState.ContainmentEraForProtocol), computed here for the same reason.
@@ -92,30 +97,35 @@ internal sealed class PhysicsEngineHolder
             Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(services.Version.Version.Protocol));
     }
 
-    /// <summary>Ensures the engine exists once the world is available, and rebuilds it whenever a DIFFERENT world has been installed; resets it at the current position either way.</summary>
-    /// <remarks>The guard is world IDENTITY, not "is there an engine". <c>WorldPhysicsView</c> closes over the world instance it was built from, so a respawn or dimension change (which calls <c>ClientState.InstallWorld</c> with a brand new <c>World</c>) would otherwise leave the engine colliding against the world the session left behind: solid where the new dimension is air and air where it is solid. This runs on the idle tick and on both navigation paths, so it stays a null check plus a reference comparison in the steady state.</remarks>
+    /// <summary>Ensures the engine exists once the world is available, and rebuilds it when the world or local player lifetime changes.</summary>
+    /// <remarks>The collision view belongs to the level, while the physics engine belongs to its local player. A same-dimension respawn retains the level and replaces the player. Steady-state calls preserve accumulated physics.</remarks>
     public void EnsureEngine()
     {
         Umpk.Game.World.World? world = _services.State.WorldOrNull;
         if (world is null)
             return;
 
-        if (_engine is not null && ReferenceEquals(_installedWorld, world))
+        bool sameWorld = ReferenceEquals(_installedWorld, world);
+        if (_engine is not null && sameWorld && _installedPlayerLifetime == _services.State.PlayerLifetime)
             return;
 
         _installedWorld = world;
+        _installedPlayerLifetime = _services.State.PlayerLifetime;
+        _appliedScale = 1F;
         _holdClimbable = false;
         _holdAgainstCurrent = null;
         LastRequestedInput = MovementInput.None;
         LastAppliedInput = MovementInput.None;
 
-        // A respawn or dimension change replaces the world; a piston that was mid-extension in the world the session left behind must not keep pushing in the new one.
-        _pistons.Clear();
-        _view = new WorldPhysicsView(world, _shapes);
+        // Moving pistons belong to the level and survive a same-dimension player replacement.
+        if (!sameWorld)
+            _pistons.Clear();
+        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol), PhysicsProfile.BlockCollisionQueryForProtocol(_services.Version.Version.Protocol));
         _engine = new PlayerPhysics(_view, _profile);
         SelfState self = _services.State.Self;
         _engine.Reset(self.Position, self.Yaw, self.Pitch);
         _engine.SetVelocity(self.Velocity);
+        _legacySelf = _services.State.GetLegacySelfGeometry(_services.Version.Version.Protocol);
         PushConditions();
     }
 
@@ -124,10 +134,21 @@ internal sealed class PhysicsEngineHolder
     {
         if (_engine is null)
             return;
+        if (_installedPlayerLifetime != _services.State.PlayerLifetime || !ReferenceEquals(_installedWorld, _services.State.WorldOrNull))
+        {
+            // A respawn's pending attribute refresh belongs to the newly constructed body, never to the outgoing engine.
+            EnsureEngine();
+            return;
+        }
 
         SelfState self = _services.State.Self;
+        float? scale = _scaleProfile is not null ? (float)self.Attributes.Value(ScaleAttributeId, 1D) : null;
+        bool refreshScale = scale is { } current && _scaleProfile!.Value.NeedsRefresh(_appliedScale, current, _services.State.SelfScaleDirty);
+        _services.State.SelfScaleDirty = false;
         var conditions = new PhysicsConditions
         {
+            Scale = scale,
+            RefreshScaleDimensions = refreshScale,
             CreativeFlying = self.Flying,
             MayFly = self.MayFly,
             GameMode = self.GameMode,
@@ -150,6 +171,12 @@ internal sealed class PhysicsEngineHolder
         };
 
         _engine.SetConditions(in conditions);
+        if (_legacySelf is not null && _legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+        {
+            // Lifecycle callbacks can change observed position and a noncentered cached box independently. Restore the exact callback box after synchronizing the owner's position and velocity.
+            _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
+            _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
     }
 
     /// <summary>Whether the installed world's dimension TYPE is the one vanilla marks <c>ultrawarm</c>, which is the only thing the fluid-push scale needs from the dimension (<c>water-contact processing</c>: 0.007 there, 0.0023333333333333335 elsewhere).</summary>
@@ -170,7 +197,7 @@ internal sealed class PhysicsEngineHolder
     public void TickAirSupply()
     {
         EnsureEngine();
-        if (_engine is null)
+        if (_engine is null || _legacySelf is { IsKnown: false })
             return;
 
         SelfState self = _services.State.Self;
@@ -404,14 +431,20 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>Records one block event, which is the ONLY notice a client gets that a piston is moving: <c>piston structure movement</c> writes the <c>moving_piston</c> blocks without <c>UPDATE_CLIENTS</c>, so they are never sent. See <see cref="MovingPistonTracker"/>.</summary>
-    public void OnBlockEvent(BlockPos position, int action, int param) =>
+    public void OnBlockEvent(BlockPos position, int action, int param)
+    {
         _pistons.OnBlockEvent(position, action, param);
+        _services.State.EntityGeometry.RefreshFixedPositions(_services.State.EntitiesOrNull);
+    }
+
+    internal bool HasCompletePistonContext => _engine is not null && ReferenceEquals(_installedWorld, _services.State.WorldOrNull)
+        && _pistons.ContextComplete && _pistons.ActiveCount == 0;
 
     /// <summary>Ticks the live moving pistons and publishes any displacement into self state.</summary>
-    /// <remarks>Called after the tick's movement send because entity movement precedes block-entity piston motion. Putting it before the send would report the push one tick earlier than vanilla does, which is a divergence even though it would look like an improvement against a server that is racing the same two ticks.</remarks>
+    /// <remarks>Entity movement precedes block-entity piston motion. The session's movement reporter selects publication before this phase through 26.2 and after this phase from 26.3, matching the native local-player send boundary.</remarks>
     public void TickPistons()
     {
-        if (_engine is null || _pistons.ActiveCount == 0)
+        if (!_services.State.WorldTicks.RunsNormally || _engine is null || _pistons.ActiveCount == 0 || _legacySelf is { IsKnown: false })
             return;
 
         _pistons.Tick(_engine);
@@ -440,7 +473,7 @@ internal sealed class PhysicsEngineHolder
         if (world.GetColumn(cell) is null)
             return true;
 
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, cell, cell, margin: 2).WithCollisionQueryEra(_view.CollisionQueryEra);
         var ctx = new CalculationContext(
             planning,
             options,
@@ -466,7 +499,7 @@ internal sealed class PhysicsEngineHolder
 
         BlockPos start = BlockPos.Containing(_services.State.Self.Position);
         BlockPos goalHint = ApproximateGoal(goal, start);
-        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24);
+        PlanningWorldView planning = PlanningWorldView.CaptureOnDemand(world, _shapes, start, goalHint, margin: 24).WithCollisionQueryEra(_view.CollisionQueryEra);
 
         // The player half of the snapshot, read here for the same reason the region and the air supply are: everything the off-loop search may price has to be observed once, on the loop.
         Umpk.Pathfinding.Core.PathfinderCapabilities capabilities = CapabilityCapture.From(
@@ -873,7 +906,7 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>Re-seeds the engine position AND velocity after a server teleport. Called from the player-position apply path with self state already holding the absolute post-teleport position, rotation and delta movement. Creates the engine first when the world is available but no engine exists yet, so a teleport that lands before the first tick seeds the engine at the server's position rather than at the origin.</summary>
-    /// <remarks><see cref="PlayerPhysics.Reset(Vec3d, float, float)"/> zeroes the velocity (it models a spawn), so the resolved delta movement is pushed back afterwards. Position correction preserves the server-reported velocity on every protocol.</remarks>
+    /// <remarks>The existing player's pose, fall, contact, environment, and input state survive a correction. A new world or player lifetime starts fresh through <see cref="EnsureEngine"/>.</remarks>
     public void ResyncPosition()
     {
         EnsureEngine();
@@ -884,14 +917,14 @@ internal sealed class PhysicsEngineHolder
         // A server teleport ends any hold: the player is no longer where it was holding station.
         _holdClimbable = false;
         _holdAgainstCurrent = null;
-        _engine.Reset(self.Position, self.Yaw, self.Pitch);
-        _engine.SetVelocity(self.Velocity);
+        _legacySelf?.ObservePosition(self.Position);
+        _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
     }
 
     /// <summary>Pushes the tracked self velocity into the engine and changes nothing else. Called from the <c>set_entity_motion</c> apply path once a server-applied velocity (knockback, explosion, piston, bounce) has landed in self state.</summary>
     /// <remarks>
-    /// This is deliberately NOT <see cref="ResyncPosition"/>. That models a teleport and calls <see cref="PlayerPhysics.Reset(Vec3d, float, float)"/>, which clears fall distance, ground state, pose, the collision flags and the water/lava sensing. A server velocity packet changes only velocity, so a knockback must not reset the fall the player was already in.
+    /// A velocity push preserves the existing position, pose, fall, contact, environment, and input state.
     /// <para>The velocity does not need to be re-read here on the next tick: <see cref="PlayerPhysics.Step"/> consumes and updates the engine's own velocity field, and <see cref="SyncSelf"/> publishes the result back. Creating the engine first matters for a velocity that arrives before the first tick; <see cref="EnsureEngine"/> seeds it from the same self state.</para>
     /// </remarks>
     public void ApplyVelocity()
@@ -901,7 +934,7 @@ internal sealed class PhysicsEngineHolder
     }
 
     /// <summary>The engine's current snapshot, or null when no engine exists yet. Exposed because the engine holds state the client does not surface on <c>SelfState</c> (fall distance, collision flags, pose), and that is precisely the state a test needs to tell a velocity PUSH apart from an engine RESET.</summary>
-    public PhysicsState? EngineState => _engine?.State;
+    public PhysicsState? EngineState => _legacySelf is not null && (!ReferenceEquals(_legacySelf, _services.State.LegacySelfGeometry) || !_legacySelf.IsKnown) ? null : _engine?.State;
 
     /// <summary>The conditions currently pushed into the engine, or null before it exists.</summary>
     public PhysicsConditions? EngineConditions => _engine?.Conditions;
@@ -919,11 +952,29 @@ internal sealed class PhysicsEngineHolder
             Sprint = requested.Sprint || self.SprintRequested,
         };
         LastRequestedInput = requested;
-        MovementInput applied = requested with { Sprint = ResolveActualSprint(requested, _engine.State) };
+        if (_legacySelf is not null)
+        {
+            _legacySelf.ObserveInput(requested.Sneak);
+            if (!_legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+                return;
+            _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
+        MovementInput applied = _legacySelf is { BlocksInput: true }
+            ? new MovementInput { Sneak = _legacySelf.IsSneaking }
+            : requested with { Sprint = ResolveActualSprint(requested, _engine.State) };
         LastAppliedInput = applied;
         StepResult result = _engine.Step(applied);
+        if (_engine.Conditions.Scale is { } scale)
+            _appliedScale = scale;
         StepSequence++;
-        SyncSelf(result.State);
+        if (_legacySelf is not null)
+        {
+            _legacySelf.ObserveMovement(result.State);
+            _legacySelf.TickSize(_shapes);
+            if (_legacySelf.TryGet(out Aabb bounds, out PhysicsBodyDimensions dimensions))
+                _engine.ApplyBodyGeometry(bounds, dimensions);
+        }
+        SyncSelf(_engine.State);
     }
 
     /// <summary>The supported subset of vanilla's entity sprint gate. Direction, hunger/flight and a blocking horizontal collision are all represented in tracked state. Item-use slowdown is not currently modeled by SelfState, so no synthetic answer is invented for it.</summary>
@@ -977,6 +1028,8 @@ internal sealed class PhysicsEngineHolder
 
     /// <summary>The transient sprint modifier's id, which this read must exclude; see the method.</summary>
     private static readonly Identifier SprintingModifierId = Identifier.Minecraft("sprinting");
+
+    private static readonly Identifier ScaleAttributeId = Identifier.Minecraft("scale");
 
     /// <summary>The movement-speed attribute WITHOUT the sprint modifier, which is what <see cref="PhysicsConditions.BaseMovementSpeedAttribute"/> is defined to carry: the engine applies the sprint multiply itself, from the tick's input.</summary>
     /// <remarks>

@@ -1,0 +1,1993 @@
+{
+  "sourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
+  "scope": "Finite existing50datasets/75named releases; source/evidence audit only; candidate labels are not native implementation claims",
+  "protocols": [
+    {
+      "protocol": 47,
+      "namedReleases": [
+        "1.8",
+        "1.8.1",
+        "1.8.2",
+        "1.8.3",
+        "1.8.4",
+        "1.8.5",
+        "1.8.6",
+        "1.8.7",
+        "1.8.8",
+        "1.8.9"
+      ],
+      "itemRows": 338,
+      "nativeDefaultKinds": {
+        "unknown": 149,
+        "pass": 129,
+        "simple_cube": 60
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/47/block-interactions.json",
+        "bytes": 45554,
+        "sha256": "716b78d1910a2bedb6570bcf672150f632a226fd3cce02c98ab86b5806349c4b"
+      }
+    },
+    {
+      "protocol": 107,
+      "namedReleases": [
+        "1.9"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/107/block-interactions.json",
+        "bytes": 29525,
+        "sha256": "422972946ed70ef25588ddd9f6807387ca119058f49653a06ab4f75847e3945d"
+      }
+    },
+    {
+      "protocol": 108,
+      "namedReleases": [
+        "1.9.1"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/108/block-interactions.json",
+        "bytes": 29529,
+        "sha256": "fb9b999d9f496f69fe89ac3794130d3a20bfc85d719145c17e8410d7ed9eeb1a"
+      }
+    },
+    {
+      "protocol": 109,
+      "namedReleases": [
+        "1.9.2"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/109/block-interactions.json",
+        "bytes": 29529,
+        "sha256": "d6a104885db42fee8f9ec875f5789ec1b930cc0a4b4cf4818eb00b72e1c17b87"
+      }
+    },
+    {
+      "protocol": 110,
+      "namedReleases": [
+        "1.9.3",
+        "1.9.4"
+      ],
+      "itemRows": 366,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 165,
+        "simple_cube": 62
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/110/block-interactions.json",
+        "bytes": 31526,
+        "sha256": "ab4da59bc82ff800c504c3b340b57f64f4b74ab762f359bda975350f405baeec"
+      }
+    },
+    {
+      "protocol": 210,
+      "namedReleases": [
+        "1.10",
+        "1.10.1",
+        "1.10.2"
+      ],
+      "itemRows": 372,
+      "nativeDefaultKinds": {
+        "pass": 139,
+        "unknown": 168,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/210/block-interactions.json",
+        "bytes": 34066,
+        "sha256": "83cd136915eae3e5b820e6362270057bae77dd03312d58a896e2b122e66273c4"
+      }
+    },
+    {
+      "protocol": 315,
+      "namedReleases": [
+        "1.11"
+      ],
+      "itemRows": 391,
+      "nativeDefaultKinds": {
+        "pass": 142,
+        "unknown": 184,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/315/block-interactions.json",
+        "bytes": 31934,
+        "sha256": "bef075aed4543e3b522f4989ece378d74f8ca66035096599cb17aece9f0c109a"
+      }
+    },
+    {
+      "protocol": 316,
+      "namedReleases": [
+        "1.11.1",
+        "1.11.2"
+      ],
+      "itemRows": 392,
+      "nativeDefaultKinds": {
+        "pass": 143,
+        "unknown": 184,
+        "simple_cube": 65
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/316/block-interactions.json",
+        "bytes": 33999,
+        "sha256": "68731cef87bb28308a69fff659ccb68af058c4458ddfb1934662ba2ba263a87e"
+      }
+    },
+    {
+      "protocol": 335,
+      "namedReleases": [
+        "1.12"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/335/block-interactions.json",
+        "bytes": 34215,
+        "sha256": "25831b8df2095ac07599b27ba0041eadae8817189318c84588e089d49199ff03"
+      }
+    },
+    {
+      "protocol": 338,
+      "namedReleases": [
+        "1.12.1"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/338/block-interactions.json",
+        "bytes": 34219,
+        "sha256": "ed2397abd188296f87ba27b5b6d814517f91b6a61f428365bfbc6746930a3cb3"
+      }
+    },
+    {
+      "protocol": 340,
+      "namedReleases": [
+        "1.12.2"
+      ],
+      "itemRows": 411,
+      "nativeDefaultKinds": {
+        "pass": 144,
+        "unknown": 200,
+        "simple_cube": 67
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/340/block-interactions.json",
+        "bytes": 34219,
+        "sha256": "1d319d29deaee1aa1312fc32fdb8e8e585ccabb4ce75e30ad4591bd7e7a4cd8a"
+      }
+    },
+    {
+      "protocol": 393,
+      "namedReleases": [
+        "1.13"
+      ],
+      "itemRows": 785,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 454,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/393/block-interactions.json",
+        "bytes": 89922,
+        "sha256": "578d430caec8b799c060e14cd711027dbda112cf8f2dad512f459adfce6f71f0"
+      }
+    },
+    {
+      "protocol": 401,
+      "namedReleases": [
+        "1.13.1"
+      ],
+      "itemRows": 790,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 459,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/401/block-interactions.json",
+        "bytes": 90578,
+        "sha256": "f174fd21164b13eb07f8abad8047df466ea35492ab28dec5d5f6e6b3a50d5fc7"
+      }
+    },
+    {
+      "protocol": 404,
+      "namedReleases": [
+        "1.13.2"
+      ],
+      "itemRows": 790,
+      "nativeDefaultKinds": {
+        "pass": 169,
+        "unknown": 459,
+        "simple_cube": 162
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/404/block-interactions.json",
+        "bytes": 90578,
+        "sha256": "c1415fdf7814bf8e200dbff269935ef6c794f19684dfafb57dd99e353b6f2224"
+      }
+    },
+    {
+      "protocol": 477,
+      "namedReleases": [
+        "1.14"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/477/block-interactions.json",
+        "bytes": 101348,
+        "sha256": "0a4ca2eb1b711a30aa7f3b37a7b5250ba165f2aafaa62a692be338ab01d2f7c9"
+      }
+    },
+    {
+      "protocol": 480,
+      "namedReleases": [
+        "1.14.1"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/480/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "bd1577409f7938268ca7ae6dfb5dcdad23de57a7e34669ccabe9eced5b69e09d"
+      }
+    },
+    {
+      "protocol": 485,
+      "namedReleases": [
+        "1.14.2"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/485/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "382f8f03bee5aee03840d3ca7eb6879914f43b7bac1dc532f51f6cca118903d2"
+      }
+    },
+    {
+      "protocol": 490,
+      "namedReleases": [
+        "1.14.3"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/490/block-interactions.json",
+        "bytes": 101350,
+        "sha256": "a1a7a7fcdda9f5b845f061a08ff0bae2e4bb47ef1db0ad5c30edd8205336f2c0"
+      }
+    },
+    {
+      "protocol": 498,
+      "namedReleases": [
+        "1.14.4"
+      ],
+      "itemRows": 877,
+      "nativeDefaultKinds": {
+        "pass": 179,
+        "unknown": 533,
+        "simple_cube": 165
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/498/block-interactions.json",
+        "bytes": 98815,
+        "sha256": "464d0b5d21fd39f4e68e576b30056772622126182b7607cb19b382ef8f1a3b0e"
+      }
+    },
+    {
+      "protocol": 573,
+      "namedReleases": [
+        "1.15"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/573/block-interactions.json",
+        "bytes": 99463,
+        "sha256": "f30a8a15933515d56923c904ef7c7d363d1bc8961c0d65dceb995b9061428036"
+      }
+    },
+    {
+      "protocol": 575,
+      "namedReleases": [
+        "1.15.1"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/575/block-interactions.json",
+        "bytes": 99465,
+        "sha256": "e22c2b0d732f2815d18421395af3bd5a873de6fe254c22e92cc6bc2961ffff74"
+      }
+    },
+    {
+      "protocol": 578,
+      "namedReleases": [
+        "1.15.2"
+      ],
+      "itemRows": 884,
+      "nativeDefaultKinds": {
+        "pass": 181,
+        "unknown": 537,
+        "simple_cube": 166
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/578/block-interactions.json",
+        "bytes": 99465,
+        "sha256": "546e3b643987dcbeb7b0f90868b68ec450f21c98203be4c600602da2042d79e9"
+      }
+    },
+    {
+      "protocol": 735,
+      "namedReleases": [
+        "1.16"
+      ],
+      "itemRows": 975,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 596,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/735/block-interactions.json",
+        "bytes": 110871,
+        "sha256": "daf67337064c202f2137c8c3c74deaa9b0b4bd318e75c97e87c4b70476d7840f"
+      }
+    },
+    {
+      "protocol": 736,
+      "namedReleases": [
+        "1.16.1"
+      ],
+      "itemRows": 975,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 596,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/736/block-interactions.json",
+        "bytes": 110873,
+        "sha256": "96107c15418f16f7a9fdcd08b74fe453e74c44764aaf2d7ec7a747672b87adbf"
+      }
+    },
+    {
+      "protocol": 751,
+      "namedReleases": [
+        "1.16.2"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/751/block-interactions.json",
+        "bytes": 110948,
+        "sha256": "f56ac21404e4231359bc012033153782b79d30df3cba57de1bdace971b26f2a7"
+      }
+    },
+    {
+      "protocol": 753,
+      "namedReleases": [
+        "1.16.3"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/753/block-interactions.json",
+        "bytes": 110948,
+        "sha256": "125cfdf53fcbe9d6d6dca8a02ccf9e38bd299b5bdbcfd4277ec7faec3bdc8ae6"
+      }
+    },
+    {
+      "protocol": 754,
+      "namedReleases": [
+        "1.16.4",
+        "1.16.5"
+      ],
+      "itemRows": 976,
+      "nativeDefaultKinds": {
+        "pass": 190,
+        "unknown": 597,
+        "simple_cube": 189
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/754/block-interactions.json",
+        "bytes": 112186,
+        "sha256": "610e2cab03d330daa873c8e8a157d6afa6442a0a1fdee16243745f2ca1e37aea"
+      }
+    },
+    {
+      "protocol": 755,
+      "namedReleases": [
+        "1.17"
+      ],
+      "itemRows": 1100,
+      "nativeDefaultKinds": {
+        "pass": 198,
+        "unknown": 669,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/755/block-interactions.json",
+        "bytes": 127944,
+        "sha256": "25939e431997d59994e1828d8d668a8ec35c33d9f5c39ce3326c364aa9f50f89"
+      }
+    },
+    {
+      "protocol": 756,
+      "namedReleases": [
+        "1.17.1"
+      ],
+      "itemRows": 1100,
+      "nativeDefaultKinds": {
+        "pass": 198,
+        "unknown": 669,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/756/block-interactions.json",
+        "bytes": 127946,
+        "sha256": "e52562bc55b348698caea70d0cb51a6a329db32aad0471f22a007a5c365f667d"
+      }
+    },
+    {
+      "protocol": 757,
+      "namedReleases": [
+        "1.18",
+        "1.18.1"
+      ],
+      "itemRows": 1101,
+      "nativeDefaultKinds": {
+        "pass": 197,
+        "unknown": 671,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/757/block-interactions.json",
+        "bytes": 129258,
+        "sha256": "a1f1135b5996210ad6d2d02477a452dd137da913c7725cfdd7d848a122a48ecb"
+      }
+    },
+    {
+      "protocol": 758,
+      "namedReleases": [
+        "1.18.2"
+      ],
+      "itemRows": 1101,
+      "nativeDefaultKinds": {
+        "pass": 197,
+        "unknown": 671,
+        "simple_cube": 233
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/758/block-interactions.json",
+        "bytes": 128022,
+        "sha256": "a44a928898062246f22dfd4e43cf8f9bb580db0b7aabdc1a7ff9b9b51c8112ba"
+      }
+    },
+    {
+      "protocol": 759,
+      "namedReleases": [
+        "1.19"
+      ],
+      "itemRows": 1152,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 706,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/759/block-interactions.json",
+        "bytes": 133547,
+        "sha256": "4e83b6c1de59ca3ddabdbc1305f7d377e8abb1efeccc0c41342edb8e3c5ee584"
+      }
+    },
+    {
+      "protocol": 760,
+      "namedReleases": [
+        "1.19.1",
+        "1.19.2"
+      ],
+      "itemRows": 1152,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 706,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/760/block-interactions.json",
+        "bytes": 134787,
+        "sha256": "d1f1ed97ca7a575e85685352cf60ba44a3361025b23f718d06e1110cd99f5b75"
+      }
+    },
+    {
+      "protocol": 761,
+      "namedReleases": [
+        "1.19.3"
+      ],
+      "itemRows": 1186,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 740,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/761/block-interactions.json",
+        "bytes": 138157,
+        "sha256": "0c254b929fe50a1bf7c19639cf50028c90674b026914a7f914b4bbf077ea7e9b"
+      }
+    },
+    {
+      "protocol": 762,
+      "namedReleases": [
+        "1.19.4"
+      ],
+      "itemRows": 1228,
+      "nativeDefaultKinds": {
+        "pass": 207,
+        "unknown": 782,
+        "simple_cube": 239
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/762/block-interactions.json",
+        "bytes": 142685,
+        "sha256": "57bd5112a6a3b7ee4959f1cfc0af06cb13fe925e014fc70194bed31b0f122e65"
+      }
+    },
+    {
+      "protocol": 763,
+      "namedReleases": [
+        "1.20",
+        "1.20.1"
+      ],
+      "itemRows": 1255,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 763,
+        "simple_cube": 244
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/763/block-interactions.json",
+        "bytes": 146143,
+        "sha256": "e812b2527e27aaea872dc154c3ab411c7217bcd718aa92963ff213dc930dd1b4"
+      }
+    },
+    {
+      "protocol": 764,
+      "namedReleases": [
+        "1.20.2"
+      ],
+      "itemRows": 1255,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 764,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/764/block-interactions.json",
+        "bytes": 144903,
+        "sha256": "357fe298c7040e99b0ea31d9ea2018cec1c00fd333c06e3e26e22c9650d3be16"
+      }
+    },
+    {
+      "protocol": 765,
+      "namedReleases": [
+        "1.20.3",
+        "1.20.4"
+      ],
+      "itemRows": 1312,
+      "nativeDefaultKinds": {
+        "pass": 248,
+        "unknown": 821,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/765/block-interactions.json",
+        "bytes": 154243,
+        "sha256": "13a8966c01dfd8cd5c899df49b90275098097db6d6c1935db5a0d8b207dc789f"
+      }
+    },
+    {
+      "protocol": 766,
+      "namedReleases": [
+        "1.20.5",
+        "1.20.6"
+      ],
+      "itemRows": 1330,
+      "nativeDefaultKinds": {
+        "pass": 252,
+        "unknown": 835,
+        "simple_cube": 243
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/766/block-interactions.json",
+        "bytes": 155579,
+        "sha256": "cb7634f922d10dab0064f2a73e594a35ca7da365c21e9181b980358477b88fbd"
+      }
+    },
+    {
+      "protocol": 767,
+      "namedReleases": [
+        "1.21",
+        "1.21.1"
+      ],
+      "itemRows": 1333,
+      "nativeDefaultKinds": {
+        "pass": 284,
+        "unknown": 785,
+        "simple_cube": 264
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/767/block-interactions.json",
+        "bytes": 155790,
+        "sha256": "c523b634e38733c886f01957394c44df63626c1ed8971726ae89b0db046ee6d1"
+      }
+    },
+    {
+      "protocol": 768,
+      "namedReleases": [
+        "1.21.2",
+        "1.21.3"
+      ],
+      "itemRows": 1375,
+      "nativeDefaultKinds": {
+        "pass": 302,
+        "unknown": 809,
+        "simple_cube": 264
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/768/block-interactions.json",
+        "bytes": 160071,
+        "sha256": "2e5d07fd17567132c389cbef3283e77afaea25f833baf12ac31a10bcbed384ed"
+      }
+    },
+    {
+      "protocol": 769,
+      "namedReleases": [
+        "1.21.4"
+      ],
+      "itemRows": 1385,
+      "nativeDefaultKinds": {
+        "pass": 305,
+        "unknown": 811,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/769/block-interactions.json",
+        "bytes": 160163,
+        "sha256": "2e461bb6bf85d6bc293e134cb4b4886bd91ae320f62498153d5fa385bbb452d2"
+      }
+    },
+    {
+      "protocol": 770,
+      "namedReleases": [
+        "1.21.5"
+      ],
+      "itemRows": 1396,
+      "nativeDefaultKinds": {
+        "pass": 307,
+        "unknown": 820,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/770/block-interactions.json",
+        "bytes": 161363,
+        "sha256": "3514355db14f00dfae265ab67e46996831eef4c1f05972c8eabcc1213d26d708"
+      }
+    },
+    {
+      "protocol": 771,
+      "namedReleases": [
+        "1.21.6"
+      ],
+      "itemRows": 1415,
+      "nativeDefaultKinds": {
+        "pass": 324,
+        "unknown": 822,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/771/block-interactions.json",
+        "bytes": 162636,
+        "sha256": "c0cc6b760e6a31176dc1a6f59a449f1486bc594fec4b6f9a02a764888c31e509"
+      }
+    },
+    {
+      "protocol": 772,
+      "namedReleases": [
+        "1.21.7",
+        "1.21.8"
+      ],
+      "itemRows": 1416,
+      "nativeDefaultKinds": {
+        "pass": 325,
+        "unknown": 822,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/772/block-interactions.json",
+        "bytes": 163947,
+        "sha256": "d1a1cce1a13395e33621768a7eabe2f08d4ed36d9442a22b6bc2b329a12d2189"
+      }
+    },
+    {
+      "protocol": 773,
+      "namedReleases": [
+        "1.21.9",
+        "1.21.10"
+      ],
+      "itemRows": 1488,
+      "nativeDefaultKinds": {
+        "pass": 333,
+        "unknown": 886,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/773/block-interactions.json",
+        "bytes": 173608,
+        "sha256": "35d73e3fcb0953bc9e912ecb3f99c55f7c4ebfd0605f0cd6bc6f722a9c1ff9ef"
+      }
+    },
+    {
+      "protocol": 774,
+      "namedReleases": [
+        "1.21.11"
+      ],
+      "itemRows": 1505,
+      "nativeDefaultKinds": {
+        "pass": 346,
+        "unknown": 890,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/774/block-interactions.json",
+        "bytes": 173526,
+        "sha256": "8521eb8839b80b7dc78e295de8184209415b73d859b078d2dc751b2e7c0d975c"
+      }
+    },
+    {
+      "protocol": 775,
+      "namedReleases": [
+        "26.1",
+        "26.1.1",
+        "26.1.2"
+      ],
+      "itemRows": 1506,
+      "nativeDefaultKinds": {
+        "pass": 346,
+        "unknown": 891,
+        "simple_cube": 269
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/775/block-interactions.json",
+        "bytes": 175979,
+        "sha256": "4738a184effc2bfa7e58c3b67dba8c3f26efabd0eacbac67cee3afd7e88495f2"
+      }
+    },
+    {
+      "protocol": 776,
+      "namedReleases": [
+        "26.2"
+      ],
+      "itemRows": 1537,
+      "nativeDefaultKinds": {
+        "pass": 348,
+        "unknown": 912,
+        "simple_cube": 277
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/776/block-interactions.json",
+        "bytes": 177573,
+        "sha256": "05ee9836b04670eb56342ba6bc3757182cd24f80dc780cab3f4631b8554c0d3a"
+      }
+    },
+    {
+      "protocol": 777,
+      "namedReleases": [
+        "26.3"
+      ],
+      "itemRows": 1658,
+      "nativeDefaultKinds": {
+        "unknown": 1030,
+        "pass": 350,
+        "simple_cube": 278
+      },
+      "source": {
+        "path": "/home/anon/Projects/UMPK/data/java/777/block-interactions.json",
+        "bytes": 191895,
+        "sha256": "c110557dbfe515e7373ad47924c4e4182ef94e138403dd06a73c5ce55592278d"
+      }
+    }
+  ],
+  "familyRowCounts": {
+    "legacy-special-placement": 306,
+    "specialized-block-placement": 23334,
+    "native-default-on-block-pass": 10620,
+    "armor-stand-use": 50,
+    "ordinary-cube-placement": 9285,
+    "rail-vehicle-use": 300,
+    "hoe": 283,
+    "growth-dye": 53,
+    "participation-not-yet-proven": 164,
+    "ignition": 100,
+    "hanging-entity-use": 123,
+    "lead": 50,
+    "item-on-block-activation-context": 555,
+    "spawn-egg": 2744,
+    "shovel": 278,
+    "end-crystal-use": 49,
+    "debug-stick": 39,
+    "axe": 228,
+    "map-use": 55,
+    "compass": 28,
+    "honeycomb": 23,
+    "potion-use": 57,
+    "brush": 16,
+    "cushion-use": 16
+  },
+  "families": [
+    {
+      "id": "native-default-on-block-pass",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Item.useOn inherits native default PASS with no transformer and proven ordinary feature context.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "No missing native useOn behavior within the extracted default-stack scope. Air-use/entity-use and component overrides remain separate.",
+      "acceptance": "Retain canonical table and current packet-only regression controls; do not create a missing implementation for each item."
+    },
+    {
+      "id": "ordinary-cube-placement",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Native BlockItem and block placement/survival/shape methods inherit the measured simple full-cube contract.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Complete final-release pack, custom components and broader obstruction geometry remain open; specialized subclasses are excluded.",
+      "acceptance": "Reuse existing replacement/source data and survival/native pilots; final exact-producer matrix remains.",
+      "statusDetail": "passed bounded scope"
+    },
+    {
+      "id": "hoe-shovel-axe",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Existing source-bound helpers cover the accepted soil/path/rooted-dirt, extinguish, strip/scrape/wax and intent branches. Native legacy axes are proven pass.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "777 transformer components, unsupported modern patches, standing campfire recipe activation and some missing-column aliases.",
+      "acceptance": "Reuse completed all-applicable-dataset session cases and7hoe/5shovel/9axe live boundaries; do not rerun them merely to audit.",
+      "statusDetail": "passed through776 bounded scope"
+    },
+    {
+      "id": "known-menus-and-switches",
+      "priority": 0,
+      "status": "passed",
+      "nativeDecision": "Crafting table/chest/furnace profiles47–777; lever/button498–777 with powered consume and766 main-hand fallback boundaries.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Native older-switch live acceptance, specialized switch placement and remaining conditional activations stay separate. The bounded old lever/button runtime now passes its original native-result and missing-terrain regressions; final combined producer gates remain required. Modern button repeated-use local powered-state ownership remains under source audit; passing one-action powered controls do not close it.",
+      "acceptance": "Reuse93actual-session menu cases and4native menu boundaries; preserve activation before cooldown/placement permission.",
+      "statusDetail": "passed bounded scope",
+      "legacySwitchRuntimeSlice": {
+        "status": "passed",
+        "report": "docs/verification/legacy-switch-activation.md",
+        "sourceBoundNames": 31,
+        "sourceBoundDatasets": 18,
+        "sourceBindings": 282,
+        "registeredKeys": 128,
+        "productionOwner": "BlockUseActivationProfile / existing InteractionActions owner",
+        "caller": "PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUseCore",
+        "producer": "all211publishedbfffe9Client production sources plus one profile change; normal8efa frozen other libraries",
+        "focused": {
+          "executed": 264,
+          "passed": 264,
+          "originalRed": 221,
+          "originalControls": 43,
+          "redGroups": {
+            "missingWireSwing": 213,
+            "inventedWireSwing": 6,
+            "typed777UnknownActualSuccess": 2
+          }
+        },
+        "existingContextIdentities": 368,
+        "otherDistinctAdjacent": 6225,
+        "unchangedOriginalAssertions": true,
+        "pdbDocuments": 242,
+        "aotBytes": 25157376,
+        "strictLimit": 25165824,
+        "executedPassingSmoke": 1,
+        "completionSha256": "3250f726d42240569150baff81f15462941c4beb85366ad4c291ec41eb326796",
+        "rootActualReviewSha256": "4b5b1e67f9b985fcfe44029928644f4ee542381b6894d79595ee88dba98de392",
+        "cleanupScopeAddendumSha256": "fe3403e238f6603f8378bc1494082a28aa2e738748c285597729ba09621cfb1d",
+        "nativeLiveStatus": "not run",
+        "limits": "activation-result scope only; specializedplacement/support/orientation, finalversionmatrix and fresh finalconsumer/package/repository gates remain open",
+        "postIntegration": {
+          "executedPassing": 264,
+          "skipped": 0,
+          "noRebuild": true,
+          "all3SharedPostimagesMatch": true,
+          "completionSha256": "4398e3ff6e191a24faf5faf9128bf1a739bca75735ff2f120dd602c1bb927a27",
+          "rootReviewSha256": "3f514241d72f05050e421c6219681660858ca1144f89459b5dbb20228089ce6b"
+        }
+      },
+      "modernButtonLocalPrediction": {
+        "status": "not run",
+        "nativeObservedExamples": [
+          "1.15/573",
+          "26.3/777"
+        ],
+        "missing": "Native client press locally sets powered=true; source audit and owned repeated-use/release/invalidation proof remain required. Existing one-action consume controls are not repeat acceptance.",
+        "productionCaller": "existing public block-use/session owner",
+        "nextRequired": "source-bound public-session repeat RED then compact shared local-state owner integration and native/lifecycle acceptance"
+      }
+    },
+    {
+      "id": "door-activation",
+      "priority": 1,
+      "status": "failed",
+      "nativeDecision": "The completed source and registration audit covers 75 named releases. The 327 framed-session cases connect native door Success/Pass, legacy lower-cell lookup, feature/hand/secondary-use ordering and protocol-777 local-only swing through the existing owner.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "The latest native315 setup now passes exact Pos+OnGround and eight partial scenarios, then fails the ninth iron-held-stone action because the successful placement omits its swing. The source-proven sheep/villager null-hard-peer fix now passes14framed cases/2137regressions/strictAOT/exact1smoke, but a fresh whole11scenario native315 row is required. Other door boundaries/copper features and final-producer acceptance remain open.",
+      "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
+      "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated.",
+      "historicalAuditAtSourceCommit": {
+        "nativeDecision": "Original1.14.4 DoorBlock returns true for nonmetal;1.21.5/26.3 hand-openable DoorBlock returns SUCCESS, non-openable returns PASS.",
+        "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
+        "status": "not run"
+      },
+      "statusDetail": "passed bounded door runtime and immutable checkpoints; native47passed; latestnative315wholeRowFAILED with8partialscenarios; new315ambient-null-hard-peer runtime/AOTpassed; freshnative315retry pending",
+      "currentEvidence": [
+        "door-activation-runtime.md",
+        "door-crystal-integration-20261023.md",
+        "interaction-completion.md#evidence-and-status",
+        "trapdoor-gate-checkpoint-20261023.md",
+        "legacy-ambient-peers-315.md"
+      ]
+    },
+    {
+      "id": "other-hand-activated-blocks",
+      "priority": 2,
+      "status": "not run",
+      "nativeDecision": "Registered trapdoor and fence-gate results now have a source audit covering 75 named releases and 50 profiles, plus connected runtime. Wood/copper trapdoors and gates consume successfully; iron trapdoor consumes through protocol 210 and passes from 315. The existing caller retains protocol-766 main-hand activation fallback and protocol-777 local-only swing.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Native executable/live acceptance for trapdoor/gate activation and other hand-activated block families remains open. Specialized placement/attachments and item-dependent effects are separate. Missing packet-established terrain stays Unknown during item continuation.",
+      "focusedFailingPublicSession": "Only after native success/pass is proven, drive framed block/property/hand state through PlaceBlockAsync and assert exact packet group.",
+      "nativeLiveNeed": "Reuse door setup only where contracts match; separate original boundaries and native state observations.",
+      "historicalAuditAtSourceCommit": {
+        "nativeDecision": "Trapdoor/fence-gate and other block overrides require their own result/registration audit; a table override is not proof of consumption.",
+        "missing": "Exact native type/era/result rather than suffix-based assumptions.",
+        "status": "not run"
+      },
+      "statusDetail": "passed bounded trapdoor/gate runtime efad22a, published at 2925b51; complete family acceptance not run",
+      "currentEvidence": [
+        "trapdoor-gate-activation.md",
+        "interaction-completion.md#evidence-and-status"
+      ]
+    },
+    {
+      "id": "other-menus-and-item-activation",
+      "priority": 3,
+      "status": "not run",
+      "nativeDecision": "Nineteen exact registered menu keys now have original client-success prediction, with smithing-table false/PASS through 1.15.2 and success from 1.16. Lectern, jukebox, campfire, cake/candle and other conditional overrides still inspect their own item/state/recipe context.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Empty lectern/book insertion, empty jukebox/record insertion, modern jukebox native-instance validity, campfire recipe use, cake/candle and other conditional branches require their exact native client context. Filled lectern has seven-version native acceptance; state-only filled jukebox has bounded runtime/AOT proof and awaits native acceptance.",
+      "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
+      "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
+      "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
+      "completedRuntimeSlice": {
+        "behavior": "Original unconditional client menu success, with native smithing-table pass through 1.15.2 and success from 1.16",
+        "protocols": "47–777 where the nineteen exact keys are natively registered; smithing pass477–578/success735+; main-hand default block use766+; local-only placement swing777",
+        "namedReleasesSourceBound": 75,
+        "protocolDatasetsSourceBound": 50,
+        "registrations": 1107,
+        "productionOwner": "BlockUseActivationProfile in BlockUsePrediction.cs",
+        "productionCaller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+        "evidence": "additional-menu-activation.md",
+        "privateFunctionalIndex": "/tmp/umpk-additional-menus-20261024-v4/functional-receipt-index.json",
+        "privateFunctionalIndexSha256": "56b66768118ba212d3a0d5bc23ebd4dc3053957490e1f28bcc2fb77b0762c418",
+        "producerMeaning": "Current19594 Client source plus one private profile patch; retained c977 informational metadata, frozen c849 dependencies and separately tested compacted Protocol; no normal19594 producer certificate",
+        "focused": "213executed RED160failed/53controls -> same213GREEN; zero skips",
+        "adjacent": "5933passed;18existingclasses",
+        "nativeAot": "25165568bytes <25165824; exact1executedPASSsmoke; actual11ILCinputs and unchanged9packagegraph",
+        "nativeServerAcceptance": "passed: current-harness protocols 47/477/498/735/765/766/777, 194 scenarios and 119 new-key visits, seven actually executed passing opt-in TRX tests, exact packet/menu/swing and phase-aware replay, actual crafter features and saved-world facts, 32 owner-thread 477 predicates, unchanged producer/source/siblings/seeds and owned process/port cleanup. Historical v3/v4 failures remain failed.",
+        "currentImmutableProducerAcceptance": "passed for 8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed: 25 repository gates, 47,331 executed .NET passes and 17 normal skips, 1,999 DMCBK and 918 MCC tests, 33 DLL matches, 13 package/consumer libraries, strict 25,165,568-byte AOT and exactly one passing smoke, all 7 CI jobs on that published head.",
+        "currentImmutableCheckpoint": {
+          "producerCommit": "8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed",
+          "certificate": "/home/anon/Projects/MinecraftOfficial/runs/interaction-format-recovery-20261024-v1-validation/cross-certificate.json",
+          "sha256": "6581975d1b757921de3cc5d30b5a4fa17118004f4ec16d201e811dba5691a1ba",
+          "historicalPrivateProducerPreserved": true
+        }
+      },
+      "filledLecternRuntimeSlice": {
+        "behavior": "canonical has_book=true lectern activation through the existing session owner",
+        "sourceBoundNamedReleases": 48,
+        "sourceBoundProtocols": 36,
+        "protocols": "477–777",
+        "producer": "normal8efa plus exact one-file BlockUsePrediction overlay",
+        "productionSourceSha256": "ba9b97de89625edde0a3d4d036d5e216a0296c5ccd2579dfc22f36955fc2cf78",
+        "runtimeStatus": "passed:152 executed RED104fail/48controls -> same152GREEN;656 public actions",
+        "adjacentOriginalPassed": 5152,
+        "aotBytes": 25165568,
+        "executedPassingSmoke": 1,
+        "rootPostIntegrationFocusedPasses": 152,
+        "completionSha256": "54ec8e04fde677e99ba56e108c7bd49f3cf2d9d8b802f670bf2d5fdfd5e32b4e",
+        "rootPostIntegrationCompletionSha256": "4ad85ceb6affc60db206cab6e92e833c39c4e8854f9fab78692281f0ffa4876e",
+        "nativeLiveStatus": "passed: seven actual native boundary tests,29 actions,217 ordered causal markers,14 closed ports; certificate17e330c1d2d45a38cd50a2c49837051ad26d0e760903de53c55ff41e60a77765. Final-producer acceptance remains separate.",
+        "remaining": "empty lecterns,book insertion,unsupported components and final combined producer gates",
+        "report": "docs/verification/lectern-activation.md"
+      },
+      "currentHarnessAcceptance": {
+        "status": "passed",
+        "runtimeProducer": "8efa26f3ac2e8b1397928a7bc2c8ec530eb015ed",
+        "completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-csharp-20261024-v3/completion.json",
+        "sha256": "04dc149a52a0bed1115640e157f7f8b849588102e9a8fd60045c13426ca905ff",
+        "normalIntegrationIdentities": 58,
+        "executedPasses": 41,
+        "namedOptInSkips": 17,
+        "officialToolPythonTests": 41,
+        "deliberatePythonCasesAdded": 3,
+        "originalOfficialToolPythonTests": 38,
+        "actualUmpkCompilerReferences": 12,
+        "existingExternalRuntimeReferences": 6,
+        "checkedPdbFiles": 30,
+        "checkedPdbDocuments": 2335,
+        "embeddedSourceDocuments": 20,
+        "producerLibrariesRecompiled": false
+      },
+      "currentNativeAcceptance": {
+        "status": "passed",
+        "meaning": "All seven unique rows and the complete 194-scenario contract pass on identical current-harness sources/output and the normal 8efa producer; broader conditional activation remains unfinished.",
+        "scenarioContract": "/home/anon/Projects/MinecraftOfficial/runs/additional-menu-live-preparation-20261024-v1/menu-live-scenario-contract.json",
+        "scenarioContractSha256": "e8fc694b368aef3b54fff0d5bd915932c65bd43e76b83822bcd41feb83e89154",
+        "requiredRows": 7,
+        "requiredScenarios": 194,
+        "newKeyVisits": 119,
+        "rows": [
+          {
+            "protocol": 47,
+            "status": "passed",
+            "scenarios": 17,
+            "currentHarness": true,
+            "replay": {
+              "selected": 258,
+              "exact": 258,
+              "markers": 17,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 8
+          },
+          {
+            "protocol": 477,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 572,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 498,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 540,
+              "exact": 540,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 735,
+            "status": "passed",
+            "scenarios": 29,
+            "currentHarness": true,
+            "replay": {
+              "selected": 573,
+              "exact": 573,
+              "markers": 29,
+              "ambientDifferences": 0
+            },
+            "newKeyVisits": 18
+          },
+          {
+            "protocol": 765,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 571,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          },
+          {
+            "protocol": 766,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 564,
+              "exact": 563,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          },
+          {
+            "protocol": 777,
+            "status": "passed",
+            "scenarios": 30,
+            "currentHarness": true,
+            "replay": {
+              "selected": 572,
+              "exact": 571,
+              "markers": 30,
+              "ambientDifferences": 1
+            },
+            "newKeyVisits": 19
+          }
+        ],
+        "accepted477Completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/completion.json",
+        "accepted477CompletionSha256": "08e5ed901ea81f410231e2b969697e815f24f793722434c8f75bbaa5e3a63d1e",
+        "ownerThreadPredicateSubstitution": {
+          "applicableProtocols": [
+            477,
+            480,
+            485
+          ],
+          "scope": "Unchanged native block-entity storage predicates only; exact feedback and generated marker, original console queue/clock. Entity predicates and adjacent 490+ retain RCON.",
+          "required477Predicates": 32,
+          "positive": 8,
+          "negative": 24,
+          "sourceEvidence": "/home/anon/Projects/MinecraftOfficial/runs/additional-menu-console-predicate-preparation-20261024-v1/native-source-bindings.json"
+        },
+        "historicalV4": {
+          "campaignStatus": "failed",
+          "acceptedProtocol": 47,
+          "acceptedScenarios": 17,
+          "failedProtocol": 477,
+          "failure": "Native RCON setup query runs outside world owner and returns no block entity; failed before furnace action. No UMPK mismatch claimed.",
+          "completion": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v4/completion.json",
+          "sha256": "cfc2488ae08ea5e34d55243f72e948a011130827fa631e2b02e4b90558c136d0"
+        },
+        "combinedCertificate": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-combined-20261024-v1/completion.json",
+        "combinedCertificateSha256": "c89da23b7daee398a011bd7468e5f8421ab975d221eb9c2c4f5816f514b5b8fd",
+        "combinedEvidenceManifestSha256": "da1c62cfa32a4d64316332f2b111588650aa0994d8eae4f9fdbbb4ac70801858",
+        "campaigns": [
+          {
+            "completion": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/completion.json",
+              "bytes": 11989,
+              "sha256": "08e5ed901ea81f410231e2b969697e815f24f793722434c8f75bbaa5e3a63d1e"
+            },
+            "cleanupAndResources": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5/cleanup-and-resources.json",
+              "bytes": 2260,
+              "sha256": "3f0cabada5edefb18f96c2d4ddfb3665037f973e504b89361dc709fec2e88ad3"
+            },
+            "selectedProtocols": [
+              477
+            ]
+          },
+          {
+            "completion": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5-rest/completion.json",
+              "bytes": 47214,
+              "sha256": "93255bcd993f699b01c77059f678017ffce3b43bbb0e2b4ab2a8c264a439f84f"
+            },
+            "cleanupAndResources": {
+              "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-additional-menu-native-20261024-v5-rest/cleanup-and-resources.json",
+              "bytes": 5399,
+              "sha256": "1cfefd2b229130013acf45b06e0b34e93fae019c05f2296b6fd8554d55a627da"
+            },
+            "selectedProtocols": [
+              47,
+              498,
+              735,
+              765,
+              766,
+              777
+            ]
+          }
+        ]
+      },
+      "filledJukeboxRuntimeSlice": {
+        "status": "passed",
+        "scope": "bounded source/framed/runtime/AOT; no native-live acceptance",
+        "nativeEra": "state-only filled-jukebox activation and local has_record clearing through1.19.3",
+        "protocols": [
+          47,
+          107,
+          108,
+          109,
+          110,
+          210,
+          315,
+          316,
+          335,
+          338,
+          340,
+          393,
+          401,
+          404,
+          477,
+          480,
+          485,
+          490,
+          498,
+          573,
+          575,
+          578,
+          735,
+          736,
+          751,
+          753,
+          754,
+          755,
+          756,
+          757,
+          758,
+          759,
+          760,
+          761
+        ],
+        "sourceBoundNamedReleases": 50,
+        "fullSourceInventoryNames": 75,
+        "fullSourceInventoryDatasets": 50,
+        "sourceInputPins": 713,
+        "productionOwner": "ClientState.JukeboxPrediction / BlockUseActivationProfile / WorldApplier",
+        "caller": "PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUseCore -> successful use write -> projection commit -> captured-session swing",
+        "producerMeaning": "normal8efa dependencies plus six previously tested Client overlays and five exact jukebox production postimages; not a full later-head certificate",
+        "clientDllSha256": "7f07d4a59922492d56b01b2cf65bbf90d856e0c002de21fe1a0a120e24b2cee7",
+        "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804",
+        "focused": {
+          "executed": 206,
+          "passed": 206,
+          "skipped": 0,
+          "originalRed": 117,
+          "originalControls": 89,
+          "statelessPassed": 179,
+          "statelessFailed": 27
+        },
+        "adjacentPassed": 6593,
+        "aotBytes": 25157376,
+        "strictLimit": 25165824,
+        "executedPassingSmoke": 1,
+        "nativeLiveStatus": "not run",
+        "remaining": "sequence-aware759–761 current/server-shadow/acknowledgment and world-lifetime ownership,empty/insertion,modern762–777 native-instance/cache context,native repeat acceptance,final committed-producer gates",
+        "retention": "16 original historical temporary inputs missing;3exact bytes recovered/13unavailable;all2544present match;actual Oracle source/runtime/TRX/native outputs retained;addendum5e6f7c29",
+        "report": "docs/verification/jukebox-activation.md",
+        "postIntegration": {
+          "executedPassed": 206,
+          "skipped": 0,
+          "noRebuild": true,
+          "all9SharedPostimagesMatched": true,
+          "native713PinsRehashed": true,
+          "completionSha256": "6a6cb45841934b911142c79de39d884817de277878b66a3ede84c3f063341a8b",
+          "rootActualReviewSha256": "fcb125d5cdfb766ec1b8dda06e7164a0cd3e0a8a360a04ff5870b8a76dabaf54"
+        },
+        "modernContextMissingFact": "Native cache-center/radius/ring-slot applicability and pendingprediction must be owned/proven before packet-arrived HasColumn can prove a native instance; source-only audit is in progress. Canonical raw NBT is not instance presence.",
+        "currentAcceptanceStatus": "failed:45source-backed framed behavior regressions on unchanged392b107; productionGREEN/native acceptance pending",
+        "sourceDiscoveredDefect": {
+          "protocols": [
+            759,
+            760,
+            761
+          ],
+          "sourceOnly": true,
+          "productionCommit": "392b10712431fba878f40a5ca75e1a4cef615556",
+          "report": "/home/anon/Projects/MinecraftOfficial/runs/sequenced-block-prediction-preparation-20261024-v1/REPORT.json",
+          "reportSha256": "a1a124ef8bcd851ef6c17a1bdaa18b16c1742d1a42e0fe2f8e72b42b7f5fc473",
+          "facts": [
+            "server update before ack must retain local current state",
+            "ack without update restores captured original state",
+            "full replacement overwrites current while retaining pending shadow",
+            "old761 fixture helper automatically acknowledges before returning"
+          ],
+          "functionalRed": {
+            "executed": 258,
+            "failed": 45,
+            "passed": 213,
+            "skipped": 0,
+            "producerCommit": "392b10712431fba878f40a5ca75e1a4cef615556",
+            "rootAudit": "/home/anon/Projects/MinecraftOfficial/runs/sequenced-block-prediction-red-recovery-20261024-v1/root-independent-functional-red.json",
+            "rootAuditSha256": "379bbd932e7abcf39fd7ef44cf28d3053d5bb09eb3f03371f79bd58a8274d55b",
+            "originalOverallAttempt": "failed:sole generated compiler-output receipt frozen as input;1169true inputs unchanged",
+            "nativeWitness": "harness failure:no accepted observation rows"
+          },
+          "nativeWitnessCompleted": {
+            "status": "passed controlled original-method comparison; production and live acceptance remain open",
+            "protocols": [
+              759,
+              761,
+              775,
+              777
+            ],
+            "namedReleases": [
+              "1.19",
+              "1.19.3",
+              "26.1",
+              "26.3"
+            ],
+            "executed": 96,
+            "passed": 96,
+            "failed": 0,
+            "skipped": 0,
+            "perPilot": [
+              23,
+              23,
+              25,
+              25
+            ],
+            "report": "/home/anon/Projects/MinecraftOfficial/runs/native-block-prediction-completed-20261024-v1/REPORT.json",
+            "reportSha256": "4c435e2c4b6ce8ca7515257f66de0b362b0d552c5ddffffff0d49ccdeaaf9f34",
+            "rootAuditSha256": "344f3bb36154895fd6b83cf59d65ed5214d648bd7d159c0d12c40e965a06cd78",
+            "limits": "Unsafe Minecraft/ClientLevel bootstrap; originalLocalPlayer and measured state/ACK/collision methods; declared rendering/BE callbacks suppressed; no packetlistener/fullworldconstructor/live proof"
+          }
+        }
+      }
+    },
+    {
+      "id": "specialized-block-placement",
+      "priority": 4,
+      "status": "not run",
+      "nativeDecision": "Unknown BlockItem subclasses have placement/state/survival/shape or feature differences; raw unknown does not identify which decision differs.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Modern slab placement/merging has connected runtime and five-version native acceptance. Remaining legacy slabs, orientation, attachments/support, multi-cell placement and component/survival contexts stay open. PredictBlockUse now receives position/face/cursor/hand; family-specific inside-block context still requires native proof.",
+      "focusedFailingPublicSession": "Start with one source-proven slab merge/top/bottom/cursor case, then attachments/multicell in separate slices; preserve explicit-coordinate API.",
+      "nativeLiveNeed": "Original placement context and independent server states/stacks with genuine session callers; no whole rendering model."
+    },
+    {
+      "id": "777-transformers",
+      "priority": 5,
+      "status": "not run",
+      "nativeDecision": "Native777 Item.useOn dispatches BLOCK_TRANSFORMER; default hoe/shovel/axe and other transformer items are excluded from inherited-PASS extraction.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Effective transformer data, predicates, ordering and context are unowned; native feature permission alone is not a use result.",
+      "focusedFailingPublicSession": "A retained default transformer success/pass through framed effective components and current owner, with unknown custom transformer control.",
+      "nativeLiveNeed": "Pin original codec/default registrations and transformBlock branch; measure missing transitions only."
+    },
+    {
+      "id": "entity-placement-items",
+      "priority": 6,
+      "status": "not run",
+      "nativeDecision": "End crystal, armor stand, hanging entity, minecart, spawn egg and new cushion families require separate native useOn predicates. Boats/buckets with default-pass entries are not moved into this row merely because they create entities/fluids through air-use.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Source-specific prechecks, eligible geometry, context and success/swing result; EndCrystalItem.useOn placement remains pending. The other active EndCrystal slice owns ENTITY picking/current bounds only; it does not implement or accept the item useOn axis.",
+      "focusedFailingPublicSession": "One family per red: exact support/face/clearance/unknown context plus actual public action and teardown.",
+      "nativeLiveNeed": "Original family method plus independent native entity/block/stack observations; exclude general AI/combat/server-owned effects."
+    },
+    {
+      "id": "growth-ignition-wax",
+      "priority": 7,
+      "status": "not run",
+      "nativeDecision": "Bone meal/legacy dye, flint-and-steel/fire-charge and honeycomb contain native useOn success/pass branches.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Exact target/material/face/world/client branch and known recipe/growth conditions; do not treat server-owned growth/drop simulation as necessary.",
+      "focusedFailingPublicSession": "One deterministic original-client result branch with inventory/world packets; unknown world context remains packet-only.",
+      "nativeLiveNeed": "Source-bound original method and native block/durability observations on relevant boundaries."
+    },
+    {
+      "id": "other-nonblock-overrides",
+      "priority": 8,
+      "status": "not run",
+      "nativeDecision": "Maps/compass/lead/brush/potions/debug-stick and feature-gated items have distinct useOn/use/other interaction channels.",
+      "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "missing": "Prove native on-block participation/default pass first; identical no-swing outcomes can already match while typed knowledge remains unavailable.",
+      "focusedFailingPublicSession": "Propose only after a native send/result/swing mismatch is established; an unknown entry alone is insufficient.",
+      "nativeLiveNeed": "Read exact inherited methods/components and existing feature audit before any new experiment.",
+      "statusDetail": "not run participation audit"
+    },
+    {
+      "id": "air-use-and-active-use",
+      "priority": 9,
+      "status": "not run",
+      "nativeDecision": "Bucket/boat/consumable/charged items can use Item.use after on-block PASS. Public UseItemAsync currently directly sends its dedicated era packet.",
+      "caller": "InteractionActions.UseItemAsync; no automatic fallback added to explicit-coordinate PlaceBlockAsync",
+      "missing": "Exact current public contract versus native input fallback/result/swing and active-use ownership needs a bounded decision; server-owned item effects remain out of scope.",
+      "focusedFailingPublicSession": "A source-proven air-use result branch through actual packet-populated inventory/view/world; preserve47sentinel andhand limits.",
+      "nativeLiveNeed": "Pin original input/controller/result caller before predicting packet groups; do not infer missing behavior from graphical effects.",
+      "statusDetail": "not run full input acceptance"
+    },
+    {
+      "id": "mining-permissions",
+      "priority": 4,
+      "status": "not run",
+      "nativeDecision": "Legacy47–340 and bounded flattened393–765 permissions; typed component766–769 cache/identity are connected.",
+      "caller": "InteractionActions mining initial/held owner on existing session tick",
+      "missing": "Property/range/full block-entity save context, missing tags and770+ extended predicates remain unknown.",
+      "focusedFailingPublicSession": "Next unsupported native predicate kind with actual can_break inventory/tag/mode packets and exact held START/swing order.",
+      "nativeLiveNeed": "Reuse completed56native component cases and98input-order bindings; measure only missing branch.",
+      "statusDetail": "passed bounded eras; remainder not run"
+    },
+    {
+      "id": "mining-equipment-and-modifiers",
+      "priority": 8,
+      "status": "not run",
+      "nativeDecision": "Existing ability/tool, legacy identity, Aqua Affinity, water arithmetic, attributes/effects, creative restrictions and pre-position charge owners are retained.",
+      "caller": "InteractionActions mining initial/held owner on existing session tick",
+      "missing": "Complete source-bound active-use/equipment/effect matrix and broad live acceptance; unrelated structured component identity families remain separate.",
+      "focusedFailingPublicSession": "Only a named missing modifier/native identity branch, through actual state packets and session clock.",
+      "nativeLiveNeed": "Reuse completed measurements and focused/native/session proofs; do not reopen them as unknown backlog.",
+      "statusDetail": "passed focused branches; final matrix not run"
+    }
+  ],
+  "limits": "The inventory is finite and every existing row is accounted for. Unclassified participation is unfinished evidence, not automatically a production defect. The next proposed production change is door activation after the full native profile/registration audit.",
+  "sourceInputs": [
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/47/block-interactions.json",
+      "bytes": 45554,
+      "sha256": "716b78d1910a2bedb6570bcf672150f632a226fd3cce02c98ab86b5806349c4b"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/107/block-interactions.json",
+      "bytes": 29525,
+      "sha256": "422972946ed70ef25588ddd9f6807387ca119058f49653a06ab4f75847e3945d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/108/block-interactions.json",
+      "bytes": 29529,
+      "sha256": "fb9b999d9f496f69fe89ac3794130d3a20bfc85d719145c17e8410d7ed9eeb1a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/109/block-interactions.json",
+      "bytes": 29529,
+      "sha256": "d6a104885db42fee8f9ec875f5789ec1b930cc0a4b4cf4818eb00b72e1c17b87"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/110/block-interactions.json",
+      "bytes": 31526,
+      "sha256": "ab4da59bc82ff800c504c3b340b57f64f4b74ab762f359bda975350f405baeec"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/210/block-interactions.json",
+      "bytes": 34066,
+      "sha256": "83cd136915eae3e5b820e6362270057bae77dd03312d58a896e2b122e66273c4"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/315/block-interactions.json",
+      "bytes": 31934,
+      "sha256": "bef075aed4543e3b522f4989ece378d74f8ca66035096599cb17aece9f0c109a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/316/block-interactions.json",
+      "bytes": 33999,
+      "sha256": "68731cef87bb28308a69fff659ccb68af058c4458ddfb1934662ba2ba263a87e"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/335/block-interactions.json",
+      "bytes": 34215,
+      "sha256": "25831b8df2095ac07599b27ba0041eadae8817189318c84588e089d49199ff03"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/338/block-interactions.json",
+      "bytes": 34219,
+      "sha256": "ed2397abd188296f87ba27b5b6d814517f91b6a61f428365bfbc6746930a3cb3"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/340/block-interactions.json",
+      "bytes": 34219,
+      "sha256": "1d319d29deaee1aa1312fc32fdb8e8e585ccabb4ce75e30ad4591bd7e7a4cd8a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/393/block-interactions.json",
+      "bytes": 89922,
+      "sha256": "578d430caec8b799c060e14cd711027dbda112cf8f2dad512f459adfce6f71f0"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/401/block-interactions.json",
+      "bytes": 90578,
+      "sha256": "f174fd21164b13eb07f8abad8047df466ea35492ab28dec5d5f6e6b3a50d5fc7"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/404/block-interactions.json",
+      "bytes": 90578,
+      "sha256": "c1415fdf7814bf8e200dbff269935ef6c794f19684dfafb57dd99e353b6f2224"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/477/block-interactions.json",
+      "bytes": 101348,
+      "sha256": "0a4ca2eb1b711a30aa7f3b37a7b5250ba165f2aafaa62a692be338ab01d2f7c9"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/480/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "bd1577409f7938268ca7ae6dfb5dcdad23de57a7e34669ccabe9eced5b69e09d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/485/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "382f8f03bee5aee03840d3ca7eb6879914f43b7bac1dc532f51f6cca118903d2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/490/block-interactions.json",
+      "bytes": 101350,
+      "sha256": "a1a7a7fcdda9f5b845f061a08ff0bae2e4bb47ef1db0ad5c30edd8205336f2c0"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/498/block-interactions.json",
+      "bytes": 98815,
+      "sha256": "464d0b5d21fd39f4e68e576b30056772622126182b7607cb19b382ef8f1a3b0e"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/573/block-interactions.json",
+      "bytes": 99463,
+      "sha256": "f30a8a15933515d56923c904ef7c7d363d1bc8961c0d65dceb995b9061428036"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/575/block-interactions.json",
+      "bytes": 99465,
+      "sha256": "e22c2b0d732f2815d18421395af3bd5a873de6fe254c22e92cc6bc2961ffff74"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/578/block-interactions.json",
+      "bytes": 99465,
+      "sha256": "546e3b643987dcbeb7b0f90868b68ec450f21c98203be4c600602da2042d79e9"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/735/block-interactions.json",
+      "bytes": 110871,
+      "sha256": "daf67337064c202f2137c8c3c74deaa9b0b4bd318e75c97e87c4b70476d7840f"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/736/block-interactions.json",
+      "bytes": 110873,
+      "sha256": "96107c15418f16f7a9fdcd08b74fe453e74c44764aaf2d7ec7a747672b87adbf"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/751/block-interactions.json",
+      "bytes": 110948,
+      "sha256": "f56ac21404e4231359bc012033153782b79d30df3cba57de1bdace971b26f2a7"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/753/block-interactions.json",
+      "bytes": 110948,
+      "sha256": "125cfdf53fcbe9d6d6dca8a02ccf9e38bd299b5bdbcfd4277ec7faec3bdc8ae6"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/754/block-interactions.json",
+      "bytes": 112186,
+      "sha256": "610e2cab03d330daa873c8e8a157d6afa6442a0a1fdee16243745f2ca1e37aea"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/755/block-interactions.json",
+      "bytes": 127944,
+      "sha256": "25939e431997d59994e1828d8d668a8ec35c33d9f5c39ce3326c364aa9f50f89"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/756/block-interactions.json",
+      "bytes": 127946,
+      "sha256": "e52562bc55b348698caea70d0cb51a6a329db32aad0471f22a007a5c365f667d"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/757/block-interactions.json",
+      "bytes": 129258,
+      "sha256": "a1f1135b5996210ad6d2d02477a452dd137da913c7725cfdd7d848a122a48ecb"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/758/block-interactions.json",
+      "bytes": 128022,
+      "sha256": "a44a928898062246f22dfd4e43cf8f9bb580db0b7aabdc1a7ff9b9b51c8112ba"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/759/block-interactions.json",
+      "bytes": 133547,
+      "sha256": "4e83b6c1de59ca3ddabdbc1305f7d377e8abb1efeccc0c41342edb8e3c5ee584"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/760/block-interactions.json",
+      "bytes": 134787,
+      "sha256": "d1f1ed97ca7a575e85685352cf60ba44a3361025b23f718d06e1110cd99f5b75"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/761/block-interactions.json",
+      "bytes": 138157,
+      "sha256": "0c254b929fe50a1bf7c19639cf50028c90674b026914a7f914b4bbf077ea7e9b"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/762/block-interactions.json",
+      "bytes": 142685,
+      "sha256": "57bd5112a6a3b7ee4959f1cfc0af06cb13fe925e014fc70194bed31b0f122e65"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/763/block-interactions.json",
+      "bytes": 146143,
+      "sha256": "e812b2527e27aaea872dc154c3ab411c7217bcd718aa92963ff213dc930dd1b4"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/764/block-interactions.json",
+      "bytes": 144903,
+      "sha256": "357fe298c7040e99b0ea31d9ea2018cec1c00fd333c06e3e26e22c9650d3be16"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/765/block-interactions.json",
+      "bytes": 154243,
+      "sha256": "13a8966c01dfd8cd5c899df49b90275098097db6d6c1935db5a0d8b207dc789f"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/766/block-interactions.json",
+      "bytes": 155579,
+      "sha256": "cb7634f922d10dab0064f2a73e594a35ca7da365c21e9181b980358477b88fbd"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/767/block-interactions.json",
+      "bytes": 155790,
+      "sha256": "c523b634e38733c886f01957394c44df63626c1ed8971726ae89b0db046ee6d1"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/768/block-interactions.json",
+      "bytes": 160071,
+      "sha256": "2e5d07fd17567132c389cbef3283e77afaea25f833baf12ac31a10bcbed384ed"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/769/block-interactions.json",
+      "bytes": 160163,
+      "sha256": "2e461bb6bf85d6bc293e134cb4b4886bd91ae320f62498153d5fa385bbb452d2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/770/block-interactions.json",
+      "bytes": 161363,
+      "sha256": "3514355db14f00dfae265ab67e46996831eef4c1f05972c8eabcc1213d26d708"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/771/block-interactions.json",
+      "bytes": 162636,
+      "sha256": "c0cc6b760e6a31176dc1a6f59a449f1486bc594fec4b6f9a02a764888c31e509"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/772/block-interactions.json",
+      "bytes": 163947,
+      "sha256": "d1a1cce1a13395e33621768a7eabe2f08d4ed36d9442a22b6bc2b329a12d2189"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/773/block-interactions.json",
+      "bytes": 173608,
+      "sha256": "35d73e3fcb0953bc9e912ecb3f99c55f7c4ebfd0605f0cd6bc6f722a9c1ff9ef"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/774/block-interactions.json",
+      "bytes": 173526,
+      "sha256": "8521eb8839b80b7dc78e295de8184209415b73d859b078d2dc751b2e7c0d975c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/775/block-interactions.json",
+      "bytes": 175979,
+      "sha256": "4738a184effc2bfa7e58c3b67dba8c3f26efabd0eacbac67cee3afd7e88495f2"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/776/block-interactions.json",
+      "bytes": 177573,
+      "sha256": "05ee9836b04670eb56342ba6bc3757182cd24f80dc780cab3f4631b8554c0d3a"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/data/java/777/block-interactions.json",
+      "bytes": 191895,
+      "sha256": "c110557dbfe515e7373ad47924c4e4182ef94e138403dd06a73c5ce55592278d"
+    }
+  ],
+  "existingLedger": {
+    "path": "/home/anon/Projects/UMPK/docs/verification/interaction-completion.md",
+    "bytes": 58689,
+    "sha256": "2c14372d3b21de0e146ec841102947cc1b142b1ded21b0e2c4bdeb17897f0572"
+  },
+  "productionInputs": [
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/InteractionActions.Placement.cs",
+      "bytes": 11440,
+      "sha256": "53f1885e07f3cfe8ad5f88c11ccb8f06707cda1d1bb6aed65fa76ce2b00cab28"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/BlockUsePrediction.cs",
+      "bytes": 3750,
+      "sha256": "d8adc8bc4ab06de70120de93623588805c397d6eae56a860163cfd5210bf6d7c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/src/Umpk.Client/Actions/InteractionActions.Mining.cs",
+      "bytes": 22297,
+      "sha256": "b65e248ca363a201e394085361319040aa5d6f45e7c0943689c519c6d34e4f2c"
+    },
+    {
+      "path": "/home/anon/Projects/UMPK/tools/extraction/shape-extractor/BlockInteractionDump.java",
+      "bytes": 10398,
+      "sha256": "4684f11336ca888251013bfa876e93e4b6c9da2a276da13606dbadda7375644e"
+    }
+  ],
+  "auditEvidence": {
+    "originalFamilyLedger": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-family-inventory-20261022-v1/family-ledger.json",
+      "sha256": "7472b1c976184af43326dea53df8ef31268025a5dafc74ae785d418a10f65a8b"
+    },
+    "correction": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/interaction-family-inventory-correction-20261022-v1/correction.json",
+      "sha256": "75050b074f4f17e811eb38b792bdfbc16e2733d9a7aa52102904f8b6ff5234c4"
+    },
+    "rawInventoriesRemainOutsideGit": true,
+    "allCanonicalItemRowsVerified": 48756,
+    "allCanonicalBlockRowsVerified": 37618,
+    "noNewNativeMeasurements": true
+  },
+  "currentRuntimeReconciliation": {
+    "codeCommit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+    "publishedEvidenceCommit": "2925b51",
+    "historicalSourceCommit": "be08d177125cdd67cbb8e1ffb66f6ace76744606",
+    "scope": "Current activation, bounded legacy ordinary-cube pre-send,777 slab collision and modern default-slab placement progress only. Original source inputs, inventory partitions, row counts and family IDs remain intact; complete native/session/live family acceptance remains unfinished.",
+    "trapdoorGate": {
+      "newFocusedCases": 459,
+      "privateAdjacentPasses": 6601,
+      "privateFullClientPasses": 30057,
+      "rootFocusedPasses": 459,
+      "newImmutableCheckpoint": "passed exact2925b51:25gates;43590.NET+15namedskips;1999/918consumers+33DLLs;AOT25132640/exact1smoke;packages;all7CI;independent actual-file review",
+      "nativeLive": "not run"
+    },
+    "doorNative": {
+      "producer": "651ddcbe377a86fe2d4e5f1acde028571cc0d71a",
+      "protocol47": "passed ten bounded scenarios; one executed test/zero skips",
+      "protocol315": "failed missing swing; one executed failure/zero passes; later rows not run",
+      "diagnosis": "native bat/squid participation and cached-bounds/movement ownership gap; no unknown-to-clear substitution"
+    },
+    "priorCodeCommit": "efad22a",
+    "legacyCubePreSend": {
+      "commit": "5fd6b08c518cb005faf89bfaecbf3ffa4a222a79",
+      "profiles": "47,107,108,109,110,210,315,316,335,338,340;393post-send control",
+      "sourceNamedReleases": 24,
+      "rootFocusedPasses": 173,
+      "privateAdjacentPasses": 2945,
+      "privateFullClientPasses": 30230,
+      "evidence": "legacy-cube-presend.md",
+      "limits": "specialized/custom items, uncertain world/body and out-of-height context stayUnknown; finalnative/version acceptance remains open"
+    },
+    "slabCollision": {
+      "commit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "protocol": 777,
+      "families": 33,
+      "states": 198,
+      "wrongHalfSlabAabbsCorrected": 132,
+      "rootFocusedPasses": 210,
+      "newPythonGuards": 12,
+      "evidence": "slab-777-collision.md",
+      "limits": "general collision lookup only; specializedslab placement/merge/result/swing remains separate"
+    },
+    "combinedCheckpoint": {
+      "commit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "repositoryGates": 25,
+      "dotnetPasses": 43973,
+      "namedNormalOptInSkips": 16,
+      "pythonPasses": 394,
+      "sourceEntries": 4267,
+      "generatedIdentical": 61,
+      "consumerTests": [
+        1999,
+        918
+      ],
+      "dependencyDllComparisons": 33,
+      "aotBytes": 25132640,
+      "executedAotSmokes": 1,
+      "allSevenCiPassed": true,
+      "evidence": "slab-presend-checkpoint-20261023.md",
+      "scope": "compatibility checkpoint; broad native/session/live and finalversion acceptance remains open"
+    },
+    "modernSlabPlacement": {
+      "baseCommit": "e6e755df2d02a4d70de31c8cf217adb07d2e7bb0",
+      "integratedAfterDocumentation": "6365be9f8fd30e1d692c6ed945518cde2c2cc8e6",
+      "patchSha256": "7600a88d1db957b757284dbf6c62e3a6576eb7696bf8ec790fd52ad340193234",
+      "profiles": 39,
+      "namedReleasesSourceAudited": 51,
+      "finiteNames": 101,
+      "itemProfileRows": 1924,
+      "rootFocusedPasses": 2344,
+      "privateAdjacentPasses": 6703,
+      "privateFullClientPasses": 32574,
+      "privateAotBytes": 25132640,
+      "privateExecutedAotSmokes": 1,
+      "evidence": "modern-slab-placement.md",
+      "limits": "Legacy slab precheck, arbitrary component patches and uncertain context stay Unknown. Native live and merged producer acceptance remain open."
+    },
+    "additionalMenus": {
+      "behavior": "Original unconditional client menu success, with native smithing-table pass through 1.15.2 and success from 1.16",
+      "protocols": "47–777 where the nineteen exact keys are natively registered; smithing pass477–578/success735+; main-hand default block use766+; local-only placement swing777",
+      "namedReleasesSourceBound": 75,
+      "protocolDatasetsSourceBound": 50,
+      "registrations": 1107,
+      "productionOwner": "BlockUseActivationProfile in BlockUsePrediction.cs",
+      "productionCaller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
+      "evidence": "additional-menu-activation.md",
+      "privateFunctionalIndex": "/tmp/umpk-additional-menus-20261024-v4/functional-receipt-index.json",
+      "privateFunctionalIndexSha256": "56b66768118ba212d3a0d5bc23ebd4dc3053957490e1f28bcc2fb77b0762c418",
+      "producerMeaning": "Current19594 Client source plus one private profile patch; retained c977 informational metadata, frozen c849 dependencies and separately tested compacted Protocol; no normal19594 producer certificate",
+      "focused": "213executed RED160failed/53controls -> same213GREEN; zero skips",
+      "adjacent": "5933passed;18existingclasses",
+      "nativeAot": "25165568bytes <25165824; exact1executedPASSsmoke; actual11ILCinputs and unchanged9packagegraph",
+      "nativeServerAcceptance": "not run",
+      "currentImmutableProducerAcceptance": "not run",
+      "integratedAfter": "19594f2ff938bbe3ae8602114cb80880cd2b27a8",
+      "productionPostimageSha256": "bc25c54d780fd384413e1dba512744e665650cf80d80b5cb62f659c04f6d849e",
+      "rootActualReviewSha256": "b361aeaf7b79b103e97a03d9a8753d2b08edf2d07f5a31bbacd452f46da16da7"
+    },
+    "filledJukebox": {
+      "status": "historical bounded runtime/AOT executed;759–761 acknowledgment defect reproduced; newGREEN/native acceptance pending",
+      "report": "jukebox-activation.md",
+      "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804"
+    },
+    "legacySwitches": {
+      "status": "passed bounded runtime/AOT; native/final acceptance not run",
+      "report": "legacy-switch-activation.md",
+      "completionSha256": "3250f726d42240569150baff81f15462941c4beb85366ad4c291ec41eb326796"
+    },
+    "legacy315NullHardPeers": {
+      "status": "passed bounded runtime/AOT; native315 whole row remains failed",
+      "protocol": 315,
+      "newCases": 14,
+      "clientBaseline": 34655,
+      "expectedSeventeenSuiteTotal": 48442,
+      "fullCombinedSuiteExecuted": false,
+      "focused": "14RED8fail6control; same14profileOnlyRED; connected14GREEN",
+      "originalAdjacentPassed": 2137,
+      "pdbDocuments": 452,
+      "threeFileFormatSha256": "0c76c3362521d65a75c1daac8e1eb5c3e27fc9e2158f20e102db7369ef4f0b5c",
+      "aotBytes": 25157376,
+      "strictLimitBytes": 25165824,
+      "executedPassingSmoke": 1,
+      "producerClientSha256": "62ef39c0aea1bdec4a2ccf179fecbf93923ab2cd62b6edbc1d4ae13ddf2ab270",
+      "rootActualAuditSha256": "73be68f68c5b7e9a04ab1a37c240b5c90110953571b69763273f8fe7784a7eda",
+      "sharedSourceIntegrationSha256": "efbca47f6dcb3f6e58f7a55757da2de81e667c926cada8f9445dd28a5d4278b9",
+      "report": "legacy-ambient-peers-315.md",
+      "remaining": "Native-backed bat fluid and finite hard-peer runtime fixes; complete 1.11 native acceptance row; final combined repository/consumer/package/AOT/CI/version matrix",
+      "latestNative": "Private diagnostic: one whole-row failure after eight partial scenes. Bat 2635 first invalidates in water at tick 474, causing placement uncertainty at tick 505; another bat in lava and three squid near an unclassified distant chicken also invalidate. Fourteen runtime cases pass; normal Integration is 41 passes/18 named skips. No native acceptance pass. Root audit 693d1629 verifies the actual evidence and cleanup.",
+      "priorTenPartialNative": "10partial scenes passed including original iron-held-stone use/swing/worldstack; whole row FAILED before finalaction because obsolete weapon.offhand token; fixture-only slot.weapon.offhand correction and full11scene retry pending",
+      "priorEightPartialNative": "Freshoffhand-fixture-continuationv1: fixturecompile/format/PDB/normal59/discoveryPASS; whole11scene row FAILS iron-held-stone missing swing after8partial scenes; correctedoffhandsceneNOTREACHED; cleanupce0a23e0/all12PIDsabsent/unforcednative0/ports35529,40689closed; exactcontextdiagnosis ongoing",
+      "diagnosticRootAuditSha256": "693d162963513a0e3799c9d8c2454a1acdf8e2dd337ef8b24a0bb4fe47cad1d5",
+      "nativeFluidPilot": {
+        "status": "passed original-native only; production/runtime/live remain pending",
+        "release": "1.11",
+        "protocol": 315,
+        "scenarios": 15,
+        "originalWorldActorTicks": 60,
+        "nativePacketRoundTrips": 398,
+        "states": 377,
+        "nativePlacementQueries": 754,
+        "originalClassOrigins": 45,
+        "rootActualAuditSha256": "0a3ec19804c72e3f1c579450df5f94d0f77d0840380c9d924fadcf877cce417e",
+        "completionSha256": "9cffe64939a34c5abc6980e048a78cfd9b2b95ede155c235732494c1893a507a",
+        "cleanupSha256": "ce67e89c2090894957e6996df6cd7e7c5fc8b5dd905ed6e6abb1f58a25d77c96",
+        "decision": "Base water changes velocity before interpolation; remote unmounted bat travel authority false; cached body does not move directly with current. Implement exact flow or preserve independent certainty."
+      }
+    },
+    "sequencedLocalBlockPrediction": {
+      "status": "private functional runtime passed; strict AOT failed; shared integration/contextual fixes/native and final acceptance pending",
+      "report": "sequenced-block-prediction.md",
+      "sourceBaseCommit": "3dae40c668717d58db906a1e73672eba90868724",
+      "producerKind": "exact private Client/Game source overlays against frozen normal 8efa dependencies",
+      "clientDllSha256": "852ecc9701fa149bed9fc0011d0f606e225f776cda758f6966ea86dbf3a95332",
+      "executed": {
+        "fullClient": 34733,
+        "focused": 298,
+        "adjacentSubsetOfFull": 6593,
+        "physics": 715,
+        "raceRed": {
+          "passed": 4,
+          "failed": 1
+        },
+        "raceGreen": 5,
+        "skipped": 0
+      },
+      "rootAuditSha256": "02235218e96f5209f633142b784f5a64d92f29777c0e746544dd19bce659236a",
+      "completionSha256": "4d041e1ea0114715a8a31ce7a49d6c31760d6b09e54494c20848eeb2c73ff13b",
+      "cleanupSha256": "227aea35820f1915225c060dd01032d7fe7d5e2fe7bce570acbbf66a54c0cb9f",
+      "nativeAot": {
+        "status": "failed",
+        "bytes": 25178240,
+        "strictLimitExclusive": 25165824,
+        "smoke": "not run"
+      },
+      "open": [
+        "native projected-outline clipping",
+        "strict AOT size and executed smoke",
+        "shared source integration",
+        "final repository/consumer/native/version acceptance"
+      ]
+    },
+    "contextualPredictionAck": {
+      "status": "passed private bounded native/runtime; shared integration and final acceptance pending",
+      "report": "sequenced-block-prediction.md#contextual-acknowledgment-collision",
+      "clientDllSha256": "90a0c9991ec061b0134bb58f2868917ccd66749ce23a5fcb7fb3ba6c3438db73",
+      "executed": {
+        "native": 26,
+        "framedRed": {
+          "failed": 12,
+          "controls": 12
+        },
+        "framedGreen": 24,
+        "adjacent": 298,
+        "physics": 715,
+        "skipped": 0
+      },
+      "rootAuditSha256": "936ab96db5590df31421c9f1da7076626a7696f61a01baf89ab913f7951e2194",
+      "completionSha256": "f4a62a22719ad907267b1a911af588619bb80f888f83c381560957522e34108b",
+      "cleanupSha256": "8ac3cb311923b8996191c749f8156f385284ee8f40db793371989c57db8df95a",
+      "aot": "not run; prior25178240FAIL/noSmoke retained, combinedstrictAOT required"
+    }
+  }
+}

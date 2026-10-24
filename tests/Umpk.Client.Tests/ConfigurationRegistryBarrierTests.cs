@@ -4,9 +4,11 @@ using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
+using Umpk.Game.Entities;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Registries;
+using Umpk.Geometry;
 using Umpk.Hosting;
 using Umpk.Nbt;
 using Umpk.Protocol.Java;
@@ -28,6 +30,33 @@ public sealed class ConfigurationRegistryBarrierTests
     private const int BootsMenuSlot = 8;
 
     private static JavaVersion Version => JavaVersions.V1_21_11;
+
+    [Fact]
+    public async Task ConfigurationTagsAreInstalledBeforeTheFirstPlayPacketIsApplied()
+    {
+        using var cts = new CancellationTokenSource(Budget);
+        CancellationToken ct = cts.Token;
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = Client(server);
+        var tag = Identifier.Parse("umpk_test:mineable");
+        var firstPlayMembership = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        client.Events.Subscribe<PacketReceived>(received =>
+        {
+            if (received.Packet is ClientboundPlayKeepAlivePacket)
+                firstPlayMembership.TrySetResult(client.State.RegistryTags.Contains(RegistryIds.Block, tag, 1));
+        });
+        Task connect = client.ConnectAsync(new ServerEndpoint("test", 25565), ct);
+        await DriveToConfigurationAsync(server, ct);
+        await SendAsync(server, ProtocolPhase.Configuration, new ClientboundConfigUpdateTagsPacket(
+            [new TagRegistry(RegistryIds.Block, [new TagEntry(tag, [1])])]), PacketCodecContext.Registryless, ct);
+        await SendAsync(server, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), PacketCodecContext.Registryless, ct);
+        server.ServerConnection.SetPhase(ProtocolPhase.Play);
+        await SendAsync(server, ProtocolPhase.Play, new ClientboundPlayKeepAlivePacket(17), PacketCodecContext.Registryless, ct);
+        Assert.IsType<ServerboundFinishConfigurationPacket>(DecodeServerbound(await server.NextFrameAsync(ct), ProtocolPhase.Configuration));
+        await connect.WaitAsync(Budget, ct);
+
+        Assert.True(await firstPlayMembership.Task.WaitAsync(Budget, ct));
+    }
 
     [Fact]
     public async Task UnownedKnownPack_IsDeclinedAndFullRegistriesReachTheFirstPlayPacket()
@@ -252,7 +281,75 @@ public sealed class ConfigurationRegistryBarrierTests
         Assert.Equal(48, harness.State.Registries!.DimensionTypes[0].Value.MinY);
     }
 
-    private static UmpkClient Client(FakeJavaServer server) => new UmpkClientBuilder()
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task RespawnRetainsOnlyTheMatchingWorldOnTheRealDriver(bool terrain, bool changeDimension)
+    {
+        using var cts = new CancellationTokenSource(Budget);
+        CancellationToken ct = cts.Token;
+        await using FakeJavaServer server = FakeJavaServer.Create();
+        await using UmpkClient client = Client(server, terrain);
+        Task connect = client.ConnectAsync(new ServerEndpoint("test", 25565), ct);
+        await DriveToConfigurationAsync(server, ct);
+        await SendAsync(server, ProtocolPhase.Configuration, DimensionRegistry(
+            Dimension("minecraft:overworld", -64, 384, hasSkylight: true),
+            Dimension(CustomType.ToString(), 48, 128, hasSkylight: true)), PacketCodecContext.Registryless, ct);
+        await SendAsync(server, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), PacketCodecContext.Registryless, ct);
+        server.ServerConnection.SetPhase(ProtocolPhase.Play);
+        await ScriptedServer.SendPlayReadinessFrameAsync(server, Version.Protocol, ct);
+        _ = await server.NextFrameAsync(ct);
+        await connect.WaitAsync(Budget, ct);
+
+        var joined = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable joinSubscription = client.Events.Subscribe<JoinedGame>(_ => joined.TrySetResult());
+        await SendAsync(server, ProtocolPhase.Play, Join(CustomWorld.ToString(), 1), PacketCodecContext.Registryless, ct);
+        await joined.Task.WaitAsync(Budget, ct);
+        var target = new BlockPos(2, 64, 2);
+        var before = await client.InvokeAsync(c =>
+        {
+            Assert.True(c.State.Registries!.EntityTypes.TryGet(Identifier.Minecraft("cow"), out RegistryEntry<EntityTypeDefinition> cow));
+            Entity entity = c.State.Entities.Add(new Entity(42, Guid.NewGuid(), cow));
+            Assert.True(c.State.Registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
+            if (terrain)
+                c.State.World.SetBlockStateId(target, stone.DefaultStateId);
+            return (World: c.State.WorldOrNull, Entity: entity, Lifetime: c.State.PlayerLifetime, Stone: stone.DefaultStateId);
+        }, ct);
+
+        var respawned = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable respawnSubscription = client.Events.Subscribe<Respawned>(_ => respawned.TrySetResult());
+        await SendAsync(server, ProtocolPhase.Play,
+            new ClientboundRespawnPacket(Spawn(changeDimension ? "minecraft:overworld" : CustomWorld.ToString(), changeDimension ? 0 : 1), 0, null),
+            PacketCodecContext.Registryless, ct);
+        await respawned.Task.WaitAsync(Budget, ct);
+
+        await client.InvokeAsync(c =>
+        {
+            Assert.Equal(before.Lifetime + 1, c.State.PlayerLifetime);
+            if (changeDimension)
+            {
+                Assert.Empty(c.State.Entities.All);
+                if (terrain)
+                {
+                    Assert.NotSame(before.World, c.State.World);
+                    Assert.Equal(Identifier.Minecraft("overworld"), c.State.World.Dimension.DimensionName);
+                }
+            }
+            else
+            {
+                Assert.Same(before.Entity, c.State.Entities.Get(42));
+                Assert.Same(before.World, c.State.WorldOrNull);
+                if (terrain)
+                    Assert.Equal(before.Stone, c.State.World.GetBlockStateId(target));
+            }
+            Assert.Equal(terrain, c.State.HasWorld);
+            return true;
+        }, ct);
+    }
+
+    private static UmpkClient Client(FakeJavaServer server, bool terrain = true) => new UmpkClientBuilder()
         .UseVersion(Version)
         .UseProfile(new GameProfile(Guid.NewGuid(), "Tester"))
         .UseConnectionFactory(new PipeConnectionFactory(server.ClientPipe))
@@ -260,7 +357,8 @@ public sealed class ConfigurationRegistryBarrierTests
         .UseTickSource(new ManualTicks())
         .ConfigureFeatures(features =>
         {
-            features.Terrain = true;
+            features.Terrain = terrain;
+            features.Entities = true;
             features.Inventory = true;
             features.Physics = false;
             features.Pathfinding = false;

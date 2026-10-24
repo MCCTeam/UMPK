@@ -28,6 +28,7 @@ public sealed class UmpkClient : IAsyncDisposable
     private readonly ITickSource _tickSource;
     private readonly EventBus _eventBus;
     private readonly MovementLeaseManager _leases = new();
+    private readonly List<int> _interpolatedEntityMoves = [];
     private readonly CommandService<ClientCommandSource> _commands = new();
     private readonly WireIndex _wire;
     private readonly int _customPayloadWireId;
@@ -83,16 +84,21 @@ public sealed class UmpkClient : IAsyncDisposable
     private TaskCompletionSource<bool> _spawned =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    internal UmpkClient(UmpkClientSettings settings)
+    internal UmpkClient(UmpkClientSettings settings, TimeProvider? nativeFrameTime = null, ITickSource? nativeFrames = null)
     {
         _settings = settings;
         _logger = settings.LoggerFactory.CreateLogger("Umpk.Client");
         _ownsScheduler = settings.Scheduler is null;
         _scheduler = settings.Scheduler ?? new ChannelSessionScheduler(ex => _logger.LogError(ex, "Session loop work threw."));
-        _tickSource = settings.TickSource ?? new PeriodicTimerTickSource();
         _eventBus = new EventBus(_logger, settings.Options.LoopStallThreshold, settings.Options.DefaultStreamCapacity);
 
         State = new ClientState(settings.Features);
+        // Match the bound packet identity rather than a numeric version or an unimplemented marker. Host-provided sources already supply game ticks.
+        bool hasTickControl = settings.Version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound)
+            .Packets.Any(entry => ReferenceEquals(entry.Type, WorldPackets.Clientbound.TickingState));
+        _tickSource = settings.TickSource ?? (hasTickControl
+            ? new NativeClientTickSource(State.WorldTicks, nativeFrameTime, nativeFrames)
+            : new PeriodicTimerTickSource());
         Events = new ClientEvents(_eventBus);
         Snapshots = new ClientSnapshots(this);
         // The one discarded task in this class that stays discarded, and the reason is structural rather than convenient: EventBus.PublishAsync isolates every handler in its own try/catch and its stream sinks cannot throw, so this task has no failure to observe. It also cannot be awaited - the lag report is raised from inside another publish (or from a stream consumer's thread), where awaiting would re-enter the bus.
@@ -116,6 +122,8 @@ public sealed class UmpkClient : IAsyncDisposable
             Scheduler = _scheduler,
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
+            ReadPhysicsState = () => _physics?.EngineState,
+            ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false),
             Events = _eventBus,
         };
 
@@ -132,6 +140,8 @@ public sealed class UmpkClient : IAsyncDisposable
                 settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(settings.Version.Version.Protocol),
                 _logger)
             : null;
+        State.EntityGeometry.FixedPositionContext = (entity, bounds) => State.EntityGeometry.FixedContextIsKnown(
+            entity, bounds, State.EntitiesOrNull, State.WorldOrNull, State.EntityMembership, settings.Version.Version.Protocol, _physics?.HasCompletePistonContext is true);
         _movementReporter = new MovementReporter(_services);
         _navigator = _physics is not null
             ? new Navigator(_services, _physics, _leases, _logger, () => Actions?.Interaction)
@@ -270,6 +280,12 @@ public sealed class UmpkClient : IAsyncDisposable
 
     /// <summary>The profile configured for a not-yet-connected supervised attempt.</summary>
     internal GameProfile ConfiguredProfile => _settings.Profile;
+
+    /// <summary>The physics owner's observed pose eye height, or standing height when physics is unavailable. Read through <see cref="InvokeAsync{T}"/> for session-loop consistency.</summary>
+    public double SelfEyeHeight => _services.EyeHeight;
+
+    /// <summary>The tracked feet position plus <see cref="SelfEyeHeight"/>. Read through <see cref="InvokeAsync{T}"/> for session-loop consistency.</summary>
+    public Vec3d SelfEyePosition => _services.EyePosition;
 
     /// <summary>
     /// The login-phase plugin channels this client claims. Register on this BEFORE <see cref="ConnectAsync"/> is called (the client is in <see cref="ClientStatus.Created"/> then): the login driver reads the registry as each <c>minecraft:custom_query</c> arrives, and login is over before any per-session attach point exists. A channel nobody claimed keeps getting <c>understood = false</c>, which is what this client has always answered.
@@ -727,6 +743,7 @@ public sealed class UmpkClient : IAsyncDisposable
             PhysicsConditionsDirty = _pushPhysicsConditions,
             PhysicsPositionDirty = _resyncPhysicsPosition,
             PhysicsVelocityDirty = _applyPhysicsVelocity,
+            StopBlockDestruction = Actions.Interaction.StopDestroyBlockOnLoopAsync,
             CommandCompletions = _commandCompletions,
             Sequences = _sequences,
             DispatchConfigurationChannel = _dispatchConfigurationChannel,
@@ -786,32 +803,14 @@ public sealed class UmpkClient : IAsyncDisposable
     /// <summary>Creates and installs the world only after the current dimension can be resolved from the finalized session registries. Callers compute this before mutating prior join/respawn state, so a required modern dimension failure cannot leave a partially replaced world behind.</summary>
     private void SetupWorld(CommonWorldSetup setup)
     {
+        WorldFactory.InstallWorld(State, setup, _settings.Version.Version.Protocol);
+        // A retained level still receives a new local player, including sessions without terrain storage.
+        _movementReadiness.Reset();
         if (!_settings.Features.Terrain)
             return;
 
-        Game.Registries.RegistryAccess? registries = State.Registries;
-        Game.Registries.Registry<Game.Registries.BlockDefinition>? blocks = registries?.Blocks;
-
-        // Pre-flattening versions key block states as (id << 4) | meta, which is the identity TryDecodeLegacy exposes; the flattening at 1.13 replaced it with a flat state index and there is no such pair to recover after it.
-        bool legacyStates = _settings.Version.Version.Protocol < FirstFlattenedProtocol;
-        var blockData = blocks is not null
-            ? (Game.Blocks.IBlockDataSource)new RegistryBlockDataSource(blocks, legacyStates)
-            : new RegistryBlockDataSource(EmptyBlockRegistry(), legacyStates);
-
-        Game.World.DimensionState dimension = WorldFactory.CreateDimension(
-            setup, registries, _settings.Version.Version.Protocol);
-        Game.Registries.Registry<Game.Registries.BiomeDefinition> biomes = WorldFactory.EmptyBiomes();
-        var world = new Game.World.World(dimension, blockData, biomes);
-        State.InstallWorld(world);
-        _movementReadiness.Reset();
         _physics?.EnsureEngine();
     }
-
-    /// <summary>The first protocol whose block states are a flat index rather than <c>(id &lt;&lt; 4) | meta</c> (1.13, the flattening). Below it the legacy id/meta pair is a real identity a consumer can read.</summary>
-    private const int FirstFlattenedProtocol = 393;
-
-    private static Game.Registries.Registry<Game.Registries.BlockDefinition> EmptyBlockRegistry()
-        => WorldFactory.EmptyBlocks();
 
     private async Task TickLoopAsync(JavaConnection connection, CancellationTokenSource sessionCts)
     {
@@ -860,6 +859,15 @@ public sealed class UmpkClient : IAsyncDisposable
         // The session's own tick clock, advanced first so everything below dates against the tick it is running in. It is not gated on any feature - only the physics block further down is - because what it dates (today, effect apply stamps) is written by appliers that run whatever the feature set is.
         State.AdvanceSessionTick();
 
+        // TickRateManager latches whether this world tick runs before consuming a granted step. Player input still runs while the world is frozen.
+        if (State.WorldDimension is not null)
+            State.WorldTicks.BeginTick();
+
+        State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+
+        // Held block input runs on the same clock as locomotion, before the movement report. A request never waits for a future tick or a server acknowledgment inside this loop.
+        await Actions.Interaction.TickMiningOnLoopAsync(ct).ConfigureAwait(false);
+
         // A server that stops ticking stops broadcasting game time, so the tick-rate estimate can only expire on our own clock. Without this a paused server (1.21.2+ pause-when-empty) or a hung one would keep reporting the last rate it managed forever.
         State.Server.ExpireStaleTickRate(TimeProvider.System.GetTimestamp(), TimeProvider.System);
 
@@ -870,14 +878,15 @@ public sealed class UmpkClient : IAsyncDisposable
         foreach (PluginHost host in Plugins.SnapshotHosts())
             host.Scheduler.Ticks.Tick(ex => _logger.LogError(ex, "Plugin {Plugin} tick threw.", host.Id));
 
-        // Placement and terrain feed the era-specific readiness owner below. Older clients continue to consult the current column, protocol 770 has its bounded fallback, and later load-tracker clients retain readiness after the first usable terrain. This prevents initial free fall into an empty world without imposing an incorrect universal own-column gate after loading.
+        // The native player tick uses received chunk availability independently of terrain storage and physics. Protocol 768 ticks immediately; 769–773 also count the pre-position load timeout, and later load-tracker clients retain readiness after their first usable terrain.
         //
         // The position report itself is no longer gated on movementFree. A movement lease (Navigator.MoveToAsync / NavigateAsync) suppresses the idle physics step for its whole run, but it moves the tracked position on every tick of its own. Reporting that position each tick keeps long navigations below the server's move-distance limit instead of sending one large displacement when the lease ends.
         bool placed = _spawned.Task.IsCompletedSuccessfully && _spawned.Task.Result;
         ReadinessTick readiness = _movementReadiness.Advance(
             _settings.Version.Version.Protocol,
-            placed && State.HasWorld,
-            State.IsLocalChunkLoaded);
+            placed,
+            State.EntityMembership.HasColumn(BlockPos.Containing(State.Self.Position)),
+            playerExists: State.WorldDimension is not null);
 
         if (readiness.AnnouncePlayerLoaded && _sink is { } readinessSink)
             await SendTickPacketAsync(
@@ -885,12 +894,12 @@ public sealed class UmpkClient : IAsyncDisposable
                     "player_loaded")
                 .ConfigureAwait(false);
 
+        bool controlsSelf = State.Self.CameraEntityId is null;
         if (_settings.Features.Physics && readiness.MovementEligible)
         {
             // Breath runs before the movement step and regardless of the lease, so it reads the water state the previous tick's movement left behind; and it ticks on every tick the player is alive, not only the ones where nothing else is steering. The server's own value overwrites this one whenever a set_entity_data for the local player arrives, on this same loop.
             _physics?.TickAirSupply();
 
-            bool controlsSelf = State.Self.CameraEntityId is null;
             bool movementFree = _leases.CurrentOwner is null;
             if (controlsSelf && _physics is { } physics)
             {
@@ -903,6 +912,37 @@ public sealed class UmpkClient : IAsyncDisposable
                 if (physics.StepSequence == beforeStep && (movementFree || navigationActive))
                     physics.TickIdle();
             }
+
+        }
+
+        // Native Player.tick advances attack strength after input and movement simulation, before LocalPlayer publishes its movement. Player loading gates this phase; disabling physics does not disable the player's charge counter.
+        Actions.Interaction.TickAttackChargeOnLoop(_movementReadiness.PlayerTickEligible);
+        if (_movementReadiness.PlayerTickEligible)
+            State.Self.TickItemCooldowns();
+
+        // Modern remote players remain ticking outside loaded terrain. Their native motion phase uses this same session clock even when local physics is disabled.
+        if (State.WorldDimension is not null)
+        {
+            _interpolatedEntityMoves.Clear();
+            List<int>? changedVehicles = State.TickEntities(_settings.Version.Version.Protocol,
+                _settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(_settings.Version.Version.Protocol), _interpolatedEntityMoves, _physics?.EngineState?.BoundingBox);
+            // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
+            if (State.WorldTicks.RunsNormally)
+                State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);
+            State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+            if (changedVehicles is not null)
+                foreach (int vehicleId in changedVehicles)
+                    await _eventBus.PublishAsync(new EntityPassengersChanged(vehicleId)).ConfigureAwait(false);
+            foreach (int entityId in _interpolatedEntityMoves)
+                await _eventBus.PublishAsync(new EntityMoved(entityId)).ConfigureAwait(false);
+        }
+
+        if (_settings.Features.Physics && readiness.MovementEligible)
+        {
+            // Native 26.3 publishes the player after block entities; earlier clients publish during the entity phase.
+            bool reportsAfterBlockEntities = _movementReporter.ReportsAfterBlockEntities;
+            if (reportsAfterBlockEntities)
+                _physics?.TickPistons();
 
             if (controlsSelf && _sink is not null && _physics?.EngineState is { } engineState)
             {
@@ -922,10 +962,16 @@ public sealed class UmpkClient : IAsyncDisposable
                     .ConfigureAwait(false);
             }
 
-            // Vanilla's client ticks block entities AFTER ticking entities, and local-player tick is where sendPosition happens. So a piston push lands on the wire on the NEXT tick, and this call sits after the send to keep that order rather than to beat it.
-            _physics?.TickPistons();
+            if (!reportsAfterBlockEntities)
+                _physics?.TickPistons();
 
         }
+
+        // ClientLevel.tick follows entities and block entities. Border animation is world state, so it respects freeze/step and does not publish a packet-change event.
+        if (State.WorldDimension is not null)
+            State.EntityMembership.FinishWorldPhase();
+        if (State.WorldOrNull is { } tickingWorld && State.WorldTicks.RunsNormally)
+            tickingWorld.SetBorder(tickingWorld.Border.AdvanceTick());
 
         // The end-of-tick marker (1.21.2+). Vanilla's client sends it every tick and the server uses the ticks it does NOT arrive in to notice the player stopped moving: without it receivedMovementThisTick latches true after the first movement packet and the server's record of the player's velocity never returns to zero. Sent last in the tick, after any movement, so the frame order matches vanilla's.
         if (_sendsTickEnd && _sink is { } tickSink && State.Self.HasSpawned)

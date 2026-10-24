@@ -1,0 +1,1946 @@
+{
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 198,
+  "measured_state_count": 1394,
+  "blocks": {
+    "acacia_door": 2,
+    "acacia_fence": 2,
+    "acacia_fence_gate": 2,
+    "acacia_stairs": 2,
+    "activator_rail": 3,
+    "air": 1,
+    "anvil": 2,
+    "barrier": 3,
+    "beacon": 2,
+    "bed": 2,
+    "bedrock": 3,
+    "birch_door": 2,
+    "birch_fence": 2,
+    "birch_fence_gate": 2,
+    "birch_stairs": 2,
+    "bookshelf": 3,
+    "brewing_stand": 2,
+    "brick_block": 3,
+    "brick_stairs": 2,
+    "brown_mushroom": 3,
+    "brown_mushroom_block": 3,
+    "cactus": 3,
+    "cake": 2,
+    "carpet": 3,
+    "carrots": 3,
+    "cauldron": 2,
+    "chest": 2,
+    "clay": 3,
+    "coal_block": 3,
+    "coal_ore": 3,
+    "cobblestone": 3,
+    "cobblestone_wall": 3,
+    "cocoa": 3,
+    "command_block": 2,
+    "crafting_table": 2,
+    "dark_oak_door": 2,
+    "dark_oak_fence": 2,
+    "dark_oak_fence_gate": 2,
+    "dark_oak_stairs": 2,
+    "daylight_detector": 2,
+    "daylight_detector_inverted": 2,
+    "deadbush": 1,
+    "detector_rail": 3,
+    "diamond_block": 3,
+    "diamond_ore": 3,
+    "dirt": 3,
+    "dispenser": 2,
+    "double_plant": 1,
+    "double_stone_slab": 3,
+    "double_stone_slab2": 3,
+    "double_wooden_slab": 3,
+    "dragon_egg": 2,
+    "dropper": 2,
+    "emerald_block": 3,
+    "emerald_ore": 3,
+    "enchanting_table": 2,
+    "end_portal": 3,
+    "end_portal_frame": 3,
+    "end_stone": 3,
+    "ender_chest": 2,
+    "farmland": 3,
+    "fence": 2,
+    "fence_gate": 2,
+    "fire": 3,
+    "flower_pot": 2,
+    "flowing_lava": 3,
+    "flowing_water": 3,
+    "furnace": 2,
+    "glass": 3,
+    "glass_pane": 3,
+    "glowstone": 3,
+    "gold_block": 3,
+    "gold_ore": 3,
+    "golden_rail": 3,
+    "grass": 3,
+    "gravel": 3,
+    "hardened_clay": 3,
+    "hay_block": 3,
+    "heavy_weighted_pressure_plate": 3,
+    "hopper": 2,
+    "ice": 3,
+    "iron_bars": 3,
+    "iron_block": 3,
+    "iron_door": 2,
+    "iron_ore": 3,
+    "iron_trapdoor": 2,
+    "jukebox": 2,
+    "jungle_door": 2,
+    "jungle_fence": 2,
+    "jungle_fence_gate": 2,
+    "jungle_stairs": 2,
+    "ladder": 3,
+    "lapis_block": 3,
+    "lapis_ore": 3,
+    "lava": 3,
+    "leaves": 3,
+    "leaves2": 3,
+    "lever": 2,
+    "light_weighted_pressure_plate": 3,
+    "lit_furnace": 2,
+    "lit_pumpkin": 3,
+    "lit_redstone_lamp": 3,
+    "lit_redstone_ore": 2,
+    "log": 3,
+    "log2": 3,
+    "melon_block": 3,
+    "melon_stem": 3,
+    "mob_spawner": 3,
+    "monster_egg": 3,
+    "mossy_cobblestone": 3,
+    "mycelium": 3,
+    "nether_brick": 3,
+    "nether_brick_fence": 2,
+    "nether_brick_stairs": 2,
+    "nether_wart": 3,
+    "netherrack": 3,
+    "noteblock": 2,
+    "oak_stairs": 2,
+    "obsidian": 3,
+    "packed_ice": 3,
+    "piston": 3,
+    "piston_extension": 2,
+    "piston_head": 3,
+    "planks": 3,
+    "portal": 3,
+    "potatoes": 3,
+    "powered_comparator": 2,
+    "powered_repeater": 2,
+    "prismarine": 3,
+    "pumpkin": 3,
+    "pumpkin_stem": 3,
+    "quartz_block": 3,
+    "quartz_ore": 3,
+    "quartz_stairs": 2,
+    "rail": 3,
+    "red_flower": 3,
+    "red_mushroom": 3,
+    "red_mushroom_block": 3,
+    "red_sandstone": 3,
+    "red_sandstone_stairs": 2,
+    "redstone_block": 3,
+    "redstone_lamp": 3,
+    "redstone_ore": 2,
+    "redstone_torch": 3,
+    "redstone_wire": 3,
+    "reeds": 3,
+    "sand": 3,
+    "sandstone": 3,
+    "sandstone_stairs": 2,
+    "sapling": 3,
+    "sea_lantern": 3,
+    "skull": 3,
+    "slime": 3,
+    "snow": 3,
+    "snow_layer": 1,
+    "soul_sand": 3,
+    "sponge": 3,
+    "spruce_door": 2,
+    "spruce_fence": 2,
+    "spruce_fence_gate": 2,
+    "spruce_stairs": 2,
+    "stained_glass": 3,
+    "stained_glass_pane": 3,
+    "stained_hardened_clay": 3,
+    "standing_banner": 3,
+    "standing_sign": 2,
+    "sticky_piston": 3,
+    "stone": 3,
+    "stone_brick_stairs": 2,
+    "stone_button": 2,
+    "stone_pressure_plate": 3,
+    "stone_slab": 3,
+    "stone_slab2": 3,
+    "stone_stairs": 2,
+    "stonebrick": 3,
+    "tallgrass": 1,
+    "tnt": 2,
+    "torch": 3,
+    "trapdoor": 2,
+    "trapped_chest": 2,
+    "tripwire": 3,
+    "tripwire_hook": 3,
+    "unlit_redstone_torch": 3,
+    "unpowered_comparator": 2,
+    "unpowered_repeater": 2,
+    "vine": 1,
+    "wall_banner": 3,
+    "wall_sign": 2,
+    "water": 3,
+    "waterlily": 3,
+    "web": 3,
+    "wheat": 3,
+    "wooden_button": 2,
+    "wooden_door": 2,
+    "wooden_pressure_plate": 3,
+    "wooden_slab": 3,
+    "wool": 3,
+    "yellow_flower": 3
+  },
+  "items": {
+    "acacia_door": [
+      "unknown",
+      ""
+    ],
+    "acacia_fence": [
+      "unknown",
+      "acacia_fence"
+    ],
+    "acacia_fence_gate": [
+      "unknown",
+      "acacia_fence_gate"
+    ],
+    "acacia_stairs": [
+      "unknown",
+      "acacia_stairs"
+    ],
+    "activator_rail": [
+      "unknown",
+      "activator_rail"
+    ],
+    "air": [
+      "pass",
+      ""
+    ],
+    "anvil": [
+      "unknown",
+      "anvil"
+    ],
+    "apple": [
+      "pass",
+      ""
+    ],
+    "armor_stand": [
+      "unknown",
+      ""
+    ],
+    "arrow": [
+      "pass",
+      ""
+    ],
+    "baked_potato": [
+      "pass",
+      ""
+    ],
+    "banner": [
+      "unknown",
+      "standing_banner"
+    ],
+    "barrier": [
+      "simple_cube",
+      "barrier"
+    ],
+    "beacon": [
+      "simple_cube",
+      "beacon"
+    ],
+    "bed": [
+      "unknown",
+      ""
+    ],
+    "bedrock": [
+      "simple_cube",
+      "bedrock"
+    ],
+    "beef": [
+      "pass",
+      ""
+    ],
+    "birch_door": [
+      "unknown",
+      ""
+    ],
+    "birch_fence": [
+      "unknown",
+      "birch_fence"
+    ],
+    "birch_fence_gate": [
+      "unknown",
+      "birch_fence_gate"
+    ],
+    "birch_stairs": [
+      "unknown",
+      "birch_stairs"
+    ],
+    "blaze_powder": [
+      "pass",
+      ""
+    ],
+    "blaze_rod": [
+      "pass",
+      ""
+    ],
+    "boat": [
+      "pass",
+      ""
+    ],
+    "bone": [
+      "pass",
+      ""
+    ],
+    "book": [
+      "pass",
+      ""
+    ],
+    "bookshelf": [
+      "simple_cube",
+      "bookshelf"
+    ],
+    "bow": [
+      "pass",
+      ""
+    ],
+    "bowl": [
+      "pass",
+      ""
+    ],
+    "bread": [
+      "pass",
+      ""
+    ],
+    "brewing_stand": [
+      "unknown",
+      ""
+    ],
+    "brick": [
+      "pass",
+      ""
+    ],
+    "brick_block": [
+      "simple_cube",
+      "brick_block"
+    ],
+    "brick_stairs": [
+      "unknown",
+      "brick_stairs"
+    ],
+    "brown_mushroom": [
+      "unknown",
+      "brown_mushroom"
+    ],
+    "brown_mushroom_block": [
+      "unknown",
+      "brown_mushroom_block"
+    ],
+    "bucket": [
+      "pass",
+      ""
+    ],
+    "cactus": [
+      "unknown",
+      "cactus"
+    ],
+    "cake": [
+      "unknown",
+      ""
+    ],
+    "carpet": [
+      "unknown",
+      "carpet"
+    ],
+    "carrot": [
+      "unknown",
+      ""
+    ],
+    "carrot_on_a_stick": [
+      "pass",
+      ""
+    ],
+    "cauldron": [
+      "unknown",
+      ""
+    ],
+    "chainmail_boots": [
+      "pass",
+      ""
+    ],
+    "chainmail_chestplate": [
+      "pass",
+      ""
+    ],
+    "chainmail_helmet": [
+      "pass",
+      ""
+    ],
+    "chainmail_leggings": [
+      "pass",
+      ""
+    ],
+    "chest": [
+      "unknown",
+      "chest"
+    ],
+    "chest_minecart": [
+      "unknown",
+      ""
+    ],
+    "chicken": [
+      "pass",
+      ""
+    ],
+    "clay": [
+      "simple_cube",
+      "clay"
+    ],
+    "clay_ball": [
+      "pass",
+      ""
+    ],
+    "clock": [
+      "pass",
+      ""
+    ],
+    "coal": [
+      "pass",
+      ""
+    ],
+    "coal_block": [
+      "simple_cube",
+      "coal_block"
+    ],
+    "coal_ore": [
+      "simple_cube",
+      "coal_ore"
+    ],
+    "cobblestone": [
+      "simple_cube",
+      "cobblestone"
+    ],
+    "cobblestone_wall": [
+      "unknown",
+      "cobblestone_wall"
+    ],
+    "command_block": [
+      "unknown",
+      "command_block"
+    ],
+    "command_block_minecart": [
+      "unknown",
+      ""
+    ],
+    "comparator": [
+      "unknown",
+      ""
+    ],
+    "compass": [
+      "pass",
+      ""
+    ],
+    "cooked_beef": [
+      "pass",
+      ""
+    ],
+    "cooked_chicken": [
+      "pass",
+      ""
+    ],
+    "cooked_fish": [
+      "pass",
+      ""
+    ],
+    "cooked_mutton": [
+      "pass",
+      ""
+    ],
+    "cooked_porkchop": [
+      "pass",
+      ""
+    ],
+    "cooked_rabbit": [
+      "pass",
+      ""
+    ],
+    "cookie": [
+      "pass",
+      ""
+    ],
+    "crafting_table": [
+      "simple_cube",
+      "crafting_table"
+    ],
+    "dark_oak_door": [
+      "unknown",
+      ""
+    ],
+    "dark_oak_fence": [
+      "unknown",
+      "dark_oak_fence"
+    ],
+    "dark_oak_fence_gate": [
+      "unknown",
+      "dark_oak_fence_gate"
+    ],
+    "dark_oak_stairs": [
+      "unknown",
+      "dark_oak_stairs"
+    ],
+    "daylight_detector": [
+      "unknown",
+      "daylight_detector"
+    ],
+    "deadbush": [
+      "unknown",
+      "deadbush"
+    ],
+    "detector_rail": [
+      "unknown",
+      "detector_rail"
+    ],
+    "diamond": [
+      "pass",
+      ""
+    ],
+    "diamond_axe": [
+      "pass",
+      ""
+    ],
+    "diamond_block": [
+      "simple_cube",
+      "diamond_block"
+    ],
+    "diamond_boots": [
+      "pass",
+      ""
+    ],
+    "diamond_chestplate": [
+      "pass",
+      ""
+    ],
+    "diamond_helmet": [
+      "pass",
+      ""
+    ],
+    "diamond_hoe": [
+      "unknown",
+      ""
+    ],
+    "diamond_horse_armor": [
+      "pass",
+      ""
+    ],
+    "diamond_leggings": [
+      "pass",
+      ""
+    ],
+    "diamond_ore": [
+      "simple_cube",
+      "diamond_ore"
+    ],
+    "diamond_pickaxe": [
+      "pass",
+      ""
+    ],
+    "diamond_shovel": [
+      "pass",
+      ""
+    ],
+    "diamond_sword": [
+      "pass",
+      ""
+    ],
+    "dirt": [
+      "simple_cube",
+      "dirt"
+    ],
+    "dispenser": [
+      "unknown",
+      "dispenser"
+    ],
+    "double_plant": [
+      "unknown",
+      "double_plant"
+    ],
+    "dragon_egg": [
+      "unknown",
+      "dragon_egg"
+    ],
+    "dropper": [
+      "unknown",
+      "dropper"
+    ],
+    "dye": [
+      "unknown",
+      ""
+    ],
+    "egg": [
+      "pass",
+      ""
+    ],
+    "emerald": [
+      "pass",
+      ""
+    ],
+    "emerald_block": [
+      "simple_cube",
+      "emerald_block"
+    ],
+    "emerald_ore": [
+      "simple_cube",
+      "emerald_ore"
+    ],
+    "enchanted_book": [
+      "pass",
+      ""
+    ],
+    "enchanting_table": [
+      "unknown",
+      "enchanting_table"
+    ],
+    "end_portal_frame": [
+      "unknown",
+      "end_portal_frame"
+    ],
+    "end_stone": [
+      "simple_cube",
+      "end_stone"
+    ],
+    "ender_chest": [
+      "unknown",
+      "ender_chest"
+    ],
+    "ender_eye": [
+      "unknown",
+      ""
+    ],
+    "ender_pearl": [
+      "pass",
+      ""
+    ],
+    "experience_bottle": [
+      "pass",
+      ""
+    ],
+    "farmland": [
+      "unknown",
+      "farmland"
+    ],
+    "feather": [
+      "pass",
+      ""
+    ],
+    "fence": [
+      "unknown",
+      "fence"
+    ],
+    "fence_gate": [
+      "unknown",
+      "fence_gate"
+    ],
+    "fermented_spider_eye": [
+      "pass",
+      ""
+    ],
+    "filled_map": [
+      "pass",
+      ""
+    ],
+    "fire_charge": [
+      "unknown",
+      ""
+    ],
+    "firework_charge": [
+      "pass",
+      ""
+    ],
+    "fireworks": [
+      "unknown",
+      ""
+    ],
+    "fish": [
+      "pass",
+      ""
+    ],
+    "fishing_rod": [
+      "pass",
+      ""
+    ],
+    "flint": [
+      "pass",
+      ""
+    ],
+    "flint_and_steel": [
+      "unknown",
+      ""
+    ],
+    "flower_pot": [
+      "unknown",
+      ""
+    ],
+    "furnace": [
+      "unknown",
+      "furnace"
+    ],
+    "furnace_minecart": [
+      "unknown",
+      ""
+    ],
+    "ghast_tear": [
+      "pass",
+      ""
+    ],
+    "glass": [
+      "simple_cube",
+      "glass"
+    ],
+    "glass_bottle": [
+      "pass",
+      ""
+    ],
+    "glass_pane": [
+      "unknown",
+      "glass_pane"
+    ],
+    "glowstone": [
+      "simple_cube",
+      "glowstone"
+    ],
+    "glowstone_dust": [
+      "pass",
+      ""
+    ],
+    "gold_block": [
+      "simple_cube",
+      "gold_block"
+    ],
+    "gold_ingot": [
+      "pass",
+      ""
+    ],
+    "gold_nugget": [
+      "pass",
+      ""
+    ],
+    "gold_ore": [
+      "simple_cube",
+      "gold_ore"
+    ],
+    "golden_apple": [
+      "pass",
+      ""
+    ],
+    "golden_axe": [
+      "pass",
+      ""
+    ],
+    "golden_boots": [
+      "pass",
+      ""
+    ],
+    "golden_carrot": [
+      "pass",
+      ""
+    ],
+    "golden_chestplate": [
+      "pass",
+      ""
+    ],
+    "golden_helmet": [
+      "pass",
+      ""
+    ],
+    "golden_hoe": [
+      "unknown",
+      ""
+    ],
+    "golden_horse_armor": [
+      "pass",
+      ""
+    ],
+    "golden_leggings": [
+      "pass",
+      ""
+    ],
+    "golden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "golden_rail": [
+      "unknown",
+      "golden_rail"
+    ],
+    "golden_shovel": [
+      "pass",
+      ""
+    ],
+    "golden_sword": [
+      "pass",
+      ""
+    ],
+    "grass": [
+      "simple_cube",
+      "grass"
+    ],
+    "gravel": [
+      "simple_cube",
+      "gravel"
+    ],
+    "gunpowder": [
+      "pass",
+      ""
+    ],
+    "hardened_clay": [
+      "simple_cube",
+      "hardened_clay"
+    ],
+    "hay_block": [
+      "unknown",
+      "hay_block"
+    ],
+    "heavy_weighted_pressure_plate": [
+      "unknown",
+      "heavy_weighted_pressure_plate"
+    ],
+    "hopper": [
+      "unknown",
+      "hopper"
+    ],
+    "hopper_minecart": [
+      "unknown",
+      ""
+    ],
+    "ice": [
+      "simple_cube",
+      "ice"
+    ],
+    "iron_axe": [
+      "pass",
+      ""
+    ],
+    "iron_bars": [
+      "unknown",
+      "iron_bars"
+    ],
+    "iron_block": [
+      "simple_cube",
+      "iron_block"
+    ],
+    "iron_boots": [
+      "pass",
+      ""
+    ],
+    "iron_chestplate": [
+      "pass",
+      ""
+    ],
+    "iron_door": [
+      "unknown",
+      ""
+    ],
+    "iron_helmet": [
+      "pass",
+      ""
+    ],
+    "iron_hoe": [
+      "unknown",
+      ""
+    ],
+    "iron_horse_armor": [
+      "pass",
+      ""
+    ],
+    "iron_ingot": [
+      "pass",
+      ""
+    ],
+    "iron_leggings": [
+      "pass",
+      ""
+    ],
+    "iron_ore": [
+      "simple_cube",
+      "iron_ore"
+    ],
+    "iron_pickaxe": [
+      "pass",
+      ""
+    ],
+    "iron_shovel": [
+      "pass",
+      ""
+    ],
+    "iron_sword": [
+      "pass",
+      ""
+    ],
+    "iron_trapdoor": [
+      "unknown",
+      "iron_trapdoor"
+    ],
+    "item_frame": [
+      "unknown",
+      ""
+    ],
+    "jukebox": [
+      "simple_cube",
+      "jukebox"
+    ],
+    "jungle_door": [
+      "unknown",
+      ""
+    ],
+    "jungle_fence": [
+      "unknown",
+      "jungle_fence"
+    ],
+    "jungle_fence_gate": [
+      "unknown",
+      "jungle_fence_gate"
+    ],
+    "jungle_stairs": [
+      "unknown",
+      "jungle_stairs"
+    ],
+    "ladder": [
+      "unknown",
+      "ladder"
+    ],
+    "lapis_block": [
+      "simple_cube",
+      "lapis_block"
+    ],
+    "lapis_ore": [
+      "simple_cube",
+      "lapis_ore"
+    ],
+    "lava_bucket": [
+      "pass",
+      ""
+    ],
+    "lead": [
+      "unknown",
+      ""
+    ],
+    "leather": [
+      "pass",
+      ""
+    ],
+    "leather_boots": [
+      "pass",
+      ""
+    ],
+    "leather_chestplate": [
+      "pass",
+      ""
+    ],
+    "leather_helmet": [
+      "pass",
+      ""
+    ],
+    "leather_leggings": [
+      "pass",
+      ""
+    ],
+    "leaves": [
+      "simple_cube",
+      "leaves"
+    ],
+    "leaves2": [
+      "simple_cube",
+      "leaves2"
+    ],
+    "lever": [
+      "unknown",
+      "lever"
+    ],
+    "light_weighted_pressure_plate": [
+      "unknown",
+      "light_weighted_pressure_plate"
+    ],
+    "lit_furnace": [
+      "unknown",
+      "lit_furnace"
+    ],
+    "lit_pumpkin": [
+      "unknown",
+      "lit_pumpkin"
+    ],
+    "log": [
+      "unknown",
+      "log"
+    ],
+    "log2": [
+      "unknown",
+      "log2"
+    ],
+    "magma_cream": [
+      "pass",
+      ""
+    ],
+    "map": [
+      "pass",
+      ""
+    ],
+    "melon": [
+      "pass",
+      ""
+    ],
+    "melon_block": [
+      "simple_cube",
+      "melon_block"
+    ],
+    "melon_seeds": [
+      "unknown",
+      ""
+    ],
+    "milk_bucket": [
+      "pass",
+      ""
+    ],
+    "minecart": [
+      "unknown",
+      ""
+    ],
+    "mob_spawner": [
+      "simple_cube",
+      "mob_spawner"
+    ],
+    "monster_egg": [
+      "simple_cube",
+      "monster_egg"
+    ],
+    "mossy_cobblestone": [
+      "simple_cube",
+      "mossy_cobblestone"
+    ],
+    "mushroom_stew": [
+      "pass",
+      ""
+    ],
+    "mutton": [
+      "pass",
+      ""
+    ],
+    "mycelium": [
+      "simple_cube",
+      "mycelium"
+    ],
+    "name_tag": [
+      "pass",
+      ""
+    ],
+    "nether_brick": [
+      "simple_cube",
+      "nether_brick"
+    ],
+    "nether_brick_fence": [
+      "unknown",
+      "nether_brick_fence"
+    ],
+    "nether_brick_stairs": [
+      "unknown",
+      "nether_brick_stairs"
+    ],
+    "nether_star": [
+      "pass",
+      ""
+    ],
+    "nether_wart": [
+      "unknown",
+      ""
+    ],
+    "netherbrick": [
+      "pass",
+      ""
+    ],
+    "netherrack": [
+      "simple_cube",
+      "netherrack"
+    ],
+    "noteblock": [
+      "simple_cube",
+      "noteblock"
+    ],
+    "oak_stairs": [
+      "unknown",
+      "oak_stairs"
+    ],
+    "obsidian": [
+      "simple_cube",
+      "obsidian"
+    ],
+    "packed_ice": [
+      "simple_cube",
+      "packed_ice"
+    ],
+    "painting": [
+      "unknown",
+      ""
+    ],
+    "paper": [
+      "pass",
+      ""
+    ],
+    "piston": [
+      "unknown",
+      "piston"
+    ],
+    "planks": [
+      "simple_cube",
+      "planks"
+    ],
+    "poisonous_potato": [
+      "pass",
+      ""
+    ],
+    "porkchop": [
+      "pass",
+      ""
+    ],
+    "potato": [
+      "unknown",
+      ""
+    ],
+    "potion": [
+      "pass",
+      ""
+    ],
+    "prismarine": [
+      "simple_cube",
+      "prismarine"
+    ],
+    "prismarine_crystals": [
+      "pass",
+      ""
+    ],
+    "prismarine_shard": [
+      "pass",
+      ""
+    ],
+    "pumpkin": [
+      "unknown",
+      "pumpkin"
+    ],
+    "pumpkin_pie": [
+      "pass",
+      ""
+    ],
+    "pumpkin_seeds": [
+      "unknown",
+      ""
+    ],
+    "quartz": [
+      "pass",
+      ""
+    ],
+    "quartz_block": [
+      "unknown",
+      "quartz_block"
+    ],
+    "quartz_ore": [
+      "simple_cube",
+      "quartz_ore"
+    ],
+    "quartz_stairs": [
+      "unknown",
+      "quartz_stairs"
+    ],
+    "rabbit": [
+      "pass",
+      ""
+    ],
+    "rabbit_foot": [
+      "pass",
+      ""
+    ],
+    "rabbit_hide": [
+      "pass",
+      ""
+    ],
+    "rabbit_stew": [
+      "pass",
+      ""
+    ],
+    "rail": [
+      "unknown",
+      "rail"
+    ],
+    "record_11": [
+      "unknown",
+      ""
+    ],
+    "record_13": [
+      "unknown",
+      ""
+    ],
+    "record_blocks": [
+      "unknown",
+      ""
+    ],
+    "record_cat": [
+      "unknown",
+      ""
+    ],
+    "record_chirp": [
+      "unknown",
+      ""
+    ],
+    "record_far": [
+      "unknown",
+      ""
+    ],
+    "record_mall": [
+      "unknown",
+      ""
+    ],
+    "record_mellohi": [
+      "unknown",
+      ""
+    ],
+    "record_stal": [
+      "unknown",
+      ""
+    ],
+    "record_strad": [
+      "unknown",
+      ""
+    ],
+    "record_wait": [
+      "unknown",
+      ""
+    ],
+    "record_ward": [
+      "unknown",
+      ""
+    ],
+    "red_flower": [
+      "unknown",
+      "red_flower"
+    ],
+    "red_mushroom": [
+      "unknown",
+      "red_mushroom"
+    ],
+    "red_mushroom_block": [
+      "unknown",
+      "red_mushroom_block"
+    ],
+    "red_sandstone": [
+      "simple_cube",
+      "red_sandstone"
+    ],
+    "red_sandstone_stairs": [
+      "unknown",
+      "red_sandstone_stairs"
+    ],
+    "redstone": [
+      "unknown",
+      ""
+    ],
+    "redstone_block": [
+      "simple_cube",
+      "redstone_block"
+    ],
+    "redstone_lamp": [
+      "simple_cube",
+      "redstone_lamp"
+    ],
+    "redstone_ore": [
+      "simple_cube",
+      "redstone_ore"
+    ],
+    "redstone_torch": [
+      "unknown",
+      "redstone_torch"
+    ],
+    "reeds": [
+      "unknown",
+      ""
+    ],
+    "repeater": [
+      "unknown",
+      ""
+    ],
+    "rotten_flesh": [
+      "pass",
+      ""
+    ],
+    "saddle": [
+      "pass",
+      ""
+    ],
+    "sand": [
+      "simple_cube",
+      "sand"
+    ],
+    "sandstone": [
+      "simple_cube",
+      "sandstone"
+    ],
+    "sandstone_stairs": [
+      "unknown",
+      "sandstone_stairs"
+    ],
+    "sapling": [
+      "unknown",
+      "sapling"
+    ],
+    "sea_lantern": [
+      "simple_cube",
+      "sea_lantern"
+    ],
+    "shears": [
+      "pass",
+      ""
+    ],
+    "sign": [
+      "unknown",
+      ""
+    ],
+    "skull": [
+      "unknown",
+      ""
+    ],
+    "slime": [
+      "simple_cube",
+      "slime"
+    ],
+    "slime_ball": [
+      "pass",
+      ""
+    ],
+    "snow": [
+      "simple_cube",
+      "snow"
+    ],
+    "snow_layer": [
+      "unknown",
+      "snow_layer"
+    ],
+    "snowball": [
+      "pass",
+      ""
+    ],
+    "soul_sand": [
+      "unknown",
+      "soul_sand"
+    ],
+    "spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "speckled_melon": [
+      "pass",
+      ""
+    ],
+    "spider_eye": [
+      "pass",
+      ""
+    ],
+    "sponge": [
+      "simple_cube",
+      "sponge"
+    ],
+    "spruce_door": [
+      "unknown",
+      ""
+    ],
+    "spruce_fence": [
+      "unknown",
+      "spruce_fence"
+    ],
+    "spruce_fence_gate": [
+      "unknown",
+      "spruce_fence_gate"
+    ],
+    "spruce_stairs": [
+      "unknown",
+      "spruce_stairs"
+    ],
+    "stained_glass": [
+      "simple_cube",
+      "stained_glass"
+    ],
+    "stained_glass_pane": [
+      "unknown",
+      "stained_glass_pane"
+    ],
+    "stained_hardened_clay": [
+      "simple_cube",
+      "stained_hardened_clay"
+    ],
+    "stick": [
+      "pass",
+      ""
+    ],
+    "sticky_piston": [
+      "unknown",
+      "sticky_piston"
+    ],
+    "stone": [
+      "simple_cube",
+      "stone"
+    ],
+    "stone_axe": [
+      "pass",
+      ""
+    ],
+    "stone_brick_stairs": [
+      "unknown",
+      "stone_brick_stairs"
+    ],
+    "stone_button": [
+      "unknown",
+      "stone_button"
+    ],
+    "stone_hoe": [
+      "unknown",
+      ""
+    ],
+    "stone_pickaxe": [
+      "pass",
+      ""
+    ],
+    "stone_pressure_plate": [
+      "unknown",
+      "stone_pressure_plate"
+    ],
+    "stone_shovel": [
+      "pass",
+      ""
+    ],
+    "stone_slab": [
+      "unknown",
+      "stone_slab"
+    ],
+    "stone_slab2": [
+      "unknown",
+      "stone_slab2"
+    ],
+    "stone_stairs": [
+      "unknown",
+      "stone_stairs"
+    ],
+    "stone_sword": [
+      "pass",
+      ""
+    ],
+    "stonebrick": [
+      "simple_cube",
+      "stonebrick"
+    ],
+    "string": [
+      "unknown",
+      ""
+    ],
+    "sugar": [
+      "pass",
+      ""
+    ],
+    "tallgrass": [
+      "unknown",
+      "tallgrass"
+    ],
+    "tnt": [
+      "simple_cube",
+      "tnt"
+    ],
+    "tnt_minecart": [
+      "unknown",
+      ""
+    ],
+    "torch": [
+      "unknown",
+      "torch"
+    ],
+    "trapdoor": [
+      "unknown",
+      "trapdoor"
+    ],
+    "trapped_chest": [
+      "unknown",
+      "trapped_chest"
+    ],
+    "tripwire_hook": [
+      "unknown",
+      "tripwire_hook"
+    ],
+    "vine": [
+      "unknown",
+      "vine"
+    ],
+    "water_bucket": [
+      "pass",
+      ""
+    ],
+    "waterlily": [
+      "unknown",
+      "waterlily"
+    ],
+    "web": [
+      "unknown",
+      "web"
+    ],
+    "wheat": [
+      "pass",
+      ""
+    ],
+    "wheat_seeds": [
+      "unknown",
+      ""
+    ],
+    "wooden_axe": [
+      "pass",
+      ""
+    ],
+    "wooden_button": [
+      "unknown",
+      "wooden_button"
+    ],
+    "wooden_door": [
+      "unknown",
+      ""
+    ],
+    "wooden_hoe": [
+      "unknown",
+      ""
+    ],
+    "wooden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "wooden_pressure_plate": [
+      "unknown",
+      "wooden_pressure_plate"
+    ],
+    "wooden_shovel": [
+      "pass",
+      ""
+    ],
+    "wooden_slab": [
+      "unknown",
+      "wooden_slab"
+    ],
+    "wooden_sword": [
+      "pass",
+      ""
+    ],
+    "wool": [
+      "simple_cube",
+      "wool"
+    ],
+    "writable_book": [
+      "pass",
+      ""
+    ],
+    "written_book": [
+      "pass",
+      ""
+    ],
+    "yellow_flower": [
+      "unknown",
+      "yellow_flower"
+    ]
+  },
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_legacy_interactions.py",
+    "tool_sha256": "37dab1c73037df0c71404d730305e4c422384cf9b9c97c2560187fefbad03074",
+    "tools_sha256": {
+      "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+      "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b",
+      "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+      "resolve_legacy_mining.py": "71f429a0cf7d8b7f81d8c021a9e879feecfe9cde04dd442e8b7ca51d7b7fb53d",
+      "resolve_legacy_outlines.py": "a8a3e6ce98046f9ee77c61348751702e93ce35ec11320daf646e89f7e91ebbee",
+      "resolve_legacy_interactions.py": "8db0b724e6e45844f1c1b5ca1fe99b3ac4fd0a2ee83a1367044a7839dc90bb33"
+    },
+    "measurements": [
+      {
+        "version": "1.8",
+        "measurement_sha256": "9097f2a00bc9a0541f5f61f690a96735797fb4f820465451af91884e1ade38a6",
+        "geometry_sha256": "066b9de501603551a4cf05178176a394a4662f1acaa77328e94d10683b76b11c",
+        "bindings_sha256": "dd1e88cd116b750aad0a82147ff76f040e5feb5adee3eb60d79e34800eec27f7",
+        "artifacts_sha256": {
+          "server.jar": "40e23f3823d6f0e3cbadc491cedb55b8ba53f8ab516b68182ddd1536babeb291",
+          "client.jar": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8"
+        },
+        "client_source_sha256": {
+          "ahd.java": "a2a829e54c3072ced5f283da69bc00b3784bda52162170ec7bed480c02dd1b94",
+          "aju.java": "db7511b897539e032470ae0a4649417ae56470d72965f6648840655da94da456",
+          "alq.java": "1920bee84c046314e1c91da2a932df747e2b504de95b5b8574dd893f28c26540",
+          "amj.java": "77466eb877055de1e675b4ae9ff477873fa7d0e589b8b33729edb081ad0df4cb",
+          "aqu.java": "12ab0bceb24aae14c6b863cc6f8de0d0663aa74d698f671e81612012535a77c2",
+          "ard.java": "58887dc0cc71643b38610fbcd2dc334ba3be2e56b81e3bbcb662dcc4fc157cf0",
+          "atr.java": "59f90b21d92b81ff8c5715dbbcfece9c599f10ddd44384a85c1a6c398ef944ae",
+          "bec.java": "d51df9696680acc1f9eb9c5de3a8c9f8afd5f06af1bd90a492b71411da0b75ba",
+          "brt.java": "c4a5912965349a05a4faa9899eaef33959dcf0c30f8982d85e252cc7029ad021",
+          "dt.java": "cb50282f8ff165b8302d307fc3b302456c5e648795ee40ea4907c5d49201ca36"
+        },
+        "native_client_classes": [
+          "aju",
+          "alq",
+          "atr",
+          "bec",
+          "brt"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2497,
+          "unsigned_jar_sha256": "80de82b489b9c8d3099826f27a3c9acdea307a41da94ec8e7bf0451c7e0ce3d4",
+          "classes_sha256": "a8bb983bbe6952d410e1380ad2228cbbaaf8082121b59f9b0a1a1be6fcdd7800"
+        },
+        "registered_states_visited": 1391,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.1",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "65cb5ce77c63eaf20df07444e8aeb48c7e8ce812cca77034c59ee39168ea206d",
+        "artifacts_sha256": {
+          "server.jar": "ef5f5a1a1a78087859b18153acf97efc6ecb12540ac08d82b9c95024249b9845",
+          "client.jar": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd"
+        },
+        "client_source_sha256": {
+          "aha.java": "39b20596c4dfca128f0d648df109789d243d3a47883604039b26122ac3902be2",
+          "ajr.java": "6e292a6fd962afab0c8f08d689d1be2e0cd1a05d53286a2fbb8f7074c3f103dd",
+          "aln.java": "ad4399dbbc60eae63d8379d621894eac1696ad8e167d585498f94d4a586020f8",
+          "amg.java": "d50e408bf63d19b3ce16fb6971b13720c5a0749cb4a0be5b24648eaa5fb6639d",
+          "aqr.java": "ae790e7e2d8e82ec421cb120d0ebf2ae3a0d10e2296c4712dcba2886e6b03c49",
+          "ara.java": "2ec0588eb45138188a50d5e773e416e11bca33de3d249fa8c64023cdcfa8c30c",
+          "ato.java": "94b9a23fffd847a487eb3ffe6aef9b7c0377e7477d8a13d7acbe44d6aba5b927",
+          "bea.java": "f7f915f9acaaa39a74516a6dcb4843ce06bd6617a5f91774376ad3e6e67170bf",
+          "brr.java": "647e54bb8e45d21ea2ab9d1478c6001c43e66ef0e07530cb1b40487ace9b2307",
+          "dt.java": "0a3d6ca829894802e7ea543b0179863a6a1aecace14eccd4a3db2e5f2503f7ff"
+        },
+        "native_client_classes": [
+          "ajr",
+          "aln",
+          "ato",
+          "bea",
+          "brr"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2500,
+          "unsigned_jar_sha256": "93b7b24c46bd6f9ee6bb9dcd327d03fa67711618cbc82baa24dc0df80d655529",
+          "classes_sha256": "033947c56dc5ae03d152176ed9b89ee81142ec4980bc1138e3e3ace997a6a433"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.2",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "56f239980e3be75c15c1955dde3ecc48a6a59a7bff82b21bf2079b5aa03b0479",
+        "artifacts_sha256": {
+          "server.jar": "d99f3b3478018cb454fbee36fd60e3c4acbe1132f1cb26b3657f9ad291e7035c",
+          "client.jar": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9"
+        },
+        "client_source_sha256": {
+          "adn.java": "655056a7d4c7cf19497f04880a2e10d1af2550fc231e1a63dbf2830fe9a96385",
+          "adr.java": "8067cb4d063713f4aa2f2dd8250f99cabee3b651f9e83844d443f73215cb07f6",
+          "afi.java": "812e608f07df2d14db36b698edfc0cbd2499a6514e54470ddac35f5fee6f1322",
+          "ama.java": "a44f056defe1931b48c5f9a61d507b0df1946f1823011f19977c833ec8e0e704",
+          "auh.java": "f37d3a166938e15039a8a9ae310914aec6522c7cfd2042f54b278c2ece6b6242",
+          "ck.java": "617f1fe68568a9728b5e463f98e08db60267c6e137fa23feaa72f47079568dca",
+          "wo.java": "cb29bf563425cb6d43397db0f1dc5337b7964615162fbb06dcb41ddac457c0c3",
+          "yp.java": "8270140b6bb35dc4d7324cec8000ffbe28f11fde2f998048d3209162c8673a64",
+          "zx.java": "31c9d8855e9b2c36098f325c90efc7e1d5a9379b9ae2f07d20f4a5cfea5cf5a0",
+          "zy.java": "e1122877653a9a4133a766649495da99a2c7e9b99d5a46174060a94d6e6c0e7b"
+        },
+        "native_client_classes": [
+          "afi",
+          "ama",
+          "auh",
+          "yp",
+          "zx"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2508,
+          "unsigned_jar_sha256": "43422ed0b1a7fbf7735d903231c3acffdd44d8336125a43adeff9c5bad53e12a",
+          "classes_sha256": "dcf55b1bd05336536cd7e71c3ec12167268918d82ff2f1586291928110ede06d"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.3",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "187113a7f3e75c81a1a8a8e5e5faf194810a17cf5d2df344ae87d29b08c082f4",
+        "artifacts_sha256": {
+          "server.jar": "a26751b18ccc80ceef488da645c3b785aa528e2ae20a6a6dbd46f6dc754e62bd",
+          "client.jar": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06"
+        },
+        "client_source_sha256": {
+          "adn.java": "655056a7d4c7cf19497f04880a2e10d1af2550fc231e1a63dbf2830fe9a96385",
+          "adr.java": "8067cb4d063713f4aa2f2dd8250f99cabee3b651f9e83844d443f73215cb07f6",
+          "afi.java": "812e608f07df2d14db36b698edfc0cbd2499a6514e54470ddac35f5fee6f1322",
+          "ama.java": "a44f056defe1931b48c5f9a61d507b0df1946f1823011f19977c833ec8e0e704",
+          "auh.java": "f37d3a166938e15039a8a9ae310914aec6522c7cfd2042f54b278c2ece6b6242",
+          "ck.java": "617f1fe68568a9728b5e463f98e08db60267c6e137fa23feaa72f47079568dca",
+          "wo.java": "cb29bf563425cb6d43397db0f1dc5337b7964615162fbb06dcb41ddac457c0c3",
+          "yp.java": "8270140b6bb35dc4d7324cec8000ffbe28f11fde2f998048d3209162c8673a64",
+          "zx.java": "31c9d8855e9b2c36098f325c90efc7e1d5a9379b9ae2f07d20f4a5cfea5cf5a0",
+          "zy.java": "e1122877653a9a4133a766649495da99a2c7e9b99d5a46174060a94d6e6c0e7b"
+        },
+        "native_client_classes": [
+          "afi",
+          "ama",
+          "auh",
+          "yp",
+          "zx"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2508,
+          "unsigned_jar_sha256": "1f543a1999d138fe3ca34772a89bfda1702288935562e6d21d18e7c261f69fce",
+          "classes_sha256": "bcc399b20f8febcf865a30e03823dc04066717caf7c0519daa8a9487bc0eb3a5"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.4",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "572d5d5e978e4d96e19e0651da939c6139e470ce695b25f388e9ef3e8e30af23",
+        "artifacts_sha256": {
+          "server.jar": "394a9d0d5bcd03272a58f036b8736a47d26d63b45a4e7c820629114876e72107",
+          "client.jar": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "d973636ff6ed9c28e68299c5e0edd632c9836962bee1853c7aa34309187cd838",
+          "zw.java": "a5b96ee99b6435b5a2a1c864f2ec1dd5ccbbe112fb6134f97120f18b996d811f",
+          "zx.java": "4491563db9fe2c112c2bbc4925c816ed3d9556e684e00cffd3eba932519647dc"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "eb024b072cc84407c14f1604abd761d8d8bc87c26458a0abae57080ecc493fd0",
+          "classes_sha256": "cde42449de8b98feb10b22fe38723f73448cace478e74b38da8d25a39e3a26c7"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.5",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "2d73066e91ea8d49e4062451ca5101c33b2d9bee93ca2194e4fcf20850010faa",
+        "artifacts_sha256": {
+          "server.jar": "6a412e89009acfcd5c56084ddab4f9676c5561bb58a3f22d5ea4ba4ac5d3503e",
+          "client.jar": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "c84fe4229def7b22f210e14b97b3ab454acd550a52e963ca27a34dcf7f6ca701",
+          "zw.java": "a1a22958fde766d61fffe7b4363fdb0aa23be0c08b38f46c2e7caae539015544",
+          "zx.java": "7d2a380d2ce5b501762fd581d9c64b5425e8d55d45147293bad91aa48d192dbd"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "654b5628474d8e40000acc9c46663a513f3392e7ce4803ec726ccbc459a45701",
+          "classes_sha256": "2bbf5d90e8c759aa6681ca1a69cebe4d6b74891e5a510cb9d87fd1fef9ea146d"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.6",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "8490ec357fa09485d43634fde5f5011ab47d72d415c037bda9284ab8a48c6224",
+        "artifacts_sha256": {
+          "server.jar": "7fc66b2b54f0f4d65fdd6d6484a50f432c144ef02072d3435d5660f120f58e0d",
+          "client.jar": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "e5ad054df8a0f07bbc66ae4b29912c30177bf39f443c1128c59fa181f7b4e0c6",
+          "zw.java": "a5b96ee99b6435b5a2a1c864f2ec1dd5ccbbe112fb6134f97120f18b996d811f",
+          "zx.java": "4491563db9fe2c112c2bbc4925c816ed3d9556e684e00cffd3eba932519647dc"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2506,
+          "unsigned_jar_sha256": "bc0d89bb7cb6ebc386e92a228cf8c1102ff6e2dcdee96db309b27e610c0eb8ab",
+          "classes_sha256": "08f6f28539e74213aab33596acfdc165f57f02b28cccdec5e72c5123d0b5e593"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.7",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "58eb3a8683415c92d5b46c8df692c0857728a23c724d596c7887f123f17ad9dd",
+        "artifacts_sha256": {
+          "server.jar": "5cf4a49762c996c94f6b8b119f1c80b4de3c12b2f5c53268801905bb7daa0644",
+          "client.jar": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "e5ad054df8a0f07bbc66ae4b29912c30177bf39f443c1128c59fa181f7b4e0c6",
+          "zw.java": "a5b96ee99b6435b5a2a1c864f2ec1dd5ccbbe112fb6134f97120f18b996d811f",
+          "zx.java": "4491563db9fe2c112c2bbc4925c816ed3d9556e684e00cffd3eba932519647dc"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2506,
+          "unsigned_jar_sha256": "50d27a6eca9ddee9e733b938e46daf084ca0298bbd06ce3f46f428cd78ca542e",
+          "classes_sha256": "d5ed4fc9220f264452a65f44d8a9c212d64c794737593a6289e7807183e2d93e"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.8",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "bb559f631d61eab1d965c6a44c50a38eabcb3a482005ad59afe9382609713070",
+        "artifacts_sha256": {
+          "server.jar": "39aef720dc5309476f56f2e96a516f3dd3041bbbf442cbfd47d63acbd06af31e",
+          "client.jar": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "e5ad054df8a0f07bbc66ae4b29912c30177bf39f443c1128c59fa181f7b4e0c6",
+          "zw.java": "a5b96ee99b6435b5a2a1c864f2ec1dd5ccbbe112fb6134f97120f18b996d811f",
+          "zx.java": "4491563db9fe2c112c2bbc4925c816ed3d9556e684e00cffd3eba932519647dc"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "ca80c2977653d80a81882231033e2ae37da65708f1dd980cb30276edd847319a",
+          "classes_sha256": "08181268b276e6589803dfeeeacded495342db7ac0e9e654a89d40d55c7f98b1"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      },
+      {
+        "version": "1.8.9",
+        "measurement_sha256": "d2fa403032cb3e874a884a3b4e85a307a698b8840cba143e97d48d0c1ff9827d",
+        "geometry_sha256": "72c661d28fb5caa267f2d06f61734f8ce3c90ccdd66837f2ad6a7536b43d4768",
+        "bindings_sha256": "9c632f0b05f8cb5e1f1d4bfce22743a0027516bf67b033823d1537b57da667be",
+        "artifacts_sha256": {
+          "server.jar": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312",
+          "client.jar": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298"
+        },
+        "client_source_sha256": {
+          "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+          "adq.java": "2789ecd923d684ad993b8e05bef443aaae4fee4d8fda9a2b58e4328d73546819",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "alz.java": "32cce3a30ce7548ea68eb50c9205ae6dd0f7f51c4428e7a81d9620243f09a406",
+          "aug.java": "3d8b40dbc0db7a4c2838e2ea3fbb23ab558a53b81783a5bd6c5999fb04cd2b3a",
+          "cj.java": "e87b4b970a864ec8bf2238ec2bacf40cb1527d8c00ec4abe827121d1274efd84",
+          "wn.java": "c65845e3cd6e95db54089ce506f43db041867e2ec07a303e284d43cb47da0a7d",
+          "yo.java": "e5ad054df8a0f07bbc66ae4b29912c30177bf39f443c1128c59fa181f7b4e0c6",
+          "zw.java": "a5b96ee99b6435b5a2a1c864f2ec1dd5ccbbe112fb6134f97120f18b996d811f",
+          "zx.java": "4491563db9fe2c112c2bbc4925c816ed3d9556e684e00cffd3eba932519647dc"
+        },
+        "native_client_classes": [
+          "afh",
+          "alz",
+          "aug",
+          "yo",
+          "zw"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "de6f21e9548af2dcd77e4158355f02908e6bc65e370e10a8bc021d2713e15480",
+          "classes_sha256": "25e6298ea893dae01583fd24745239e970d811f5410f8dc3e66b926c37290e96"
+        },
+        "registered_states_visited": 1394,
+        "equal_wire_state_aliases": 0
+      }
+    ],
+    "client_profile": "1.8.9",
+    "different_earlier_client_profiles": [
+      {
+        "version": "1.8",
+        "blocks": {
+          "air": 3
+        },
+        "measured_state_count": 1391
+      }
+    ],
+    "note": "Native client inheritance contracts; every eligible state's actual collision box is measured before recognizing simple cubes. The server jar supplies libraries only because the placement precheck is client-only. Unknown subclasses remain explicit. Runtime player, world and stack conditions still apply. Protocol 47 follows the existing 1.8.9 client profile; the measured 1.8 air-replacement difference is retained separately and requires release-specific profile support."
+  }
+}

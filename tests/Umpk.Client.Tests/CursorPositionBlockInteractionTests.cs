@@ -72,12 +72,25 @@ public sealed class CursorPositionBlockInteractionTests
         Assert.Equal(new BlockPos(10, 64, -3), sent.Position);
         Assert.Equal((int)Direction.Up, sent.Face);
 
-        // (int)(0.5 * 16) is 8; 1.0 clamps to the top of the byte's documented 0..15 domain.
+        // Vanilla mx writes (int)(cursor * 16.0F): the upper face at 1.0 is byte 16.
         Assert.Equal(8, sent.CursorX);
-        Assert.Equal(15, sent.CursorY);
+        Assert.Equal(16, sent.CursorY);
         Assert.Equal(8, sent.CursorZ);
 
         Assert.Empty(recorder.Frames);
+    }
+
+    [Fact]
+    public async Task PlaceBlock_On1_8_QuantizesTheFloatCursorBeforeWriting()
+    {
+        var recorder = new RecordingSink();
+
+        await Actions(recorder, 47).PlaceBlockAsync(
+            new BlockPos(10, 64, -3), Direction.Up, new Vec3d(0.99999999, 1.0, 0.5));
+
+        var sent = Assert.IsType<ServerboundLegacyBlockPlacePacket>(Assert.Single(recorder.Packets));
+        Assert.Equal(16, sent.CursorX);
+        Assert.Equal(16, sent.CursorY);
     }
 
     [Fact]

@@ -5,12 +5,16 @@ using Umpk.Geometry;
 namespace Umpk.Game.World;
 
 /// <summary>DDA voxel raycasting over the world. It honors block shapes when an <see cref="IBlockShapeSource"/> is supplied. Without a shape source, non-air blocks are treated as full cubes. Entity raycasts use an AABB slab test against candidate boxes ordered by distance.</summary>
-public static class Raycast
+public static partial class Raycast
 {
     private const double Epsilon = 1.0E-7;
 
     /// <summary>Casts a ray from <paramref name="start"/> to <paramref name="end"/> through the world, stopping at the first block that the ray enters. When <paramref name="shapes"/> is null a non-air block is a full cube; otherwise the ray is clipped against the block's outline AABBs. Fluids are treated as non-solid unless <paramref name="includeFluids"/> is set.</summary>
     public static BlockHitResult CastBlock(World world, Vec3d start, Vec3d end, bool includeFluids = false, IBlockShapeSource? shapes = null)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, Identifier.Minecraft("air"));
+
+    /// <summary>Casts a ray with the held-item and coordinate context needed by measured outline and interaction shapes.</summary>
+    public static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem)
     {
         ArgumentNullException.ThrowIfNull(world);
         if (start.Equals(end))
@@ -26,7 +30,7 @@ public static class Raycast
 
         int cx = FloorInt(sx), cy = FloorInt(sy), cz = FloorInt(sz);
 
-        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, out BlockHitResult first))
+        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, out BlockHitResult first))
             return first;
 
         double dx = ex - sx, dy = ey - sy, dz = ez - sz;
@@ -63,7 +67,7 @@ public static class Raycast
                 tZ += invZ;
             }
 
-            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, out BlockHitResult hit))
+            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, out BlockHitResult hit))
                 return hit;
 
         }
@@ -93,7 +97,7 @@ public static class Raycast
         return EntityHitResult.FromHit(bestIndex, point, distance);
     }
 
-    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, out BlockHitResult result)
+    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, out BlockHitResult result)
     {
         result = BlockHitResult.Miss;
         BlockState state = world.GetBlock(pos);
@@ -119,6 +123,8 @@ public static class Raycast
             return false;
         }
 
+        if (shapes is IBlockTargetingSource targeting && targeting.TryGetTargetingShape(world, pos, heldItem, out BlockTargetingShape geometry))
+            return TryHitTargeting(pos, rayStart, dir, geometry, out result);
         ReadOnlySpan<Aabb> outline = shapes.GetOutlineShapes(state);
         if (outline.IsEmpty)
             return false;

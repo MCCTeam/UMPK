@@ -1,0 +1,9 @@
+# Citation checker coverage
+
+The repository oracle check required more than 400 class references even though the Roslyn scanner found 24. The original repository commit, `f06f078`, contained at most four matching class references, including test strings that the scanner intentionally ignores. The guard failed after every real reference resolved successfully.
+
+Repository coverage now requires known references from Client, Game, Physics and Protocol. That check also runs when local vanilla artifacts are unavailable. The native oracle check still resolves every scanned reference against its named source tree. A generated 401-file fixture checks complete enumeration. Four omission cases prove that a scan missing any required library fails even when it returns more than 400 other references. These fixtures exist only in temporary test directories.
+
+The scanner reads every maintained source file and parses files containing the required `-decompiled` marker. The repository checks share their immutable scan result. The focused checker run passed 11 tests in 320 ms; the complete isolated conformance run passed 892 tests with the real oracle enabled. The deliberate six-test increase changes the conformance baseline from 886 to 892.
+
+The diagnostic output, original-history search, isolated checker commands and logs are preserved under `/home/anon/Projects/MinecraftOfficial/runs/shulker-runtime-final-20261017-v1`. The original and corrected repository scans return the same 24 references, including their source locations. Full checkout validation is recorded under `/home/anon/Projects/MinecraftOfficial/runs/citation-coverage-validation-20261017-v1`: 33,941 tests pass, seven opt-in tests skip and all 17 suite totals match. Build, format, dataset, language and regeneration checks pass; all 61 generated outputs match. This correction changes test infrastructure only. It does not change protocol datasets, generated pins or allocation limits.

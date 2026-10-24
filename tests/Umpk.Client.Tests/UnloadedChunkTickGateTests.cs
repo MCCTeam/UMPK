@@ -55,7 +55,11 @@ public sealed class UnloadedChunkTickGateTests
         Assert.DoesNotContain(movePosRotWire, frames);
 
         // The control. The column arrives, so the very same ticks now run: the player falls (the column is empty, which is exactly a world with no floor) and the movement goes out again.
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         for (int i = 0; i < 40; i++)
             await ticks.FireAsync(ct);
 
@@ -79,7 +83,11 @@ public sealed class UnloadedChunkTickGateTests
         await JoinAsync(client, server, frames, ct);
 
         // Stand on real ground first, so the gate is demonstrably OPEN before the dimension change and the assertion below cannot pass merely because it was never open.
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         await TeleportAsync(client, server, frames, new Vec3d(8.5, 200.0, 8.5), ct);
         Assert.True(
             await client.InvokeAsync(c => c.State.IsLocalChunkLoaded, ct),

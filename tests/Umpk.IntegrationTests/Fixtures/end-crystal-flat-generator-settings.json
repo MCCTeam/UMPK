@@ -1,0 +1,12 @@
+{
+  "layers": [
+    {
+      "height": 164,
+      "block": "minecraft:stone"
+    }
+  ],
+  "biome": "minecraft:the_void",
+  "features": false,
+  "lakes": false,
+  "structure_overrides": []
+}

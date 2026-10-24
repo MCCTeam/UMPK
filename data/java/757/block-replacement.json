@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "identity": "flat",
+  "state_count": 20342,
+  "ranges": [
+    [
+      0,
+      0,
+      3
+    ],
+    [
+      1,
+      33,
+      0
+    ],
+    [
+      34,
+      65,
+      3
+    ],
+    [
+      66,
+      1397,
+      0
+    ],
+    [
+      1398,
+      1403,
+      3
+    ],
+    [
+      1404,
+      1495,
+      0
+    ],
+    [
+      1496,
+      2008,
+      3
+    ],
+    [
+      2009,
+      3989,
+      0
+    ],
+    [
+      3990,
+      3990,
+      3
+    ],
+    [
+      3991,
+      4861,
+      0
+    ],
+    [
+      4862,
+      5020,
+      3
+    ],
+    [
+      5021,
+      7754,
+      0
+    ],
+    [
+      7755,
+      7786,
+      3
+    ],
+    [
+      7787,
+      8142,
+      0
+    ],
+    [
+      8143,
+      8146,
+      3
+    ],
+    [
+      8147,
+      9508,
+      0
+    ],
+    [
+      9509,
+      9509,
+      3
+    ],
+    [
+      9510,
+      9914,
+      0
+    ],
+    [
+      9915,
+      9918,
+      3
+    ],
+    [
+      9919,
+      15226,
+      0
+    ],
+    [
+      15227,
+      15228,
+      3
+    ],
+    [
+      15229,
+      15297,
+      0
+    ],
+    [
+      15298,
+      15298,
+      3
+    ],
+    [
+      15299,
+      18679,
+      0
+    ],
+    [
+      18680,
+      18681,
+      3
+    ],
+    [
+      18682,
+      20341,
+      0
+    ]
+  ],
+  "below_overrides": {},
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_block_replacement.py",
+    "tool_sha256": "bfdd41e8676d91164a2c9745fcbcb778f8daa23459499233f327b057c12fd1c8",
+    "client_profile": "1.18.1",
+    "different_earlier_client_profiles": [],
+    "measurements": [
+      {
+        "version": "1.18",
+        "measurement_sha256": "6d42f2b442dc7d9722acad905e517d74e307c649fff74ae2e809a1ad573bbfea",
+        "measurement_receipt_sha256": "21feb376b17d2d81fe99c56cd1d04d5502bb56665ae47bb6a7dbeda3831cbe09",
+        "client_class_preservation": {
+          "unchanged_class_files": 6288,
+          "unsigned_jar_sha256": "8ed3d65e33a53cab290a5ff977513dfd1c891ff1ed3f9bc571ad3246cca6566a",
+          "classes_sha256": "0a7d0b3274770a702e6e53bc22823ad3404fe3086797ccab00733ef4bf0bc6fb"
+        },
+        "artifacts_sha256": {
+          "client.jar": "381e090ef22584526113bcccf26ae38a310a22094d14c2d0dec72b71fdf65aaa",
+          "server.jar": "8417edceb471b38a59a6ce260f3aa1479e95264a38eb56283bdf24ec98647e6f",
+          "client_mappings.txt": "b4c7d514328050fa09ac04818d21e4be0b58e75c6b0847e56ce09f6637b8877b"
+        },
+        "completion_sha256": "99fdd82c5680bf6327bd99774ed38af898c1088a3fe755412446dc95ef26de65",
+        "measurement_tools_sha256": "12793cca706326a6209d8c8e44e64219ab9dc8dccd0d577709898680391a3547",
+        "measurement_sources_sha256": {
+          "ReplacementDump.java": "f0cd1fc58fdaac4c2af5e48029e096c8b467195120a30003380d855ca59b74be",
+          "measure.py": "b24c560981ad2ebd4960e2b5cb6556a0a7bf0722eed510b1157ca1e097dd55f3"
+        },
+        "predicate_sources_sha256": {
+          "net/minecraft/world/level/block/CandleBlock.java": "a1f2a6e838add641f5a07ecac287d55128727ab99d6e859bbf5f9ea7495f2a25",
+          "net/minecraft/world/level/block/GlowLichenBlock.java": "4b19cbbca72c70bbf58f7042e8f6f84302219594af5f918abf88191d0b60099d",
+          "net/minecraft/world/level/block/GrowingPlantBodyBlock.java": "70fd1c081fe32af59e82a411f2047779a21e490637d311fdc2e87a91752d34a1",
+          "net/minecraft/world/level/block/ScaffoldingBlock.java": "143b07096fc1793f2a647fee9f4061f079447fded06167686c658409ad21500e",
+          "net/minecraft/world/level/block/SeaPickleBlock.java": "73e31c7ce1f8e186520cd1fd153f4f551ff76ec08d3d14add23079421ca3934b",
+          "net/minecraft/world/level/block/SlabBlock.java": "3b3fdd9676677e4ad9e44a5d6f497fedfeaf042d1bad303fdccf30588ee399e8",
+          "net/minecraft/world/level/block/SnowLayerBlock.java": "993b46d37b4d0ea969f7dfa2578fccd845e8426b4940ddbc8b75722bd75a0fdb",
+          "net/minecraft/world/level/block/TallFlowerBlock.java": "44a9b8b95f26b5b0955155d338038f06b2334f582b9a73a5f83c4b30c53954fc",
+          "net/minecraft/world/level/block/TurtleEggBlock.java": "3293fbb94ff96aa77c0515179ead008f250a9fe45aa14d60cb1bb3efb7c685bb",
+          "net/minecraft/world/level/block/VineBlock.java": "c4e09fba7959caead9a6e46958b6acd75e4ff21a2975927d20796bb4fe96afcf",
+          "net/minecraft/world/level/block/state/BlockBehaviour.java": "c7c59882b394a282137b1ded1a41e9fa71e59fd28bfa456efbace76ad10e21c3"
+        },
+        "predicate_calls": 2442593,
+        "state_count": 20342,
+        "cube_item_count": 233,
+        "full_use_samples": 16,
+        "scope": "Original state.canBeReplaced predicate with cached original BlockPlaceContext instances for constructor-query and adjacent-destination phases; original world reads. Base inherited short-circuit/material/item-identity rules are source-backed; overrides execute every measured ordinary-cube item in all six directions and both phases. No world or entity tick."
+      },
+      {
+        "version": "1.18.1",
+        "measurement_sha256": "28b7b989e0910458d486af9a16514b1294540c83d7dbee2003b964c5d4252ddd",
+        "measurement_receipt_sha256": "21feb376b17d2d81fe99c56cd1d04d5502bb56665ae47bb6a7dbeda3831cbe09",
+        "client_class_preservation": {
+          "unchanged_class_files": 6288,
+          "unsigned_jar_sha256": "782ad00614e267d9ff85ef87b5de51c22a6e0fff6a787904e20e1681ed7671e3",
+          "classes_sha256": "3aeca9d7596d001836f2b77434b5e10c24e0d8e495ea33aec03e43d273db309b"
+        },
+        "artifacts_sha256": {
+          "client.jar": "737c28a56c8980fcd8574465c61538ebde8f511bdd035c69d0cbe27953f892aa",
+          "server.jar": "ebcd120ad81480b968a548df6ffb83b88075e95195c8ff63d461c9df4df5dbdf",
+          "client_mappings.txt": "a7a4109255dfb74b9552b339482f0714bb0e7e7143d1059b0bf62a526d2c2a84"
+        },
+        "completion_sha256": "7046ee30960be6b89affde6ef17cff610bb1fd7e13302b7b153a748fb0d6b445",
+        "measurement_tools_sha256": "12793cca706326a6209d8c8e44e64219ab9dc8dccd0d577709898680391a3547",
+        "measurement_sources_sha256": {
+          "ReplacementDump.java": "f0cd1fc58fdaac4c2af5e48029e096c8b467195120a30003380d855ca59b74be",
+          "measure.py": "b24c560981ad2ebd4960e2b5cb6556a0a7bf0722eed510b1157ca1e097dd55f3"
+        },
+        "predicate_sources_sha256": {
+          "net/minecraft/world/level/block/CandleBlock.java": "a1f2a6e838add641f5a07ecac287d55128727ab99d6e859bbf5f9ea7495f2a25",
+          "net/minecraft/world/level/block/GlowLichenBlock.java": "4b19cbbca72c70bbf58f7042e8f6f84302219594af5f918abf88191d0b60099d",
+          "net/minecraft/world/level/block/GrowingPlantBodyBlock.java": "70fd1c081fe32af59e82a411f2047779a21e490637d311fdc2e87a91752d34a1",
+          "net/minecraft/world/level/block/ScaffoldingBlock.java": "143b07096fc1793f2a647fee9f4061f079447fded06167686c658409ad21500e",
+          "net/minecraft/world/level/block/SeaPickleBlock.java": "73e31c7ce1f8e186520cd1fd153f4f551ff76ec08d3d14add23079421ca3934b",
+          "net/minecraft/world/level/block/SlabBlock.java": "3b3fdd9676677e4ad9e44a5d6f497fedfeaf042d1bad303fdccf30588ee399e8",
+          "net/minecraft/world/level/block/SnowLayerBlock.java": "993b46d37b4d0ea969f7dfa2578fccd845e8426b4940ddbc8b75722bd75a0fdb",
+          "net/minecraft/world/level/block/TallFlowerBlock.java": "44a9b8b95f26b5b0955155d338038f06b2334f582b9a73a5f83c4b30c53954fc",
+          "net/minecraft/world/level/block/TurtleEggBlock.java": "3293fbb94ff96aa77c0515179ead008f250a9fe45aa14d60cb1bb3efb7c685bb",
+          "net/minecraft/world/level/block/VineBlock.java": "c4e09fba7959caead9a6e46958b6acd75e4ff21a2975927d20796bb4fe96afcf",
+          "net/minecraft/world/level/block/state/BlockBehaviour.java": "c7c59882b394a282137b1ded1a41e9fa71e59fd28bfa456efbace76ad10e21c3"
+        },
+        "predicate_calls": 2442593,
+        "state_count": 20342,
+        "cube_item_count": 233,
+        "full_use_samples": 16,
+        "scope": "Original state.canBeReplaced predicate with cached original BlockPlaceContext instances for constructor-query and adjacent-destination phases; original world reads. Base inherited short-circuit/material/item-identity rules are source-backed; overrides execute every measured ordinary-cube item in all six directions and both phases. No world or entity tick."
+      }
+    ],
+    "note": "Ordinary cube items only. Flags 1=replace clicked block, 2=allow placement into the resolved destination. Ranges contain native wire state identifiers; absent identifiers remain unknown. Below-state overrides preserve measured legacy dependencies. Protocol aliases use the latest measured vanilla client profile. Stack, player, world, obstruction and use-result rules remain runtime conditions."
+  }
+}

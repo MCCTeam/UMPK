@@ -1,33 +1,36 @@
 namespace Umpk.Physics;
 
-/// <summary>Physics scalars that are constant across the whole 1.8-26.2 supported range. Values that vary by era live on <see cref="PhysicsProfile"/> instead.</summary>
+/// <summary>Physics scalars for the 1.8-26.3 supported range. Values that vary by era live on <see cref="PhysicsProfile"/> instead.</summary>
 public static class PhysicsConstants
 {
-    // Player dimensions. Crouch height varies by era.
+    // 1.14.4-client-decompiled net/minecraft/world/entity/player/Player.java stores pose dimensions and eye heights as floats. Preserve their rounding before widening to double.
 
-    /// <summary>Player box width (all poses).</summary>
-    public const double PlayerWidth = 0.6;
+    /// <summary>Standard player box width.</summary>
+    public const double PlayerWidth = 0.6f;
 
     /// <summary>Standing box height.</summary>
-    public const double PlayerStandingHeight = 1.8;
+    public const double PlayerStandingHeight = 1.8f;
 
     /// <summary>Standing eye height.</summary>
-    public const double PlayerStandingEyeHeight = 1.62;
+    public const double PlayerStandingEyeHeight = 1.62f;
 
     /// <summary>Crouch box height, 1.14+.</summary>
     public const double PlayerCrouchHeightModern = 1.5;
 
-    /// <summary>Crouch box height, pre-1.14.</summary>
-    public const double PlayerCrouchHeightLegacy = 1.65;
+    /// <summary>Crouch box height, 1.9 through 1.13.2. Sneaking in 1.8 retains the standing box.</summary>
+    public const double PlayerCrouchHeightLegacy = 1.65f;
 
-    /// <summary>Crouch eye height.</summary>
-    public const double PlayerCrouchEyeHeight = 1.27;
+    /// <summary>Crouch eye height, 1.14 onward.</summary>
+    public const double PlayerCrouchEyeHeight = 1.27f;
+
+    /// <summary>Crouch eye height, 1.8 through 1.13.2.</summary>
+    public const double PlayerCrouchEyeHeightLegacy = 1.54f;
 
     /// <summary>Swim/crawl/elytra box height.</summary>
-    public const double PlayerSwimHeight = 0.6;
+    public const double PlayerSwimHeight = 0.6f;
 
     /// <summary>Swim/crawl/elytra eye height.</summary>
-    public const double PlayerSwimEyeHeight = 0.4;
+    public const double PlayerSwimEyeHeight = 0.4f;
 
     // Gravity
 

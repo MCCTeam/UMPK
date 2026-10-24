@@ -14,7 +14,7 @@ namespace Umpk.Physics;
 internal static class PowderSnowCollision
 {
     /// <summary>The above-shape tolerance, <c>1.0E-5F</c> widened to a double.</summary>
-    private const double IsAboveEpsilon = 1.0E-5;
+    private const double IsAboveEpsilon = 1.0E-5F;
 
     /// <summary>Fall distance above which the body meets the 0.9-tall falling shape.</summary>
     private const double NumBlocksToFallIntoBlock = 2.5;

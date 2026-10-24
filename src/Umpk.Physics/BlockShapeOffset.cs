@@ -11,7 +11,7 @@ namespace Umpk.Physics;
 /// long seed = Seed(pos.X, pos.Z); double x = Clamp(((float)(seed &amp; 15) / 15 - 0.5) * 0.5, -maxOffset, maxOffset); double z = Clamp(((float)((seed &gt;&gt; 8) &amp; 15) / 15 - 0.5) * 0.5, -maxOffset, maxOffset);
 /// </code>
 /// <para>A state-only shape table cannot encode a position-dependent offset. The collision engine therefore applies this calculation when it places pointed-dripstone and bamboo shapes.</para>
-/// <para>The planner deliberately keeps using the unoffset table. The maximum horizontal offset is the widest shape's own inset (dripstone: 0.125 against a 0.125 inset; bamboo: 0.25 against 0.40625), so an offset box never leaves its own cell and no per-cell walkability verdict can change. Collision resolution still needs the offset because bodies and narrow boxes can meet at different points within the cell.</para>
+/// <para>Physics and planning prefer a source's measured <see cref="BlockCollisionGrid"/> delegates and offset model when available. This helper remains the fallback for sources that supply only bounding boxes. Collision resolution and narrow-lane checks need the actual offset because bodies can meet a box at different positions inside the cell.</para>
 /// </remarks>
 public static class BlockShapeOffset
 {

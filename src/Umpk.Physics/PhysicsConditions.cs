@@ -9,6 +9,12 @@ namespace Umpk.Physics;
 /// </summary>
 public readonly record struct PhysicsConditions
 {
+    /// <summary>The current native scale after attribute clamping and float narrowing. Null keeps the default unscaled engine behavior. Prospective pose queries use this value before the cached body changes.</summary>
+    public float? Scale { get; init; }
+
+    /// <summary>Requests one dimensions refresh at the end of the next living phase. The engine retains this request across condition pushes and consumes it once during Step; the host selects the native float-change or dirty-attribute rule.</summary>
+    public bool RefreshScaleDimensions { get; init; }
+
     /// <summary>Whether creative/spectator flight is currently active (flying behavior).</summary>
     public bool CreativeFlying { get; init; }
 

@@ -441,7 +441,11 @@ public sealed class SelfAirSupplyTests
         await joined.Task.WaitAsync(Budget, ct);
 
         // The tick gate needs the player's own column and a spawn position, or nothing ticks at all.
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
 
         var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using IDisposable positionSubscription = client.Events.Subscribe<Umpk.Client.Events.PositionCorrected>(

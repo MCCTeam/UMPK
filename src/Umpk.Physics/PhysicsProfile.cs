@@ -1,3 +1,5 @@
+using Umpk.Game.Entities;
+
 namespace Umpk.Physics;
 
 /// <summary>The fluid-movement era selector (the <c>FluidMovement</c> toggle). Named for the dataset's swimming-update feature flag, but the one thing it currently gates in the engine (<c>PlayerPhysics.TravelInWater</c>'s depth-strider water-movement-efficiency blend) is not actually a 1.13 change - see <see cref="PhysicsProfile.ForProtocol"/>'s remarks for the behavior evidence that this blend has existed unchanged since Depth Strider shipped in 1.8. Swim POSES (a real 1.13 addition) are a separate field, <see cref="PhysicsProfile.SwimPoseAvailable"/>, not driven by this toggle.</summary>
@@ -24,14 +26,17 @@ public enum WaterTravelEra
     SprintAware = 1,
 }
 
-/// <summary>The pose-dimension era (the <c>PoseDimensionsEra</c> toggle). Controls crouch height (1.65 pre-1.14, 1.5 after) and whether swim/crawl boxes exist.</summary>
+/// <summary>The player's pose-dimension era. Sneaking retains standing height in 1.8, uses a shorter box from 1.9 and changes again in 1.14.</summary>
 public enum PoseDimensionsEra
 {
-    /// <summary>Pre-1.14: crouch height 1.65, no crawl box.</summary>
+    /// <summary>1.9 through 1.13.2: crouch height 1.65, no crawl box.</summary>
     PreCrawl = 0,
 
     /// <summary>1.14+: crouch height 1.5, swim/crawl boxes 0.6 tall.</summary>
     ModernCrawl = 1,
+
+    /// <summary>1.8: sneaking keeps the standing box and lowers the eye.</summary>
+    LegacyStanding = 2,
 }
 
 /// <summary>The position-send cadence era (the <c>PositionSendCadence</c> toggle). The engine does not send packets, but exposes this so the integration layer can pick the right cadence without re-deriving it from the protocol version.</summary>
@@ -51,6 +56,24 @@ public enum PositionSendCadence
 /// </summary>
 public sealed record PhysicsProfile
 {
+    /// <summary>Selects native query rules for the measured 1.13-and-later default grids. The 1.14 boundary changes the exact epsilon comparison used to coalesce coordinate planes.</summary>
+    public static BlockCollisionQueryEra BlockCollisionQueryForProtocol(int protocol) => protocol switch
+    {
+        < 393 => BlockCollisionQueryEra.BoundingBoxes,
+        < 477 => BlockCollisionQueryEra.QueryFirstStrict,
+        < 735 => BlockCollisionQueryEra.QueryFirst,
+        < 755 => BlockCollisionQueryEra.BlockFirst,
+        _ => BlockCollisionQueryEra.Modern,
+    };
+
+    /// <summary>Selects the native player dimension era for a session. The standing crouch box ends after 1.8; the modern pose table starts at 1.14.</summary>
+    public static PoseDimensionsEra PoseDimensionsForProtocol(int protocol) => protocol switch
+    {
+        <= 47 => PoseDimensionsEra.LegacyStanding,
+        < 477 => PoseDimensionsEra.PreCrawl,
+        _ => PoseDimensionsEra.ModernCrawl,
+    };
+
     /// <summary>The fluid-movement era (depth-strider blend only).</summary>
     public required FluidMovementEra FluidMovement { get; init; }
 
@@ -85,15 +108,27 @@ public sealed record PhysicsProfile
     public double StandingHeight => PhysicsConstants.PlayerStandingHeight;
 
     /// <summary>The player crouch box height for this era.</summary>
-    public double CrouchHeight => PoseDimensions == PoseDimensionsEra.ModernCrawl
-        ? PhysicsConstants.PlayerCrouchHeightModern
-        : PhysicsConstants.PlayerCrouchHeightLegacy;
+    public double CrouchHeight => PoseDimensions switch
+    {
+        PoseDimensionsEra.LegacyStanding => PhysicsConstants.PlayerStandingHeight,
+        PoseDimensionsEra.ModernCrawl => PhysicsConstants.PlayerCrouchHeightModern,
+        _ => PhysicsConstants.PlayerCrouchHeightLegacy,
+    };
 
     /// <summary>The player swim/crawl box height for this era.</summary>
     public double SwimHeight => PhysicsConstants.PlayerSwimHeight;
 
     /// <summary>The player box width for this era.</summary>
     public double Width => PhysicsConstants.PlayerWidth;
+
+    internal static double EyeHeightForPose(EntityPose pose, PoseDimensionsEra dimensions) => pose switch
+    {
+        EntityPose.Crouching => dimensions == PoseDimensionsEra.ModernCrawl
+            ? PhysicsConstants.PlayerCrouchEyeHeight
+            : PhysicsConstants.PlayerCrouchEyeHeightLegacy,
+        EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => PhysicsConstants.PlayerSwimEyeHeight,
+        _ => PhysicsConstants.PlayerStandingEyeHeight,
+    };
 
     /// <summary>Builds a profile from raw feature-flag values (the shape of <c>features.json</c>). Callers that hold a generated <c>ProtocolFeatures</c> (from <c>Umpk.Data.Java</c>) adapt it to these raw bools rather than this project taking a dependency on the protocol/data layers, so the engine never reads JSON - or <c>ProtocolFeatures</c> - directly. See <c>Umpk.Client.Navigation.PhysicsProfileFactory</c> for the production adapter and its field-by- field mapping (2 of these 8 flags - <paramref name="modernCrouchHeight"/> and <paramref name="dirtyCheckedPositionCadence"/> - have no direct <c>features.json</c> source and are derived there).</summary>
     public static PhysicsProfile FromFeatures(
@@ -126,7 +161,7 @@ public sealed record PhysicsProfile
     /// </summary>
     public static PhysicsProfile ForProtocol(int protocolVersion) => protocolVersion switch
     {
-        // 1.8 (protocol 47): pre-swimming, no elytra, legacy crouch height 1.65, legacy cadence.
+        // 1.8-client-decompiled ahd.java keeps the standing box while sneaking; its eye getter subtracts 0.08F from 1.62F.
         <= 47 => new PhysicsProfile
         {
             FluidMovement = FluidMovementEra.Legacy,
@@ -135,7 +170,7 @@ public sealed record PhysicsProfile
             ElytraAvailable = false,
             SwimPoseAvailable = false,
             CrawlPoseAvailable = false,
-            PoseDimensions = PoseDimensionsEra.PreCrawl,
+            PoseDimensions = PoseDimensionsEra.LegacyStanding,
             PositionSend = PositionSendCadence.Legacy,
         },
         // 1.9-1.13 boundary (protocols 48-392): elytra + dirty cadence, still legacy fluid/pose.

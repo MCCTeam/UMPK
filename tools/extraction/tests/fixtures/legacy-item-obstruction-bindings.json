@@ -1,0 +1,835 @@
+[
+  {
+    "version": "1.8",
+    "protocol": 47,
+    "measurement_sha256": "a730a7db59b0b99b09be49d745a49a98c475624319e08a51b250cbe58b80a693",
+    "client_sha256": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+    "native": {
+      "version": "1.8",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "adw",
+      "field_owner": "wv",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "adw": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar",
+        "wv": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar",
+        "aqu": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.1",
+    "protocol": 47,
+    "measurement_sha256": "dee9e809a013f8e33feac6695751fcf742fdfc8cec758450e9e773eea33b25c7",
+    "client_sha256": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+    "native": {
+      "version": "1.8.1",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "adx",
+      "field_owner": "wx",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "adx": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar",
+        "wx": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar",
+        "aqr": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.2",
+    "protocol": 47,
+    "measurement_sha256": "9cae3e0da3cf69f442b1a4eb08b39b470b37410219a306eaaa1b9506f971509b",
+    "client_sha256": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+    "native": {
+      "version": "1.8.2",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "va",
+      "field_owner": "pl",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "va": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar",
+        "pl": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar",
+        "adn": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.2/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.3",
+    "protocol": 47,
+    "measurement_sha256": "5149f6b517dd7276413bc561f0e9272151aeeee8d2c8d41df8d05471493c7f29",
+    "client_sha256": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+    "native": {
+      "version": "1.8.3",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "va",
+      "field_owner": "pl",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "va": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar",
+        "pl": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar",
+        "adn": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.3/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.4",
+    "protocol": 47,
+    "measurement_sha256": "099a78c1c30870192ed83e1ff40828cb2acc8d06c4f935afb5d2f7d14555cc2f",
+    "client_sha256": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+    "native": {
+      "version": "1.8.4",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.4/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.5",
+    "protocol": 47,
+    "measurement_sha256": "d5c39c25e82154061eae57a74cca42170cd51f86fdb62b241027e974b19a45fc",
+    "client_sha256": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+    "native": {
+      "version": "1.8.5",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.5/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.6",
+    "protocol": 47,
+    "measurement_sha256": "138b58188239167e3f6db1a225cc208e2ee130b8e0ec1a112c35c671273bc8e1",
+    "client_sha256": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+    "native": {
+      "version": "1.8.6",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.6/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.7",
+    "protocol": 47,
+    "measurement_sha256": "c3591eaf25999621952bffc151458208a7e9333947b5e1af5e633e8fd2010afe",
+    "client_sha256": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+    "native": {
+      "version": "1.8.7",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.7/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.8",
+    "protocol": 47,
+    "measurement_sha256": "974349921ad49534c194aaf3995c484b4be95a0433bd0d51be3118d0eee8be8a",
+    "client_sha256": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+    "native": {
+      "version": "1.8.8",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.8/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.8.9",
+    "protocol": 47,
+    "measurement_sha256": "5904935ead5c10fe2451676ee942ea6dd7e823dd4c06fe0255db90d046ced38c",
+    "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+    "native": {
+      "version": "1.8.9",
+      "protocol": 47,
+      "entity": "minecraft:item",
+      "class": "uz",
+      "field_owner": "pk",
+      "field_name": "k",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "uz": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar",
+        "pk": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar",
+        "adm": "/home/anon/Projects/MinecraftOfficial/runs/classic-villager-geometry-all-20261017-v1/1.8.9/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.9",
+    "protocol": 107,
+    "measurement_sha256": "6405d8915d3c24e6f517123b78f9a21e9714820cd60f97aa979a68237ec53034",
+    "client_sha256": "0273b5c79d6b96799c6480ae61366d6b1d042655970de87f77f1a3f1ebea9307",
+    "native": {
+      "protocol": 107,
+      "version": "1.9",
+      "entity": "minecraft:item",
+      "class": "yd",
+      "field_owner": "rr",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yd": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9/client-unsigned.jar",
+        "rr": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9/client-unsigned.jar",
+        "aht": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.9.1",
+    "protocol": 108,
+    "measurement_sha256": "397a1daa99568213dd268c79e356393ae979851048a5a20f17fc46c4a3c94177",
+    "client_sha256": "56ad7e53f6f4ad393844e274aa2190692b61d2ad9f6b3d12b33a8b7332fd51f9",
+    "native": {
+      "protocol": 108,
+      "version": "1.9.1",
+      "entity": "minecraft:item",
+      "class": "yd",
+      "field_owner": "rr",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yd": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.1/client-unsigned.jar",
+        "rr": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.1/client-unsigned.jar",
+        "aht": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.9.2",
+    "protocol": 109,
+    "measurement_sha256": "8a4bd2d6f60ede4500870d9eaaf79d5abc4038b70a1f378e5428498030512518",
+    "client_sha256": "ef87eb71250df1b871deab8d3ef10aac3290b9e78667ad548fde4d0e14af0d65",
+    "native": {
+      "protocol": 109,
+      "version": "1.9.2",
+      "entity": "minecraft:item",
+      "class": "yd",
+      "field_owner": "rr",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yd": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.2/client-unsigned.jar",
+        "rr": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.2/client-unsigned.jar",
+        "aht": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v3/1.9.2/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.9.3",
+    "protocol": 110,
+    "measurement_sha256": "d1b8d163d42a0cd7e758c535f55e4a3de8690cd964aebcad7dca62ca8acc3db6",
+    "client_sha256": "ab8fdde789c5b4614ffc98249e04fdcce7dfce320b55215bfe5418608af6a63b",
+    "native": {
+      "protocol": 110,
+      "version": "1.9.3",
+      "entity": "minecraft:item",
+      "class": "yd",
+      "field_owner": "rr",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yd": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.3/client-unsigned.jar",
+        "rr": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.3/client-unsigned.jar",
+        "aht": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.3/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.9.4",
+    "protocol": 110,
+    "measurement_sha256": "47069705ca3cfae594147a34aa50874bc55b393227b6017a2009459864b6ad8d",
+    "client_sha256": "23e90103a1ca2ac71100004c6d5846de09f85695f579843ef8da41571e60c908",
+    "native": {
+      "protocol": 110,
+      "version": "1.9.4",
+      "entity": "minecraft:item",
+      "class": "yd",
+      "field_owner": "rr",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yd": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.4/client-unsigned.jar",
+        "rr": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.4/client-unsigned.jar",
+        "aht": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.9.4/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.10",
+    "protocol": 210,
+    "measurement_sha256": "e5c9bc7b86d7d74fb76723ed256be94543e39d50b61b319dbb9c27a9f9eb5163",
+    "client_sha256": "c00f8170ebf4fd834f552246743a64885a6dffb3dd1e3a3f3dba9676b7a0af35",
+    "native": {
+      "protocol": 210,
+      "version": "1.10",
+      "entity": "minecraft:item",
+      "class": "yk",
+      "field_owner": "rw",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yk": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10/client-unsigned.jar",
+        "rw": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10/client-unsigned.jar",
+        "aid": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.10.1",
+    "protocol": 210,
+    "measurement_sha256": "258e83fc0ce41c71f2d8f9bf36e1f16dfe74a687072e7787ad3e61913d023f4a",
+    "client_sha256": "338b205f20c22b9c676d9d3227a5e6c5e190f30ad84d7caad035150b3e05ba72",
+    "native": {
+      "protocol": 210,
+      "version": "1.10.1",
+      "entity": "minecraft:item",
+      "class": "yk",
+      "field_owner": "rw",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "yk": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10.1/client-unsigned.jar",
+        "rw": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10.1/client-unsigned.jar",
+        "aid": "/home/anon/Projects/MinecraftOfficial/runs/early-entity-geometry-batch-20261017-v4/1.10.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "native": {
+      "protocol": 316,
+      "version": "1.11.1",
+      "entity": "minecraft:item",
+      "class": "zj",
+      "field_owner": "sn",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "zj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar",
+        "sn": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar",
+        "ajs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "41fa31cd59269cda353f2520a5196559500515d2e60e7c330fd52ab79510da34",
+    "client_sha256": "eff72a31339cd9a96a61092eed2d95b95e4cc91516bea4e9105c3d73574147f6",
+    "audit_sha256": "e859e9181411773a1fd1f497435ad601554f215c79e6da3119d93808374083cd"
+  },
+  {
+    "native": {
+      "protocol": 316,
+      "version": "1.11.2",
+      "entity": "minecraft:item",
+      "class": "zj",
+      "field_owner": "sn",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "zj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar",
+        "sn": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar",
+        "ajs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.11.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "84d147d1667a0709a4383df9889f604db5695b164dfc00ba2222c08e15ebbede",
+    "client_sha256": "be3fff4f2cc005a1310a96389efdeb983d2bcb4b8e747c402acd616ae73d0ba2",
+    "audit_sha256": "7f9a9abb83d2bef440eacf865d09321b4789b36e374f10f156f8f8473521456f"
+  },
+  {
+    "native": {
+      "protocol": 335,
+      "version": "1.12",
+      "entity": "minecraft:item",
+      "class": "acj",
+      "field_owner": "ve",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acj": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar",
+        "ve": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar",
+        "ams": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "fa0cf2c9118dfd46ca42fee65cefbbf566ba52c069df6421a8cc858e8a0a19f6",
+    "client_sha256": "59e84cf6acc3912e1705ab05c722485afb3ec33343eef4756d8c16edfe6411ca",
+    "audit_sha256": "6be722c520799d18a86a32a06b9c5672a142d8f302c204ce4110504f2434b3e5"
+  },
+  {
+    "native": {
+      "protocol": 338,
+      "version": "1.12.1",
+      "entity": "minecraft:item",
+      "class": "acl",
+      "field_owner": "vg",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acl": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar",
+        "vg": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar",
+        "amu": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "caf4b29dbfed1aa204e9317c12df240c61cc41d80b07aa6954050a6c350e75b8",
+    "client_sha256": "19331fb29bf8b8d5ed764677c94cca9d66481e10104f660eb555894a4300cf22",
+    "audit_sha256": "800f83675b2fbcb4f2d95b0a093ba26b2728f404a3c152dd2facb4b65fb41031"
+  },
+  {
+    "native": {
+      "protocol": 340,
+      "version": "1.12.2",
+      "entity": "minecraft:item",
+      "class": "acl",
+      "field_owner": "vg",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "acl": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar",
+        "vg": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar",
+        "amu": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.12.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "0f0fac7df2cee2a16c2adfbf9c482cd316a8209d764c5ab858eac88e3c2734de",
+    "client_sha256": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f",
+    "audit_sha256": "84153507fc20cbb50b981b8c1d17a38bccada761a08988dffe9329614ba15fd5"
+  },
+  {
+    "native": {
+      "protocol": 393,
+      "version": "1.13",
+      "entity": "minecraft:item",
+      "class": "ami",
+      "field_owner": "aeo",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ami": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar",
+        "aeo": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar",
+        "axs": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "3adb08f5220d7975d42e175dd29e251e09c3bde315e4f851a35d580b613498b5",
+    "client_sha256": "d807a5ed9428b6c16b64888fd2b7fa76dcf5c55d06f96f7c0c47762c3fc3e26e",
+    "audit_sha256": "9ceecd909613f0a455ac4db727d1bb4fce13484120546fcffb2c70d3ffab3fcc"
+  },
+  {
+    "native": {
+      "protocol": 401,
+      "version": "1.13.1",
+      "entity": "minecraft:item",
+      "class": "aml",
+      "field_owner": "aer",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "aml": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar",
+        "aer": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar",
+        "axx": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.1/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "f8fc30b8212cc9ec6c7c08d25e4a88c1bab81b28b3bf055058460e875225424c",
+    "client_sha256": "f0b4cf6d1a87ae150f87a535651138ca7b82bdad8853f76e7ddbff1dd610ac87",
+    "audit_sha256": "11bfc8086efb010013ab6a231d6db31eb35058c320f7f2354139e4790df13776"
+  },
+  {
+    "native": {
+      "protocol": 404,
+      "version": "1.13.2",
+      "entity": "minecraft:item",
+      "class": "amm",
+      "field_owner": "aer",
+      "field_name": "j",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "amm": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar",
+        "aer": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar",
+        "axy": "/home/anon/Projects/MinecraftOfficial/runs/legacy-entity-geometry-batch-20261017-v1/1.13.2/client-unsigned.jar"
+      }
+    },
+    "measurement_sha256": "689e59a782224f643bdbcb72ff170d35c7e7f37235712f3010ee5b3735866c09",
+    "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+    "audit_sha256": "aab57a432a827611b7e6553167d9e71c7c35f2c201689e9f577d56156f30734a"
+  },
+  {
+    "version": "1.14",
+    "protocol": 477,
+    "measurement_sha256": "852622bcdc2006af505976a595ba7f898304985c755a9599ceacec5137900696",
+    "client_sha256": "93907cbf0655aa5f10d049efa4d745f4250eecc5d0d5d1268046eec3144f323a",
+    "native": {
+      "protocol": 477,
+      "version": "1.14",
+      "entity": "minecraft:item",
+      "class": "ato",
+      "field_owner": "aif",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ato": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar",
+        "aif": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar",
+        "bhh": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.1",
+    "protocol": 480,
+    "measurement_sha256": "7a9418a3211c9b06cad8d82cafc49deb8f511992c56b7c4fadee57d382310ac1",
+    "client_sha256": "7194d1326cf796f62ac55f3cb56f851c232895639ae27510f3207d5a73f91814",
+    "native": {
+      "protocol": 480,
+      "version": "1.14.1",
+      "entity": "minecraft:item",
+      "class": "atp",
+      "field_owner": "aii",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "atp": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar",
+        "aii": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar",
+        "bhi": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.1/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.2",
+    "protocol": 485,
+    "measurement_sha256": "0f7d6592de8435d437b605797500124d99e02af67e33e05170755177f22f400c",
+    "client_sha256": "9b740c9fd4955981125ebd3cd086baa8b4392963d043a3480b5b942a96637c25",
+    "native": {
+      "protocol": 485,
+      "version": "1.14.2",
+      "entity": "minecraft:item",
+      "class": "atp",
+      "field_owner": "aii",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "atp": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar",
+        "aii": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar",
+        "bhi": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.2/client-unsigned.jar"
+      }
+    }
+  },
+  {
+    "version": "1.14.3",
+    "protocol": 490,
+    "measurement_sha256": "d52a67ccb9094e17c1efe2821c0c42f9e452f665be188197b839c19610552a6e",
+    "client_sha256": "4063062677433988e012fba53e42e4c21adb6919ac7f061f19f3c6e75b334e07",
+    "native": {
+      "protocol": 490,
+      "version": "1.14.3",
+      "entity": "minecraft:item",
+      "class": "ats",
+      "field_owner": "ail",
+      "field_name": "i",
+      "rows": [
+        {
+          "constructor": "default",
+          "blocks_building": false
+        },
+        {
+          "constructor": "network_xyz",
+          "blocks_building": false
+        }
+      ],
+      "origins": {
+        "ats": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar",
+        "ail": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar",
+        "bhm": "/home/anon/Projects/MinecraftOfficial/runs/early-pose-entity-geometry-batch-20261017-v5/1.14.3/client-unsigned.jar"
+      }
+    }
+  }
+]

@@ -63,6 +63,78 @@ The fold step rejects a block when its states disagree instead of collapsing sta
 
 When jar-driven extraction is unavailable, `shape_extractor.py` maps the report's block-state ordering onto the repository-local bootstrap asset and marks the result with `curated-shape-bootstrap` provenance. This fallback does not invent data for unresolved blocks.
 
+For the 33 slab families added in 26.3, fold the retained original default collision grids into the existing AABB reference table after modern extraction. This supplements only those 198 states, reuses existing half/full pool entries, and preserves every other reference and unresolved family. It verifies the native measurement, official artifacts, unchanged probe and slab source, state schemas, exact grid planes/cells/boxes, singleton identity and canonical-grid provenance before writing. A changed existing reference is rejected. Add `--check` to reconstruct without writing:
+
+```bash
+python3 tools/extraction/shape_extractor.py --native-slab-refs \
+  --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/composite-grid-extraction-20261016-v1/native/standalone/all-v2"
+python3 -m unittest discover -s tools/extraction -p test_native_slab_shape_refs.py
+```
+
+## Entity and world lifetime source audit
+
+From the repository root, audit the official client trees for same-dimension respawn retention and duplicate-ID entity replacement:
+
+```bash
+python3 tools/extraction/audit_entity_lifecycle.py --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-lifecycle-source.json
+python3 -m unittest discover -s tools/extraction -p test_audit_entity_lifecycle.py
+```
+
+The auditor checks each official client jar's SHA-1, records jar and source SHA-256 hashes, and includes the resolved method evidence. It resolves both mapped and obfuscated releases and includes stable aliases from the official interaction catalogue. Missing or ambiguous source patterns fail the audit. This is source evidence; it does not execute a native world or replace live lifecycle tests.
+
+`audit_entity_packet_bases.py` separately audits relative-coordinate storage, rotation-only handling, classic teleport cache replacement and modern position-sync ownership. Its legacy bindings include static cache setters resolved from the actual call site.
+
+```bash
+python3 tools/extraction/audit_entity_packet_bases.py --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-packet-bases-source.json
+python3 -m unittest discover -s tools/extraction -p test_audit_entity_packet_bases.py
+```
+
+## Modern teleport measurements
+
+`EntityTeleportDump.java` executes the official client's `PositionMoveRotation.calculateAbsolute` for every combination of the nine relative flags and eight input pairs. The maintained driver checks official artifact hashes, unchanged client class bytes, native class origins, complete finite output and equal protocol aliases before emitting a deduplicated replay fixture.
+
+```bash
+python3 tools/extraction/measure_entity_teleport.py --official /home/anon/Projects/MinecraftOfficial --measurements /tmp/entity-teleport-measurements --out /tmp/EntityTeleport.native.json
+python3 -m unittest discover -s tools/extraction -p test_measure_entity_teleport.py
+```
+
+The default matrix covers every available stable modern release from 1.21.2 through 26.3, including aliases from the official artifact catalogue. `--versions` selects a smaller explicit matrix. Each measurement includes the native sine-table hash and source hashes for position transforms, relative flags, vector rotation, math, entities and the client listener. Position-sync source must retain velocity. These measurements establish transform arithmetic; they do not execute the listener, select an entity's current or interpolation-target state, or implement vehicle authority.
+
+## Entity motion catalogue proposals
+
+`extract_entity_motion.py` folds a complete native interpolation factory catalogue into a fresh external proposal directory. It verifies raw measurement hashes, release coverage, registry coverage and equal protocol aliases. It preserves native controller owners, factory roles and measured network update intervals without inventing missing legacy intervals. A network update interval is not automatically the controller's interpolation length.
+
+```bash
+python3 tools/extraction/extract_entity_motion.py --measurements /absolute/native-interpolation-run --official /home/anon/Projects/MinecraftOfficial --out /tmp/entity-motion-proposal
+python3 -m unittest discover -s tools/extraction -p test_extract_entity_motion.py
+```
+
+The owned survival-player row remains marked `client_player_measured: false`; it does not establish the actual remote-client player role. The extractor rejects relabeling that actor as a native player factory. Review the proposed files and obtain the dataset approval required by AGENTS.md before integrating them through DataGen and generated accessors. A constructor/controller catalogue does not establish full entity ticks, dynamic geometry or world physics.
+
+## Native remote-player measurements
+
+`measure_remote_player.py` constructs an owned subtype of the actual native `RemotePlayer`, overrides only survival game-mode queries and invokes the unchanged native `aiStep`. Its controlled client-level adapter supplies empty peer queries, collision-free answers and relative tick speed one. The player constructor runs normally; the owned world is allocated without executing its constructor. On 26.3 the driver explicitly advances the native interpolation handler before `aiStep`. This is a controlled phase measurement, not a complete entity or world tick or a packet-listener test.
+
+```bash
+python3 tools/extraction/measure_remote_player.py --official /home/anon/Projects/MinecraftOfficial --measurements /absolute/fresh-native-remote-player-run
+python3 tools/extraction/verify_remote_player.py /absolute/fresh-native-remote-player-run/26.3/remote-ai.json
+python3 tools/extraction/extract_remote_player_fixture.py --official /home/anon/Projects/MinecraftOfficial --measurements /absolute/fresh-native-remote-player-run --out /tmp/RemotePlayer.native.json
+```
+
+Use `--versions <release> ...` for a focused measurement. The fixture extractor requires the complete mapped release set, successful reports, exact hashes, equal protocol aliases and the previously verified position-controller profile for each release. Eight scenarios record 12 ticks each: linear, repeated and changed targets, velocity updates and retargeting, wrapped rotation, synchronized crouching and a stationary control. The sanity verifier checks completeness and controls; managed replay compares every recorded position, rotation, box, target, active state and velocity by exact numeric bits. The native measurements establish three position steps through 26.2 and two in 26.3, with immediate velocity updates through 1.19.3 and three-step velocity interpolation from 1.19.4. Network update intervals alone do not establish these durations. `VanillaEntityVelocity` and the existing position model remain caller-driven components pending runtime integration.
+
+## Native item attack defaults
+
+`measure_item_attack.py` measures the native piercing component's data, hash and wire codecs, plus piercing and minimum-charge defaults for every registered item from 1.21.11 through 26.3. It checks official artifact hashes, preserved client class bytes and native class origins. Set `MINECRAFT_OFFICIAL_ROOT` for another artifact location. The optional release arguments after the fresh output directory select a smaller measurement run.
+
+```bash
+python3 tools/extraction/measure_item_attack.py /absolute/fresh-item-attack-run
+python3 tools/extraction/extract_item_attack.py --measurements /absolute/fresh-item-attack-run --data data/java --out data/java
+```
+
+The extractor verifies the maintained helper hash and report hashes, reads protocol identifiers from the verified client jars, requires every registered item and rejects differing protocol aliases. Canonical nulls mean measured component absence. Generated prototypes preserve the native sound holders and minimum charge while allowing stack patches to remove or override them. These measurements do not execute input handling or establish attack-charge tick order.
+
 ## Validation
 
 ```bash
@@ -71,3 +143,286 @@ dotnet run --project ../Umpk.DataGen -- diff --data ../../data/java <previous-pr
 ```
 
 After extraction, regenerate all affected C# outputs through `Umpk.DataGen` and review the dataset and generated diffs together.
+## Ordinary cube replacement
+
+`extract_block_replacement.py` validates completed native client measurements and writes `block-replacement.json` through the canonical dataset pipeline. Pass each measurement root with a separate `--measurements` argument. The roots must retain their results, tool receipts, source snapshots, adapters and class-origin logs. Artifact jars and decompiled client trees remain under the shared official-artifact root.
+
+```bash
+python3 tools/extraction/extract_block_replacement.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-replacement-modern-all-20261016-v2" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-replacement-legacy-all-20261016-v1" \
+  --out data/java
+python3 -m unittest discover -s tools/extraction -p test_extract_block_replacement.py
+```
+
+The extractor checks official artifact hashes, preserved original client-class hashes, predicate origins, source bindings, exact registry and ordinary-cube item coverage, and equal-protocol release differences before writing any dataset files. It rejects per-item or per-face rules that the compact schema cannot represent. Protocol aliases select the latest measured vanilla client profile; measured earlier differences remain in provenance.
+
+Range rows contain `[firstStateId, lastStateId, flags]`. Flag 1 means the clicked block is replaced; flag 2 means the resolved destination accepts an ordinary cube item. These predicates are distinct in metadata-era clients. `below_overrides` retains the measured dependency of upper double plants on the lower cell. Gaps remain unknown state identifiers. These tables cover ordinary cube items; item components, block use, player state, survival, obstruction and other runtime placement conditions still require evaluation.
+
+## Entity geometry
+
+`extract_entity_geometry.py` writes audited entity dimensions and metadata refresh rules to `entity-geometry.json`. It checks the native age/pose transition phases, report hashes and official client/server hashes before extracting the selected protocol representatives. Preserve the complete measurement roots outside Git.
+
+Use the classic extractor for protocol 47. It verifies all ten 1.8 release aliases, their original client classes and artifact hashes before writing the signed-age selector and deferred living-tick contract. Metadata index 12 selects baby dimensions when its signed byte is negative. Villager adult dimensions are 0.6F by 1.8F; baby dimensions are 0.3F by 0.9F. Metadata updates and position reapplication keep cached dimensions until the eligible living phase runs. The original world source requires loaded columns across an inclusive 32-block horizontal radius.
+
+```bash
+python3 tools/extraction/extract_classic_entity_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/classic-villager-geometry-all-20261017-v1" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/ClassicVillagerGeometry.native.json.gz \
+  --roles "$MINECRAFT_OFFICIAL_ROOT/runs/classic-farm-geometry-all-20261017-v2" \
+  --role-fixture tests/Umpk.Client.Tests/Fixtures/ClassicFarmGeometry.native.json.gz
+```
+
+Add `--check` to verify the dataset and both fixtures without rewriting them. The four farm-animal types require all ten release aliases. Their explicit `classic-role-v1` receipts retain canonical entity identity, original registry class and numeric ID, source hierarchy, method owners and helper source/class hashes. Cows, pigs, sheep and chickens use the same signed-age selector and deferred size phase, with their own measured dimensions. The separate role fixture contains 10,240 predicates and 3,000 size transitions in four deduplicated cases. The existing villager rule and fixture remain unchanged. These measurements cover the watcher predicate and size phases; complete mob movement and other dynamic geometry require their own evidence.
+
+```bash
+legacy_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/legacy-entity-geometry-batch-20261017-v1"
+early_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/early-entity-geometry-batch-20261017"
+pose_measurements="$MINECRAFT_OFFICIAL_ROOT/runs/early-pose-entity-geometry-batch-20261017-v5"
+legacy_arguments=(
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-20261017-v1"
+  --legacy "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-villager-geometry-1.11-20261017-v1"
+)
+for release in 1.9 1.9.1 1.9.2; do
+  legacy_arguments+=(--legacy "$early_measurements-v3/$release/geometry")
+done
+for release in 1.9.3 1.9.4 1.10 1.10.1; do
+  legacy_arguments+=(--legacy "$early_measurements-v4/$release/geometry")
+done
+for release in 1.11.1 1.11.2 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
+  legacy_arguments+=(--legacy "$legacy_measurements/$release/geometry")
+done
+for release in 1.14 1.14.1 1.14.2 1.14.3; do
+  legacy_arguments+=(--legacy "$pose_measurements/$release/geometry")
+done
+role_arguments=()
+for release in 1.14 1.14.1 1.14.2 1.14.3; do
+  for entity in cat iron_golem; do
+    role_arguments+=(--role "$MINECRAFT_OFFICIAL_ROOT/runs/entity-role-geometry-batch-20261017-v1/$release/$entity")
+  done
+  role_arguments+=(--role "$MINECRAFT_OFFICIAL_ROOT/runs/entity-horse-geometry-batch-20261017-v1/$release/horse")
+done
+mapped_arguments=()
+for batch in mapped-entity-role-geometry-pilot-20261017-v1 mapped-entity-role-geometry-batch-20261017-v1; do
+  measurement_root="$MINECRAFT_OFFICIAL_ROOT/runs/$batch"
+  while IFS= read -r measurement; do
+    mapped_arguments+=(--mapped-role "$measurement")
+  done < <(python3 - "$measurement_root" <<'PY'
+import json
+from pathlib import Path
+import sys
+root = Path(sys.argv[1])
+for row in json.loads((root / "results.json").read_text()):
+    print(root / row["version"] / row["entity"].split(":")[1])
+PY
+  )
+done
+python3 tools/extraction/extract_entity_geometry.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/placement-entity-native-all-20261017-v1" \
+  --transitions "$MINECRAFT_OFFICIAL_ROOT/runs/villager-box-transitions-all-20261017-v1" \
+  "${legacy_arguments[@]}" \
+  "${role_arguments[@]}" \
+  "${mapped_arguments[@]}" \
+  --role-fixture tests/Umpk.Client.Tests/Fixtures/EntityRoleGeometry.native.json \
+  --mapped-role-fixture tests/Umpk.Client.Tests/Fixtures/MappedEntityRoleGeometry.native.json.gz \
+  --legacy-fixture tests/Umpk.Client.Tests/Fixtures/LegacyVillagerGeometry.native.json \
+  --check
+python3 -m unittest discover -s tools/extraction -p test_extract_entity_geometry.py
+```
+
+The 49 datasets cover the measured releases from 1.9 through 1.14.3, and the measured protocol representatives from 1.14.4 through 26.3. The Boolean selector identifies the native baby metadata field: index 11 through 1.9.4, index 12 from 1.10 through 1.13.2, and the measured modern indices thereafter. Each variant contains `[selector, canonicalPose, width, height, fixed, blocksBuilding]`. Refresh rules distinguish retained minimum corners, retained minima only on growth, and recentering. Position reapplication always recenters. Native 1.11 already recenters shrinking dimensions, while 1.10.2 retains their minimum corner. `JavaGameData.EntityGeometryData` returns the geometry source independently; the interaction source retains its `IEntityGeometrySource` adapter. Unknown entity types and poses remain unknown. Attribute scaling beyond the default value, riders, specialized geometry and native mob interpolation still need implementation and live validation.
+
+`extract_player_geometry.py` adds player rules to the existing entity datasets from independent native snapshots and complete pose/position callback sweeps. It verifies official artifact hashes, original class hashes and captured class origins, adapter source hashes, callback owners, every pose transition and same-protocol aliases. Run it after the base entity extractor so both sets of rules remain present:
+
+```bash
+python3 tools/extraction/measure_entity_box_transitions.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements /external/fresh/player-box-transitions
+python3 tools/extraction/extract_player_geometry.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements /external/placement-entity-native \
+  --transitions /external/fresh/player-box-transitions \
+  --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/PlayerEntityGeometry.native.json.gz
+python3 -m unittest discover -s tools/extraction -p test_extract_player_geometry.py
+```
+
+Add `--check` to the extraction command to verify the existing outputs. The measured player batch covers 27,981 callbacks across 44 releases from 1.14.4 through 26.3 and 32 protocols. Older player eras, nondefault attribute scaling, spectator lookup/cache behavior and rider positioning need separate evidence; these measurements do not execute complete entity/world ticks. The actor is a survival Player adapter that inherits the original geometry methods. A separate source audit confirms that RemotePlayer and AbstractClientPlayer do not override those callbacks in the measured releases.
+
+`extract_legacy_player_geometry.py` adds player geometry for 1.14, 1.14.1, 1.14.2 and 1.14.3. The separate original RemotePlayer probe covers 588 pose-pair/position transitions, constructor building flags, pose accessor 6 and actual callback owners. Source verification checks the original hierarchy, first-call delegation from LivingEntity to Entity, the pose setter and refresh callback, the dimension getter and the placement building predicate. Native `SNEAKING` maps to canonical crouching; native dying ordinal 6 maps to canonical dying 7 through the existing pose codec. These measurements execute controlled callbacks with an empty world, not complete entity/world ticks or rider positioning. The owned helper sources, adapters, commands and artifact hashes are preserved with `legacy-player-geometry-20261018-v2` under the shared runs directory.
+
+```bash
+python3 tools/extraction/extract_legacy_player_geometry.py \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-player-geometry-20261018-v2" \
+  --fixture tests/Umpk.Client.Tests/Fixtures/LegacyPosePlayerGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p test_extract_legacy_player_geometry.py
+```
+
+The four early 1.14 datasets also contain native cat, horse and iron golem geometry. Cats and horses retain the Boolean baby selector; iron golems use `[-1, "none", 0, 0]` and only selector-zero variants. Each type retains its measured pose transitions, including sleeping dimensions. The separate role fixture contains 5,292 transitions across twelve release/entity measurements and three deduplicated cases. `--role` checks the original class origins, method owners, age predicate, complete callbacks and artifact hashes before adding each role. Include these arguments when regenerating the datasets.
+
+The 32 mapped protocol datasets also contain native cat, cow, horse and golem geometry. The 176 measurements cover 44 mapped releases and 363,753 native transition rows. The compressed replay fixture deduplicates 25 cases while retaining each release's artifact and measurement hashes. Gzip output uses no filename or clock metadata. The extractor checks the mapped method owners, original class preservation, official mappings and the native living-scale getter. Attribute scaling beyond the default value remains unmeasured; fixed dimensions retain their native behavior. Protocol aliases must agree on their geometry and scale contract. The official 26.1.1 and 26.1.2 clients use existing protocol 775; their release names share the same generated descriptor.
+
+After the general geometry extraction, merge the measured cow, pig, sheep and chicken profiles for 1.9 through 1.13.2. This preserves the existing villager profiles and provenance. The 68 release/type measurements cover all seventeen releases and thirteen protocols, with 816 original-client metadata/position transitions and twelve deduplicated fixture cases. The extractor requires complete aliases, native registry IDs, original class bytes, hashed source and helper files, Boolean child observations and callback delegation to the ageable base. It handles the native entity-list, class-registry and type-registry forms, including the flattened IDs from 1.13. The helper uses controlled world inputs and does not execute complete entity or world ticks.
+
+```bash
+python3 tools/extraction/extract_legacy_ageable_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-farm-geometry-all-20261017-v2" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/LegacyFarmGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p test_extract_legacy_ageable_geometry.py
+```
+
+Omit `--check` to regenerate the datasets and fixture from the complete measured cohort, then run DataGen. The Boolean age accessor is 11 through 1.9.4 and 12 from 1.10. All four types resize during the metadata callback. The refresh retains the minimum corner through 1.10.2; from 1.11 it recenters on shrink and retains the minimum on growth. Position reapplication recenters in every measured release. The cow's adult height is 1.4F, compared with 1.3F in the separately measured 1.8 cohort. No classic signed-age or deferred living-tick policy is reused for these Boolean-age profiles.
+
+For 1.14 through 1.14.3, merge the separate native farm pose cohort after the general geometry extraction. The sixteen release/type measurements contain 9,408 age/pose transitions and cover all four protocols. The Boolean age accessor is 14 and the pose accessor is 6. Sleeping dimensions are fixed at .2F by .2F for adults and babies; other measured poses retain the original age-scaled dimensions. Native refresh recenters on shrink and retains the minimum on growth. The extractor verifies the original typed factory, actual entity type, native registry ID and key, complete runtime/source hierarchy, method owners, scale getter, Boolean predicate and callback delegation. It preserves the existing villager, cat, horse and golem profiles and provenance.
+
+```bash
+python3 tools/extraction/extract_pose_farm_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/pose-farm-geometry-all-20261017-v4" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/PoseFarmGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p test_extract_pose_farm_geometry.py
+```
+
+Omit `--check` to regenerate this cohort before DataGen. The explicit `pose-farm-role-v1` format requires all four releases and all four types. Earlier pilots and incomplete provenance receipts do not satisfy it. These measurements execute controlled metadata, refresh and position operations; complete entity/world ticks, riders, attribute-scale sweeps and moving mobs remain separate acceptance work.
+
+For mapped releases from 1.14.4 through 26.3, merge the separate pig, sheep and chicken cohort after the earlier geometry extractors. Its 132 release/type records cover all 44 stable releases and 32 protocols, with 335,772 native age/pose transitions. The explicit `mapped-farm-role-v1` format requires the complete cohort and a hash-pinned, post-measurement source audit. The audit binds factory and numeric registry contracts to the unchanged original receipts, helper classes, official artifacts and decompiled sources. Extraction also validates strict native child observations, the complete superclass chain, Boolean accessor defaults, callback delegation, the newer baby gate, scale-source behavior and every cached box phase. Existing entity profiles and provenance remain unchanged.
+
+```bash
+python3 tools/extraction/extract_mapped_farm_geometry.py \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-geometry-pilot-20261017-v2" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-geometry-all-20261017-v1" \
+  --source-audit "$MINECRAFT_OFFICIAL_ROOT/runs/mapped-farm-source-contracts-20261017-v1/audit.json" \
+  --source-audit-sha256 3e2c2c8bba4430330891912ffab142370f30bcbfca0ead465ce74b982c7dd401 \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --data data/java \
+  --fixture tests/Umpk.Client.Tests/Fixtures/MappedFarmGeometry.native.json.gz --check
+python3 -m unittest discover -s tools/extraction -p '*mapped_farm*.py'
+```
+
+Omit `--check` to regenerate the datasets and deterministic compressed fixture, then run DataGen. Age metadata moves from index 14 to 15 in 1.15 and to 16 in 1.17. Refresh recenters on growth from 1.17; the scale attribute appears in 1.20.5. Baby chicken dimensions change from .2F by .35F to .3F by .4F in 26.1. These observations cover default attributes and controlled metadata, refresh and position operations. Attribute sweeps, riders, full entity/world ticks and moving mobs still need separate native acceptance.
+
+The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
+
+`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains their distinct obfuscated class bindings. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The remaining legacy entity keys retain unknown rules. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.
+
+```bash
+classic_items="$MINECRAFT_OFFICIAL_ROOT/runs/classic-item-obstruction-all-20261017-v1"
+classic_aliases=()
+for release in 1.8 1.8.1 1.8.2 1.8.3 1.8.4 1.8.5 1.8.6 1.8.7 1.8.8; do
+  classic_aliases+=(--alias "$classic_items/$release")
+done
+python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$classic_items/1.8.9" "${classic_aliases[@]}" --check
+```
+
+```bash
+python3 tools/extraction/extract_legacy_item_obstruction.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-20261017-v1" \
+  --alias "$early_measurements-v4/1.10/item" \
+  --alias "$early_measurements-v4/1.10.1/item" \
+  --check
+python3 tools/extraction/extract_legacy_item_obstruction.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-1.11-20261017-v1" \
+  --check
+python3 tools/extraction/extract_legacy_item_obstruction.py \
+  --data data/java \
+  --official "$MINECRAFT_OFFICIAL_ROOT" \
+  --measurements "$legacy_measurements/1.11.2/item" \
+  --alias "$legacy_measurements/1.11.1/item" \
+  --check
+for release in 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
+  python3 tools/extraction/extract_legacy_item_obstruction.py \
+    --data data/java \
+    --official "$MINECRAFT_OFFICIAL_ROOT" \
+    --measurements "$legacy_measurements/$release/item" \
+    --check
+done
+```
+
+For the earlier nonblocking item rules, check each 1.9 release and both protocol-110 aliases:
+
+```bash
+for release in 1.9 1.9.1 1.9.2; do
+  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v3/$release/item" --check
+done
+python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v4/1.9.4/item" --alias "$early_measurements-v4/1.9.3/item" --check
+```
+
+The `--legacy` inputs also accept the original pose-aware clients from 1.14 through 1.14.3. Their receipts verify native enum names, false baby defaults, pose metadata at index 6, building flags and a source-backed age-only scale method. The runtime name `SNEAKING` maps to canonical `CROUCHING`; obfuscated enum field names do not establish pose identities.
+
+```bash
+for release in 1.14 1.14.1 1.14.2 1.14.3; do
+  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$pose_measurements/$release/item" --check
+done
+```
+
+## Early voxel grids and legacy resize queries
+
+`run_legacy_collision_grids.py` measures every original block state for the seven releases from 1.13 through 1.14.3. It uses the audited client symbol bindings, a fresh signature-free copy with byte-identical original classes, Java 11 and a fresh external output directory. Native planes, occupied cells, boxes and canonical full-block identity remain unchanged. The 1.13 empty shape has three empty coordinate lists. Default shapes do not establish neighbor, block-entity or actor-context variants.
+
+```bash
+python3 tools/extraction/run_legacy_collision_grids.py --official "$MINECRAFT_OFFICIAL_ROOT" --out /absolute/fresh-collision-grid-run
+python3 tools/extraction/extract_legacy_collision_grids.py --official "$MINECRAFT_OFFICIAL_ROOT" --measurements /absolute/fresh-collision-grid-run --data data/java
+```
+
+The importer verifies run files, source hashes, official jar hashes, native class origins and unchanged original class bytes before writing all seven tables. Add `--check` to compare the committed data with the same audited measurement run. The recorded dataset uses `runs/pre-pose-collision-grids-20261018-v3`; its provenance identifies each exact measurement.
+
+`extract_legacy_player_clearance.py` reconstructs both resize-query replay fixtures from the original query, player size-phase and composite measurements. It verifies the source, artifacts, helper classes and run receipts before deriving the fixtures. The captures control air/stone inputs and bypass the world constructor; they do not execute complete player ticks or bed/death packet handlers.
+
+```bash
+python3 tools/extraction/extract_legacy_player_clearance.py \
+  --classic "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-client-clearance-20261018-v1" \
+  --voxel "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-voxel-clearance-20261018-v1" \
+  --phase "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-size-phase-20261018-v3" \
+  --composite "$MINECRAFT_OFFICIAL_ROOT/runs/pre-pose-player-composite-clearance-20261018-v1" \
+  --official "$MINECRAFT_OFFICIAL_ROOT" --out tests/Umpk.Client.Tests/Fixtures --check
+```
+## Legacy player lifecycle geometry
+
+`extract_legacy_player_lifecycle.py` reconstructs the explicit sleep, wake-after-removal, death-size and position witnesses across 27 releases from 1.8 through 1.13.2. It also reconstructs the 17-release size-phase sweep, including shared-flag noise, sleeping/spin priority, failed resize attempts and position reapplication. The importer checks original artifact and class bytes, source hashes, method owners, complete matrices and protocol aliases before writing deterministic gzip fixtures.
+
+```bash
+python3 tools/extraction/extract_legacy_player_lifecycle.py \
+  --classic "$UMPK_ORACLE_ROOT/runs/pre-pose-player-lifecycle-1.8-20261018-v1" \
+  --phases "$UMPK_ORACLE_ROOT/runs/pre-pose-player-lifecycle-all-20261018-v1" \
+  --size-phases "$UMPK_ORACLE_ROOT/runs/pre-pose-player-size-phase-20261018-v3" \
+  --official "$UMPK_ORACLE_ROOT" \
+  --out tests/Umpk.Client.Tests/Fixtures --check
+```
+
+The fixtures exercise `VanillaLegacyPlayerGeometry` together with the measured block-clearance component. Session wiring, intact-bed wake exits, packet-listener execution and complete native player ticks remain unfinished. Health and velocity effects are outside this geometry component.
+
+`extract_legacy_bed_facings.py` imports all sixteen raw metadata values for each legacy bed and all registered flattened bed states from 27 original clients. It preserves the original decoded packed state ID as an import check while writing UMPK's canonical wire state IDs. Fourteen per-protocol tables contain 944 measured horizontal facings; unmeasured versions remain unknown.
+
+```bash
+python3 tools/extraction/extract_legacy_bed_facings.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-facing-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java --check
+```
+
+`extract_legacy_player_wake.py` reconstructs the original intact-bed wake geometry, integer exit and ordered candidate evaluations across all 27 legacy releases. The five controlled neighborhoods include a valid exit only in the second search area and an obstructed first candidate. The component receives support/material predicates from its caller; native World.setBlock notifications, full ticks and packet handlers remain outside these measurements.
+
+```bash
+python3 tools/extraction/extract_legacy_player_wake.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-player-intact-wake-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java \
+  --out tests/Umpk.Client.Tests/Fixtures/LegacyPlayerWake.native.json.gz --check
+```
+
+`extract_legacy_bed_exit_cells.py` imports the original bed exit predicate's support, feet-material and head-material evaluations across all 27 releases. Fourteen canonical tables partition every registry state into measured flags or an explicit native metadata rejection. The probe invokes the original predicate at a fixed cell in a controlled client world; it does not execute player ticks or world notifications. Runtime world bounds and missing chunks require separate handling.
+
+```bash
+python3 tools/extraction/extract_legacy_bed_exit_cells.py \
+  --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-exit-cells-all-20261018-v1" \
+  --official "$UMPK_ORACLE_ROOT" --data data/java --check
+```

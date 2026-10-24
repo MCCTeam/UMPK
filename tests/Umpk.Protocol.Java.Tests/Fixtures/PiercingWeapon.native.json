@@ -1,0 +1,3918 @@
+{
+  "schema": 1,
+  "scope": "Unchanged native PiercingWeapon.CODEC over RegistryOps<HashOps.CRC32C_INSTANCE>, native component STREAM_CODEC and a native stone slot packet with an explicit piercing patch. Boolean and optional sound-holder branches are exhaustive for these chosen sounds.",
+  "tools_sha256": {
+    "/tmp/umpk-piercing/PiercingComponentDump.java": "ac9c97546fe8f6d7433d2c69442772abb85451a0411e6eba22c3b34379ba619d",
+    "/home/anon/Projects/UMPK/tools/extraction/shape-extractor/PushDump.java": "14dab35dde7676dfffcaad0e65d989cd4d94a91d598facc62a689c5594f602b1",
+    "/home/anon/Projects/UMPK/tools/extraction/shape-extractor/MiningDump.java": "743825a4bc345112acc351ad3edb67249cff026a85ffaf2f2aefef9c8b45c669",
+    "/tmp/umpk-piercing/measure_components.py": "5a818e331a4c1cc4c8b19ea1582e518e4a348f32e1fa1d524d3a43bba57c4717"
+  },
+  "groups": [
+    {
+      "protocol": 774,
+      "cases": [
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false
+          },
+          "hash": -1744932201,
+          "component_hex": "00000000",
+          "slot_hex": "00070024010101002600000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1076825899,
+          "component_hex": "00000001de09",
+          "slot_hex": "00070024010101002600000001de09"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1755000135,
+          "component_hex": "00000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1317922915,
+          "component_hex": "00000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 238545931,
+          "component_hex": "000001de0900",
+          "slot_hex": "000700240101010026000001de0900"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1078774917,
+          "component_hex": "000001de0901de09",
+          "slot_hex": "000700240101010026000001de0901de09"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1761144553,
+          "component_hex": "000001de0901000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001de0901000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1324231629,
+          "component_hex": "000001de0901000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001de0901000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 646172263,
+          "component_hex": "000001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 318953886,
+          "component_hex": "000001000a756d706b3a70726f62650001de09",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001de09"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1001847794,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -497041112,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -9767747,
+          "component_hex": "000001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1702141338,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001de09",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001de09"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1304477686,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1809218260,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {},
+          "hash": -982207288,
+          "component_hex": "01000000",
+          "slot_hex": "00070024010101002601000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -171104684,
+          "component_hex": "01000001de09",
+          "slot_hex": "00070024010101002601000001de09"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1828632580,
+          "component_hex": "01000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -752491615,
+          "component_hex": "01000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -93686900,
+          "component_hex": "010001de0900",
+          "slot_hex": "000700240101010026010001de0900"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1812248776,
+          "component_hex": "010001de0901de09",
+          "slot_hex": "000700240101010026010001de0901de09"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 180935008,
+          "component_hex": "010001de0901000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001de0901000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1257012541,
+          "component_hex": "010001de0901000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001de0901000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1666837980,
+          "component_hex": "010001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1152424612,
+          "component_hex": "010001000a756d706b3a70726f62650001de09",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001de09"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 578616076,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1649958737,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -595413383,
+          "component_hex": "010001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1655070594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001de09",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001de09"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -74071594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1146002037,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true
+          },
+          "hash": 2031441700,
+          "component_hex": "00010000",
+          "slot_hex": "00070024010101002600010000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -2042554660,
+          "component_hex": "00010001de09",
+          "slot_hex": "00070024010101002600010001de09"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 720436281,
+          "component_hex": "00010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1552332861,
+          "component_hex": "00010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 2037814410,
+          "component_hex": "000101de0900",
+          "slot_hex": "000700240101010026000101de0900"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -963746894,
+          "component_hex": "000101de0901de09",
+          "slot_hex": "000700240101010026000101de0901de09"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1782548823,
+          "component_hex": "000101de0901000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101de0901000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 474598739,
+          "component_hex": "000101de0901000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101de0901000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -708346257,
+          "component_hex": "000101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1206887825,
+          "component_hex": "000101000a756d706b3a70726f62650001de09",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001de09"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -346140812,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1658320016,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1548666261,
+          "component_hex": "000101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1466118023,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001de09",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001de09"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 70072988,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1918598808,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true
+          },
+          "hash": -890381668,
+          "component_hex": "01010000",
+          "slot_hex": "00070024010101002601010000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -490514210,
+          "component_hex": "01010001de09",
+          "slot_hex": "00070024010101002601010001de09"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -898139470,
+          "component_hex": "01010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 329138280,
+          "component_hex": "01010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1394885632,
+          "component_hex": "010101de0900",
+          "slot_hex": "000700240101010026010101de0900"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -492790928,
+          "component_hex": "010101de0901de09",
+          "slot_hex": "000700240101010026010101de0901de09"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -904611556,
+          "component_hex": "010101de0901000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101de0901000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 335381446,
+          "component_hex": "010101de0901000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101de0901000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 2073060972,
+          "component_hex": "010101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1309766037,
+          "component_hex": "010101000a756d706b3a70726f62650001de09",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001de09"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1722110969,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1085511389,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1569104714,
+          "component_hex": "010101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 946288017,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001de09",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001de09"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 282269693,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -918934233,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        }
+      ]
+    },
+    {
+      "protocol": 775,
+      "cases": [
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false
+          },
+          "hash": -1744932201,
+          "component_hex": "00000000",
+          "slot_hex": "00070024010101002600000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1076825899,
+          "component_hex": "00000001970a",
+          "slot_hex": "00070024010101002600000001970a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1755000135,
+          "component_hex": "00000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1317922915,
+          "component_hex": "00000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 238545931,
+          "component_hex": "000001970a00",
+          "slot_hex": "000700240101010026000001970a00"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1078774917,
+          "component_hex": "000001970a01970a",
+          "slot_hex": "000700240101010026000001970a01970a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1761144553,
+          "component_hex": "000001970a01000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001970a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1324231629,
+          "component_hex": "000001970a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001970a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 646172263,
+          "component_hex": "000001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 318953886,
+          "component_hex": "000001000a756d706b3a70726f62650001970a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001970a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1001847794,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -497041112,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -9767747,
+          "component_hex": "000001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1702141338,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001970a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001970a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1304477686,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1809218260,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {},
+          "hash": -982207288,
+          "component_hex": "01000000",
+          "slot_hex": "00070024010101002601000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -171104684,
+          "component_hex": "01000001970a",
+          "slot_hex": "00070024010101002601000001970a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1828632580,
+          "component_hex": "01000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -752491615,
+          "component_hex": "01000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -93686900,
+          "component_hex": "010001970a00",
+          "slot_hex": "000700240101010026010001970a00"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1812248776,
+          "component_hex": "010001970a01970a",
+          "slot_hex": "000700240101010026010001970a01970a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 180935008,
+          "component_hex": "010001970a01000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001970a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1257012541,
+          "component_hex": "010001970a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001970a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1666837980,
+          "component_hex": "010001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1152424612,
+          "component_hex": "010001000a756d706b3a70726f62650001970a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001970a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 578616076,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1649958737,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -595413383,
+          "component_hex": "010001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1655070594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001970a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001970a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -74071594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1146002037,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true
+          },
+          "hash": 2031441700,
+          "component_hex": "00010000",
+          "slot_hex": "00070024010101002600010000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -2042554660,
+          "component_hex": "00010001970a",
+          "slot_hex": "00070024010101002600010001970a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 720436281,
+          "component_hex": "00010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1552332861,
+          "component_hex": "00010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 2037814410,
+          "component_hex": "000101970a00",
+          "slot_hex": "000700240101010026000101970a00"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -963746894,
+          "component_hex": "000101970a01970a",
+          "slot_hex": "000700240101010026000101970a01970a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1782548823,
+          "component_hex": "000101970a01000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101970a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 474598739,
+          "component_hex": "000101970a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101970a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -708346257,
+          "component_hex": "000101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1206887825,
+          "component_hex": "000101000a756d706b3a70726f62650001970a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001970a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -346140812,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1658320016,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1548666261,
+          "component_hex": "000101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1466118023,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001970a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001970a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 70072988,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1918598808,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true
+          },
+          "hash": -890381668,
+          "component_hex": "01010000",
+          "slot_hex": "00070024010101002601010000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -490514210,
+          "component_hex": "01010001970a",
+          "slot_hex": "00070024010101002601010001970a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -898139470,
+          "component_hex": "01010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 329138280,
+          "component_hex": "01010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1394885632,
+          "component_hex": "010101970a00",
+          "slot_hex": "000700240101010026010101970a00"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -492790928,
+          "component_hex": "010101970a01970a",
+          "slot_hex": "000700240101010026010101970a01970a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -904611556,
+          "component_hex": "010101970a01000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101970a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 335381446,
+          "component_hex": "010101970a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101970a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 2073060972,
+          "component_hex": "010101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1309766037,
+          "component_hex": "010101000a756d706b3a70726f62650001970a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001970a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1722110969,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1085511389,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1569104714,
+          "component_hex": "010101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 946288017,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001970a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001970a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 282269693,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -918934233,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        }
+      ]
+    },
+    {
+      "protocol": 776,
+      "cases": [
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false
+          },
+          "hash": -1744932201,
+          "component_hex": "00000000",
+          "slot_hex": "00070024010101002600000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1076825899,
+          "component_hex": "000000019b0a",
+          "slot_hex": "000700240101010026000000019b0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1755000135,
+          "component_hex": "00000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1317922915,
+          "component_hex": "00000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 238545931,
+          "component_hex": "0000019b0a00",
+          "slot_hex": "0007002401010100260000019b0a00"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1078774917,
+          "component_hex": "0000019b0a019b0a",
+          "slot_hex": "0007002401010100260000019b0a019b0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1761144553,
+          "component_hex": "0000019b0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260000019b0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1324231629,
+          "component_hex": "0000019b0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260000019b0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 646172263,
+          "component_hex": "000001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 318953886,
+          "component_hex": "000001000a756d706b3a70726f626500019b0a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f626500019b0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1001847794,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -497041112,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -9767747,
+          "component_hex": "000001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1702141338,
+          "component_hex": "000001000a756d706b3a70726f62650141480000019b0a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650141480000019b0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1304477686,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1809218260,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {},
+          "hash": -982207288,
+          "component_hex": "01000000",
+          "slot_hex": "00070024010101002601000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -171104684,
+          "component_hex": "010000019b0a",
+          "slot_hex": "000700240101010026010000019b0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1828632580,
+          "component_hex": "01000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -752491615,
+          "component_hex": "01000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -93686900,
+          "component_hex": "0100019b0a00",
+          "slot_hex": "0007002401010100260100019b0a00"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1812248776,
+          "component_hex": "0100019b0a019b0a",
+          "slot_hex": "0007002401010100260100019b0a019b0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 180935008,
+          "component_hex": "0100019b0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260100019b0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1257012541,
+          "component_hex": "0100019b0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260100019b0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1666837980,
+          "component_hex": "010001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1152424612,
+          "component_hex": "010001000a756d706b3a70726f626500019b0a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f626500019b0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 578616076,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1649958737,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -595413383,
+          "component_hex": "010001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1655070594,
+          "component_hex": "010001000a756d706b3a70726f62650141480000019b0a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650141480000019b0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -74071594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1146002037,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true
+          },
+          "hash": 2031441700,
+          "component_hex": "00010000",
+          "slot_hex": "00070024010101002600010000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -2042554660,
+          "component_hex": "000100019b0a",
+          "slot_hex": "000700240101010026000100019b0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 720436281,
+          "component_hex": "00010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1552332861,
+          "component_hex": "00010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 2037814410,
+          "component_hex": "0001019b0a00",
+          "slot_hex": "0007002401010100260001019b0a00"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -963746894,
+          "component_hex": "0001019b0a019b0a",
+          "slot_hex": "0007002401010100260001019b0a019b0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1782548823,
+          "component_hex": "0001019b0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260001019b0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 474598739,
+          "component_hex": "0001019b0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260001019b0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -708346257,
+          "component_hex": "000101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1206887825,
+          "component_hex": "000101000a756d706b3a70726f626500019b0a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f626500019b0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -346140812,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1658320016,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1548666261,
+          "component_hex": "000101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1466118023,
+          "component_hex": "000101000a756d706b3a70726f62650141480000019b0a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650141480000019b0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 70072988,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1918598808,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true
+          },
+          "hash": -890381668,
+          "component_hex": "01010000",
+          "slot_hex": "00070024010101002601010000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -490514210,
+          "component_hex": "010100019b0a",
+          "slot_hex": "000700240101010026010100019b0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -898139470,
+          "component_hex": "01010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 329138280,
+          "component_hex": "01010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1394885632,
+          "component_hex": "0101019b0a00",
+          "slot_hex": "0007002401010100260101019b0a00"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -492790928,
+          "component_hex": "0101019b0a019b0a",
+          "slot_hex": "0007002401010100260101019b0a019b0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -904611556,
+          "component_hex": "0101019b0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260101019b0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 335381446,
+          "component_hex": "0101019b0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260101019b0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 2073060972,
+          "component_hex": "010101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1309766037,
+          "component_hex": "010101000a756d706b3a70726f626500019b0a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f626500019b0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1722110969,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1085511389,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1569104714,
+          "component_hex": "010101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 946288017,
+          "component_hex": "010101000a756d706b3a70726f62650141480000019b0a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650141480000019b0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 282269693,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -918934233,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        }
+      ]
+    },
+    {
+      "protocol": 777,
+      "cases": [
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false
+          },
+          "hash": -1744932201,
+          "component_hex": "00000000",
+          "slot_hex": "00070024010101002600000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1076825899,
+          "component_hex": "000000019f0a",
+          "slot_hex": "000700240101010026000000019f0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1755000135,
+          "component_hex": "00000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1317922915,
+          "component_hex": "00000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 238545931,
+          "component_hex": "0000019f0a00",
+          "slot_hex": "0007002401010100260000019f0a00"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1078774917,
+          "component_hex": "0000019f0a019f0a",
+          "slot_hex": "0007002401010100260000019f0a019f0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1761144553,
+          "component_hex": "0000019f0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260000019f0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1324231629,
+          "component_hex": "0000019f0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260000019f0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 646172263,
+          "component_hex": "000001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 318953886,
+          "component_hex": "000001000a756d706b3a70726f626500019f0a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f626500019f0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1001847794,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -497041112,
+          "component_hex": "000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -9767747,
+          "component_hex": "000001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1702141338,
+          "component_hex": "000001000a756d706b3a70726f62650141480000019f0a",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f62650141480000019f0a"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1304477686,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 0,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1809218260,
+          "component_hex": "000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {},
+          "hash": -982207288,
+          "component_hex": "01000000",
+          "slot_hex": "00070024010101002601000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -171104684,
+          "component_hex": "010000019f0a",
+          "slot_hex": "000700240101010026010000019f0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1828632580,
+          "component_hex": "01000001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -752491615,
+          "component_hex": "01000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -93686900,
+          "component_hex": "0100019f0a00",
+          "slot_hex": "0007002401010100260100019f0a00"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1812248776,
+          "component_hex": "0100019f0a019f0a",
+          "slot_hex": "0007002401010100260100019f0a019f0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 180935008,
+          "component_hex": "0100019f0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260100019f0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1257012541,
+          "component_hex": "0100019f0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260100019f0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -1666837980,
+          "component_hex": "010001000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1152424612,
+          "component_hex": "010001000a756d706b3a70726f626500019f0a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f626500019f0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 578616076,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1649958737,
+          "component_hex": "010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -595413383,
+          "component_hex": "010001000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1655070594,
+          "component_hex": "010001000a756d706b3a70726f62650141480000019f0a",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f62650141480000019f0a"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -74071594,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 1,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1146002037,
+          "component_hex": "010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010001000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true
+          },
+          "hash": 2031441700,
+          "component_hex": "00010000",
+          "slot_hex": "00070024010101002600010000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -2042554660,
+          "component_hex": "000100019f0a",
+          "slot_hex": "000700240101010026000100019f0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 720436281,
+          "component_hex": "00010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1552332861,
+          "component_hex": "00010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002600010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 2037814410,
+          "component_hex": "0001019f0a00",
+          "slot_hex": "0007002401010100260001019f0a00"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -963746894,
+          "component_hex": "0001019f0a019f0a",
+          "slot_hex": "0007002401010100260001019f0a019f0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1782548823,
+          "component_hex": "0001019f0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260001019f0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 474598739,
+          "component_hex": "0001019f0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260001019f0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -708346257,
+          "component_hex": "000101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1206887825,
+          "component_hex": "000101000a756d706b3a70726f626500019f0a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f626500019f0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -346140812,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1658320016,
+          "component_hex": "000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1548666261,
+          "component_hex": "000101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -1466118023,
+          "component_hex": "000101000a756d706b3a70726f62650141480000019f0a",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f62650141480000019f0a"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 70072988,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 2,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "deals_knockback": false,
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 1918598808,
+          "component_hex": "000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026000101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true
+          },
+          "hash": -890381668,
+          "component_hex": "01010000",
+          "slot_hex": "00070024010101002601010000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -490514210,
+          "component_hex": "010100019f0a",
+          "slot_hex": "000700240101010026010100019f0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -898139470,
+          "component_hex": "01010001000a756d706b3a70726f626500",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 0,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 329138280,
+          "component_hex": "01010001000a756d706b3a70726f62650141480000",
+          "slot_hex": "00070024010101002601010001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1394885632,
+          "component_hex": "0101019f0a00",
+          "slot_hex": "0007002401010100260101019f0a00"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": -492790928,
+          "component_hex": "0101019f0a019f0a",
+          "slot_hex": "0007002401010100260101019f0a019f0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": -904611556,
+          "component_hex": "0101019f0a01000a756d706b3a70726f626500",
+          "slot_hex": "0007002401010100260101019f0a01000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 1,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": "minecraft:entity.player.attack.sweep",
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": 335381446,
+          "component_hex": "0101019f0a01000a756d706b3a70726f62650141480000",
+          "slot_hex": "0007002401010100260101019f0a01000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 2073060972,
+          "component_hex": "010101000a756d706b3a70726f62650000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 1309766037,
+          "component_hex": "010101000a756d706b3a70726f626500019f0a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f626500019f0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 1722110969,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 2,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe"
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1085511389,
+          "component_hex": "010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650001000a756d706b3a70726f62650141480000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 0,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -1569104714,
+          "component_hex": "010101000a756d706b3a70726f6265014148000000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000000"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 1,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": "minecraft:entity.player.attack.sweep"
+          },
+          "hash": 946288017,
+          "component_hex": "010101000a756d706b3a70726f62650141480000019f0a",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f62650141480000019f0a"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 2,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe"
+            }
+          },
+          "hash": 282269693,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f626500"
+        },
+        {
+          "flags": 3,
+          "sound_kind": 3,
+          "hit_sound_kind": 3,
+          "data": {
+            "dismounts": true,
+            "sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            },
+            "hit_sound": {
+              "sound_id": "umpk:probe",
+              "range": 12.5
+            }
+          },
+          "hash": -918934233,
+          "component_hex": "010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000",
+          "slot_hex": "000700240101010026010101000a756d706b3a70726f6265014148000001000a756d706b3a70726f62650141480000"
+        }
+      ]
+    }
+  ],
+  "releases": [
+    {
+      "version": "1.21.11",
+      "protocol": 774,
+      "group": 0,
+      "client_sha256": "1473c9489ac50fda3c435049a76a70d61a10b8610db27f5ba9d8756b686cd3bd",
+      "server_sha256": "f83b8e093865806f931c7e34aae41b177d4c076335263dd124c75d6d65dd1726",
+      "measurement_sha256": "ec9fc97f2ec0d8972cdee5ac515058bd5ed6df378ec7c1096f30e8fbcbb9fcce"
+    },
+    {
+      "version": "26.1",
+      "protocol": 775,
+      "group": 1,
+      "client_sha256": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
+      "server_sha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994",
+      "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+    },
+    {
+      "version": "26.1.1",
+      "protocol": 775,
+      "group": 1,
+      "client_sha256": "8c109be6177f40d10d0afd820b06542f9609597874242b96e16c5b0dc9e1fef3",
+      "server_sha256": "d792784979722dc35144acffb953554e707445c62450550044c4281e632cbbcc",
+      "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+    },
+    {
+      "version": "26.1.2",
+      "protocol": 775,
+      "group": 1,
+      "client_sha256": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
+      "server_sha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42",
+      "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+    },
+    {
+      "version": "26.2",
+      "protocol": 776,
+      "group": 2,
+      "client_sha256": "40896ee9f1e2bec3c934daac7e93d41e9e3d9c2f8ae0ca366d52ffbfd1afa290",
+      "server_sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5",
+      "measurement_sha256": "92dc8f5034f09da808d3282544a0d870fe8490ebe5d4227002905cc1bf371315"
+    },
+    {
+      "version": "26.3",
+      "protocol": 777,
+      "group": 3,
+      "client_sha256": "4508d006323f24fa02876310c192d739af56516eb259000ac50f0909a68c9a2d",
+      "server_sha256": "d052f14d7a173734fba553711e5b570162e2f2a313267ee31a21b975a679be64",
+      "measurement_sha256": "a902e5fe3ffa9af8dc6f7ee64f79b5a381147a974cc78aa3c6be29de0ed91085"
+    }
+  ]
+}

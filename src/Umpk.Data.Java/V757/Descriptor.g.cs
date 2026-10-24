@@ -238,8 +238,13 @@ internal static class Descriptor
     public static ReadOnlySpan<byte> MenuDefs => SharedTables.MenusV735;
     public static ReadOnlySpan<byte> CollisionShapes => SharedTables.CollisionShapesV755;
     public static ReadOnlySpan<byte> BlockShapeRefs => SharedTables.BlockShapeReferencesV755;
+    public static ReadOnlySpan<byte> BlockCollisionGrids => SharedTables.BlockCollisionGridsV757;
     public static ReadOnlySpan<byte> BlockAttrs => SharedTables.BlockAttributesV755;
     public static ReadOnlySpan<byte> BlockPush => SharedTables.BlockPushV755;
+    public static ReadOnlySpan<byte> BlockMining => SharedTables.BlockMiningV757;
+    public static ReadOnlySpan<byte> BlockInteractions => SharedTables.BlockInteractionsV757;
+    public static ReadOnlySpan<byte> EntityGeometry => SharedTables.EntityGeometryV755;
+    public static ReadOnlySpan<byte> BlockTargeting => SharedTables.BlockTargetingV757;
     public static ReadOnlySpan<byte> EnchantmentDefs => SharedTables.EnchantmentsV735;
     public static ReadOnlySpan<byte> MobEffectDefs => SharedTables.MobEffectsV477;
     public static ReadOnlySpan<byte> AttributeDefs => SharedTables.AttributesV735;

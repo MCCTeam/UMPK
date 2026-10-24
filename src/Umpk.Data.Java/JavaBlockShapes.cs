@@ -20,7 +20,7 @@ namespace Umpk.Data.Java;
 /// <para>What is left, and why each piece is left:</para>
 /// <list type="bullet">
 /// <item>Blocks with no collision need no supplement: torch, lever, button, rail, pressure plate,
-/// tripwire hook, and portal have no collision for every metadata value. A portal's outline does turn with its axis, but the datasets carry no outline table at all.</item>
+/// tripwire hook, and portal have no collision for every metadata value. Their targeting geometry is stored separately from collision.</item>
 /// <item>METADATA-CARRYING but collision-INVARIANT: a cauldron adds the same five boxes whatever its
 /// LEVEL says.</item>
 /// <item>Neighbour-derived geometry cannot be represented by a per-state table: fences, walls, panes,
@@ -28,9 +28,9 @@ namespace Umpk.Data.Java;
 /// </list>
 /// <para>The supplement can only refine coverage, never remove it: <see cref="ReadRefs"/> seeds every meta of a covered block with that block's own value before applying overrides, so an unlisted meta retains the base block shape rather than becoming silently non-solid.</para>
 /// <para>Block flags and collision shapes intentionally diverge for one legacy case. Flags are a different table and are still derived per BLOCK id from the meta-0 shape table; <c>CollisionRefs</c> returns a single-element list on legacy datasets. On the ten bands that carry a fence gate, an open gate answers no collision boxes here while <c>BlockState.BlocksMotion</c> still reports true, and <c>Umpk.Pathfinding</c>'s <c>Moves/MoveHelper.IsPassable</c> ends in <c>return !state.BlocksMotion;</c>, reading that flag rather than these boxes: physics walks through the open gate, while the planner still refuses to route through it. This is conservative: the planner declines a valid route instead of attempting an invalid one. Correcting the divergence requires changing legacy flag derivation outside this type.</para>
-/// <para>Outline (visual/raycast) shapes are answered with the collision shapes. The datasets carry no separate outline table, and the two differ for a small set of blocks (a fence's outline is one block tall while it collides at 1.5), so callers that need the visual box for those blocks are reading an approximation. Returning nothing instead would break raycasting outright.</para>
+/// <para>All supported bands carry a separate artifact-derived targeting table. Contextual lookups resolve coordinate offsets, held-item variants, interaction-shape face overrides and measured legacy door-neighbor rules. Other legacy neighbor and block-entity variants remain pending and use their measured empty-world selection boxes. The state-only outline methods use an empty holding and neighbor context at the origin.</para>
 /// </remarks>
-internal sealed class JavaBlockShapes : IBlockShapeSource
+internal sealed class JavaBlockShapes : IBlockTargetingSource, IBlockCollisionGridSource
 {
     /// <summary>Vanilla's pre-flattening state packing is <c>(blockId &lt;&lt; 4) | meta</c>.</summary>
     private const int LegacyMetaBits = 4;
@@ -51,11 +51,15 @@ internal sealed class JavaBlockShapes : IBlockShapeSource
 
     /// <summary>True when <see cref="_refs"/> is indexed by block network id rather than state id.</summary>
     private readonly bool _byBlockId;
+    private readonly JavaBlockTargeting _targeting;
+    private readonly JavaBlockCollisionGrids _grids;
 
-    internal JavaBlockShapes(ReadOnlySpan<byte> pool, ReadOnlySpan<byte> refs)
+    internal JavaBlockShapes(ReadOnlySpan<byte> pool, ReadOnlySpan<byte> refs, ReadOnlySpan<byte> targeting = default, ReadOnlySpan<byte> collisionGrids = default)
     {
         (_boxes, _offsets) = ReadPool(pool);
         (_refs, _byBlockId) = ReadRefs(refs);
+        _targeting = targeting.IsEmpty ? JavaBlockTargeting.Create([0]) : JavaBlockTargeting.Create(targeting);
+        _grids = new JavaBlockCollisionGrids(collisionGrids);
 
         int covered = 0;
         foreach (int value in _refs)
@@ -73,6 +77,19 @@ internal sealed class JavaBlockShapes : IBlockShapeSource
 
     /// <summary>Test seam: true when the dataset names a shape for this state rather than falling back.</summary>
     internal bool Covers(int stateId) => Lookup(stateId) >= 0;
+
+    /// <inheritdoc/>
+    public BlockCollisionGrid? GetCollisionGrid(BlockState state)
+    {
+        if (state.IsDefault || state.IsAir || state.IsFluid)
+            return null;
+        // The native offset supplement supplies original coordinate delegates. Entity-context substitutions still use the existing context path.
+        if (!state.IsSolid && (state.IsScaffolding || state.IsPowderSnow))
+            return null;
+        if (!_grids.HasOffsetData && !state.IsSolid && state.Block.Id.Path is "bamboo" or "pointed_dripstone" or "sulfur_spike")
+            return null;
+        return _grids.Get(state.StateId);
+    }
 
     /// <inheritdoc/>
     public ReadOnlySpan<Aabb> GetCollisionShapes(BlockState state)
@@ -96,10 +113,21 @@ internal sealed class JavaBlockShapes : IBlockShapeSource
     }
 
     /// <inheritdoc/>
-    public ReadOnlySpan<Aabb> GetOutlineShapes(BlockState state) => GetCollisionShapes(state);
+    public ReadOnlySpan<Aabb> GetOutlineShapes(BlockState state)
+        => state.IsDefault ? [] : _targeting.HasData ? _targeting.AtOrigin(state.StateId) : GetCollisionShapes(state);
 
     /// <inheritdoc/>
-    public ReadOnlySpan<Aabb> GetOutlineShapes(int stateId) => GetCollisionShapes(stateId);
+    public ReadOnlySpan<Aabb> GetOutlineShapes(int stateId)
+        => _targeting.HasData ? _targeting.AtOrigin(stateId) : GetCollisionShapes(stateId);
+
+    /// <inheritdoc/>
+    public bool TryGetTargetingShape(Umpk.Game.World.World world, BlockPos position, Identifier heldItem, out BlockTargetingShape shape)
+    {
+        ArgumentNullException.ThrowIfNull(world);
+        shape = default;
+        BlockState state = world.GetBlock(position);
+        return state.IsValid && _targeting.TryGet(state.StateId, position, heldItem, world, out shape);
+    }
 
     /// <summary>The pool index for a state id, or -1 when this band does not cover it.</summary>
     private int Lookup(int stateId)

@@ -150,16 +150,7 @@ internal sealed class ApplierHarness
 
     private void SetupWorld(CommonWorldSetup setup)
     {
-        if (!Features.Terrain)
-            return;
-
-        // Same call UmpkClient.SetupWorld makes, with the same three inputs. A harness that resolved the dimension its own way would let a registry-driven resolution pass here and never run live.
-        Game.World.DimensionState dimension = WorldFactory.CreateDimension(
-            setup, State.Registries, _version.Version.Protocol);
-        Game.Registries.Registry<Game.Registries.BlockDefinition> blocks =
-            State.Registries?.Blocks ?? WorldFactory.EmptyBlocks();
-        var blockData = new RegistryBlockDataSource(blocks, _version.Version.Protocol < 393);
-        var world = new Game.World.World(dimension, blockData, WorldFactory.EmptyBiomes());
-        State.InstallWorld(world);
+        // Share the live driver's dimension resolution and level-lifetime policy.
+        WorldFactory.InstallWorld(State, setup, _version.Version.Protocol);
     }
 }

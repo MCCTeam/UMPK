@@ -1336,7 +1336,7 @@
         "strictLimit": 25165824,
         "executedPassingSmoke": 1,
         "nativeLiveStatus": "not run",
-        "remaining": "empty/insertion,modern762–777 native-instance context,native repeat acceptance,final committed-producer gates",
+        "remaining": "sequence-aware759–761 current/server-shadow/acknowledgment and world-lifetime ownership,empty/insertion,modern762–777 native-instance/cache context,native repeat acceptance,final committed-producer gates",
         "retention": "16 original historical temporary inputs missing;3exact bytes recovered/13unavailable;all2544present match;actual Oracle source/runtime/TRX/native outputs retained;addendum5e6f7c29",
         "report": "docs/verification/jukebox-activation.md",
         "postIntegration": {
@@ -1348,7 +1348,36 @@
           "completionSha256": "6a6cb45841934b911142c79de39d884817de277878b66a3ede84c3f063341a8b",
           "rootActualReviewSha256": "fcb125d5cdfb766ec1b8dda06e7164a0cd3e0a8a360a04ff5870b8a76dabaf54"
         },
-        "modernContextMissingFact": "Native cache-center/radius/ring-slot applicability and pendingprediction must be owned/proven before packet-arrived HasColumn can prove a native instance; source-only audit is in progress. Canonical raw NBT is not instance presence."
+        "modernContextMissingFact": "Native cache-center/radius/ring-slot applicability and pendingprediction must be owned/proven before packet-arrived HasColumn can prove a native instance; source-only audit is in progress. Canonical raw NBT is not instance presence.",
+        "currentAcceptanceStatus": "failed:45source-backed framed behavior regressions on unchanged392b107; productionGREEN/native acceptance pending",
+        "sourceDiscoveredDefect": {
+          "protocols": [
+            759,
+            760,
+            761
+          ],
+          "sourceOnly": true,
+          "productionCommit": "392b10712431fba878f40a5ca75e1a4cef615556",
+          "report": "/home/anon/Projects/MinecraftOfficial/runs/sequenced-block-prediction-preparation-20261024-v1/REPORT.json",
+          "reportSha256": "a1a124ef8bcd851ef6c17a1bdaa18b16c1742d1a42e0fe2f8e72b42b7f5fc473",
+          "facts": [
+            "server update before ack must retain local current state",
+            "ack without update restores captured original state",
+            "full replacement overwrites current while retaining pending shadow",
+            "old761 fixture helper automatically acknowledges before returning"
+          ],
+          "functionalRed": {
+            "executed": 258,
+            "failed": 45,
+            "passed": 213,
+            "skipped": 0,
+            "producerCommit": "392b10712431fba878f40a5ca75e1a4cef615556",
+            "rootAudit": "/home/anon/Projects/MinecraftOfficial/runs/sequenced-block-prediction-red-recovery-20261024-v1/root-independent-functional-red.json",
+            "rootAuditSha256": "379bbd932e7abcf39fd7ef44cf28d3053d5bb09eb3f03371f79bd58a8274d55b",
+            "originalOverallAttempt": "failed:sole generated compiler-output receipt frozen as input;1169true inputs unchanged",
+            "nativeWitness": "harness failure:no accepted observation rows"
+          }
+        }
       }
     },
     {
@@ -1828,7 +1857,7 @@
       "rootActualReviewSha256": "b361aeaf7b79b103e97a03d9a8753d2b08edf2d07f5a31bbacd452f46da16da7"
     },
     "filledJukebox": {
-      "status": "passed bounded runtime/AOT; native/final acceptance not run",
+      "status": "historical bounded runtime/AOT executed;759–761 acknowledgment defect reproduced; newGREEN/native acceptance pending",
       "report": "jukebox-activation.md",
       "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804"
     },

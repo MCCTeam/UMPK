@@ -38,6 +38,38 @@ The required post-integration rerun uses the exact saved argv in `/tmp/lectern-r
 
 The first Python-only preparation failure is retained at `/tmp/lectern-bind-v1-failed-20261024.json`. The corrected binder verifies the actual seventeen named `NotExecuted` rows because the normal TRX aggregate skip counter is zero. That preparation failure launched no compiler or native process and does not count as behavior evidence.
 
+## Completed seven-version native acceptance, 2026-10-24
+
+All seven selected vanilla-server versions pass through the public block-use caller with physics enabled and actual received terrain. The 29 actions cover main/offhand, held sticks, empty sneaking, suppression by either occupied hand, and Adventure where the boundary pack requires them. Owner-thread vanilla commands independently check the book, both hand stacks, the interaction statistic, supporting floor and adjacent air. Processing replies or matching sequence acknowledgments fence each action; the unchanged post-action window is at least 2.1 seconds. Menu content, close fences, packet hand/cursor/order, decoded values and byte round trips are asserted.
+
+| Release | Protocol | Actions | Native menu opens | Wire swings |
+| --- | --- | --- | --- | --- |
+| 1.14 | 477 | 7 | 5 | 5 |
+| 1.15 | 573 | 2 | 2 | 2 |
+| 1.20.4 | 765 | 2 | 2 | 2 |
+| 1.20.5 | 766 | 7 | 4 | 4 |
+| 1.21.2 | 768 | 2 | 1 | 1 |
+| 26.2 | 776 | 2 | 1 | 1 |
+| 26.3 | 777 | 7 | 4 | 0 |
+
+The accepted rows contain 48 use packets including nineteen close fences, fifteen wire swings, 217 causal markers in exact capture order and 29 post-action markers. All seven required tests execute and pass with zero skips. Of 1,605 independently replayed selected frames, 1,598 are byte-identical; seven ambient-chat byte differences pass the retained semantic rules and remain explicit. A separate witness verifies 1,735 exact action/block round trips. All fourteen accepted game/RCON ports close; each native launcher exits zero without forced termination and the server observes the client disconnect. Source, runtime, Java, seed and sibling source/Git invariants pass.
+
+Every row uses the same tested Client DLL `06c601f7699e3e97aacaef3969750ee6f29b000f276fd35dca4bfb3e6e09c727`, representing the published `1a9be0d` lectern change over normal `8efa26f` dependencies. This is bounded live acceptance of that exact runtime. Protocol 777's headless leg proves the absent wire swing and native server outcome; its local-only animation policy also has the earlier source/framed proof, with no graphical animation claim.
+
+### Harness corrections and retained failures
+
+The first 1.14 native test passes all seven actions, then its external replay helper fails while exporting a `System.Type`. A tiny explicit wire-value export recovers the saved capture without rerunning the native test. The following six-row attempt accepts 1.15 and passes 1.20.4's native test, then rejects saved-world metadata: the native default feature set is omitted from `enabled_features`. Original configuration/flag/storage methods establish that omission across the five modern rows; an exact-null correction recovers the existing 1.20.4 evidence. The old expectation and a present-list negative control still reject.
+
+The next attempt passes 1.20.5 and 1.21.2. Its 26.3 row records five successful actions before the offhand setup predicate fails. Original 1.21.4/1.21.5 and 26.2/26.3 sources establish that protocol 770 moves offhand persistence from `Inventory[{Slot:-106b}]` to `equipment.offhand`. The corrected predicate requires exact item id/count one or absence of the equipment key; it has no old-path fallback. The prior 26.2 negative predicate was ineffective, so its original row is explicitly superseded. Only 26.2 and 26.3 rerun, both passing; all five unaffected accepted rows are reused. Packet, result, swing, timing and marker assertions remain unchanged. Every original overall failure stays failed and pinned.
+
+The corrected fixture is `d83c4d1217528593c03b1c3876bb299e0ec8296389ff24c69ce546c94a7d9c14`. Its separate compile/normal trial passes all 41 normal Integration tests and records eighteen named opt-in skips, with eighteen actual references, 2,549 verified PDB documents and empty formatting diff. Completion is `5229170d34f0b70e38583288c7c67a3f6567a3a161533eeec1699bc3c1844dcb`; cleanup is `031dfc7e101c25bf754107cac998f8fbecb4f2a49f4845fb5cfe530be8af2994`. The actual unit exits zero, peaks at 352,210,944 bytes and leaves all nine observed PIDs absent. The deliberate normal Integration baseline changes from 58 to 59 because this adds one opt-in theory. At this commit's unchanged Client baseline of 34,171, the expected seventeen-suite total becomes 47,958, including eighteen normal opt-in skips; that is not a new complete-suite result.
+
+### Reproducible evidence and cleanup
+
+Exact launches, commands, environment, input manifests, TRX and owned cleanup remain under `MinecraftOfficial/runs/lectern-native-1_14-pilot-20261024-v2`, `lectern-native-remaining-six-20261024-v1`, `lectern-native-remaining-four-20261024-v1` and `lectern-native-corrected-776-777-20261024-v1`. The first two recoveries retain their separate replay/metadata cross-certificates. Native services use 3 GiB, 200% CPU, zero core files, bounded deadlines and one server at a time. Their actual exits/resources are captured before explicit cleanup. The corrected final pair peaks at 1,392,365,568 bytes, leaves twenty observed PIDs absent and closes all four owned ports. Final cgroup event counters are unavailable after exit; sampled zero OOM counters are recorded separately.
+
+The seven-row index is `/home/anon/Projects/MinecraftOfficial/runs/lectern-native-seven-row-acceptance-20261024-v1/certificate.json`, SHA-256 `17e330c1d2d45a38cd50a2c49837051ad26d0e760903de53c55ff41e60a77765`. Its 1,887-file manifest is `0ea47c7789605dc94152c2465d3bfde223affb04aaf8a689fc37981476264947`. Composition reruns only the strict verifier over retained files. Root independently rehashes every consumed file, reads all seven actual passing XML results, checks the raw witness's ordered markers against all 217 expected roles and verifies the captured physics, terrain, menus, outcomes and cleanup. Root review is `/tmp/lectern-native-seven-root-actual-review-20261024-v1.json`, SHA-256 `ec256df1206c7295557628dd0282ae272dfdecff295eafac71a98eb6d86275ea`.
+
 ## Remaining acceptance
 
-Physics-enabled native acceptance is planned for seven result/hand/swing boundaries and 29 actions; none has executed for this lectern change. Empty lecterns, book insertion, unsupported components and the broader conditional interaction inventory remain open. Fresh final-producer repository, consumer, package, AOT and published-head CI acceptance remain required. The PR stays open and draft.
+Empty lecterns, book insertion, live cooldown variants, unsupported components and the broader conditional interaction inventory remain open. Fresh final-producer repository, consumer, package, AOT and published-head CI acceptance remain required. The PR stays open and draft.

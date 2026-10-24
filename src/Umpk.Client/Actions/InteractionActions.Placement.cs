@@ -126,6 +126,13 @@ public sealed partial class InteractionActions
         VanillaAxeUse axe = VanillaAxeUse.ForProtocol(_services.Version.Version.Protocol);
         if (axe.TryPredict(item.Item.Id, clicked, hand, off, _services.Self.Sneaking, out BlockUsePrediction axeUse))
             return axe.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? axeUse : BlockUsePrediction.Unknown;
+        VanillaIgnitionUse ignition = VanillaIgnitionUse.ForProtocol(_services.Version.Version.Protocol);
+        if (ignition.Supports(item.Item.Id))
+            return ignition.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position)
+                ? ignition.Predict(clicked,
+                    _services.State.RegistryTags.Contains(RegistryIds.Block, Identifier.Minecraft("campfires"), clicked.Block.NetworkId),
+                    _services.State.RegistryTags.Contains(RegistryIds.Block, Identifier.Minecraft("candles"), clicked.Block.NetworkId))
+                : BlockUsePrediction.Unknown;
         if (!item.Components.HasNoPatch)
             return BlockUsePrediction.Unknown;
         if (!data.TryGetItem(item.Item.Id, out ItemUseOnInfo use))

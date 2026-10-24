@@ -46,26 +46,12 @@ public static partial class WorldBlockCodecs
             static (ref PacketWriter w, ClientboundSectionBlocksUpdatePacket p, PacketCodecContext _) =>
             {
                 w.WriteLong(p.SectionPos);
-                w.WriteVarInt(p.Changes.Count);
-                for (int i = 0; i < p.Changes.Count; i++)
-                {
-                    long packed = ((long)p.Changes[i].BlockStateId << 12) | (uint)(p.Changes[i].PackedPosition & 0xFFF);
-                    w.WriteVarLong(packed);
-                }
+                WriteModernSectionChanges(ref w, p.Changes);
             },
             static (ref PacketReader r, PacketCodecContext _) =>
             {
                 long section = r.ReadLong();
-                int count = r.ReadVarInt();
-                var changes = new SectionBlockChange[count];
-                for (int i = 0; i < count; i++)
-                {
-                    long packed = r.ReadVarLong();
-                    short local = (short)(packed & 0xFFF);
-                    int state = (int)(packed >>> 12);
-                    changes[i] = new SectionBlockChange(local, state);
-                }
-
+                SectionBlockChange[] changes = ReadModernSectionChanges(ref r);
                 return new ClientboundSectionBlocksUpdatePacket(section, LegacyChunkX: 0, LegacyChunkZ: 0, changes);
             });
 
@@ -76,32 +62,43 @@ public static partial class WorldBlockCodecs
             {
                 w.WriteLong(p.SectionPos);
                 w.WriteBool(p.SuppressLightUpdates);
-                w.WriteVarInt(p.Changes.Count);
-                for (int i = 0; i < p.Changes.Count; i++)
-                {
-                    long packed = ((long)p.Changes[i].BlockStateId << 12) | (uint)(p.Changes[i].PackedPosition & 0xFFF);
-                    w.WriteVarLong(packed);
-                }
+                WriteModernSectionChanges(ref w, p.Changes);
             },
             static (ref PacketReader r, PacketCodecContext _) =>
             {
                 long section = r.ReadLong();
                 bool suppressLightUpdates = r.ReadBool();
-                int count = r.ReadVarInt();
-                var changes = new SectionBlockChange[count];
-                for (int i = 0; i < count; i++)
-                {
-                    long packed = r.ReadVarLong();
-                    short local = (short)(packed & 0xFFF);
-                    int state = (int)(packed >>> 12);
-                    changes[i] = new SectionBlockChange(local, state);
-                }
-
+                SectionBlockChange[] changes = ReadModernSectionChanges(ref r);
                 return new ClientboundSectionBlocksUpdatePacket(section, LegacyChunkX: 0, LegacyChunkZ: 0, changes)
                 {
                     SuppressLightUpdates = suppressLightUpdates,
                 };
             });
+
+    private static void WriteModernSectionChanges(ref PacketWriter w, IReadOnlyList<SectionBlockChange> changes)
+    {
+        w.WriteVarInt(changes.Count);
+        for (int i = 0; i < changes.Count; i++)
+        {
+            long packed = ((long)changes[i].BlockStateId << 12) | (uint)(changes[i].PackedPosition & 0xFFF);
+            w.WriteVarLong(packed);
+        }
+    }
+
+    private static SectionBlockChange[] ReadModernSectionChanges(ref PacketReader r)
+    {
+        int count = r.ReadVarInt();
+        var changes = new SectionBlockChange[count];
+        for (int i = 0; i < count; i++)
+        {
+            long packed = r.ReadVarLong();
+            short local = (short)(packed & 0xFFF);
+            int state = (int)(packed >>> 12);
+            changes[i] = new SectionBlockChange(local, state);
+        }
+
+        return changes;
+    }
 
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareSectionBlocksUpdate(PacketBindings bindings)

@@ -16,7 +16,7 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
-        BlockUsePrediction prediction = PredictBlockUse(position, face, cursor, hand);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out bool clearJukebox);
         if (!prediction.SendPacket)
             return null;
         ct.ThrowIfCancellationRequested();
@@ -29,6 +29,8 @@ public sealed partial class InteractionActions
             sequence = _sequences.Next();
             await _sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
         }
+        if (clearJukebox)
+            _services.State.JukeboxPrediction.Commit(_services.State.World, position);
         if (prediction.Swing == BlockUseSwing.Packet)
             await SwingAsync(hand, session).ConfigureAwait(false);
         return sequence;
@@ -44,7 +46,11 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
+        => PredictBlockUseCore(position, face, cursor, hand, out _);
+
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out bool clearJukebox)
     {
+        clearJukebox = false;
         bool inventoryKnown = _services.State.Features.Inventory;
         ItemStack main = HeldItem();
         ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
@@ -72,6 +78,7 @@ public sealed partial class InteractionActions
         IBlockInteractionSource data = JavaGameData.BlockInteractionData(_services.Version.Version.Protocol);
         if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block))
             return BlockUsePrediction.Unknown;
+        bool projectedEmptyJukebox = _services.State.JukeboxPrediction.TryProject(world, position, clicked, out clicked);
         // 1.14.4 and 26.3 MultiPlayerGameMode.useItemOn/performUseItemOn suppress block activation only when secondary use has a nonempty stack in either hand. Activation runs before item cooldown and placement permissions.
         bool suppressActivation = _services.Self.Sneaking && (!main.IsEmpty || !off.IsEmpty);
         // performUseItemOn fails on a disabled target before activation, but still commits the use packet. Native secondary use suppresses this entire target/activation phase.
@@ -86,6 +93,11 @@ public sealed partial class InteractionActions
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? world.GetBlock(position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
+        if (projectedEmptyJukebox)
+        {
+            hasActivation = true;
+            activationResult = BlockUseResult.Pass;
+        }
         // Cached block updates do not establish the native terrain required by supported activation families or their item continuation.
         if (hasActivation && activation.RequiresNativeTerrain(clicked) && !_services.State.EntityMembership.HasColumn(position))
             return BlockUsePrediction.Unknown;
@@ -93,12 +105,15 @@ public sealed partial class InteractionActions
         if (!suppressActivation && hasActivation && !activationPassesOffhand)
         {
             if (activationResult != BlockUseResult.Pass)
+            {
+                clearJukebox = activationResult == BlockUseResult.Success && activation.HasStateOnlyJukeboxRules && clicked.Block.Id.Path == "jukebox";
                 return activationResult switch
                 {
                     BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),
                     BlockUseResult.Consume => BlockUsePrediction.Consume,
                     _ => BlockUsePrediction.Unknown,
                 };
+            }
         }
         if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass))
             return BlockUsePrediction.Unknown;

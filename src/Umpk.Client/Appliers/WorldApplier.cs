@@ -33,12 +33,14 @@ internal sealed class WorldApplier : IApplier
         {
             case ClientboundLevelChunkPacket chunk when EntityMembershipApplier.IsLegacyUnload(chunk):
                 var unloaded = new ChunkPos(chunk.ChunkX, chunk.ChunkZ);
+                context.State.JukeboxPrediction.ObserveUnload(unloaded);
                 world.UnloadColumn(unloaded);
                 world.RemoveBlockEntityNbt(unloaded);
                 await context.PublishAsync(new ChunkUnloaded(unloaded)).ConfigureAwait(false);
                 return true;
 
             case ClientboundLevelChunkPacket chunk:
+                context.State.JukeboxPrediction.ObserveColumn(chunk.Column, chunk.FullChunk);
                 // A frame that is not ground-up carries ONLY the sections its bitmask names, so installing it as a whole column deletes every other section of that column. Vanilla's server sends exactly that frame whenever 64 distinct block changes land in one chunk in one tick, in place of the block-update and section-blocks-update forms, and it is only ever sent for a column the client already holds in full. See MergeColumnSections.
                 if (chunk.FullChunk)
                 {
@@ -61,6 +63,7 @@ internal sealed class WorldApplier : IApplier
             case ClientboundMapChunkBulkPacket bulk:
                 foreach (Game.World.ChunkColumn column in bulk.Columns)
                 {
+                    context.State.JukeboxPrediction.ObserveColumn(column, full: true);
                     world.LoadColumn(column);
                     await context.PublishAsync(new ChunkLoaded(column.Position)).ConfigureAwait(false);
                 }
@@ -68,6 +71,7 @@ internal sealed class WorldApplier : IApplier
                 return true;
 
             case ClientboundForgetLevelChunkPacket forget:
+                context.State.JukeboxPrediction.ObserveUnload(forget.Chunk);
                 world.UnloadColumn(forget.Chunk);
                 world.RemoveBlockEntityNbt(forget.Chunk);
                 await context.PublishAsync(new ChunkUnloaded(forget.Chunk)).ConfigureAwait(false);
@@ -75,6 +79,7 @@ internal sealed class WorldApplier : IApplier
 
             case ClientboundBlockUpdatePacket block:
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, block.Position, block.BlockStateId);
+                context.State.JukeboxPrediction.ObserveBlock(block.Position);
                 world.SetBlockStateId(block.Position, block.BlockStateId);
                 await context.PublishAsync(new BlockChanged(block.Position, block.BlockStateId)).ConfigureAwait(false);
                 return true;
@@ -229,6 +234,7 @@ internal sealed class WorldApplier : IApplier
                 int worldY = packed & 0xFF;
                 var legacyPos = new BlockPos(baseX + localX, worldY, baseZ + localZ);
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, legacyPos, change.BlockStateId);
+                context.State.JukeboxPrediction.ObserveBlock(legacyPos);
                 world.SetBlockStateId(legacyPos, change.BlockStateId);
                 await context.PublishAsync(new BlockChanged(legacyPos, change.BlockStateId)).ConfigureAwait(false);
             }
@@ -249,6 +255,7 @@ internal sealed class WorldApplier : IApplier
             int localZ = (packed >> 4) & 0xF;
             int localY = packed & 0xF;
             var pos = new BlockPos((sectionX << 4) + localX, (sectionY << 4) + localY, (sectionZ << 4) + localZ);
+            context.State.JukeboxPrediction.ObserveBlock(pos);
             world.SetBlockStateId(pos, change.BlockStateId);
             await context.PublishAsync(new BlockChanged(pos, change.BlockStateId)).ConfigureAwait(false);
         }

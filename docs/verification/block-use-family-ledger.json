@@ -992,7 +992,7 @@
       "status": "not run",
       "nativeDecision": "Nineteen exact registered menu keys now have original client-success prediction, with smithing-table false/PASS through 1.15.2 and success from 1.16. Lectern, jukebox, campfire, cake/candle and other conditional overrides still inspect their own item/state/recipe context.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Empty lectern/book insertion, jukebox, campfire recipe use, cake/candle and other conditional families still require their exact native client branch/context ownership; filled-lectern runtime/AOT proof is recorded separately and its native live acceptance remains open.",
+      "missing": "Empty lectern/book insertion, empty jukebox/record insertion, modern jukebox native-instance validity, campfire recipe use, cake/candle and other conditional branches require their exact native client context. Filled lectern has seven-version native acceptance; state-only filled jukebox has bounded runtime/AOT proof and awaits native acceptance.",
       "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
       "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
       "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
@@ -1034,7 +1034,7 @@
         "rootPostIntegrationFocusedPasses": 152,
         "completionSha256": "54ec8e04fde677e99ba56e108c7bd49f3cf2d9d8b802f670bf2d5fdfd5e32b4e",
         "rootPostIntegrationCompletionSha256": "4ad85ceb6affc60db206cab6e92e833c39c4e8854f9fab78692281f0ffa4876e",
-        "nativeLiveStatus": "not run; seven-boundary29-action acceptance remains required",
+        "nativeLiveStatus": "passed: seven actual native boundary tests,29 actions,217 ordered causal markers,14 closed ports; certificate17e330c1d2d45a38cd50a2c49837051ad26d0e760903de53c55ff41e60a77765. Final-producer acceptance remains separate.",
         "remaining": "empty lecterns,book insertion,unsupported components and final combined producer gates",
         "report": "docs/verification/lectern-activation.md"
       },
@@ -1220,6 +1220,82 @@
             ]
           }
         ]
+      },
+      "filledJukeboxRuntimeSlice": {
+        "status": "passed",
+        "scope": "bounded source/framed/runtime/AOT; no native-live acceptance",
+        "nativeEra": "state-only filled-jukebox activation and local has_record clearing through1.19.3",
+        "protocols": [
+          47,
+          107,
+          108,
+          109,
+          110,
+          210,
+          315,
+          316,
+          335,
+          338,
+          340,
+          393,
+          401,
+          404,
+          477,
+          480,
+          485,
+          490,
+          498,
+          573,
+          575,
+          578,
+          735,
+          736,
+          751,
+          753,
+          754,
+          755,
+          756,
+          757,
+          758,
+          759,
+          760,
+          761
+        ],
+        "sourceBoundNamedReleases": 50,
+        "fullSourceInventoryNames": 75,
+        "fullSourceInventoryDatasets": 50,
+        "sourceInputPins": 713,
+        "productionOwner": "ClientState.JukeboxPrediction / BlockUseActivationProfile / WorldApplier",
+        "caller": "PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUseCore -> successful use write -> projection commit -> captured-session swing",
+        "producerMeaning": "normal8efa dependencies plus six previously tested Client overlays and five exact jukebox production postimages; not a full later-head certificate",
+        "clientDllSha256": "7f07d4a59922492d56b01b2cf65bbf90d856e0c002de21fe1a0a120e24b2cee7",
+        "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804",
+        "focused": {
+          "executed": 206,
+          "passed": 206,
+          "skipped": 0,
+          "originalRed": 117,
+          "originalControls": 89,
+          "statelessPassed": 179,
+          "statelessFailed": 27
+        },
+        "adjacentPassed": 6593,
+        "aotBytes": 25157376,
+        "strictLimit": 25165824,
+        "executedPassingSmoke": 1,
+        "nativeLiveStatus": "not run",
+        "remaining": "empty/insertion,modern762–777 native-instance context,native repeat acceptance,final committed-producer gates",
+        "retention": "16 original historical temporary inputs missing;3exact bytes recovered/13unavailable;all2544present match;actual Oracle source/runtime/TRX/native outputs retained;addendum5e6f7c29",
+        "report": "docs/verification/jukebox-activation.md",
+        "postIntegration": {
+          "executedPassed": 206,
+          "skipped": 0,
+          "noRebuild": true,
+          "all9SharedPostimagesMatched": true,
+          "native713PinsRehashed": true,
+          "completionSha256": "6a6cb45841934b911142c79de39d884817de277878b66a3ede84c3f063341a8b",
+          "rootActualReviewSha256": "fcb125d5cdfb766ec1b8dda06e7164a0cd3e0a8a360a04ff5870b8a76dabaf54"
+        }
       }
     },
     {
@@ -1697,6 +1773,11 @@
       "integratedAfter": "19594f2ff938bbe3ae8602114cb80880cd2b27a8",
       "productionPostimageSha256": "bc25c54d780fd384413e1dba512744e665650cf80d80b5cb62f659c04f6d849e",
       "rootActualReviewSha256": "b361aeaf7b79b103e97a03d9a8753d2b08edf2d07f5a31bbacd452f46da16da7"
+    },
+    "filledJukebox": {
+      "status": "passed bounded runtime/AOT; native/final acceptance not run",
+      "report": "jukebox-activation.md",
+      "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804"
     }
   }
 }

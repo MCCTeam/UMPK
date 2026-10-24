@@ -124,6 +124,8 @@ public sealed class ClientState
 
     internal Internal.EntityMembershipState EntityMembership { get; } = new();
 
+    internal Internal.JukeboxPredictionState JukeboxPrediction { get; } = new();
+
     internal List<int>? TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
     {
         if (_entities is null)
@@ -213,6 +215,8 @@ public sealed class ClientState
 
     internal void InstallWorld(Identifier dimension, World? world)
     {
+        if (!ReferenceEquals(_world, world))
+            JukeboxPrediction.Clear();
         LegacySelfGeometry = null;
         _world = world;
         _worldDimension = dimension;
@@ -240,6 +244,7 @@ public sealed class ClientState
     /// </summary>
     internal void ResetForConfigurationReentry()
     {
+        JukeboxPrediction.Clear();
         // Level-owned in vanilla: cleared with the level, refilled by the join that ends the re-entry.
         _world = null;
         _worldDimension = null;
@@ -274,6 +279,7 @@ public sealed class ClientState
     /// <returns>True when a dialog was open and has been cleared.</returns>
     internal bool ResetForSessionEnd()
     {
+        JukeboxPrediction.Clear();
         bool wasShowing = Dialogs.IsShowing;
         LegacySelfGeometry = null;
         Dialogs.Clear();

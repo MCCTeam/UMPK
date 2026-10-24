@@ -29,10 +29,11 @@ internal sealed class BlockUseSession : IAsyncDisposable
     private static readonly Guid AssignedId = Guid.Parse("f8cffac4-a661-4e6f-a9ca-14b9bf1f2905");
     internal List<PacketReceived> FeatureFrames { get; } = [];
     internal List<bool?> VanillaMembershipAtFeatureEvent { get; } = [];
-    internal FakeJavaServer Server { get; } = FakeJavaServer.Create();
+    internal FakeJavaServer Server { get; private set; } = FakeJavaServer.Create();
     private ObservedTicks Ticks { get; } = new();
     internal UmpkClient Client { get; }
     private readonly CancellationTokenSource _budget = new(TimeSpan.FromSeconds(40));
+    private readonly PipeFactory _connections;
     private readonly JavaVersion _version;
     private readonly int _protocol;
     private readonly bool _featureFlags;
@@ -45,9 +46,10 @@ internal sealed class BlockUseSession : IAsyncDisposable
         _protocol = protocol;
         _featureFlags = featureFlags;
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out _version!));
+        _connections = new PipeFactory(Server.ClientPipe);
         Client = new UmpkClientBuilder().UseVersion(_version)
             .UseProfile(new GameProfile(RequestedId, "DoorSession"))
-            .UseConnectionFactory(new PipeFactory(Server.ClientPipe))
+            .UseConnectionFactory(_connections)
             .UseStaticRegistries(JavaGameData.Registries(protocol)).UseTickSource(Ticks)
             .ConfigureFeatures(features => { features.Physics = physics; features.Pathfinding = false; })
             .Build();
@@ -67,29 +69,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
         try
         {
             await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session.Token), session.DriveToPlay());
-            var joined = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            using IDisposable join = session.Client.Events.Subscribe<JoinedGame>(_ => joined.TrySetResult());
-            var spawn = new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, -1, false, false, null, 0, 63);
-            await session.Send(new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, spawn, false, false, new LegacyLoginFields(0, 2, "flat")));
-            await joined.Task.WaitAsync(session.Token);
-            var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            using IDisposable correction = session.Client.Events.Subscribe<PositionCorrected>(_ => corrected.TrySetResult());
-            var position = new Vec3d(2.5, 65, 2.5);
-            await session.Send(new ClientboundPlayerPositionPacket(position.X, position.Y, position.Z, 0, 0, 0, 1, new PositionMoveRotation(position, Vec3d.Zero, 0, 0)));
-            await corrected.Task.WaitAsync(session.Token);
-            Assert.Equal(AssignedId, session.Client.State.Self.Uuid);
-            Assert.NotEqual(RequestedId, session.Client.State.Self.Uuid);
-            if (terrain)
-                await session.Terrain();
-            await session.Block(Target, block);
-            await session.Block(Target.Above(), "air");
-            await session.Block(new BlockPos(2, 64, 2), "stone");
-            await session.Hold(null);
-            Assert.Empty(await session.Barrier());
-            Assert.Null(session.Client.State.World.GetBlockEntityNbt(Target));
-            await session.Ticks.Fire(session.Token);
-            Assert.Equal(1L, session.Client.State.SessionTick);
-            Assert.Empty(await session.Barrier());
+            await session.PrepareWorld(block, terrain);
             return session;
         }
         catch
@@ -97,6 +77,44 @@ internal sealed class BlockUseSession : IAsyncDisposable
             await session.DisposeAsync();
             throw;
         }
+    }
+
+    private async Task PrepareWorld(string block, bool terrain)
+    {
+        var joined = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable join = Client.Events.Subscribe<JoinedGame>(_ => joined.TrySetResult());
+        var spawn = new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, -1, false, false, null, 0, 63);
+        await Send(new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, spawn, false, false, new LegacyLoginFields(0, 2, "flat")));
+        await joined.Task.WaitAsync(Token);
+        var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using IDisposable correction = Client.Events.Subscribe<PositionCorrected>(_ => corrected.TrySetResult());
+        var position = new Vec3d(2.5, 65, 2.5);
+        await Send(new ClientboundPlayerPositionPacket(position.X, position.Y, position.Z, 0, 0, 0, 1, new PositionMoveRotation(position, Vec3d.Zero, 0, 0)));
+        await corrected.Task.WaitAsync(Token);
+        Assert.Equal(AssignedId, Client.State.Self.Uuid);
+        Assert.NotEqual(RequestedId, Client.State.Self.Uuid);
+        if (terrain)
+            await Terrain();
+        await Block(Target, block);
+        await Block(Target.Above(), "air");
+        await Block(new BlockPos(2, 64, 2), "stone");
+        await Hold(null);
+        Assert.Empty(await Barrier());
+        Assert.Null(Client.State.World.GetBlockEntityNbt(Target));
+        long beforeTick = Client.State.SessionTick;
+        await Ticks.Fire(Token);
+        Assert.Equal(beforeTick + 1, Client.State.SessionTick);
+        Assert.Empty(await Barrier());
+    }
+
+    internal async Task Restart(string block)
+    {
+        Assert.Equal(ClientStatus.Disconnected, Client.Status);
+        await Server.DisposeAsync();
+        Server = FakeJavaServer.Create();
+        _connections.Pipe = Server.ClientPipe;
+        await Task.WhenAll(Client.ConnectAsync(new ServerEndpoint("test", 25565), Token), DriveToPlay());
+        await PrepareWorld(block, terrain: true);
     }
 
     private async Task DriveToPlay()
@@ -475,7 +493,8 @@ internal sealed class BlockUseSession : IAsyncDisposable
 
     private sealed class PipeFactory(IDuplexPipe pipe) : IConnectionFactory
     {
-        public ValueTask<IDuplexPipe> ConnectAsync(ServerEndpoint endpoint, CancellationToken ct) => ValueTask.FromResult(pipe);
+        internal IDuplexPipe Pipe { get; set; } = pipe;
+        public ValueTask<IDuplexPipe> ConnectAsync(ServerEndpoint endpoint, CancellationToken ct) => ValueTask.FromResult(Pipe);
     }
 
     private sealed class ObservedTicks : ITickSource

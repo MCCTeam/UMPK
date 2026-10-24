@@ -190,8 +190,8 @@ internal sealed partial class EntityMotionState
             {
                 if (ReferenceEquals(peer, source) || membership.IsWorldQueryMember(peer) is false)
                     continue;
-                // Original sm.ag and sm.j are null through these audited inheritance chains. Other peer contracts remain unowned.
-                if (peer.Type.Id.IsMinecraft && peer.Type.Id.Path is "bat" or "squid" or "cow" or "player")
+                // The original 1.11 hard-box getters are null for this profile's audited peer families. Other peer contracts remain unowned.
+                if (LegacyAmbientMobProfile.HasNoHardPeerBox(peer.Type.Id))
                     continue;
                 return false;
             }

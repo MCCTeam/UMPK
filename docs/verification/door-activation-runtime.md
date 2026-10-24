@@ -1,5 +1,9 @@
 # Native door-use prediction
 
+## Current 1.11 placement-swing correction
+
+The latest native315 attempt passes its exact grounded setup and eight partial scenarios, then fails the ninth successful stone placement because the swing is missing. A [source-backed ambient collision correction](legacy-ambient-peers-315.md) now preserves squid geometry when sheep or villagers have native null hard boxes: fourteen new framed cases and 2,137 original regressions pass, with strict AOT at 25,157,376 bytes and exactly one passing smoke test and three-file formatting. A fresh native315 whole row remains required; the failed attempt and partial results below retain their original producers.
+
 Door activation now returns its source-backed native result before the held item's use-on-block phase. Known native PASS continues into the existing ordinary block-item path; unknown activation context remains packet-only. The public explicit-coordinate placement contract and server-observed outcomes retain their existing meaning.
 
 The retained source audit covers all fifty current representative client profiles and 573 registered door rows across the 75-name release catalogue. This is source coverage, not 75 independent native method executions. Protocol 47 retains the 1.8.9 profile. The 393 audit input/output pins were rechecked against `/home/anon/Projects/MinecraftOfficial/runs/door-activation-source-audit-20261022-v7/manifest.json`; the original jars and completion markers remain part of those inputs.

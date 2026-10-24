@@ -999,10 +999,10 @@
     {
       "id": "door-activation",
       "priority": 1,
-      "status": "not run",
+      "status": "failed",
       "nativeDecision": "The completed source and registration audit covers 75 named releases. The 327 framed-session cases connect native door Success/Pass, legacy lower-cell lookup, feature/hand/secondary-use ordering and protocol-777 local-only swing through the existing owner.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Original651ddcb native315 missing-swing failure remains open. Later bounded bat/squid geometry is connected and tested; the latest c9 retry stops at exact native Pos+OnGround setup before any door scenario. A five-second owner-console observation correction is prepared but unexecuted. Other door boundaries/copper features and final-producer acceptance remain open.",
+      "missing": "The latest native315 setup now passes exact Pos+OnGround and eight partial scenarios, then fails the ninth iron-held-stone action because the successful placement omits its swing. The source-proven sheep/villager null-hard-peer fix now passes14framed cases/2137regressions/strictAOT/exact1smoke, but a fresh whole11scenario native315 row is required. Other door boundaries/copper features and final-producer acceptance remain open.",
       "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
       "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated.",
       "historicalAuditAtSourceCommit": {
@@ -1010,12 +1010,13 @@
         "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
         "status": "not run"
       },
-      "statusDetail": "passed bounded runtime486683b and immutable checkpoints651ddcb/2925b51; native47passed, native315failed; complete family acceptance not run",
+      "statusDetail": "passed bounded door runtime and immutable checkpoints; native47passed; latestnative315wholeRowFAILED with8partialscenarios; new315ambient-null-hard-peer runtime/AOTpassed; freshnative315retry pending",
       "currentEvidence": [
         "door-activation-runtime.md",
         "door-crystal-integration-20261023.md",
         "interaction-completion.md#evidence-and-status",
-        "trapdoor-gate-checkpoint-20261023.md"
+        "trapdoor-gate-checkpoint-20261023.md",
+        "legacy-ambient-peers-315.md"
       ]
     },
     {
@@ -1865,6 +1866,26 @@
       "status": "passed bounded runtime/AOT; native/final acceptance not run",
       "report": "legacy-switch-activation.md",
       "completionSha256": "3250f726d42240569150baff81f15462941c4beb85366ad4c291ec41eb326796"
+    },
+    "legacy315NullHardPeers": {
+      "status": "passed bounded runtime/AOT; native315 whole row remains failed",
+      "protocol": 315,
+      "newCases": 14,
+      "clientBaseline": 34655,
+      "expectedSeventeenSuiteTotal": 48442,
+      "fullCombinedSuiteExecuted": false,
+      "focused": "14RED8fail6control; same14profileOnlyRED; connected14GREEN",
+      "originalAdjacentPassed": 2137,
+      "pdbDocuments": 452,
+      "threeFileFormatSha256": "0c76c3362521d65a75c1daac8e1eb5c3e27fc9e2158f20e102db7369ef4f0b5c",
+      "aotBytes": 25157376,
+      "strictLimitBytes": 25165824,
+      "executedPassingSmoke": 1,
+      "producerClientSha256": "62ef39c0aea1bdec4a2ccf179fecbf93923ab2cd62b6edbc1d4ae13ddf2ab270",
+      "rootActualAuditSha256": "73be68f68c5b7e9a04ab1a37c240b5c90110953571b69763273f8fe7784a7eda",
+      "sharedSourceIntegrationSha256": "efbca47f6dcb3f6e58f7a55757da2de81e667c926cada8f9445dd28a5d4278b9",
+      "report": "legacy-ambient-peers-315.md",
+      "remaining": "freshnative315wholeRow; finalcombinedrepository/consumer/package/AOT/CI/matrix"
     }
   }
 }

@@ -16,6 +16,10 @@ internal readonly record struct LegacyAmbientMobProfile(bool IsBat)
     public static Vec3d SpawnVelocity(int protocol, int typeId, short x, short y, short z, Vec3d fallback)
         => protocol == 315 && typeId is 65 or 94 ? new(x / 8000.0F, y / 8000.0F, z / 8000.0F) : fallback;
 
+    // Original 1.11 sm.ag and sm.j(sm) return null through the audited registry-bound inheritance chains; this says nothing about placement obstruction or picking.
+    public static bool HasNoHardPeerBox(Identifier type)
+        => type.IsMinecraft && type.Path is "bat" or "squid" or "cow" or "player" or "sheep" or "villager";
+
     public static bool TryGet(Entity entity, int protocol, out LegacyAmbientMobProfile profile)
     {
         profile = default;

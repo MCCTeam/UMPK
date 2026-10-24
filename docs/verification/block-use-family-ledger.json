@@ -940,9 +940,61 @@
       "status": "passed",
       "nativeDecision": "Crafting table/chest/furnace profiles47–777; lever/button498–777 with powered consume and766 main-hand fallback boundaries.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Other menus, older switches and item-dependent block activation remain separate.",
+      "missing": "Native older-switch live acceptance, specialized switch placement and remaining conditional activations stay separate. The bounded old lever/button runtime now passes its original native-result and missing-terrain regressions; final combined producer gates remain required. Modern button repeated-use local powered-state ownership remains under source audit; passing one-action powered controls do not close it.",
       "acceptance": "Reuse93actual-session menu cases and4native menu boundaries; preserve activation before cooldown/placement permission.",
-      "statusDetail": "passed bounded scope"
+      "statusDetail": "passed bounded scope",
+      "legacySwitchRuntimeSlice": {
+        "status": "passed",
+        "report": "docs/verification/legacy-switch-activation.md",
+        "sourceBoundNames": 31,
+        "sourceBoundDatasets": 18,
+        "sourceBindings": 282,
+        "registeredKeys": 128,
+        "productionOwner": "BlockUseActivationProfile / existing InteractionActions owner",
+        "caller": "PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUseCore",
+        "producer": "all211publishedbfffe9Client production sources plus one profile change; normal8efa frozen other libraries",
+        "focused": {
+          "executed": 264,
+          "passed": 264,
+          "originalRed": 221,
+          "originalControls": 43,
+          "redGroups": {
+            "missingWireSwing": 213,
+            "inventedWireSwing": 6,
+            "typed777UnknownActualSuccess": 2
+          }
+        },
+        "existingContextIdentities": 368,
+        "otherDistinctAdjacent": 6225,
+        "unchangedOriginalAssertions": true,
+        "pdbDocuments": 242,
+        "aotBytes": 25157376,
+        "strictLimit": 25165824,
+        "executedPassingSmoke": 1,
+        "completionSha256": "3250f726d42240569150baff81f15462941c4beb85366ad4c291ec41eb326796",
+        "rootActualReviewSha256": "4b5b1e67f9b985fcfe44029928644f4ee542381b6894d79595ee88dba98de392",
+        "cleanupScopeAddendumSha256": "fe3403e238f6603f8378bc1494082a28aa2e738748c285597729ba09621cfb1d",
+        "nativeLiveStatus": "not run",
+        "limits": "activation-result scope only; specializedplacement/support/orientation, finalversionmatrix and fresh finalconsumer/package/repository gates remain open",
+        "postIntegration": {
+          "executedPassing": 264,
+          "skipped": 0,
+          "noRebuild": true,
+          "all3SharedPostimagesMatch": true,
+          "completionSha256": "4398e3ff6e191a24faf5faf9128bf1a739bca75735ff2f120dd602c1bb927a27",
+          "rootReviewSha256": "3f514241d72f05050e421c6219681660858ca1144f89459b5dbb20228089ce6b"
+        }
+      },
+      "modernButtonLocalPrediction": {
+        "status": "not run",
+        "nativeObservedExamples": [
+          "1.15/573",
+          "26.3/777"
+        ],
+        "missing": "Native client press locally sets powered=true; source audit and owned repeated-use/release/invalidation proof remain required. Existing one-action consume controls are not repeat acceptance.",
+        "productionCaller": "existing public block-use/session owner",
+        "nextRequired": "source-bound public-session repeat RED then compact shared local-state owner integration and native/lifecycle acceptance"
+      }
     },
     {
       "id": "door-activation",
@@ -950,7 +1002,7 @@
       "status": "not run",
       "nativeDecision": "The completed source and registration audit covers 75 named releases. The 327 framed-session cases connect native door Success/Pass, legacy lower-cell lookup, feature/hand/secondary-use ordering and protocol-777 local-only swing through the existing owner.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Native1.8.9/47 passes all10 scenarios on651ddcb. Native1.11/315 fails missing held-stone swing: unresolved bat/squid geometry becomes Unknown before spatial selection; same genuine framed regressions fail on651ddcb and2925b51. Later default and feature-enabled copper rows and final-producer acceptance remain open.",
+      "missing": "Original651ddcb native315 missing-swing failure remains open. Later bounded bat/squid geometry is connected and tested; the latest c9 retry stops at exact native Pos+OnGround setup before any door scenario. A five-second owner-console observation correction is prepared but unexecuted. Other door boundaries/copper features and final-producer acceptance remain open.",
       "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
       "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated.",
       "historicalAuditAtSourceCommit": {
@@ -1295,7 +1347,8 @@
           "native713PinsRehashed": true,
           "completionSha256": "6a6cb45841934b911142c79de39d884817de277878b66a3ede84c3f063341a8b",
           "rootActualReviewSha256": "fcb125d5cdfb766ec1b8dda06e7164a0cd3e0a8a360a04ff5870b8a76dabaf54"
-        }
+        },
+        "modernContextMissingFact": "Native cache-center/radius/ring-slot applicability and pendingprediction must be owned/proven before packet-arrived HasColumn can prove a native instance; source-only audit is in progress. Canonical raw NBT is not instance presence."
       }
     },
     {
@@ -1304,7 +1357,7 @@
       "status": "not run",
       "nativeDecision": "Unknown BlockItem subclasses have placement/state/survival/shape or feature differences; raw unknown does not identify which decision differs.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Slab stacking, orientation, attachments/support, multi-cell placement, block-entity data and material/survival contexts. PredictBlockUse currently receives no cursor/inside-block argument even though public caller has them.",
+      "missing": "Modern slab placement/merging has connected runtime and five-version native acceptance. Remaining legacy slabs, orientation, attachments/support, multi-cell placement and component/survival contexts stay open. PredictBlockUse now receives position/face/cursor/hand; family-specific inside-block context still requires native proof.",
       "focusedFailingPublicSession": "Start with one source-proven slab merge/top/bottom/cursor case, then attachments/multicell in separate slices; preserve explicit-coordinate API.",
       "nativeLiveNeed": "Original placement context and independent server states/stacks with genuine session callers; no whole rendering model."
     },
@@ -1778,6 +1831,11 @@
       "status": "passed bounded runtime/AOT; native/final acceptance not run",
       "report": "jukebox-activation.md",
       "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804"
+    },
+    "legacySwitches": {
+      "status": "passed bounded runtime/AOT; native/final acceptance not run",
+      "report": "legacy-switch-activation.md",
+      "completionSha256": "3250f726d42240569150baff81f15462941c4beb85366ad4c291ec41eb326796"
     }
   }
 }

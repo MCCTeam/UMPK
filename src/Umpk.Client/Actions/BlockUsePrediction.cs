@@ -32,11 +32,11 @@ internal readonly record struct BlockUsePrediction(bool SendPacket, BlockUseResu
 
 internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse, bool HasTrapdoorGateRules, bool SmithingTablePassesUse, bool HasStateOnlyJukeboxRules)
 {
-    // 1.14.4-client-decompiled net/minecraft/world/level/block/LeverBlock.java:75 returns true on the client. Later LeverBlock.use/useWithoutItem returns SUCCESS on the client. MultiPlayerGameMode introduces main-hand-only useWithoutItem fallback in 1.20.5; the source audit covers every release through 26.3.
-    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 498 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735, protocol is >= 47 and <= 761);
+    // Original registered lever/button use methods return client true from 1.8 through 1.14.4; powered buttons introduce CONSUME in 1.15. Main-hand-only useWithoutItem fallback begins 1.20.5; source bindings cover all 31 earlier named releases and preserve the later profile.
+    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735, protocol is >= 47 and <= 761);
 
     public bool RequiresNativeTerrain(BlockState block)
-        => block.Block.Id.IsMinecraft && (HasMenuActivationRules && IsMenuBlock(block) || HasDoorActivationRules && IsDoor(block) || HasTrapdoorGateRules && (IsTrapdoor(block) || IsFenceGate(block)));
+        => block.Block.Id.IsMinecraft && (HasMenuActivationRules && IsMenuBlock(block) || HasDoorActivationRules && IsDoor(block) || HasTrapdoorGateRules && (IsTrapdoor(block) || IsFenceGate(block)) || HasActivationRules && (block.Block.Id.Path == "lever" || IsButton(block)));
 
     public bool RequiresLowerCell(BlockState block)
         => HasDoorActivationRules && LegacyDoorLowerCell && IsDoor(block) && block.Block.Id.Path != "iron_door" && (block.LegacyMeta & 8) != 0;
@@ -87,13 +87,16 @@ internal readonly record struct BlockUseActivationProfile(bool HasActivationRule
             result = BlockUseResult.Success;
             return true;
         }
-        // Blocks.java registers exactly these native ButtonBlock implementations. ButtonBlock.use returns true for either powered state in 1.14.4; 1.15 introduces CONSUME when already powered. No button overrides item interaction in the audited releases through 26.3.
-        if (block.Block.Id.Path is not ("stone_button" or "oak_button" or "spruce_button" or "birch_button" or "jungle_button" or "acacia_button" or "dark_oak_button" or "crimson_button" or "warped_button" or "polished_blackstone_button" or "mangrove_button" or "cherry_button" or "bamboo_button" or "pale_oak_button" or "poplar_button"))
+        // Native buttons return true for both powered states through 1.14.4, including legacy packed states without a property map. From 1.15 the powered property distinguishes CONSUME from SUCCESS.
+        if (!IsButton(block))
             return false;
-        if (block.TryGetProperty("powered", out string powered) && powered is "true" or "false")
-            result = PoweredButtonConsumes && powered == "true" ? BlockUseResult.Consume : BlockUseResult.Success;
+        if (!PoweredButtonConsumes)
+            result = BlockUseResult.Success;
+        else if (block.TryGetProperty("powered", out string powered) && powered is "true" or "false")
+            result = powered == "true" ? BlockUseResult.Consume : BlockUseResult.Success;
         return true;
     }
+    private static bool IsButton(BlockState block) => block.Block.Id.Path is "wooden_button" or "stone_button" or "oak_button" or "spruce_button" or "birch_button" or "jungle_button" or "acacia_button" or "dark_oak_button" or "crimson_button" or "warped_button" or "polished_blackstone_button" or "mangrove_button" or "cherry_button" or "bamboo_button" or "pale_oak_button" or "poplar_button";
     private static bool IsMenuBlock(BlockState block) => block.Block.Id.Path is "crafting_table" or "chest" or "furnace" or "lit_furnace" or "trapped_chest" or "ender_chest" or "dispenser" or "dropper" or "hopper" or "brewing_stand" or "enchanting_table" or "anvil" or "chipped_anvil" or "damaged_anvil" or "barrel" or "smoker" or "blast_furnace" or "loom" or "cartography_table" or "stonecutter" or "grindstone" or "smithing_table" or "crafter" or "lectern" or "jukebox";
     private static bool IsTrapdoor(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "trapdoor" or "oak_trapdoor" or "iron_trapdoor" or "spruce_trapdoor" or "birch_trapdoor" or "jungle_trapdoor" or "acacia_trapdoor" or "dark_oak_trapdoor" or "crimson_trapdoor" or "warped_trapdoor" or "mangrove_trapdoor" or "bamboo_trapdoor" or "cherry_trapdoor" or "pale_oak_trapdoor" or "poplar_trapdoor" or "copper_trapdoor" or "exposed_copper_trapdoor" or "weathered_copper_trapdoor" or "oxidized_copper_trapdoor" or "waxed_copper_trapdoor" or "waxed_exposed_copper_trapdoor" or "waxed_weathered_copper_trapdoor" or "waxed_oxidized_copper_trapdoor";
     private static bool IsFenceGate(BlockState block) => block.Block.Id.IsMinecraft && block.Block.Id.Path is "fence_gate" or "oak_fence_gate" or "spruce_fence_gate" or "birch_fence_gate" or "jungle_fence_gate" or "acacia_fence_gate" or "dark_oak_fence_gate" or "crimson_fence_gate" or "warped_fence_gate" or "mangrove_fence_gate" or "bamboo_fence_gate" or "cherry_fence_gate" or "pale_oak_fence_gate" or "poplar_fence_gate";

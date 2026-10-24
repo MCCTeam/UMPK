@@ -205,6 +205,7 @@ public sealed class BlockUsePredictionRuntimeTests
             Assert.True(registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out var stone));
             world.SetBlockStateId(Target, stone.DefaultStateId);
             State.InstallWorld(world);
+            State.EntityMembership.LoadColumn(ChunkPos.Containing(Target));
             Assert.True(registries.Items.TryGet(Identifier.Minecraft("stone"), out var item));
             State.Inventory.SetSlot(0, 36, new ItemStack(item, 32));
             var sequences = new SequenceTracker();

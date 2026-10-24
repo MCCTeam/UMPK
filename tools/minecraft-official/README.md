@@ -67,6 +67,8 @@ The launcher selects Java 11 through 1.16.5 and Java 25 from 1.17 onward. `--jav
 
 `--flat-world-settings '<JSON object>'` opts in to the native `flat` world type (`minecraft:flat` in modern world-preset registries) and writes that object as compact `generator-settings` JSON before the native process starts. Invalid JSON and non-object values are rejected. Omit this option to keep the existing vanilla world defaults. The option supports the dedicated motion fixture's recorded 164-layer stone/the-void setup; callers that omit it retain normal terrain.
 
+`--level-data-seed /absolute/level.dat --level-data-seed-sha256 <SHA256>` copies only those pinned same-version native metadata bytes into the fresh world and records their provenance. It copies no neighboring chunks, entities or player files. Both arguments are required together; they cannot be combined with `--flat-world-settings`. This supports the 1.17 fixture whose original Properties flat-codec path lacks registry context. Explicit flat requests now fail readiness on its native `Not a registry ops` error. Verify the actual loaded and saved world separately; seed copying and startup do not prove scenario preconditions.
+
 `--view-distance <2–32>` changes the isolated server's chunk view distance. The default remains four, and simulation distance remains four. `ready.json` records the selected value. The dedicated modern-motion acceptance leg requests eight so the native server sends every required collision column and continues tracking its peer.
 
 ## UMPK live harness

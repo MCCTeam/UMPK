@@ -39,17 +39,16 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     [MemberData(nameof(SlabReleases))]
     public async Task ModernSlabPlacementMatchesNativeStatesStacksAndSwing(string release, int protocol)
     {
-        await VerifySlabPrerequisites();
+        (string? levelDataSeed, string? levelDataSeedSha256) = await VerifySlabPrerequisites(protocol);
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
         string? flatWorldSettings = protocol switch
         {
-            < 755 => null,
-            755 => """{"layers":[{"height":100,"block":"minecraft:stone"}],"biome":"minecraft:the_void","structures":{"structures":{}},"features":false,"lakes":false}""",
+            < 766 => null,
             _ => """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""",
         };
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: flatWorldSettings);
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: flatWorldSettings, levelDataSeed: levelDataSeed, levelDataSeedSha256: levelDataSeedSha256);
         output.WriteLine($"Evidence: {server.DirectoryPath}");
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
         var capture = new Capture(version);
@@ -284,7 +283,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         }
     }
 
-    private static async Task VerifySlabPrerequisites()
+    private static async Task<(string? Path, string? Sha256)> VerifySlabPrerequisites(int protocol)
     {
         string prerequisite = Environment.GetEnvironmentVariable("UMPK_SLAB_PREREQUISITE_RECEIPT") ?? throw new InvalidOperationException("Supply the reviewed merged-producer slab prerequisite receipt before native execution.");
         byte[] bytes = await File.ReadAllBytesAsync(prerequisite);
@@ -311,6 +310,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.Equal(actual.Keys.Order(StringComparer.Ordinal), binaries.EnumerateObject().Select(binary => binary.Name).Order(StringComparer.Ordinal));
         foreach (var binary in actual)
             Assert.Equal(binary.Value, binaries.GetProperty(binary.Key!).GetString());
+        if (protocol != 755)
+            return (null, null);
+        JsonElement seed = ready.GetProperty("level_data_seed_755");
+        Assert.Equal("1.17", seed.GetProperty("release").GetString());
+        Assert.Equal(755, seed.GetProperty("protocol").GetInt32());
+        string path = seed.GetProperty("path").GetString()!;
+        string generationReceipt = seed.GetProperty("generation_receipt").GetString()!;
+        Assert.True(Path.IsPathFullyQualified(path) && Path.IsPathFullyQualified(generationReceipt));
+        Assert.Equal("level.dat", Path.GetFileName(path));
+        Assert.Equal(seed.GetProperty("sha256").GetString(), Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(path))));
+        Assert.Equal(seed.GetProperty("generation_receipt_sha256").GetString(), Convert.ToHexStringLower(SHA256.HashData(await File.ReadAllBytesAsync(generationReceipt))));
+        return (path, seed.GetProperty("sha256").GetString());
     }
 
     private static bool SlabState(BlockState state, string half, bool waterlogged)

@@ -2,6 +2,7 @@
 """Start one owned vanilla server in a fresh directory, or send a local RCON command."""
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -96,6 +97,21 @@ def run(args: argparse.Namespace) -> None:
     eula = seed / 'eula.txt'
     if not args.accept_eula and (not eula.is_file() or 'eula=true' not in eula.read_text(encoding='utf-8').splitlines()):
         raise ValueError('Accept the Minecraft EULA with --accept-eula, or provision an accepted seed.')
+    if (args.level_data_seed is None) != (args.level_data_seed_sha256 is None):
+        raise ValueError('Use --level-data-seed and --level-data-seed-sha256 together')
+    metadata = None
+    metadata_receipt = None
+    if args.level_data_seed is not None:
+        if args.flat_world_settings is not None:
+            raise ValueError('A level-data seed cannot be combined with --flat-world-settings')
+        expected_hash = args.level_data_seed_sha256.lower()
+        if len(expected_hash) != 64 or any(character not in '0123456789abcdef' for character in expected_hash):
+            raise ValueError('The level-data seed SHA256 must contain 64 hexadecimal characters')
+        source = args.level_data_seed.expanduser().resolve(strict=True)
+        metadata = source.read_bytes()
+        if hashlib.sha256(metadata).hexdigest() != expected_hash:
+            raise ValueError(f'Level-data seed SHA256 mismatch: {source}')
+        metadata_receipt = {'version': args.version, 'source': str(source), 'sha256': expected_hash, 'bytes': len(metadata), 'destination': 'world/level.dat'}
     if not 1024 <= args.port <= 65535 or not 1024 <= args.rcon_port <= 65535 or args.port == args.rcon_port:
         raise ValueError('Select two distinct ports from 1024 through 65535')
     check_port(args.port)
@@ -107,6 +123,12 @@ def run(args: argparse.Namespace) -> None:
     else:
         directory = Path(tempfile.mkdtemp(prefix=f'minecraft-{args.version}-'))
     shutil.copyfile(seed / 'server.jar', directory / 'server.jar')
+    if metadata is not None:
+        (directory / 'world').mkdir()
+        (directory / 'world' / 'level.dat').write_bytes(metadata)
+        if hashlib.sha256((directory / 'world' / 'level.dat').read_bytes()).hexdigest() != metadata_receipt['sha256']:
+            raise RuntimeError('The copied level-data seed SHA256 changed')
+        (directory / 'level-data-seed.json').write_text(json.dumps(metadata_receipt, indent=2) + '\n', encoding='utf-8')
     password = secrets.token_hex(16)
     (directory / 'eula.txt').write_text('eula=true\n', encoding='utf-8')
     properties = {
@@ -135,7 +157,10 @@ def run(args: argparse.Namespace) -> None:
                     raise RuntimeError(f'Server exited with {process.returncode}. Inspect {log_path}')
                 if time.monotonic() >= deadline:
                     raise TimeoutError(f'Server readiness timed out. Inspect {log_path}')
-                if 'Done (' in log_path.read_text(encoding='utf-8', errors='replace'):
+                startup_log = log_path.read_text(encoding='utf-8', errors='replace')
+                if args.flat_world_settings is not None and 'Not a registry ops' in startup_log:
+                    raise RuntimeError(f'Vanilla rejected flat world settings: Not a registry ops. Inspect {log_path}')
+                if 'Done (' in startup_log:
                     try:
                         with socket.create_connection(('127.0.0.1', args.port), timeout=1):
                             pass
@@ -145,6 +170,8 @@ def run(args: argparse.Namespace) -> None:
                         pass
                 time.sleep(0.5)
             result = {'version': args.version, 'pid': process.pid, 'java': java, 'port': args.port, 'rcon_port': args.rcon_port, 'run_dir': str(directory), 'rcon_list': response, 'command': command, 'view_distance': args.view_distance}
+            if metadata_receipt is not None:
+                result['level_data_seed'] = metadata_receipt
             (directory / 'ready.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
             print(f'READY {args.version} port={args.port} rcon={args.rcon_port}: {response}', flush=True)
             if not args.smoke:
@@ -195,6 +222,8 @@ def main() -> int:
     parser.add_argument('--java')
     parser.add_argument('--view-distance', type=view_distance, default=4, help='native chunk view distance from 2 through 32; isolated default: 4')
     parser.add_argument('--flat-world-settings', type=flat_world_settings, help='opt in to minecraft:flat with this JSON generator-settings object; omitted: preserve vanilla world defaults')
+    parser.add_argument('--level-data-seed', type=Path, help='copy only this same-version native level.dat into the fresh world; requires --level-data-seed-sha256 and cannot be combined with --flat-world-settings')
+    parser.add_argument('--level-data-seed-sha256', help='required SHA256 of --level-data-seed; the source metadata remains unchanged')
     parser.add_argument('--accept-eula', action='store_true')
     parser.add_argument('--timeout', type=int, default=180)
     parser.add_argument('--smoke', action='store_true', help='prove server and RCON readiness, then stop')

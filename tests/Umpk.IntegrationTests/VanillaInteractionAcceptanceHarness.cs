@@ -35,8 +35,12 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
     public int RconPort { get; }
     public string ServerLog => File.Exists(Path.Combine(DirectoryPath, "server.log")) ? File.ReadAllText(Path.Combine(DirectoryPath, "server.log")) : string.Empty;
 
-    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null, string? flatWorldSettings = null)
+    public static async Task<VanillaInteractionAcceptanceHarness> StartAsync(string release, int protocol, CancellationToken ct, int? viewDistance = null, string? flatWorldSettings = null, string? levelDataSeed = null, string? levelDataSeedSha256 = null)
     {
+        if ((levelDataSeed is null) != (levelDataSeedSha256 is null))
+            throw new ArgumentException("Supply the native level-data seed and its SHA256 together.");
+        if (levelDataSeed is not null && flatWorldSettings is not null)
+            throw new ArgumentException("The native level-data seed cannot be combined with Properties generation settings.");
         if (viewDistance is { } requestedDistance)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(requestedDistance, 2, nameof(viewDistance));
@@ -75,6 +79,13 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
             start.ArgumentList.Add("--flat-world-settings");
             start.ArgumentList.Add(flatWorldSettings);
         }
+        if (levelDataSeed is not null)
+        {
+            start.ArgumentList.Add("--level-data-seed");
+            start.ArgumentList.Add(levelDataSeed);
+            start.ArgumentList.Add("--level-data-seed-sha256");
+            start.ArgumentList.Add(levelDataSeedSha256!);
+        }
         start.RedirectStandardInput = true;
         gameReservation.Stop();
         rconReservation.Stop();
@@ -100,6 +111,8 @@ internal sealed class VanillaInteractionAcceptanceHarness : IAsyncDisposable
                 serverSha256 = jarHash,
                 viewDistance = viewDistance ?? 4,
                 flatWorldSettings,
+                levelDataSeed,
+                levelDataSeedSha256,
                 testSources = new[] { "VanillaInteractionAcceptanceHarness.cs", "VanillaInteractionAcceptanceLiveTests.cs", "VanillaInteractionAcceptanceLiveTests.Shovel.cs", "VanillaInteractionAcceptanceLiveTests.Axe.cs", "VanillaInteractionAcceptanceLiveTests.Motion.cs", "VanillaInteractionAcceptanceLiveTests.Scale.cs", "VanillaInteractionAcceptanceLiveTests.Menu.cs", "VanillaInteractionAcceptanceDiagnostics.cs" }
                     .ToDictionary(name => name, name => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(Path.Combine(FixturePaths.RepoRoot(), "tests", "Umpk.IntegrationTests", name))))),
                 binaries = Directory.GetFiles(AppContext.BaseDirectory, "Umpk.*.dll").ToDictionary(path => Path.GetFileName(path), path => Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path)))),

@@ -992,7 +992,7 @@
       "status": "not run",
       "nativeDecision": "Nineteen exact registered menu keys now have original client-success prediction, with smithing-table false/PASS through 1.15.2 and success from 1.16. Lectern, jukebox, campfire, cake/candle and other conditional overrides still inspect their own item/state/recipe context.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Lectern, jukebox, campfire recipe use, cake/candle and other conditional families still require their exact native client branch/context ownership; this slice does not classify them as successful.",
+      "missing": "Empty lectern/book insertion, jukebox, campfire recipe use, cake/candle and other conditional families still require their exact native client branch/context ownership; filled-lectern runtime/AOT proof is recorded separately and its native live acceptance remains open.",
       "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
       "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
       "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
@@ -1019,6 +1019,24 @@
           "sha256": "6581975d1b757921de3cc5d30b5a4fa17118004f4ec16d201e811dba5691a1ba",
           "historicalPrivateProducerPreserved": true
         }
+      },
+      "filledLecternRuntimeSlice": {
+        "behavior": "canonical has_book=true lectern activation through the existing session owner",
+        "sourceBoundNamedReleases": 48,
+        "sourceBoundProtocols": 36,
+        "protocols": "477–777",
+        "producer": "normal8efa plus exact one-file BlockUsePrediction overlay",
+        "productionSourceSha256": "ba9b97de89625edde0a3d4d036d5e216a0296c5ccd2579dfc22f36955fc2cf78",
+        "runtimeStatus": "passed:152 executed RED104fail/48controls -> same152GREEN;656 public actions",
+        "adjacentOriginalPassed": 5152,
+        "aotBytes": 25165568,
+        "executedPassingSmoke": 1,
+        "rootPostIntegrationFocusedPasses": 152,
+        "completionSha256": "54ec8e04fde677e99ba56e108c7bd49f3cf2d9d8b802f670bf2d5fdfd5e32b4e",
+        "rootPostIntegrationCompletionSha256": "4ad85ceb6affc60db206cab6e92e833c39c4e8854f9fab78692281f0ffa4876e",
+        "nativeLiveStatus": "not run; seven-boundary29-action acceptance remains required",
+        "remaining": "empty lecterns,book insertion,unsupported components and final combined producer gates",
+        "report": "docs/verification/lectern-activation.md"
       },
       "currentHarnessAcceptance": {
         "status": "passed",

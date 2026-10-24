@@ -49,6 +49,17 @@ internal sealed partial class EntityMotionState
         return true;
     }
 
+    /// <summary>Reads proven spectator state without initializing the native lazy player-info cache.</summary>
+    public bool IsKnownSpectator(Entity entity, TabList players)
+    {
+        if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? player))
+            return false;
+        TabListEntry? info = player.PlayerInfo;
+        if (!player.Profile.CachesPlayerInfo)
+            players.TryGet(entity.Uuid, out info);
+        return info?.GameMode == GameMode.Spectator;
+    }
+
     public bool IsSpectator(Entity entity, TabList players)
         => _remotePlayers.TryGetValue(entity, out RemotePlayerMotion? player)
             && ResolvePlayerInfo(entity, player, players)?.GameMode == GameMode.Spectator;

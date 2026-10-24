@@ -225,7 +225,8 @@ public sealed partial class InteractionActions
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
             foreach (var entity in _services.State.Entities.All)
             {
-                if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id))
+                if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id)
+                    || _services.State.EntityMotion.IsKnownSpectator(entity, _services.State.TabList))
                     continue;
                 bool? member = _services.State.EntityMembership.IsWorldQueryMember(entity);
                 if (member is false)

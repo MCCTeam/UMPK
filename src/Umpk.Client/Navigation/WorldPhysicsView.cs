@@ -136,15 +136,34 @@ internal static class ModernHardCollisionProfile
     {
         if (type.Namespace != "minecraft")
             return false;
+        if (IsCommonNonHardTarget(type.Path))
+            return true;
         return type.Path switch
         {
 
-            "allay" or "area_effect_cloud" or "armadillo" or "armor_stand" or "arrow" or "axolotl" or "bat" or "bee" or "blaze" or "block_display" or "bogged" or "breeze" or "breeze_wind_charge" or "camel" or "cat" or "cave_spider" or "chest_minecart" or "chicken" or "cod" or "command_block_minecart" or "cow" or "creaking" or "creeper" or "dolphin" or "donkey" or "dragon_fireball" or "drowned" or "egg" or "elder_guardian" or "end_crystal" or "ender_dragon" or "ender_pearl" or "enderman" or "endermite" or "evoker" or "evoker_fangs" or "experience_bottle" or "experience_orb" or "eye_of_ender" or "falling_block" or "fireball" or "firework_rocket" or "fishing_bobber" or "fox" or "frog" or "furnace_minecart" or "ghast" or "giant" or "glow_item_frame" or "glow_squid" or "goat" or "guardian" or "hoglin" or "hopper_minecart" or "horse" or "husk" or "illusioner" or "interaction" or "iron_golem" or "item" or "item_display" or "item_frame" or "leash_knot" or "lightning_bolt" or "lingering_potion" or "llama" or "llama_spit" or "magma_cube" or "marker" or "minecart" or "mooshroom" or "mule" or "ocelot" or "ominous_item_spawner" or "painting" or "panda" or "parrot" or "phantom" or "pig" or "piglin" or "piglin_brute" or "pillager" or "player" or "polar_bear" or "pufferfish" or "rabbit" or "ravager" or "salmon" or "sheep" or "shulker_bullet" or "silverfish" or "skeleton" or "skeleton_horse" or "slime" or "small_fireball" or "sniffer" or "snow_golem" or "snowball" or "spawner_minecart" or "spectral_arrow" or "spider" or "splash_potion" or "squid" or "stray" or "strider" or "tadpole" or "text_display" or "tnt" or "tnt_minecart" or "trader_llama" or "trident" or "tropical_fish" or "turtle" or "vex" or "villager" or "vindicator" or "wandering_trader" or "warden" or "wind_charge" or "witch" or "wither" or "wither_skeleton" or "wither_skull" or "wolf" or "zoglin" or "zombie" or "zombie_horse" or "zombie_villager" or "zombified_piglin" => true,
             "copper_golem" or "mannequin" => protocol >= 773,
             "camel_husk" or "nautilus" or "parched" or "zombie_nautilus" => protocol >= 774,
             "sulfur_cube" => protocol >= 776,
             "cushion" => protocol >= 777,
             _ => false,
         };
+    }
+
+    private static bool IsCommonNonHardTarget(string path)
+    {
+        if (path.Length == 0)
+            return false;
+        const string names = "allay|area_effect_cloud|armadillo|armor_stand|arrow|axolotl|bat|bee|blaze|block_display|bogged|breeze|breeze_wind_charge|camel|cat|cave_spider|chest_minecart|chicken|cod|command_block_minecart|cow|creaking|creeper|dolphin|donkey|dragon_fireball|drowned|egg|elder_guardian|end_crystal|ender_dragon|ender_pearl|enderman|endermite|evoker|evoker_fangs|experience_bottle|experience_orb|eye_of_ender|falling_block|fireball|firework_rocket|fishing_bobber|fox|frog|furnace_minecart|ghast|giant|glow_item_frame|glow_squid|goat|guardian|hoglin|hopper_minecart|horse|husk|illusioner|interaction|iron_golem|item|item_display|item_frame|leash_knot|lightning_bolt|lingering_potion|llama|llama_spit|magma_cube|marker|minecart|mooshroom|mule|ocelot|ominous_item_spawner|painting|panda|parrot|phantom|pig|piglin|piglin_brute|pillager|player|polar_bear|pufferfish|rabbit|ravager|salmon|sheep|shulker_bullet|silverfish|skeleton|skeleton_horse|slime|small_fireball|sniffer|snow_golem|snowball|spawner_minecart|spectral_arrow|spider|splash_potion|squid|stray|strider|tadpole|text_display|tnt|tnt_minecart|trader_llama|trident|tropical_fish|turtle|vex|villager|vindicator|wandering_trader|warden|wind_charge|witch|wither|wither_skeleton|wither_skull|wolf|zoglin|zombie|zombie_horse|zombie_villager|zombified_piglin";
+        int start = 0;
+        while (true)
+        {
+            int index = names.IndexOf(path, start, StringComparison.Ordinal);
+            if (index < 0)
+                return false;
+            int end = index + path.Length;
+            if ((index == 0 || names[index - 1] == '|') && (end == names.Length || names[end] == '|'))
+                return true;
+            start = index + 1;
+        }
     }
 }

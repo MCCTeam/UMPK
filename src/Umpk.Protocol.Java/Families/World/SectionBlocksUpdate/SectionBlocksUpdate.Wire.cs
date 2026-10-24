@@ -69,13 +69,13 @@ public static partial class WorldBlockCodecs
                 return new ClientboundSectionBlocksUpdatePacket(section, LegacyChunkX: 0, LegacyChunkZ: 0, changes);
             });
 
-    /// <summary>section_blocks_update for 1.19-1.19.4: carries a <c>suppressLightUpdates</c> bool between the section-pos long and the change-count VarInt; it was removed at 1.20 (763 rides the default no-bool member). Version 1.19.2 has the bool and 1.20.1 does not. It is always false in join and idle traffic, so this codec re-emits false.</summary>
+    /// <summary>1.16.2–1.19.4 section update: preserves the native <c>suppressLightUpdates</c> bool between the section-pos long and the change-count VarInt. Protocol 763 removes this field.</summary>
     internal static readonly PacketCodec<ClientboundSectionBlocksUpdatePacket> SectionBlocksUpdateV1_16_2 =
         PacketCodec<ClientboundSectionBlocksUpdatePacket>.Of(
             static (ref PacketWriter w, ClientboundSectionBlocksUpdatePacket p, PacketCodecContext _) =>
             {
                 w.WriteLong(p.SectionPos);
-                w.WriteBool(false);
+                w.WriteBool(p.SuppressLightUpdates);
                 w.WriteVarInt(p.Changes.Count);
                 for (int i = 0; i < p.Changes.Count; i++)
                 {
@@ -86,7 +86,7 @@ public static partial class WorldBlockCodecs
             static (ref PacketReader r, PacketCodecContext _) =>
             {
                 long section = r.ReadLong();
-                r.ReadBool();
+                bool suppressLightUpdates = r.ReadBool();
                 int count = r.ReadVarInt();
                 var changes = new SectionBlockChange[count];
                 for (int i = 0; i < count; i++)
@@ -97,7 +97,10 @@ public static partial class WorldBlockCodecs
                     changes[i] = new SectionBlockChange(local, state);
                 }
 
-                return new ClientboundSectionBlocksUpdatePacket(section, LegacyChunkX: 0, LegacyChunkZ: 0, changes);
+                return new ClientboundSectionBlocksUpdatePacket(section, LegacyChunkX: 0, LegacyChunkZ: 0, changes)
+                {
+                    SuppressLightUpdates = suppressLightUpdates,
+                };
             });
 
     /// <summary>Adds this packet's timelines to the binding table.</summary>
@@ -105,7 +108,7 @@ public static partial class WorldBlockCodecs
     {
         // The multi-block-change wire has three era forms:
         //  - 1.8-1.16.1 (<=736): legacy i32 chunk-x/z + short-pos/VarInt-state records (V1_8 shape).
-        //  - 1.16.2-1.19.4 (751-762): bitfield section long + notTrustEdges bool + VarLong records.
+        //  - 1.16.2-1.19.4 (751-762): bitfield section long + suppressLightUpdates bool + VarLong records.
         //  - 1.20+ (>=763): bitfield section long + VarLong records, the bool removed.
         // 1.8 spells it block_change_multi. The 477-736 datasets (1.14 through 1.16.1) spell it chunk_blocks_update. Version 1.16.2 renamed it section_blocks_update. The chunk_blocks_update alias applies to 477-736. Its body remains int chunk X, int chunk Z, VarInt count, then short packed-position and VarInt state records, matching the V1_8 codec.
         bindings.Packet(WorldPackets.Clientbound.SectionBlocksUpdate)

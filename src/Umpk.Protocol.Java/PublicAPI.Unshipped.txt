@@ -2656,6 +2656,8 @@ Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.LegacyChunkZ.get
 Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.LegacyChunkZ.init -> void
 Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.SectionPos.get -> long
 Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.SectionPos.init -> void
+Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.SuppressLightUpdates.get -> bool
+Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.SuppressLightUpdates.init -> void
 Umpk.Protocol.Java.Packets.ClientboundSectionBlocksUpdatePacket.Type.get -> Umpk.Protocol.Java.PacketType!
 Umpk.Protocol.Java.Packets.ClientboundSelectAdvancementsTabPacket
 Umpk.Protocol.Java.Packets.ClientboundSelectAdvancementsTabPacket.<Clone>$() -> Umpk.Protocol.Java.Packets.ClientboundSelectAdvancementsTabPacket!

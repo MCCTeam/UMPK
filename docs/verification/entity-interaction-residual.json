@@ -1206,5 +1206,51 @@
   "builds_started": 0,
   "tests_started": 0,
   "shared_edits": 0,
-  "band_semantics": "Inclusive endpoints select only the50 supported protocols listed in source-protocol-bands.json. A missing band is not a native exclusion."
+  "band_semantics": "Inclusive endpoints select only the50 supported protocols listed in source-protocol-bands.json. A missing band is not a native exclusion.",
+  "current_runtime_reconciliation": {
+    "date": "2026-10-24",
+    "historical_audit_preserved": true,
+    "resolved_bounded_slice": {
+      "residual_id": "other-owned-living-picking-and-motion",
+      "status": "passed",
+      "protocols": [
+        769,
+        770
+      ],
+      "named_releases": [
+        "1.21.4",
+        "1.21.5"
+      ],
+      "families": [
+        "cat",
+        "chicken",
+        "horse",
+        "iron_golem",
+        "pig",
+        "sheep",
+        "villager"
+      ],
+      "scope": "default adult standing dry unmounted default-scale constructor-health context only",
+      "owners": [
+        "EntityMotionState",
+        "EntityMembershipState",
+        "EntityGeometryState",
+        "InteractionPicker"
+      ],
+      "callers": [
+        "DigBlockInViewAsync",
+        "PlaceBlockAsync"
+      ],
+      "evidence": "ordinary-living-motion-769-770.md",
+      "producer": "immutable8efa plus six exact source overlays, including1a9 lectern; fresh final producer gates remain required",
+      "completion_sha256": "dad9c94f05c8b6e6ef1a8b8403aed997e8330348c3813671cf15359ce47251ca",
+      "new_cases": 309,
+      "combined_focused_passes": 609,
+      "full_client_passes": 34171,
+      "root_after_integration_passes": 609,
+      "aot_bytes": 25157376,
+      "aot_smoke_executed_passes": 1
+    },
+    "remaining": "The historical residual remains open for other eras and contexts, native live, riders, pushes, special geometry and final producer acceptance. Cached geometry does not establish current query position; no unknown is relabelled clear."
+  }
 }

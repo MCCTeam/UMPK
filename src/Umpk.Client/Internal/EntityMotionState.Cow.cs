@@ -30,9 +30,11 @@ internal sealed partial class EntityMotionState
             : null;
         var cow = new CowMotion(protocol, profile, position, geometry, membership);
         _cows.Add(entity, cow);
-        if (entity.Velocity != Vec3d.Zero)
+        if (entity.Type.Id.Path != "cow" || entity.Velocity != Vec3d.Zero)
             BeginCowMotion(entity, cow);
     }
+
+    public bool IsTrackedOrdinaryLiving(Entity entity) => _cows.TryGetValue(entity, out _);
 
     public bool IsTrackedCowSource(Entity entity) => _cows.TryGetValue(entity, out CowMotion? cow) && cow.Protocol == 770;
 
@@ -166,7 +168,7 @@ internal sealed partial class EntityMotionState
             return;
         }
         PushPosition(entity, position);
-        entity.Velocity = CowMotionProfile.TickVelocity(entity.Velocity, active);
+        entity.Velocity = CowMotionProfile.TickVelocity(entity.Velocity, active, entity.Type.Id.Path == "chicken" && !entity.OnGround);
         if (active)
             geometry.ObservePosition(entity);
         if (before != entity.Position)

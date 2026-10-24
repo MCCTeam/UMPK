@@ -228,7 +228,7 @@ public sealed class EntityGeometryStateTests
         ValueTask Reapply()
         {
             // MappedRoleGeometryDump invokes original setPos directly. Its geometry phase is distinct from a framed relative-movement listener and interpolation tick.
-            if (entityName == "cow" && protocol is 769 or 770)
+            if (protocol is 769 or 770 && entityName is "cow" or "cat" or "chicken" or "horse" or "iron_golem" or "pig" or "sheep" or "villager")
             {
                 harness.State.EntityGeometry.ObservePosition(entity);
                 return ValueTask.CompletedTask;
@@ -238,7 +238,11 @@ public sealed class EntityGeometryStateTests
         void AssertBox(string phase)
         {
             JsonElement box = row.GetProperty(phase);
-            Assert.True(harness.State.EntityGeometry.TryGet(entity, source, out Aabb actual, out bool blocking));
+            bool cacheOnlyOracle = protocol is 769 or 770 && entityName is "cat" or "chicken" or "horse" or "iron_golem" or "pig" or "sheep" or "villager";
+            bool known = cacheOnlyOracle
+                ? harness.State.EntityGeometry.TryGetCachedGeometry(entity, source, out Aabb actual, out bool blocking)
+                : harness.State.EntityGeometry.TryGet(entity, source, out actual, out blocking);
+            Assert.True(known);
             Assert.True(blocking);
             Assert.Equal(new Aabb(box[0].GetDouble(), box[1].GetDouble(), box[2].GetDouble(), box[3].GetDouble(), box[4].GetDouble(), box[5].GetDouble()), actual);
         }

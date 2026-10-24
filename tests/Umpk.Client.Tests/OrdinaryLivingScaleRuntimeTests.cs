@@ -52,14 +52,14 @@ public sealed class OrdinaryLivingScaleRuntimeTests
             Vec3d point = Point(row.GetProperty("point"));
             await harness.ApplyAsync(BoundDescriptorCodec.RoundTrip(protocol, "add_entity", new ClientboundAddEntityPacket(42, Guid.Empty, type.NetworkId, point.X, point.Y, point.Z, 0, 0, 0, 0, 0, 0, 0, null)));
             Entity entity = Assert.IsType<Entity>(harness.State.Entities.Get(42));
-            AssertBox(harness.State, entity, protocol, row.GetProperty("before"));
+            AssertBox(harness.State, entity, protocol, row.GetProperty("before"), CachedOracleOnly(protocol, family));
             byte[] body = Body(native, row);
             ClientboundUpdateAttributesPacket packet = DecodeAttribute(protocol, body, row.GetProperty("input").GetString()!);
             await harness.ApplyAsync(packet);
 
-            AssertBox(harness.State, entity, protocol, row.GetProperty("after_packet"));
+            AssertBox(harness.State, entity, protocol, row.GetProperty("after_packet"), CachedOracleOnly(protocol, family));
             harness.State.EntityGeometry.ObservePosition(entity);
-            AssertBox(harness.State, entity, protocol, row.GetProperty("after_position"));
+            AssertBox(harness.State, entity, protocol, row.GetProperty("after_position"), CachedOracleOnly(protocol, family));
         }
     }
 
@@ -82,9 +82,9 @@ public sealed class OrdinaryLivingScaleRuntimeTests
         var type = session.Client.State.Registries!.EntityTypes[Identifier.Minecraft(family)];
         await session.Send(new ClientboundAddEntityPacket(42, Guid.Empty, type.NetworkId, 1.5, 64, 1.5, 0, 0, 0, 0, 0, 0, 0, null));
         await session.Raw("update_attributes", Body(native, row));
-        await session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, row.GetProperty("after_packet")), session.Token);
+        await session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, row.GetProperty("after_packet"), CachedOracleOnly(protocol, family)), session.Token);
         await session.Tick();
-        await session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, row.GetProperty("after_explicit_refresh")), session.Token);
+        await session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, row.GetProperty("after_explicit_refresh"), CachedOracleOnly(protocol, family)), session.Token);
     }
 
     [Theory]
@@ -114,7 +114,7 @@ public sealed class OrdinaryLivingScaleRuntimeTests
         return;
 
         JsonElement Find(string input) => native.GetProperty("rows").EnumerateArray().First(row => row.GetProperty("family").GetString() == family && row.GetProperty("input").GetString() == input && !row.GetProperty("baby").GetBoolean() && row.GetProperty("target_pose").GetString() == "STANDING" && Point(row.GetProperty("point")) == new Vec3d(1.5, 64, 1.5));
-        Task<bool> Check(JsonElement expected) => session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, expected), session.Token);
+        Task<bool> Check(JsonElement expected) => session.Client.InvokeAsync(client => AssertBox(client.State, client.State.Entities.Get(42)!, protocol, expected, CachedOracleOnly(protocol, family)), session.Token);
     }
 
     public static IEnumerable<object[]> AgeCases()
@@ -185,7 +185,7 @@ public sealed class OrdinaryLivingScaleRuntimeTests
             var data = new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(rule.PoseMetadataIndex, MetadataValue.Pose(pose))], []));
             await harness.ApplyAsync(BoundDescriptorCodec.RoundTrip(protocol, "set_entity_data", data));
         }
-        AssertBox(harness.State, harness.State.Entities.Get(42)!, protocol, row.GetProperty("after_pose"));
+        AssertBox(harness.State, harness.State.Entities.Get(42)!, protocol, row.GetProperty("after_pose"), CachedOracleOnly(protocol, family));
     }
 
     public static IEnumerable<object[]> NativeMotionCases()
@@ -334,7 +334,11 @@ public sealed class OrdinaryLivingScaleRuntimeTests
 
         Task<Aabb> Bounds() => session.Client.InvokeAsync(client =>
         {
-            Assert.True(client.State.EntityGeometry.TryGet(client.State.Entities.Get(42)!, JavaGameData.EntityGeometryData(protocol), out Aabb box, out _, protocol));
+            Entity entity = client.State.Entities.Get(42)!;
+            bool known = CachedOracleOnly(protocol, family)
+                ? client.State.EntityGeometry.TryGetCachedGeometry(entity, JavaGameData.EntityGeometryData(protocol), out Aabb box, out _, protocol)
+                : client.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out box, out _, protocol);
+            Assert.True(known);
             return box;
         }, session.Token);
     }
@@ -356,7 +360,11 @@ public sealed class OrdinaryLivingScaleRuntimeTests
 
         Task<Aabb> Bounds() => session.Client.InvokeAsync(client =>
         {
-            Assert.True(client.State.EntityGeometry.TryGet(client.State.Entities.Get(42)!, JavaGameData.EntityGeometryData(protocol), out Aabb box, out _, protocol));
+            Entity entity = client.State.Entities.Get(42)!;
+            bool known = CachedOracleOnly(protocol, family)
+                ? client.State.EntityGeometry.TryGetCachedGeometry(entity, JavaGameData.EntityGeometryData(protocol), out Aabb box, out _, protocol)
+                : client.State.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out box, out _, protocol);
+            Assert.True(known);
             return box;
         }, session.Token);
     }
@@ -476,14 +484,20 @@ public sealed class OrdinaryLivingScaleRuntimeTests
         return packet;
     }
 
-    private static bool AssertBox(ClientState state, Entity entity, int protocol, JsonElement native)
+    private static bool AssertBox(ClientState state, Entity entity, int protocol, JsonElement native, bool cachedValuesOnly = false)
     {
-        Assert.True(state.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out Aabb box, out bool blocking, protocol));
+        bool known = cachedValuesOnly
+            ? state.EntityGeometry.TryGetCachedGeometry(entity, JavaGameData.EntityGeometryData(protocol), out Aabb box, out bool blocking, protocol)
+            : state.EntityGeometry.TryGet(entity, JavaGameData.EntityGeometryData(protocol), out box, out blocking, protocol);
+        Assert.True(known);
         Assert.True(blocking);
         JsonElement expected = native.GetProperty("body");
         Assert.Equal(new Aabb(expected[0].GetDouble(), expected[1].GetDouble(), expected[2].GetDouble(), expected[3].GetDouble(), expected[4].GetDouble(), expected[5].GetDouble()), box);
         return true;
     }
+
+    private static bool CachedOracleOnly(int protocol, string family)
+        => protocol is 769 or 770 && family is "cat" or "chicken" or "horse" or "iron_golem" or "pig" or "sheep" or "villager";
 
     private static Vec3d Point(JsonElement point) => new(point[0].GetDouble(), point[1].GetDouble(), point[2].GetDouble());
 

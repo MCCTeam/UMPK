@@ -103,6 +103,13 @@ internal sealed class EntityGeometryState
         return geometry.Known && PositionKnown(entity, geometry);
     }
 
+    /// <summary>Reads cached native geometry values; success does not establish the actor's current world-query position.</summary>
+    internal bool TryGetCachedGeometry(Entity entity, IEntityGeometrySource source, out Aabb box, out bool blocksBuilding, int protocol = 0)
+    {
+        bool current = TryGet(entity, source, out box, out blocksBuilding, protocol);
+        return current || _entities.TryGetValue(entity, out Geometry? geometry) && geometry.Known;
+    }
+
     public void ObserveMetadata(Entity entity, int index)
     {
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))

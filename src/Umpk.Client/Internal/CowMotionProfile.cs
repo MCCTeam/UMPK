@@ -6,7 +6,7 @@ using Umpk.Geometry;
 
 namespace Umpk.Client.Internal;
 
-/// <summary>The original 1.21.4/1.21.5 ordinary Cow listener and complete inherited tick profile.</summary>
+/// <summary>The 1.21.4/1.21.5 ordinary living packet and tick profile; each supported family has a separate original actor witness.</summary>
 internal readonly record struct CowMotionProfile(VanillaInterpolationProfile Interpolation, bool UsesPendingComponents)
 {
     private static readonly Identifier Scale = Identifier.Minecraft("scale");
@@ -14,7 +14,7 @@ internal readonly record struct CowMotionProfile(VanillaInterpolationProfile Int
 
     public static bool Supports(int protocol) => protocol is 769 or 770;
 
-    public static bool Supports(Entity entity, int protocol) => Supports(protocol) && entity.Type.Id == Identifier.Minecraft("cow");
+    public static bool Supports(Entity entity, int protocol) => Supports(protocol) && entity.Type.Id.IsMinecraft && ConstructorHealth(entity.Type.Id.Path) != 0;
 
     public static CowMotionProfile ForProtocol(int protocol) => protocol switch
     {
@@ -32,16 +32,33 @@ internal readonly record struct CowMotionProfile(VanillaInterpolationProfile Int
             return false;
         if (entity.Metadata.TryGet(rule.PoseMetadataIndex, out MetadataValue pose) && (pose.Kind != MetadataValueKind.Pose || pose.AsPose() != EntityPose.Standing))
             return false;
-        if (entity.Metadata.TryResolve(EntityMetadataKeys.Health, out MetadataValue health) && (health.Kind != MetadataValueKind.Float || health.AsFloat() != 10F))
+        if (entity.Metadata.TryResolve(EntityMetadataKeys.Health, out MetadataValue health) && (health.Kind != MetadataValueKind.Float || health.AsFloat() != DefaultHealth(entity)))
             return false;
         return !entity.Metadata.TryResolve(EntityMetadataKeys.SharedFlags, out MetadataValue flags) || flags.Kind == MetadataValueKind.Byte && flags.AsByte() == 0;
     }
 
-    public static Vec3d TickVelocity(Vec3d value, bool hadActiveInterpolation)
+    private static float DefaultHealth(Entity entity)
+    {
+        int health = ConstructorHealth(entity.Type.Id.Path);
+        return health == 0 ? 10F : health;
+    }
+
+    private static int ConstructorHealth(string path)
+    {
+        // Each exact name is followed by its constructor health and a separator; all eight names have independent original actor witnesses.
+        const string families = "cow\u000a|cat\u000a|pig\u000a|chicken\u0004|horse\u0035|iron_golem\u0064|sheep\u0008|villager\u0014|";
+        int start = families.IndexOf(path, StringComparison.Ordinal);
+        int end = start + path.Length;
+        return start >= 0 && (start == 0 || families[start - 1] == '|') && end < families.Length - 1 && families[end + 1] == '|'
+            ? families[end] : 0;
+    }
+
+    public static Vec3d TickVelocity(Vec3d value, bool hadActiveInterpolation, bool fallingChicken = false)
     {
         if (!hadActiveInterpolation)
             value = value.Scale(.98);
-        return new Vec3d(Math.Abs(value.X) < .003 ? 0 : value.X, Math.Abs(value.Y) < .003 ? 0 : value.Y, Math.Abs(value.Z) < .003 ? 0 : value.Z);
+        double y = Math.Abs(value.Y) < .003 ? 0 : value.Y;
+        return new Vec3d(Math.Abs(value.X) < .003 ? 0 : value.X, fallingChicken && y < 0 ? y * .6 : y, Math.Abs(value.Z) < .003 ? 0 : value.Z);
     }
 
     /// <summary>Encloses every original player pose only to prove spatial nonrelevance when physics storage is disabled. This is not the player's actual body.</summary>

@@ -40,6 +40,6 @@ The root review's first attempt incorrectly expected a repeated path field in on
 
 ## Publication and remaining acceptance
 
-The preceding rider/ignition head `cd69215` passes all seven jobs in [run 40046034078](https://github.com/MCCTeam/UMPK/actions/runs/40046034078). Its completed JSON receipt is `/tmp/umpk-cd69215-ci-result-20261024.json`, SHA-256 `84d6f0357264cf02662e5df42455398404aebfbae34a003939d6b7c8fe3b2254`. The later `c977ff3` has its own CI run; its final result must be recorded separately.
+All seven CI jobs pass on the runtime producer `c977ff3` in [run 40047637282](https://github.com/MCCTeam/UMPK/actions/runs/40047637282). Its completed receipt is `/tmp/umpk-c977ff3-completed-ci-20261024.json`, SHA-256 `d8cb6c4f96d5dc4107f148263631cce1ffaddcd06e155be4c1f9322387099c14`. All seven also pass on the later published fixture/documentation head `a932873` in [run 40049225194](https://github.com/MCCTeam/UMPK/actions/runs/40049225194); `/tmp/umpk-a932873-completed-ci-20261024.json` has SHA-256 `a986f6e733ce8f43f5a3e98b2017b317e1a4d75e80adc5e9549bc05b8eac6714`. These results retain their exact heads; later production changes require fresh CI.
 
 Fresh final full-solution/25-core-gate, DMCBK/MCC, package/isolated-consumer, complete native/live/version-matrix and actual final-head CI acceptance remain required. The last full repository/consumer/package certificate remains exact `c8492cb`. The [completion ledger](interaction-completion.md) retains the unfinished behavior families and explicit unknowns. PR #10 stays open and draft.

@@ -2,6 +2,7 @@
 
 from contextlib import redirect_stderr
 from io import StringIO
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import sys
@@ -16,21 +17,32 @@ class PreparedProperties(Exception):
 
 
 class ViewDistanceTests(unittest.TestCase):
-    def properties_for(self, *arguments: str) -> dict[str, str]:
+    def properties_for(self, *arguments: str, release: str = '1.21.5') -> dict[str, str]:
         with TemporaryDirectory(prefix='umpk-view-distance-') as temporary:
             root = Path(temporary)
-            seed = root / 'downloads' / '1.21.5'
+            seed = root / 'downloads' / release
             seed.mkdir(parents=True)
             (seed / 'server.jar').write_bytes(b'owned launcher option fixture')
             (seed / 'eula.txt').write_text('eula=true\n', encoding='utf-8')
             run = root / 'run'
-            command = ['server.py', '1.21.5', '--root', str(root), '--run-dir', str(run), *arguments]
+            command = ['server.py', release, '--root', str(root), '--run-dir', str(run), *arguments]
             with patch.dict('os.environ', {}, clear=True), patch.object(sys, 'argv', command), patch.object(server, 'check_port'), patch.object(server, 'java_for', return_value='not-executed'), patch.object(server.subprocess, 'Popen', side_effect=PreparedProperties):
                 with self.assertRaises(PreparedProperties):
                     server.main()
             self.assertEqual(b'owned launcher option fixture', (seed / 'server.jar').read_bytes())
             self.assertEqual('eula=true\n', (seed / 'eula.txt').read_text())
             return dict(line.split('=', 1) for line in (run / 'server.properties').read_text().splitlines())
+
+    def test_flat_world_preserves_117_and_modern_settings_before_child(self) -> None:
+        v117 = {"layers": [{"height": 100, "block": "minecraft:stone"}], "biome": "minecraft:the_void", "structures": {"structures": {}}, "features": False, "lakes": False}
+        modern = {"layers": [{"height": 164, "block": "minecraft:stone"}], "biome": "minecraft:the_void", "features": False, "lakes": False, "structure_overrides": []}
+        for release, settings in (("1.17", v117), ("1.20.6", modern), ("26.3", modern)):
+            with self.subTest(release=release):
+                serialized = json.dumps(settings, separators=(',', ':'))
+                properties = self.properties_for('--flat-world-settings', serialized, release=release)
+                self.assertEqual('flat', properties['level-type'])
+                self.assertEqual(serialized, properties['generator-settings'])
+                self.assertEqual(settings, json.loads(properties['generator-settings']))
 
     def test_default_property_is_four(self) -> None:
         properties = self.properties_for()

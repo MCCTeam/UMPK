@@ -43,7 +43,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
+        string? flatWorldSettings = protocol switch
+        {
+            < 755 => null,
+            755 => """{"layers":[{"height":100,"block":"minecraft:stone"}],"biome":"minecraft:the_void","structures":{"structures":{}},"features":false,"lakes":false}""",
+            _ => """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""",
+        };
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: flatWorldSettings);
         output.WriteLine($"Evidence: {server.DirectoryPath}");
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
         var capture = new Capture(version);
@@ -86,6 +92,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             int[] initialIds = await client.InvokeAsync(c => c.State.Entities.All.Select(entity => entity.Id).ToArray(), ct);
             await server.ConsoleAsync(FormattableString.Invariant($"tp @e[type=!minecraft:player] {staging.X:R} {staging.Y:R} {staging.Z:R}"), ct);
             await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
+            await server.ConsoleAsync("kill @e[type=minecraft:item]", ct);
             await WaitAsync(client, c => !c.State.Entities.All.Any(), "staged ambient actors actually removed", ct);
             int cleanupMarker = await Marker("execute unless entity @e[type=!minecraft:player]", "zero-ambient-native");
             CapturedFrame[] setupFrames = capture.Frames.Take(cleanupMarker).ToArray();
@@ -159,6 +166,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await WaitAsync(() => capture.Since(mark).Any(frame => SlabMetadata(frame.Packet, actor.Id, rule.MetadataIndex, true)), "native child metadata before adult transition", ct);
                 await server.ConsoleAsync($"data merge entity @e[tag={actorTag},limit=1] {{Age:0}}", ct);
                 await WaitAsync(() => capture.Since(mark).Any(frame => SlabMetadata(frame.Packet, actor.Id, rule.MetadataIndex, false)), "actual dirty adult metadata", ct);
+                await server.ConsoleAsync(FormattableString.Invariant($"tp @e[tag={actorTag},limit=1] {position.X:R} {position.Y:R} {position.Z:R}"), ct);
                 await WaitAsync(client, c => c.State.Entities.Get(actor.Id)?.Position == position, "native body position applied", ct);
                 await Marker(FormattableString.Invariant($"execute if entity @e[type=minecraft:villager,tag={actorTag},nbt={{Pos:[{position.X:R}d,{position.Y:R}d,{position.Z:R}d],Age:0,NoAI:1b,NoGravity:1b}}] unless entity @e[type=!minecraft:player,tag=!{actorTag}]"), "exact-adult-body");
                 var body = await client.InvokeAsync(c => ReadSlabBody(c, actor.Id, protocol), ct);

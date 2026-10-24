@@ -68,7 +68,7 @@ class WorldSettingsTests(unittest.TestCase):
     def test_flat_world_is_an_explicit_serialized_option(self) -> None:
         with launcher(arguments=['--flat-world-settings', json.dumps(FLAT_SETTINGS)]) as owned:
             properties = (owned.directory / 'server.properties').read_text(encoding='utf-8')
-            self.assertEqual(self.expected_default_properties(owned) + 'level-type=minecraft:flat\ngenerator-settings=' + FLAT_SERIALIZED + '\n', properties)
+            self.assertEqual(self.expected_default_properties(owned) + 'level-type=flat\ngenerator-settings=' + FLAT_SERIALIZED + '\n', properties)
             self.assertEqual(FLAT_SETTINGS, json.loads(dict(line.split('=', 1) for line in properties.splitlines())['generator-settings']))
             owned.send(b'stop\n')
             self.assert_clean_stop(owned)

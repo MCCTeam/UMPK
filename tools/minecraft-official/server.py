@@ -119,7 +119,7 @@ def run(args: argparse.Namespace) -> None:
         'max-players': '5', 'level-name': 'world', 'max-tick-time': '-1',
     }
     if args.flat_world_settings is not None:
-        properties['level-type'] = 'minecraft:flat'
+        properties['level-type'] = 'flat'
         properties['generator-settings'] = json.dumps(args.flat_world_settings, separators=(',', ':'))
     (directory / 'server.properties').write_text(''.join(f'{key}={value}\n' for key, value in properties.items()), encoding='utf-8')
     (directory / 'rcon-password.txt').write_text(password + '\n', encoding='utf-8')

@@ -1914,8 +1914,80 @@
       "rootActualAuditSha256": "73be68f68c5b7e9a04ab1a37c240b5c90110953571b69763273f8fe7784a7eda",
       "sharedSourceIntegrationSha256": "efbca47f6dcb3f6e58f7a55757da2de81e667c926cada8f9445dd28a5d4278b9",
       "report": "legacy-ambient-peers-315.md",
-      "remaining": "freshnative315wholeRow; finalcombinedrepository/consumer/package/AOT/CI/matrix",
-      "latestNative": "10partial scenes passed including original iron-held-stone use/swing/worldstack; whole row FAILED before finalaction because obsolete weapon.offhand token; fixture-only slot.weapon.offhand correction and full11scene retry pending"
+      "remaining": "Native-backed bat fluid and finite hard-peer runtime fixes; complete 1.11 native acceptance row; final combined repository/consumer/package/AOT/CI/version matrix",
+      "latestNative": "Private diagnostic: one whole-row failure after eight partial scenes. Bat 2635 first invalidates in water at tick 474, causing placement uncertainty at tick 505; another bat in lava and three squid near an unclassified distant chicken also invalidate. Fourteen runtime cases pass; normal Integration is 41 passes/18 named skips. No native acceptance pass. Root audit 693d1629 verifies the actual evidence and cleanup.",
+      "priorTenPartialNative": "10partial scenes passed including original iron-held-stone use/swing/worldstack; whole row FAILED before finalaction because obsolete weapon.offhand token; fixture-only slot.weapon.offhand correction and full11scene retry pending",
+      "priorEightPartialNative": "Freshoffhand-fixture-continuationv1: fixturecompile/format/PDB/normal59/discoveryPASS; whole11scene row FAILS iron-held-stone missing swing after8partial scenes; correctedoffhandsceneNOTREACHED; cleanupce0a23e0/all12PIDsabsent/unforcednative0/ports35529,40689closed; exactcontextdiagnosis ongoing",
+      "diagnosticRootAuditSha256": "693d162963513a0e3799c9d8c2454a1acdf8e2dd337ef8b24a0bb4fe47cad1d5",
+      "nativeFluidPilot": {
+        "status": "passed original-native only; production/runtime/live remain pending",
+        "release": "1.11",
+        "protocol": 315,
+        "scenarios": 15,
+        "originalWorldActorTicks": 60,
+        "nativePacketRoundTrips": 398,
+        "states": 377,
+        "nativePlacementQueries": 754,
+        "originalClassOrigins": 45,
+        "rootActualAuditSha256": "0a3ec19804c72e3f1c579450df5f94d0f77d0840380c9d924fadcf877cce417e",
+        "completionSha256": "9cffe64939a34c5abc6980e048a78cfd9b2b95ede155c235732494c1893a507a",
+        "cleanupSha256": "ce67e89c2090894957e6996df6cd7e7c5fc8b5dd905ed6e6abb1f58a25d77c96",
+        "decision": "Base water changes velocity before interpolation; remote unmounted bat travel authority false; cached body does not move directly with current. Implement exact flow or preserve independent certainty."
+      }
+    },
+    "sequencedLocalBlockPrediction": {
+      "status": "private functional runtime passed; strict AOT failed; shared integration/contextual fixes/native and final acceptance pending",
+      "report": "sequenced-block-prediction.md",
+      "sourceBaseCommit": "3dae40c668717d58db906a1e73672eba90868724",
+      "producerKind": "exact private Client/Game source overlays against frozen normal 8efa dependencies",
+      "clientDllSha256": "852ecc9701fa149bed9fc0011d0f606e225f776cda758f6966ea86dbf3a95332",
+      "executed": {
+        "fullClient": 34733,
+        "focused": 298,
+        "adjacentSubsetOfFull": 6593,
+        "physics": 715,
+        "raceRed": {
+          "passed": 4,
+          "failed": 1
+        },
+        "raceGreen": 5,
+        "skipped": 0
+      },
+      "rootAuditSha256": "02235218e96f5209f633142b784f5a64d92f29777c0e746544dd19bce659236a",
+      "completionSha256": "4d041e1ea0114715a8a31ce7a49d6c31760d6b09e54494c20848eeb2c73ff13b",
+      "cleanupSha256": "227aea35820f1915225c060dd01032d7fe7d5e2fe7bce570acbbf66a54c0cb9f",
+      "nativeAot": {
+        "status": "failed",
+        "bytes": 25178240,
+        "strictLimitExclusive": 25165824,
+        "smoke": "not run"
+      },
+      "open": [
+        "native projected-outline clipping",
+        "strict AOT size and executed smoke",
+        "shared source integration",
+        "final repository/consumer/native/version acceptance"
+      ]
+    },
+    "contextualPredictionAck": {
+      "status": "passed private bounded native/runtime; shared integration and final acceptance pending",
+      "report": "sequenced-block-prediction.md#contextual-acknowledgment-collision",
+      "clientDllSha256": "90a0c9991ec061b0134bb58f2868917ccd66749ce23a5fcb7fb3ba6c3438db73",
+      "executed": {
+        "native": 26,
+        "framedRed": {
+          "failed": 12,
+          "controls": 12
+        },
+        "framedGreen": 24,
+        "adjacent": 298,
+        "physics": 715,
+        "skipped": 0
+      },
+      "rootAuditSha256": "936ab96db5590df31421c9f1da7076626a7696f61a01baf89ab913f7951e2194",
+      "completionSha256": "f4a62a22719ad907267b1a911af588619bb80f888f83c381560957522e34108b",
+      "cleanupSha256": "8ac3cb311923b8996191c749f8156f385284ee8f40db793371989c57db8df95a",
+      "aot": "not run; prior25178240FAIL/noSmoke retained, combinedstrictAOT required"
     }
   }
 }

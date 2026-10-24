@@ -344,7 +344,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
         Assert.True(Client.State.EntityMembership.HasColumn(cell));
     }
 
-    private async Task Send(IPacket packet)
+    internal async Task Send(IPacket packet)
     {
         string identifier = packet switch
         {
@@ -360,6 +360,29 @@ internal sealed class BlockUseSession : IAsyncDisposable
         object decoded = codec.Decode(bytes, Context);
         switch (packet)
         {
+            case ClientboundAddPlayerPacket player:
+                var added = Assert.IsType<ClientboundAddPlayerPacket>(decoded);
+                Assert.Equal(player.EntityId, added.EntityId);
+                Assert.Equal(player.Uuid, added.Uuid);
+                Assert.Equal(new Vec3d(player.X, player.Y, player.Z), new Vec3d(added.X, added.Y, added.Z));
+                Assert.Equal(player.Yaw, added.Yaw);
+                Assert.Equal(player.Pitch, added.Pitch);
+                break;
+            case ClientboundSetEntityLinkPacket link:
+                Assert.Equal(link, Assert.IsType<ClientboundSetEntityLinkPacket>(decoded));
+                break;
+            case ClientboundTeleportEntityPacket teleport:
+                var moved = Assert.IsType<ClientboundTeleportEntityPacket>(decoded);
+                Assert.Equal(teleport.EntityId, moved.EntityId);
+                Assert.Equal(new Vec3d(teleport.X, teleport.Y, teleport.Z), new Vec3d(moved.X, moved.Y, moved.Z));
+                Assert.Equal(teleport.Yaw, moved.Yaw);
+                Assert.Equal(teleport.Pitch, moved.Pitch);
+                break;
+            case ClientboundRespawnPacket { Legacy: not null } legacyRespawn:
+                var nativeRespawn = Assert.IsType<ClientboundRespawnPacket>(decoded);
+                Assert.Equal(legacyRespawn.Legacy, nativeRespawn.Legacy);
+                Assert.Null(nativeRespawn.SpawnInfo);
+                break;
             case ClientboundRespawnPacket respawn:
                 var changed = Assert.IsType<ClientboundRespawnPacket>(decoded);
                 var expectedSpawn = Assert.IsType<CommonPlayerSpawnInfo>(respawn.SpawnInfo);

@@ -83,6 +83,81 @@ internal sealed partial class EntityMotionState
         _localMountVehicle = null;
     }
 
+    public static bool UsesLegacyMountTraversal(int protocol) => RemotePlayerProfile.ForProtocol(protocol).LegacyMounts;
+
+    /// <summary>Routes the measured legacy remote graph and the separate Pig/Horse leash state. Unsupported or contradictory edges do not weaken EntityStore invariants.</summary>
+    public void ObserveLegacyLink(EntityStore entities, EntityGeometryState geometry, int protocol, int selfId, ClientboundSetEntityLinkPacket link)
+    {
+        if (!UsesLegacyMountTraversal(protocol) || link.SourceId == selfId || !entities.TryGet(link.SourceId, out Entity? source))
+            return;
+        entities.TryGet(link.DestId, out Entity? destination);
+        if (link.LegacyLeash == true)
+        {
+            if (link.DestId != selfId && source.Type.Id.IsMinecraft && source.Type.Id.Path is "pig" or "horse")
+                source.LeashHolder = destination;
+            return;
+        }
+        if (link.LegacyLeash != false)
+            return;
+        bool unsupported = link.DestId == selfId || destination is not null && destination.Passengers.Count != 0
+            && (destination.Passengers.Count != 1 || !ReferenceEquals(destination.Passengers[0], source));
+        for (Entity? ancestor = destination; ancestor is not null && !unsupported; ancestor = ancestor.Vehicle)
+            unsupported = ReferenceEquals(ancestor, source);
+        if (unsupported)
+        {
+            InvalidateRelation(source);
+            if (destination is not null)
+                InvalidateRelation(destination);
+            return;
+        }
+        if (_remotePlayers.TryGetValue(source, out RemotePlayerMotion? motion))
+            motion.LegacyMountKnown = true;
+        else if (destination is null && source.Vehicle is not null)
+            geometry.InvalidatePosition(source);
+        entities.SetVehicle(source, destination);
+        return;
+
+        void InvalidateRelation(Entity actor)
+        {
+            geometry.InvalidatePosition(actor);
+            if (_remotePlayers.TryGetValue(actor, out RemotePlayerMotion? motion))
+                motion.LegacyMountKnown = false;
+        }
+    }
+
+    public bool IsRiderGeometrySupported(Entity entity)
+        => entity.Vehicle is null || _remotePlayers.TryGetValue(entity, out RemotePlayerMotion? rider) && rider.Profile.LegacyMounts && rider.LegacyMountKnown
+            && _remotePlayers.TryGetValue(entity.Vehicle, out RemotePlayerMotion? vehicle) && vehicle.Profile.LegacyMounts && vehicle.LegacyMountKnown
+            && entity.Vehicle.Passengers.Count == 1 && ReferenceEquals(entity.Vehicle.Passengers[0], entity);
+
+    /// <summary>The original player tick and size callback finish before its vehicle reapplies rider position; pending interpolation fields survive that setter.</summary>
+    public void PositionLegacyRider(Entity entity, EntityGeometryState geometry, List<int> moved)
+    {
+        if (entity.Vehicle is not { } vehicle || !_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? rider) || !rider.Profile.LegacyMounts)
+            return;
+        if (!IsRiderGeometrySupported(entity) || !geometry.IsPositionKnown(vehicle) || !geometry.TryGetDimensions(vehicle, out EntityGeometryDimensions dimensions))
+        {
+            geometry.InvalidatePosition(entity);
+            return;
+        }
+        Vec3d before = entity.Position;
+        // 1.8.9 pk.an widens the native float height before multiplying by double .75; wn.am is double -.35.
+        entity.Position = new(vehicle.Position.X, vehicle.Position.Y + dimensions.Height * .75 - .35, vehicle.Position.Z);
+        rider.Position?.SetPosition(entity.Position);
+        geometry.ObservePosition(entity);
+        if (before != entity.Position)
+            moved.Add(entity.Id);
+    }
+
+    internal bool TryGetRemotePlayerInterpolation(Entity entity, out (Vec3d Target, int RemainingSteps) pending)
+    {
+        pending = default;
+        if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
+            return false;
+        pending = position.LegacyPending;
+        return true;
+    }
+
     private static TabListEntry? ResolvePlayerInfo(Entity entity, RemotePlayerMotion player, TabList players)
     {
         if (player.Profile.CachesPlayerInfo && player.PlayerInfo is { } cached)
@@ -357,6 +432,7 @@ internal sealed partial class EntityMotionState
 
     private sealed record RemotePlayerMotion(int Protocol, RemotePlayerProfile Profile, VanillaEntityInterpolation? Position, VanillaEntityVelocity Velocity)
     {
+        public bool LegacyMountKnown { get; set; } = true;
         public TabListEntry? PlayerInfo { get; set; }
         public ModernPlayerCollision? Collision { get; set; }
     }
@@ -369,10 +445,10 @@ internal sealed partial class EntityMotionState
         public LegacyFallingBlockCollision? Collision { get; set; }
     }
 
-    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo, bool UsesWorldCollision)
+    private readonly record struct RemotePlayerProfile(int VelocitySteps, bool AppliesSpawnVelocity, bool UsesPendingComponents, bool SuppressesNearTeleportPosition, bool CancelsNearTeleport, bool CachesPlayerInfo, bool UsesWorldCollision, bool LegacyMounts)
     {
         // Actual RemotePlayer traces cover all 75 releases; generic spawn starts carrying players in 1.20.2, before Entity.recreateFromPacket applies their velocity in 1.21.5.
         public static RemotePlayerProfile ForProtocol(int protocol)
-            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498, protocol >= 761, ModernHardCollisionProfile.Supports(protocol));
+            => new(protocol >= 762 ? 3 : 0, protocol >= 770, protocol is >= 764 and <= 769 or >= 773, protocol < 751, protocol is >= 107 and <= 498, protocol >= 761, ModernHardCollisionProfile.Supports(protocol), protocol == 47);
     }
 }

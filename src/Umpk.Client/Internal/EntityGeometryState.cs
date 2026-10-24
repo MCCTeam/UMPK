@@ -158,6 +158,11 @@ internal sealed class EntityGeometryState
             dimensions = ambient.Profile.Dimensions;
             return true;
         }
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+        {
+            dimensions = new(legacy.Geometry.Width, legacy.Geometry.Height, true, true);
+            return legacy.TryGet(out _);
+        }
         dimensions = default;
         if (!_entities.TryGetValue(entity, out Geometry? geometry))
             return false;
@@ -169,6 +174,8 @@ internal sealed class EntityGeometryState
     /// <summary>A missing displacement decision makes the position unproven until the owning profile observes a supported recovery event.</summary>
     public void InvalidatePosition(Entity entity)
     {
+        if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
+            legacy.InvalidatePosition();
         if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
             ambient.Known = false;
         if (_entities.TryGetValue(entity, out Geometry? geometry))

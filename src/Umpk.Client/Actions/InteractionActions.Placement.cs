@@ -212,7 +212,7 @@ public sealed partial class InteractionActions
 
         BlockUsePrediction PredictPlacementObstruction(BlockPos destination, bool preSend, ReadOnlySpan<Aabb> shapes)
         {
-            if (_services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
+            if (_services.State.EntityMotion.IsLocalMountUnresolved || _services.ReadPhysicsState() is not { } physics || physics.BoundingBox.XSize <= 0 || physics.BoundingBox.YSize <= 0)
                 return BlockUsePrediction.Unknown;
             if (VanillaPlacementCollision.Intersects(destination, shapes, physics.BoundingBox, _blockProfile))
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
@@ -225,7 +225,7 @@ public sealed partial class InteractionActions
                     continue;
                 if (member is null)
                     return BlockUsePrediction.Unknown;
-                if (entity.Vehicle is not null)
+                if (!_services.State.EntityMotion.IsRiderGeometrySupported(entity) || !_services.State.EntityGeometry.IsPositionKnown(entity))
                     return BlockUsePrediction.Unknown;
                 Aabb bounds;
                 if (data is IEntityGeometrySource geometry && _services.State.EntityGeometry.TryGet(entity, geometry, out bounds, out bool blocksBuilding, _services.Version.Version.Protocol))

@@ -1,0 +1,27 @@
+# Protocol-47 remote player riders
+
+Protocol 47 now routes remote mount packets through the existing relationship, membership, motion and geometry owners. A healthy tracked remote player riding another tracked remote player receives the native rider position during the session tick. Placement can use the resulting proven bounds instead of treating every mounted actor as an unconditional unknown. Unsupported vehicles, unresolved local mounts, malformed relationships and unproven positions remain Unknown. This work keeps the existing 1.8.9 client profile.
+
+Mount and leash relationships stay separate. Packet mutations complete before the existing typed `EntityPassengersChanged` events publish; transfers notify the previous vehicle before the new vehicle. Tick-owned detach events publish after graph changes and before movement notifications. The implementation preserves pending interpolation targets, packet-coordinate bases, native actor order, and removal/replacement/world-lifetime cleanup. It adds no clock, velocity controller, synthetic self entity, public signature, dependency or DI lifetime.
+
+## Source and runtime proof
+
+The measured native campaign is retained at `runs/legacy-remote-mount-native-20261023-v3`; `mount-routing.json` has SHA-256 `87b147fc802f49df8fadea454b1f918e9a688b31492a7ae3a0c455b318af7a56`. Its bounded posthoc review is `runs/legacy-remote-mount-posthoc-review-20261023-v2/manifest.json`, SHA-256 `8808ca1049bc623f76ad472d89c56c4b048c7c1b8d2fbbcd4391d0414af65020`. The original nullable-Gson validator failure remains separate from that accepted review; no fresh native campaign is claimed here.
+
+The event-complete runtime overlay starts from `c8492cb` and is retained at `runs/legacy47-mount-routing-runtime-20261023-v1`. Its ten-file patch SHA-256 is `22fcd5a128d8a9b706cf2e70692c257ed6d09985d584cab089723097532b0c3c`; the source manifest is `b284cc1b994d0350091eb13ab25600de35d12966d3099acb123ba44074886887`. Fifty-one new framed session cases cover relationship routing, public placement, pending motion, confidence loss/recovery, chunk transitions, replacement, teardown and public notifications. Incoming packets use actual bound codecs and retain decoded-value and byte-roundtrip assertions. Genuine failing attempts remain outside Git.
+
+The event-complete overlay passes all 32,844 Client cases in Release, zero skipped, with TRX SHA-256 `65e0171d42e6252f43e1efba071933b022543add89d09691d4941a3348b13aa3`. Its adjacent run passes 4,940 cases. These full and adjacent receipts precede the size refactor described below and do not establish a final combined producer pass.
+
+## Strict native size correction
+
+The first final publish attempt fails during managed compilation of unchanged generated data with an out-of-memory exception. Publishing against the exact tested library inputs avoids that repeat compilation and produces a real native executable, but its 25,169,664 bytes exceed the unchanged strict limit of 25,165,824. Both failures remain recorded; neither is a passing AOT result.
+
+The additional two-file patch `73c0b8f6a2f7f6ff58357aa3c786770514a50f0d47c808c824f062f30cee1d1a` replaces production construction of an eleven-field diagnostic membership snapshot with narrow queries on the existing membership owner. It preserves the original predicates, untracked defaults and event behavior. Independent review is `/tmp/bounded-change-independent-review-20261024-v1.json`, SHA-256 `5d986acea785c7546ff50c9217aa8ea77b265942b19de8fb3662e066fd4e75dc`.
+
+The measured corrected producer passes all 51 rider cases plus five unchanged allocation controls, then publishes a 25,165,568-byte native executable and executes exactly one passing smoke with zero skips. The remaining size margin is only 256 bytes. Its binary SHA-256 is `e262607b6de21d1ebfde85ce0c7047e186ad73a26634609c85e747853e9a895d`; focused and smoke TRX hashes are `bb19ddbafb1b99f128696b230df775f44a47c547ff25267aee54868546ef8e9a` and `13505787f9b482e91dd2b3859d1689b5e6e1f4b7066dae3ded19ec556bebd6d2`.
+
+Actual compiler references, all eleven native compiler/staged library inputs and the unchanged NuGet package/version/hash shape are verified. All 4,271 original source files, twelve symlink targets, 276 normal DLL/PDB files, 238 reused smoke-harness files and 22 frozen/original library DLL/PDB pairs remain unchanged. Two earlier missing-NBT reference harness failures remain separate. The successful external override verifies actual compiler inputs before compilation rather than assuming transitive project resolution.
+
+Exact commands, durations, XML, native compiler response, source/binary hashes and retained failures are indexed by `aot-size-v3-analysis/narrow-query-candidate-v3/delivery-manifest.json` under that run, SHA-256 `cf1262a85c8ba7e5327ad019ae9a22154c76611f7405abee4d4ce21eae16be26`. Its completion receipt is `31c20d38d5c98307b09b5c7fe27371019316ed4f6cc7e718e7899e56972c9fcd`.
+
+Root applied both reviewed patches and verified the shared postimages against the measured source. Fresh full combined tests, format, immutable producer, consumer/package/AOT and published-head CI checks remain required. No new live mounted-player placement acceptance is claimed. General vehicle families, local/nested riders and picking eligibility remain in the [completion ledger](interaction-completion.md).

@@ -35,6 +35,8 @@ internal sealed class TrackedLegacyPlayerGeometry
 
     public bool IsPositionKnown => _positionKnown;
 
+    public void InvalidatePosition() => _positionKnown = false;
+
     public bool TryGet(out Aabb bounds)
     {
         bounds = _geometry.Bounds;

@@ -267,9 +267,26 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundSetEntityLinkPacket link:
+                Entity? previousVehicle = store.Get(link.SourceId)?.Vehicle;
                 if (link.LegacyLeash == false && store.TryGet(link.SourceId, out Entity? linkedActor) && linkedActor is not null && store.TryGet(link.DestId, out _))
                     context.State.EntityGeometry.InvalidateFallingBlock(linkedActor);
                 context.State.EntityMotion.ObserveLocalLegacyMount(context.State.Self.EntityId, link.SourceId, link.DestId, link.LegacyLeash);
+                context.State.EntityMotion.ObserveLegacyLink(store, context.State.EntityGeometry, context.Version.Version.Protocol, context.State.Self.EntityId, link);
+                if (EntityMotionState.UsesLegacyMountTraversal(context.Version.Version.Protocol) && link.LegacyLeash == false)
+                {
+                    if (store.TryGet(link.SourceId, out Entity? source) && !context.State.EntityGeometry.IsPositionKnown(source))
+                        context.State.EntityMembership.InvalidateLegacyRiderRegistration(source);
+                    if (store.TryGet(link.DestId, out Entity? destination) && !context.State.EntityGeometry.IsPositionKnown(destination))
+                        context.State.EntityMembership.InvalidateLegacyRiderRegistration(destination);
+                }
+                Entity? currentVehicle = store.Get(link.SourceId)?.Vehicle;
+                if (!ReferenceEquals(previousVehicle, currentVehicle))
+                {
+                    if (previousVehicle is not null)
+                        await context.PublishAsync(new EntityPassengersChanged(previousVehicle.Id)).ConfigureAwait(false);
+                    if (currentVehicle is not null)
+                        await context.PublishAsync(new EntityPassengersChanged(currentVehicle.Id)).ConfigureAwait(false);
+                }
                 return true;
 
             case ClientboundUseBedPacket bed:

@@ -924,12 +924,15 @@ public sealed class UmpkClient : IAsyncDisposable
         if (State.WorldDimension is not null)
         {
             _interpolatedEntityMoves.Clear();
-            State.TickEntities(_settings.Version.Version.Protocol,
+            List<int>? changedVehicles = State.TickEntities(_settings.Version.Version.Protocol,
                 _settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(_settings.Version.Version.Protocol), _interpolatedEntityMoves, _physics?.EngineState?.BoundingBox);
             // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
             if (State.WorldTicks.RunsNormally)
                 State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);
             State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+            if (changedVehicles is not null)
+                foreach (int vehicleId in changedVehicles)
+                    await _eventBus.PublishAsync(new EntityPassengersChanged(vehicleId)).ConfigureAwait(false);
             foreach (int entityId in _interpolatedEntityMoves)
                 await _eventBus.PublishAsync(new EntityMoved(entityId)).ConfigureAwait(false);
         }

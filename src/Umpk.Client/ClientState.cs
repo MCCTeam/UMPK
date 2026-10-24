@@ -124,22 +124,59 @@ public sealed class ClientState
 
     internal Internal.EntityMembershipState EntityMembership { get; } = new();
 
-    internal void TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
+    internal List<int>? TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
     {
         if (_entities is null)
-            return;
+            return null;
+        List<int>? changedVehicles = null;
         EntityMembership.BeginEntityPhase();
+        bool legacyMounts = Internal.EntityMotionState.UsesLegacyMountTraversal(protocol);
         foreach (Entity entity in _entities.All)
         {
-            if (EntityMembership.CanTick(entity, WorldTicks.RunsNormally))
+            if (legacyMounts && entity.Vehicle is { } vehicle)
             {
-                EntityMembership.BeginPlayerTick(entity);
-                EntityMotion.TickEntity(entity, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate, Self, localBody);
-                EntityGeometry.TickLegacyPlayer(entity, _world, shapes, protocol, EntityMembership);
-                EntityGeometry.TickLivingScale(entity, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(entity.Position)));
+                if (!EntityMembership.IsLegacyRemoved(vehicle) && vehicle.Passengers.Count == 1 && ReferenceEquals(vehicle.Passengers[0], entity))
+                    continue;
+                _entities.SetVehicle(entity, null);
+                (changedVehicles ??= []).Add(vehicle.Id);
             }
-            EntityMembership.AfterEntityPhase(entity);
+            Entity current = entity;
+            // The legacy graph has one passenger per vehicle. Iterate its chain after each parent's registration, independently of table insertion order.
+            for (int depth = 0; depth < _entities.Count; depth++)
+            {
+                if (EntityMembership.CanTick(current, WorldTicks.RunsNormally))
+                {
+                    EntityMembership.BeginPlayerTick(current);
+                    EntityMotion.TickEntity(current, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate, Self, localBody);
+                    EntityGeometry.TickLegacyPlayer(current, _world, shapes, protocol, EntityMembership);
+                    EntityGeometry.TickLivingScale(current, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(current.Position)));
+                    if (legacyMounts)
+                    {
+                        if (current.Vehicle is { } parent && (!EntityMembership.IsHealthyLegacyRider(current) || !EntityMembership.IsHealthyLegacyRider(parent)))
+                            EntityGeometry.InvalidatePosition(current);
+                        else
+                            EntityMotion.PositionLegacyRider(current, EntityGeometry, moved);
+                    }
+                }
+                if (legacyMounts && !EntityGeometry.IsPositionKnown(current))
+                    EntityMembership.InvalidateLegacyRiderRegistration(current);
+                EntityMembership.AfterEntityPhase(current);
+                if (!legacyMounts || current.Passengers.Count != 1
+                    || !EntityMembership.CanTraverseLegacyPassengers(current))
+                    break;
+                Entity passenger = current.Passengers[0];
+                if (EntityMembership.IsLegacyRemoved(passenger) || !ReferenceEquals(passenger.Vehicle, current))
+                {
+                    Entity? previousVehicle = passenger.Vehicle;
+                    _entities.SetVehicle(passenger, null);
+                    if (previousVehicle is not null)
+                        (changedVehicles ??= []).Add(previousVehicle.Id);
+                    break;
+                }
+                current = passenger;
+            }
         }
+        return changedVehicles;
     }
 
     internal Internal.WorldTickState WorldTicks { get; } = new();

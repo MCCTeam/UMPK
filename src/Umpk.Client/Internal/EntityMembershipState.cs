@@ -42,7 +42,7 @@ internal sealed class EntityMembershipState
     {
         // A replacing packet installs a new native chunk. Existing added-to-chunk flags survive, but the new chunk has no old entity list.
         foreach (Membership player in _players.Values)
-            if (player.Column == column && (player.AmbientProfile is null || player.MembershipKnown))
+            if (player.Column == column && player.MembershipKnown)
                 player.Column = null;
         _columns.Add(column);
     }
@@ -54,7 +54,7 @@ internal sealed class EntityMembershipState
     {
         _columns.Remove(column);
         foreach (Membership player in _players.Values)
-            if (player.Column == column && (player.AmbientProfile is null || player.MembershipKnown))
+            if (player.Column == column && player.MembershipKnown)
             {
                 player.Column = null;
                 player.PendingUnload = true;
@@ -64,7 +64,7 @@ internal sealed class EntityMembershipState
     public void BeginEntityPhase()
     {
         foreach (Membership player in _players.Values)
-            if (player.PendingUnload)
+            if (player.PendingUnload && player.MembershipKnown)
             {
                 player.PendingUnload = false;
                 player.InEntityList = false;
@@ -121,6 +121,13 @@ internal sealed class EntityMembershipState
             member.MembershipKnown = false;
     }
 
+    /// <summary>The protocol-47 riding owner cannot use a retained position to prove current registration after an unresolved relation or unowned rider movement.</summary>
+    public void InvalidateLegacyRiderRegistration(Entity entity)
+    {
+        if (_players.TryGetValue(entity, out Membership? member) && member.IsPlayer)
+            member.MembershipKnown = false;
+    }
+
     private static bool TryGetHealth(Membership player, out float health)
     {
         // Original constructors supply family health (bat 6, squid 10, player 20) until metadata supplies its value. A malformed kind cannot prove lifetime or reentry.
@@ -136,6 +143,17 @@ internal sealed class EntityMembershipState
         health = value.AsFloat();
         return true;
     }
+
+    internal bool IsLegacyRemoved(Entity entity)
+        => _players.TryGetValue(entity, out Membership? member) && member.Removed;
+
+    internal bool IsHealthyLegacyRider(Entity entity)
+        => !_players.TryGetValue(entity, out Membership? member)
+            || TryGetHealth(member, out float health) && health > 0 && !member.Removed;
+
+    internal bool CanTraverseLegacyPassengers(Entity entity)
+        => !_players.TryGetValue(entity, out Membership? member)
+            || member.InEntityList && member.Added && !member.Removed;
 
     internal bool TryGetLegacyMembership(Entity entity, out LegacyMembershipSnapshot snapshot)
     {
@@ -159,7 +177,7 @@ internal sealed class EntityMembershipState
             _reentry.Remove(player);
             return;
         }
-        if (player.AmbientProfile is not null && !player.MembershipKnown)
+        if (!player.MembershipKnown)
             return;
         (int x, int y, int z) = Chunk(entity.Position);
         if (player.Added && player.X == x && player.Y == y && player.Z == z)
@@ -187,7 +205,7 @@ internal sealed class EntityMembershipState
             }
             Membership player = _reentry[selected];
             _reentry.RemoveAt(selected);
-            if (player.AmbientProfile is not null && !player.MembershipKnown)
+            if (!player.MembershipKnown)
                 continue;
             (int x, _, int z) = Chunk(player.Entity.Position);
             if (player.SetsAddedForEmptyChunk || player.IsPlayer || _columns.Contains(new ChunkPos(x, z)))

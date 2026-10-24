@@ -69,6 +69,10 @@ internal sealed class VanillaComponentMiningPermission
             }
             if (!property.Exact)
             {
+                // Native ranges include equality. Canonical current-value endpoints need no property-kind or ordering assumption.
+                if ((property.MinValue is null || property.MinValue == actual)
+                    && (property.MaxValue is null || property.MaxValue == actual))
+                    continue;
                 unknown = true;
                 continue;
             }

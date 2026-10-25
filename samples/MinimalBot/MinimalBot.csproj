@@ -8,6 +8,7 @@
     -->
     <IsAotCompatible>true</IsAotCompatible>
     <PublishAot>true</PublishAot>
+    <OptimizationPreference>Size</OptimizationPreference>
   </PropertyGroup>
   <ItemGroup>
     <!-- ServerEndpoint -->

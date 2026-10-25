@@ -8,6 +8,7 @@ public sealed class PhysicsCollisionQuery
 {
     private readonly IPhysicsWorldView _world;
     private readonly ColliderBuffer _scratch = new();
+    private readonly ColliderBuffer _stepScratch = new();
 
     /// <summary>Creates a query over a live or captured world view.</summary>
     public PhysicsCollisionQuery(IPhysicsWorldView world)
@@ -21,6 +22,17 @@ public sealed class PhysicsCollisionQuery
     {
         var body = new BodyCollisionContext(descending, fallDistance, powderSnowWalkable, sourcePosition);
         return CollisionResolver.NoCollision(_world, box, sourcePosition.Y, body, _scratch);
+    }
+
+    /// <summary>Resolves externally imposed movement when native step-up is not activated, using the existing block, body-context and eligible-entity collision owner. The caller owns mover-kind side effects and authority.</summary>
+    internal bool TryCollideWithoutStep(Vec3d sourcePosition, in Aabb box, Vec3d requested, bool onGround, float maxUpStep, bool descending, double fallDistance, bool powderSnowWalkable, out Vec3d resolved)
+    {
+        var body = new BodyCollisionContext(descending, fallDistance, powderSnowWalkable, sourcePosition);
+        resolved = CollisionResolver.Collide(_world, box, requested, onGround, in body, 0, _scratch, _stepScratch);
+        // Native Entity.collide uses exact axis comparisons for step activation. The bounded external mover cannot reuse the engine's differing step-candidate rules as native proof.
+        bool stepRequired = maxUpStep > 0 && (onGround || requested.Y != resolved.Y && requested.Y < 0)
+            && (requested.X != resolved.X || requested.Z != resolved.Z);
+        return !stepRequired;
     }
 
     /// <summary>Tests one block's state-only collision shape against the proposed box. The caller owns block iteration and any entity, border or entity-context checks.</summary>

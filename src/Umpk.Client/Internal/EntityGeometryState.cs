@@ -8,7 +8,7 @@ using Umpk.Geometry;
 namespace Umpk.Client.Internal;
 
 /// <summary>Owns native entity boxes on the session loop. Metadata refresh and position reapplication are separate operations.</summary>
-internal sealed class EntityGeometryState
+internal sealed partial class EntityGeometryState
 {
     private readonly ConditionalWeakTable<Entity, Geometry> _entities = new();
     private readonly ConditionalWeakTable<Entity, TrackedShulkerGeometry> _shulkers = new();
@@ -385,12 +385,15 @@ internal sealed class EntityGeometryState
     }
 
     public void TickLivingDimensions(EntityStore? entities, World? world)
+        => TickLivingDimensions(entities, world, includeShulkers: true);
+
+    public void TickLivingDimensions(EntityStore? entities, World? world, bool includeShulkers)
     {
         if ((!_hasLivingTickRules && !_hasShulkers) || entities is null || world is null)
             return;
         foreach (Entity entity in entities.All)
         {
-            if (_shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker) && HasLoadedArea(world, entity.Position, 0))
+            if (includeShulkers && _shulkers.TryGetValue(entity, out TrackedShulkerGeometry? shulker) && HasLoadedArea(world, entity.Position, 0))
                 shulker.Tick(entity);
             if (_entities.TryGetValue(entity, out Geometry? geometry)
                 && geometry.Rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick

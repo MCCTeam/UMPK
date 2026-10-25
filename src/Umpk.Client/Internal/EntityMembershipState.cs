@@ -6,7 +6,7 @@ using Umpk.Geometry;
 namespace Umpk.Client.Internal;
 
 /// <summary>Session-owned packet chunk availability and measured legacy actor list and chunk membership.</summary>
-internal sealed class EntityMembershipState
+internal sealed partial class EntityMembershipState
 {
     private readonly HashSet<ChunkPos> _columns = [];
     private readonly ConditionalWeakTable<Entity, object> _cows = new();
@@ -19,6 +19,7 @@ internal sealed class EntityMembershipState
 
     public void Register(Entity entity, int protocol, bool isPlayer, int? healthIndex = null)
     {
+        RegisterShulkerTickOrder(entity, protocol, isPlayer);
         if (CowMotionProfile.Supports(entity, protocol))
         {
             _cows.Add(entity, CowMarker);
@@ -52,6 +53,7 @@ internal sealed class EntityMembershipState
 
     public void UnloadColumn(ChunkPos column)
     {
+        InvalidateShulkerTickOrder(column);
         _columns.Remove(column);
         foreach (Membership player in _players.Values)
             if (player.Column == column && player.MembershipKnown)
@@ -168,6 +170,7 @@ internal sealed class EntityMembershipState
 
     public void AfterEntityPhase(Entity entity)
     {
+        ObserveShulkerPosition(entity);
         if (!_players.TryGetValue(entity, out Membership? player) || !player.InEntityList)
             return;
         if (player.Removed)
@@ -249,6 +252,7 @@ internal sealed class EntityMembershipState
 
     public void Remove(Entity entity)
     {
+        RemoveShulkerTickOrder(entity);
         _cows.Remove(entity);
         if (_players.Remove(entity, out Membership? player))
             _reentry.Remove(player);
@@ -259,6 +263,7 @@ internal sealed class EntityMembershipState
         _players.Clear();
         _cows.Clear();
         _columns.Clear();
+        ClearShulkerTickOrder();
         _reentry.Clear();
         _reentryCapacity = 16;
     }

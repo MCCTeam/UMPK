@@ -79,6 +79,7 @@ internal sealed class EntityApplier : IApplier
                     {
                         posEntity.Position = target;
                         context.State.EntityGeometry.ObservePosition(posEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(posEntity);
                     }
                     posEntity.OnGround = move.OnGround;
                     if (!deferred)
@@ -104,6 +105,7 @@ internal sealed class EntityApplier : IApplier
                         {
                             rotEntity.Position = current;
                             context.State.EntityGeometry.ObservePosition(rotEntity);
+                            context.State.EntityMembership.ObserveShulkerPosition(rotEntity);
                         }
                         rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
                         rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
@@ -127,6 +129,7 @@ internal sealed class EntityApplier : IApplier
                         prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
                         prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
                         context.State.EntityGeometry.ObservePosition(prEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(prEntity);
                     }
                     prEntity.OnGround = posRot.OnGround;
                     if (!deferred)
@@ -172,6 +175,7 @@ internal sealed class EntityApplier : IApplier
                     if (!deferred || tpEntity.Position != previous)
                     {
                         context.State.EntityGeometry.ObservePosition(tpEntity, independent: teleport.ModernValues is null || (teleport.Relatives & 7) == 0);
+                        context.State.EntityMembership.ObserveShulkerPosition(tpEntity);
                         await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
                     }
                 }
@@ -194,6 +198,7 @@ internal sealed class EntityApplier : IApplier
                     if (!deferred || syncEntity.Position != previous)
                     {
                         context.State.EntityGeometry.ObservePosition(syncEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(syncEntity);
                         await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
                     }
                 }

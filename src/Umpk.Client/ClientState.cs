@@ -134,7 +134,7 @@ public sealed class ClientState
         List<int>? changedVehicles = null;
         EntityMembership.BeginEntityPhase();
         bool legacyMounts = Internal.EntityMotionState.UsesLegacyMountTraversal(protocol);
-        foreach (Entity entity in _entities.All)
+        foreach (Entity entity in EntityMembership.ShulkerTickActors(_entities.All))
         {
             if (legacyMounts && entity.Vehicle is { } vehicle)
             {
@@ -150,9 +150,12 @@ public sealed class ClientState
                 if (EntityMembership.CanTick(current, WorldTicks.RunsNormally))
                 {
                     EntityMembership.BeginPlayerTick(current);
+                    EntityMotion.BeginShulkerPushPlayerTick(current, TabList);
                     EntityMotion.TickEntity(current, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate, Self, localBody);
                     EntityGeometry.TickLegacyPlayer(current, _world, shapes, protocol, EntityMembership);
                     EntityGeometry.TickLivingScale(current, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(current.Position)));
+                    if (WorldTicks.RunsNormally)
+                        EntityGeometry.TickShulkerPush(current, this, shapes, protocol, moved, localBody);
                     if (legacyMounts)
                     {
                         if (current.Vehicle is { } parent && (!EntityMembership.IsHealthyLegacyRider(current) || !EntityMembership.IsHealthyLegacyRider(parent)))

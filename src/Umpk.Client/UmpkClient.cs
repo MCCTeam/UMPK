@@ -122,7 +122,7 @@ public sealed class UmpkClient : IAsyncDisposable
             Scheduler = _scheduler,
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
-            ReadPhysicsState = () => _physics?.EngineState,
+            ReadPhysicsState = () => State.EntityMotion.HasUnknownShulkerSelfDisplacement ? null : _physics?.EngineState,
             ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false, nativeCurrent: true),
             Events = _eventBus,
         };
@@ -930,7 +930,7 @@ public sealed class UmpkClient : IAsyncDisposable
                 _settings.BlockShapes ?? Umpk.Data.Java.JavaGameData.BlockShapes(_settings.Version.Version.Protocol), _interpolatedEntityMoves, _physics?.EngineState?.BoundingBox);
             // Classic Ageable applies its age-size phase after inherited living movement. Metadata and position callbacks retain the cached dimensions until this eligible entity tick.
             if (State.WorldTicks.RunsNormally)
-                State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull);
+                State.EntityGeometry.TickLivingDimensions(State.EntitiesOrNull, State.WorldOrNull, includeShulkers: false);
             State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
             if (changedVehicles is not null)
                 foreach (int vehicleId in changedVehicles)

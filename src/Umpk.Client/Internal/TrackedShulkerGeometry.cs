@@ -102,5 +102,12 @@ internal sealed class TrackedShulkerGeometry
             entity.Metadata.Set(PeekIndex, MetadataValue.Byte(_geometry.RawPeek));
     }
 
+    public bool TryOpeningPush(Entity entity, out Aabb region, out Vec3d movement)
+    {
+        region = default;
+        movement = default;
+        return TryGet(entity, out _) && _geometry.TryOpeningPush(out region, out movement);
+    }
+
     private static float Scale(Entity entity) => Math.Min((float)entity.Attributes.GetValueOrDefault(ScaleAttribute, 1.0), 3.0F);
 }

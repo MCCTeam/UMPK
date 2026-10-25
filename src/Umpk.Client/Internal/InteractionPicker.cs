@@ -54,7 +54,7 @@ internal static class InteractionPicker
     public static InteractionPickResult Cast(ClientSessionServices services, double requestedBlockRange)
     {
         ClientState state = services.State;
-        if (!state.HasWorld || !state.Features.Entities || state.EntityMotion.IsLocalMountUnresolved || state.LegacySelfGeometry is { IsKnown: false })
+        if (!state.HasWorld || !state.Features.Entities || state.EntityMotion.IsLocalMountUnresolved || state.EntityMotion.HasUnknownShulkerSelfDisplacement || state.LegacySelfGeometry is { IsKnown: false })
             return InteractionPickResult.Unknown;
         int protocol = services.Version.Version.Protocol;
         InteractionPickProfile profile = InteractionPickProfile.ForProtocol(protocol);

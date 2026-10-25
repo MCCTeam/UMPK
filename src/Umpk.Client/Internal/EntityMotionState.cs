@@ -405,6 +405,7 @@ internal sealed partial class EntityMotionState
     public void Remove(Entity entity)
     {
         _remotePlayers.Remove(entity);
+        _shulkerPushPlayers.Remove(entity);
         _cows.Remove(entity);
         _immovable.Remove(entity);
         _fallingBlocks.Remove(entity);
@@ -414,6 +415,7 @@ internal sealed partial class EntityMotionState
     public void Clear()
     {
         _remotePlayers.Clear();
+        _shulkerPushPlayers.Clear();
         _cows.Clear();
         _immovable.Clear();
         _fallingBlocks.Clear();
@@ -425,6 +427,7 @@ internal sealed partial class EntityMotionState
     {
         _localMountUnresolved = false;
         _localMountVehicle = null;
+        HasUnknownShulkerSelfDisplacement = false;
         _localPushPositionKnown = false;
         _localPushPoseUnsupported = false;
         _localPushBedUnsupported = false;

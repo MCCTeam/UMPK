@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -143,7 +144,7 @@ public sealed class WorldTickPipelineTests
         AssertBox(scenario.GetProperty("initial"));
         await session.TickAsync();
         AssertBox(scenario.GetProperty("initial"));
-        await session.Client.InvokeAsync(client => client.State.World.LoadColumn(new ChunkPos(0, 0)));
+        await session.SetChunkAvailabilityAsync(loaded: true);
         await session.SendAsync(new ClientboundTickingStatePacket(20, true));
         await session.TickAsync();
         AssertBox(scenario.GetProperty("initial"));
@@ -154,11 +155,11 @@ public sealed class WorldTickPipelineTests
         AssertBox(phases[1]);
         await session.TickAsync();
         AssertBox(phases[1]);
-        await session.Client.InvokeAsync(client => client.State.World.UnloadColumn(new ChunkPos(0, 0)));
+        await session.SetChunkAvailabilityAsync(loaded: false);
         await session.SendAsync(new ClientboundTickingStatePacket(20, false));
         await session.TickAsync();
         AssertBox(phases[1]);
-        await session.Client.InvokeAsync(client => client.State.World.LoadColumn(new ChunkPos(0, 0)));
+        await session.SetChunkAvailabilityAsync(loaded: true);
         await session.TickAsync();
         AssertBox(phases[2]);
         await session.SendAsync(new ClientboundRemoveEntitiesPacket([42]));
@@ -238,6 +239,51 @@ public sealed class WorldTickPipelineTests
         internal Task JoinAsync() => SendAsync(new ClientboundLoginPacket(1, false, ["minecraft:overworld"], 20, 8, 8, false, true, false, Spawn("minecraft:overworld"), false, false, null));
 
         internal Task InitializeBorderAsync(long duration) => SendAsync(new ClientboundInitializeBorderPacket(0, 0, 100, 20, duration, 1000, 5, 15));
+
+        internal async Task SetChunkAvailabilityAsync(bool loaded)
+        {
+            int protocol = _version.Version.Protocol;
+            var context = new PacketCodecContext(Client.State.Registries!, IConnectionCodecState.Empty);
+            BoundPacketCodec codec;
+            IPacket packet;
+            byte[] bytes;
+            if (loaded)
+            {
+                var empty = new ChunkPalettedContainerWire(0, 0, null, []);
+                var sections = Enumerable.Range(0, (Client.State.World.Dimension.MaxY - Client.State.World.Dimension.MinY) / 16)
+                    .Select(_ => new ChunkSectionWire(0, protocol >= 775 ? (short)0 : null, empty, empty)).ToArray();
+                bytes = ChunkCodecs.EncodeStructural(new ModernChunkWireBody(0, 0, protocol >= 775, [], sections, [], new byte[7]));
+                codec = BoundDescriptorCodec.Clientbound(protocol, "level_chunk_with_light");
+                var chunk = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(bytes, context));
+                Assert.True(chunk.FullChunk);
+                Assert.Equal(0, chunk.ChunkX);
+                Assert.Equal(0, chunk.ChunkZ);
+                Assert.Equal(0, chunk.Column.GetBlockStateId(0, 64, 0));
+                Assert.Equal(bytes, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(chunk)));
+                packet = chunk;
+            }
+            else
+            {
+                codec = BoundDescriptorCodec.Clientbound(protocol, "forget_level_chunk");
+                bytes = Encode(codec, new ClientboundForgetLevelChunkPacket(new ChunkPos(0, 0)), context);
+                var forget = Assert.IsType<ClientboundForgetLevelChunkPacket>(codec.Decode(bytes, context));
+                Assert.Equal(new ChunkPos(0, 0), forget.Chunk);
+                packet = forget;
+            }
+            Assert.Equal(bytes, Encode(codec, packet, context));
+            await SendAsync(packet);
+            var cell = new BlockPos(0, 64, 0);
+            Assert.Equal(loaded, Client.State.EntityMembership.HasColumn(cell));
+            Assert.Equal(loaded, Client.State.World.GetColumn(cell) is not null);
+        }
+
+        private static byte[] Encode(BoundPacketCodec codec, object packet, PacketCodecContext context)
+        {
+            var output = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(output);
+            codec.Encode(ref writer, packet, context);
+            return output.WrittenSpan.ToArray();
+        }
 
         internal Task TickAsync() => _ticks.FireAsync(_budget.Token);
 

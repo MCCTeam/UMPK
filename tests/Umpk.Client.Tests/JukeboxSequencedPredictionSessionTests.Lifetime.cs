@@ -526,6 +526,20 @@ public sealed partial class JukeboxSequencedPredictionSessionTests
         {
             for (int tick = 0; tick < 90 && !walk.IsCompleted; tick++)
             {
+                while (!walk.IsCompleted)
+                {
+                    bool ready = await session.Client.InvokeAsync(client =>
+                    {
+                        const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+                        object navigator = typeof(UmpkClient).GetField("_navigator", flags)!.GetValue(client)!;
+                        return navigator.GetType().GetField("_pendingTick", flags)!.GetValue(navigator) is not null;
+                    }, session.Token);
+                    if (ready)
+                        break;
+                    await Task.Yield();
+                }
+                if (walk.IsCompleted)
+                    break;
                 await session.Tick();
                 Assert.Empty(await session.Barrier());
             }

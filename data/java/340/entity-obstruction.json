@@ -80,7 +80,7 @@
     "minecraft:wither_skull": 0,
     "minecraft:wolf": 0,
     "minecraft:xp_bottle": 0,
-    "minecraft:xp_orb": 0,
+    "minecraft:xp_orb": 1,
     "minecraft:zombie": 0,
     "minecraft:zombie_horse": 0,
     "minecraft:zombie_pigman": 0,
@@ -90,7 +90,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "a3880fbbcc0fab82f3c2a8856bcdf757ff6bb9bd5afc6db89d53288815d830ad",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
     "version": "1.12.2",
     "protocol": 340,
     "client_sha256": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f",
@@ -123,6 +123,19 @@
       ".complete.json": "ffca14faae79819974bf8d7af8fcb2f7a9f689ef79c9fafa2d5e79b4d909d28b",
       "brz.java": "b89b0f3047d8fe09d9e7d86a3d6817c0cd0514ba7323e30f5e806cbbe80cd8f7"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 7 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:xp_orb",
+      "source_sha256": {
+        "vm.java": "75bc2d789ae20aaf70dc3039070f300583ea8a2966c59d9083b24dd250059c7c",
+        "vg.java": "7921cab59a65f621212098e6a93cdd903420d585ffdd7845d9ee3ac326311cf3",
+        "amu.java": "c9ce01dfdda3da0e234665aec796e7c475e973e2409547b094a65f1a90c4e204",
+        "vi.java": "d008379aac0406510c90a5e4196b062924d92a60bda6c495e4954d5605cf5f8d"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
   }
 }

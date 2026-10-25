@@ -29,7 +29,7 @@
     "minecraft:evoker": 0,
     "minecraft:evoker_fangs": 0,
     "minecraft:experience_bottle": 0,
-    "minecraft:experience_orb": 0,
+    "minecraft:experience_orb": 1,
     "minecraft:eye_of_ender": 0,
     "minecraft:falling_block": 0,
     "minecraft:fireball": 0,
@@ -108,7 +108,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "a3880fbbcc0fab82f3c2a8856bcdf757ff6bb9bd5afc6db89d53288815d830ad",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
     "version": "1.14",
     "protocol": 477,
     "client_sha256": "93907cbf0655aa5f10d049efa4d745f4250eecc5d0d5d1268046eec3144f323a",
@@ -145,6 +145,21 @@
       ".complete.json": "86dee8567a43e8fd53b9dfdeb9686ca737cfbb5594ad72c916e106d29e9026a5",
       "dhi.java": "2777d7f5c32743c84a77916d2aec0678d11e98f0c914145c0aa73818ebba009c"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 7 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:experience_orb",
+      "source_sha256": {
+        "ail.java": "80104e1c226331a95f5d58e488ab7216bbaba341ba967d9b300ba6111040ff54",
+        "aif.java": "b3fe2ee0039cbe517d781a14c5862f77bbeb274226b31d681904399b3122a070",
+        "bgz.java": "e183ebdc097f65fc59939ee64a40508de4eb8f86fd98b3d33705e35268bdc3c8",
+        "aij.java": "f5cf106d7608842f8526873ff8c24e353d2c3601ddaf3c6d2b5a999abdf88c17",
+        "bhh.java": "9e322ec934d847daab6cd2d899d2d66a9fad03d2d6ce7b90da24762e97ed842c",
+        "bhi.java": "f27be2a078dd7214c1fb00a75f45e2224000fe1cd1cb706f2c9bb76b9619f596"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
   }
 }

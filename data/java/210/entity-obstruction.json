@@ -65,7 +65,7 @@
     "minecraft:wither_skull": 0,
     "minecraft:wolf": 0,
     "minecraft:xp_bottle": 0,
-    "minecraft:xp_orb": 0,
+    "minecraft:xp_orb": 1,
     "minecraft:zombie": 0,
     "minecraft:zombie_pigman": 0
   },
@@ -73,7 +73,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "a3880fbbcc0fab82f3c2a8856bcdf757ff6bb9bd5afc6db89d53288815d830ad",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
     "version": "1.10.2",
     "protocol": 210,
     "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
@@ -98,7 +98,7 @@
       "yk.java": "27871855a6c6ea6fc0eb11756800381b6dd67d1ac532b29d359de43149d40179",
       "yl.java": "c267682f309a79e24bf04b309a7aed94941fb512cc35c6be17ee1dda38e1884a"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.i false; all original class files were audited, and its 8 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed.",
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
     "aliases": [
       {
         "version": "1.10",
@@ -121,6 +121,19 @@
         "measurement_sha256": "cf155b0d238f83eafbe5492b52dd6d080c7a29889fa3b3b2e3644eb9e3168d8b",
         "audit_sha256": "5432eef0fbe321c02a41182ceb25f5982776ec8281d196f19694488ff16b2950"
       }
-    ]
+    ],
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:xp_orb",
+      "source_sha256": {
+        "sc.java": "9da81c8a2b2af0196ff19224fa1443ae5071c25c3d124756612db18e81d1c4fb",
+        "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+        "aid.java": "8c48e680d70d2a94d9d8ba1e3a0463ef6bdc15daa670c3498ab8f8106e932363",
+        "ry.java": "5da66a650baf9b7048c340e5cd029b5554369a55d38e34957a1109fac47ed7db"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
   }
 }

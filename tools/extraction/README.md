@@ -310,7 +310,7 @@ Omit `--check` to regenerate the datasets and deterministic compressed fixture, 
 
 The extractor verifies original class preservation, source hashes and separate measurements for protocol aliases. Unequal aliases and duplicate release inputs fail. The native replay fixture deduplicates equal transition cases while retaining each release's artifact and measurement hashes; its five cases cover 2,612 transition replays across twenty-one unmapped releases.
 
-`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains their distinct obfuscated class bindings. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The remaining legacy entity keys retain unknown rules. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.
+`extract_legacy_item_obstruction.py` adds measured legacy item entities' nonblocking rules from 1.8 through 1.14.3. It verifies both native constructors, original client-class preservation and each version's audit of every write to the building flag. Protocol 47 requires separate measurements for all ten releases and retains the existing 1.8.9 client profile. Its native field is `k`; protocols 393–404 use `j`, and protocols 477–490 return to `i`. The optional `--source-proof` argument promotes only the reviewed XP identity whose root flag stays false and whose native placement predicate requires that flag. The compact family bundle binds all thirty named releases in the other seventeen legacy datasets; protocol 315 retains its original single-release proof. Protocols 477–490 bind the inherited entity-access predicate. Neither proof needs XP bounds or initial velocity, and neither claims an executed XP constructor, world query or entity tick. All other unknown entities remain unknown. Canonical identities join the native measurements to the registry while output keys preserve the registry's original spelling.
 
 ```bash
 classic_items="$MINECRAFT_OFFICIAL_ROOT/runs/classic-item-obstruction-all-20261017-v1"
@@ -318,7 +318,7 @@ classic_aliases=()
 for release in 1.8 1.8.1 1.8.2 1.8.3 1.8.4 1.8.5 1.8.6 1.8.7 1.8.8; do
   classic_aliases+=(--alias "$classic_items/$release")
 done
-python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$classic_items/1.8.9" "${classic_aliases[@]}" --check
+python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$classic_items/1.8.9" "${classic_aliases[@]}" --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json --check
 ```
 
 ```bash
@@ -328,23 +328,27 @@ python3 tools/extraction/extract_legacy_item_obstruction.py \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-20261017-v1" \
   --alias "$early_measurements-v4/1.10/item" \
   --alias "$early_measurements-v4/1.10.1/item" \
+  --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json \
   --check
 python3 tools/extraction/extract_legacy_item_obstruction.py \
   --data data/java \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --measurements "$MINECRAFT_OFFICIAL_ROOT/runs/legacy-item-obstruction-1.11-20261017-v1" \
+  --source-proof tools/extraction/tests/fixtures/legacy315-xp-obstruction-source-proof.json \
   --check
 python3 tools/extraction/extract_legacy_item_obstruction.py \
   --data data/java \
   --official "$MINECRAFT_OFFICIAL_ROOT" \
   --measurements "$legacy_measurements/1.11.2/item" \
   --alias "$legacy_measurements/1.11.1/item" \
+  --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json \
   --check
 for release in 1.12 1.12.1 1.12.2 1.13 1.13.1 1.13.2; do
   python3 tools/extraction/extract_legacy_item_obstruction.py \
     --data data/java \
     --official "$MINECRAFT_OFFICIAL_ROOT" \
     --measurements "$legacy_measurements/$release/item" \
+    --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json \
     --check
 done
 ```
@@ -353,19 +357,18 @@ For the earlier nonblocking item rules, check each 1.9 release and both protocol
 
 ```bash
 for release in 1.9 1.9.1 1.9.2; do
-  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v3/$release/item" --check
+  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v3/$release/item" --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json --check
 done
-python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v4/1.9.4/item" --alias "$early_measurements-v4/1.9.3/item" --check
+python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$early_measurements-v4/1.9.4/item" --alias "$early_measurements-v4/1.9.3/item" --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json --check
 ```
 
 The `--legacy` inputs also accept the original pose-aware clients from 1.14 through 1.14.3. Their receipts verify native enum names, false baby defaults, pose metadata at index 6, building flags and a source-backed age-only scale method. The runtime name `SNEAKING` maps to canonical `CROUCHING`; obfuscated enum field names do not establish pose identities.
 
 ```bash
 for release in 1.14 1.14.1 1.14.2 1.14.3; do
-  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$pose_measurements/$release/item" --check
+  python3 tools/extraction/extract_legacy_item_obstruction.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --measurements "$pose_measurements/$release/item" --source-proof tools/extraction/tests/fixtures/legacy-xp-obstruction-source-proofs.json --check
 done
 ```
-
 ## Early voxel grids and legacy resize queries
 
 `run_legacy_collision_grids.py` measures every original block state for the seven releases from 1.13 through 1.14.3. It uses the audited client symbol bindings, a fresh signature-free copy with byte-identical original classes, Java 11 and a fresh external output directory. Native planes, occupied cells, boxes and canonical full-block identity remain unchanged. The 1.13 empty shape has three empty coordinate lists. Default shapes do not establish neighbor, block-entity or actor-context variants.

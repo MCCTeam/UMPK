@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "protocol": 315,
+  "version": "1.11",
+  "entity": "minecraft:xp_orb",
+  "class": "ss",
+  "field_owner": "sm",
+  "field_name": "i",
+  "direct_superclass": "sm",
+  "initial_building_flag": false,
+  "permanently_nonblocking": true,
+  "source_proof_sha256": "ec2f55a9bc6c74159d261548903246a5ba7689920fca81e9372090fb91544b86",
+  "client_sha256": "f0d11987ea743f55a2c03bf77216e6dc9baea7201cc7bf498ceb18043e984634",
+  "writer_audit_sha256": "5d00b46d4960e8f694ba7eb94644d29ea9b03e9048f5aa159535a81ed842a36e",
+  "classes_preserved": 3084,
+  "source_sha256": {
+    "ajq.java": "8dcd63fa410598c8c2e4ddc2f585e00a85f63ef9bbbc896dc4a9a23a30a42d84",
+    "bnm.java": "af2529a71d11f6369258854a252c94a2d5ef556c479ef1955eb317d87dc95872",
+    "sm.java": "e9f69c657fb07e4b81013490bc87fe9c6b47142a66629b84a9b1566980ae7163",
+    "so.java": "1b9546486bb9bed590c4d3588ba27ac90a2001ba46b7fea16c537b135099db9a",
+    "ss.java": "ea8ccb95aad42634940e6eb6614cc98844d2288cc77809ab63d30796af2a88ac"
+  },
+  "constructor_body_sha256": {
+    "public ss(ajq var1, double var2, double var4, double var6, int var8)": "9d91bcf342890574458a9aad7aa8603b7e85582aad579ad8e003198e0b824330",
+    "public ss(ajq var1)": "17a27fea631db63e2fc368cc3a5eff613fab594feb5b4ea06af17509b49e4ea9",
+    "public sm(ajq var1)": "452a344d4188e6d54d3eea63852ccce02f6ce1f7de0c75dcd3e2166794c9ebfb"
+  },
+  "world_query_body_sha256": "a382748ae048ad86d10a8133e2e82267288c4669a7588ee4c7e87dae20129ba2",
+  "root_flag_writers": [
+    {
+      "class": "abw",
+      "method": "<init>",
+      "descriptor": "(Lajq;)V",
+      "offset": 14,
+      "fieldref": [
+        "abw",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "abx",
+      "method": "<init>",
+      "descriptor": "(Lajq;)V",
+      "offset": 7,
+      "fieldref": [
+        "abx",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "sv",
+      "method": "<init>",
+      "descriptor": "(Lajq;)V",
+      "offset": 84,
+      "fieldref": [
+        "sv",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "xz",
+      "method": "<init>",
+      "descriptor": "(Lajq;)V",
+      "offset": 7,
+      "fieldref": [
+        "xz",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "yw",
+      "method": "A_",
+      "descriptor": "()V",
+      "offset": 225,
+      "fieldref": [
+        "yw",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "zh",
+      "method": "<init>",
+      "descriptor": "(Lajq;DDDLatj;)V",
+      "offset": 29,
+      "fieldref": [
+        "zh",
+        "i",
+        "Z"
+      ]
+    },
+    {
+      "class": "zj",
+      "method": "<init>",
+      "descriptor": "(Lajq;)V",
+      "offset": 13,
+      "fieldref": [
+        "zj",
+        "i",
+        "Z"
+      ]
+    }
+  ],
+  "native_xp_constructor_executed": false,
+  "native_world_query_executed": false
+}

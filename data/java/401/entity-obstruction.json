@@ -28,7 +28,7 @@
     "minecraft:evoker": 0,
     "minecraft:evoker_fangs": 0,
     "minecraft:experience_bottle": 0,
-    "minecraft:experience_orb": 0,
+    "minecraft:experience_orb": 1,
     "minecraft:eye_of_ender": 0,
     "minecraft:falling_block": 0,
     "minecraft:fireball": 0,
@@ -101,7 +101,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "a3880fbbcc0fab82f3c2a8856bcdf757ff6bb9bd5afc6db89d53288815d830ad",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
     "version": "1.13.1",
     "protocol": 401,
     "client_sha256": "f0b4cf6d1a87ae150f87a535651138ca7b82bdad8853f76e7ddbff1dd610ac87",
@@ -134,6 +134,19 @@
       ".complete.json": "5baa4dd40bda6d78c52cbfc9d6ab72d62a7d1b75e92b3353156a29506f33b5e6",
       "crc.java": "845e6be727150a5ab51a4eeb15b04ee5f4df55554fc0acb6072fcce2b6d60ad1"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.j false; all original class files were audited, and its 7 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed."
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:experience_orb",
+      "source_sha256": {
+        "aex.java": "46ed0fbf131a9ebcaa7a899616843e67b2732c63136d7d43ec5d27cbec64923c",
+        "aer.java": "7f7c08543da130cd39e3e40551eb4b999c56b13729c911f5609d52f875e8bd1c",
+        "axx.java": "b43c282442056277e67036e7a66124381970689ee1675d5e5b422f38797e972e",
+        "aev.java": "00a212484cd5546cf09a45cac3d0c9427678cf39f15ccd97d6cff778bae5535c"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
   }
 }

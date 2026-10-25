@@ -6,6 +6,7 @@ namespace Umpk.Client.Internal;
 /// <remarks>Pre-1.14 versions carry TWO disjoint spawn id spaces: <c>add_mob</c> (SpawnMob) numbers living entities and <c>add_entity</c> (SpawnObject) numbers objects, and the same number names different things in each (object 1 is a boat, mob 1 is a dropped item). Resolving one against the other's table therefore does not miss, it MISLABELS, which is the failure mode that made this area look healthy in field observations: a 1.8 boat spawn reported as <c>minecraft:item</c>. Callers pass <see cref="EntitySpawnSpace"/> so each spawn packet resolves against its own space; on 1.14+ the spaces merged and the parameter is inert.</remarks>
 internal sealed class EntityTypeResolver
 {
+    private static readonly Identifier LegacyExperienceOrb = Identifier.Minecraft("xp_orb");
     private readonly Registry<EntityTypeDefinition> _fallback;
 
     public EntityTypeResolver()
@@ -32,11 +33,18 @@ internal sealed class EntityTypeResolver
             : _fallback[0];
     }
 
-    /// <summary>Resolves a spawn whose packet carries no type id because the packet identity is the type: <c>add_player</c>, <c>add_experience_orb</c>, and pre-1.9 <c>add_painting</c>. Resolving by key is version-independent; an era whose registry lacks the key degrades to the placeholder.</summary>
+    /// <summary>Resolves a spawn whose packet carries no type id because the packet identity is the type: <c>add_player</c>, <c>add_experience_orb</c>, and pre-1.9 <c>add_painting</c>. The dedicated experience-orb packet also resolves the original <c>xp_orb</c> registry key when <c>experience_orb</c> is absent. Other missing keys degrade to the placeholder.</summary>
     public RegistryEntry<EntityTypeDefinition> ResolveByKey(RegistryAccess? registries, Identifier key)
     {
-        if (registries is not null && registries.EntityTypes.TryGet(key, out RegistryEntry<EntityTypeDefinition> entry))
-            return entry;
+        if (registries is not null)
+        {
+            if (registries.EntityTypes.TryGet(key, out RegistryEntry<EntityTypeDefinition> entry))
+                return entry;
+
+            // The 1.9-1.12.2 canonical registries use xp_orb; the dedicated packet has no numeric type to resolve instead.
+            if (key.IsMinecraft && key.Path == "experience_orb" && registries.EntityTypes.TryGet(LegacyExperienceOrb, out entry))
+                return entry;
+        }
 
         return _fallback[0];
     }

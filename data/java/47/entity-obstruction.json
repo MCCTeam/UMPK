@@ -20,7 +20,7 @@
     "enderman": 0,
     "endermite": 0,
     "experience_bottle": 0,
-    "experience_orb": 0,
+    "experience_orb": 1,
     "eye_of_ender": 0,
     "falling_block": 0,
     "fireball": 0,
@@ -67,7 +67,7 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_legacy_item_obstruction.py",
-    "tool_sha256": "c22875e66eb5215ee0852c81d138a50f54791e5354c308af2bf80751de2b30c2",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
     "version": "1.8.9",
     "protocol": 47,
     "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
@@ -90,7 +90,7 @@
       "va.java": "333519e7896f7a5de05985a2d88eecc7a01c403ac064a1bc51c3da2812babccb",
       "vj.java": "fb2f9de158a5ed416ed51bab891c3cc104aa5067e764faeba0530b1d75d84db5"
     },
-    "note": "Only the original item entity is proven permanently nonblocking. Both constructors leave Entity.k false; all original class files were audited, and its 6 writes belong to unrelated entity classes. Other entries remain unknown (0). No entity or world tick was executed.",
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
     "aliases": [
       {
         "version": "1.8",
@@ -162,6 +162,19 @@
         "measurement_sha256": "5904935ead5c10fe2451676ee942ea6dd7e823dd4c06fe0255db90d046ced38c",
         "audit_sha256": "1df5f7f0ad97dac308d7cef72972d93ec468b1934252479403a9ba0852035371"
       }
-    ]
+    ],
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:experience_orb",
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
   }
 }

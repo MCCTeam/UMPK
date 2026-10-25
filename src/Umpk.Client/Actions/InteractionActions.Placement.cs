@@ -132,6 +132,9 @@ public sealed partial class InteractionActions
         }
         if (item.IsEmpty || _services.Self.IsItemOnCooldown(item, _services.Version.Version.Protocol))
             return BlockUsePrediction.Pass;
+        VanillaEndCrystalUse crystal = VanillaEndCrystalUse.ForProtocol(_services.Version.Version.Protocol);
+        if (crystal.Supports(item.Item.Id))
+            return PredictEndCrystalUse(crystal, item, clicked, world, position, data);
         if (_services.Self.GameMode == GameMode.Adventure)
             return BlockUsePrediction.Unknown;
         VanillaHoeUse hoe = VanillaHoeUse.ForProtocol(_services.Version.Version.Protocol);

@@ -272,6 +272,10 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundSetEntityLinkPacket link:
+                if (store.TryGet(link.SourceId, out Entity? envelopeSource) && envelopeSource is not null)
+                    context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopeSource);
+                if (store.TryGet(link.DestId, out Entity? envelopeDestination) && envelopeDestination is not null)
+                    context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopeDestination);
                 Entity? previousVehicle = store.Get(link.SourceId)?.Vehicle;
                 if (link.LegacyLeash == false && store.TryGet(link.SourceId, out Entity? linkedActor) && linkedActor is not null && store.TryGet(link.DestId, out _))
                     context.State.EntityGeometry.InvalidateFallingBlock(linkedActor);
@@ -482,6 +486,7 @@ internal sealed class EntityApplier : IApplier
             entity.PlayerProfile = tabEntry.Profile;
 
         // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
+        context.State.EntityGeometry.RegisterPlacementEnvelope(entity, context.Version.Version.Protocol, store);
         context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
         context.State.EntityMotion.RegisterFallingBlock(entity, context.Version.Version.Protocol, objectData, context.State.EntityGeometry);
         int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
@@ -506,6 +511,7 @@ internal sealed class EntityApplier : IApplier
             await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
         }
         store.Add(entity);
+        context.State.EntityGeometry.RefreshPlacementEnvelopes(store);
         await context.PublishAsync(new EntitySpawned(entityId, entity)).ConfigureAwait(false);
     }
 
@@ -680,6 +686,15 @@ internal sealed class EntityApplier : IApplier
     {
         bool hasVehicle = store.TryGet(packet.VehicleId, out Entity? vehicle);
         context.State.EntityMotion.ObserveLocalPassengers(context.State.Self.EntityId, packet.VehicleId, packet.Passengers, vehicle);
+        if (vehicle is not null)
+        {
+            context.State.EntityGeometry.InvalidatePlacementEnvelope(vehicle);
+            foreach (Entity oldPassenger in vehicle.Passengers)
+                context.State.EntityGeometry.InvalidatePlacementEnvelope(oldPassenger);
+        }
+        foreach (int id in packet.Passengers)
+            if (store.TryGet(id, out Entity? envelopePassenger) && envelopePassenger is not null)
+                context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopePassenger);
         if (!hasVehicle || vehicle is null)
             return;
 

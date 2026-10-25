@@ -142,6 +142,8 @@ public sealed class UmpkClient : IAsyncDisposable
             : null;
         State.EntityGeometry.FixedPositionContext = (entity, bounds) => State.EntityGeometry.FixedContextIsKnown(
             entity, bounds, State.EntitiesOrNull, State.WorldOrNull, State.EntityMembership, settings.Version.Version.Protocol, _physics?.HasCompletePistonContext is true);
+        State.EntityGeometry.PlacementEnvelopeWorldContext = () => _physics?.HasCompletePistonContext is true
+            && LegacyWolfPlacementEnvelope.WorldContextIsKnown(State.WorldOrNull);
         _movementReporter = new MovementReporter(_services);
         _navigator = _physics is not null
             ? new Navigator(_services, _physics, _leases, _logger, () => Actions?.Interaction)

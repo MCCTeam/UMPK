@@ -246,10 +246,12 @@ public sealed partial class InteractionActions
                 return BlockUsePrediction.Unknown;
             if (VanillaPlacementCollision.Intersects(destination, shapes, physics.BoundingBox, _blockProfile))
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            _services.State.EntityGeometry.RefreshPlacementEnvelopes(_services.State.EntitiesOrNull);
             foreach (var entity in _services.State.Entities.All)
             {
                 if (entity.Id == _services.Self.EntityId || data.IsAlwaysNonObstructingEntity(entity.Type.Id)
-                    || _services.State.EntityMotion.IsKnownSpectator(entity, _services.State.TabList))
+                    || _services.State.EntityMotion.IsKnownSpectator(entity, _services.State.TabList)
+                    || _services.State.EntityGeometry.IsProvenPlacementNonCandidate(entity, Aabb.BlockAt(destination.X, destination.Y, destination.Z)))
                     continue;
                 bool? member = _services.State.EntityMembership.IsWorldQueryMember(entity);
                 if (member is false)

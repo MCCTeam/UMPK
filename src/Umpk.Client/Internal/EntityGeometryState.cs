@@ -15,6 +15,8 @@ internal sealed partial class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
     private readonly ConditionalWeakTable<Entity, TrackedFallingBlockGeometry> _fallingBlocks = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyAmbientGeometry> _legacyAmbient = new();
+    private readonly Dictionary<Entity, LegacyWolfPlacementEnvelope> _placementEnvelopes = [];
+    internal Func<bool>? PlacementEnvelopeWorldContext { get; set; }
     private World? _legacyWorld;
     private EntityMembershipState? _legacyMembership;
     private LegacyPlayerResizeClearance? _legacyClearance;
@@ -27,6 +29,35 @@ internal sealed partial class EntityGeometryState
     internal static bool IsFixedCrystal(Entity entity, int protocol)
         => protocol is >= 769 and <= 777 && entity.Type.Id.IsMinecraft && entity.Type.Id.Path == "end_crystal";
 
+
+    internal void RegisterPlacementEnvelope(Entity entity, int protocol, EntityStore entities)
+    {
+        if (!LegacyWolfPlacementEnvelope.Supports(entity, protocol))
+            return;
+        _placementEnvelopes.Add(entity, new(entity.Position));
+        RefreshPlacementEnvelopes(entities);
+    }
+
+    internal void InvalidatePlacementEnvelope(Entity entity)
+    {
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+            envelope.Invalidate();
+    }
+
+    internal void RefreshPlacementEnvelopes(EntityStore? entities)
+    {
+        if (_placementEnvelopes.Count == 0)
+            return;
+        bool worldKnown = entities is not null && PlacementEnvelopeWorldContext?.Invoke() is true;
+        foreach (var pair in _placementEnvelopes)
+            if (!worldKnown || !pair.Value.TryGet(pair.Key, out Aabb envelope)
+                || !ExpansionPushIsIrrelevant(pair.Key, entities!, this, LegacyWolfPlacementEnvelope.Protocol, envelope, envelope))
+                pair.Value.Invalidate();
+    }
+
+    internal bool IsProvenPlacementNonCandidate(Entity entity, Aabb query)
+        => _placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope)
+            && envelope.TryGet(entity, out Aabb bounds) && !bounds.Intersects(query);
 
     public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
     {
@@ -112,6 +143,8 @@ internal sealed partial class EntityGeometryState
 
     public void ObserveMetadata(Entity entity, int index)
     {
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+            _ = envelope.TryGet(entity, out _);
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
         {
             legacy.ObserveMetadata(entity, index);
@@ -128,6 +161,8 @@ internal sealed partial class EntityGeometryState
 
     public void ObservePosition(Entity entity, bool independent = false)
     {
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+            envelope.ObserveEndpoint(entity.Position, independent);
         if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
         {
             ambient.ObservePosition(entity);
@@ -181,6 +216,7 @@ internal sealed partial class EntityGeometryState
     /// <summary>A missing displacement decision makes the position unproven until the owning profile observes a supported recovery event.</summary>
     public void InvalidatePosition(Entity entity)
     {
+        InvalidatePlacementEnvelope(entity);
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
             legacy.InvalidatePosition();
         if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
@@ -220,6 +256,7 @@ internal sealed partial class EntityGeometryState
     /// <summary>Records uncertainty at the event or tick that can move an otherwise stationary actor. Removing a displacement source cannot restore its earlier position.</summary>
     internal void RefreshFixedPositions(EntityStore? entities)
     {
+        RefreshPlacementEnvelopes(entities);
         if (!_hasFixedCrystals || entities is null)
             return;
         foreach (Entity entity in entities.All)
@@ -416,6 +453,7 @@ internal sealed partial class EntityGeometryState
 
     public void Remove(Entity entity)
     {
+        _placementEnvelopes.Remove(entity);
         _entities.Remove(entity);
         _shulkers.Remove(entity);
         _legacyPlayers.Remove(entity);
@@ -424,6 +462,7 @@ internal sealed partial class EntityGeometryState
     }
     public void Clear()
     {
+        _placementEnvelopes.Clear();
         _entities.Clear();
         _shulkers.Clear();
         _legacyPlayers.Clear();

@@ -56,6 +56,7 @@ internal sealed class WorldApplier : IApplier
                 foreach (ChunkBlockEntity blockEntity in chunk.BlockEntities)
                     world.SetBlockEntityNbt(blockEntity.Position, blockEntity.Nbt);
 
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new ChunkLoaded(new ChunkPos(chunk.ChunkX, chunk.ChunkZ))).ConfigureAwait(false);
                 return true;
 
@@ -65,6 +66,7 @@ internal sealed class WorldApplier : IApplier
                 {
                     context.State.JukeboxPrediction.ObserveColumn(column, full: true);
                     world.LoadColumn(column);
+                    context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                     await context.PublishAsync(new ChunkLoaded(column.Position)).ConfigureAwait(false);
                 }
 
@@ -81,6 +83,7 @@ internal sealed class WorldApplier : IApplier
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, block.Position, block.BlockStateId);
                 context.State.JukeboxPrediction.ObserveBlock(block.Position, block.BlockStateId);
                 world.SetBlockStateId(block.Position, block.BlockStateId);
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new BlockChanged(block.Position, block.BlockStateId)).ConfigureAwait(false);
                 return true;
 
@@ -236,6 +239,7 @@ internal sealed class WorldApplier : IApplier
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, legacyPos, change.BlockStateId);
                 context.State.JukeboxPrediction.ObserveBlock(legacyPos, change.BlockStateId);
                 world.SetBlockStateId(legacyPos, change.BlockStateId);
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new BlockChanged(legacyPos, change.BlockStateId)).ConfigureAwait(false);
             }
 
@@ -257,6 +261,7 @@ internal sealed class WorldApplier : IApplier
             var pos = new BlockPos((sectionX << 4) + localX, (sectionY << 4) + localY, (sectionZ << 4) + localZ);
             context.State.JukeboxPrediction.ObserveBlock(pos, change.BlockStateId);
             world.SetBlockStateId(pos, change.BlockStateId);
+            context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
             await context.PublishAsync(new BlockChanged(pos, change.BlockStateId)).ConfigureAwait(false);
         }
     }

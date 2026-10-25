@@ -182,7 +182,7 @@ internal sealed partial class EntityMotionState
     /// <summary>Applies setDeltaMovement without replacing an existing lerpMotion target.</summary>
     public void SetCurrentVelocity(Entity entity, Vec3d value)
     {
-        if (!_immovable.TryGetValue(entity, out _))
+        if (!_immovable.TryGetValue(entity, out _) && !TryObserveLegacyAmbientVelocity(entity, value))
             entity.Velocity = value;
     }
 
@@ -191,6 +191,8 @@ internal sealed partial class EntityMotionState
         if (_cows.TryGetValue(entity, out CowMotion? cow))
             BeginCowMotion(entity, cow);
         if (_immovable.TryGetValue(entity, out _))
+            return;
+        if (TryObserveLegacyAmbientVelocity(entity, value))
             return;
         if (_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion))
         {

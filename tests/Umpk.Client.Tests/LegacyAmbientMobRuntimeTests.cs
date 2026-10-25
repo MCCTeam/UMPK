@@ -206,7 +206,7 @@ public sealed class LegacyAmbientMobRuntimeTests
     }
 
     [Fact]
-    public async Task UnmeasuredNonhangingCurrentAtTickEntryCannotBorrowDryTargetContext()
+    public async Task MeasuredNonhangingWaterAtTickEntryRetainsNativeInterpolation()
     {
         ApplierHarness harness = Create();
         await LegacyPlacementTerrain.Receive(harness, 315);
@@ -219,8 +219,10 @@ public sealed class LegacyAmbientMobRuntimeTests
 
         Tick(harness);
 
-        Assert.False(Known(harness, actor, out _));
-        Assert.Equal(opening, actor.Position);
+        Assert.True(Known(harness, actor, out Aabb box));
+        Assert.Equal(new Vec3d(3.5, opening.Y, opening.Z), actor.Position);
+        Assert.Equal(VanillaEntityBounds.Create(actor.Position, .5F, .9F).Box, box);
+        Assert.True(harness.State.EntityMembership.IsWorldQueryMember(actor));
     }
 
     [Theory]
@@ -280,7 +282,7 @@ public sealed class LegacyAmbientMobRuntimeTests
         await Spawn(harness, 94, opening);
         Entity actor = harness.State.Entities.Get(42)!;
         Assert.True(Known(harness, actor, out Aabb openingBounds));
-        await Apply(harness, new ClientboundBlockUpdatePacket(new BlockPos(2, 65, 1), 165 << 4));
+        await Apply(harness, new ClientboundBlockUpdatePacket(new BlockPos(2, 65, 1), 30 << 4));
         Vec3d target = new(3.5, 65.125, 1.5);
         await Move(harness, target);
         Assert.True(harness.State.EntityMotion.TryGetLegacyAmbientInterpolation(actor, out EntityMotionState.LegacyAmbientInterpolationSnapshot before));

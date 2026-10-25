@@ -98,7 +98,7 @@ public sealed class LegacyAmbientMobSessionTests
         await using BlockUseSession session = await BlockUseSession.Create(315, "stone", physics: true);
         await session.Hold("stone");
         await session.Terrain(chunkX: 1);
-        await session.Block(new BlockPos(17, 65, 1), "slime");
+        await session.Block(new BlockPos(17, 65, 1), "web");
         if (ambient)
         {
             await Spawn(session, 94, new Vec3d(15.5, 65.125, 1.5));

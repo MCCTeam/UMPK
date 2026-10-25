@@ -938,7 +938,7 @@
       "id": "known-menus-and-switches",
       "priority": 0,
       "status": "passed",
-      "nativeDecision": "Crafting table/chest/furnace profiles47–777; lever/button498–777 with powered consume and766 main-hand fallback boundaries.",
+      "nativeDecision": "Crafting table/chest/furnace profiles47\u2013777; lever/button498\u2013777 with powered consume and766 main-hand fallback boundaries.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
       "missing": "Native older-switch live acceptance, specialized switch placement and remaining conditional activations stay separate. The bounded old lever/button runtime now passes its original native-result and missing-terrain regressions; final combined producer gates remain required. Modern button repeated-use local powered-state ownership remains under source audit; passing one-action powered controls do not close it.",
       "acceptance": "Reuse93actual-session menu cases and4native menu boundaries; preserve activation before cooldown/placement permission.",
@@ -1051,7 +1051,7 @@
       "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
       "completedRuntimeSlice": {
         "behavior": "Original unconditional client menu success, with native smithing-table pass through 1.15.2 and success from 1.16",
-        "protocols": "47–777 where the nineteen exact keys are natively registered; smithing pass477–578/success735+; main-hand default block use766+; local-only placement swing777",
+        "protocols": "47\u2013777 where the nineteen exact keys are natively registered; smithing pass477\u2013578/success735+; main-hand default block use766+; local-only placement swing777",
         "namedReleasesSourceBound": 75,
         "protocolDatasetsSourceBound": 50,
         "registrations": 1107,
@@ -1077,7 +1077,7 @@
         "behavior": "canonical has_book=true lectern activation through the existing session owner",
         "sourceBoundNamedReleases": 48,
         "sourceBoundProtocols": 36,
-        "protocols": "477–777",
+        "protocols": "477\u2013777",
         "producer": "normal8efa plus exact one-file BlockUsePrediction overlay",
         "productionSourceSha256": "ba9b97de89625edde0a3d4d036d5e216a0296c5ccd2579dfc22f36955fc2cf78",
         "runtimeStatus": "passed:152 executed RED104fail/48controls -> same152GREEN;656 public actions",
@@ -1337,7 +1337,7 @@
         "strictLimit": 25165824,
         "executedPassingSmoke": 1,
         "nativeLiveStatus": "not run",
-        "remaining": "sequence-aware759–761 current/server-shadow/acknowledgment and world-lifetime ownership,empty/insertion,modern762–777 native-instance/cache context,native repeat acceptance,final committed-producer gates",
+        "remaining": "sequence-aware759\u2013761 current/server-shadow/acknowledgment and world-lifetime ownership,empty/insertion,modern762\u2013777 native-instance/cache context,native repeat acceptance,final committed-producer gates",
         "retention": "16 original historical temporary inputs missing;3exact bytes recovered/13unavailable;all2544present match;actual Oracle source/runtime/TRX/native outputs retained;addendum5e6f7c29",
         "report": "docs/verification/jukebox-activation.md",
         "postIntegration": {
@@ -1476,7 +1476,7 @@
       "id": "mining-permissions",
       "priority": 4,
       "status": "not run",
-      "nativeDecision": "Legacy47–340 and bounded flattened393–765 permissions; typed component766–769 cache/identity are connected.",
+      "nativeDecision": "Legacy47\u2013340 and bounded flattened393\u2013765 permissions; typed component766\u2013769 cache/identity are connected.",
       "caller": "InteractionActions mining initial/held owner on existing session tick",
       "missing": "Property/range/full block-entity save context, missing tags and770+ extended predicates remain unknown.",
       "focusedFailingPublicSession": "Next unsupported native predicate kind with actual can_break inventory/tag/mode packets and exact held START/swing order.",
@@ -1867,7 +1867,7 @@
     },
     "additionalMenus": {
       "behavior": "Original unconditional client menu success, with native smithing-table pass through 1.15.2 and success from 1.16",
-      "protocols": "47–777 where the nineteen exact keys are natively registered; smithing pass477–578/success735+; main-hand default block use766+; local-only placement swing777",
+      "protocols": "47\u2013777 where the nineteen exact keys are natively registered; smithing pass477\u2013578/success735+; main-hand default block use766+; local-only placement swing777",
       "namedReleasesSourceBound": 75,
       "protocolDatasetsSourceBound": 50,
       "registrations": 1107,
@@ -1887,7 +1887,7 @@
       "rootActualReviewSha256": "b361aeaf7b79b103e97a03d9a8753d2b08edf2d07f5a31bbacd452f46da16da7"
     },
     "filledJukebox": {
-      "status": "historical bounded runtime/AOT executed;759–761 acknowledgment defect reproduced; newGREEN/native acceptance pending",
+      "status": "historical bounded runtime/AOT executed;759\u2013761 acknowledgment defect reproduced; newGREEN/native acceptance pending",
       "report": "jukebox-activation.md",
       "completionSha256": "5a28e0caf5b29a43f8580eafa6e32f77c6063f869d5765d78103daae5a183804"
     },
@@ -1936,7 +1936,7 @@
       }
     },
     "sequencedLocalBlockPrediction": {
-      "status": "private functional runtime passed; strict AOT failed; shared integration/contextual fixes/native and final acceptance pending",
+      "status": "historical private functional producer passed; its default AOT failed; superseded by combinedPrediction20261025",
       "report": "sequenced-block-prediction.md",
       "sourceBaseCommit": "3dae40c668717d58db906a1e73672eba90868724",
       "producerKind": "exact private Client/Game source overlays against frozen normal 8efa dependencies",
@@ -1970,7 +1970,7 @@
       ]
     },
     "contextualPredictionAck": {
-      "status": "passed private bounded native/runtime; shared integration and final acceptance pending",
+      "status": "historical bounded native/runtime pass; incorporated into combinedPrediction20261025",
       "report": "sequenced-block-prediction.md#contextual-acknowledgment-collision",
       "clientDllSha256": "90a0c9991ec061b0134bb58f2868917ccd66749ce23a5fcb7fb3ba6c3438db73",
       "executed": {
@@ -1988,6 +1988,112 @@
       "completionSha256": "f4a62a22719ad907267b1a911af588619bb80f888f83c381560957522e34108b",
       "cleanupSha256": "8ac3cb311923b8996191c749f8156f385284ee8f40db793371989c57db8df95a",
       "aot": "not run; prior25178240FAIL/noSmoke retained, combinedstrictAOT required"
+    },
+    "combinedPrediction20261025": {
+      "status": "passed bounded combined private runtime/Size AOT and normal4e1dede focused341; final acceptance pending",
+      "report": "sequenced-block-prediction.md#combined-runtime-and-native-size-result-2026-10-25",
+      "runtimeCommit": "7ff6044",
+      "sampleSizeCommit": "4e1dede6ab34621620c474df4a83a3281286aee4",
+      "producerKind": "exact private compiler/PDB source maps against frozen dependencies; these source postimages match shared commit; normal commit-matched build pending",
+      "clientDllSha256": "f2f83605a4b96fe6ac582806ae7e148dbf13948292ed367a9c51a33b392d8edd",
+      "gameDllSha256": "fe0c93342f750f52ca10559c3b42bfe1ebb51aa09134bce7a47e5d90dbd48078",
+      "sourceCounts": {
+        "Client": 211,
+        "Game": 103,
+        "Tests": 318
+      },
+      "executed": {
+        "fullClient": 34771,
+        "game": 1032,
+        "physics": 715,
+        "focused": 298,
+        "contextual": 24,
+        "rayInitialFailures": 14,
+        "rayGameOnlyFailures": 14,
+        "rayProfileOnlyFailures": 14,
+        "rayCallerGreen": 14,
+        "skipped": 0
+      },
+      "rootAuditSha256": "14cd3bc20da24c2cb7374b7dbf8f49ca711f3a6ebbe66be1b16946f6150e000f",
+      "cleanupSha256": "1ee43d3d98fe34eeaea62b711c9b3a98aecc9e84c5e249f65cbc955e8a80ac73",
+      "defaultNativeAot": {
+        "status": "failed",
+        "bytes": 25178208,
+        "strictLimitExclusive": 25165824,
+        "smoke": "not run",
+        "differenceAttribution": "32-byte net difference across combined changes, not an isolated storage-compaction measurement"
+      },
+      "sizeNativeAot": {
+        "status": "passed",
+        "onlyPropertyChange": "OptimizationPreference=Size",
+        "onlyAdditionalIlcArgument": "--Os",
+        "bytes": 24634336,
+        "strictLimitExclusive": 25165824,
+        "executedPassingSmoke": 1,
+        "skipped": 0,
+        "unchangedProducerDllPdbPairs": 11,
+        "unchangedPackageGraph": 9,
+        "nativePerformance": "unmeasured beyond smoke",
+        "rootAuditSha256": "64eb23fe8b01ea24fe448a999f88d34aa815a3f3e7961b0652cc8b09bae90773",
+        "cleanupSha256": "413df5924858506ead6cac6bc4aae5d42583b62768e532b6a0513b79a8179d0a"
+      },
+      "deliberateBaselineDelta": 116,
+      "clientBaseline": 34771,
+      "all17SuiteBaseline": 48558,
+      "open": [
+        "native prediction live acceptance",
+        "final repository/package/consumer/AOT/version acceptance",
+        "actual published-head CI"
+      ],
+      "normalCommittedSourceIntegration": {
+        "commit": "4e1dede6ab34621620c474df4a83a3281286aee4",
+        "executedPassing": 341,
+        "skipped": 0,
+        "normalCompileGlobs": true,
+        "formatOwnedCSharpFiles": 53,
+        "exactUserSourceHashes": 632,
+        "matchingEmbeddedTestResources": 53,
+        "matchingPdbDocuments": {
+          "Game": 106,
+          "Client": 214,
+          "Tests": 322
+        },
+        "clientDllSha256": "2b697ec832efc351a8ea069466d588222b97cef45c1af3ffdf3b5d2137b047c5",
+        "gameDllSha256": "d93233f39a0137520a21fb592791a252b86e26125b2c3068221c6fc7328782f7",
+        "rootAuditSha256": "e27ff2d20503004cdb4319a0139956dfe4019324191797b2a4c760e68750c46a",
+        "cleanupSha256": "f6a89affc744b5910616ca280a94715b6c6a6ac17a5f375581ca0adaa496dbf1",
+        "fullSuiteAndAotReexecuted": false
+      },
+      "publishedCi4e1dede": {
+        "status": "failed format; other6jobs passed",
+        "run": 40196339933,
+        "actualMerge": "bf22e707f844af693cc8b144d826d7f12f653b66",
+        "headTreeMatches": true,
+        "all17PerOs": 48558,
+        "clientCases": 34771,
+        "ubuntu": {
+          "passed": 48539,
+          "skipped": 19
+        },
+        "windowsAndMacOS": {
+          "passed": 48537,
+          "skipped": 21
+        },
+        "nativeBytes": 24634288,
+        "nativeExecutedPassingSmoke": 1,
+        "strictXmlGuardPassed": true,
+        "auditSha256": "39964556f771c91e9ba48b8360cda938042ae8545c80c86b17470f64736e32b1"
+      },
+      "importOnlyCorrection": {
+        "commit": "2a661f8",
+        "status": "actualfullformatterpassed; freshpublishedheadCIpending",
+        "usingMultisetUnchanged": 16,
+        "remainingBodyBytesUnchanged": true,
+        "actualSelectedFileCount": 1,
+        "rootAuditSha256": "6730e23ff9e03444c5bffc1a4cb13857f9f6c51453e69cd7f770a29339b8bda0",
+        "cleanupSha256": "6c42e98f2031f44529123dd72b93cc25a9d5781249dd8dcf73b9f2bdb24666e6",
+        "newTests": 0
+      }
     }
   }
 }

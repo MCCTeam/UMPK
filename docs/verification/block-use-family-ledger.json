@@ -999,10 +999,10 @@
     {
       "id": "door-activation",
       "priority": 1,
-      "status": "failed",
+      "status": "not run",
       "nativeDecision": "The completed source and registration audit covers 75 named releases. The 327 framed-session cases connect native door Success/Pass, legacy lower-cell lookup, feature/hand/secondary-use ordering and protocol-777 local-only swing through the existing owner.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "The latest native315 setup now passes exact Pos+OnGround and eight partial scenarios, then fails the ninth iron-held-stone action because the successful placement omits its swing. The source-proven sheep/villager null-hard-peer fix now passes14framed cases/2137regressions/strictAOT/exact1smoke, but a fresh whole11scenario native315 row is required. Other door boundaries/copper features and final-producer acceptance remain open.",
+      "missing": "The unchanged current315 eleven-scene native row now passes all use/swing/block/stack/offhand assertions. Other door boundaries/copper features and final producer acceptance remain open. This fresh recording has no wolves; controlled native Wolf exclusion is separate.",
       "focusedFailingPublicSession": "Received full chunk+oak door, empty main hand, public PlaceBlockAsync: expect one use plus native packet swing before777 and local-only policy777. Iron/non-openable, open/closed, both halves, sneak/offhand, cooldown, mode/permission, terrain and47hand controls.",
       "nativeLiveNeed": "Original source/registration/result bindings at every behavior boundary, focused original-method witness if source cannot establish a branch, then dedicated native door-open/block/use/swing evidence on exact producer. No server-only effects simulated.",
       "historicalAuditAtSourceCommit": {
@@ -1010,14 +1010,35 @@
         "missing": "Current activation profile never classifies a door, so known oak-door main-hand use falls to Unknown and omits the native success swing. All profile/registration bands must be pinned before coding.",
         "status": "not run"
       },
-      "statusDetail": "passed bounded door runtime and immutable checkpoints; native47passed; latestnative315wholeRowFAILED with8partialscenarios; new315ambient-null-hard-peer runtime/AOTpassed; freshnative315retry pending",
+      "statusDetail": "Passed bounded source/runtime plus protocol47 and current315 native legs; other native boundaries and final producer acceptance remain open.",
       "currentEvidence": [
         "door-activation-runtime.md",
         "door-crystal-integration-20261023.md",
         "interaction-completion.md#evidence-and-status",
         "trapdoor-gate-checkpoint-20261023.md",
         "legacy-ambient-peers-315.md"
-      ]
+      ],
+      "prior315NativeFailure": {
+        "status": "failed",
+        "missing": "The latest native315 setup now passes exact Pos+OnGround and eight partial scenarios, then fails the ninth iron-held-stone action because the successful placement omits its swing. The source-proven sheep/villager null-hard-peer fix now passes14framed cases/2137regressions/strictAOT/exact1smoke, but a fresh whole11scenario native315 row is required. Other door boundaries/copper features and final-producer acceptance remain open.",
+        "statusDetail": "passed bounded door runtime and immutable checkpoints; native47passed; latestnative315wholeRowFAILED with8partialscenarios; new315ambient-null-hard-peer runtime/AOTpassed; freshnative315retry pending"
+      },
+      "current315NativeAcceptance": {
+        "status": "passed",
+        "report": "docs/verification/legacy-wolf-placement-envelope-315.md#subsequent-111-live-acceptance",
+        "actualHandoffSha256": "5f4b2c1183a3ae222d157b658bf20183ad253ea9f3340033bd05fc2d4f80d602",
+        "rootAuditSha256": "3b57dc29f6949117e579a1049b021ec6d332a422c157496ab4673dfb204a371b",
+        "executedTests": 1,
+        "passedScenes": 11,
+        "uses": 11,
+        "packetSwings": 7,
+        "markers": 22,
+        "liveWolves": 0,
+        "producerClientSha256": "fce4b3d4ed8f60807d0af3253aef0c67484200a187cc618ac2454317630dcf01",
+        "siblingSourceGitSeedAndPairsUnchanged": true,
+        "all16OwnedPidsAbsent": true,
+        "ownedPortsClosed": true
+      }
     },
     {
       "id": "other-hand-activated-blocks",

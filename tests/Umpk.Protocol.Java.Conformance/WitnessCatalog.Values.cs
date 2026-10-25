@@ -456,6 +456,13 @@ internal static partial class WitnessCatalog
             Metadata: MetadataRich(protocol),
             Uuid: WitnessUuid);
 
+    private static object AddMobWithWideType(int protocol)
+    {
+        if (protocol is not (315 or 316))
+            throw new NotSupportedException("The additional wide-type witness covers the 1.11 width boundary.");
+        return ((ClientboundAddMobPacket)Mob(MetadataLegacy())) with { TypeId = 999 };
+    }
+
     private static object AddMobWithNbt(int protocol) => Mob(MetadataWithNbt());
 
     private static object AddMobLegacy(int protocol) => Mob(MetadataLegacy());

@@ -36,7 +36,7 @@ Login Serverbound 0x01 minecraft:key LoginCodecs.Key src:none
 Play Clientbound 0x00 minecraft:add_entity EntitySpawnCodecs.AddEntityV1_9 src:none
 Play Clientbound 0x01 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_9 src:none
 Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_12 src:synth w:104 ok AddMob{EntityId=4660,HeadPitch=22.5,Metadata=EntityMetadataList{Entries=[6:EntityDataEntry{Index h=3E678604
-    reject:P107(3:EntityDataEntry{Index=0) reject:P393(9:EntityDataEntry{Index=0)
+    reject:P315(3:EntityDataEntry{Index=0) reject:P393(9:EntityDataEntry{Index=0)
 Play Clientbound 0x04 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_9 src:none
 Play Clientbound 0x05 minecraft:add_player EntitySpawnCodecs.AddPlayerV1_12 src:synth w:96 ok AddPlayer{CurrentItem=0,EntityId=4660,Metadata=EntityMetadataList{Entries=[6:EntityDataEntry{Ind h=D7DAA7C9
     reject:P107(3:EntityDataEntry{Index=0) reject:P393(9:EntityDataEntry{Index=0)

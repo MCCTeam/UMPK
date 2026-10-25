@@ -5,16 +5,19 @@ using Umpk.Text.Serialization;
 
 namespace Umpk.Protocol.Java.Codecs;
 
-/// <summary>The pre-1.15 spawn-mob layout: the entity type id widened from a byte to a VarInt at 1.13, and the BLOCK_POS packing inside the trailing metadata block moved at 1.14. The two boundaries are one release apart, so a codec that takes them as separate defaulted parameters can be given the 1.13 type width with the 1.9 position packing without anything saying so.</summary>
-/// <param name="TypeIsVarInt">1.13+: the entity type id is a VarInt rather than a byte.</param>
+/// <summary>The pre-1.15 spawn-mob layout: the entity type id widened from a byte to a VarInt at 1.11, and the BLOCK_POS packing inside the trailing metadata block moved at 1.14. Type width and metadata position packing change independently and must retain separate era bindings.</summary>
+/// <param name="TypeIsVarInt">1.11+: the entity type id is a VarInt rather than a byte.</param>
 /// <param name="BlockPos">The BLOCK_POS packing the trailing metadata block uses.</param>
 internal readonly record struct AddMobWire(bool TypeIsVarInt, BlockPosLayout BlockPos)
 {
-    /// <summary>107-316 (1.9-1.11.2) and 335-340 (1.12-1.12.2): byte type, pre-1.14 packing.</summary>
+    /// <summary>107-210 (1.9-1.10.2): byte type, pre-1.14 packing.</summary>
     internal static AddMobWire V1_9 { get; } = new(TypeIsVarInt: false, BlockPosLayout.PrePacked114);
 
-    /// <summary>393-404 (1.13-1.13.2): the type becomes a VarInt.</summary>
-    internal static AddMobWire V1_13 { get; } = V1_9 with { TypeIsVarInt = true };
+    /// <summary>315-340 (1.11-1.12.2): VarInt type, pre-1.14 packing.</summary>
+    internal static AddMobWire V1_11 { get; } = V1_9 with { TypeIsVarInt = true };
+
+    /// <summary>393-404 (1.13-1.13.2): retains VarInt type and pre-1.14 packing.</summary>
+    internal static AddMobWire V1_13 { get; } = V1_11;
 
     /// <summary>477-498 (1.14-1.14.4): the 1.14 block-position packing.</summary>
     internal static AddMobWire V1_14 { get; } = V1_13 with { BlockPos = BlockPosLayout.Packed114 };

@@ -14,7 +14,7 @@ Login Serverbound 0x01 minecraft:key LoginCodecs.Key read:2 shape:bytes,bytes
 Play Clientbound 0x00 minecraft:add_entity EntitySpawnCodecs.AddEntityV1_9 read:54 shape:opaque
 Play Clientbound 0x01 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_9 read:27 shape:opaque
 Play Clientbound 0x02 minecraft:add_global_entity marker n/a shape:opaque
-Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_9 fault:ProtocolViolationException shape:varint,uuid,byte,3*double,3*angle,3*short,metadata|varinttype=0,PrePacked114,metadata/79c206b7
+Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_11 fault:ProtocolViolationException shape:varint,uuid,varint,3*double,3*angle,3*short,metadata|varinttype=1,PrePacked114,metadata/79c206b7
 Play Clientbound 0x04 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_9 read:27 shape:opaque
 Play Clientbound 0x05 minecraft:add_player EntitySpawnCodecs.AddPlayerV1_9 fault:ProtocolViolationException shape:varint,uuid,3*double,2*angle,metadata|PrePacked114,metadata/79c206b7
 Play Clientbound 0x06 minecraft:animate EntityStateCodecs.Animate read:2 shape:opaque

@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 14 of 109 implemented bindings (corpus 7, synth 7)
+# witnessed 14 of 109 implemented bindings (corpus 6, synth 8)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -35,8 +35,8 @@ Login Serverbound 0x00 minecraft:hello LoginCodecs.ClientHelloV1_8 src:synth w:8
 Login Serverbound 0x01 minecraft:key LoginCodecs.Key src:none
 Play Clientbound 0x00 minecraft:add_entity EntitySpawnCodecs.AddEntityV1_9 src:none
 Play Clientbound 0x01 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_9 src:none
-Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_9 src:corpus@107 w:93 ok AddMob{EntityId=2109,HeadPitch=5.625,Metadata=EntityMetadataList{Entries=[12:EntityDataEntry{Ind h=3B655742
-    reject:P47(ProtocolViolationException) same:P335
+Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_11 src:synth w:101 ok AddMob{EntityId=4660,HeadPitch=22.5,Metadata=EntityMetadataList{Entries=[6:EntityDataEntry{Index h=E56664F7
+    reject:P107(HeadPitch=315) same:P335
 Play Clientbound 0x04 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_9 src:none
 Play Clientbound 0x05 minecraft:add_player EntitySpawnCodecs.AddPlayerV1_9 src:synth w:92 ok AddPlayer{CurrentItem=0,EntityId=4660,Metadata=EntityMetadataList{Entries=[6:EntityDataEntry{Ind h=7CD023F1
     reject:P47(ProtocolViolationException) same:P335

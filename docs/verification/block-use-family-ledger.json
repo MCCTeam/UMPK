@@ -2094,6 +2094,20 @@
         "cleanupSha256": "6c42e98f2031f44529123dd72b93cc25a9d5781249dd8dcf73b9f2bdb24666e6",
         "newTests": 0
       }
+    },
+    "publishedCi6f94b84": {
+      "head": "6f94b84e959d399a9bfe4d1abd6ee9ef723a2f18",
+      "run": 40200279495,
+      "status": "passed",
+      "actualMerge": "a8f21fe811db8c4cdc3bc637f6e2dae8cde8e4b3",
+      "rawAuditSha256": "2a0c5a6178131ecf86dc966e7d345206e55f8166ab4bfbb6c23717428379472d",
+      "matchingSuiteTotals": 17,
+      "allOsTotal": 48558,
+      "ClientPasses": 34771,
+      "AotBytes": 24634288,
+      "strictAotLimit": 25165824,
+      "executedPassingAotSmoke": 1,
+      "limits": "Normal-suite opt-in skips remain explicit; final native/version/consumer acceptance is separate. Historical4e failure preserved."
     }
   }
 }

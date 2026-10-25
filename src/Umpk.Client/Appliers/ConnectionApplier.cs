@@ -176,6 +176,7 @@ internal sealed class ConnectionApplier : IApplier
         await context.Sink.SendAsync(new ServerboundConfigurationAcknowledgedPacket(), ct).ConfigureAwait(false);
 
         context.State.ResetForConfigurationReentry();
+        context.Sequences.ResetLifetime();
 
         // Vanilla holds the chunk-batch estimator on the play listener (chunk batch size calculator behavior), so the re-entry starts the negotiation over at the initial estimate rather than carrying the previous world's rate into the new one.
         _chunkBatches = null;

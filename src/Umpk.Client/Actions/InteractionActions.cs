@@ -63,8 +63,9 @@ public sealed partial class InteractionActions
         try
         {
             int? sequence = await request.Completion.Task.WaitAsync(lifetime.Token).ConfigureAwait(false);
+            lifetime.Token.ThrowIfCancellationRequested();
             if (sequence is int acknowledged && HasSequences())
-                await AwaitAckAsync(acknowledged, lifetime.Token).ConfigureAwait(false);
+                await AwaitAckAsync(new SequenceTracker.Ticket(acknowledged, request.SequenceLifetime), lifetime.Token).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (lifetime.IsCancellationRequested)
         {
@@ -335,10 +336,14 @@ public sealed partial class InteractionActions
         CancellationToken session = _services.CurrentSessionCancellation()
             ?? throw new InvalidOperationException("The client is not connected.");
         using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
-        int? sequence = await _services.Scheduler.InvokeAsync(
-            () => SendBlockUseOnLoopAsync(position, face, cursor, hand, insideBlock, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+        SequenceTracker.Lifetime? sequenceLifetime = null;
+        int? sequence = await _services.Scheduler.InvokeAsync(() =>
+        {
+            sequenceLifetime = _sequences.CaptureLifetime();
+            return SendBlockUseOnLoopAsync(position, face, cursor, hand, insideBlock, lifetime.Token, session);
+        }, lifetime.Token).ConfigureAwait(false);
         if (sequence is int acknowledged && HasSequences())
-            await AwaitAckAsync(acknowledged, lifetime.Token).ConfigureAwait(false);
+            await AwaitAckAsync(new SequenceTracker.Ticket(acknowledged, sequenceLifetime!), lifetime.Token).ConfigureAwait(false);
     }
 
     /// <summary>Uses the held item in the air.</summary>
@@ -475,15 +480,15 @@ public sealed partial class InteractionActions
     // A bounded wait for the block-change ack; a silent server falls back to write-completion.
     private const double AckTimeoutSeconds = 5.0;
 
-    private async Task AwaitAckAsync(int sequence, CancellationToken ct)
+    private async Task AwaitAckAsync(SequenceTracker.Ticket ticket, CancellationToken ct)
     {
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(TimeSpan.FromSeconds(AckTimeoutSeconds));
         try
         {
-            await _sequences.WaitForAsync(sequence, cts.Token).ConfigureAwait(false);
+            await _sequences.WaitForAsync(ticket, cts.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        catch (OperationCanceledException error) when (!ct.IsCancellationRequested && error is not SequenceTracker.LifetimeEndedException)
         {
             // Timed out waiting for the acknowledgment: fall back to write-completion.
         }

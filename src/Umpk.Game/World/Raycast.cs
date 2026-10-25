@@ -15,6 +15,13 @@ public static partial class Raycast
 
     /// <summary>Casts a ray with the held-item and coordinate context needed by measured outline and interaction shapes.</summary>
     public static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, heldItem, readBlock: null);
+
+    // The client native-current view supplies only state changes whose static outline is source-bound. Public casts continue to read received world state and contextual outlines.
+    internal static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel: null);
+
+    internal static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock, BlockRayClipModel? projectedClipModel)
     {
         ArgumentNullException.ThrowIfNull(world);
         if (start.Equals(end))
@@ -30,7 +37,7 @@ public static partial class Raycast
 
         int cx = FloorInt(sx), cy = FloorInt(sy), cz = FloorInt(sz);
 
-        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, out BlockHitResult first))
+        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel, out BlockHitResult first))
             return first;
 
         double dx = ex - sx, dy = ey - sy, dz = ez - sz;
@@ -67,7 +74,7 @@ public static partial class Raycast
                 tZ += invZ;
             }
 
-            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, out BlockHitResult hit))
+            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel, out BlockHitResult hit))
                 return hit;
 
         }
@@ -97,10 +104,10 @@ public static partial class Raycast
         return EntityHitResult.FromHit(bestIndex, point, distance);
     }
 
-    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, out BlockHitResult result)
+    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock, BlockRayClipModel? projectedClipModel, out BlockHitResult result)
     {
         result = BlockHitResult.Miss;
-        BlockState state = world.GetBlock(pos);
+        BlockState state = readBlock?.Invoke(pos) ?? world.GetBlock(pos);
         if (state.IsAir)
             return false;
 
@@ -123,11 +130,20 @@ public static partial class Raycast
             return false;
         }
 
-        if (shapes is IBlockTargetingSource targeting && targeting.TryGetTargetingShape(world, pos, heldItem, out BlockTargetingShape geometry))
+        if ((readBlock is null || state.StateId == world.GetBlock(pos).StateId) && shapes is IBlockTargetingSource targeting && targeting.TryGetTargetingShape(world, pos, heldItem, out BlockTargetingShape geometry))
             return TryHitTargeting(pos, rayStart, dir, geometry, out result);
         ReadOnlySpan<Aabb> outline = shapes.GetOutlineShapes(state);
         if (outline.IsEmpty)
             return false;
+
+        // Projected jukebox and button states have source-bound static outlines with no offsets or interaction shape. Reuse the native clipping model instead of losing its inside flag, point and face in the generic box fallback.
+        if (projectedClipModel is { } clipModel && readBlock is not null && state.StateId != world.GetBlock(pos).StateId)
+        {
+            if (!ClipTargetingShape(outline, Vec3d.Zero, clipModel, pos, rayStart, dir, out Vec3d point, out Direction face, out bool inside))
+                return false;
+            result = BlockHitResult.FromHit(pos, face, point, point.Subtract(rayStart).Length(), inside);
+            return true;
+        }
 
         double bestT = double.PositiveInfinity;
         Vec3d bestPoint = Vec3d.Zero;

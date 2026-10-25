@@ -1,5 +1,6 @@
 using Umpk.Client.State;
 using Umpk.Game.Players;
+using Umpk.Game.Registries;
 
 namespace Umpk.Client.Actions;
 
@@ -19,8 +20,13 @@ internal readonly record struct BlockInteractionProfile(bool InitialSwingBeforeS
     private const int ChargedPiercingAttackIntroduced = 774;
     private const int TeleportStopsDestroyingIntroduced = 777;
 
+    public BlockRayClipModel ProjectedOutlineClipModel { get; init; }
+
     public static BlockInteractionProfile ForProtocol(int protocol)
-        => new(protocol < OffHandIntroduced, protocol >= InstantBuildCriterionIntroduced, protocol >= ExponentialMiningFatigueIntroduced, protocol >= DestroyDirectionActionIntroduced, protocol >= ItemToolComponentIntroduced, protocol >= LocalPredictedUseSwingIntroduced, protocol >= VoxelPlacementObstructionIntroduced, protocol >= EmptyThinShapesIntroduced, protocol < SpectatorConsumeResultIntroduced, protocol >= ChargedPiercingAttackIntroduced, protocol >= TeleportStopsDestroyingIntroduced, protocol < ItemBlockPlacementPrecheckRemoved);
+        => new(protocol < OffHandIntroduced, protocol >= InstantBuildCriterionIntroduced, protocol >= ExponentialMiningFatigueIntroduced, protocol >= DestroyDirectionActionIntroduced, protocol >= ItemToolComponentIntroduced, protocol >= LocalPredictedUseSwingIntroduced, protocol >= VoxelPlacementObstructionIntroduced, protocol >= EmptyThinShapesIntroduced, protocol < SpectatorConsumeResultIntroduced, protocol >= ChargedPiercingAttackIntroduced, protocol >= TeleportStopsDestroyingIntroduced, protocol < ItemBlockPlacementPrecheckRemoved)
+        {
+            ProjectedOutlineClipModel = protocol < 393 ? BlockRayClipModel.LegacyBox : protocol < 477 ? BlockRayClipModel.VoxelForwardInside : BlockRayClipModel.VoxelOppositeInside,
+        };
 
     // 26.3 inserts CHANGE_DESTROY_DIRECTION after START; every following wire enum ordinal moves by one. The packet's public Action remains the actual wire ordinal.
     public int AbortDestroyAction => HasDestroyDirectionAction ? 2 : 1;

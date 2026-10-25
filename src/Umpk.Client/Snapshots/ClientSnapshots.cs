@@ -1,3 +1,4 @@
+using Umpk.Client.Actions;
 using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Blocks;
@@ -204,7 +205,7 @@ public sealed class ClientSnapshots
         return new BlockSnapshot(position, state, loaded);
     }
 
-    internal static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids)
+    internal static BlockHitResult? CastView(UmpkClient client, double maxDistance, bool includeFluids, bool nativeCurrent = false)
     {
         if (!client.State.HasWorld || client.Session is null)
             return null;
@@ -219,10 +220,13 @@ public sealed class ClientSnapshots
         Vec3d end = eye.Add(direction.Scale(maxDistance));
 
         // The negotiated protocol's own generated shape tables (real slab/stair/fence/wall/pane/carpet geometry per protocol), resolved from the live session rather than one fixed dataset.
-        IBlockShapeSource shapes = JavaGameData.BlockShapes(client.Session.Version.Version.Protocol);
+        int protocol = client.Session.Version.Version.Protocol;
+        IBlockShapeSource shapes = JavaGameData.BlockShapes(protocol);
         ItemStack held = client.State.Features.Inventory ? PlayerInventorySnapshot.ResolveHeldItem(client.State.Inventory.PlayerSlots, self.HeldSlot) : ItemStack.Empty;
         Identifier heldId = held.IsEmpty ? Identifier.Minecraft("air") : held.Item.Id;
-        BlockHitResult hit = Raycast.CastBlockWithContext(client.State.World, eye, end, includeFluids, shapes, heldId);
+        BlockHitResult hit = nativeCurrent
+            ? Raycast.CastBlockWithContext(client.State.World, eye, end, includeFluids, shapes, heldId, position => client.State.JukeboxPrediction.GetBlock(client.State.World, position), BlockInteractionProfile.ForProtocol(protocol).ProjectedOutlineClipModel)
+            : Raycast.CastBlockWithContext(client.State.World, eye, end, includeFluids, shapes, heldId);
         return hit.Hit ? hit : null;
     }
 }

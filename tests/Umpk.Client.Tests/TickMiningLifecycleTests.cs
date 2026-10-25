@@ -373,6 +373,7 @@ public sealed class TickMiningLifecycleTests
             Assert.True(State.Registries.Blocks.TryGetValue(Identifier.Minecraft("stone"), out BlockDefinition? stone));
             world.SetBlockStateId(Target, stone.DefaultStateId);
             State.InstallWorld(world);
+            State.EntityMembership.LoadColumn(ChunkPos.Containing(Target));
         }
 
         public void SetBlock(string name)

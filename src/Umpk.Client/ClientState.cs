@@ -24,6 +24,7 @@ public sealed class ClientState
     internal ClientState(ClientFeatures features)
     {
         _features = features;
+        JukeboxPrediction = new Internal.JukeboxPredictionState(EntityMembership);
         if (features.Entities)
             _entities = new EntityStore();
 
@@ -124,7 +125,7 @@ public sealed class ClientState
 
     internal Internal.EntityMembershipState EntityMembership { get; } = new();
 
-    internal Internal.JukeboxPredictionState JukeboxPrediction { get; } = new();
+    internal Internal.JukeboxPredictionState JukeboxPrediction { get; }
 
     internal List<int>? TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
     {

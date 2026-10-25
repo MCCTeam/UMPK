@@ -79,7 +79,7 @@ internal sealed class WorldApplier : IApplier
 
             case ClientboundBlockUpdatePacket block:
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, block.Position, block.BlockStateId);
-                context.State.JukeboxPrediction.ObserveBlock(block.Position);
+                context.State.JukeboxPrediction.ObserveBlock(block.Position, block.BlockStateId);
                 world.SetBlockStateId(block.Position, block.BlockStateId);
                 await context.PublishAsync(new BlockChanged(block.Position, block.BlockStateId)).ConfigureAwait(false);
                 return true;
@@ -234,7 +234,7 @@ internal sealed class WorldApplier : IApplier
                 int worldY = packed & 0xFF;
                 var legacyPos = new BlockPos(baseX + localX, worldY, baseZ + localZ);
                 context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, legacyPos, change.BlockStateId);
-                context.State.JukeboxPrediction.ObserveBlock(legacyPos);
+                context.State.JukeboxPrediction.ObserveBlock(legacyPos, change.BlockStateId);
                 world.SetBlockStateId(legacyPos, change.BlockStateId);
                 await context.PublishAsync(new BlockChanged(legacyPos, change.BlockStateId)).ConfigureAwait(false);
             }
@@ -255,7 +255,7 @@ internal sealed class WorldApplier : IApplier
             int localZ = (packed >> 4) & 0xF;
             int localY = packed & 0xF;
             var pos = new BlockPos((sectionX << 4) + localX, (sectionY << 4) + localY, (sectionZ << 4) + localZ);
-            context.State.JukeboxPrediction.ObserveBlock(pos);
+            context.State.JukeboxPrediction.ObserveBlock(pos, change.BlockStateId);
             world.SetBlockStateId(pos, change.BlockStateId);
             await context.PublishAsync(new BlockChanged(pos, change.BlockStateId)).ConfigureAwait(false);
         }

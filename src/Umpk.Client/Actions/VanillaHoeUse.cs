@@ -1,3 +1,4 @@
+using Umpk.Client.Internal;
 using Umpk.Game.Blocks;
 using Umpk.Game.Items;
 using Umpk.Game.World;
@@ -22,7 +23,7 @@ internal readonly record struct VanillaHoeUse(bool HasRules, bool HasRootedDirt,
         return true;
     }
 
-    public bool TryPredict(Identifier item, BlockState clicked, World world, BlockPos position, Direction face, out BlockUsePrediction prediction)
+    public bool TryPredict(Identifier item, BlockState clicked, World world, BlockPos position, Direction face, out BlockUsePrediction prediction, JukeboxPredictionState? current = null)
     {
         prediction = BlockUsePrediction.Unknown;
         if (!HasRules || !item.IsMinecraft || item.Path is not ("wooden_hoe" or "stone_hoe" or "iron_hoe" or "golden_hoe" or "diamond_hoe" or "netherite_hoe" or "copper_hoe"))
@@ -55,7 +56,7 @@ internal readonly record struct VanillaHoeUse(bool HasRules, bool HasRootedDirt,
         if (face == Direction.Down)
             return true;
         BlockPos above = position.Above();
-        BlockState upper = world.GetBlock(above);
+        BlockState upper = current?.GetBlock(world, above) ?? world.GetBlock(above);
         if (world.GetColumn(above) is null || !upper.IsValid)
             prediction = BlockUsePrediction.Unknown;
         else if (upper.IsAir)

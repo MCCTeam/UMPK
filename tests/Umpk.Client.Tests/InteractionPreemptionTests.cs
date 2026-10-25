@@ -283,6 +283,8 @@ public sealed class InteractionPreemptionTests
         world.SetBlockStateId(new BlockPos(Door.X, Door.Y + 1, Door.Z), DoorState(data, door!, !closed, "upper"));
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, FloorY, LaneZ + 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();

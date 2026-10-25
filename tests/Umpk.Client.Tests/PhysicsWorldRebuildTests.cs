@@ -55,6 +55,8 @@ public sealed class PhysicsWorldRebuildTests
         {
             // The world the join already installed, not a new one: the engine is bound to it either way.
             AddFloor(harness.State.World, floorY: 0);
+            foreach (var column in harness.State.World.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
             SeedAt(harness, holder, Spawn);
             Tick(holder, 5);
 
@@ -96,6 +98,8 @@ public sealed class PhysicsWorldRebuildTests
 
             // Give the new world a floor, then run the seam the client runs every tick.
             AddFloor(second, floorY: 64);
+            foreach (var column in second.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
             SeedAt(harness, holder, Spawn);
             Tick(holder, 40);
 
@@ -111,6 +115,8 @@ public sealed class PhysicsWorldRebuildTests
         await using (loop)
         {
             AddFloor(harness.State.World, floorY: 0);
+            foreach (var column in harness.State.World.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
             SeedAt(harness, holder, Spawn);
             Tick(holder, 5);
             Assert.True(holder.EngineState!.Value.FallDistance > 0);
@@ -151,6 +157,8 @@ public sealed class PhysicsWorldRebuildTests
             WorldFactory.EmptyBiomes());
         AddFloor(world, floorY);
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
     }
 
     private static void AddFloor(Umpk.Game.World.World world, int floorY)

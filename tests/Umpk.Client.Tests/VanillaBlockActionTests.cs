@@ -143,6 +143,8 @@ public sealed class VanillaBlockActionTests
         world.SetBlockStateId(target, stone.DefaultStateId);
         state.Registries = registries;
         state.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            state.EntityMembership.LoadColumn(column.Position);
     }
 
     private static Task TickAsync(ChannelSessionScheduler scheduler, InteractionActions actions, ClientState state)

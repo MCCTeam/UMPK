@@ -27,7 +27,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         int filled = Filled(session, protocol);
         await Prime(session, filled);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
         BlockUseResult? duringEvent = null;
         using IDisposable subscription = session.Client.Events.Subscribe<BlockChanged>(change =>
         {
@@ -50,7 +50,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         Assert.Equal(BlockUseResult.Success, duringEvent);
         Assert.Equal(filled, session.Client.State.World.GetBlock(Session.Target).StateId);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
 
     [Theory]
@@ -64,25 +64,25 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         int filled = Filled(session, protocol);
         await Prime(session, filled);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
 
         await SendChunk(session, protocol, filled, full: false, section: 3, includeRecord: false);
         Assert.Equal(filled, session.Client.State.World.GetBlock(Session.Target).StateId);
-        await AssertPrediction(session, BlockUseResult.Pass);
-        await AssertUse(session, protocol, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
+        await AssertUse(session, protocol, AfterAcknowledgedUse(protocol));
 
         BlockUseResult? duringEvent = null;
         using IDisposable subscription = session.Client.Events.Subscribe<ChunkLoaded>(_ => duringEvent = Prediction(session).Result);
         await SendChunk(session, protocol, filled, full: false, section: 4, includeRecord: true);
         Assert.Equal(BlockUseResult.Success, duringEvent);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
 
         duringEvent = null;
         await SendChunk(session, protocol, filled, full: true, section: 4, includeRecord: true);
         Assert.Equal(BlockUseResult.Success, duringEvent);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
 
     [Theory]
@@ -95,7 +95,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         int filled = Filled(session, protocol);
         await Prime(session, filled);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
         BlockUseResult? duringUnload = null;
         using IDisposable subscription = session.Client.Events.Subscribe<ChunkUnloaded>(_ => duringUnload = Prediction(session).Result);
         await session.Forget();
@@ -105,7 +105,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         await AssertUse(session, protocol, BlockUseResult.Unknown);
         await SendChunk(session, protocol, filled, full: true, section: 4, includeRecord: true);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
 
     [Theory]
@@ -118,13 +118,13 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         int filled = Filled(session, protocol);
         await Prime(session, filled);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
         var oldWorld = session.Client.State.World;
         await Respawn(session, protocol, "minecraft:overworld");
         Assert.Same(oldWorld, session.Client.State.World);
         Assert.Equal(filled, oldWorld.GetBlock(Session.Target).StateId);
-        await AssertPrediction(session, BlockUseResult.Pass);
-        await AssertUse(session, protocol, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
+        await AssertUse(session, protocol, AfterAcknowledgedUse(protocol));
 
         await Respawn(session, protocol, "minecraft:the_nether");
         Assert.NotSame(oldWorld, session.Client.State.World);
@@ -133,7 +133,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         await AssertPrediction(session, BlockUseResult.Unknown);
         await SendChunk(session, protocol, filled, full: true, section: 4, includeRecord: true);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
 
     [Theory]
@@ -152,7 +152,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         Assert.Equal(filled, session.Client.State.World.GetBlock(Session.Target).StateId);
         await AssertPrediction(session, BlockUseResult.Success);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
         var originalClient = session.Client;
         var retainedWorld = session.Client.State.World;
         long priorTick = session.Client.State.SessionTick;
@@ -172,7 +172,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         Assert.Equal(priorTick + 1, session.Client.State.SessionTick);
         await SendChunk(session, protocol, filled, full: true, section: 4, includeRecord: true);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
 
     [Theory]
@@ -183,7 +183,7 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         int filled = Filled(session, protocol);
         await Prime(session, filled);
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
         int observations = 0;
         BlockUseResult? duringEvent = null;
         using IDisposable subscription = session.Client.Events.Subscribe<ChunkLoaded>(change =>
@@ -219,8 +219,11 @@ public sealed class JukeboxPredictionLifetimeSessionTests
         Assert.Null(session.Client.State.World.GetBlockEntityNbt(Session.Target));
         Assert.True(session.Client.State.EntityMembership.HasColumn(Session.Target));
         await AssertUse(session, protocol, BlockUseResult.Success);
-        await AssertPrediction(session, BlockUseResult.Pass);
+        await AssertPrediction(session, AfterAcknowledgedUse(protocol));
     }
+
+    // These historical cases use Session.Use, which has already acknowledged 759+; dedicated sequenced cases exercise pending state through every lifetime transition.
+    private static BlockUseResult AfterAcknowledgedUse(int protocol) => protocol >= 759 ? BlockUseResult.Success : BlockUseResult.Pass;
 
     private static int Filled(Session session, int protocol)
     {

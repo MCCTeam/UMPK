@@ -357,6 +357,7 @@ public sealed class AxeUsePredictionRuntimeTests
         await harness.Features(["vanilla", flag]);
         await harness.Use(Direction.Up, Hand.Main);
         Assert.Equal(3, harness.Sent.Count);
+        await harness.AcknowledgeLastUse();
         await harness.Block(harness.Target, "lever");
         Assert.True(harness.State.Registries.Items.TryGet(Identifier.Minecraft(held), out var blockItem));
         await harness.Slot(Hand.Main, new ItemStack(blockItem, 1));
@@ -430,6 +431,7 @@ public sealed class AxeUsePredictionRuntimeTests
         await harness.Features(["vanilla"]);
         await harness.Use(Direction.Up, Hand.Main);
         Assert.Equal(3, harness.Sent.Count);
+        await harness.AcknowledgeLastUse();
         await harness.Block(harness.Target, "lever");
         await harness.Features([]);
         await harness.Use(Direction.Up, Hand.Main);
@@ -664,6 +666,8 @@ public sealed class AxeUsePredictionRuntimeTests
                 state = Enumerable.Range(block.MinStateId, block.StateCount).First(id => block.TryGetPropertyValue(id, "axis", out string value) && value == expected);
             return Apply("block_update", new ClientboundBlockUpdatePacket(position, state));
         }
+
+        public Task AcknowledgeLastUse() => Apply("block_changed_ack", new ClientboundBlockChangedAckPacket(Sent.OfType<ServerboundUseItemOnPacket>().Last().Sequence));
 
         public Task Slot(Hand hand, ItemStack item) => Apply(_protocol == 47 ? "set_slot" : "container_set_slot", new ClientboundContainerSetSlotPacket(0, 0, hand == Hand.Main ? 36 : 45, item));
         public Task GameMode(GameMode mode) => Apply("game_event", new ClientboundGameEventPacket(3, (float)mode));

@@ -156,6 +156,8 @@ public sealed class StationHoldArrivalTests
                 world.SetBlockStateId(new BlockPos(x, WaterY, LaneZ), WaterState(water, data, SourceX - x));
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(SourceX - 6 + 0.5, WaterY, LaneZ + 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();

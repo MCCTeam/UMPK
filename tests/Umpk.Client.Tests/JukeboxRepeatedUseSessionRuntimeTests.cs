@@ -20,6 +20,7 @@ public sealed class JukeboxRepeatedUseSessionRuntimeTests
     [MemberData(nameof(Cases))]
     public async Task LocalEjectionStopsRepeatedSuccessAndIdenticalServerStateRearmsIt(int protocol, Hand hand)
     {
+        // The session helper acknowledges 759+ before returning; the separate sequenced cases control the unacknowledged interval explicitly.
         await using Session session = await Session.Create(protocol, "jukebox");
         BlockDefinition block = session.Client.State.Registries!.Blocks[Identifier.Minecraft("jukebox")].Value;
         int filled = protocol <= 340 ? block.MinStateId | 1
@@ -33,14 +34,14 @@ public sealed class JukeboxRepeatedUseSessionRuntimeTests
         Assert.Equal(filled, session.Client.State.World.GetBlock(Session.Target).StateId);
         Assert.Null(session.Client.State.World.GetBlockEntityNbt(Session.Target));
 
-        await AssertPrediction(session, hand, BlockUseResult.Pass);
-        await AssertPrediction(session, hand, BlockUseResult.Pass);
-        await AssertPackets(session, protocol, hand, swing: false);
+        await AssertPrediction(session, hand, protocol >= 759 ? BlockUseResult.Success : BlockUseResult.Pass);
+        await AssertPrediction(session, hand, protocol >= 759 ? BlockUseResult.Success : BlockUseResult.Pass);
+        await AssertPackets(session, protocol, hand, swing: protocol >= 759);
         Assert.Equal(filled, session.Client.State.World.GetBlock(Session.Target).StateId);
 
         await session.Send(new ClientboundBlockUpdatePacket(Session.Target.Offset(Direction.East), block.DefaultStateId));
         Assert.Empty(await session.Barrier());
-        await AssertPrediction(session, hand, BlockUseResult.Pass);
+        await AssertPrediction(session, hand, protocol >= 759 ? BlockUseResult.Success : BlockUseResult.Pass);
 
         BlockUseResult? resultDuringServerEvent = null;
         using IDisposable observed = session.Client.Events.Subscribe<Umpk.Client.Events.BlockChanged>(change =>

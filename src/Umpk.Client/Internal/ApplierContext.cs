@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
+using Umpk.Geometry;
 using Umpk.Protocol.Java;
 
 namespace Umpk.Client.Internal;
@@ -46,6 +47,9 @@ internal sealed class ApplierContext
 
     /// <summary>Stops the live client's game-mode block destruction after a teleport when the native profile requires it. State-only applier harnesses have no active interaction owner.</summary>
     public Func<CancellationToken, ValueTask> StopBlockDestruction { get; init; } = static _ => ValueTask.CompletedTask;
+
+    /// <summary>Applies a native block prediction's captured-position restoration through the existing local body owner. It sends no network response.</summary>
+    public Action<BlockPos, Umpk.Game.Blocks.BlockState, Vec3d> RestorePredictedPosition { get; init; } = static (_, _, _) => { };
 
     /// <summary>The server tab-complete correlator; resolves pending completion requests.</summary>
     public required Umpk.Client.Commands.CommandCompletionService CommandCompletions { get; init; }

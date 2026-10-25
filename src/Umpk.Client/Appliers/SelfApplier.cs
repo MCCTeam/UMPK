@@ -209,6 +209,8 @@ internal sealed class SelfApplier : IApplier
                     ct)
                 .ConfigureAwait(false);
 
+        if (EntityTeleportProfile.HasBlockPredictionTeleportBarrier(context.Version.Version.Protocol))
+            context.Sequences.ObserveTeleport();
         if (BlockInteractionProfile.ForProtocol(context.Version.Version.Protocol).TeleportStopsDestroying)
             await context.StopBlockDestruction(ct).ConfigureAwait(false);
 

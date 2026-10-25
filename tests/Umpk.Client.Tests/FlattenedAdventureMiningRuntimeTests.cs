@@ -135,6 +135,8 @@ public sealed class FlattenedAdventureMiningRuntimeTests
             var world = new Umpk.Game.World.World(old.Dimension, old.BlockData, WorldFactory.EmptyBiomes());
             world.SetBlockStateId(Fixture.Target, old.GetBlock(Fixture.Target).StateId);
             fixture.State.InstallWorld(world);
+            foreach (var column in world.LoadedColumns)
+                fixture.State.EntityMembership.LoadColumn(column.Position);
         }
         await AssertStartAsync(fixture, true);
     }

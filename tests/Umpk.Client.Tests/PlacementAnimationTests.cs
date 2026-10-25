@@ -757,6 +757,7 @@ public sealed class PlacementAnimationTests
             world.SetBlockStateId(Target, StoneState);
             State.Registries = registries;
             State.InstallWorld(world);
+            State.EntityMembership.LoadColumn(ChunkPos.Containing(Target));
             Assert.True(registries.Items.TryGet(Identifier.Minecraft("stone"), out RegistryEntry<ItemDefinition> item));
             if (State.Features.Inventory)
                 State.Inventory.SetSlot(0, 36, new ItemStack(item, 32));

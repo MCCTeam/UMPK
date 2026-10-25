@@ -1,3 +1,4 @@
+using Umpk.Client.Internal;
 using Umpk.Game.Blocks;
 using Umpk.Game.Items;
 using Umpk.Game.World;
@@ -22,7 +23,7 @@ internal readonly record struct VanillaShovelUse(bool HasRules, bool CreatesPath
         return true;
     }
 
-    public bool TryPredict(Identifier item, BlockState clicked, World world, BlockPos position, Direction face, out BlockUsePrediction prediction)
+    public bool TryPredict(Identifier item, BlockState clicked, World world, BlockPos position, Direction face, out BlockUsePrediction prediction, JukeboxPredictionState? current = null)
     {
         prediction = BlockUsePrediction.Unknown;
         if (!HasRules || !item.IsMinecraft || item.Path is not ("wooden_shovel" or "stone_shovel" or "iron_shovel" or "golden_shovel" or "diamond_shovel" or "netherite_shovel" or "copper_shovel"))
@@ -49,7 +50,7 @@ internal readonly record struct VanillaShovelUse(bool HasRules, bool CreatesPath
             return true;
         }
         BlockPos above = position.Above();
-        BlockState upper = world.GetBlock(above);
+        BlockState upper = current?.GetBlock(world, above) ?? world.GetBlock(above);
         if (world.GetColumn(above) is null || !upper.IsValid)
             prediction = BlockUsePrediction.Unknown;
         else if (upper.IsAir)

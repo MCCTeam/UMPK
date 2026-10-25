@@ -9,7 +9,7 @@ using Umpk.Physics;
 namespace Umpk.Client.Navigation;
 
 /// <summary>Adapts the tracked <see cref="Umpk.Game.World.World"/> to <see cref="IPhysicsWorldView"/> for the local-player physics engine. Collision shapes come from an <see cref="IBlockShapeSource"/>: the version's generated shape tables by default, or whatever the host injected. Entity colliders are collected only when an owned source actor supplies the native query context.</summary>
-internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeSource shapes, WorldBorderContainmentEra borderEra, BlockCollisionQueryEra collisionEra = BlockCollisionQueryEra.BoundingBoxes, EntityCollisionContext? entityContext = null) : IPhysicsWorldView
+internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeSource shapes, WorldBorderContainmentEra borderEra, BlockCollisionQueryEra collisionEra = BlockCollisionQueryEra.BoundingBoxes, EntityCollisionContext? entityContext = null, JukeboxPredictionState? current = null) : IPhysicsWorldView
 {
     private readonly Umpk.Game.World.World _world = world;
     private readonly IBlockShapeSource _shapes = shapes;
@@ -29,7 +29,7 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
             if (ModernHardCollisionProfile.Supports(context.Protocol) && _world.GetColumn(pos) is null)
                 throw new UnknownEntityCollisionContextException();
         }
-        BlockState state = _world.GetBlock(pos);
+        BlockState state = current?.GetBlock(_world, pos) ?? _world.GetBlock(pos);
         if (entityContext is { } modern && ModernHardCollisionProfile.Supports(modern.Protocol) && !state.IsValid)
             throw new UnknownEntityCollisionContextException();
         return state;

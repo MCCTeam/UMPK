@@ -27,6 +27,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
     internal static readonly BlockPos Target = new(1, 65, 1);
     private static readonly Guid RequestedId = Guid.Parse("0baf5574-d2d0-4769-9c4a-0b02c326266f");
     private static readonly Guid AssignedId = Guid.Parse("f8cffac4-a661-4e6f-a9ca-14b9bf1f2905");
+    internal List<IPacket> ObservedOutbound { get; } = [];
     internal List<PacketReceived> FeatureFrames { get; } = [];
     internal List<bool?> VanillaMembershipAtFeatureEvent { get; } = [];
     internal FakeJavaServer Server { get; private set; } = FakeJavaServer.Create();
@@ -37,6 +38,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
     private readonly JavaVersion _version;
     private readonly int _protocol;
     private readonly bool _featureFlags;
+    internal int Protocol => _protocol;
     private long _barrier;
     internal CancellationToken Token => _budget.Token;
     private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
@@ -272,6 +274,8 @@ internal sealed class BlockUseSession : IAsyncDisposable
 
     internal Task Tick() => Ticks.Fire(Token);
 
+    internal Task RejoinWorld(string block = "jukebox") => PrepareWorld(block, terrain: true);
+
     internal async Task<List<IPacket>> Use(Hand hand)
     {
         Task action = Client.Actions.Interaction.PlaceBlockAsync(Target, Direction.Up, new Vec3d(.5, 1, .5), hand, ct: Token);
@@ -478,6 +482,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
             var packet = Assert.IsAssignableFrom<IPacket>(codec.Decode(frame.Payload, Context));
             Assert.Equal(frame.Payload.ToArray(), Encode(codec, packet));
+            ObservedOutbound.Add(packet);
             if (packet is ServerboundPlayKeepAlivePacket { Id: var id } && id == nonce)
                 return actions;
             if (packet is ServerboundLegacyBlockPlacePacket or ServerboundUseItemOnPacket or ServerboundSwingPacket or ServerboundPunchPacket)

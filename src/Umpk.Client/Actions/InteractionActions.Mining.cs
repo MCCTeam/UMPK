@@ -23,12 +23,13 @@ public sealed partial class InteractionActions
     private long? _interactionLifetime;
     private int _destroyDelay;
 
-    private sealed class MiningRequest(BlockPos position, Direction face, double? viewDistance, long playerLifetime, CancellationToken cancellation)
+    private sealed class MiningRequest(BlockPos position, Direction face, double? viewDistance, long playerLifetime, SequenceTracker.Lifetime sequenceLifetime, CancellationToken cancellation)
     {
         public BlockPos Position { get; } = position;
         public Direction Face { get; set; } = face;
         public double? ViewDistance { get; } = viewDistance;
         public long PlayerLifetime { get; } = playerLifetime;
+        public SequenceTracker.Lifetime SequenceLifetime { get; } = sequenceLifetime;
         public CancellationToken Cancellation { get; } = cancellation;
         public TaskCompletionSource<int?> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public World? World { get; set; }
@@ -62,7 +63,7 @@ public sealed partial class InteractionActions
                 throw new OperationCanceledException("The requested block is no longer in view.", new CancellationToken(true));
             face = hit.Face;
         }
-        return _mining = new MiningRequest(position, face, viewDistance, _services.State.PlayerLifetime, ct);
+        return _mining = new MiningRequest(position, face, viewDistance, _services.State.PlayerLifetime, _sequences.CaptureLifetime(), ct);
     }
 
     internal void TickAttackChargeOnLoop(bool playerTicking)
@@ -129,7 +130,7 @@ public sealed partial class InteractionActions
                         return;
                     }
 
-                    BlockState initialBlock = world.GetBlock(request.Position);
+                    BlockState initialBlock = _services.State.JukeboxPrediction.GetBlock(world, request.Position);
                     if (!initialBlock.IsValid)
                         throw new MiningUnavailableException("The target block state is unknown.");
                     if (initialBlock.IsAir)
@@ -157,7 +158,7 @@ public sealed partial class InteractionActions
             if (piercing)
                 return;
 
-            BlockState block = world.GetBlock(request.Position);
+            BlockState block = _services.State.JukeboxPrediction.GetBlock(world, request.Position);
             if (!block.IsValid)
                 throw new MiningUnavailableException("The target block state is unknown.");
             if (block.IsAir)
@@ -262,7 +263,7 @@ public sealed partial class InteractionActions
         if (_services.Self.GameMode == GameMode.Adventure)
         {
             int protocol = _services.Version.Version.Protocol;
-            BlockState block = request.World!.GetBlock(request.Position);
+            BlockState block = _services.State.JukeboxPrediction.GetBlock(request.World!, request.Position);
             bool? allowed = VanillaLegacyMiningPermission.Supports(protocol)
                 ? VanillaLegacyMiningPermission.Allows(item, block, protocol)
                 : VanillaFlattenedMiningPermission.Supports(protocol)

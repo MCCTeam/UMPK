@@ -171,6 +171,8 @@ public sealed class MiningItemIdentityRuntimeTests
             _harness.State.RegistryTags.Install([new TagRegistry(RegistryIds.Block, [new TagEntry(Identifier.Minecraft(block == "clay" ? "mineable/shovel" : "mineable/pickaxe"), [blockId])])]);
             world.SetBlockStateId(Target, definition.DefaultStateId);
             _harness.State.InstallWorld(world);
+            foreach (var column in world.LoadedColumns)
+                _harness.State.EntityMembership.LoadColumn(column.Position);
             var services = new ClientSessionServices
             {
                 Version = version,

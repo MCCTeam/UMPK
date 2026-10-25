@@ -16,7 +16,7 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out bool clearJukebox);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState);
         if (!prediction.SendPacket)
             return null;
         ct.ThrowIfCancellationRequested();
@@ -29,8 +29,8 @@ public sealed partial class InteractionActions
             sequence = _sequences.Next();
             await _sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
         }
-        if (clearJukebox)
-            _services.State.JukeboxPrediction.Commit(_services.State.World, position);
+        if (localState is int changed)
+            _services.State.JukeboxPrediction.Commit(_services.State.World, position, changed, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         if (prediction.Swing == BlockUseSwing.Packet)
             await SwingAsync(hand, session).ConfigureAwait(false);
         return sequence;
@@ -48,9 +48,9 @@ public sealed partial class InteractionActions
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
         => PredictBlockUseCore(position, face, cursor, hand, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out bool clearJukebox)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState)
     {
-        clearJukebox = false;
+        localState = null;
         bool inventoryKnown = _services.State.Features.Inventory;
         ItemStack main = HeldItem();
         ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
@@ -66,9 +66,11 @@ public sealed partial class InteractionActions
         World world = _services.State.World;
         if (!world.Border.IsWithinBounds(position.X, position.Z, WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol)))
             return BlockUsePrediction.Rejected;
-        if (world.GetColumn(position) is null)
+        // Block updates can synthesize storage without establishing native terrain.
+        if (world.GetColumn(position) is null || !_services.State.EntityMembership.HasColumn(position))
             return BlockUsePrediction.Unknown;
-        BlockState clicked = world.GetBlock(position);
+        BlockState observed = world.GetBlock(position);
+        bool projected = _services.State.JukeboxPrediction.TryProject(world, position, observed, out BlockState clicked);
         if (itemEnabled is null)
             return BlockUsePrediction.Unknown;
         // Before 1.21.2 the spectator controller returns SUCCESS before item use. Later clients return CONSUME, whose swing source is NONE.
@@ -78,7 +80,6 @@ public sealed partial class InteractionActions
         IBlockInteractionSource data = JavaGameData.BlockInteractionData(_services.Version.Version.Protocol);
         if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block))
             return BlockUsePrediction.Unknown;
-        bool projectedEmptyJukebox = _services.State.JukeboxPrediction.TryProject(world, position, clicked, out clicked);
         // 1.14.4 and 26.3 MultiPlayerGameMode.useItemOn/performUseItemOn suppress block activation only when secondary use has a nonempty stack in either hand. Activation runs before item cooldown and placement permissions.
         bool suppressActivation = _services.Self.Sneaking && (!main.IsEmpty || !off.IsEmpty);
         // performUseItemOn fails on a disabled target before activation, but still commits the use packet. Native secondary use suppresses this entire target/activation phase.
@@ -91,9 +92,10 @@ public sealed partial class InteractionActions
                 return blockEnabled is false ? BlockUsePrediction.Fail : BlockUsePrediction.Unknown;
         }
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
-        BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? world.GetBlock(position.Below()) : default;
+        BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? _services.State.JukeboxPrediction.GetBlock(world, position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
-        if (projectedEmptyJukebox)
+        if (projected && clicked.Block.Id.IsMinecraft && clicked.Block.Id.Path == "jukebox"
+            && (clicked.LegacyId >= 0 && clicked.LegacyMeta == 0 || clicked.TryGetProperty("has_record", out string hasRecord) && hasRecord == "false"))
         {
             hasActivation = true;
             activationResult = BlockUseResult.Pass;
@@ -106,7 +108,8 @@ public sealed partial class InteractionActions
         {
             if (activationResult != BlockUseResult.Pass)
             {
-                clearJukebox = activationResult == BlockUseResult.Success && activation.HasStateOnlyJukeboxRules && clicked.Block.Id.Path == "jukebox";
+                if (activationResult == BlockUseResult.Success && activation.TryGetLocalMutation(clicked, out int changed))
+                    localState = changed;
                 return activationResult switch
                 {
                     BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),
@@ -132,11 +135,11 @@ public sealed partial class InteractionActions
         if (_services.Self.GameMode == GameMode.Adventure)
             return BlockUsePrediction.Unknown;
         VanillaHoeUse hoe = VanillaHoeUse.ForProtocol(_services.Version.Version.Protocol);
-        if (hoe.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction toolUse))
+        if (hoe.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction toolUse, _services.State.JukeboxPrediction))
             // A block update can synthesize a storage column before native chunk arrival or after unload. It does not establish the terrain needed by the tool.
             return hoe.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? toolUse : BlockUsePrediction.Unknown;
         VanillaShovelUse shovel = VanillaShovelUse.ForProtocol(_services.Version.Version.Protocol);
-        if (shovel.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction shovelUse))
+        if (shovel.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction shovelUse, _services.State.JukeboxPrediction))
             return shovel.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? shovelUse : BlockUsePrediction.Unknown;
         VanillaAxeUse axe = VanillaAxeUse.ForProtocol(_services.Version.Version.Protocol);
         if (axe.TryPredict(item.Item.Id, clicked, hand, off, _services.Self.Sneaking, out BlockUsePrediction axeUse))
@@ -179,7 +182,7 @@ public sealed partial class InteractionActions
                 return BlockUsePrediction.Unknown;
             if (!replacesClicked)
             {
-                BlockState previous = world.GetBlock(destination);
+                BlockState previous = _services.State.JukeboxPrediction.GetBlock(world, destination);
                 if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
                     return BlockUsePrediction.Unknown;
             }
@@ -209,7 +212,7 @@ public sealed partial class InteractionActions
             if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY
                 || world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
                 return BlockUsePrediction.Unknown;
-            BlockState previous = world.GetBlock(destination);
+            BlockState previous = _services.State.JukeboxPrediction.GetBlock(world, destination);
             if (!previous.IsValid)
                 return BlockUsePrediction.Unknown;
             string type;
@@ -274,7 +277,7 @@ public sealed partial class InteractionActions
 
         bool TryReplacement(BlockPos cell, BlockState state, out BlockReplacementInfo info)
         {
-            BlockState lower = world.GetBlock(cell.Below());
+            BlockState lower = _services.State.JukeboxPrediction.GetBlock(world, cell.Below());
             return data.TryGetCubeReplacement(state.StateId, lower.IsValid ? lower.StateId : null, out info);
         }
     }

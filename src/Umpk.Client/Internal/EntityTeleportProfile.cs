@@ -7,6 +7,8 @@ namespace Umpk.Client.Internal;
 /// <summary>Native modern teleport arithmetic and current/target transitions. Packet-coordinate bases remain separately owned.</summary>
 internal readonly record struct EntityTeleportProfile(bool ClampPitchBeforeRotation, bool WideTrigIndex, bool UsesPendingRotation)
 {
+    public static bool HasBlockPredictionTeleportBarrier(int protocol) => protocol >= 775;
+
     public static EntityTeleportProfile ForProtocol(int protocol) => new(protocol >= 770, protocol >= 774, protocol >= 770);
 
     public PositionMoveRotation GetSource(VanillaEntityInterpolation position, Vec3d knownMovement)

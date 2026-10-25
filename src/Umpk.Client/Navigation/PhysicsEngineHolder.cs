@@ -120,7 +120,9 @@ internal sealed class PhysicsEngineHolder
         // Moving pistons belong to the level and survive a same-dimension player replacement.
         if (!sameWorld)
             _pistons.Clear();
-        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol), PhysicsProfile.BlockCollisionQueryForProtocol(_services.Version.Version.Protocol));
+        _view = new WorldPhysicsView(world, _shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(_services.Version.Version.Protocol), PhysicsProfile.BlockCollisionQueryForProtocol(_services.Version.Version.Protocol), current: _services.State.JukeboxPrediction);
+        _predictionCollisionView = null;
+        _predictionCollision = null;
         _engine = new PlayerPhysics(_view, _profile);
         SelfState self = _services.State.Self;
         _engine.Reset(self.Position, self.Yaw, self.Pitch);
@@ -269,7 +271,7 @@ internal sealed class PhysicsEngineHolder
     /// </remarks>
     private bool InScaffolding(in PhysicsState state)
         => _installedWorld is { } world
-        && world.GetBlock(
+        && _services.State.JukeboxPrediction.GetBlock(world,
             Umpk.Geometry.BlockPos.Containing(state.Position.X, state.Position.Y, state.Position.Z)).IsScaffolding;
 
     /// <summary>The idle input that keeps a player standing in flowing water on the block a navigation just put it on, by walking back toward the arrival position.</summary>
@@ -920,6 +922,39 @@ internal sealed class PhysicsEngineHolder
         _legacySelf?.ObservePosition(self.Position);
         _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
+    }
+
+    private SuppliedStateCollisionView? _predictionCollisionView;
+    private PhysicsCollisionQuery? _predictionCollision;
+
+    // Entity.isColliding queries the supplied restored state even when EmptyLevelChunk refuses its write. This scalar query context reuses the existing exact grid/offset collision implementation.
+    private sealed class SuppliedStateCollisionView(WorldPhysicsView world) : IPhysicsWorldView
+    {
+        internal Umpk.Game.Blocks.BlockState State { get; set; }
+        internal BlockPos Position { get; set; }
+        public Umpk.Game.Blocks.BlockState GetBlock(BlockPos position) => position == Position ? State : default;
+        public ReadOnlySpan<Aabb> GetCollisionShapes(Umpk.Game.Blocks.BlockState state) => world.GetCollisionShapes(state);
+        public Umpk.Game.Blocks.BlockCollisionGrid? GetCollisionGrid(Umpk.Game.Blocks.BlockState state) => world.GetCollisionGrid(state);
+        public BlockCollisionQueryEra CollisionQueryEra => world.CollisionQueryEra;
+        public bool IsChunkLoaded(BlockPos position) => world.IsChunkLoaded(position);
+    }
+
+    /// <summary>Moves only the existing native player position after a restored block intersects its current body. Rotation, velocity, pose, fall and contact state survive; no teleport response is sent.</summary>
+    public void RestorePredictedPosition(BlockPos position, Umpk.Game.Blocks.BlockState restored, Vec3d captured)
+    {
+        EnsureEngine();
+        if (_engine is null || _view is null)
+            return;
+        _predictionCollisionView ??= new SuppliedStateCollisionView(_view);
+        _predictionCollision ??= new PhysicsCollisionQuery(_predictionCollisionView);
+        _predictionCollisionView.State = restored;
+        _predictionCollisionView.Position = position;
+        PhysicsState body = _engine.State;
+        if (_predictionCollision.NoCollision(body.Position, body.BoundingBox, LastAppliedInput.Sneak, body.FallDistance, ReadPowderSnowWalkable()))
+            return;
+        SelfState self = _services.State.Self;
+        self.Position = new Vec3d(Math.Clamp(captured.X, -3.0E7, 3.0E7), captured.Y, Math.Clamp(captured.Z, -3.0E7, 3.0E7));
+        _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
     }
 
     /// <summary>Pushes the tracked self velocity into the engine and changes nothing else. Called from the <c>set_entity_motion</c> apply path once a server-applied velocity (knockback, explosion, piston, bounce) has landed in self state.</summary>

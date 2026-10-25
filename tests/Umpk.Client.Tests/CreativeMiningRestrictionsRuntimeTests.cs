@@ -328,8 +328,18 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
             if (packet is ServerboundPlayerActionPacket { Action: 0 })
                 fixture.ReplaceSession();
         };
+        var publication = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        fixture.NextQueuedResultPublication = publication.Task;
         Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North);
-        Exception? tickError = await Record.ExceptionAsync(() => fixture.TickAsync());
+        Exception? tickError;
+        try
+        {
+            tickError = await Record.ExceptionAsync(() => fixture.TickAsync());
+        }
+        finally
+        {
+            publication.TrySetResult();
+        }
         Assert.True(tickError is null or OperationCanceledException);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
         Assert.Equal(protocol == 47 ? 2 : 1, fixture.Sent.Count);
@@ -443,6 +453,7 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
         internal List<object> Sent { get; } = [];
         internal ClientState State => _harness.State;
         internal Action<IPacket>? PacketCommitted { get; set; }
+        internal Task? NextQueuedResultPublication { get; set; }
 
         internal Fixture(int protocol)
         {
@@ -457,6 +468,8 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
             State.RegistryTags.Install([new TagRegistry(RegistryIds.Block, [new TagEntry(Identifier.Minecraft("mineable/pickaxe"), [stoneId])])]);
             world.SetBlockStateId(Target, stone.DefaultStateId);
             State.InstallWorld(world);
+            foreach (var column in world.LoadedColumns)
+                State.EntityMembership.LoadColumn(column.Position);
             var services = new ClientSessionServices
             {
                 Version = version,
@@ -465,7 +478,7 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
                 State = State,
                 Wire = new WireIndex(version),
                 Logger = NullLogger.Instance,
-                Scheduler = new ObservedScheduler(_scheduler, () => CancellationCleanupQueued.TrySetResult()),
+                Scheduler = new ObservedScheduler(_scheduler, () => CancellationCleanupQueued.TrySetResult(), TakeQueuedResultPublication),
                 CurrentSessionCancellation = () => _session.Token,
                 Events = _harness.Events,
             };
@@ -522,6 +535,13 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
             }, CancellationToken.None);
         }
 
+        private Task? TakeQueuedResultPublication()
+        {
+            Task? gate = NextQueuedResultPublication;
+            NextQueuedResultPublication = null;
+            return gate;
+        }
+
         internal void ReplaceSession()
         {
             _session.Cancel();
@@ -539,12 +559,24 @@ public sealed class CreativeMiningRestrictionsRuntimeTests
                 lifetime.Dispose();
         }
 
-        private sealed class ObservedScheduler(ChannelSessionScheduler scheduler, Action asynchronousWorkQueued) : ISessionScheduler
+        private sealed class ObservedScheduler(ChannelSessionScheduler scheduler, Action asynchronousWorkQueued, Func<Task?> takeQueuedResultPublication) : ISessionScheduler
         {
             public bool IsCurrent => scheduler.IsCurrent;
             public void Post(Action work) => scheduler.Post(work);
             public Task InvokeAsync(Action work, CancellationToken cancellationToken) => scheduler.InvokeAsync(work, cancellationToken);
-            public Task<TResult> InvokeAsync<TResult>(Func<TResult> work, CancellationToken cancellationToken) => scheduler.InvokeAsync(work, cancellationToken);
+            public Task<TResult> InvokeAsync<TResult>(Func<TResult> work, CancellationToken cancellationToken)
+            {
+                Task<TResult> completion = scheduler.InvokeAsync(work, cancellationToken);
+                Task? gate = takeQueuedResultPublication();
+                return gate is null ? completion : PublishAfterGateAsync(completion, gate);
+            }
+
+            private static async Task<TResult> PublishAfterGateAsync<TResult>(Task<TResult> completion, Task gate)
+            {
+                TResult result = await completion.ConfigureAwait(false);
+                await gate.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                return result;
+            }
             public Task<TResult> InvokeAsync<TResult>(Func<ValueTask<TResult>> work, CancellationToken cancellationToken) => scheduler.InvokeAsync(work, cancellationToken);
             public Task InvokeAsync(Func<ValueTask> work, CancellationToken cancellationToken)
             {

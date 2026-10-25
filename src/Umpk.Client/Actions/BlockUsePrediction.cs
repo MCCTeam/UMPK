@@ -1,3 +1,4 @@
+using Umpk.Client.Internal;
 using Umpk.Game.Blocks;
 
 namespace Umpk.Client.Actions;
@@ -34,6 +35,16 @@ internal readonly record struct BlockUseActivationProfile(bool HasActivationRule
 {
     // Original registered lever/button use methods return client true from 1.8 through 1.14.4; powered buttons introduce CONSUME in 1.15. Main-hand-only useWithoutItem fallback begins 1.20.5; source bindings cover all 31 earlier named releases and preserve the later profile.
     public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735, protocol is >= 47 and <= 761);
+
+    internal bool TryGetLocalMutation(BlockState block, out int state)
+    {
+        state = 0;
+        if (HasStateOnlyJukeboxRules && JukeboxPredictionState.TryEmptyState(block, out state))
+            return true;
+        return PoweredButtonConsumes && IsButton(block)
+            && block.TryGetProperty("powered", out string powered) && powered == "false"
+            && JukeboxPredictionState.TryPropertyState(block, "powered", "true", out state);
+    }
 
     public bool RequiresNativeTerrain(BlockState block)
         => block.Block.Id.IsMinecraft && (HasMenuActivationRules && IsMenuBlock(block) || HasDoorActivationRules && IsDoor(block) || HasTrapdoorGateRules && (IsTrapdoor(block) || IsFenceGate(block)) || HasActivationRules && (block.Block.Id.Path == "lever" || IsButton(block)));

@@ -123,7 +123,7 @@ public sealed class UmpkClient : IAsyncDisposable
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
             ReadPhysicsState = () => _physics?.EngineState,
-            ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false),
+            ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false, nativeCurrent: true),
             Events = _eventBus,
         };
 
@@ -746,6 +746,7 @@ public sealed class UmpkClient : IAsyncDisposable
             StopBlockDestruction = Actions.Interaction.StopDestroyBlockOnLoopAsync,
             CommandCompletions = _commandCompletions,
             Sequences = _sequences,
+            RestorePredictedPosition = (position, state, captured) => _physics?.RestorePredictedPosition(position, state, captured),
             DispatchConfigurationChannel = _dispatchConfigurationChannel,
             ChatVerifierResolver = _chatVerifiers,
             LastSeenTracker = _chatSigning?.Tracker,
@@ -803,7 +804,8 @@ public sealed class UmpkClient : IAsyncDisposable
     /// <summary>Creates and installs the world only after the current dimension can be resolved from the finalized session registries. Callers compute this before mutating prior join/respawn state, so a required modern dimension failure cannot leave a partially replaced world behind.</summary>
     private void SetupWorld(CommonWorldSetup setup)
     {
-        WorldFactory.InstallWorld(State, setup, _settings.Version.Version.Protocol);
+        if (WorldFactory.InstallWorld(State, setup, _settings.Version.Version.Protocol))
+            _sequences.ResetLifetime();
         // A retained level still receives a new local player, including sessions without terrain storage.
         _movementReadiness.Reset();
         if (!_settings.Features.Terrain)
@@ -1206,7 +1208,9 @@ public sealed class UmpkClient : IAsyncDisposable
         _navigator?.ResetSession();
 
         // A dialog belongs to the connection that showed it: drop it so a reconnect does not resume with a stale one still reported as open.
-        if (State.ResetForSessionEnd())
+        bool dialogCleared = State.ResetForSessionEnd();
+        _sequences.ResetLifetime();
+        if (dialogCleared)
             await _eventBus.PublishAsync(new Umpk.Client.Events.DialogCleared()).ConfigureAwait(false);
 
         SetStatus(ClientStatus.Disconnected);

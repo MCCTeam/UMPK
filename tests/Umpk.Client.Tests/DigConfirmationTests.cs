@@ -191,6 +191,8 @@ public sealed class DigConfirmationTests
             Assert.True(blocks.TryGetValue(Identifier.Minecraft("air"), out BlockDefinition? air));
             world.SetBlockStateId(Target, stone.DefaultStateId);
             state.InstallWorld(world);
+            foreach (var column in world.LoadedColumns)
+                state.EntityMembership.LoadColumn(column.Position);
 
             EventBus? events = withEvents ? new EventBus(NullLogger.Instance, TimeSpan.Zero, 256) : null;
             var sequences = new SequenceTracker();

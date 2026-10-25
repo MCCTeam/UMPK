@@ -328,6 +328,9 @@ public sealed class SelfAirSupplyTests
             for (int z = 3; z <= 10; z++)
                 world.SetBlockStateId(new BlockPos(x, FloorY, z), stone!.DefaultStateId);
 
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
+
     }
 
     private static void FillWater(ApplierHarness harness)

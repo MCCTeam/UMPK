@@ -162,6 +162,8 @@ public sealed class PlayerCorrectionStateTests
             else
                 // Load the column without putting a floor under the falling player.
                 fixture.Harness.State.World.SetBlockStateId(new BlockPos(0, 0, 0), fixture.Stone);
+            foreach (var column in fixture.Harness.State.World.LoadedColumns)
+                fixture.Harness.State.EntityMembership.LoadColumn(column.Position);
             fixture.Harness.State.Self.Position = new Vec3d(.5, floor ? 64 : 200, .5);
             fixture.Holder.ResyncPosition();
             return fixture;

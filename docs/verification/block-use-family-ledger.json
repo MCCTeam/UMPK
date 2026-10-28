@@ -1096,7 +1096,7 @@
       "status": "not run",
       "nativeDecision": "Nineteen exact registered menu keys now have original client-success prediction, with smithing-table false/PASS through 1.15.2 and success from 1.16. Lectern, jukebox, campfire, cake/candle and other conditional overrides still inspect their own item/state/recipe context.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Empty lectern/book insertion, empty jukebox/record insertion, modern jukebox native-instance validity, campfire recipe use, cake/candle and other conditional branches require their exact native client context. Filled lectern has seven-version native acceptance; state-only filled jukebox has bounded runtime/AOT proof and awaits native acceptance.",
+      "missing": "Empty lectern/book insertion, empty jukebox/record insertion, modern jukebox native-instance validity, campfire recipes and specialized/custom cake/candle contexts remain. Filled lectern has seven-version native acceptance; bounded default cake eating now passes six boundaries; state-only filled jukebox has runtime/AOT proof and awaits native acceptance.",
       "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
       "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
       "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
@@ -1487,7 +1487,7 @@
       "status": "not run",
       "nativeDecision": "End crystal, armor stand, hanging entity, minecart, spawn egg and new cushion families require separate native useOn predicates. Boats/buckets with default-pass entries are not moved into this row merely because they create entities/fluids through air-use.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Source-specific prechecks, eligible geometry, context and success/swing result; EndCrystalItem.useOn placement remains pending. The other active EndCrystal slice owns ENTITY picking/current bounds only; it does not implement or accept the item useOn axis.",
+      "missing": "Bounded EndCrystalItem.useOn runtime and five-boundary native acceptance pass on their recorded producer. Other entity-placement items, patched contexts, relevant geometry and final-producer acceptance remain unfinished.",
       "focusedFailingPublicSession": "One family per red: exact support/face/clearance/unknown context plus actual public action and teardown.",
       "nativeLiveNeed": "Original family method plus independent native entity/block/stack observations; exclude general AI/combat/server-owned effects."
     },
@@ -2233,7 +2233,7 @@
     },
     "cakeRuntime": {
       "status": "passed",
-      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; current Horse-matched native47/315/573/765/766 passed, while777 failed before use at a fixture save-path check.",
+      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; six selected native profiles 47/315/573/765/766/777 passed 45 scenes, with exact fixture provenance retained per profile.",
       "producerClientSha256": "ca4ae7b9f1fb3c5447a22edb44abddcaa16b6ae27cd3d75e96053a7724669758",
       "protocols": 50,
       "focusedCases": 111,
@@ -2244,9 +2244,8 @@
       "clientBaseline": 35303,
       "rootAuditSha256": "350c948c8e6cb2e0904c58562b8938abbdb5dffca6100be19a61c4af7f1461f1",
       "report": "docs/verification/cake-use-runtime.md",
-      "compilerRuntimeLimit": "The historical 6ea/ca4 red-green proof, ca4/989 full 35,303 result, later fcea/df1d full 35,499/native47v5 result and current Horse5591/4249 full 35,611/nativev6 result retain their exact producer and fixture receipts. Current native success covers five profiles; 777 nutrition and swing checks remain unrun.",
+      "compilerRuntimeLimit": "Historical runtime and matched full proofs retain their own producer pairs. The current six-profile pack uses Horse5591/4249 and full 35,611/same-full111/AOT: five profiles use 07e fixture, while777v9 uses c94a. Wire/state observations do not expose internal typed results or graphical swing.",
       "remaining": [
-        "Native777 nutrition/swing acceptance after the root-approved fixture-only save path correction; current native47/315/573/765/766 passed",
         "Candle-cake follow-on and specialized/custom item context; bounded attachment runtime accepted separately",
         "Exact fresh-player defaults and unmeasured respawn-copy bands",
         "Final repository/consumer/package/version-matrix/CI checks"
@@ -2488,6 +2487,94 @@
         "resultAndSwingLabels": "expectedFromNativeSource",
         "allNativeRawLogsOutsideGit": true,
         "futureCombinedFixture": "UNBOUND pending actual46/PDB50/ref199/normal63/discovery10 acceptance"
+      },
+      "native777V9": {
+        "status": "passed",
+        "protocol": 777,
+        "release": "26.3",
+        "attempt": "cake-native-777-20261028-v9",
+        "rootAudit": {
+          "path": "/home/anon/Projects/UMPK/.scratch/cake-native777-actual-root-audit-20261029-v9.json",
+          "bytes": 7422,
+          "sha256": "2b1c90dd92617590383b42076435976e6c6767bd9b140bcad0b34920989f62bd"
+        },
+        "actualHandoff": {
+          "path": "/home/anon/Projects/UMPK/.scratch/cake777-native-successor-preparation-20261028-v9/ACTUAL-HANDOFF.json",
+          "bytes": 7813,
+          "sha256": "7f020d00ea3d2a9b37609befeceaf668256536d21dc9850b315db62f6dcb0ce8"
+        },
+        "fixtureRootAudit": {
+          "path": "/home/anon/Projects/UMPK/.scratch/combined-fixture-actual-root-audit-20261028-v3.json",
+          "bytes": 6578,
+          "sha256": "f4fab237402b3f144742eea6ebfe9484ebafe447adf46e3b223f0f68481298df"
+        },
+        "fixtureDllSha256": "c94a057063eb6d04feaf58c0330a65c89173a61ca7dd6a822c9a10bb652db440",
+        "fixturePdbSha256": "385e84f83c0dc7693075148dbf317e14903849a8353191275ced7283971ac69c",
+        "producerClientSha256": "5591ade158bcdaca5245091bfcdbde6294646ca112c327f5997d682ec6c649c7",
+        "matchedTestSha256": "42492b4276fcf96508a1e42cf2d12e57db6fdd6d8a65c3b35e24629a8087ffdd",
+        "currentFullRoot": {
+          "path": "/home/anon/Projects/UMPK/.scratch/horse35611-full-aot-actual-root-audit-20261028-v1.json",
+          "bytes": 12158,
+          "sha256": "fdf0c26552f226bb5dac3f3bf910c9d7aacb1be2b69c5ecbda211b231a132b6d"
+        },
+        "rowsExecutedPassed": 1,
+        "skips": 0,
+        "scenes": 8,
+        "uses": 8,
+        "wireSwings": 0,
+        "rawFrames": 8053,
+        "payloadBytes": 6860642,
+        "typedNativeSnapshots": 16,
+        "rawTrx": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/cake-native-777-20261028-v9/results/cake-use.trx",
+          "bytes": 3337,
+          "sha256": "686f2b14ff36bcad188e2efe3c9c6acbcf6f250fc167bed7d1285ba0c97669fd"
+        },
+        "replay": {
+          "actionReplay": 606,
+          "stateReplay": 619,
+          "causalReplay": 142,
+          "healthAndAbilitiesReplay": 63
+        },
+        "causalDispositions": 157,
+        "ambientSemanticOnly": 15,
+        "allByteRequiredFramesMatch": true,
+        "resources": {
+          "seconds": 81.36514136800542,
+          "peakBytes": 1434345472,
+          "samples": 150,
+          "compilerRows": 0,
+          "unitOOMAdjustment": 0,
+          "sampledChildOOMAdjustment": 100
+        },
+        "allOwnedPidsAbsent": 13,
+        "ownedPortsClosed": 2,
+        "peerObservedEOF": true,
+        "unforcedNativeExit": 0,
+        "cleanupSha256": "e33e8ac410844208099e69776bf88278289e7cd6304a9fd32389d4d17a0a4e85",
+        "sourceExpectedResultSwingLabelsOnly": true,
+        "originalMinecraftInput": "NOT RUN",
+        "graphicalSwingObservation": "NOT RUN"
+      },
+      "nativeMatchedSixProfilePack": {
+        "status": "passed",
+        "protocols": [
+          47,
+          315,
+          573,
+          765,
+          766,
+          777
+        ],
+        "scenes": 45,
+        "uses": 45,
+        "wireSwings": 29,
+        "typedNativeSnapshots": 90,
+        "priorFiveExactEvidence": "nativeCurrentHorseV6.passedProfiles with fixture07e206fa; its failed777row remains failed",
+        "new777ExactEvidence": "native777V9 with fixturec94a0570",
+        "sameProducer": "Horse5591/4249; full35,611 with same-full111/AOT accepted separately",
+        "scope": "Selected Cake nutrition boundaries only; no all-native-release, custom-stack, exact-constructor or original-client-input claim",
+        "miningNativeAcceptance": "pending; fixture compilation and discovery do not execute live scenario bodies"
       }
     },
     "finalVersionMatrix": {

@@ -15,7 +15,7 @@ internal sealed partial class EntityGeometryState
     private readonly ConditionalWeakTable<Entity, TrackedLegacyPlayerGeometry> _legacyPlayers = new();
     private readonly ConditionalWeakTable<Entity, TrackedFallingBlockGeometry> _fallingBlocks = new();
     private readonly ConditionalWeakTable<Entity, TrackedLegacyAmbientGeometry> _legacyAmbient = new();
-    private readonly Dictionary<Entity, LegacyWolfPlacementEnvelope> _placementEnvelopes = [];
+    private readonly Dictionary<Entity, LegacyPlacementEnvelope> _placementEnvelopes = [];
     internal Func<bool>? PlacementEnvelopeWorldContext { get; set; }
     private World? _legacyWorld;
     private EntityMembershipState? _legacyMembership;
@@ -32,15 +32,17 @@ internal sealed partial class EntityGeometryState
 
     internal void RegisterPlacementEnvelope(Entity entity, int protocol, EntityStore entities)
     {
-        if (!LegacyWolfPlacementEnvelope.Supports(entity, protocol))
+        LegacyPlacementEnvelope? envelope = LegacyWolfPlacementEnvelope.Create(entity, protocol)
+            ?? LegacyRabbitPlacementEnvelope.Create(entity, protocol);
+        if (envelope is null)
             return;
-        _placementEnvelopes.Add(entity, new(entity.Position));
+        _placementEnvelopes.Add(entity, envelope);
         RefreshPlacementEnvelopes(entities);
     }
 
     internal void InvalidatePlacementEnvelope(Entity entity)
     {
-        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyPlacementEnvelope? envelope))
             envelope.Invalidate();
     }
 
@@ -51,12 +53,12 @@ internal sealed partial class EntityGeometryState
         bool worldKnown = entities is not null && PlacementEnvelopeWorldContext?.Invoke() is true;
         foreach (var pair in _placementEnvelopes)
             if (!worldKnown || !pair.Value.TryGet(pair.Key, out Aabb envelope)
-                || !ExpansionPushIsIrrelevant(pair.Key, entities!, this, LegacyWolfPlacementEnvelope.Protocol, envelope, envelope))
+                || !ExpansionPushIsIrrelevant(pair.Key, entities!, this, pair.Value.Protocol, envelope, envelope))
                 pair.Value.Invalidate();
     }
 
     internal bool IsProvenPlacementNonCandidate(Entity entity, Aabb query)
-        => _placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope)
+        => _placementEnvelopes.TryGetValue(entity, out LegacyPlacementEnvelope? envelope)
             && envelope.TryGet(entity, out Aabb bounds) && !bounds.Intersects(query);
 
     public void Register(Entity entity, IEntityGeometrySource source, int protocol = 0, bool isPlayer = false)
@@ -143,7 +145,7 @@ internal sealed partial class EntityGeometryState
 
     public void ObserveMetadata(Entity entity, int index)
     {
-        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyPlacementEnvelope? envelope))
             _ = envelope.TryGet(entity, out _);
         if (_legacyPlayers.TryGetValue(entity, out TrackedLegacyPlayerGeometry? legacy))
         {
@@ -161,7 +163,7 @@ internal sealed partial class EntityGeometryState
 
     public void ObservePosition(Entity entity, bool independent = false)
     {
-        if (_placementEnvelopes.TryGetValue(entity, out LegacyWolfPlacementEnvelope? envelope))
+        if (_placementEnvelopes.TryGetValue(entity, out LegacyPlacementEnvelope? envelope))
             envelope.ObserveEndpoint(entity.Position, independent);
         if (_legacyAmbient.TryGetValue(entity, out TrackedLegacyAmbientGeometry? ambient))
         {

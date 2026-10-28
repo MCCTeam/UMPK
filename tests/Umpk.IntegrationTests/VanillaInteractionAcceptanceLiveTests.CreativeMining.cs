@@ -100,6 +100,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await WaitAsync(() => capture.Frames.Any(frame => frame.Packet is ClientboundLevelChunkPacket { FullChunk: true } chunk && chunk.ChunkX == x >> 4 && chunk.ChunkZ == z >> 4), "actual native full column", ct);
             Guid ownId = await client.InvokeAsync(c => c.State.Self.Uuid, ct);
             Assert.NotEqual(Guid.Empty, ownId);
+            // Clear late chunk-generation creatures and initial kill drops only in this owned native run.
+            await server.CommandAsync(protocol < 774 ? "gamerule doMobLoot false" : "gamerule minecraft:mob_drops false", ct);
+            await server.CommandAsync("kill @e[type=!minecraft:player]", ct);
             await Marker("execute unless entity @e[type=!minecraft:player]", "no-peers");
             AdventureTagFrame[] nativeTags;
             lock (tagGate)

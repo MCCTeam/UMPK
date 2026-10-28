@@ -2233,7 +2233,7 @@
     },
     "cakeRuntime": {
       "status": "passed",
-      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; native protocol 47 using the existing 1.8.9 profile passed; five other native boundaries and final acceptance remain pending.",
+      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; current Horse-matched native47/315/573/765/766 passed, while777 failed before use at a fixture save-path check.",
       "producerClientSha256": "ca4ae7b9f1fb3c5447a22edb44abddcaa16b6ae27cd3d75e96053a7724669758",
       "protocols": 50,
       "focusedCases": 111,
@@ -2244,9 +2244,9 @@
       "clientBaseline": 35303,
       "rootAuditSha256": "350c948c8e6cb2e0904c58562b8938abbdb5dffca6100be19a61c4af7f1461f1",
       "report": "docs/verification/cake-use-runtime.md",
-      "compilerRuntimeLimit": "Historical red/green uses one Test DLL compiled against baseline 6ea and run against final ca4ae. Matched ca4/989 full 35,303/AOT and current fcea/df1d full 35,499/AOT are accepted separately; native 47 uses the current producer and private v8 fixture.",
+      "compilerRuntimeLimit": "The historical 6ea/ca4 red-green proof, ca4/989 full 35,303 result, later fcea/df1d full 35,499/native47v5 result and current Horse5591/4249 full 35,611/nativev6 result retain their exact producer and fixture receipts. Current native success covers five profiles; 777 nutrition and swing checks remain unrun.",
       "remaining": [
-        "Native cake use/live acceptance at 315/573/765/766/777; native 47 using the existing 1.8.9 profile passed",
+        "Native777 nutrition/swing acceptance after the root-approved fixture-only save path correction; current native47/315/573/765/766 passed",
         "Candle-cake follow-on and specialized/custom item context; bounded attachment runtime accepted separately",
         "Exact fresh-player defaults and unmeasured respawn-copy bands",
         "Final repository/consumer/package/version-matrix/CI checks"
@@ -2365,6 +2365,129 @@
           }
         ],
         "scope": "Closed-menu default empty/stick nutrition only; existing protocol 47 profile 1.8.9. Native wire/state observations do not expose the internal prediction result. Candle/custom/default-constructor/final matrix acceptance stays separate."
+      },
+      "nativeCurrentHorseV6": {
+        "status": "harness failure",
+        "producerClientSha256": "5591ade158bcdaca5245091bfcdbde6294646ca112c327f5997d682ec6c649c7",
+        "matchedTestSha256": "42492b4276fcf96508a1e42cf2d12e57db6fdd6d8a65c3b35e24629a8087ffdd",
+        "fullRootAudit": {
+          "path": "/home/anon/Projects/UMPK/.scratch/horse35611-full-aot-actual-root-audit-20261028-v1.json",
+          "bytes": 12158,
+          "sha256": "fdf0c26552f226bb5dac3f3bf910c9d7aacb1be2b69c5ecbda211b231a132b6d"
+        },
+        "fixtureRootAudit": {
+          "path": "/home/anon/Projects/UMPK/.scratch/combined-fixture-actual-root-audit-20261028-v1.json",
+          "bytes": 5827,
+          "sha256": "d003d36f394705c17a305bb9324fb62fa31c542fe1f484abaa1f650b7962e0bb"
+        },
+        "fixtureDllSha256": "07e206faa2f9aa1297f09377902b864948e3090fd83156255c04a20bfc69ecae",
+        "passedProfiles": [
+          {
+            "protocol": 47,
+            "release": "1.8.9",
+            "scenes": 7,
+            "uses": 7,
+            "wireSwings": 7,
+            "frames": 4626,
+            "payloadBytes": 4160584,
+            "nativeTypedSnapshots": 14,
+            "seconds": 50.72,
+            "ownedPidsAbsent": 12,
+            "rootAuditSha256": "08daadfefcf63df878031914463455975448264815dbd5cd2a635efcdf1b87b4",
+            "cleanupSha256": "c07beb6326733916f49639ebc75084f8fdecf012e2cfe856cdf7293e7d56320e",
+            "status": "passed"
+          },
+          {
+            "protocol": 315,
+            "release": "1.11",
+            "scenes": 7,
+            "uses": 7,
+            "wireSwings": 6,
+            "frames": 3384,
+            "payloadBytes": 2702159,
+            "nativeTypedSnapshots": 14,
+            "seconds": 57.5,
+            "ownedPidsAbsent": 12,
+            "rootAuditSha256": "1a7236d5ff2d9669bdb9e1ff58d12c40af1bfb3b181871baf885c83c20def582",
+            "cleanupSha256": "77fee41cd9d46ee2210a473912678bb7f1b49c61ab9b0fdb13cff49d08c16aec",
+            "status": "passed"
+          },
+          {
+            "protocol": 573,
+            "release": "1.15",
+            "scenes": 7,
+            "uses": 7,
+            "wireSwings": 5,
+            "frames": 12980,
+            "payloadBytes": 3731155,
+            "nativeTypedSnapshots": 14,
+            "seconds": 72.16,
+            "ownedPidsAbsent": 12,
+            "rootAuditSha256": "359770f7020e4fe3b36c9a6ae356674cb9bd838f3a3054cb547f507fcb0fd233",
+            "cleanupSha256": "d298fc6898bde577975b7b20d79bb1b94724ac354762c0526139ab5da8e0be3a",
+            "status": "passed"
+          },
+          {
+            "protocol": 765,
+            "release": "1.20.4",
+            "scenes": 8,
+            "uses": 8,
+            "wireSwings": 6,
+            "frames": 3203,
+            "payloadBytes": 4766120,
+            "nativeTypedSnapshots": 16,
+            "seconds": 105.33,
+            "ownedPidsAbsent": 13,
+            "rootAuditSha256": "02c8b8084e640096879502f967cf353a0bd0a402102be3ba28cd706f76c18a8b",
+            "cleanupSha256": "fcecfce13cad2418b34a54a1e44c4eb72128838925571966a805b045c2eb1f76",
+            "status": "passed"
+          },
+          {
+            "protocol": 766,
+            "release": "1.20.5",
+            "scenes": 8,
+            "uses": 8,
+            "wireSwings": 5,
+            "frames": 3173,
+            "payloadBytes": 4319145,
+            "nativeTypedSnapshots": 16,
+            "seconds": 85.5,
+            "ownedPidsAbsent": 11,
+            "rootAuditSha256": "4af4ab2f54769659d4e0b1aebef46fbf843c37c13fc632fef71873178e256b5c",
+            "cleanupSha256": "deb6f2c631634ef137a0b690f4b298bd0d3c7cb0971364338ce13261e04bba42",
+            "status": "passed"
+          }
+        ],
+        "scenesPassed": 37,
+        "usePackets": 37,
+        "wireSwings": 29,
+        "modernCausalReplayLimit": "765 and 766 each retain 157 dispositions: 142 byte-identical frames and fifteen ambient semantic records; every byte-required row matches.",
+        "failed777": {
+          "wholeStatus": "failed before first use",
+          "attempt": "cake-native-777-20261028-v6",
+          "receipt": {
+            "path": "/home/anon/Projects/UMPK/.scratch/cake-native777-actual-failure-agent-20261028-v6.json",
+            "bytes": 6896,
+            "sha256": "03aab7b1dc0b58518486f2318327fdf0773c4f8a08ce7d9d3cd125fdaafc5b2a"
+          },
+          "uses": 0,
+          "wireSwings": 0,
+          "scenesPassed": 0,
+          "frames": 512,
+          "payloadBytes": 2673604,
+          "cause": "The fixture looked under world/playerdata; native 26.3 writes the source-bound UUID under world/players/data.",
+          "sourceOnlyPathPostimageSha256": "136e6772aaabdbfcb0ed70dc36dee68f12f5e8c8626673e5ee1d24c4820b0bf2",
+          "pathCorrectionCompiledOrExecuted": false,
+          "strictFreshnessAssertionPreserved": true,
+          "ownedPidsAbsent": 7,
+          "ownedPortsClosed": 2,
+          "nativeNutritionSwing": "NOT RUN"
+        },
+        "originalClientInput": "NOT RUN",
+        "graphicalSwing": "NOT RUN",
+        "resultAndSwingLabels": "expectedFromNativeSource",
+        "allNativeRawLogsOutsideGit": true,
+        "futureCombinedFixture": "UNBOUND pending actual46/PDB50/ref199/normal63/discovery10 acceptance"
       }
     },
     "finalVersionMatrix": {
@@ -2690,6 +2813,49 @@
         "historical35499Retained": true,
         "scope": "Full Client/AOT for the frozen Horse pair; other sixteen suites, Integration, native whole rows, consumer, package and final CI acceptance require separate current evidence."
       }
+    },
+    "maintainedInteractionFixtureV3": {
+      "status": "passed",
+      "scope": "Test-only format/build/normal/discovery acceptance; no native scenario body or production change",
+      "producerCommit": "973810a5eed0ed6bafe126da90519e724a256fd3",
+      "producerClientSha256": "5591ade158bcdaca5245091bfcdbde6294646ca112c327f5997d682ec6c649c7",
+      "fixtureDllSha256": "c94a057063eb6d04feaf58c0330a65c89173a61ca7dd6a822c9a10bb652db440",
+      "fixturePdbSha256": "385e84f83c0dc7693075148dbf317e14903849a8353191275ced7283971ac69c",
+      "authoredSources": 46,
+      "pdbDocuments": 50,
+      "compilerReferences": 199,
+      "normal": {
+        "total": 63,
+        "passed": 41,
+        "namedOptInSkips": 22,
+        "previous62IdentitiesPreserved": true
+      },
+      "discovery": {
+        "previousCakeMiningRows": 9,
+        "controlledDoor315Rows": 1,
+        "total": 10,
+        "nativeBodiesExecuted": 0
+      },
+      "sourceChanges": [
+        "777 native player save path only; strict UUID/freshness checks preserved",
+        "Late owned-server mob-loot disable and nonplayer cleanup before unchanged mining no-peer check",
+        "Controlled Door315 admission only; all eleven scene/action/helper assertions preserved"
+      ],
+      "formatter": {
+        "selected": 3,
+        "beforeImportOrderingChanges": 1,
+        "afterChanges": 0,
+        "namespaceBodiesByteIdentical": true
+      },
+      "rootAuditSha256": "f4fab237402b3f144742eea6ebfe9484ebafe447adf46e3b223f0f68481298df",
+      "evidence": "/home/anon/Projects/MinecraftOfficial/runs/combined-interaction-fixture-compile-20261028-v3",
+      "allObservedPidsAbsent": 23,
+      "remaining": [
+        "Fresh native777 Cake eight scenes",
+        "Fresh creative mining769/770/777 thirteen scenes",
+        "Fresh controlled Door315 eleven scenes",
+        "Final producer-matched repository/consumer/package/version acceptance"
+      ]
     }
   }
 }

@@ -216,7 +216,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 var login = await client.InvokeAsync(c => (c.State.Self.Uuid, c.State.Self.Username), ct);
                 Assert.NotEqual(Guid.Empty, login.Uuid);
                 Assert.Equal(Username, login.Username);
-                string path = Path.Combine(server.DirectoryPath, "world", "playerdata", login.Uuid.ToString("D") + ".dat");
+                string path = protocol == 777
+                    ? Path.Combine(server.DirectoryPath, "world", "players", "data", login.Uuid.ToString("D") + ".dat")
+                    : Path.Combine(server.DirectoryPath, "world", "playerdata", login.Uuid.ToString("D") + ".dat");
                 Assert.False(File.Exists(path + ".tmp"));
                 DateTime? previousWriteUtc = File.Exists(path) ? File.GetLastWriteTimeUtc(path) : null;
                 int logStart = server.ServerLog.Length;

@@ -33,7 +33,8 @@ internal sealed partial class EntityGeometryState
     internal void RegisterPlacementEnvelope(Entity entity, int protocol, EntityStore entities)
     {
         LegacyPlacementEnvelope? envelope = LegacyWolfPlacementEnvelope.Create(entity, protocol)
-            ?? LegacyRabbitPlacementEnvelope.Create(entity, protocol);
+            ?? LegacyRabbitPlacementEnvelope.Create(entity, protocol)
+            ?? LegacyHorsePlacementEnvelope.Create(entity, protocol);
         if (envelope is null)
             return;
         _placementEnvelopes.Add(entity, envelope);

@@ -10,14 +10,16 @@ internal sealed class LegacyPlacementEnvelope
     private Vec3d _lastEndpoint;
     private bool _known;
     private readonly Func<Entity, bool> _metadataIsKnown;
+    private readonly int _enclosurePadding;
 
     public int Protocol { get; }
 
-    public LegacyPlacementEnvelope(Vec3d initial, int protocol, Func<Entity, bool> metadataIsKnown)
+    public LegacyPlacementEnvelope(Vec3d initial, int protocol, Func<Entity, bool> metadataIsKnown, int enclosurePadding = 1)
     {
         Protocol = protocol;
         _metadataIsKnown = metadataIsKnown;
-        _known = Admitted(initial);
+        _enclosurePadding = enclosurePadding;
+        _known = enclosurePadding is 1 or 2 && Admitted(initial);
         // Native AddMob invokes sm.a(DDDFF), which clamps spawn X/Z before setting its box; packet-coordinate bases retain the original values. Retain both points without altering either runtime position or packet base.
         double nativeX = Math.Clamp(initial.X, -30000000D, 30000000D);
         double nativeZ = Math.Clamp(initial.Z, -30000000D, 30000000D);
@@ -53,9 +55,9 @@ internal sealed class LegacyPlacementEnvelope
             Invalidate();
             return false;
         }
-        // Each admitted native profile proves its cached body offsets below one block, including retained-minimum age growth. One block also encloses the proved <1/4096 interpolation error for admitted endpoints and native counts zero through three; outward rounding covers these final additions.
-        envelope = new(Math.BitDecrement(_endpoints.MinX - 1), Math.BitDecrement(_endpoints.MinY - 1), Math.BitDecrement(_endpoints.MinZ - 1),
-            Math.BitIncrement(_endpoints.MaxX + 1), Math.BitIncrement(_endpoints.MaxY + 1), Math.BitIncrement(_endpoints.MaxZ + 1));
+        // Each admitted native profile proves its padding contains the maximum cached body offsets, retained-minimum age growth and <1/4096 interpolation error for admitted endpoints and native counts zero through three. Wolf and Rabbit retain one block; the separately bound Horse family requires two. Outward rounding covers the final additions.
+        envelope = new(Math.BitDecrement(_endpoints.MinX - _enclosurePadding), Math.BitDecrement(_endpoints.MinY - _enclosurePadding), Math.BitDecrement(_endpoints.MinZ - _enclosurePadding),
+            Math.BitIncrement(_endpoints.MaxX + _enclosurePadding), Math.BitIncrement(_endpoints.MaxY + _enclosurePadding), Math.BitIncrement(_endpoints.MaxZ + _enclosurePadding));
         return true;
     }
 

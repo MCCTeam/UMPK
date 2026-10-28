@@ -2451,6 +2451,81 @@
       "nativeBytes": 24688088,
       "smokeExecutedPassed": 1,
       "rootAuditSha256": "49c4f2f894bf6043e7eafefafcdcdc9c0e51e290e2e9e75ac4b042212bb64a69"
+    },
+    "horse315Relevance": {
+      "status": "passed",
+      "scope": "Staged/matched placement relevance for the six original 1.11 Horse families; exact bodies/picking/motion/membership remain unowned.",
+      "protocol": 315,
+      "families": [
+        "horse",
+        "skeleton_horse",
+        "zombie_horse",
+        "donkey",
+        "mule",
+        "llama"
+      ],
+      "adjacentControls": [
+        210,
+        316
+      ],
+      "newCases": 112,
+      "baselineRed": 31,
+      "baselineControls": 81,
+      "connectedAndMatchedPassedEach": 112,
+      "oldWolfRabbitMaskPassedAtEachOfFiveStages": 78,
+      "relatedPassed": 375,
+      "candlePassed": 159,
+      "testGroups": 13,
+      "observations": 1485,
+      "intendedRepeatedCausalRed": 94,
+      "passingObservations": 1391,
+      "realNativeFrameBytes": 108,
+      "clientSha256": "5591ade158bcdaca5245091bfcdbde6294646ca112c327f5997d682ec6c649c7",
+      "matchedTestSha256": "42492b4276fcf96508a1e42cf2d12e57db6fdd6d8a65c3b35e24629a8087ffdd",
+      "rootAuditSha256": "76c528833cc39f61da709f774038cad5dc59ae75040d6f8dec4dbaec52faa81e",
+      "report": "docs/verification/legacy-horse-placement-envelope-315.md",
+      "enclosurePadding": 2,
+      "WolfRabbitPaddingUnchanged": 1,
+      "actualPdbDocuments": {
+        "ClientFinal": 224,
+        "TestEach": 337
+      },
+      "allReferenceCounts": {
+        "Client": 182,
+        "Test": 198
+      },
+      "testResourcesCscAndPe": 54,
+      "runtimeFilesEach": 124,
+      "ownedPidsIndependentlyAbsent": 86,
+      "deliberateClientBaselineDelta": {
+        "before": 35499,
+        "after": 35611,
+        "added": 112,
+        "total17Before": 49351,
+        "total17After": 49463,
+        "integrationUnchanged": 60,
+        "status": "applied deliberate112-case addition; full35611 not run"
+      },
+      "historical35499FullAotRetainedForFceaDf1d": true,
+      "saved7047HorseReplay": {
+        "status": "passed",
+        "queries": 76,
+        "queryCounts": [
+          12,
+          16,
+          16,
+          16,
+          16
+        ],
+        "allPredictions": "Success/Packet/SendPacket=true",
+        "originalMapperRepeatAgreement": true,
+        "rootAuditSha256": "b1d86c44eebe8d8d7bffd12e345064d5ef6d37b860b567a82a9d05b0d0cf5ea4",
+        "originalNativeQueryClock": "unknown",
+        "freshNativeWholeRow": "not run"
+      },
+      "native315WholeRow": "failed before ninth action after eight partial passes; future Horse leg not run",
+      "futureHorseFullAotConsumerPackageCi": "not run",
+      "membershipLimit": "Untracked IsWorldQueryMember=true remains a fallback. Pending endpoint (6,16) and negative-X (-1,0) actor terrain are deliberately not packet-established."
     }
   }
 }

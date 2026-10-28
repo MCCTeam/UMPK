@@ -2295,18 +2295,18 @@
       "basicNamedReleaseRows": 75
     },
     "latestPublishedCheckpoint": {
-      "head": "6fe9d73f6c397bb4c1df261a8a389cf7c36b31d2",
+      "head": "4c335673265fa46c98f5485850273edc332952f4",
       "status": "passed",
       "ciJobs": 7,
-      "total17": 49192,
-      "client": 35340,
+      "total17": 49351,
+      "client": 35499,
       "integration": 60,
       "normalSkipsUbuntu": 20,
       "normalSkipsWindowsMacos": 22,
       "normalSkipIdentitiesUnchanged": true,
       "nativeBytes": 24688088,
       "smokeExecutedPassed": 1,
-      "rootAuditSha256": "49c4f2f894bf6043e7eafefafcdcdc9c0e51e290e2e9e75ac4b042212bb64a69"
+      "rootAuditSha256": "70186be1809b60d35c6fb0456fd9cde681ad50374c60edfff02ade2daacc3518"
     },
     "rabbit315Relevance": {
       "status": "passed",
@@ -2337,6 +2337,18 @@
         "ownedPidsIndependentlyAbsent": 14,
         "portsRecordedClosed": 2,
         "unforcedServerExit": 0
+      },
+      "freshNativeV5": {
+        "status": "failed",
+        "view5SetupPassed": true,
+        "partialScenesPassed": 8,
+        "ninthActionSent": false,
+        "firstUnknown": "Horse37 native100, no current or fixed bounds; exact76-query replay agrees across five schedules.",
+        "rootReplayAuditSha256": "1952d84b601b39ac113a6735d7312a4b3e34635cb33edb979265b69a3f7a6083",
+        "allOwnedPidsAbsent": 16,
+        "portsClosed": 2,
+        "unforcedExit": 0,
+        "originalQueryClockUnknown": true
       }
     },
     "candleAttachmentRuntime": {
@@ -2385,7 +2397,33 @@
       "report": "docs/verification/candle-cake-attachment-runtime.md",
       "clientBaseline": 35499,
       "total17": 49351,
-      "currentFullAotNativeConsumerCi": "not run"
+      "currentFullAotNativeConsumerCi": "full Client/AOT and published4c33567 seven-job CI passed; native/consumer/final acceptance pending",
+      "matchedFullAot": {
+        "status": "passed",
+        "fullClientRows": 35499,
+        "fullUniqueKeys": 35375,
+        "fullFailures": 0,
+        "fullSkips": 0,
+        "exactSubsets": [
+          6593,
+          1880,
+          111,
+          37,
+          159,
+          375,
+          483,
+          2351
+        ],
+        "nativeBytes": 24688144,
+        "strictLimit": 25165824,
+        "smokeExecutedPassed": 1,
+        "actualCiXmlGuardPassed": true,
+        "producerPairsUnchanged": 12,
+        "matchedTestPairUnchanged": true,
+        "ownedPidsIndependentlyAbsent": 18,
+        "rootAuditSha256": "7ab2d5f0e61e5a9bb313a614abe1cb20d66c8f21d98b902e0b69c77ada6227de",
+        "notFinalRepositoryNativeConsumerPackageVersionMatrixCertificate": true
+      }
     },
     "priorPublished1ceCheckpoint": {
       "head": "1ce8c350c96dd2136e0225be94a8a51e42cc7369",
@@ -2399,6 +2437,20 @@
       "nativeBytes": 24688080,
       "smokeExecutedPassed": 1,
       "rootAuditSha256": "7128fe00c14c2fa49af133dbd7fe749c99055731b6b334ecdd04101eaed6ca04"
+    },
+    "priorPublished6feCheckpoint": {
+      "head": "6fe9d73f6c397bb4c1df261a8a389cf7c36b31d2",
+      "status": "passed",
+      "ciJobs": 7,
+      "total17": 49192,
+      "client": 35340,
+      "integration": 60,
+      "normalSkipsUbuntu": 20,
+      "normalSkipsWindowsMacos": 22,
+      "normalSkipIdentitiesUnchanged": true,
+      "nativeBytes": 24688088,
+      "smokeExecutedPassed": 1,
+      "rootAuditSha256": "49c4f2f894bf6043e7eafefafcdcdc9c0e51e290e2e9e75ac4b042212bb64a69"
     }
   }
 }

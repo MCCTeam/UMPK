@@ -1,5 +1,13 @@
 # Interaction fixture synchronization
 
+## Published Candle checkpoint, 2026-10-28
+
+Published `4c335673265fa46c98f5485850273edc332952f4` passes all seven jobs in [run 40720503942](https://github.com/MCCTeam/UMPK/actions/runs/40720503942). All three operating systems match seventeen totals of 49,351, including 35,499 Client and sixty Integration cases. Ubuntu records 49,331 passes/twenty normal named skips; Windows and macOS record 49,329 passes/twenty-two skips each. The only baseline change from `6fe9d73` is the deliberate 159 Candle cases, and every normal skip identity is unchanged.
+
+Strict CI Native AOT is 24,688,088 bytes, below 25,165,824, with exactly one executed passing smoke and the successful XML guard. Full formatting, fifty datasets, fresh generated-code comparison, fourteen primary/thirteen symbol packages and isolated package-consumer restore/build pass. Tested merge `5c7d7269e3be0b7f5cb8329dad8541ddf6b24e2c` matches the published head tree and workflow. The workflow does not execute that package consumer or upload raw normal/AOT TRX artifacts.
+
+Root audit `.scratch/pr10-ci-4c33567-root-audit-20261028-v1.json` (`70186be1809b60d35c6fb0456fd9cde681ad50374c60edfff02ade2daacc3518`) verifies the actual seven raw logs, exact counts/skips, size/smoke guard, matching merge and thirty-two evidence files under `/home/anon/Projects/MinecraftOfficial/runs/pr10-ci-4c33567-20261028-v1/`. The [matched local full Client/AOT run](candle-cake-attachment-runtime.md#combined-full-client-and-aot-acceptance-2026-10-28) separately verifies the frozen fcea/df1d producer. Native/live, final repository/consumer and version acceptance remain open.
+
 ## Published Rabbit checkpoint, 2026-10-28
 
 Published `6fe9d73f6c397bb4c1df261a8a389cf7c36b31d2` passes all seven jobs in [run 40713740811](https://github.com/MCCTeam/UMPK/actions/runs/40713740811). All three operating systems match seventeen totals of 49,192, including 35,340 Client and sixty Integration cases. Ubuntu records 49,172 passes/twenty normal named skips; Windows and macOS record 49,170 passes/twenty-two skips each. The only baseline change from `1ce8c35` is the deliberate thirty-seven Rabbit cases; all normal skip identities are unchanged.

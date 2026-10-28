@@ -2233,7 +2233,7 @@
     },
     "cakeRuntime": {
       "status": "passed",
-      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; native/final acceptance pending.",
+      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; native protocol 47 using the existing 1.8.9 profile passed; five other native boundaries and final acceptance remain pending.",
       "producerClientSha256": "ca4ae7b9f1fb3c5447a22edb44abddcaa16b6ae27cd3d75e96053a7724669758",
       "protocols": 50,
       "focusedCases": 111,
@@ -2244,9 +2244,9 @@
       "clientBaseline": 35303,
       "rootAuditSha256": "350c948c8e6cb2e0904c58562b8938abbdb5dffca6100be19a61c4af7f1461f1",
       "report": "docs/verification/cake-use-runtime.md",
-      "compilerRuntimeLimit": "Same Test DLL compiled against baseline6ea and ran finalca4ae; matched final Test rebuild/full35303/AOT required.",
+      "compilerRuntimeLimit": "Historical red/green uses one Test DLL compiled against baseline 6ea and run against final ca4ae. Matched ca4/989 full 35,303/AOT and current fcea/df1d full 35,499/AOT are accepted separately; native 47 uses the current producer and private v8 fixture.",
       "remaining": [
-        "Native cake use/live acceptance",
+        "Native cake use/live acceptance at 315/573/765/766/777; native 47 using the existing 1.8.9 profile passed",
         "Candle-cake follow-on and specialized/custom item context; bounded attachment runtime accepted separately",
         "Exact fresh-player defaults and unmeasured respawn-copy bands",
         "Final repository/consumer/package/version-matrix/CI checks"
@@ -2260,7 +2260,7 @@
         "maskedControls": 3,
         "newClientCompiles": 0,
         "cause": "protocol47 fixture health-codec lookup uses wire-era alias rather than canonical packet identity",
-        "correction": "one-line canonical EntityPackets.Clientbound.SetHealth.Id locator; no assertion/result/protocol/count changes; freshtrial pending",
+        "correction": "one-line canonical EntityPackets.Clientbound.SetHealth.Id locator; no assertion/result/protocol/count changes; accepted staged runtime v5 preserves this failed v4 receipt",
         "proposedCases": 111
       },
       "sourceCommit": "a614513",
@@ -2287,6 +2287,84 @@
           "ownedPidsAbsent": 14,
           "rootAuditSha256": "77d45e5944028c9ce61b861342d83723c6523daa495a16c1fa8990c6c24729ca"
         }
+      },
+      "native47": {
+        "status": "passed",
+        "releaseProfile": "1.8.9",
+        "protocol": 47,
+        "run": "cake-native-47-20261028-v5",
+        "rootAuditSha256": "55dc8b7fbe66c72f4d77bb3dd99fbb8414ce8a0f748b1df9603bb69791de0c95",
+        "producerClientSha256": "fcea9e6a2c1dd7735c392741901a72a84e97b64b14f3fc0ab7391225c29b6fbf",
+        "matchedTestSha256": "df1d4f936519d7b48c1ad0b74c52fdd27757b123f5d4409d9076ae7b165e01ee",
+        "currentProducerFullRows": 35499,
+        "sameFullCakeTypedCases": 111,
+        "currentProducerRootAuditSha256": "7ab2d5f0e61e5a9bb313a614abe1cb20d66c8f21d98b902e0b69c77ada6227de",
+        "privateFixtureVersion": 8,
+        "fixtureRootAuditSha256": "faa4c6fb9b84980243ce109f5cfb7dd58f0740945693902f7b4c3e487416c1f8",
+        "fixtureDllSha256": "bb84b3e3a8a2323a657a9878c41d849a80949d32d2f6f99fdd3f40e41910135b",
+        "fixturePdbSha256": "2817dda916e18785c3965fd3c66aafb339f355157d3db9be33e226517448c49c",
+        "executedPassedRows": 1,
+        "nativeTrxSha256": "90e1fc1ff257503ae2aba6ccd5e35742d112f531f6b2efefabef8d2da98ebaef",
+        "scenes": 7,
+        "uses": 7,
+        "wireSwings": 7,
+        "captureFrames": 6003,
+        "payloadBytes": 5471677,
+        "captureCap": 20971520,
+        "nativeTypedNbtSnapshots": 14,
+        "nativeNbtIndependentSha256": "5993bbf29d3257295cc71f382a7e708f06078e9aa9c8722422cf09fe2ad42e53",
+        "replay": {
+          "action": 143,
+          "state": 144,
+          "causal": 150,
+          "healthAbilities": 84,
+          "byteIdenticalCausalDispositions": 150,
+          "limits": "Selected packet families only; protocol 47 action absent-hand normalization and state swing exclusion retained; does not claim all 6,003 captured frames roundtripped."
+        },
+        "wholeSeconds": 49.52,
+        "ownedPidsIndependentlyAbsent": 14,
+        "ownedPortsClosed": 2,
+        "peerObservedEOF": true,
+        "unforcedServerExit": 0,
+        "cleanupSha256": "f0b481fa03004beaa4a48f5e1e26ecaf192fcffe8a708d96addb7edc338ce2b7",
+        "sourceExpectedResultLabelsOnly": true,
+        "originalMinecraftClientInput": "NOT RUN",
+        "graphicalSwingObservation": "NOT RUN",
+        "remainingNativeProtocols": [
+          315,
+          573,
+          765,
+          766,
+          777
+        ],
+        "retainedFailedNativeAttempts": [
+          {
+            "version": 1,
+            "wholeStatus": "failed",
+            "uses": 0,
+            "cause": "post-connect difficulty setter does not publish the awaited packet"
+          },
+          {
+            "version": 2,
+            "wholeStatus": "failed",
+            "uses": 0,
+            "cause": "unmaterialized ownership UNIT before any managed/server process"
+          },
+          {
+            "version": 3,
+            "wholeStatus": "failed",
+            "uses": 0,
+            "cause": "absent protocol 47 offhand index 45 in the authoritative 45-slot inventory"
+          },
+          {
+            "version": 4,
+            "wholeStatus": "failed",
+            "partialUses": 1,
+            "durableSceneReceipt": false,
+            "cause": "whole packet exposes System.Type during receipt serialization"
+          }
+        ],
+        "scope": "Closed-menu default empty/stick nutrition only; existing protocol 47 profile 1.8.9. Native wire/state observations do not expose the internal prediction result. Candle/custom/default-constructor/final matrix acceptance stays separate."
       }
     },
     "finalVersionMatrix": {
@@ -2504,7 +2582,7 @@
         "total17Before": 49351,
         "total17After": 49463,
         "integrationUnchanged": 60,
-        "status": "applied deliberate112-case addition; full35611 not run"
+        "status": "applied deliberate112-case addition; matched full35611 now passes; the seventeen-suite total remains a separate gate"
       },
       "historical35499FullAotRetainedForFceaDf1d": true,
       "saved7047HorseReplay": {
@@ -2524,8 +2602,94 @@
         "freshNativeWholeRow": "not run"
       },
       "native315WholeRow": "failed before ninth action after eight partial passes; future Horse leg not run",
-      "futureHorseFullAotConsumerPackageCi": "not run",
-      "membershipLimit": "Untracked IsWorldQueryMember=true remains a fallback. Pending endpoint (6,16) and negative-X (-1,0) actor terrain are deliberately not packet-established."
+      "futureHorseFullAotConsumerPackageCi": "Horse full Client/AOT passed; final repository, consumer, package and CI acceptance remain separate",
+      "membershipLimit": "Untracked IsWorldQueryMember=true remains a fallback. Pending endpoint (6,16) and negative-X (-1,0) actor terrain are deliberately not packet-established.",
+      "fullClientAndAot": {
+        "status": "passed",
+        "rootAuditSha256": "fdf0c26552f226bb5dac3f3bf910c9d7aacb1be2b69c5ecbda211b231a132b6d",
+        "fullRows": 35611,
+        "fullKeys": 35487,
+        "skipped": 0,
+        "fullTrx": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/horse112-full35611-runtime-20261028-v1/results/full35611-green/tests.trx",
+          "bytes": 54123331,
+          "sha256": "259eb71e84c174e54978a11ce1b58ffa02e2786796db2266f221468b4f1d5a0f"
+        },
+        "actualCounter": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/horse112-full35611-runtime-20261028-v1/actual-full35611-counter.json",
+          "bytes": 5465662,
+          "sha256": "ccec8eac2f8ba95fae7c4341626ed83edae9b72f015e7dc6570103cb524d73ea"
+        },
+        "expectedCounter": {
+          "path": "/home/anon/Projects/UMPK/.scratch/horse35611-full-aot-preparation-20261028-v1/counter-final-jobroot-v2/expected-counter.json",
+          "bytes": 5465662,
+          "sha256": "a83242e6102159d1cf98559f26aaeb67cf20a09e9c7ab19cc131809df17dc7bd"
+        },
+        "sourceBoundCounterDerivation": {
+          "path": "/home/anon/Projects/UMPK/.scratch/horse35611-full-aot-preparation-20261028-v1/counter-final-jobroot-v2/DERIVATION.json",
+          "bytes": 8636,
+          "sha256": "72da659a24f25dafaae2d5f7add53f3b5932b7a6d9e1cb8a304f29638ce7b6c5"
+        },
+        "sameFullSubsets": {
+          "exactAdjacent": 6593,
+          "Cake1880": 1880,
+          "Cake111": 111,
+          "Rabbit37": 37,
+          "Candle159": 159,
+          "RabbitRelated375": 375,
+          "Retained483": 483,
+          "CandleAdjacent2351": 2351,
+          "Horse112": 112,
+          "Retained78": 78
+        },
+        "sameFullCake111ActualCounter": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/horse112-full35611-runtime-20261028-v1/same-full-Cake111-counter.json",
+          "bytes": 18649,
+          "sha256": "4f165445d5f3a552835cf46d9902e63664ff1427c055942cf108c9949ae2bf51"
+        },
+        "clientSha256": "5591ade158bcdaca5245091bfcdbde6294646ca112c327f5997d682ec6c649c7",
+        "matchedTestSha256": "42492b4276fcf96508a1e42cf2d12e57db6fdd6d8a65c3b35e24629a8087ffdd",
+        "binary": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/horse112-full35611-runtime-20261028-v1/publish/MinimalBot",
+          "bytes": 24688160,
+          "sha256": "c99578eb7757fe77c0c5bf7b8a3d44dc27d4cece5e3da20a250831173c5d52a3"
+        },
+        "strictLimit": 25165824,
+        "remainingBytes": 477664,
+        "oneOsSwitch": true,
+        "actualIlcProducerReferences": 11,
+        "nativeSmokeExecutedPassed": 1,
+        "nativeSmokeTrx": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/horse112-full35611-runtime-20261028-v1/results/native-smoke/native-smoke.trx",
+          "bytes": 2937,
+          "sha256": "146530b208973d4c0801cd742d3594f7873b88f08e962195483b131fa0b8517f"
+        },
+        "actualCiXmlGuardPassed": true,
+        "producerPairsUnchanged": 12,
+        "matchedTestPairUnchanged": true,
+        "compiledProductionAndTests": 0,
+        "onlySampleCompiledForAot": true,
+        "sourceCommit": "1806ca4abb4bb60c8a0fe03aa5833bfe969e2565",
+        "authoredSourceBindings": 554,
+        "additionalSdkProgram": 1,
+        "PdbDocuments": [
+          224,
+          337
+        ],
+        "compilerReferences": [
+          182,
+          198
+        ],
+        "resourcesCscAndPe": 54,
+        "runtimeHostFiles": 119,
+        "runtimeSeconds": 335.57959718799975,
+        "resourceSamples": 633,
+        "peakBytes": 3807744000,
+        "ownedPidsIndependentlyAbsent": 20,
+        "ownedCleanupSha256": "2a064d51320befa1b498833a11cf7576d83b677f8c2fc0821e69784061652ac5",
+        "historical35499Retained": true,
+        "scope": "Full Client/AOT for the frozen Horse pair; other sixteen suites, Integration, native whole rows, consumer, package and final CI acceptance require separate current evidence."
+      }
     }
   }
 }

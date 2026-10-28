@@ -1,5 +1,13 @@
 # Interaction fixture synchronization
 
+## Published Rabbit checkpoint, 2026-10-28
+
+Published `6fe9d73f6c397bb4c1df261a8a389cf7c36b31d2` passes all seven jobs in [run 40713740811](https://github.com/MCCTeam/UMPK/actions/runs/40713740811). All three operating systems match seventeen totals of 49,192, including 35,340 Client and sixty Integration cases. Ubuntu records 49,172 passes/twenty normal named skips; Windows and macOS record 49,170 passes/twenty-two skips each. The only baseline change from `1ce8c35` is the deliberate thirty-seven Rabbit cases; all normal skip identities are unchanged.
+
+Strict Native AOT is 24,688,088 bytes, below 25,165,824, with exactly one executed passing smoke and the successful XML guard. Full formatting, fifty datasets, fresh generated-code comparison, fourteen primary/thirteen symbol packages and isolated package-consumer restore/build pass. Tested merge `e667c1666f7764012a8cf175e899e1c291e75630` matches the published head tree and workflow. This workflow does not execute that package consumer or upload raw normal/AOT TRX artifacts.
+
+Root audit `.scratch/pr10-ci-6fe9d73-root-audit-20261028-v1.json` (`49c4f2f894bf6043e7eafefafcdcdc9c0e51e290e2e9e75ac4b042212bb64a69`) independently verifies all seven raw job logs, exact suite totals/skips, actual size/smoke guard, matching merge and thirty-two evidence files under `/home/anon/Projects/MinecraftOfficial/runs/pr10-ci-6fe9d73-20261028-v1/`. Later Candle implementation, fresh native and final repository/consumer/version acceptance remain separate.
+
 ## Published cake and acceptance-fixture checkpoint, 2026-10-28
 
 Published `1ce8c350c96dd2136e0225be94a8a51e42cc7369` passes all seven jobs in [run 40691085568](https://github.com/MCCTeam/UMPK/actions/runs/40691085568). All three operating systems match seventeen totals of 49,155, including all 35,303 Client cases. Ubuntu records 49,135 passes/twenty named normal skips; Windows and macOS each record 49,133 passes/twenty-two skips. Relative to `0fa673b`, the only count changes are 111 new Client cases and one normal Integration opt-in row for End Crystal use. Every previous normal skip identity remains; that new End Crystal method is the sole added skip. Its five required native rows execute separately under the scoped native report.

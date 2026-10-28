@@ -2295,17 +2295,18 @@
       "basicNamedReleaseRows": 75
     },
     "latestPublishedCheckpoint": {
-      "head": "1ce8c350c96dd2136e0225be94a8a51e42cc7369",
+      "head": "6fe9d73f6c397bb4c1df261a8a389cf7c36b31d2",
       "status": "passed",
       "ciJobs": 7,
-      "total17": 49155,
-      "client": 35303,
+      "total17": 49192,
+      "client": 35340,
       "integration": 60,
       "normalSkipsUbuntu": 20,
       "normalSkipsWindowsMacos": 22,
-      "nativeBytes": 24688080,
+      "normalSkipIdentitiesUnchanged": true,
+      "nativeBytes": 24688088,
       "smokeExecutedPassed": 1,
-      "rootAuditSha256": "7128fe00c14c2fa49af133dbd7fe749c99055731b6b334ecdd04101eaed6ca04"
+      "rootAuditSha256": "49c4f2f894bf6043e7eafefafcdcdc9c0e51e290e2e9e75ac4b042212bb64a69"
     },
     "rabbit315Relevance": {
       "status": "passed",
@@ -2385,6 +2386,19 @@
       "clientBaseline": 35499,
       "total17": 49351,
       "currentFullAotNativeConsumerCi": "not run"
+    },
+    "priorPublished1ceCheckpoint": {
+      "head": "1ce8c350c96dd2136e0225be94a8a51e42cc7369",
+      "status": "passed",
+      "ciJobs": 7,
+      "total17": 49155,
+      "client": 35303,
+      "integration": 60,
+      "normalSkipsUbuntu": 20,
+      "normalSkipsWindowsMacos": 22,
+      "nativeBytes": 24688080,
+      "smokeExecutedPassed": 1,
+      "rootAuditSha256": "7128fe00c14c2fa49af133dbd7fe749c99055731b6b334ecdd04101eaed6ca04"
     }
   }
 }

@@ -33,6 +33,7 @@ internal sealed class SelfApplier : IApplier
                 self.Food = health.Food;
                 self.Saturation = health.Saturation;
                 self.HealthObserved = true;
+                self.NutritionObservationLifetime = context.State.PlayerLifetime;
                 await context.PublishAsync(new HealthChanged(health.Health, health.Food, health.Saturation)).ConfigureAwait(false);
                 if (wasAlive && health.Health <= 0)
                     await context.PublishAsync(new Died()).ConfigureAwait(false);
@@ -92,6 +93,7 @@ internal sealed class SelfApplier : IApplier
 
             case ClientboundPlayerAbilitiesPacket abilities:
                 ApplyAbilities(abilities, self);
+                self.AbilitiesObservationLifetime = context.State.PlayerLifetime;
                 context.PhysicsConditionsDirty();
                 await context.PublishAsync(new AbilitiesChanged(
                     self.Invulnerable, self.Flying, self.MayFly, self.InstantBuild, self.FlyingSpeed, self.WalkingSpeed))

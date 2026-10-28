@@ -16,17 +16,23 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption);
         if (!prediction.SendPacket)
             return null;
         ct.ThrowIfCancellationRequested();
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
-        int? sequence = null;
-        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn))
+        int? sequence = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _sequences.Next() : null;
+        // Native cake activation changes local nutrition and the client block before the use packet is written. The received public world remains separate from the existing prediction shadow.
+        if (cakeConsumption is { } eaten)
+        {
+            _services.Self.Food = eaten.Food;
+            _services.Self.Saturation = eaten.Saturation;
+            _services.State.JukeboxPrediction.Commit(_services.State.World, position, eaten.State, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
+        }
+        if (sequence is null)
             await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session).ConfigureAwait(false);
         else
         {
-            sequence = _sequences.Next();
             await _sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
         }
         if (localState is int changed)
@@ -46,11 +52,12 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
-        => PredictBlockUseCore(position, face, cursor, hand, out _);
+        => PredictBlockUseCore(position, face, cursor, hand, out _, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption)
     {
         localState = null;
+        cakeConsumption = null;
         bool inventoryKnown = _services.State.Features.Inventory;
         ItemStack main = HeldItem();
         ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
@@ -94,6 +101,18 @@ public sealed partial class InteractionActions
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? _services.State.JukeboxPrediction.GetBlock(world, position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
+        VanillaCakeUse cake = VanillaCakeUse.ForProtocol(_services.Version.Version.Protocol);
+        if (!suppressActivation && cake.Supports(clicked))
+        {
+            if (!inventoryKnown)
+                return BlockUsePrediction.Unknown;
+            BlockUsePrediction cakeUse = cake.Predict(clicked, item, hand, _services.Self, data, _blockProfile.UseSwingIsLocal,
+                _services.Self.NutritionObservationLifetime == _services.State.PlayerLifetime && _services.Self.AbilitiesObservationLifetime == _services.State.PlayerLifetime, out cakeConsumption);
+            if (cakeUse.Result != BlockUseResult.Pass)
+                return cakeUse;
+            hasActivation = true;
+            activationResult = BlockUseResult.Pass;
+        }
         if (projected && clicked.Block.Id.IsMinecraft && clicked.Block.Id.Path == "jukebox"
             && (clicked.LegacyId >= 0 && clicked.LegacyMeta == 0 || clicked.TryGetProperty("has_record", out string hasRecord) && hasRecord == "false"))
         {

@@ -40,6 +40,10 @@ public sealed class SelfState
     /// <remarks>The defaults are a healthy, fed player, so a consumer cannot tell "20 health" from "nobody has told us yet" by value. That matters to anything that spends health as a budget: assuming full health is exactly the direction that plans a fall the bot cannot survive. Written once, by <c>SelfApplier</c> on the first <c>set_health</c>, and never cleared.</remarks>
     public bool HealthObserved { get; internal set; }
 
+    // Observed packet state belongs to the player instance, even when the public snapshot retains its last values across replacement.
+    internal long NutritionObservationLifetime { get; set; } = -1;
+    internal long AbilitiesObservationLifetime { get; set; } = -1;
+
     /// <summary>Food level.</summary>
     public int Food { get; internal set; } = 20;
 

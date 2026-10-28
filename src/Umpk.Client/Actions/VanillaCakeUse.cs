@@ -8,14 +8,41 @@ using Umpk.Game.Registries;
 namespace Umpk.Client.Actions;
 
 internal readonly record struct CakeConsumption(int State, int Food, float Saturation);
+internal readonly record struct CakeAttachment(int State, ItemStack RemainingStack);
 
 /// <summary>The registered cake's client result and local nutrition/block mutation.</summary>
-internal readonly record struct VanillaCakeUse(bool HasRules, bool AlwaysHandles, bool EmptyHandConsumesWithoutSwing, bool InvulnerableCanEat, bool MainHandFallbackOnly, bool ClampNutritionLower)
+internal readonly record struct VanillaCakeUse(bool HasRules, bool AlwaysHandles, bool EmptyHandConsumesWithoutSwing, bool InvulnerableCanEat, bool MainHandFallbackOnly, bool ClampNutritionLower, bool AttachesCandles, bool UsesInfiniteMaterials)
 {
     // All75 retained client methods: cake always handles through1.10.2;1.11 adds eat-or-empty;1.15 introduces CONSUME and permits invulnerable eating. The main-hand fallback begins1.20.5;1.21 clamps nutrition at zero.
-    internal static VanillaCakeUse ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol <= 210, protocol >= 573, protocol >= 573, protocol >= 766, protocol >= 767);
+    internal static VanillaCakeUse ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol <= 210, protocol >= 573, protocol >= 573, protocol >= 766, protocol >= 767, protocol is >= 755 and <= 777, protocol >= 767);
 
     internal bool Supports(BlockState state) => HasRules && state.IsValid && state.Block.Id.IsMinecraft && state.Block.Id.Path == "cake";
+
+    // Original755–777 attachment is a block activation in either hand, before ordinary item continuation. A synchronized tag cannot turn an unrelated item into a CandleBlock item.
+    internal bool? CanAttachCandle(BlockState state, ItemStack item, bool? candleMember)
+    {
+        if (!AttachesCandles || item.IsEmpty || !IsCandleItem(item.Item.Id))
+            return false;
+        if (!TryBites(state, out int bites))
+            return null;
+        return bites == 0 ? candleMember : false;
+    }
+
+    internal bool TryCreateAttachment(BlockState state, ItemStack item, bool infiniteMaterials, out CakeAttachment attachment)
+    {
+        attachment = default;
+        if (!AttachesCandles || !Supports(state) || !TryBites(state, out int bites) || bites != 0 || item.IsEmpty || !IsCandleItem(item.Item.Id)
+            || !state.Source.Blocks.TryGet(Identifier.Minecraft(item.Item.Id.Path + "_cake"), out var candleCake))
+            return false;
+        var changed = new BlockState(state.Source, candleCake.Value.DefaultStateId);
+        if (!changed.TryGetProperty("lit", out string lit) || lit != "false")
+            return false;
+        attachment = new(changed.StateId, infiniteMaterials ? item : item.Shrink(1));
+        return true;
+    }
+
+    private static bool IsCandleItem(Identifier item)
+        => item.IsMinecraft && item.Path is "candle" or "white_candle" or "orange_candle" or "magenta_candle" or "light_blue_candle" or "yellow_candle" or "lime_candle" or "pink_candle" or "gray_candle" or "light_gray_candle" or "cyan_candle" or "purple_candle" or "blue_candle" or "brown_candle" or "green_candle" or "red_candle" or "black_candle";
 
     internal BlockUsePrediction Predict(BlockState state, ItemStack item, Hand hand, SelfState self, IBlockInteractionSource data, bool localSwing, bool currentPlayerObserved, out CakeConsumption? consumption)
     {

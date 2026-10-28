@@ -46,13 +46,28 @@ internal sealed class VanillaCreativeMiningRestriction
             return false;
         if (protocol < FlatteningProtocol)
             return state.Self.GameMode == GameMode.Creative;
+        return IsOwnCreative(state, protocol);
+    }
+
+    // Candle attachment through766 and the existing restricted mining items read the same native local-player object and cache. A preview observes this state without creating a native lookup event.
+    internal bool? IsOwnCreative(ClientState state, int protocol) => ReadOwnCreative(state, protocol, remember: true);
+    internal bool? PeekOwnCreative(ClientState state, int protocol) => ReadOwnCreative(state, protocol, remember: false);
+
+    private bool? ReadOwnCreative(ClientState state, int protocol, bool remember)
+    {
+        if (remember)
+            Synchronize(state);
         if (state.Self.Uuid == Guid.Empty)
             return null;
         if (protocol < CachedOwnPlayerInfoProtocol)
             return state.TabList.TryGet(state.Self.Uuid, out TabListEntry? direct) && direct.GameMode == GameMode.Creative;
+        bool current = _interactionLifetime == state.InteractionLifetime && _playerLifetime == state.PlayerLifetime && _playerId == state.Self.Uuid;
+        TabListEntry? info = current ? _cachedPlayerInfo : null;
         // A missing entry is retried; a found native PlayerInfo object survives map removal/replacement until the local player is replaced.
-        if (_cachedPlayerInfo is null)
-            state.TabList.TryGet(state.Self.Uuid, out _cachedPlayerInfo);
-        return _cachedPlayerInfo?.GameMode == GameMode.Creative;
+        if (info is null)
+            state.TabList.TryGet(state.Self.Uuid, out info);
+        if (remember)
+            _cachedPlayerInfo = info;
+        return info?.GameMode == GameMode.Creative;
     }
 }

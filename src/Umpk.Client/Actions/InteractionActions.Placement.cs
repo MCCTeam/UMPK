@@ -1,4 +1,5 @@
 using Umpk.Client.Internal;
+using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Blocks;
 using Umpk.Game.Items;
@@ -16,12 +17,22 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment);
         if (!prediction.SendPacket)
             return null;
         ct.ThrowIfCancellationRequested();
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
         int? sequence = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _sequences.Next() : null;
+        // Native candle attachment consumes the selected stack before changing the block; both precede the use write. The session inventory remains the single stack owner.
+        if (cakeAttachment is { } attached)
+        {
+            // Pure prediction selected this same entry on this owner without an intervening await. Commit its native lookup only after both cancellation checks and sequence capture.
+            if (!VanillaCakeUse.ForProtocol(_services.Version.Version.Protocol).UsesInfiniteMaterials)
+                _ = _creativeMiningRestriction.IsOwnCreative(_services.State, _services.Version.Version.Protocol);
+            int slot = hand == Hand.Main ? 36 + _services.Self.HeldSlot : 45;
+            _services.State.Inventory.SetSlot(InventoryState.PlayerWindowId, slot, attached.RemainingStack);
+            _services.State.JukeboxPrediction.Commit(_services.State.World, position, attached.State, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
+        }
         // Native cake activation changes local nutrition and the client block before the use packet is written. The received public world remains separate from the existing prediction shadow.
         if (cakeConsumption is { } eaten)
         {
@@ -52,15 +63,16 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
-        => PredictBlockUseCore(position, face, cursor, hand, out _, out _);
+        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment)
     {
         localState = null;
         cakeConsumption = null;
+        cakeAttachment = null;
         bool inventoryKnown = _services.State.Features.Inventory;
         ItemStack main = HeldItem();
-        ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _services.State.Inventory.GetSlot(45) : ItemStack.Empty;
+        ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) && _services.State.Inventory.PlayerSlots.Count > 45 ? _services.State.Inventory.PlayerSlots[45] : ItemStack.Empty;
         ItemStack item = hand == Hand.Main ? main : off;
         // Minecraft.startUseItem rejects disabled nonempty stacks before useItemOn, independently of terrain and spectator mode. Without inventory, only a completely classified and enabled native catalog can establish permission.
         bool? itemEnabled = inventoryKnown
@@ -106,6 +118,24 @@ public sealed partial class InteractionActions
         {
             if (!inventoryKnown)
                 return BlockUsePrediction.Unknown;
+            bool? attachesCandle = cake.CanAttachCandle(clicked, item, item.IsEmpty ? false
+                : _services.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("candles"), item.Item.NetworkId));
+            if (attachesCandle is not false)
+            {
+                // The bounded stack mutation uses the closed player inventory. An open menu or pending click has a separate reconciliation owner.
+                if (attachesCandle is not true || _services.State.Inventory.HasOpenContainer || _services.State.Inventory.HasPendingPrediction)
+                    return BlockUsePrediction.Unknown;
+                if (!cake.TryCreateAttachment(clicked, item, infiniteMaterials: true, out CakeAttachment attached))
+                    return BlockUsePrediction.Unknown;
+                // Prediction reads the existing owner without resetting or priming its first-nonnull cache. The admitted input commits that lookup together with its mutations.
+                bool? infiniteMaterials = cake.UsesInfiniteMaterials
+                    ? _services.Self.AbilitiesObservationLifetime == _services.State.PlayerLifetime ? _services.Self.InstantBuild : null
+                    : _creativeMiningRestriction.PeekOwnCreative(_services.State, _services.Version.Version.Protocol);
+                if (infiniteMaterials is not bool infinite)
+                    return BlockUsePrediction.Unknown;
+                cakeAttachment = infinite ? attached : attached with { RemainingStack = item.Shrink(1) };
+                return BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal);
+            }
             BlockUsePrediction cakeUse = cake.Predict(clicked, item, hand, _services.Self, data, _blockProfile.UseSwingIsLocal,
                 _services.Self.NutritionObservationLifetime == _services.State.PlayerLifetime && _services.Self.AbilitiesObservationLifetime == _services.State.PlayerLifetime, out cakeConsumption);
             if (cakeUse.Result != BlockUseResult.Pass)

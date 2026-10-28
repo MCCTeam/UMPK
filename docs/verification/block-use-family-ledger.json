@@ -2247,7 +2247,7 @@
       "compilerRuntimeLimit": "Same Test DLL compiled against baseline6ea and ran finalca4ae; matched final Test rebuild/full35303/AOT required.",
       "remaining": [
         "Native cake use/live acceptance",
-        "Candle and specialized/custom item context",
+        "Candle-cake follow-on and specialized/custom item context; bounded attachment runtime accepted separately",
         "Exact fresh-player defaults and unmeasured respawn-copy bands",
         "Final repository/consumer/package/version-matrix/CI checks"
       ],
@@ -2337,6 +2337,54 @@
         "portsRecordedClosed": 2,
         "unforcedServerExit": 0
       }
+    },
+    "candleAttachmentRuntime": {
+      "status": "passed",
+      "scope": "Bounded native-tagged candle attachment through the real framed session caller; native live and final acceptance separate.",
+      "protocols": [
+        755,
+        756,
+        757,
+        758,
+        759,
+        760,
+        761,
+        762,
+        763,
+        764,
+        765,
+        766,
+        767,
+        768,
+        769,
+        770,
+        771,
+        772,
+        773,
+        774,
+        775,
+        776,
+        777
+      ],
+      "namedReleases": 34,
+      "adjacentControl": 754,
+      "newCases": 159,
+      "baselineRed": 130,
+      "baselineControls": 29,
+      "connectedPassed": 159,
+      "matchedPassed": 159,
+      "retainedPassedEachStage": 483,
+      "retainedStages": 5,
+      "finalAdditionalAdjacentPassed": 2351,
+      "producerClientSha256": "fcea9e6a2c1dd7735c392741901a72a84e97b64b14f3fc0ab7391225c29b6fbf",
+      "matchedTestSha256": "df1d4f936519d7b48c1ad0b74c52fdd27757b123f5d4409d9076ae7b165e01ee",
+      "sourceAuditSha256": "33d33190446b45c38ab9d1ded46beb51e93cf7f3d1541074987bc21e11326460",
+      "rootAuditSha256": "db1651658f2ac1fa521b1ee83cb5575c33a126ae6ad1b107ac40098767202d88",
+      "ownedPidsIndependentlyAbsent": 84,
+      "report": "docs/verification/candle-cake-attachment-runtime.md",
+      "clientBaseline": 35499,
+      "total17": 49351,
+      "currentFullAotNativeConsumerCi": "not run"
     }
   }
 }

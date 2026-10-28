@@ -1,6 +1,6 @@
 # Cake interaction runtime
 
-The session action now predicts the registered cake's result and swing, then applies native local food, saturation and cake-bite changes before writing the use packet. This implementation covers empty hands and measured default pass-through items across the fifty protocol datasets, using the existing protocol-47 client profile from 1.8.9. Candle insertion, specialized items, custom components and exact native constructor/respawn defaults remain open.
+The session action now predicts the registered cake's result and swing, then applies native local food, saturation and cake-bite changes before writing the use packet. This implementation covers empty hands and measured default pass-through items across the fifty protocol datasets, using the existing protocol-47 client profile from 1.8.9. [Candle insertion](candle-cake-attachment-runtime.md) now has a separately accepted bounded runtime slice; specialized items, custom components and exact native constructor/respawn defaults remain open.
 
 ## Ownership and native boundaries
 

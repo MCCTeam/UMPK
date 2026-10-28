@@ -37,18 +37,21 @@ internal sealed class BlockUseSession : IAsyncDisposable
     private readonly PipeFactory _connections;
     private readonly JavaVersion _version;
     private readonly int _protocol;
+    private readonly bool _observeWrites;
+    internal Action? BeforeClientWrite { get; set; }
     private readonly bool _featureFlags;
     internal int Protocol => _protocol;
     private long _barrier;
     internal CancellationToken Token => _budget.Token;
     private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
 
-    private BlockUseSession(int protocol, bool physics, bool featureFlags)
+    private BlockUseSession(int protocol, bool physics, bool featureFlags, bool observeWrites)
     {
         _protocol = protocol;
         _featureFlags = featureFlags;
+        _observeWrites = observeWrites;
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out _version!));
-        _connections = new PipeFactory(Server.ClientPipe);
+        _connections = new PipeFactory(ObservedPipe(Server.ClientPipe));
         Client = new UmpkClientBuilder().UseVersion(_version)
             .UseProfile(new GameProfile(RequestedId, "DoorSession"))
             .UseConnectionFactory(_connections)
@@ -65,9 +68,9 @@ internal sealed class BlockUseSession : IAsyncDisposable
         });
     }
 
-    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true)
+    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true, bool observeWrites = false)
     {
-        var session = new BlockUseSession(protocol, physics, featureFlags);
+        var session = new BlockUseSession(protocol, physics, featureFlags, observeWrites);
         try
         {
             await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session.Token), session.DriveToPlay());
@@ -114,7 +117,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
         Assert.Equal(ClientStatus.Disconnected, Client.Status);
         await Server.DisposeAsync();
         Server = FakeJavaServer.Create();
-        _connections.Pipe = Server.ClientPipe;
+        _connections.Pipe = ObservedPipe(Server.ClientPipe);
         await Task.WhenAll(Client.ConnectAsync(new ServerEndpoint("test", 25565), Token), DriveToPlay());
         await PrepareWorld(block, terrain: true);
     }
@@ -494,6 +497,37 @@ internal sealed class BlockUseSession : IAsyncDisposable
     {
         try { await Client.DisposeAsync(); }
         finally { await Server.DisposeAsync(); _budget.Dispose(); }
+    }
+
+    private IDuplexPipe ObservedPipe(IDuplexPipe pipe) => _observeWrites ? new ObservedClientPipe(pipe, this) : pipe;
+
+    private sealed class ObservedClientPipe : IDuplexPipe
+    {
+        public PipeReader Input { get; }
+        public PipeWriter Output { get; }
+
+        public ObservedClientPipe(IDuplexPipe inner, BlockUseSession owner)
+        {
+            Input = inner.Input;
+            Output = new ObservedClientWriter(inner.Output, owner);
+        }
+    }
+
+    private sealed class ObservedClientWriter(PipeWriter inner, BlockUseSession owner) : PipeWriter
+    {
+        public override bool CanGetUnflushedBytes => inner.CanGetUnflushedBytes;
+        public override long UnflushedBytes => inner.UnflushedBytes;
+        public override void Advance(int bytes)
+        {
+            owner.BeforeClientWrite?.Invoke();
+            inner.Advance(bytes);
+        }
+        public override void CancelPendingFlush() => inner.CancelPendingFlush();
+        public override void Complete(Exception? exception = null) => inner.Complete(exception);
+        public override ValueTask CompleteAsync(Exception? exception = null) => inner.CompleteAsync(exception);
+        public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default) => inner.FlushAsync(cancellationToken);
+        public override Memory<byte> GetMemory(int sizeHint = 0) => inner.GetMemory(sizeHint);
+        public override Span<byte> GetSpan(int sizeHint = 0) => inner.GetSpan(sizeHint);
     }
 
     private sealed class PipeFactory(IDuplexPipe pipe) : IConnectionFactory

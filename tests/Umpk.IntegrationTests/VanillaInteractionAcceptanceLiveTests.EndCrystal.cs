@@ -121,7 +121,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "native peer disconnect", ct);
             Assert.Equal(9, scenarios.Count);
-            await server.WriteAsync("crystal-acceptance.json", new { release, protocol, physics = true, scenarios, actors, ordinary, entities, actions, causal, exactMarkers = markers.Count, peerObservedDisconnect = true, originalMinecraftInputOrNetworkExecuted = false, EndCrystalItemUseOnImplemented = false, noPistonOrShulkerFixture = true, recordingCap = 20 * 1024 * 1024, capture.PayloadBytes });
+            await server.WriteAsync("crystal-acceptance.json", new { release, protocol, physics = true, scenarios, actors, ordinary, entities, actions, causal, exactMarkers = markers.Count, peerObservedDisconnect = true, originalMinecraftInputOrNetworkExecuted = false, EndCrystalItemUseOnExercised = false, noPistonOrShulkerFixture = true, recordingCap = 20 * 1024 * 1024, capture.PayloadBytes });
             passed = true;
 
             async Task Marker(string condition, string label)

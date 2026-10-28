@@ -696,6 +696,16 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             }
             else if (decoded is ClientboundRemoveEntitiesPacket removed)
                 Assert.Equal(Assert.IsType<ClientboundRemoveEntitiesPacket>(frame.Packet).EntityIds, removed.EntityIds);
+            else if (decoded is ServerboundUseItemOnPacket use)
+            {
+                var original = Assert.IsType<ServerboundUseItemOnPacket>(frame.Packet);
+                Assert.Equal(original with
+                {
+                    Inside = version.Version.Protocol >= 477 && original.Inside,
+                    WorldBorderHit = version.Version.Protocol >= 768 && original.WorldBorderHit,
+                    Sequence = version.Version.Protocol >= 759 ? original.Sequence : 0,
+                }, use);
+            }
             else if (decoded is ServerboundSwingPacket swing)
                 Assert.Equal(Assert.IsType<ServerboundSwingPacket>(frame.Packet) with { HasHand = true }, swing);
             else

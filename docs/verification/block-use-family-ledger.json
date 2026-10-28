@@ -2217,7 +2217,19 @@
       "rootAuditSha256": "89322f95b35f080bf041acec8b8f56d218d722ddc6c3bf202bc3100637449b74",
       "ownedProcessesAbsent": 15,
       "portsClosed": 2,
-      "earlierAttempt": "Resource-policy harness failure before tests/server; retained separately."
+      "earlierAttempt": "Resource-policy harness failure before tests/server; retained separately.",
+      "laterAttribution": {
+        "status": "passed",
+        "scope": "Exact offline diagnostic; original whole native row remains failed.",
+        "firstUnknown": "rabbit215 has no current/fixed body contract at original Placement.cs274, after membership/rider/position checks.",
+        "schedules": 5,
+        "queries": 136,
+        "allOriginalAndRepeatedPredictionsAgree": true,
+        "wolfExcludedAllQueries": true,
+        "rootAuditSha256": "eed0fc68769d510650c51189788a8fe9d5d82b79ed3022fa8b49fd24f2b9f423",
+        "limits": "Original native query clock and exact capture mark were not recorded. No native server or ninth action executed in replay.",
+        "next": "Separate native-backed Rabbit placement-relevance integration; near/invalidated contexts retain Unknown."
+      }
     },
     "cakeRuntime": {
       "status": "passed",
@@ -2251,12 +2263,80 @@
         "correction": "one-line canonical EntityPackets.Clientbound.SetHealth.Id locator; no assertion/result/protocol/count changes; freshtrial pending",
         "proposedCases": 111
       },
-      "sourceCommit": "a614513"
+      "sourceCommit": "a614513",
+      "matchedFull": {
+        "status": "passed",
+        "rows": 35303,
+        "uniqueDisplayKeys": 35179,
+        "exactSubsets": [
+          6593,
+          1880,
+          111
+        ],
+        "sourceBoundDirectoryDisplayKeys": 3,
+        "theoryInputOccurrences": 127,
+        "rootAuditSha256": "c3b2403fd9eb1b5868af78ac12550905ce66d8244dfb39ea0238f1f27a3de9df",
+        "originalWholeJob": "Failed stale display-prefix guard before AOT; original Counters/receipt retained.",
+        "localAot": {
+          "status": "passed",
+          "nativeBytes": 24688128,
+          "strictLimit": 25165824,
+          "smokeExecutedPassed": 1,
+          "producerPairsUnchanged": 12,
+          "matchedTestPairUnchanged": true,
+          "ownedPidsAbsent": 14,
+          "rootAuditSha256": "77d45e5944028c9ce61b861342d83723c6523daa495a16c1fa8990c6c24729ca"
+        }
+      }
     },
     "finalVersionMatrix": {
       "status": "not run",
       "generalProtocolRows": 50,
       "basicNamedReleaseRows": 75
+    },
+    "latestPublishedCheckpoint": {
+      "head": "1ce8c350c96dd2136e0225be94a8a51e42cc7369",
+      "status": "passed",
+      "ciJobs": 7,
+      "total17": 49155,
+      "client": 35303,
+      "integration": 60,
+      "normalSkipsUbuntu": 20,
+      "normalSkipsWindowsMacos": 22,
+      "nativeBytes": 24688080,
+      "smokeExecutedPassed": 1,
+      "rootAuditSha256": "7128fe00c14c2fa49af133dbd7fe749c99055731b6b334ecdd04101eaed6ca04"
+    },
+    "rabbit315Relevance": {
+      "status": "passed",
+      "scope": "Bounded placement-relevance runtime/replay only; exact geometry/picking/motion unowned.",
+      "sourceCommit": "5f2608d",
+      "protocol": 315,
+      "newCases": 37,
+      "baselineRed": 14,
+      "baselineControls": 23,
+      "oldWolfMaskControls": 41,
+      "relatedPassed": 375,
+      "successfulDiagnosticQueries": 136,
+      "producerClientSha256": "d86ea0aa4ddbb211a772c652cd9b00eb69b71f97de51eccfe545497fb108e989",
+      "matchedTestSha256": "647dcd9ed903dfe19a53ce942fe80ba527c05cec408ab27ecb3559b2518ad2ab",
+      "rootAuditSha256": "9827b19c33c9d7d0e09ce3fa5633387a4afcaff04d35cc5650cfdfd851d45d5d",
+      "report": "docs/verification/legacy-rabbit-placement-envelope-315.md",
+      "clientBaseline": 35340,
+      "total17": 49192,
+      "currentFullAotCi": "not run",
+      "freshControlledNative11": "harness failure before any scene/action",
+      "freshNativeAttempt": {
+        "status": "harness failure",
+        "rootAuditSha256": "e20506f4ee21de09ac7b50adc6b0011526b3f8232ae0fa579642a70f30984570",
+        "reason": "Required full controlled-wolf column(5,9) did not arrive before setup deadline.",
+        "scenesExecuted": 0,
+        "captureFrames": 3741,
+        "payloadBytes": 4657180,
+        "ownedPidsIndependentlyAbsent": 14,
+        "portsRecordedClosed": 2,
+        "unforcedServerExit": 0
+      }
     }
   }
 }

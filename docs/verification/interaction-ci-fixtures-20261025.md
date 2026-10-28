@@ -1,5 +1,13 @@
 # Interaction fixture synchronization
 
+## Published cake and acceptance-fixture checkpoint, 2026-10-28
+
+Published `1ce8c350c96dd2136e0225be94a8a51e42cc7369` passes all seven jobs in [run 40691085568](https://github.com/MCCTeam/UMPK/actions/runs/40691085568). All three operating systems match seventeen totals of 49,155, including all 35,303 Client cases. Ubuntu records 49,135 passes/twenty named normal skips; Windows and macOS each record 49,133 passes/twenty-two skips. Relative to `0fa673b`, the only count changes are 111 new Client cases and one normal Integration opt-in row for End Crystal use. Every previous normal skip identity remains; that new End Crystal method is the sole added skip. Its five required native rows execute separately under the scoped native report.
+
+Strict Native AOT remains 24,688,080 bytes, below 25,165,824, with exactly one executed passing smoke and the successful XML guard. Full formatting, fifty datasets, clean fresh generation, fourteen primary/thirteen symbol packages and isolated local-consumer restore/build pass. The package consumer is not executed by this workflow. Tested merge `28c0788c46cc1215e3579887181164319cbb0509` has the exact published-head tree and workflow.
+
+Evidence is retained under `/home/anon/Projects/MinecraftOfficial/runs/pr10-ci-1ce8c35-20261028-v1/`. Root audit `.scratch/pr10-ci-1ce8c35-root-audit-20261028-v1.json` (`7128fe00c14c2fa49af133dbd7fe749c99055731b6b334ecdd04101eaed6ca04`) hashes thirty-three evidence files and verifies the raw logs, all seventeen counts, exact named skips, native budget and executed smoke guard. The first log download stops at the installed CLI's ANSI-output guard before saving a log; the successor preserves raw bytes directly to files with the documented CLI flag and never prints their escape sequences. This workflow uploads no raw normal/AOT TRX artifacts. Final local/native/consumer/version acceptance remains separate.
+
 ## Current published acceptance, 2026-10-28
 
 Published `0fa673b0e55a11ba09bd0a438fb3eaf4b281e2f4` passes all seven jobs in [run 40249240600](https://github.com/MCCTeam/UMPK/actions/runs/40249240600). All three operating systems match the seventeen-suite baseline of 49,043, including 35,192 Client passes. Ubuntu records 49,024 passes and nineteen named normal skips; Windows and macOS each record 49,022 passes and twenty-one named skips. The six deliberate Client additions cover the corrected block-entity guard. Every suite reports zero failures.

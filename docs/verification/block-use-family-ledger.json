@@ -1038,6 +1038,36 @@
         "siblingSourceGitSeedAndPairsUnchanged": true,
         "all16OwnedPidsAbsent": true,
         "ownedPortsClosed": true
+      },
+      "controlledWolfNativeTrial": {
+        "status": "failed",
+        "report": "docs/verification/legacy-wolf-placement-envelope-315.md#controlled-native-trial-2026-10-26",
+        "actualHandoffSha256": "111b29e433634b7f77da68b41d3b7d8a96880b7f3c3d3d71a937b1322ff1088c",
+        "rootAuditSha256": "ec32d203ce960ac0d13e85351b1b5b4d59c3816776561bb94052a850d4e27aec",
+        "nativeSetupPassed": true,
+        "sceneActions": 0,
+        "uses": 0,
+        "packetSwings": 0,
+        "failedPrecondition": "EnvelopeExcluded returned false before first action",
+        "all12OwnedPidsAbsent": true,
+        "ownedPortsClosed": true,
+        "attributionAtTrial": "unestablished",
+        "laterAttribution": {
+          "status": "passed",
+          "cause": "four incorrectly encoded unowned-block-entity bitmap bytes; packet-only AddMob registration reproduces grass-path invalidation",
+          "rootAuditSha256": "2b8a54b5767941b18ac1c0ce3b820d64789eae158014570afb17bde54e5fb5e0"
+        },
+        "correctedRuntime": {
+          "status": "passed",
+          "newCases": 6,
+          "adjacentCases": 204,
+          "originalResources": 54,
+          "diagnosticSchedules": 5,
+          "framesPerSchedule": 1483,
+          "rootAuditSha256": "90635cae985c2fe6854b717fc6c973d7d691b89f36e50533ff6050cbb7daae73",
+          "nativeCorrectedProducer": "not run",
+          "fullAotCorrectedProducer": "not run"
+        }
       }
     },
     {
@@ -2129,6 +2159,104 @@
       "strictAotLimit": 25165824,
       "executedPassingAotSmoke": 1,
       "limits": "Normal-suite opt-in skips remain explicit; final native/version/consumer acceptance is separate. Historical4e failure preserved."
+    }
+  },
+  "resumedAcceptance20261028": {
+    "publishedHead": "0fa673b0e55a11ba09bd0a438fb3eaf4b281e2f4",
+    "publishedCi": {
+      "status": "passed",
+      "jobs": 7,
+      "total17": 49043,
+      "client": 35192,
+      "nativeBytes": 24688080,
+      "smokeExecutedPassed": 1,
+      "rootAuditSha256": "6736a2a02367d756cfa4f54fc109c98c984b5a9502d20fa66e0cd0553c985ae2"
+    },
+    "correctedGuardFullAot": {
+      "status": "passed",
+      "client": 35192,
+      "fullKeys": 35068,
+      "adjacentSubset": 6593,
+      "nativeBytes": 24688128,
+      "smokeExecutedPassed": 1,
+      "rootAuditSha256": "4a56316fd8afdda6445677bfedb245b13ef824e2f4328218a833eacf096ac5b0",
+      "producerBindingSha256": "8bb7f57b5fc153a9854be06f6d23f187500f69cc4c7e67cd3370b07feae5db3f"
+    },
+    "endCrystalNative": {
+      "status": "passed",
+      "protocols": [
+        107,
+        340,
+        393,
+        776,
+        777
+      ],
+      "namedReleases": [
+        "1.9",
+        "1.12.2",
+        "1.13",
+        "26.2",
+        "26.3"
+      ],
+      "rows": 5,
+      "scenes": 40,
+      "producerBindingSha256": "ffd23f8d86ab1a68dcbcc709ece6fba6d43416c29739493a2925e9393901e4da",
+      "report": "docs/verification/end-crystal-use-runtime.md#native-server-acceptance-2026-10-28",
+      "limits": "Bounded default use; the fresh protocol-777 world did not recreate the prior container-drop setup. Original-client input, custom components, deeper edges and final-producer proof remain separate."
+    },
+    "controlledWolfNative": {
+      "status": "failed",
+      "requiredScenes": 11,
+      "passedScenesBeforeFailure": 8,
+      "failure": "Ninth iron-held-stone pre-action prediction is Unknown/None although controlled wolf envelope exclusion is true; exact cause unestablished.",
+      "frames": 5041,
+      "payloadBytes": 4590250,
+      "snapshots": 9,
+      "uses": 8,
+      "wireSwings": 5,
+      "rootAuditSha256": "89322f95b35f080bf041acec8b8f56d218d722ddc6c3bf202bc3100637449b74",
+      "ownedProcessesAbsent": 15,
+      "portsClosed": 2,
+      "earlierAttempt": "Resource-policy harness failure before tests/server; retained separately."
+    },
+    "cakeRuntime": {
+      "status": "passed",
+      "scope": "Bounded registered cake session runtime for empty hand and measured default pass-through items; native/final acceptance pending.",
+      "producerClientSha256": "ca4ae7b9f1fb3c5447a22edb44abddcaa16b6ae27cd3d75e96053a7724669758",
+      "protocols": 50,
+      "focusedCases": 111,
+      "baselineFailures": 90,
+      "baselinePassingControls": 21,
+      "finalFocusedPassed": 111,
+      "adjacentPassed": 1880,
+      "clientBaseline": 35303,
+      "rootAuditSha256": "350c948c8e6cb2e0904c58562b8938abbdb5dffca6100be19a61c4af7f1461f1",
+      "report": "docs/verification/cake-use-runtime.md",
+      "compilerRuntimeLimit": "Same Test DLL compiled against baseline6ea and ran finalca4ae; matched final Test rebuild/full35303/AOT required.",
+      "remaining": [
+        "Native cake use/live acceptance",
+        "Candle and specialized/custom item context",
+        "Exact fresh-player defaults and unmeasured respawn-copy bands",
+        "Final repository/consumer/package/version-matrix/CI checks"
+      ],
+      "retainedFailedV4": {
+        "status": "harness failure",
+        "executedBaselineRows": 111,
+        "genuineBehaviorFailures": 85,
+        "passingControls": 18,
+        "maskedIntendedBehaviorFailures": 5,
+        "maskedControls": 3,
+        "newClientCompiles": 0,
+        "cause": "protocol47 fixture health-codec lookup uses wire-era alias rather than canonical packet identity",
+        "correction": "one-line canonical EntityPackets.Clientbound.SetHealth.Id locator; no assertion/result/protocol/count changes; freshtrial pending",
+        "proposedCases": 111
+      },
+      "sourceCommit": "a614513"
+    },
+    "finalVersionMatrix": {
+      "status": "not run",
+      "generalProtocolRows": 50,
+      "basicNamedReleaseRows": 75
     }
   }
 }

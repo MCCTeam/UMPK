@@ -1,6 +1,24 @@
 # End-crystal use prediction runtime
 
-The scoped runtime now predicts the default end-crystal item's native result and swing policy when the required world and entity context is known. The connected caller preserves packet-only behavior for unknown context. This report covers source-backed item-use prediction and framed session tests; it does not report a live Minecraft server or original client-method execution.
+The scoped runtime now predicts the default end-crystal item's native result and swing policy when the required world and entity context is known. The connected caller preserves packet-only behavior for unknown context. The original runtime evidence below covers source-backed item-use prediction and framed session tests. Later native server acceptance has its own producer and limits; original client-method execution remains untested.
+
+## Native server acceptance, 2026-10-28
+
+All five measured native boundaries now pass one required eight-scene row each: forty executed scenarios and zero skipped required rows. The fixture enables physics and verifies independent native entities, stacks and player positions, exact hand/use/swing groups, captured-frame replay, peer disconnect and owned cleanup. Protocol 777 retains its native local-only successful swing; the row observes three Local predictions and no wire swing.
+
+| Native release | Protocol | Passed scenes | Uses | Wire swings | Payload bytes | Root audit |
+|---|---:|---:|---:|---:|---:|---|
+| 1.9 | 107 | 8 | 8 | 2 | 16,123,965 | `1ea625b1` |
+| 1.12.2 | 340 | 8 | 8 | 2 | 3,044,699 | `4fdaffee` |
+| 1.13 | 393 | 8 | 8 | 3 | 3,023,141 | `a4c072fd` |
+| 26.2 | 776 | 8 | 8 | 3 | 4,149,674 | `684bd32f` |
+| 26.3 | 777 | 8 | 8 | 0 | 5,142,696 | `80b616fa` |
+
+These runs identify the frozen combined `fce4b3d4` Client through producer binding `ffd23f8d86ab1a68dcbcc709ece6fba6d43416c29739493a2925e9393901e4da`. The later protocol-315-only guard repair does not participate in these five protocols. This is bounded source/runtime reuse, not a final current-producer or all-release certificate. Each run retains its exact `HANDOVER.json`, launch/command receipts, capture and source/runtime manifests under `/home/anon/Projects/MinecraftOfficial/runs/end-crystal-use-live-<protocol>-<date>-v<attempt>/`. All owned PIDs are absent, both owned ports per run reject connections, native exits are unforced with code zero, and producer pairs, siblings and seeds remain unchanged.
+
+Earlier failed attempts remain separate: BOM-prefixed prerequisite XML read as a string, comparison of a local sequence absent from the legacy wire layout, exact native command-response wording, and a false empty-world premise on 26.3. The latter kills the initially selected chest minecarts, whose removal creates thirty-two genuine native item entities outside that selected collection. Every surviving wire item UUID matches a saved native item. The repaired fixture fences the initial native removals, issues a second native clear and retains the original strict no-entity assertion, timeouts and recording cap. The fresh passing world has two initial entities and does not recreate the earlier four-container/thirty-two-item setup; the retained source and saved-world evidence establish that earlier cause.
+
+Private fixture v7 passes all three full-format selections with zero delta, one fixture build, forty-six source/PDB documents, twelve producer references, forty-one normal passes with eighteen/nineteen exact named skips in the original/unfiltered scopes, and exact five-row discovery. Reused actual 107/777 capture controls pass, including rejection of a corrupted modern sequence. Root audit `.scratch/end-crystal-use-compile-actual-root-audit-20261028-v7.json`, SHA-256 `886ccb8a64e68d25a5cd1b138e6e3662490ac3069e666372006577037f26ea6d`, checks 1,748 physical pins and all twenty-four absent owned PIDs. The actual native 777 audit is `.scratch/end-crystal-use-live-777-actual-root-audit-20261028-v3.json`, SHA-256 `80b616fabe97e5ef11d88f2ec2f43d720b0dc91cdb6677db29164d503ddd5fc6`. The private fixture has not yet added its extra normal opt-in row to the committed Integration baseline. Original Minecraft client item-method execution, custom components, deeper section-edge behavior and final producer/version-matrix acceptance remain separate.
 
 ## Producer and scope
 

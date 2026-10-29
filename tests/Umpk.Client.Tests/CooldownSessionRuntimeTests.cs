@@ -178,6 +178,9 @@ public sealed class CooldownSessionRuntimeTests
         using IDisposable subscription = session.Client.Events.Subscribe<Respawned>(_ => done.TrySetResult());
         await session.Send(new ClientboundRespawnPacket(Session.Spawn with { SeaLevel = protocol >= 768 ? 63 : 0 }, 0, null));
         await done.Task.WaitAsync(session.Token);
+        Assert.True(session.Client.State.Inventory.GetSlot(36).IsEmpty);
+        var item = session.Client.State.Registries!.Items[Identifier.Minecraft("diamond_hoe")];
+        await session.Send(new ClientboundContainerSetSlotPacket(0, 0, 36, new ItemStack(item, 1)));
         await session.Cooldown(3);
         for (int tick = 0; tick < 3; tick++)
             await session.Tick();

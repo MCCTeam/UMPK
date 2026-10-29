@@ -86,7 +86,7 @@ public sealed class InventoryState
         {
             target[index] = item;
             if (windowId == OpenWindowId)
-                SyncPlayerSlotsFromOpenContainer();
+                SyncPlayerSlotsFromOpenContainer(index);
 
         }
     }
@@ -352,13 +352,17 @@ public sealed class InventoryState
     }
 
     /// <summary>Mirrors the 36 player-inventory slots at the end of a generic open-container snapshot into the player window. The server sends those slots in the container's content and slot updates while a chest is open; without this mirror, consumers observe a stale player inventory until the container closes and can incorrectly treat a successful quick-move as a rejected one.</summary>
-    private void SyncPlayerSlotsFromOpenContainer()
+    private void SyncPlayerSlotsFromOpenContainer(int? updatedSlot = null)
     {
         if (!HasOpenContainer || _containerSlots is not { Length: >= 36 } container)
             return;
 
         int playerStart = container.Length - 36;
-        for (int i = 0; i < 36; i++)
+        int first = updatedSlot is int slot ? slot - playerStart : 0;
+        if ((uint)first >= 36)
+            return;
+        int end = updatedSlot.HasValue ? first + 1 : 36;
+        for (int i = first; i < end; i++)
             _playerSlots[9 + i] = container[playerStart + i];
 
     }

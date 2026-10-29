@@ -1,4 +1,5 @@
 using Umpk.Client.Actions;
+using Umpk.Client.State;
 using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Items;
@@ -162,7 +163,11 @@ internal static class InteractionPicker
     {
         if (!state.Features.Inventory)
             return false;
-        ItemStack main = state.Inventory.GetSlot(36 + state.Self.HeldSlot), off = state.Inventory.GetSlot(45);
+        InventoryState inventory = state.Inventory;
+        int mainSlot = 36 + state.Self.HeldSlot;
+        if (!inventory.IsPlayerSlotAvailable(mainSlot) || !inventory.IsPlayerSlotAvailable(45))
+            return false;
+        ItemStack main = inventory.PlayerSlots[mainSlot], off = inventory.PlayerSlots[45];
         // 1.21.11+ LivingEntity.getActiveItem selects the use stack or main hand. Until use-hand ownership is tracked, either hand's range override makes this context unknown. Native Item.Properties.spear is the only vanilla default ATTACK_RANGE supplier.
         return Ordinary(main) && Ordinary(off);
 

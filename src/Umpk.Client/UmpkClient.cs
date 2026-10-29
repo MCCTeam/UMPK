@@ -911,6 +911,11 @@ public sealed class UmpkClient : IAsyncDisposable
 
         State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
 
+        // The game-mode controller synchronizes the selected hotbar slot before input, even while local-player ticks wait for terrain or the world is frozen.
+        if (State.WorldDimension is not null && _sink is { } carriedSink
+            && !await SynchronizeCarriedItemOnTickAsync(carriedSink, ct).ConfigureAwait(false))
+            return;
+
         // Held block input runs on the same clock as locomotion, before the movement report. A request never waits for a future tick or a server acknowledgment inside this loop.
         await Actions.Interaction.TickMiningOnLoopAsync(ct).ConfigureAwait(false);
 
@@ -1025,6 +1030,21 @@ public sealed class UmpkClient : IAsyncDisposable
                 () => tickSink.SendAsync(new ServerboundClientTickEndPacket(), CancellationToken.None),
                 "client_tick_end").ConfigureAwait(false);
 
+    }
+
+    private async ValueTask<bool> SynchronizeCarriedItemOnTickAsync(IPacketSink sink, CancellationToken ct)
+    {
+        try
+        {
+            await Actions.Inventory.TickCarriedItemOnLoopAsync(sink, ct).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex) when (IsExpectedSendTeardown(ex))
+        {
+            // A closing connection has no usable server hand for this input phase. Keep its receive-loop verdict and stop this tick before mining.
+            _logger.LogDebug("The per-tick {Packet} send was dropped: {Reason}", "set_carried_item", DescribeTeardown(ex));
+            return false;
+        }
     }
 
     private async ValueTask<bool> SendMovementTickPacketAsync(object packet, string name)

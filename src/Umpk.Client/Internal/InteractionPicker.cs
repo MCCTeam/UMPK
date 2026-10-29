@@ -1,6 +1,7 @@
 using Umpk.Client.Actions;
 using Umpk.Client.State;
 using Umpk.Data.Java;
+using Umpk.Game.Blocks;
 using Umpk.Game.Entities;
 using Umpk.Game.Items;
 using Umpk.Game.Players;
@@ -68,7 +69,11 @@ internal static class InteractionPicker
         Vec3d eye = services.EyePosition;
         double yaw = services.Self.Yaw * Math.PI / 180, pitch = services.Self.Pitch * Math.PI / 180;
         var direction = new Vec3d(-Math.Sin(yaw) * Math.Cos(pitch), -Math.Sin(pitch), Math.Cos(yaw) * Math.Cos(pitch));
-        BlockHitResult? block = services.ReadBlockHit(profile.AttributeReach ? traceRange : blockRange);
+        double blockTraceRange = profile.AttributeReach ? traceRange : blockRange;
+        if ((!state.Features.Inventory || !state.Inventory.IsPlayerSlotAvailable(36 + services.Self.HeldSlot))
+            && !HasDefiniteScaffoldingOutline(services, protocol, eye, eye.Add(direction.Scale(blockTraceRange))))
+            return InteractionPickResult.Unknown;
+        BlockHitResult? block = services.ReadBlockHit(blockTraceRange);
         double blockDistance = block is { } hit ? hit.Point.Subtract(eye).LengthSqr() : traceRange * traceRange;
         if (profile.AttributeReach && block is not null)
             traceRange = Math.Sqrt(blockDistance);
@@ -157,6 +162,27 @@ internal static class InteractionPicker
 
         bool TryBounds(Entity entity, out Aabb bounds)
             => state.EntityGeometry.TryGet(entity, geometry, out bounds, out _, protocol);
+    }
+
+    private static bool HasDefiniteScaffoldingOutline(ClientSessionServices services, int protocol, Vec3d eye, Vec3d end)
+    {
+        ClientState state = services.State;
+        // Native ScaffoldingBlock.getShape reads only the player's selected main hand. A nearer independent hit can still be definite while that input is unavailable.
+        bool hasScaffolding = false;
+        var shapes = JavaGameData.BlockShapes(protocol);
+        BlockRayClipModel clipModel = BlockInteractionProfile.ForProtocol(protocol).ProjectedOutlineClipModel;
+        BlockHitResult ordinary = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("air"), ReadBlock, clipModel);
+        if (!hasScaffolding)
+            return true;
+        BlockHitResult holding = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("scaffolding"), ReadBlock, clipModel);
+        return ordinary == holding;
+
+        BlockState ReadBlock(BlockPos position)
+        {
+            BlockState block = state.JukeboxPrediction.GetBlock(state.World, position);
+            hasScaffolding |= block.IsValid && block.Block.Id.IsMinecraft && block.Block.Id.Path == "scaffolding";
+            return block;
+        }
     }
 
     private static bool HasOrdinaryItemRange(ClientState state)

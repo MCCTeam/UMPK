@@ -2,6 +2,7 @@ using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.State;
 using Umpk.Game.Items;
+using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
 
 namespace Umpk.Client.Appliers;
@@ -20,6 +21,10 @@ internal sealed class InventoryApplier : IApplier
         InventoryState inventory = context.State.Inventory;
         switch (packet)
         {
+            case InventoryUpdateLossScope loss:
+                ApplyDecodeLoss(loss, inventory);
+                return true;
+
             case ClientboundOpenScreenPacket open:
                 // Resolve the window KIND here, the one point where both eras' keys are in hand: the numeric menu id from 1.14, the window-type string before that. Consumers then read a single semantic type instead of inferring it from slot count and property presence.
                 inventory.OpenContainer(
@@ -73,13 +78,43 @@ internal sealed class InventoryApplier : IApplier
         }
     }
 
+    private static void ApplyDecodeLoss(InventoryUpdateLossScope loss, InventoryState inventory)
+    {
+        // Only the decoded header is known. Preserve cached stacks and revisions while invalidating the addressed knowledge.
+        switch (loss)
+        {
+            case { Kind: InventoryUpdateLossKind.ContainerSlot, ContainerId: CursorContainerId }:
+            case { Kind: InventoryUpdateLossKind.Cursor }:
+                inventory.MarkCursorUnavailable();
+                break;
+            case { Kind: InventoryUpdateLossKind.ContainerSlot, ContainerId: PlayerInventoryContainerId, Slot: int inventorySlot }:
+                MarkInventorySpaceSlotUnavailable(inventorySlot, inventory);
+                break;
+            case { Kind: InventoryUpdateLossKind.PlayerInventorySlot, Slot: int playerSlot }:
+                MarkInventorySpaceSlotUnavailable(playerSlot, inventory);
+                break;
+            case { Kind: InventoryUpdateLossKind.ContainerSlot, ContainerId: int windowId, Slot: int menuSlot }:
+                inventory.MarkSlotUnavailable(windowId, menuSlot);
+                break;
+            case { Kind: InventoryUpdateLossKind.ContainerContents, ContainerId: int contentsWindowId }:
+                inventory.MarkContentsUnavailable(contentsWindowId, loss.ItemCount);
+                break;
+        }
+    }
+
+    private static void MarkInventorySpaceSlotUnavailable(int inventorySlot, InventoryState inventory)
+    {
+        if (PlayerInventorySlotMap.TryToMenuSlot(inventorySlot, out int menuSlot))
+            inventory.MarkSlotUnavailable(InventoryState.PlayerWindowId, menuSlot);
+    }
+
     /// <summary>Applies a player-inventory write whose slot index is in INVENTORY space (container id -2 through 1.21.1, <c>set_player_inventory</c> from 1.21.2) by translating it to the menu-space index the player array stores. An index with no player-window slot (the 1.21.9+ body-armor and saddle equipment indices) is dropped without an event: nothing in the tracked window changed.</summary>
     private static async ValueTask ApplyInventorySpaceSlotAsync(int inventorySlot, ItemStack item, InventoryState inventory, ApplierContext context)
     {
         if (!PlayerInventorySlotMap.TryToMenuSlot(inventorySlot, out int menuSlot))
             return;
 
-        inventory.SetSlot(InventoryState.PlayerWindowId, menuSlot, item);
+        inventory.SetAuthoritativeSlot(InventoryState.PlayerWindowId, menuSlot, item);
         await context.PublishAsync(new ContainerContentChanged(InventoryState.PlayerWindowId)).ConfigureAwait(false);
     }
 

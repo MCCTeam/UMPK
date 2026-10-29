@@ -71,11 +71,15 @@ public sealed partial class InteractionActions
         cakeConsumption = null;
         cakeAttachment = null;
         bool inventoryKnown = _services.State.Features.Inventory;
+        bool hasOffhand = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn);
+        bool mainKnown = inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(36 + _services.Self.HeldSlot);
+        bool offKnown = !hasOffhand || inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(45);
         ItemStack main = HeldItem();
-        ItemStack off = inventoryKnown && _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) && _services.State.Inventory.PlayerSlots.Count > 45 ? _services.State.Inventory.PlayerSlots[45] : ItemStack.Empty;
+        ItemStack off = inventoryKnown && hasOffhand && _services.State.Inventory.PlayerSlots.Count > 45 ? _services.State.Inventory.PlayerSlots[45] : ItemStack.Empty;
         ItemStack item = hand == Hand.Main ? main : off;
-        // Minecraft.startUseItem rejects disabled nonempty stacks before useItemOn, independently of terrain and spectator mode. Without inventory, only a completely classified and enabled native catalog can establish permission.
-        bool? itemEnabled = inventoryKnown
+        bool itemKnown = hand == Hand.Main ? mainKnown : offKnown;
+        // Minecraft.startUseItem rejects disabled nonempty stacks before useItemOn, independently of terrain and spectator mode. With an unavailable selected stack, only a completely classified and enabled native catalog can establish permission.
+        bool? itemEnabled = itemKnown
             ? item.IsEmpty ? true : _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol)
             : _services.State.EnabledFeatures.IsUnobservedItemEnabled(_services.State.Registries, _services.Version.Version.Protocol);
         if (itemEnabled is false)
@@ -100,10 +104,11 @@ public sealed partial class InteractionActions
         if (!clicked.IsValid || !data.TryGetBlock(clicked.Block.Id, out BlockInteractionInfo block))
             return BlockUsePrediction.Unknown;
         // 1.14.4 and 26.3 MultiPlayerGameMode.useItemOn/performUseItemOn suppress block activation only when secondary use has a nonempty stack in either hand. Activation runs before item cooldown and placement permissions.
-        bool suppressActivation = _services.Self.Sneaking && (!main.IsEmpty || !off.IsEmpty);
-        // performUseItemOn fails on a disabled target before activation, but still commits the use packet. Native secondary use suppresses this entire target/activation phase.
-        if (_services.Self.Sneaking && !inventoryKnown)
+        bool knownNonemptyHand = mainKnown && !main.IsEmpty || offKnown && !off.IsEmpty;
+        if (_services.Self.Sneaking && !knownNonemptyHand && (!mainKnown || !offKnown))
             return BlockUsePrediction.Unknown;
+        bool suppressActivation = _services.Self.Sneaking && knownNonemptyHand;
+        // performUseItemOn fails on a disabled target before activation, but still commits the use packet. Native secondary use suppresses this entire target/activation phase.
         if (!suppressActivation)
         {
             bool? blockEnabled = _services.State.EnabledFeatures.IsBlockEnabled(clicked.Block.Id, _services.Version.Version.Protocol);
@@ -116,7 +121,7 @@ public sealed partial class InteractionActions
         VanillaCakeUse cake = VanillaCakeUse.ForProtocol(_services.Version.Version.Protocol);
         if (!suppressActivation && cake.Supports(clicked))
         {
-            if (!inventoryKnown)
+            if (!itemKnown)
                 return BlockUsePrediction.Unknown;
             bool? attachesCandle = cake.CanAttachCandle(clicked, item, item.IsEmpty ? false
                 : _services.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("candles"), item.Item.NetworkId));
@@ -169,7 +174,7 @@ public sealed partial class InteractionActions
         }
         if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass))
             return BlockUsePrediction.Unknown;
-        if (!inventoryKnown)
+        if (!itemKnown)
             return BlockUsePrediction.Unknown;
         // The legacy controller checks ItemBlock placement before sending and before cooldown/Adventure item use. Only default ordinary cube items have their complete precheck represented here; specialized items keep their own result and unknown context.
         if (_blockProfile.PrechecksBlockItemPlacement && !item.IsEmpty && item.Components.HasNoPatch
@@ -194,7 +199,7 @@ public sealed partial class InteractionActions
         if (shovel.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction shovelUse, _services.State.JukeboxPrediction))
             return shovel.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? shovelUse : BlockUsePrediction.Unknown;
         VanillaAxeUse axe = VanillaAxeUse.ForProtocol(_services.Version.Version.Protocol);
-        if (axe.TryPredict(item.Item.Id, clicked, hand, off, _services.Self.Sneaking, out BlockUsePrediction axeUse))
+        if (axe.TryPredict(item.Item.Id, clicked, hand, off, _services.Self.Sneaking, out BlockUsePrediction axeUse, offKnown))
             return axe.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position) ? axeUse : BlockUsePrediction.Unknown;
         VanillaIgnitionUse ignition = VanillaIgnitionUse.ForProtocol(_services.Version.Version.Protocol);
         if (ignition.Supports(item.Item.Id))

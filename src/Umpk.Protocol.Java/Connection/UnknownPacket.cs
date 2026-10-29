@@ -13,6 +13,9 @@ public sealed record UnknownPacket(int WireId, ReadOnlyMemory<byte> Payload) : I
 /// <remarks><see cref="Frames"/> is index-aligned with <see cref="Packets"/> and always the same length. The bundle crosses the channel as one <see cref="InboundItem"/> whose own <see cref="InboundItem.Frame"/> is <c>default</c> (a bundle is not a frame), so without this the wire id and byte count of every bundled packet would be lost and a consumer publishing frame identity would have to invent one. Entries are <c>default</c> only when the bundle was assembled through a <see cref="BundleAccumulator"/> overload that was never given a frame, which is the session-layer path over already-decoded packets; <see cref="JavaConnection"/> always supplies the real frame.</remarks>
 public sealed record PacketBundle(IReadOnlyList<object> Packets, IReadOnlyList<InboundFrame> Frames)
 {
+    /// <summary>Opt-in declared compact-component losses in frame order. Each loss retains its real frame and its insertion position before an ordinary packet; a position equal to <see cref="Packets"/> count follows the last packet. These entries do not alter the index alignment of <see cref="Packets"/> and <see cref="Frames"/>.</summary>
+    public IReadOnlyList<InboundDecodeLoss> DecodeLosses { get; init; } = [];
+
     /// <summary>Creates a bundle whose packets carry no captured frame identity, for the session-layer accumulator path that is handed already-decoded packets and never sees a frame.</summary>
     public PacketBundle(IReadOnlyList<object> packets)
         : this(packets, NoFrames(packets))

@@ -27,6 +27,9 @@ public sealed record JavaConnectionOptions
     /// <summary>Behavior when a mapped codec throws mid-decode (a malformed field, or the frame-exact trailing-byte check). Defaults to <see cref="DecodeFailureMode.FailConnection"/>, the strict client/server behavior. The proxy role selects <see cref="DecodeFailureMode.ForwardVerbatim"/> so a mapped-but-buggy codec degrades to a verbatim relay instead of killing the session; the frame then surfaces as an <see cref="UnknownPacket"/> carrying its known wire id and raw payload for byte-identical re-emission.</summary>
     public DecodeFailureMode DecodeFailurePolicy { get; init; } = DecodeFailureMode.FailConnection;
 
+    /// <summary>Delivers declared unmodeled compact-component losses in order through <see cref="InboundItem.DecodeLoss"/> or <see cref="PacketBundle.DecodeLosses"/>. Applies only to item-mode play delivery; the default keeps the existing packet-drop behavior. Other decode faults retain <see cref="DecodeFailurePolicy"/>.</summary>
+    public bool DeliverUnmodeledPacketLosses { get; init; }
+
     /// <summary>Logger for connection diagnostics. Defaults to a no-op logger.</summary>
     public ILogger Logger { get; init; } = NullLogger.Instance;
 }

@@ -19,7 +19,7 @@ internal readonly record struct VanillaAxeUse(bool HasRules, bool StripsBlocks, 
         return true;
     }
 
-    public bool TryPredict(Identifier item, BlockState clicked, Hand hand, ItemStack offhand, bool secondaryUse, out BlockUsePrediction prediction)
+    public bool TryPredict(Identifier item, BlockState clicked, Hand hand, ItemStack offhand, bool secondaryUse, out BlockUsePrediction prediction, bool offhandKnown = true)
     {
         prediction = BlockUsePrediction.Unknown;
         if (!HasRules || !item.IsMinecraft || item.Path is not ("wooden_axe" or "stone_axe" or "iron_axe" or "golden_axe" or "diamond_axe" or "netherite_axe" or "copper_axe"))
@@ -33,6 +33,11 @@ internal readonly record struct VanillaAxeUse(bool HasRules, bool StripsBlocks, 
             || ChangesCopper && IsCopperChange(block);
         if (!transforms)
             return true;
+        if (BlockingIntent != AxeBlockingIntent.None && hand == Hand.Main && !secondaryUse && !offhandKnown)
+        {
+            prediction = BlockUsePrediction.Unknown;
+            return true;
+        }
         if (BlockingIntent != AxeBlockingIntent.None && hand == Hand.Main && !secondaryUse && !offhand.IsEmpty)
         {
             // Native reads the effective offhand stack. An unsupported patch is not evidence that BLOCKS_ATTACKS is absent.

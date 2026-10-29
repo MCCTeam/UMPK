@@ -382,6 +382,7 @@ public sealed class UmpkClient : IAsyncDisposable
         {
             Logger = _logger,
             UnknownPacketPolicy = UnknownPacketPolicy.Preserve,
+            DeliverUnmodeledPacketLosses = true,
             ReadIdleTimeout = _settings.Options.ReadIdleTimeout,
         };
         var connection = new JavaConnection(pipe, connectionOptions);
@@ -626,9 +627,15 @@ public sealed class UmpkClient : IAsyncDisposable
     {
         if (item.Bundle is PacketBundle bundle)
         {
-            if (bundle.Packets.Count != 0)
+            if (bundle.Packets.Count != 0 || bundle.DecodeLosses.Count != 0)
                 await _scheduler.InvokeAsync(() => ApplyBundleOnLoopAsync(bundle), ct).ConfigureAwait(false);
 
+            return;
+        }
+
+        if (item.DecodeLoss is { } loss)
+        {
+            await _scheduler.InvokeAsync(() => ApplyDecodeLossOnLoopAsync(loss), ct).ConfigureAwait(false);
             return;
         }
 
@@ -639,6 +646,11 @@ public sealed class UmpkClient : IAsyncDisposable
         await _scheduler.InvokeAsync(
             () => ApplyOnLoopAsync(item.Packet, item.Frame.WireId, item.Frame.Payload.Length), ct).ConfigureAwait(false);
     }
+
+    private ValueTask ApplyDecodeLossOnLoopAsync(InboundDecodeLoss loss)
+        => loss.InventoryScope is { } scope
+            ? _dispatcher.DispatchAsync(scope, GetApplierContext(), CancellationToken.None)
+            : ValueTask.CompletedTask;
 
     private ValueTask ApplyOnLoopAsync(object packet, int wireId, int payloadLength)
         => ApplyPacketAsync(packet, ProtocolPhase.Play, wireId, payloadLength, CancellationToken.None);
@@ -652,8 +664,16 @@ public sealed class UmpkClient : IAsyncDisposable
     {
         IReadOnlyList<object> packets = bundle.Packets;
         IReadOnlyList<InboundFrame> frames = bundle.Frames;
-        for (int i = 0; i < packets.Count; i++)
+        IReadOnlyList<InboundDecodeLoss> losses = bundle.DecodeLosses;
+        int lossIndex = 0;
+        for (int i = 0; i <= packets.Count; i++)
         {
+            // Losses share the packet channel and retain their insertion positions, including trailing and loss-only bundles. They are metadata, so they do not publish PacketReceived.
+            while (lossIndex < losses.Count && losses[lossIndex].BeforePacketIndex == i)
+                await ApplyDecodeLossOnLoopAsync(losses[lossIndex++]).ConfigureAwait(false);
+            if (i == packets.Count)
+                break;
+
             // A bundled marker rides in the bundle as an UnknownPacket so it keeps its place in wire order, but there is nothing to dispatch and nothing to name in PacketReceived. Skipping it is exactly what the null-Packet arm of the receive loop does for an unbundled marker, so a marker looks the same to a consumer whether or not it arrived inside a bundle.
             if (packets[i] is UnknownPacket)
                 continue;
@@ -664,6 +684,8 @@ public sealed class UmpkClient : IAsyncDisposable
             await ApplyPacketAsync(packets[i], ProtocolPhase.Play, wireId, payloadLength, CancellationToken.None)
                 .ConfigureAwait(false);
         }
+        if (lossIndex != losses.Count)
+            throw new InvalidOperationException("An inbound bundle has an invalid decode-loss position.");
     }
 
     /// <summary>The connect-time chat-signing setup, run from the JOIN applier rather than from the connect path: acquire the profile certificates, then announce the chat session. Idempotent per connection.</summary>

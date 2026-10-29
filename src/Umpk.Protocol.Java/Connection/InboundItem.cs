@@ -8,6 +8,7 @@ public readonly struct InboundItem
         Packet = packet;
         Frame = frame;
         Bundle = null;
+        DecodeLoss = null;
     }
 
     internal InboundItem(PacketBundle? bundle)
@@ -15,9 +16,18 @@ public readonly struct InboundItem
         Packet = null;
         Frame = default;
         Bundle = bundle;
+        DecodeLoss = null;
     }
 
-    /// <summary>The decoded packet, or null when no binding decoded this frame or this item is a bundle.</summary>
+    internal InboundItem(InboundDecodeLoss decodeLoss)
+    {
+        Packet = null;
+        Frame = decodeLoss.Frame;
+        Bundle = null;
+        DecodeLoss = decodeLoss;
+    }
+
+    /// <summary>The decoded packet, or null when no binding decoded this frame, this item is a bundle, or this item carries a decode loss.</summary>
     public object? Packet { get; }
 
     /// <summary>The raw frame (wire id + pooled payload); default for a bundle item.</summary>
@@ -25,6 +35,9 @@ public readonly struct InboundItem
 
     /// <summary>The atomically-delivered bundle (1.19.4+), or null for an ordinary single-frame item.</summary>
     public PacketBundle? Bundle { get; }
+
+    /// <summary>An opt-in declared compact-component loss, or null for ordinary frames and bundles. A loss has its real <see cref="Frame"/> and no decoded <see cref="Packet"/>.</summary>
+    public InboundDecodeLoss? DecodeLoss { get; }
 }
 
 /// <summary>A predicate selecting which frames a decode filter decodes in frame mode. Frames whose wire id matches are decoded (when a binding is attached) in addition to being delivered raw; the rest cross verbatim. The proxy uses this to decode only subscribed types.</summary>

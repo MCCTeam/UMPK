@@ -80,6 +80,9 @@ public sealed class UnmodeledItemComponentException : Exception
 
     /// <summary>The wire id of the packet that carried it, attached once the packet identity is known.</summary>
     public int? WireId { get; init; }
+
+    // Attached by the owning inventory codec after its header has been read. Nested component failures retain the containing update's scope without retaining partial stacks.
+    internal InventoryUpdateLossScope? InventoryScope { get; set; }
 }
 
 /// <summary>Thrown when a connection is asked to bind a protocol it does not support.</summary>

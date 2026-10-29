@@ -70,7 +70,12 @@ public sealed partial class InteractionActions
     {
         _attackCharge.Synchronize(_services.State.PlayerLifetime);
         if (_blockProfile.ChargedPiercingAttack && playerTicking)
-            _attackCharge.Advance(_services.State.PlayerLifetime, HeldItem());
+        {
+            if (HasUnavailableTrackedHeldItem())
+                _attackCharge.AdvanceUnavailable(_services.State.PlayerLifetime);
+            else
+                _attackCharge.Advance(_services.State.PlayerLifetime, HeldItem());
+        }
     }
 
     internal async ValueTask TickMiningOnLoopAsync(CancellationToken ct)
@@ -97,6 +102,8 @@ public sealed partial class InteractionActions
             if (request.World is { } previous && !ReferenceEquals(previous, world))
                 throw new MiningUnavailableException("The mining world has ended.");
             request.World = world;
+            if (HasUnavailableTrackedHeldItem())
+                throw new MiningUnavailableException("The held-item state is unavailable.");
             if (_services.Self.GameMode == GameMode.Spectator
                 || _services.Self.GameMode == GameMode.Adventure
                 && !VanillaLegacyMiningPermission.Supports(_services.Version.Version.Protocol)
@@ -223,6 +230,10 @@ public sealed partial class InteractionActions
         }
     }
 
+    private bool HasUnavailableTrackedHeldItem()
+        => _services.State.Features.Inventory &&
+            !_services.State.Inventory.IsPlayerSlotAvailable(36 + _services.State.Self.HeldSlot);
+
     private bool IsPiercing(ItemStack item)
         => _blockProfile.ChargedPiercingAttack && item.Components.Has(DataComponents.PiercingWeapon);
 
@@ -230,6 +241,8 @@ public sealed partial class InteractionActions
     {
         if (!_blockProfile.ChargedPiercingAttack || item.Components.Get(DataComponents.MinimumAttackCharge) is not { } charge || !(charge.Value > 0))
             return false;
+        if (!_attackCharge.HasKnownStrength)
+            throw new MiningUnavailableException("The attack-charge history is unavailable.");
         Identifier id = Identifier.Minecraft("attack_speed");
         RegistryAccess registries = _services.State.Registries ?? JavaGameData.Registries(_services.Version.Version.Protocol);
         if (!registries.Attributes.TryGetValue(id, out AttributeDefinition? attribute))
@@ -334,7 +347,7 @@ public sealed partial class InteractionActions
     }
 
     private ValueTask StopReleasedMiningOnLoopAsync(CancellationToken ct)
-        => IsPiercing(HeldItem()) ? ValueTask.CompletedTask : StopDestroyBlockOnLoopAsync(ct);
+        => !HasUnavailableTrackedHeldItem() && IsPiercing(HeldItem()) ? ValueTask.CompletedTask : StopDestroyBlockOnLoopAsync(ct);
 
     private async ValueTask ReleaseMiningOnLoopAsync(MiningRequest request, CancellationToken session)
     {
@@ -374,12 +387,19 @@ public sealed partial class InteractionActions
         if (!efficiencyAttribute && item.TryGetEnchantmentLevel(Identifier.Minecraft("efficiency"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int level) && level > 0)
             efficiency = level * (float)level + 1.0F;
         float submerged = (float)_services.Self.Attributes.Value(Identifier.Minecraft("submerged_mining_speed"), 0.2);
+        bool underwater = _services.ReadPhysicsState()?.IsUnderWater ?? false;
         bool legacyUnderwaterPenalty = !HasMiningAttribute(registries, "submerged_mining_speed");
+        bool unknownArmor = false;
         if (legacyUnderwaterPenalty && _services.State.Features.Inventory)
         {
             // Native Aqua Affinity selects all armor slots, including server-supplied enchantments outside the ordinary helmet slot.
             for (int slot = 5; slot <= 8; slot++)
             {
+                if (!_services.State.Inventory.IsPlayerSlotAvailable(slot))
+                {
+                    unknownArmor = true;
+                    continue;
+                }
                 ItemStack armor = _services.State.Inventory.PlayerSlots[slot];
                 if (armor.TryGetEnchantmentLevel(Identifier.Minecraft("aqua_affinity"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int aqua) && aqua > 0)
                 {
@@ -389,13 +409,15 @@ public sealed partial class InteractionActions
                 }
             }
         }
+        if (underwater && legacyUnderwaterPenalty && unknownArmor)
+            throw new MiningUnavailableException("The underwater mining equipment is unavailable.");
         var modifiers = new MiningModifiers(
             efficiency,
             Math.Max(MiningEffectAmplifier(registries, "haste"), MiningEffectAmplifier(registries, "conduit_power")),
             MiningEffectAmplifier(registries, "mining_fatigue"),
             (float)_services.Self.Attributes.Value(Identifier.Minecraft("block_break_speed"), 1),
             submerged,
-            _services.ReadPhysicsState()?.IsUnderWater ?? false,
+            underwater,
             _services.Self.OnGround)
         {
             LegacyUnderwaterPenalty = legacyUnderwaterPenalty,

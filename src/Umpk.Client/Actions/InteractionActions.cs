@@ -196,14 +196,17 @@ public sealed partial class InteractionActions
             ?? throw new InvalidOperationException(
                 $"{nameof(UseBlockVerifiedAsync)} requires an event bus (ClientSessionServices.Events), and none is wired on this session.");
 
-        // Both refusals happen BEFORE the send, because both describe a packet the server would do nothing with, and a send nobody acts on costs a whole confirmation window.
-        bool withinReach = _services.Scheduler.IsCurrent
-            ? IsWithinReach(target)
-            : await _services.Scheduler.InvokeAsync(() => IsWithinReach(target), ct).ConfigureAwait(false);
-        if (!withinReach)
+        (bool WithinReach, bool HeldItemPreventsUse) ReadPreflight()
+            => (IsWithinReach(target), _services.Self.Sneaking && !HasUnavailableTrackedHeldItem() && !HeldItem().IsEmpty);
+
+        // Read both preflight facts on the session owner. An unavailable held stack cannot prove a refusal.
+        var preflight = _services.Scheduler.IsCurrent
+            ? ReadPreflight()
+            : await _services.Scheduler.InvokeAsync(ReadPreflight, ct).ConfigureAwait(false);
+        if (!preflight.WithinReach)
             return UseBlockOutcome.OutOfReach;
 
-        if (_services.Self.Sneaking && !HeldItem().IsEmpty)
+        if (preflight.HeldItemPreventsUse)
         {
             // When secondary use is active and a hand holds an item, the held item is used on the block instead of invoking the block's own action. Against a door this means trying to place the held item. Sneaking with empty hands still opens the door, so the refusal is on the pair.
             return UseBlockOutcome.NotUsed;

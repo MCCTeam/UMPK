@@ -7977,3 +7977,57 @@ static Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket.operator ==(Umpk.
 static readonly Umpk.Protocol.Java.Packets.WorldPackets.Clientbound.TickingStep -> Umpk.Protocol.Java.PacketType<Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.TickingStateV1_20_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundTickingStatePacket!>!
 static readonly Umpk.Protocol.Java.Codecs.WorldStateCodecs.TickingStepV1_20_3 -> Umpk.Protocol.Java.Codecs.PacketCodec<Umpk.Protocol.Java.Packets.ClientboundTickingStepPacket!>!
+Umpk.Protocol.Java.InboundDecodeLoss
+Umpk.Protocol.Java.InboundDecodeLoss.<Clone>$() -> Umpk.Protocol.Java.InboundDecodeLoss!
+Umpk.Protocol.Java.InboundDecodeLoss.BeforePacketIndex.get -> int?
+Umpk.Protocol.Java.InboundDecodeLoss.BeforePacketIndex.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.ComponentId.get -> Umpk.Identifier
+Umpk.Protocol.Java.InboundDecodeLoss.ComponentId.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.ComponentWireId.get -> int
+Umpk.Protocol.Java.InboundDecodeLoss.ComponentWireId.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.Deconstruct(out Umpk.Protocol.Java.ProtocolPhase Phase, out Umpk.Protocol.Java.PacketFlow Flow, out Umpk.Protocol.Java.InboundFrame Frame, out int ComponentWireId, out Umpk.Identifier ComponentId, out Umpk.Protocol.Java.InventoryUpdateLossScope? InventoryScope) -> void
+Umpk.Protocol.Java.InboundDecodeLoss.Equals(Umpk.Protocol.Java.InboundDecodeLoss? other) -> bool
+Umpk.Protocol.Java.InboundDecodeLoss.Flow.get -> Umpk.Protocol.Java.PacketFlow
+Umpk.Protocol.Java.InboundDecodeLoss.Flow.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.Frame.get -> Umpk.Protocol.Java.InboundFrame
+Umpk.Protocol.Java.InboundDecodeLoss.Frame.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.InboundDecodeLoss(Umpk.Protocol.Java.ProtocolPhase Phase, Umpk.Protocol.Java.PacketFlow Flow, Umpk.Protocol.Java.InboundFrame Frame, int ComponentWireId, Umpk.Identifier ComponentId, Umpk.Protocol.Java.InventoryUpdateLossScope? InventoryScope) -> void
+Umpk.Protocol.Java.InboundDecodeLoss.InventoryScope.get -> Umpk.Protocol.Java.InventoryUpdateLossScope?
+Umpk.Protocol.Java.InboundDecodeLoss.InventoryScope.init -> void
+Umpk.Protocol.Java.InboundDecodeLoss.Phase.get -> Umpk.Protocol.Java.ProtocolPhase
+Umpk.Protocol.Java.InboundDecodeLoss.Phase.init -> void
+Umpk.Protocol.Java.InboundItem.DecodeLoss.get -> Umpk.Protocol.Java.InboundDecodeLoss?
+Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossKind.ContainerContents = 1 -> Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossKind.ContainerSlot = 0 -> Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossKind.Cursor = 2 -> Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossKind.PlayerInventorySlot = 3 -> Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossScope
+Umpk.Protocol.Java.InventoryUpdateLossScope.<Clone>$() -> Umpk.Protocol.Java.InventoryUpdateLossScope!
+Umpk.Protocol.Java.InventoryUpdateLossScope.ContainerId.get -> int?
+Umpk.Protocol.Java.InventoryUpdateLossScope.ContainerId.init -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.Deconstruct(out Umpk.Protocol.Java.InventoryUpdateLossKind Kind, out int? ContainerId, out int? StateId, out int? Slot, out int? ItemCount) -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.Equals(Umpk.Protocol.Java.InventoryUpdateLossScope? other) -> bool
+Umpk.Protocol.Java.InventoryUpdateLossScope.InventoryUpdateLossScope(Umpk.Protocol.Java.InventoryUpdateLossKind Kind, int? ContainerId, int? StateId, int? Slot, int? ItemCount) -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.ItemCount.get -> int?
+Umpk.Protocol.Java.InventoryUpdateLossScope.ItemCount.init -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.Kind.get -> Umpk.Protocol.Java.InventoryUpdateLossKind
+Umpk.Protocol.Java.InventoryUpdateLossScope.Kind.init -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.Slot.get -> int?
+Umpk.Protocol.Java.InventoryUpdateLossScope.Slot.init -> void
+Umpk.Protocol.Java.InventoryUpdateLossScope.StateId.get -> int?
+Umpk.Protocol.Java.InventoryUpdateLossScope.StateId.init -> void
+Umpk.Protocol.Java.JavaConnectionOptions.DeliverUnmodeledPacketLosses.get -> bool
+Umpk.Protocol.Java.JavaConnectionOptions.DeliverUnmodeledPacketLosses.init -> void
+Umpk.Protocol.Java.PacketBundle.DecodeLosses.get -> System.Collections.Generic.IReadOnlyList<Umpk.Protocol.Java.InboundDecodeLoss!>!
+Umpk.Protocol.Java.PacketBundle.DecodeLosses.init -> void
+override Umpk.Protocol.Java.InboundDecodeLoss.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.InboundDecodeLoss.GetHashCode() -> int
+override Umpk.Protocol.Java.InboundDecodeLoss.ToString() -> string!
+override Umpk.Protocol.Java.InventoryUpdateLossScope.Equals(object? obj) -> bool
+override Umpk.Protocol.Java.InventoryUpdateLossScope.GetHashCode() -> int
+override Umpk.Protocol.Java.InventoryUpdateLossScope.ToString() -> string!
+static Umpk.Protocol.Java.InboundDecodeLoss.operator !=(Umpk.Protocol.Java.InboundDecodeLoss? left, Umpk.Protocol.Java.InboundDecodeLoss? right) -> bool
+static Umpk.Protocol.Java.InboundDecodeLoss.operator ==(Umpk.Protocol.Java.InboundDecodeLoss? left, Umpk.Protocol.Java.InboundDecodeLoss? right) -> bool
+static Umpk.Protocol.Java.InventoryUpdateLossScope.operator !=(Umpk.Protocol.Java.InventoryUpdateLossScope? left, Umpk.Protocol.Java.InventoryUpdateLossScope? right) -> bool
+static Umpk.Protocol.Java.InventoryUpdateLossScope.operator ==(Umpk.Protocol.Java.InventoryUpdateLossScope? left, Umpk.Protocol.Java.InventoryUpdateLossScope? right) -> bool

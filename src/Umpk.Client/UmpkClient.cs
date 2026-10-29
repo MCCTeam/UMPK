@@ -505,7 +505,7 @@ public sealed class UmpkClient : IAsyncDisposable
         // The scheduler drains itself (default) or is pumped by the host. Attach plugins first (marshalled onto the session loop, so IClientPlugin.Attach genuinely runs there), then start the inbound pump and the tick driver.
         await Plugins.BeginSessionAsync(linked.Token).ConfigureAwait(false);
         CancellationTokenSource sessionCts = _sessionCts;
-        _receiveTask = ReceiveLoopAsync(connection, sessionCts.Token);
+        _receiveTask = ReceiveLoopAsync(connection, sessionCts.Token, sessionCts);
         _tickTask = TickLoopAsync(connection, sessionCts);
 
         await _eventBus.PublishAsync(new PhaseChanged(ProtocolPhase.Play)).ConfigureAwait(false);
@@ -590,7 +590,7 @@ public sealed class UmpkClient : IAsyncDisposable
 
     }
 
-    private async Task ReceiveLoopAsync(JavaConnection connection, CancellationToken ct)
+    private async Task ReceiveLoopAsync(JavaConnection connection, CancellationToken ct, CancellationTokenSource sessionCts)
     {
         try
         {
@@ -611,6 +611,26 @@ public sealed class UmpkClient : IAsyncDisposable
         catch (Exception ex)
         {
             RecordDisconnect(new DisconnectInfo { Reason = CloseReason.ProtocolViolation, Fault = ex });
+            // Cancel only this captured session. A cancellation callback can fail, so closing its transport belongs in finally. Full teardown joins _receiveTask and would make this loop await itself.
+            try
+            {
+                await sessionCts.CancelAsync().ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+                // External teardown already ended this captured session.
+            }
+            finally
+            {
+                try
+                {
+                    await connection.CloseAsync(CloseReason.ProtocolViolation, CancellationToken.None).ConfigureAwait(false);
+                }
+                catch (Exception closeError) when (closeError is ObjectDisposedException or ConnectionClosedException)
+                {
+                    _logger.LogDebug(closeError, "The required-applier failure raced completed connection teardown.");
+                }
+            }
         }
         finally
         {

@@ -17,6 +17,7 @@ public sealed class ClientState
     private Identifier? _worldDimension;
     private EntityStore? _entities;
     private InventoryState? _inventory;
+    private bool _nativePlayerPresent;
 
     /// <summary>The composed feature toggles for this session.</summary>
     public ClientFeatures Features => _features;
@@ -201,6 +202,17 @@ public sealed class ClientState
             : null;
 
 
+    /// <summary>Initializes inventory and selection when the native client constructs a local player; a repeated join can reuse the existing player.</summary>
+    internal void InitializePlayerInventory(bool replacesExistingPlayer)
+    {
+        if (_nativePlayerPresent && !replacesExistingPlayer)
+            return;
+
+        _inventory?.Clear();
+        Self.HeldSlot = 0;
+        _nativePlayerPresent = true;
+    }
+
     internal void AdvancePlayerLifetime()
     {
         PlayerLifetime++;
@@ -248,6 +260,7 @@ public sealed class ClientState
     /// </summary>
     internal void ResetForConfigurationReentry()
     {
+        _nativePlayerPresent = false;
         JukeboxPrediction.Clear();
         // Level-owned in vanilla: cleared with the level, refilled by the join that ends the re-entry.
         _world = null;
@@ -283,6 +296,7 @@ public sealed class ClientState
     /// <returns>True when a dialog was open and has been cleared.</returns>
     internal bool ResetForSessionEnd()
     {
+        _nativePlayerPresent = false;
         JukeboxPrediction.Clear();
         bool wasShowing = Dialogs.IsShowing;
         LegacySelfGeometry = null;

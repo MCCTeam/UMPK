@@ -295,6 +295,7 @@ internal sealed class ConnectionApplier : IApplier
         });
         context.State.AdvanceInteractionLifetime();
         context.State.AdvancePlayerLifetime();
+        context.State.InitializePlayerInventory(replacesExistingPlayer: false);
 
         // World construction is the required, failure-prone part of a join. Complete it before making the player observable as spawned or resetting join-owned state, so an unusable required custom dimension terminates the session without leaving a half-applied player/world transition.
         SelfState self = context.State.Self;
@@ -367,6 +368,7 @@ internal sealed class ConnectionApplier : IApplier
             gameMode = (Game.Players.GameMode)legacy.GameMode;
         }
         context.State.AdvancePlayerLifetime();
+        context.State.InitializePlayerInventory(replacesExistingPlayer: true);
 
         // As on join, resolve/install the required world first. An invalid replacement must leave the previous player and world coherent while the required packet fault ends the connection.
         ClearSprintLatch(context.State.Self);

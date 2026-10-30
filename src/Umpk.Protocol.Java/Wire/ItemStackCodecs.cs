@@ -510,8 +510,15 @@ internal static partial class ItemStackCodecs
             }
             else
             {
-                int hash = table.ByKey(entry.Type).Hash(ops, entry.Value!, context);
-                added.Add((table.WireId(entry.Type), hash));
+                try
+                {
+                    int hash = table.ByKey(entry.Type).Hash(ops, entry.Value!, context);
+                    added.Add((table.WireId(entry.Type), hash));
+                }
+                catch (ComponentHashUnavailableException)
+                {
+                    // A nested DATA value is unavailable. Omit this entire outer component so the server can resynchronize it.
+                }
             }
         }
 
@@ -546,7 +553,7 @@ internal static partial class ItemStackCodecs
         foreach (DataComponentEntry entry in stack.Components.Patch)
         {
             if (!table.Contains(entry.Type))
-                continue;
+                throw new ComponentHashUnavailableException("A nested component has no DATA form in the current era.");
 
             string keyId = entry.Type.Id.ToString();
             if (entry.IsRemoval)
@@ -554,8 +561,8 @@ internal static partial class ItemStackCodecs
 
             else if (entry.Value is UnmodeledComponent)
             {
-                // Same reason as ToHashedStack: no DATA form to hash, so omit and let the server resync.
-                continue;
+                // Wire bytes do not supply the native DATA value. The outer sender must omit the entire containing component.
+                throw new ComponentHashUnavailableException("A nested component's native DATA value is unavailable.");
             }
             else
             {

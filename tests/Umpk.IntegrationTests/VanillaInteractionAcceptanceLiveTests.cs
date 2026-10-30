@@ -328,11 +328,11 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
         Assert.Contains(response, expected);
     }
 
-    private static void AssertMining(CapturedFrame[] frames, int protocol, BlockPos target)
+    private static void AssertMining(CapturedFrame[] frames, int protocol, BlockPos target, int expectedInitialDestroyDelay = 0)
     {
         CapturedFrame[] actions = frames.Where(IsMiningOrAnimation).ToArray();
-        Assert.Equal(9, actions.Length);
-        Assert.Equal(7, actions.Count(frame => frame.Packet is ServerboundSwingPacket or ServerboundPunchPacket));
+        Assert.Equal(9 + expectedInitialDestroyDelay, actions.Length);
+        Assert.Equal(7 + expectedInitialDestroyDelay, actions.Count(frame => frame.Packet is ServerboundSwingPacket or ServerboundPunchPacket));
         int startIndex = protocol == 47 ? 1 : 0;
         var start = Assert.IsType<ServerboundPlayerActionPacket>(actions[startIndex].Packet);
         Assert.Equal(0, start.Action);

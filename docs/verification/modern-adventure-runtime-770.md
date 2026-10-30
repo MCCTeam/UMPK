@@ -26,6 +26,21 @@ The correction uses the documented `UMPK_UPDATE_CODEC_IDENTITY_PINS=1` gate in a
 
 This follow-up changes the pin and documentation. Native/live, consumer, final local aggregate and release-matrix acceptance remain open; the corrected published head still requires its own CI result.
 
+## Bounded can_place_on placement, 2026-10-30
+
+The protocol 770 caller connects Adventure `can_place_on` to ordinary cube-placement prediction. Block activation keeps its existing precedence. Item permission reads `CanPlaceOn` rather than borrowing `CanBreak`, and evaluates the clicked block through the existing component-owned predicate/cache. A known denial returns PASS after the controller sends USE; it does not become a pre-send rejection. A supported allowance continues through the existing cube-placement path. Missing tags or other unavailable context remain unknown.
+
+This slice admits only protocol 770 simple cube placement. An otherwise allowed item with additional component patches remains unknown; other item-use paths and 771+ keep their previous result. It adds no public API, dependency, dataset axis or codec binding. The existing native BlockInWorld matching rules and mining permission behavior remain unchanged.
+
+Six framed session cases cover measured native allow bytes, a nonmatching `can_place_on` alongside matching `can_break`, missing `can_place_on`, activation precedence, an unobserved tag and the 771 boundary. The native SetSlot vector is decoded with asserted values and reproduced byte-for-byte. The public action sends its exact USE frame and resolves through the matching sequence ACK; success retains the existing swing, while denied/unknown results send no swing. The fixture does not assert a real server block placement or stack decrement.
+
+Before the caller change, three causal failures and three controls remain unchanged when only the predicate owner is prepared. Connecting the caller passes all six and the same 44 mining cases. Root `e1f7104e` accepts both production stages and their 50 distinct final cases on Client `f6783944`/PDB `900da240`, Game `e74c476b` and Protocol `6b027807`; all 31 owned processes are absent.
+
+The subsequent run compiles only the Test project and reports all 35,808 passing with zero skips, including the six new cases. Its exact inventory contains 35,684 literal names plus 124 historical duplicate occurrences; all 16 retained subsets, three path-sensitive keys covering 127 rows and 121 physical corpus files are preserved. Source/PDB proof covers 355 authored+one SDK+three generated documents, 198 references/eleven UMPK references, 54 resource payloads, twelve analyzers and zero additional files. Formatting selects only the new Test file and changes no bytes. All 1,859 inputs remain unchanged, only the four declared Client/Test DLL/PDB files differ among 126 runtime files, and all 16 owned processes are absent. Root `e5b9f206` independently accepts binding `356a029b`, including all 2,003 verified paths. Retained PDB and PE resource inspectors executed; helper compilation stayed zero.
+
+The deliberate baselines change Client 35,802 → 35,808 (+6) and the seventeen-suite expected total 49,701 → 49,707; Protocol remains 6,527. Published e61 CI and local AOT root `cabed245` cover the prior Client `8e885cc1`; they do not certify `f6783944`. Native/live placement outcomes, candidate AOT, consumer and final aggregate checks, broader eras and new-head CI remain unexecuted. Earlier failures retain their original status.
+
+
 ## Evidence pointers
 
 Exact commands, TRX, source/PDB/reference/resource proofs and cleanup remain in `/home/anon/Projects/MinecraftOfficial/runs/inventory-adventure770-client35802-completion-runtime-20261030-v1/` and its retained v3 compilation directory. The corrected Game/Protocol result remains in `adventure770-game-friend-completion-runtime-20261030-v1`. Root and independent receipts live in the repository's ignored `.scratch/` directory; the filenames and hashes below identify them. Earlier failed wrappers remain under their original run directories.
@@ -39,3 +54,5 @@ Exact commands, TRX, source/PDB/reference/resource proofs and cleanup remain in 
 - `adventure770-combined-client35802-actual-failed-binding-20261030-v3.json`: `e038b9cb5dde4f4782600ce4b2d9a71a0719f378b0dc8343be6468cae03e2c26`.
 - `adventure770-combined-v3-compiled-prefix-independent-review-20261030-v1.json`: `74563d476a3fcb1f57cf474c8b3aa62419f24846c5895d97a1d27864ec324036`.
 - `adventure770-combined-client35802-v3-dynamic-output-classification-20261030-v1.json`: `694a3eec9382197232d647de1b34d8cc6b60fade213b33c50e181aea92699cc8`.
+
+- `can-place-on770-full35808-actual-root-audit-20261030-v1.json`: `e5b9f2060c37d86100d24b7aa986eda0fd0fe245404dac0da39c0a1b25cdc128`; independently accepted full Client35808, source/PDB/reference/resource/runtime and cleanup.

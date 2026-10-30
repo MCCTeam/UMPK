@@ -7,7 +7,7 @@ using Umpk.Game.Registries;
 
 namespace Umpk.Client.Actions;
 
-/// <summary>The typed 1.20.5–1.21.5 can_break predicates and their native component-owned last-state cache. Null retains missing tag, native property-kind/range or full block-entity context.</summary>
+/// <summary>The typed 1.20.5–1.21.5 Adventure predicates and their native component-owned last-state cache. Null retains missing tag, native property-kind/range or full block-entity context.</summary>
 internal sealed class VanillaComponentMiningPermission
 {
     private const int ItemComponentsProtocol = 766;
@@ -18,11 +18,16 @@ internal sealed class VanillaComponentMiningPermission
 
     public static bool Supports(int protocol) => protocol is >= ItemComponentsProtocol and <= LastMeasuredPredicateProtocol;
 
+    public static bool SupportsPlacement(int protocol) => protocol == 770;
+
     public bool? Allows(ItemStack item, BlockState target, ClientRegistryTags tags, int protocol)
+        => Allows(item.IsEmpty ? null : item.Components.Get(DataComponents.CanBreak), target, tags, protocol);
+
+    public bool? Allows(AdventureModePredicateComponent? component, BlockState target, ClientRegistryTags tags, int protocol)
     {
         if (!Supports(protocol) || !target.IsValid)
             return null;
-        if (item.IsEmpty || item.Components.Get(DataComponents.CanBreak) is not { } component)
+        if (component is null)
             return false;
         if (_cache.TryGetValue(component, out CachedPermission? cached) && cached.State == target)
             return cached.Allowed;

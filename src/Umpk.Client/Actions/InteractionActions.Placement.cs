@@ -205,7 +205,18 @@ public sealed partial class InteractionActions
         if (crystal.Supports(item.Item.Id))
             return PredictEndCrystalUse(crystal, item, clicked, world, position, data);
         if (_services.Self.GameMode == GameMode.Adventure)
-            return BlockUsePrediction.Unknown;
+        {
+            if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)
+                || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || adventureUse.Kind != ItemUseOnKind.SimpleCubePlacement)
+                return BlockUsePrediction.Unknown;
+            // ItemStack.useOn checks the clicked block's can_place_on before ordinary item use. Native denial is PASS after the controller commits USE.
+            bool? allowed = _componentMiningPermission.Allows(item.Components.Get(DataComponents.CanPlaceOn), clicked, _services.State.RegistryTags, _services.Version.Version.Protocol);
+            if (allowed is false)
+                return BlockUsePrediction.Pass;
+            if (allowed is null || item.Components.Patch.Any(entry => !entry.Type.Equals(DataComponents.CanPlaceOn)))
+                return BlockUsePrediction.Unknown;
+            return PredictCubePlacement(preSend: false);
+        }
         VanillaHoeUse hoe = VanillaHoeUse.ForProtocol(_services.Version.Version.Protocol);
         if (hoe.TryPredict(item.Item.Id, clicked, world, position, face, out BlockUsePrediction toolUse, _services.State.JukeboxPrediction))
             // A block update can synthesize a storage column before native chunk arrival or after unload. It does not establish the terrain needed by the tool.

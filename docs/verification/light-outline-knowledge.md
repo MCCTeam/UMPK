@@ -37,3 +37,5 @@ Raw arguments, compiler inputs, TRX files and cleanup remain external under `/ho
 | `carried-item-immediate-light-joint-actual-root-audit-20261030-v1.json` | `a9f865ee412faac90e67c0c850259fceec9e7cb23ac5d17dcec96954a77d3539` |
 
 Light activation/level cycling, placement, lighting, physics, planning, other contextual families, native/server execution and full version acceptance are outside this result. The deliberate nine-case addition contributes to the expected Client 35,780 baseline; the [matched full continuation](immediate-carried-item-synchronization.md#matched-full-client-acceptance-2026-10-30) now passes all 35,780 cases with zero failures or skips on this same producer, root `ef38ee8e`. Earlier AOT and published CI apply to their recorded producers. The original user report and raw evidence are preserved.
+
+The reviewed Light change is committed as `cb9b3382cd0cd4470aa84b6df833b9bcf683f24a` and immediate synchronization as `a6fca6a9dca9be5b89d4f075ed2a6071008a3b2b`. The full receipt above identifies the exact combined source bytes; these commits introduce no source difference from that tested projection.

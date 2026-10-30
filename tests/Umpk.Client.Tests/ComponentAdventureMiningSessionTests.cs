@@ -213,9 +213,9 @@ public sealed class ComponentAdventureMiningSessionTests
     }
 
     [Fact]
-    public async Task Protocol770RemainsOutsideTheBoundComponentPayloadAndPermissionSlice()
+    public async Task Protocol771RemainsOutsideTheBoundComponentPayloadAndPermissionSlice()
     {
-        await using Session session = await Session.Create(770);
+        await using Session session = await Session.Create(771);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold("diamond_pickaxe");
         Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
@@ -376,7 +376,11 @@ public sealed class ComponentAdventureMiningSessionTests
                 int block = Client.State.Registries.Blocks[Identifier.Minecraft(blockName)].NetworkId;
                 StatePropertyMatcher[]? properties = kind == "range" ? [new("axis", false, MinValue: "x", MaxValue: "z")] : null;
                 NbtCompound? nbt = kind == "nbt" ? new NbtCompound { ["CustomName"] = new NbtString("unavailable full native save") } : null;
-                stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent([new BlockPredicateEntry(kind == "tag" ? new HolderSetRef(Identifier.Minecraft("permission_probe"), []) : new HolderSetRef(null, [block]), properties, nbt)], showInTooltip));
+                var entry = new BlockPredicateEntry(kind == "tag" ? new HolderSetRef(Identifier.Minecraft("permission_probe"), []) : new HolderSetRef(null, [block]), properties, nbt)
+                {
+                    ComponentMatchers = _protocol == 770 ? new([], []) : null,
+                };
+                stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent([entry], showInTooltip));
             }
             await Send(new ClientboundContainerSetSlotPacket(0, 0, 36, stack));
             Assert.Empty(await Barrier());
@@ -395,16 +399,30 @@ public sealed class ComponentAdventureMiningSessionTests
                 Assert.Equal(expected.Properties, predicate.Properties);
                 Assert.Equal(expected.Nbt, predicate.Nbt);
                 Assert.Equal(showInTooltip, observed.ShowInTooltip);
+                if (_protocol == 770)
+                    AssertKnownEmptyMatchers(predicate);
             }
         }
 
         internal async Task HoldPredicates(IReadOnlyList<BlockPredicateEntry> predicates)
         {
+            if (_protocol == 770)
+                predicates = predicates.Select(predicate => predicate.ComponentMatchers is null ? predicate with { ComponentMatchers = new([], []) } : predicate).ToArray();
             ItemStack stack = new(Client.State.Registries!.Items[Identifier.Minecraft("diamond_pickaxe")], 1);
             stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent(predicates, true));
             await Send(new ClientboundContainerSetSlotPacket(0, 0, 36, stack));
             Assert.Empty(await Barrier());
             AssertPredicates(predicates, Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!.Predicates);
+            if (_protocol == 770)
+                foreach (BlockPredicateEntry predicate in Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!.Predicates)
+                    AssertKnownEmptyMatchers(predicate);
+        }
+
+        private static void AssertKnownEmptyMatchers(BlockPredicateEntry predicate)
+        {
+            BlockPredicateComponentMatchers matchers = Assert.IsType<BlockPredicateComponentMatchers>(predicate.ComponentMatchers);
+            Assert.Empty(matchers.Exact);
+            Assert.Empty(matchers.Partial);
         }
 
         private static void AssertPredicates(IReadOnlyList<BlockPredicateEntry> expected, IReadOnlyList<BlockPredicateEntry> actual)
@@ -508,7 +526,7 @@ public sealed class ComponentAdventureMiningSessionTests
             Assert.True(Client.State.EntityMembership.HasColumn(Target));
         }
 
-        private async Task Send(IPacket packet)
+        internal async Task Send(IPacket packet)
         {
             string identifier = packet switch
             {
@@ -546,6 +564,10 @@ public sealed class ComponentAdventureMiningSessionTests
                         AdventureModePredicateComponent actualPredicate = item.Components.Get(DataComponents.CanBreak)!;
                         Assert.Equal(expectedPredicate.ShowInTooltip, actualPredicate.ShowInTooltip);
                         AssertPredicates(expectedPredicate.Predicates, actualPredicate.Predicates);
+                        if (_protocol == 770)
+                            for (int index = 0; index < expectedPredicate.Predicates.Count; index++)
+                                if (expectedPredicate.Predicates[index].ComponentMatchers is { Exact.Count: 0, Partial.Count: 0 })
+                                    AssertKnownEmptyMatchers(actualPredicate.Predicates[index]);
                     }
                     break;
                 case ClientboundBlockUpdatePacket block:
@@ -574,7 +596,7 @@ public sealed class ComponentAdventureMiningSessionTests
             return output.WrittenSpan.ToArray();
         }
 
-        private async Task<List<IPacket>> Barrier()
+        internal async Task<List<IPacket>> Barrier()
         {
             long nonce = ++_barrier;
             await Send(new ClientboundPlayKeepAlivePacket(nonce));

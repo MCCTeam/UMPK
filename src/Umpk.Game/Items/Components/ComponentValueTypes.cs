@@ -164,14 +164,34 @@ public sealed record StatePropertyMatcher(
     string? MinValue = null,
     string? MaxValue = null);
 
-/// <summary>One <c>BlockPredicate</c> of an adventure-mode predicate (<c>minecraft:can_break</c> / <c>minecraft:can_place_on</c>), in its pre-1.21.5 shape: an optional block holder set, an optional list of state matchers, and an optional block-entity NBT predicate.</summary>
+/// <summary>One <c>BlockPredicate</c> of an adventure-mode predicate (<c>minecraft:can_break</c> / <c>minecraft:can_place_on</c>): an optional block holder set, optional state matchers and optional block-entity NBT, plus component matchers from 1.21.5.</summary>
 /// <param name="Blocks">The optional matching block set.</param>
 /// <param name="Properties">The optional state-property matchers; null when the field was absent.</param>
 /// <param name="Nbt">The optional block-entity NBT predicate compound.</param>
 public sealed record BlockPredicateEntry(
     HolderSetRef? Blocks,
     IReadOnlyList<StatePropertyMatcher>? Properties,
-    NbtCompound? Nbt);
+    NbtCompound? Nbt)
+{
+    /// <summary>The 1.21.5+ component matchers. Null means that modern matcher context is not represented; an explicit empty matcher set is known empty. Earlier wire forms do not carry this field.</summary>
+    public BlockPredicateComponentMatchers? ComponentMatchers { get; init; }
+}
+
+/// <summary>The exact and partial component matchers carried by a modern block predicate. The client Adventure permission path does not evaluate them, but native value equality, wire serialization and DATA hashing still include them.</summary>
+/// <param name="Exact">The exact typed values in wire order. Entries set values; removal entries are invalid here.</param>
+/// <param name="Partial">The partial predicates in retained wire order. Their types form a native map, so duplicate types are invalid.</param>
+public sealed record BlockPredicateComponentMatchers(
+    IReadOnlyList<DataComponentEntry> Exact,
+    IReadOnlyList<BlockPredicatePartialMatcher> Partial);
+
+/// <summary>One selected partial component predicate and its network-NBT payload. Retaining the payload does not establish the selected native codec's canonical equality or DATA hash.</summary>
+/// <param name="Type">The selected predicate type, or the component type for an AnyValue matcher.</param>
+/// <param name="IsAnyValue">True for the component-presence branch introduced in 1.21.11; false for a concrete predicate type.</param>
+/// <param name="Value">The selected codec's network-NBT value. It can be a scalar, list or compound.</param>
+public sealed record BlockPredicatePartialMatcher(
+    Identifier Type,
+    bool IsAnyValue,
+    NbtTag Value);
 
 /// <summary>The inline (direct-holder) form of a goat-horn instrument (<c>Instrument.DIRECT_STREAM_CODEC</c>). 1.21.2 re-shaped it: the use duration went from a VarInt tick count to a FLOAT second count and a description component was appended, so exactly one of the two duration fields is set.</summary>
 /// <param name="Sound">The instrument's sound event.</param>

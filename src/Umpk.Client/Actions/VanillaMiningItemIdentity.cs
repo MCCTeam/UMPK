@@ -7,6 +7,9 @@ namespace Umpk.Client.Actions;
 /// <summary>The held-stack comparison used by the native destroy-target cache, independently of stack count.</summary>
 internal static class VanillaMiningItemIdentity
 {
+    private const int ItemComponentsProtocol = 766;
+    private const int ModernPredicateProtocol = 770;
+
     public static bool Matches(ItemStack current, ItemStack previous, int protocol)
     {
         if (ReferenceEquals(current, previous))
@@ -16,9 +19,9 @@ internal static class VanillaMiningItemIdentity
         {
             if (current.IsSameItemSameComponents(previous))
                 return true;
-            if (!VanillaComponentMiningPermission.Supports(protocol) || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
+            if (protocol is < ItemComponentsProtocol or > ModernPredicateProtocol || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
                 return false;
-            return ComponentMapsMatch(current.Components, previous.Components);
+            return ComponentMapsMatch(current.Components, previous.Components, protocol);
         }
         if (current.IsEmpty || previous.IsEmpty)
             return current.IsEmpty && previous.IsEmpty;
@@ -34,7 +37,7 @@ internal static class VanillaMiningItemIdentity
             || Math.Max(0, current.Damage) == Math.Max(0, previous.Damage);
     }
 
-    private static bool ComponentMapsMatch(DataComponentMap current, DataComponentMap previous)
+    private static bool ComponentMapsMatch(DataComponentMap current, DataComponentMap previous, int protocol)
     {
         if (current.Count != previous.Count)
             return false;
@@ -46,9 +49,7 @@ internal static class VanillaMiningItemIdentity
                 if (!entry.Type.Equals(other.Type))
                     continue;
                 // Native AdventureModePredicate, HolderSet.Direct and StatePropertiesPredicate compare ordered values. Their public wire models retain IReadOnlyList without structural record equality.
-                match = entry.Value is AdventureModePredicateComponent predicate && other.Value is AdventureModePredicateComponent otherPredicate
-                    ? PredicateValuesMatch(predicate, otherPredicate)
-                    : Equals(entry.Value, other.Value);
+                match = ComponentValuesMatch(entry.Value, other.Value, protocol);
                 break;
             }
             if (!match)
@@ -57,9 +58,14 @@ internal static class VanillaMiningItemIdentity
         return true;
     }
 
-    private static bool PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous)
+    private static bool ComponentValuesMatch(object? current, object? previous, int protocol)
+        => current is AdventureModePredicateComponent predicate && previous is AdventureModePredicateComponent otherPredicate
+            ? PredicateValuesMatch(predicate, otherPredicate, protocol)
+            : Equals(current, previous);
+
+    private static bool PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous, int protocol)
     {
-        if (current.ShowInTooltip != previous.ShowInTooltip || current.Predicates.Count != previous.Predicates.Count)
+        if (protocol < ModernPredicateProtocol && current.ShowInTooltip != previous.ShowInTooltip || current.Predicates.Count != previous.Predicates.Count)
             return false;
         for (int index = 0; index < current.Predicates.Count; index++)
         {
@@ -81,6 +87,68 @@ internal static class VanillaMiningItemIdentity
                 return false;
             if (entry.Nbt is null ? other.Nbt is not null : !entry.Nbt.Equals(other.Nbt))
                 return false;
+            if (protocol == ModernPredicateProtocol && !MatcherValuesMatch(entry.ComponentMatchers, other.ComponentMatchers, protocol))
+                return false;
+        }
+        return true;
+    }
+
+    private static bool MatcherValuesMatch(BlockPredicateComponentMatchers? current, BlockPredicateComponentMatchers? previous, int protocol)
+    {
+        if (current is null || previous is null || current.Exact.Count != previous.Exact.Count || current.Partial.Count != previous.Partial.Count)
+            return false;
+        // Native exact predicates retain ordered typed values; DATA map hashes cannot establish this equality.
+        for (int index = 0; index < current.Exact.Count; index++)
+        {
+            DataComponentEntry entry = current.Exact[index];
+            DataComponentEntry other = previous.Exact[index];
+            if (entry.IsRemoval || other.IsRemoval || !entry.Type.Equals(other.Type) || !ComponentValuesMatch(entry.Value, other.Value, protocol))
+                return false;
+        }
+        // Only Damage is owned by the measured selected-predicate codec, so the native partial map has at most one owned entry.
+        if (current.Partial.Count > 1)
+            return false;
+        if (current.Partial.Count == 0)
+            return true;
+        BlockPredicatePartialMatcher partial = current.Partial[0];
+        BlockPredicatePartialMatcher otherPartial = previous.Partial[0];
+        return !partial.IsAnyValue && !otherPartial.IsAnyValue
+            && partial.Type == Identifier.Minecraft("damage") && partial.Type == otherPartial.Type
+            && partial.Value is NbtCompound damage && otherPartial.Value is NbtCompound otherDamage
+            && DamageBoundsMatch(damage, otherDamage, "durability")
+            && DamageBoundsMatch(damage, otherDamage, "damage");
+    }
+
+    private static bool DamageBoundsMatch(NbtCompound current, NbtCompound previous, string name)
+        => TryReadDamageBounds(current, name, out int? min, out int? max)
+            && TryReadDamageBounds(previous, name, out int? otherMin, out int? otherMax)
+            && min == otherMin && max == otherMax;
+
+    private static bool TryReadDamageBounds(NbtCompound compound, string name, out int? min, out int? max)
+    {
+        min = null;
+        max = null;
+        if (!compound.TryGet(name, out NbtTag? value))
+            return true;
+        if (value is NbtInt point)
+        {
+            min = point.Value;
+            max = point.Value;
+            return true;
+        }
+        if (value is not NbtCompound bounds)
+            return false;
+        if (bounds.TryGet("min", out NbtTag? lower))
+        {
+            if (lower is not NbtInt minimum)
+                return false;
+            min = minimum.Value;
+        }
+        if (bounds.TryGet("max", out NbtTag? upper))
+        {
+            if (upper is not NbtInt maximum)
+                return false;
+            max = maximum.Value;
         }
         return true;
     }

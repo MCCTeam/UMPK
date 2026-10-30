@@ -191,7 +191,7 @@ public sealed class LegacyAdventureMiningRuntimeTests
     }
 
     [Theory]
-    [InlineData(770)]
+    [InlineData(771)]
     [InlineData(777)]
     public async Task UnsupportedAdventurePredicateErasRemainExplicitFailures(int protocol)
     {

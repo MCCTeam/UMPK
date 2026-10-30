@@ -48,7 +48,7 @@ internal sealed partial class ItemComponentTable
     internal bool TryGetCodec(int wireId, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ItemComponentCodec? codec) =>
         _codecByWire.TryGetValue(wireId, out codec);
 
-    /// <summary>The codec for a component on a COMPACT component list, where payloads carry no length prefix. This is the single place in UMPK that raises <see cref="UnmodeledItemComponentException"/>, and therefore the single entry point to the connection's packet-scoped recovery. Callers on a length-delimited or payload-free list must NOT use it: they can recover losslessly and should go through <see cref="TryGetCodec"/> and <see cref="UnmodeledKeyByWireId"/> instead.</summary>
+    /// <summary>The codec for a component on a COMPACT component list, where payloads carry no length prefix. Its table-owned modeling-gap factory also serves selected component values whose native codec is not owned. Callers on a length-delimited or payload-free list must NOT use it: they can recover losslessly and should go through <see cref="TryGetCodec"/> and <see cref="UnmodeledKeyByWireId"/> instead.</summary>
     /// <param name="wireId">The component wire id.</param>
     /// <returns>The typed codec.</returns>
     /// <exception cref="UnmodeledItemComponentException">The id is in range for this era but UMPK does not model it. Costs the packet, not the session.</exception>
@@ -59,7 +59,16 @@ internal sealed partial class ItemComponentTable
             return codec;
 
         // KeyByWireId throws ProtocolViolationException for an out-of-range id, which is exactly the wanted split: only an id the era itself declares is eligible for recovery.
-        throw new UnmodeledItemComponentException(wireId, KeyByWireId(wireId));
+        throw UnmodeledValue(UnmodeledKeyByWireId(wireId));
+    }
+
+    /// <summary>The table-owned modeling-gap factory for a declared component or an unowned selected value. Numeric identity validation remains on the table, independently of packet-scoped recovery.</summary>
+    internal UnmodeledItemComponentException UnmodeledValue(DataComponentType type, string? detail = null)
+    {
+        int wireId = WireId(type);
+        return detail is null
+            ? new UnmodeledItemComponentException(wireId, type.Id)
+            : new UnmodeledItemComponentException(wireId, type.Id, $"Item component '{type.Id}' has an unmodeled selected value: {detail}", new NotSupportedException(detail));
     }
 
     /// <summary>The stable key for a component this era knows but UMPK does not model. Used for a removal entry (which carries no payload) and for a length-delimited unmodeled payload, so both round-trip exactly instead of faulting.</summary>
@@ -133,7 +142,7 @@ internal sealed partial class ItemComponentTable
     }
 
     /// <summary>Builds the 1.21.5 (protocol 770) component id table.</summary>
-    public static ItemComponentTable V1_21_5() => Build(ItemComponentLayout.V1_21_5);
+    public static ItemComponentTable V1_21_5() => BuildModern(ItemComponentLayout.V1_21_5, bindMeasuredAdventure: true);
 
     /// <summary>Builds the 1.21.6-1.21.8 (protocols 771/772) table. The component id ORDERING is byte-for-byte the 770 ordering, but <c>attribute_modifiers</c> is not the 770 payload: protocol 771 appended a display field after each entry's attribute, modifier, and slot, so 771 onward needs the display-carrying codec.</summary>
     /// <returns>The table.</returns>
@@ -175,7 +184,7 @@ internal sealed partial class ItemComponentTable
     private static ItemComponentTable Build(ItemComponentLayout layout) =>
         layout.Dialect == ComponentWireEra.Modern ? BuildModern(layout) : BuildLegacyDialect(layout);
 
-    private static ItemComponentTable BuildModern(ItemComponentLayout layout)
+    private static ItemComponentTable BuildModern(ItemComponentLayout layout, bool bindMeasuredAdventure = false)
     {
         string[] identifiers = layout.Ordering;
         var idByWire = new Identifier[identifiers.Length];
@@ -186,6 +195,10 @@ internal sealed partial class ItemComponentTable
             idByWire[i] = id;
             wireById[id] = i;
         }
+
+        // Only the measured 770 factory binds these codecs. Later tables remain unbound until their boundary witnesses are accepted.
+        ItemComponentCodecs.ModernAdventurePredicateCodec? canBreak = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanBreak) : null;
+        ItemComponentCodecs.ModernAdventurePredicateCodec? canPlaceOn = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanPlaceOn) : null;
 
         // The typed component set. Nested-stack codecs are created fresh per table and bound below so their nested decoding uses this era's table.
         NestedStackComponentCodec container = ItemComponentCodecs.MakeContainer(layout.NestedStacks);
@@ -276,7 +289,7 @@ internal sealed partial class ItemComponentTable
             ItemComponentCodecs.Fireworks,
             ItemComponentCodecs.FireworkExplosion,
 
-            // These components use their era-specific codecs. minecraft:can_break and minecraft:can_place_on stay untyped here: from protocol 770 their predicate payload includes an open, registry-dispatched component-matcher branch. They are typed on the pre-770 table below.
+            // These components use their era-specific codecs. The measured 770 Adventure pair is appended below; later modern tables retain the unmodeled boundary.
             ItemComponentCodecs.BannerPatterns,
             layout.TypedEntityData ? ItemComponentCodecs.BeesV1_21_9 : ItemComponentCodecs.Bees,
             ItemComponentCodecs.SuspiciousStewEffects,
@@ -292,6 +305,9 @@ internal sealed partial class ItemComponentTable
             layout.UnwrappedHolders ? ItemComponentCodecs.JukeboxPlayableV26_1 : ItemComponentCodecs.JukeboxPlayableV1_21_5,
         ];
 
+        if (canBreak is not null && canPlaceOn is not null)
+            typed = [.. typed, canBreak, canPlaceOn];
+
         var codecByWire = new Dictionary<int, ItemComponentCodec>(typed.Length);
         var codecByKey = new Dictionary<DataComponentType, ItemComponentCodec>(typed.Length);
         foreach (ItemComponentCodec codec in typed)
@@ -302,6 +318,8 @@ internal sealed partial class ItemComponentTable
             }
 
         var table = new ItemComponentTable(idByWire, codecByWire, wireById, codecByKey, layout);
+        canBreak?.Bind(table);
+        canPlaceOn?.Bind(table);
         container.Bind(table);
         bundle.Bind(table);
         charged.Bind(table);

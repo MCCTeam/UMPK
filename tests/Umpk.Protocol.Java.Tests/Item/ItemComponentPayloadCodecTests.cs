@@ -248,15 +248,28 @@ public class ItemComponentPayloadCodecTests
         }
     }
 
-    /// <summary><c>can_break</c> still costs the packet on 770-776, because 1.21.5 appended <c>DataComponentMatchers</c> to <c>BlockPredicate</c>, and its exact-match half is a list of <c>TypedDataComponent</c> whose recursive compact payloads can name unmodeled components and cannot be skipped (the predicate-dispatch half is self-delimiting NBT and could be; see the codec's remarks).</summary>
+    /// <summary>The measured 770 codec accepts vanilla's legal empty predicate wire list; 776 retains its explicit unmodeled boundary. This does not establish a DATA hash for an empty list or support for later predicate layouts.</summary>
     [Theory]
     [InlineData(770, 12)]
     [InlineData(776, 15)]
-    public void CanBreak_StillCostsThePacketOn1_21_5AndUp(int protocol, int wireId)
+    public void CanBreak_IsTypedOnlyOnTheMeasured770Boundary(int protocol, int wireId)
     {
         byte[] frame = SetSlotFrame(protocol, wireId, static (ref PacketWriter w) => w.WriteVarInt(0));
 
         BoundPacketCodec bound = BoundCodec.At(protocol, PacketFlow.Clientbound, SetSlot);
+        if (protocol == 770)
+        {
+            var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.DecodeFrame(frame));
+            Assert.Equal(0, packet.ContainerId);
+            Assert.Equal(1, packet.StateId);
+            Assert.Equal(3, packet.Slot);
+            Assert.Equal(1, packet.Item.Count);
+            Assert.Equal(Identifier.Minecraft("stone"), packet.Item.Item.Id);
+            var predicate = Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(DataComponents.CanBreak));
+            Assert.Empty(predicate.Predicates);
+            Assert.Equal(frame, bound.Encode(packet));
+            return;
+        }
         var ex = Assert.Throws<UnmodeledItemComponentException>(() => bound.DecodeFrame(frame));
         Assert.Equal(Identifier.Minecraft("can_break"), ex.ComponentId);
     }

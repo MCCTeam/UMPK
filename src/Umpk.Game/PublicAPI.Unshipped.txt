@@ -3377,3 +3377,35 @@ Umpk.Game.Registries.BedExitCellInfo.AllowsBody.init -> void
 static Umpk.Game.Registries.BedExitCellInfo.operator ==(Umpk.Game.Registries.BedExitCellInfo left, Umpk.Game.Registries.BedExitCellInfo right) -> bool
 static Umpk.Game.Registries.BedExitCellInfo.operator !=(Umpk.Game.Registries.BedExitCellInfo left, Umpk.Game.Registries.BedExitCellInfo right) -> bool
 Umpk.Game.Registries.IBlockInteractionSource.TryGetBedExitCell(int stateId, out Umpk.Game.Registries.BedExitCellInfo info) -> bool
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.<Clone>$() -> Umpk.Game.Items.Components.BlockPredicateComponentMatchers!
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.BlockPredicateComponentMatchers(System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.DataComponentEntry!>! Exact, System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.Components.BlockPredicatePartialMatcher!>! Partial) -> void
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Deconstruct(out System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.DataComponentEntry!>! Exact, out System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.Components.BlockPredicatePartialMatcher!>! Partial) -> void
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Equals(Umpk.Game.Items.Components.BlockPredicateComponentMatchers? other) -> bool
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Exact.get -> System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.DataComponentEntry!>!
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Exact.init -> void
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Partial.get -> System.Collections.Generic.IReadOnlyList<Umpk.Game.Items.Components.BlockPredicatePartialMatcher!>!
+Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Partial.init -> void
+Umpk.Game.Items.Components.BlockPredicateEntry.ComponentMatchers.get -> Umpk.Game.Items.Components.BlockPredicateComponentMatchers?
+Umpk.Game.Items.Components.BlockPredicateEntry.ComponentMatchers.init -> void
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.<Clone>$() -> Umpk.Game.Items.Components.BlockPredicatePartialMatcher!
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.BlockPredicatePartialMatcher(Umpk.Identifier Type, bool IsAnyValue, Umpk.Nbt.NbtTag! Value) -> void
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Deconstruct(out Umpk.Identifier Type, out bool IsAnyValue, out Umpk.Nbt.NbtTag! Value) -> void
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Equals(Umpk.Game.Items.Components.BlockPredicatePartialMatcher? other) -> bool
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.IsAnyValue.get -> bool
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.IsAnyValue.init -> void
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Type.get -> Umpk.Identifier
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Type.init -> void
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Value.get -> Umpk.Nbt.NbtTag!
+Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Value.init -> void
+override Umpk.Game.Items.Components.BlockPredicateComponentMatchers.Equals(object? obj) -> bool
+override Umpk.Game.Items.Components.BlockPredicateComponentMatchers.GetHashCode() -> int
+override Umpk.Game.Items.Components.BlockPredicateComponentMatchers.ToString() -> string!
+override Umpk.Game.Items.Components.BlockPredicatePartialMatcher.Equals(object? obj) -> bool
+override Umpk.Game.Items.Components.BlockPredicatePartialMatcher.GetHashCode() -> int
+override Umpk.Game.Items.Components.BlockPredicatePartialMatcher.ToString() -> string!
+static Umpk.Game.Items.Components.BlockPredicateComponentMatchers.operator !=(Umpk.Game.Items.Components.BlockPredicateComponentMatchers? left, Umpk.Game.Items.Components.BlockPredicateComponentMatchers? right) -> bool
+static Umpk.Game.Items.Components.BlockPredicateComponentMatchers.operator ==(Umpk.Game.Items.Components.BlockPredicateComponentMatchers? left, Umpk.Game.Items.Components.BlockPredicateComponentMatchers? right) -> bool
+static Umpk.Game.Items.Components.BlockPredicatePartialMatcher.operator !=(Umpk.Game.Items.Components.BlockPredicatePartialMatcher? left, Umpk.Game.Items.Components.BlockPredicatePartialMatcher? right) -> bool
+static Umpk.Game.Items.Components.BlockPredicatePartialMatcher.operator ==(Umpk.Game.Items.Components.BlockPredicatePartialMatcher? left, Umpk.Game.Items.Components.BlockPredicatePartialMatcher? right) -> bool

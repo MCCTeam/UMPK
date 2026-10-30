@@ -594,7 +594,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         string[] lines = await File.ReadAllLinesAsync(Path.Combine(server.DirectoryPath, "server.properties"), ct);
         var properties = lines.Where(line => line.StartsWith("level-type=", StringComparison.Ordinal) || line.StartsWith("generator-settings=", StringComparison.Ordinal))
             .ToDictionary(line => line[..line.IndexOf('=')], line => line[(line.IndexOf('=') + 1)..].Replace("\\:", ":", StringComparison.Ordinal).Replace("\\=", "=", StringComparison.Ordinal).Replace("\\\\", "\\", StringComparison.Ordinal));
-        Assert.Equal("minecraft:flat", properties["level-type"]);
+        Assert.Equal("flat", properties["level-type"]);
         using JsonDocument actual = JsonDocument.Parse(properties["generator-settings"]);
         Assert.True(JsonElement.DeepEquals(expected.RootElement, actual.RootElement));
         Assert.Equal(-64, await client.InvokeAsync(c => c.State.World.Dimension.MinY, ct));

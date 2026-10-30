@@ -71,7 +71,7 @@ internal static class InteractionPicker
         var direction = new Vec3d(-Math.Sin(yaw) * Math.Cos(pitch), -Math.Sin(pitch), Math.Cos(yaw) * Math.Cos(pitch));
         double blockTraceRange = profile.AttributeReach ? traceRange : blockRange;
         if ((!state.Features.Inventory || !state.Inventory.IsPlayerSlotAvailable(36 + services.Self.HeldSlot))
-            && !HasDefiniteScaffoldingOutline(services, protocol, eye, eye.Add(direction.Scale(blockTraceRange))))
+            && !HasDefiniteScaffoldingOrLightOutline(services, protocol, eye, eye.Add(direction.Scale(blockTraceRange))))
             return InteractionPickResult.Unknown;
         BlockHitResult? block = services.ReadBlockHit(blockTraceRange);
         double blockDistance = block is { } hit ? hit.Point.Subtract(eye).LengthSqr() : traceRange * traceRange;
@@ -164,23 +164,33 @@ internal static class InteractionPicker
             => state.EntityGeometry.TryGet(entity, geometry, out bounds, out _, protocol);
     }
 
-    private static bool HasDefiniteScaffoldingOutline(ClientSessionServices services, int protocol, Vec3d eye, Vec3d end)
+    private static bool HasDefiniteScaffoldingOrLightOutline(ClientSessionServices services, int protocol, Vec3d eye, Vec3d end)
     {
         ClientState state = services.State;
-        // Native ScaffoldingBlock.getShape reads only the player's selected main hand. A nearer independent hit can still be definite while that input is unavailable.
-        bool hasScaffolding = false;
+        // Native scaffolding and light outlines read only the player's selected main hand. A nearer independent hit can still be definite while that input is unavailable.
+        bool hasScaffolding = false, hasLight = false;
         var shapes = JavaGameData.BlockShapes(protocol);
         BlockRayClipModel clipModel = BlockInteractionProfile.ForProtocol(protocol).ProjectedOutlineClipModel;
         BlockHitResult ordinary = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("air"), ReadBlock, clipModel);
-        if (!hasScaffolding)
+        if (hasScaffolding)
+        {
+            BlockHitResult holding = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("scaffolding"), ReadBlock, clipModel);
+            if (ordinary != holding)
+                return false;
+        }
+        if (!hasLight)
             return true;
-        BlockHitResult holding = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("scaffolding"), ReadBlock, clipModel);
-        return ordinary == holding;
+        BlockHitResult holdingLight = Raycast.CastBlockWithContext(state.World, eye, end, false, shapes, Identifier.Minecraft("light"), ReadBlock, clipModel);
+        return ordinary == holdingLight;
 
         BlockState ReadBlock(BlockPos position)
         {
             BlockState block = state.JukeboxPrediction.GetBlock(state.World, position);
-            hasScaffolding |= block.IsValid && block.Block.Id.IsMinecraft && block.Block.Id.Path == "scaffolding";
+            if (block.IsValid && block.Block.Id.IsMinecraft)
+            {
+                hasScaffolding |= block.Block.Id.Path == "scaffolding";
+                hasLight |= block.Block.Id.Path == "light";
+            }
             return block;
         }
     }

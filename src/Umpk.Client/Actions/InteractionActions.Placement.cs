@@ -17,10 +17,13 @@ public sealed partial class InteractionActions
     {
         ct.ThrowIfCancellationRequested();
         RequireBlockUseHand(hand, nameof(PlaceBlockAsync));
+        // Minecraft rejects a known disabled held input before entering the controller. Border and legacy placement rejection occur inside it, after carried synchronization.
+        if (IsBlockUseItemEnabled(hand) is false)
+            return null;
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
         BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment);
         if (!prediction.SendPacket)
             return null;
-        ct.ThrowIfCancellationRequested();
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
         int? sequence = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn) ? _sequences.Next() : null;
         // Native candle attachment consumes the selected stack before changing the block; both precede the use write. The session inventory remains the single stack owner.
@@ -41,16 +44,30 @@ public sealed partial class InteractionActions
             _services.State.JukeboxPrediction.Commit(_services.State.World, position, eaten.State, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         }
         if (sequence is null)
-            await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session).ConfigureAwait(false);
+            await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session, sink).ConfigureAwait(false);
         else
         {
-            await _sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
+            await sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
         }
         if (localState is int changed)
             _services.State.JukeboxPrediction.Commit(_services.State.World, position, changed, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         if (prediction.Swing == BlockUseSwing.Packet)
-            await SwingAsync(hand, session).ConfigureAwait(false);
+            await SendSwingAsync(sink, hand, session).ConfigureAwait(false);
         return sequence;
+    }
+
+    private bool? IsBlockUseItemEnabled(Hand hand)
+    {
+        bool inventoryKnown = _services.State.Features.Inventory;
+        bool hasOffhand = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn);
+        bool itemKnown = hand == Hand.Main
+            ? inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(36 + _services.Self.HeldSlot)
+            : !hasOffhand || inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(45);
+        ItemStack item = hand == Hand.Main ? HeldItem()
+            : inventoryKnown && hasOffhand && _services.State.Inventory.PlayerSlots.Count > 45 ? _services.State.Inventory.PlayerSlots[45] : ItemStack.Empty;
+        return itemKnown
+            ? item.IsEmpty ? true : _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol)
+            : _services.State.EnabledFeatures.IsUnobservedItemEnabled(_services.State.Registries, _services.Version.Version.Protocol);
     }
 
     private void RequireBlockUseHand(Hand hand, string action)
@@ -79,9 +96,7 @@ public sealed partial class InteractionActions
         ItemStack item = hand == Hand.Main ? main : off;
         bool itemKnown = hand == Hand.Main ? mainKnown : offKnown;
         // Minecraft.startUseItem rejects disabled nonempty stacks before useItemOn, independently of terrain and spectator mode. With an unavailable selected stack, only a completely classified and enabled native catalog can establish permission.
-        bool? itemEnabled = itemKnown
-            ? item.IsEmpty ? true : _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol)
-            : _services.State.EnabledFeatures.IsUnobservedItemEnabled(_services.State.Registries, _services.Version.Version.Protocol);
+        bool? itemEnabled = IsBlockUseItemEnabled(hand);
         if (itemEnabled is false)
             return BlockUsePrediction.Rejected;
         if (!_services.State.HasWorld)

@@ -351,15 +351,41 @@ public sealed partial class InteractionActions
 
     /// <summary>Uses the held item in the air.</summary>
     /// <remarks>Same era split as <see cref="PlaceBlockAsync"/>. 1.8 spells "use the held item in the air" as a <c>block_place</c> at the sentinel position (-1, -1, -1) with face 255. The 1.8 form carries only the held item stack.</remarks>
-    public Task UseItemAsync(Hand hand = Hand.Main, CancellationToken ct = default)
+    public async Task UseItemAsync(Hand hand = Hand.Main, CancellationToken ct = default)
     {
         RequireBlockUseHand(hand, nameof(UseItemAsync));
-        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItem))
-            return SendLegacyBlockPlaceAsync(nameof(UseItemAsync), LegacyUseItemPosition, LegacyUseItemFace, default, ct);
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await UseItemOnLoopAsync(hand, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => UseItemOnLoopAsync(hand, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
 
-        return _sink.SendAsync(
-            new ServerboundUseItemPacket((int)hand, _sequences.Next(), _services.Self.Yaw, _services.Self.Pitch),
-            ct).AsTask();
+    private async ValueTask UseItemOnLoopAsync(Hand hand, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        // The native air-use controller returns for spectator before synchronizing the selected slot.
+        if (_services.Self.GameMode == GameMode.Spectator)
+            return;
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
+        if (_blockProfile.AirUsePublishesPosition)
+        {
+            Vec3d position = _services.Self.Position;
+            await sink.SendAsync(new ServerboundMovePlayerPosRotPacket(position.X, position.Y, position.Z,
+                _services.Self.Yaw, _services.Self.Pitch, _services.Self.OnGround, HorizontalCollision: false), session).ConfigureAwait(false);
+        }
+        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItem))
+            await SendLegacyBlockPlaceAsync(nameof(UseItemAsync), LegacyUseItemPosition, LegacyUseItemFace, default, session, sink).ConfigureAwait(false);
+        else
+            await sink.SendAsync(new ServerboundUseItemPacket((int)hand, _sequences.Next(), _services.Self.Yaw, _services.Self.Pitch), session).ConfigureAwait(false);
+    }
+
+    private ValueTask<IPacketSink> PrepareInteractionPacketSinkAsync(CancellationToken session)
+    {
+        session.ThrowIfCancellationRequested();
+        return _services.PrepareInteractionPacketSink is { } prepare ? prepare(session) : ValueTask.FromResult(_sink);
     }
 
     /// <summary>The sentinel position 1.8 sends for "use the held item in the air".</summary>
@@ -369,7 +395,7 @@ public sealed partial class InteractionActions
     private const int LegacyUseItemFace = 255;
 
     /// <summary>Sends the pre-1.9 <c>block_place</c>. The held item comes from the client's inventory snapshot. The server acts on its own held-stack state and uses the packet copy for resynchronization, so a session without inventory state sends an empty stack and may receive a corrective slot update.</summary>
-    private Task SendLegacyBlockPlaceAsync(string action, BlockPos position, int face, Vec3d cursor, CancellationToken ct)
+    private Task SendLegacyBlockPlaceAsync(string action, BlockPos position, int face, Vec3d cursor, CancellationToken ct, IPacketSink? packetSink = null)
     {
         Require(
             _services.Wire.CanSendPlay(ItemPackets.Serverbound.LegacyBlockPlace),
@@ -377,7 +403,7 @@ public sealed partial class InteractionActions
             ItemPackets.Serverbound.LegacyBlockPlace.Id,
             "Neither use_item_on nor the 1.8 block_place is sendable on this version.");
 
-        return _sink.SendAsync(
+        return (packetSink ?? _sink).SendAsync(
             new ServerboundLegacyBlockPlacePacket(
                 position, face, HeldItem(), LegacyCursor(cursor.X), LegacyCursor(cursor.Y), LegacyCursor(cursor.Z)),
             ct).AsTask();
@@ -392,23 +418,35 @@ public sealed partial class InteractionActions
     private static byte LegacyCursor(double value) => unchecked((byte)(int)((float)value * 16.0F));
 
     /// <summary>Attacks an entity (uses the 26.1+ dedicated attack packet where available).</summary>
-    public Task AttackEntityAsync(int entityId, CancellationToken ct = default)
-        => _services.Scheduler.InvokeAsync(async () =>
+    public async Task AttackEntityAsync(int entityId, CancellationToken ct = default)
+    {
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await AttackEntityOnLoopAsync(entityId, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => AttackEntityOnLoopAsync(entityId, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
+
+    private async ValueTask AttackEntityOnLoopAsync(int entityId, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
+        int attackId = _services.Wire.ServerboundPlay(Identifier.Minecraft("attack"));
+        if (attackId >= 0)
+            await sink.SendAsync(new ServerboundAttackPacket(entityId), session).ConfigureAwait(false);
+        else
         {
-            int attackId = _services.Wire.ServerboundPlay(Identifier.Minecraft("attack"));
-            if (attackId >= 0)
-                await _sink.SendAsync(new ServerboundAttackPacket(entityId), ct).ConfigureAwait(false);
-            else
-            {
-                // Legacy: interact with action = attack, no hand.
-                await _sink.SendAsync(
-                    new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
-                        UsingSecondaryAction: _services.Self.Sneaking),
-                    ct).ConfigureAwait(false);
-            }
-            _attackCharge.Synchronize(_services.State.PlayerLifetime);
-            _attackCharge.Reset();
-        }, ct);
+            // Legacy: interact with action = attack, no hand.
+            await sink.SendAsync(
+                new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
+                    UsingSecondaryAction: _services.Self.Sneaking),
+                session).ConfigureAwait(false);
+        }
+        _attackCharge.Synchronize(_services.State.PlayerLifetime);
+        _attackCharge.Reset();
+    }
 
     /// <summary>Interacts with an entity (right-click).</summary>
     public Task InteractEntityAsync(int entityId, Hand hand = Hand.Main, CancellationToken ct = default)
@@ -420,11 +458,14 @@ public sealed partial class InteractionActions
     /// <summary>Swings the given arm.</summary>
     /// <remarks>26.3 removes the swing-arm send in favour of the handless punch: when the session binds punch, both hands send it (the packet carries no hand to choose with); older eras keep the hand-carrying swing. The branch reads the bound outbound table, never a protocol number.</remarks>
     public Task SwingAsync(Hand hand = Hand.Main, CancellationToken ct = default)
+        => SendSwingAsync(_sink, hand, ct).AsTask();
+
+    private ValueTask SendSwingAsync(IPacketSink sink, Hand hand, CancellationToken ct)
     {
         if (_services.Wire.CanSendPlay(EntityPackets.Serverbound.Punch))
-            return _sink.SendAsync(new ServerboundPunchPacket(), ct).AsTask();
+            return sink.SendAsync(new ServerboundPunchPacket(), ct);
 
-        return _sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct).AsTask();
+        return sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct);
     }
 
     /// <summary>Updates the text of the sign at <paramref name="position"/> (the sign whose editor the server opened). The <paramref name="isFrontText"/> flag selects the front/back side on 1.20+ and is ignored on older versions. Lines beyond four are dropped and missing lines are sent empty.</summary>

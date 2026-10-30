@@ -35,6 +35,9 @@ internal sealed class ClientSessionServices
     public Func<CancellationToken?> CurrentSessionCancellation { get; init; } =
         static () => CancellationToken.None;
 
+    /// <summary>Synchronizes the existing carried-index cache and returns this action group's concrete connection sink on the session owner. A hand-built harness may retain its supplied stable sink by leaving this unset.</summary>
+    public Func<CancellationToken, ValueTask<IPacketSink>>? PrepareInteractionPacketSink { get; init; }
+
     /// <summary>The existing physics owner's current pose and eye-water observation. Hand-built action harnesses can supply their own snapshot.</summary>
     public Func<Umpk.Physics.PhysicsState?> ReadPhysicsState { get; init; } = static () => null;
 

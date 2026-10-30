@@ -122,6 +122,7 @@ public sealed class UmpkClient : IAsyncDisposable
             Scheduler = _scheduler,
             CurrentPhase = () => _connection?.Phase ?? ProtocolPhase.Play,
             CurrentSessionCancellation = () => _sessionCts?.Token,
+            PrepareInteractionPacketSink = PrepareInteractionPacketSinkOnLoopAsync,
             ReadPhysicsState = () => State.EntityMotion.HasUnknownShulkerSelfDisplacement ? null : _physics?.EngineState,
             ReadBlockHit = distance => ClientSnapshots.CastView(this, distance, includeFluids: false, nativeCurrent: true),
             Events = _eventBus,
@@ -1030,6 +1031,17 @@ public sealed class UmpkClient : IAsyncDisposable
                 () => tickSink.SendAsync(new ServerboundClientTickEndPacket(), CancellationToken.None),
                 "client_tick_end").ConfigureAwait(false);
 
+    }
+
+    private async ValueTask<IPacketSink> PrepareInteractionPacketSinkOnLoopAsync(CancellationToken session)
+    {
+        session.ThrowIfCancellationRequested();
+        IPacketSink sink = _sink ?? throw new InvalidOperationException("The client is not connected.");
+        // Teardown cancels the old session before clearing or replacing its sink. Recheck after capture so an admitted group cannot move to a reconnected peer.
+        session.ThrowIfCancellationRequested();
+        await Actions.Inventory.TickCarriedItemOnLoopAsync(sink, session).ConfigureAwait(false);
+        session.ThrowIfCancellationRequested();
+        return sink;
     }
 
     private async ValueTask<bool> SynchronizeCarriedItemOnTickAsync(IPacketSink sink, CancellationToken ct)

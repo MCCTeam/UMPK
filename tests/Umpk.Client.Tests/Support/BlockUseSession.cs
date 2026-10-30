@@ -39,25 +39,28 @@ internal sealed class BlockUseSession : IAsyncDisposable
     private readonly int _protocol;
     private readonly bool _observeWrites;
     internal Action? BeforeClientWrite { get; set; }
+    internal Action<ReadOnlyMemory<byte>>? BeforeFramedWrite { get; set; }
     private readonly bool _featureFlags;
     internal int Protocol => _protocol;
     private long _barrier;
     internal CancellationToken Token => _budget.Token;
     private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
 
-    private BlockUseSession(int protocol, bool physics, bool featureFlags, bool observeWrites)
+    private BlockUseSession(int protocol, bool physics, bool featureFlags, bool observeWrites, ISessionScheduler? scheduler)
     {
         _protocol = protocol;
         _featureFlags = featureFlags;
         _observeWrites = observeWrites;
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out _version!));
         _connections = new PipeFactory(ObservedPipe(Server.ClientPipe));
-        Client = new UmpkClientBuilder().UseVersion(_version)
+        var builder = new UmpkClientBuilder().UseVersion(_version)
             .UseProfile(new GameProfile(RequestedId, "DoorSession"))
             .UseConnectionFactory(_connections)
             .UseStaticRegistries(JavaGameData.Registries(protocol)).UseTickSource(Ticks)
-            .ConfigureFeatures(features => { features.Physics = physics; features.Pathfinding = false; })
-            .Build();
+            .ConfigureFeatures(features => { features.Physics = physics; features.Pathfinding = false; });
+        if (scheduler is not null)
+            builder.UseScheduler(scheduler);
+        Client = builder.Build();
         Client.Events.Subscribe<PacketReceived>(received =>
         {
             if (received.Packet is ClientboundConfigUpdateEnabledFeaturesPacket)
@@ -68,18 +71,20 @@ internal sealed class BlockUseSession : IAsyncDisposable
         });
     }
 
-    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true, bool observeWrites = false)
+    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true, bool observeWrites = false, ISessionScheduler? scheduler = null)
     {
-        var session = new BlockUseSession(protocol, physics, featureFlags, observeWrites);
+        var session = new BlockUseSession(protocol, physics, featureFlags, observeWrites, scheduler);
         try
         {
             await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session.Token), session.DriveToPlay());
             await session.PrepareWorld(block, terrain);
             return session;
         }
-        catch
+        catch (Exception primary)
         {
-            await session.DisposeAsync();
+            using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            try { await session.DisposeAsync().AsTask().WaitAsync(cleanup.Token); }
+            catch (Exception disposal) { throw new AggregateException("Session setup and cleanup both failed.", primary, disposal); }
             throw;
         }
     }
@@ -495,8 +500,14 @@ internal sealed class BlockUseSession : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        List<Exception> failures = [];
         try { await Client.DisposeAsync(); }
-        finally { await Server.DisposeAsync(); _budget.Dispose(); }
+        catch (Exception error) { failures.Add(error); }
+        try { await Server.DisposeAsync(); }
+        catch (Exception error) { failures.Add(error); }
+        _budget.Dispose();
+        if (failures.Count > 0)
+            throw new AggregateException("Session disposal failed.", failures);
     }
 
     private IDuplexPipe ObservedPipe(IDuplexPipe pipe) => _observeWrites ? new ObservedClientPipe(pipe, this) : pipe;
@@ -515,10 +526,12 @@ internal sealed class BlockUseSession : IAsyncDisposable
 
     private sealed class ObservedClientWriter(PipeWriter inner, BlockUseSession owner) : PipeWriter
     {
+        private Memory<byte> _buffer;
         public override bool CanGetUnflushedBytes => inner.CanGetUnflushedBytes;
         public override long UnflushedBytes => inner.UnflushedBytes;
         public override void Advance(int bytes)
         {
+            owner.BeforeFramedWrite?.Invoke(_buffer[..bytes]);
             owner.BeforeClientWrite?.Invoke();
             inner.Advance(bytes);
         }
@@ -526,8 +539,8 @@ internal sealed class BlockUseSession : IAsyncDisposable
         public override void Complete(Exception? exception = null) => inner.Complete(exception);
         public override ValueTask CompleteAsync(Exception? exception = null) => inner.CompleteAsync(exception);
         public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default) => inner.FlushAsync(cancellationToken);
-        public override Memory<byte> GetMemory(int sizeHint = 0) => inner.GetMemory(sizeHint);
-        public override Span<byte> GetSpan(int sizeHint = 0) => inner.GetSpan(sizeHint);
+        public override Memory<byte> GetMemory(int sizeHint = 0) => _buffer = inner.GetMemory(sizeHint);
+        public override Span<byte> GetSpan(int sizeHint = 0) => GetMemory(sizeHint).Span;
     }
 
     private sealed class PipeFactory(IDuplexPipe pipe) : IConnectionFactory

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.State;
+using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
@@ -24,6 +25,17 @@ internal sealed class ConnectionApplier : IApplier
 
         switch (packet)
         {
+            // Native listeners ignore tick control without a level. The level lifetime also exists when terrain tracking is disabled.
+            case ClientboundTickingStatePacket ticking:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.ApplyState(ticking.TickRate, ticking.IsFrozen);
+                return true;
+
+            case ClientboundTickingStepPacket stepping:
+                if (context.State.WorldDimension is not null)
+                    context.State.WorldTicks.SetSteps(stepping.TickSteps);
+                return true;
+
             case ClientboundLoginPacket join:
                 await ApplyJoinAsync(join, context, ct).ConfigureAwait(false);
                 return true;
@@ -62,6 +74,18 @@ internal sealed class ConnectionApplier : IApplier
 
                 // Configuration traffic also reaches handlers registered for that channel, and a minecraft:register announcement is folded into the server-announced set. Routing is unconditional rather than an else-arm of the brand: the brand is still captured into ClientState above, and "the engine reads it too" is a less surprising rule for a consumer than one channel silently not being deliverable. The return value is ignored because this applier claims the packet either way; an unclaimed configuration payload has nowhere else to go in the chain.
                 context.DispatchConfigurationChannel(payload.Channel, payload.Data);
+                return true;
+
+            case ClientboundConfigUpdateEnabledFeaturesPacket features:
+                context.State.EnabledFeatures.Install(features.Features, context.Version.Version.Protocol);
+                return true;
+
+            case ClientboundConfigUpdateTagsPacket tags:
+                context.State.RegistryTags.Install(tags.Registries);
+                return true;
+
+            case ClientboundUpdateTagsPacket tags:
+                context.State.RegistryTags.Install(tags.Registries);
                 return true;
 
             // 1.20.2+ registry data. Three registries are kept, and only three, because they are the three this client acts on: minecraft:dimension_type decides where every decoded chunk column lands, minecraft:chat_type decides how a 1.19+ chat body is composed into the line a consumer sees, and minecraft:enchantment is the only thing that can name the numeric holder id a 1.21+ enchantment component carries. From protocol 767 there is no built-in table to fall back on and an uninstalled one decodes every enchantment to an unbound handle). Every other registry in this packet is deliberately dropped rather than half-modelled; decoding one with no consumer would only move the drop one layer up. Claiming the packet either way keeps it from falling through the chain as unhandled.
@@ -152,6 +176,7 @@ internal sealed class ConnectionApplier : IApplier
         await context.Sink.SendAsync(new ServerboundConfigurationAcknowledgedPacket(), ct).ConfigureAwait(false);
 
         context.State.ResetForConfigurationReentry();
+        context.Sequences.ResetLifetime();
 
         // Vanilla holds the chunk-batch estimator on the play listener (chunk batch size calculator behavior), so the re-entry starts the negotiation over at the initial estimate rather than carrying the previous world's rate into the new one.
         _chunkBatches = null;
@@ -268,6 +293,9 @@ internal sealed class ConnectionApplier : IApplier
             DimensionTypeName = join.SpawnInfo.DimensionTypeName,
             InlineType = join.DimensionTypeNbt,
         });
+        context.State.AdvanceInteractionLifetime();
+        context.State.AdvancePlayerLifetime();
+        context.State.InitializePlayerInventory(replacesExistingPlayer: false);
 
         // World construction is the required, failure-prone part of a join. Complete it before making the player observable as spawned or resetting join-owned state, so an unusable required custom dimension terminates the session without leaving a half-applied player/world transition.
         SelfState self = context.State.Self;
@@ -316,11 +344,18 @@ internal sealed class ConnectionApplier : IApplier
     private static async ValueTask ApplyRespawnAsync(
         ClientboundRespawnPacket respawn, ApplierContext context, CancellationToken ct)
     {
+        AttributeInstance? previousScale = null;
+        bool keepScaleModifiers = (respawn.DataToKeep & 1) != 0;
+        bool scaleWasServerStated = context.State.Self.Attributes.IsServerStated(ScaleAttributeId);
+        int protocol = context.Version.Version.Protocol;
+        if (LivingScaleProfile.Supports(protocol) && (keepScaleModifiers || LivingScaleProfile.ForProtocol(protocol).KeepsRespawnBaseValue))
+            context.State.Self.Attributes.Map.TryGet(ScaleAttributeId, out previousScale);
         Game.Players.GameMode? gameMode = null;
         if (respawn.SpawnInfo is { } spawn)
         {
             context.WorldSetup(new CommonWorldSetup(spawn.Dimension, spawn.DimensionTypeId)
             {
+                IsRespawn = true,
                 DimensionTypeName = spawn.DimensionTypeName,
                 InlineType = respawn.DimensionTypeNbt,
             });
@@ -329,14 +364,17 @@ internal sealed class ConnectionApplier : IApplier
         else if (respawn.Legacy is { } legacy)
         {
             // 47-404 name the dimension with a signed int rather than a resource key, and the respawn packet is the ONLY notice a client gets that it moved between them. Without this the world instance keeps the previous dimension's height bounds and skylight after a portal, which silently mis-sizes every chunk column decoded afterwards.
-            context.WorldSetup(new CommonWorldSetup(LegacyDimensionName(legacy.Dimension), legacy.Dimension));
+            context.WorldSetup(new CommonWorldSetup(LegacyDimensionName(legacy.Dimension), legacy.Dimension) { IsRespawn = true });
             gameMode = (Game.Players.GameMode)legacy.GameMode;
         }
+        context.State.AdvancePlayerLifetime();
+        context.State.InitializePlayerInventory(replacesExistingPlayer: true);
 
         // As on join, resolve/install the required world first. An invalid replacement must leave the previous player and world coherent while the required packet fault ends the connection.
         ClearSprintLatch(context.State.Self);
         ClearEffectsIfThePlayerEntityWasDestroyed(respawn, context);
         SeedSelfAttributes(context);
+        RestoreRespawnScale(context, previousScale, keepScaleModifiers, scaleWasServerStated);
         if (gameMode is { } resolvedGameMode)
             context.State.Self.GameMode = resolvedGameMode;
 
@@ -371,13 +409,25 @@ internal sealed class ConnectionApplier : IApplier
 
     }
 
-    /// <summary>Drops the local player's attribute map and re-seeds the standard player defaults on login and every respawn.</summary>
-    /// <remarks>
-    /// <para>The respawn reset is unconditional, unlike <see cref="ClearEffectsIfThePlayerEntityWasDestroyed"/>, which gates on <c>DataToKeep == 0</c>. The keep flags govern what the server restores and sends; client attributes return to player defaults on both respawn branches.</para>
-    /// <para>The two failure directions are not symmetric, which is the same argument <see cref="ClearSprintLatch"/> makes. Failing to clear leaves a dead player's soul-speed or powder-snow modifier on the map forever, and nothing on the wire ever contradicts it. Clearing when vanilla would have kept costs one stale tick until the server's next dirty broadcast.</para>
-    /// <para>This does NOT depend on <c>DataToKeep</c> being zero by accident on the legacy codecs, and that matters: 47-404 have no such field on the wire and <c>WorldStateCodecs</c> writes the literal <c>DataToKeep: 0</c> for them, while 735-758 map their single <c>keepAllPlayerData</c> bool onto 1/0. An unconditional reset is correct on all three shapes without reading the field at all.</para>
-    /// <para><c>Known</c> is answered STRUCTURALLY, exactly as <c>CapabilityCapture</c> answers <c>EffectsKnown</c>: the entity applier is the only writer of self attributes and <c>ClientState</c> creates the entity store only when the feature is on, so a null store is precisely "this session can never observe an attribute". A protocol with no <c>minecraft:attribute</c> registry is the same claim for a different reason, and gets the same answer.</para>
-    /// </remarks>
+    private static readonly Identifier ScaleAttributeId = Identifier.Minecraft("scale");
+
+    /// <summary>Transfers the measured scale attribute into the new local owner. Protocol 766 copies only for keep bit1; from 767 the other branch copies its base without modifiers.</summary>
+    private static void RestoreRespawnScale(ApplierContext context, AttributeInstance? previous, bool keepModifiers, bool wasServerStated)
+    {
+        if (previous is null || !context.State.Self.Attributes.Map.TryGet(ScaleAttributeId, out AttributeInstance target))
+            return;
+        // replaceFrom always dirties the native instance; assignBaseValues dirties only a changed double.
+        context.State.SelfScaleDirty = keepModifiers || target.BaseValue != previous.BaseValue;
+        target.BaseValue = previous.BaseValue;
+        if (keepModifiers)
+            foreach (AttributeModifier modifier in previous.Modifiers)
+                target.AddOrReplaceModifier(modifier);
+        if (wasServerStated)
+            context.State.Self.Attributes.MarkServerStated(ScaleAttributeId);
+    }
+
+    /// <summary>Re-seeds the existing local attribute policy on login and respawn. The measured scale transfer is applied separately after this reset.</summary>
+    /// <remarks>Attribute observability still requires entity tracking and the session attribute registry. Other attribute transfer rules retain their existing policy here.</remarks>
     private static void SeedSelfAttributes(ApplierContext context)
     {
         Game.Registries.RegistryAccess? registries = context.State.Registries;

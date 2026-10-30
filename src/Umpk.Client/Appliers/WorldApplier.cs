@@ -1,8 +1,10 @@
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Data.Java;
+using Umpk.Game.World;
 using Umpk.Geometry;
 using Umpk.Nbt;
+using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
 
 namespace Umpk.Client.Appliers;
@@ -29,7 +31,16 @@ internal sealed class WorldApplier : IApplier
         Game.World.World world = context.State.World;
         switch (packet)
         {
+            case ClientboundLevelChunkPacket chunk when EntityMembershipApplier.IsLegacyUnload(chunk):
+                var unloaded = new ChunkPos(chunk.ChunkX, chunk.ChunkZ);
+                context.State.JukeboxPrediction.ObserveUnload(unloaded);
+                world.UnloadColumn(unloaded);
+                world.RemoveBlockEntityNbt(unloaded);
+                await context.PublishAsync(new ChunkUnloaded(unloaded)).ConfigureAwait(false);
+                return true;
+
             case ClientboundLevelChunkPacket chunk:
+                context.State.JukeboxPrediction.ObserveColumn(chunk.Column, chunk.FullChunk);
                 // A frame that is not ground-up carries ONLY the sections its bitmask names, so installing it as a whole column deletes every other section of that column. Vanilla's server sends exactly that frame whenever 64 distinct block changes land in one chunk in one tick, in place of the block-update and section-blocks-update forms, and it is only ever sent for a column the client already holds in full. See MergeColumnSections.
                 if (chunk.FullChunk)
                 {
@@ -37,11 +48,15 @@ internal sealed class WorldApplier : IApplier
                     world.RemoveBlockEntityNbt(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
                 }
                 else
+                {
+                    context.State.EntityGeometry.ObserveLegacyPartialColumn(context.Version.Version.Protocol, context.State.EntityMembership, chunk.Column);
                     world.MergeColumnSections(chunk.Column);
+                }
 
                 foreach (ChunkBlockEntity blockEntity in chunk.BlockEntities)
                     world.SetBlockEntityNbt(blockEntity.Position, blockEntity.Nbt);
 
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new ChunkLoaded(new ChunkPos(chunk.ChunkX, chunk.ChunkZ))).ConfigureAwait(false);
                 return true;
 
@@ -49,20 +64,26 @@ internal sealed class WorldApplier : IApplier
             case ClientboundMapChunkBulkPacket bulk:
                 foreach (Game.World.ChunkColumn column in bulk.Columns)
                 {
+                    context.State.JukeboxPrediction.ObserveColumn(column, full: true);
                     world.LoadColumn(column);
+                    context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                     await context.PublishAsync(new ChunkLoaded(column.Position)).ConfigureAwait(false);
                 }
 
                 return true;
 
             case ClientboundForgetLevelChunkPacket forget:
+                context.State.JukeboxPrediction.ObserveUnload(forget.Chunk);
                 world.UnloadColumn(forget.Chunk);
                 world.RemoveBlockEntityNbt(forget.Chunk);
                 await context.PublishAsync(new ChunkUnloaded(forget.Chunk)).ConfigureAwait(false);
                 return true;
 
             case ClientboundBlockUpdatePacket block:
+                context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, block.Position, block.BlockStateId);
+                context.State.JukeboxPrediction.ObserveBlock(block.Position, block.BlockStateId);
                 world.SetBlockStateId(block.Position, block.BlockStateId);
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new BlockChanged(block.Position, block.BlockStateId)).ConfigureAwait(false);
                 return true;
 
@@ -72,7 +93,10 @@ internal sealed class WorldApplier : IApplier
 
             case ClientboundBlockEntityDataPacket blockEntity:
                 if (blockEntity.Nbt is NbtCompound nbt)
+                {
                     world.SetBlockEntityNbt(blockEntity.Position, nbt);
+                    context.State.EntityGeometry.RefreshFixedPositions(context.State.EntitiesOrNull);
+                }
 
                 return true;
 
@@ -81,40 +105,43 @@ internal sealed class WorldApplier : IApplier
                 await context.PublishAsync(new TimeChanged(time.GameTime, time.DayTime)).ConfigureAwait(false);
                 return true;
 
+            case ClientboundWorldBorderPacket border:
+                ApplyCombinedBorder(world, context, border.Action, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.PortalTeleportBoundary, border.WarningTime, border.WarningBlocks);
+                await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
+                return true;
+
+            case ClientboundSetBorderPacket border:
+                ApplyCombinedBorder(world, context, border.Action, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.PortalTeleportBoundary, border.WarningTime, border.WarningBlocks);
+                await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
+                return true;
+
             case ClientboundInitializeBorderPacket border:
-                world.SetBorder(new Game.World.WorldBorderState(
-                    border.CenterX, border.CenterZ, border.OldSize, border.NewSize,
-                    border.LerpTime, border.WarningBlocks, border.WarningTime));
+                world.SetBorder(InitializeBorder(context, border.CenterX, border.CenterZ, border.OldSize, border.NewSize, border.LerpTime, border.NewAbsoluteMaxSize, border.WarningTime, border.WarningBlocks));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderCenterPacket center:
-                UpdateBorder(world, center, static (b, p) => new Game.World.WorldBorderState(
-                    p.CenterX, p.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithCenter(center.CenterX, center.CenterZ));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderSizePacket size:
-                UpdateBorder(world, size, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, p.Size, p.Size, 0, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithSize(size.Size));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderLerpSizePacket lerp:
-                UpdateBorder(world, lerp, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, p.OldSize, p.NewSize, p.LerpTime, b.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(StartBorderLerp(world.Border, context, lerp.OldSize, lerp.NewSize, lerp.LerpTime));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDelayPacket warnDelay:
-                UpdateBorder(world, warnDelay, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, b.WarningBlocks, p.WarningDelay));
+                world.SetBorder(world.Border.WithWarnings(world.Border.WarningBlocks, warnDelay.WarningDelay));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
             case ClientboundSetBorderWarningDistancePacket warnDist:
-                UpdateBorder(world, warnDist, static (b, p) => new Game.World.WorldBorderState(
-                    b.CenterX, b.CenterZ, b.Size, b.TargetSize, b.LerpTimeMillis, p.WarningBlocks, b.WarningTimeSeconds));
+                world.SetBorder(world.Border.WithWarnings(warnDist.WarningBlocks, world.Border.WarningTimeSeconds));
                 await context.PublishAsync(new WorldBorderChanged()).ConfigureAwait(false);
                 return true;
 
@@ -209,7 +236,10 @@ internal sealed class WorldApplier : IApplier
                 int localZ = (packed >> 8) & 0xF;
                 int worldY = packed & 0xFF;
                 var legacyPos = new BlockPos(baseX + localX, worldY, baseZ + localZ);
+                context.State.EntityGeometry.ObserveLegacyBlockUpdate(context.Version.Version.Protocol, context.State.EntityMembership, legacyPos, change.BlockStateId);
+                context.State.JukeboxPrediction.ObserveBlock(legacyPos, change.BlockStateId);
                 world.SetBlockStateId(legacyPos, change.BlockStateId);
+                context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
                 await context.PublishAsync(new BlockChanged(legacyPos, change.BlockStateId)).ConfigureAwait(false);
             }
 
@@ -229,11 +259,31 @@ internal sealed class WorldApplier : IApplier
             int localZ = (packed >> 4) & 0xF;
             int localY = packed & 0xF;
             var pos = new BlockPos((sectionX << 4) + localX, (sectionY << 4) + localY, (sectionZ << 4) + localZ);
+            context.State.JukeboxPrediction.ObserveBlock(pos, change.BlockStateId);
             world.SetBlockStateId(pos, change.BlockStateId);
+            context.State.EntityGeometry.RefreshPlacementEnvelopes(context.State.EntitiesOrNull);
             await context.PublishAsync(new BlockChanged(pos, change.BlockStateId)).ConfigureAwait(false);
         }
     }
 
-    private static void UpdateBorder<TPacket>(Game.World.World world, TPacket packet, Func<Game.World.WorldBorderState, TPacket, Game.World.WorldBorderState> update)
-        => world.SetBorder(update(world.Border, packet));
+    private static WorldBorderState InitializeBorder(ApplierContext context, double centerX, double centerZ, double oldSize, double newSize, long duration, int absoluteMaxSize, int warningTime, int warningBlocks) =>
+        new(centerX, centerZ, duration > 0 ? oldSize : newSize, newSize, duration, warningBlocks, warningTime, absoluteMaxSize, WorldBorderState.InterpolationClockForProtocol(context.Version.Version.Protocol), context.Time);
+
+    private static WorldBorderState StartBorderLerp(WorldBorderState border, ApplierContext context, double oldSize, double newSize, long duration) =>
+        new(border.CenterX, border.CenterZ, oldSize, newSize, duration, border.WarningBlocks, border.WarningTimeSeconds, border.AbsoluteMaxSize, WorldBorderState.InterpolationClockForProtocol(context.Version.Version.Protocol), context.Time);
+
+    private static void ApplyCombinedBorder(Game.World.World world, ApplierContext context, WorldBorderAction action, double centerX, double centerZ, double oldSize, double newSize, long duration, int absoluteMaxSize, int warningTime, int warningBlocks)
+    {
+        WorldBorderState border = world.Border;
+        world.SetBorder(action switch
+        {
+            WorldBorderAction.SetSize => border.WithSize(newSize),
+            WorldBorderAction.LerpSize => StartBorderLerp(border, context, oldSize, newSize, duration),
+            WorldBorderAction.SetCenter => border.WithCenter(centerX, centerZ),
+            WorldBorderAction.Initialize => InitializeBorder(context, centerX, centerZ, oldSize, newSize, duration, absoluteMaxSize, warningTime, warningBlocks),
+            WorldBorderAction.SetWarningTime => border.WithWarnings(border.WarningBlocks, warningTime),
+            WorldBorderAction.SetWarningBlocks => border.WithWarnings(warningBlocks, border.WarningTimeSeconds),
+            _ => throw new ProtocolViolationException($"Unknown world-border action {action}."),
+        });
+    }
 }

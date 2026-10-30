@@ -55,6 +55,8 @@ public sealed class PhysicsWorldRebuildTests
         {
             // The world the join already installed, not a new one: the engine is bound to it either way.
             AddFloor(harness.State.World, floorY: 0);
+            foreach (var column in harness.State.World.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
             SeedAt(harness, holder, Spawn);
             Tick(holder, 5);
 
@@ -96,11 +98,39 @@ public sealed class PhysicsWorldRebuildTests
 
             // Give the new world a floor, then run the seam the client runs every tick.
             AddFloor(second, floorY: 64);
+            foreach (var column in second.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
             SeedAt(harness, holder, Spawn);
             Tick(holder, 40);
 
             Assert.True(harness.State.Self.OnGround, "the engine is still colliding against the pre-respawn world");
             Assert.Equal(65.0, harness.State.Self.Position.Y, 6);
+        }
+    }
+
+    [Fact]
+    public async Task SameDimensionRespawnResetsPlayerPhysicsWhileRetainingTheWorld()
+    {
+        (ApplierHarness harness, PhysicsEngineHolder holder, IAsyncDisposable loop) = await StartAsync();
+        await using (loop)
+        {
+            AddFloor(harness.State.World, floorY: 0);
+            foreach (var column in harness.State.World.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(column.Position);
+            SeedAt(harness, holder, Spawn);
+            Tick(holder, 5);
+            Assert.True(holder.EngineState!.Value.FallDistance > 0);
+            var world = harness.State.World;
+
+            await harness.ApplyAsync(new ClientboundRespawnPacket(
+                new CommonPlayerSpawnInfo(0, "minecraft:overworld", 0, 0, 0, false, false, null, 0, 63), 0, null));
+            harness.State.Self.Velocity = Vec3d.Zero;
+            holder.EnsureEngine();
+
+            Assert.Same(world, harness.State.World);
+            Assert.Equal(harness.State.Self.Position, holder.EngineState!.Value.Position);
+            Assert.Equal(Vec3d.Zero, holder.EngineState.Value.Velocity);
+            Assert.Equal(0, holder.EngineState.Value.FallDistance);
         }
     }
 
@@ -127,6 +157,8 @@ public sealed class PhysicsWorldRebuildTests
             WorldFactory.EmptyBiomes());
         AddFloor(world, floorY);
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
     }
 
     private static void AddFloor(Umpk.Game.World.World world, int floorY)

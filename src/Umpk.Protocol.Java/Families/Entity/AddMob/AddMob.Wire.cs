@@ -37,13 +37,16 @@ internal static partial class EntitySpawnCodecs
                 return new ClientboundAddMobPacket(id, type, x, y, z, yaw, pitch, head, vx, vy, vz, meta);
             });
 
-    // The pre-flattening split-spawn family: unlike 1.8 these carry a UUID and double positions, and the mob/player metadata is the 1.9 typed format (JSON components, named-root NBT, pre-1.14 block position packing), byte-identical to the era's set_entity_data body. Mob type is a byte on 1.9-1.12 and a VarInt on 1.13+; the metadata serializer table is V1_9 (1.9-1.11), V1_12 (1.12-1.12.2), or V1_13 (1.13-1.13.2).
+    // The pre-flattening split-spawn family: unlike 1.8 these carry a UUID and double positions, and the mob/player metadata is the 1.9 typed format (JSON components, named-root NBT, pre-1.14 block position packing), byte-identical to the era's set_entity_data body. Mob type is a byte on 1.9-1.10.2 and a VarInt from 1.11; the metadata serializer table is V1_9 (1.9-1.11), V1_12 (1.12-1.12.2), or V1_13 (1.13-1.13.2).
 
-    /// <summary>1.9-1.11.2 spawn mob (byte type, V1_9 metadata table).</summary>
+    /// <summary>1.9-1.10.2 spawn mob (byte type, V1_9 metadata table).</summary>
     public static readonly PacketCodec<ClientboundAddMobPacket> AddMobV1_9 = AddMobPre114(ModernMetadataTable.V1_9, AddMobWire.V1_9);
 
-    /// <summary>1.12-1.12.2 spawn mob (byte type, V1_12 metadata table).</summary>
-    public static readonly PacketCodec<ClientboundAddMobPacket> AddMobV1_12 = AddMobPre114(ModernMetadataTable.V1_12, AddMobWire.V1_9);
+    /// <summary>1.11-1.11.2 spawn mob (VarInt type, V1_9 metadata table): 1.11-client-decompiled ft.java:70-107 reads et.g() and writes et.d(int), whose VarInt bodies are in et.java:143-193.</summary>
+    public static readonly PacketCodec<ClientboundAddMobPacket> AddMobV1_11 = AddMobPre114(ModernMetadataTable.V1_9, AddMobWire.V1_11);
+
+    /// <summary>1.12-1.12.2 spawn mob (VarInt type, V1_12 metadata table).</summary>
+    public static readonly PacketCodec<ClientboundAddMobPacket> AddMobV1_12 = AddMobPre114(ModernMetadataTable.V1_12, AddMobWire.V1_11);
 
     /// <summary>1.13-1.13.2 spawn mob (VarInt type, V1_13 metadata table).</summary>
     public static readonly PacketCodec<ClientboundAddMobPacket> AddMobV1_13 = AddMobPre114(ModernMetadataTable.V1_13, AddMobWire.V1_13);
@@ -88,6 +91,7 @@ internal static partial class EntitySpawnCodecs
         bindings.Packet(EntityPackets.Clientbound.AddMob)
             .From(JavaProtocols.V1_8, EntitySpawnCodecs.AddMobV1_8)
             .From(JavaProtocols.V1_9, EntitySpawnCodecs.AddMobV1_9)
+            .From(JavaProtocols.V1_11, EntitySpawnCodecs.AddMobV1_11)
             .From(JavaProtocols.V1_12, EntitySpawnCodecs.AddMobV1_12)
             .From(JavaProtocols.V1_13, EntitySpawnCodecs.AddMobV1_13)
             .From(JavaProtocols.V1_14, EntitySpawnCodecs.AddMobV1_14)

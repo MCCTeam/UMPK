@@ -414,7 +414,7 @@ internal static class ComponentIds
         "minecraft:shulker/color",
     ];
 
-    /// <summary>Protocol 775 (26.1) component id ordering (110 entries).</summary>
+    /// <summary>Protocol 775 (26.1.2) component id ordering (110 entries).</summary>
     public static string[] V26_1 { get; } =
     [
         "minecraft:custom_data",

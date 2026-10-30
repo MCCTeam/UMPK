@@ -1,0 +1,400 @@
+{
+  "schema": 1,
+  "scope": "Audited original client collision-grid symbols for 1.13 through 1.14.3; source hashes identify each reviewed declaration",
+  "releases": [
+    {
+      "version": "1.13.1",
+      "bootstrap": "pf",
+      "boot": "c",
+      "block": "bcr",
+      "blocks": "bcs",
+      "air": "a",
+      "default_state": "p",
+      "state": "blb",
+      "registry_field": "e",
+      "state_id": "l",
+      "collision": "h",
+      "reader": "axj",
+      "position": "el",
+      "shape": "cev",
+      "discrete": "cel",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "eq$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "cdz",
+      "shapes": "ces",
+      "full": "b",
+      "empty": {
+        "state": "blb",
+        "fluid_type": "byv",
+        "fluid_getter": "s",
+        "constants": {
+          "K": 15
+        }
+      },
+      "sources_sha256": {
+        "axj.java": "a55e4a4733e1164a71ad82ced399df76e3c27f0032fe2f3eb45c7cd457430edd",
+        "bcr.java": "9bd06704762f34228ab3b7b0db66a5e5f7438a8b0c67065e8b604182067864c1",
+        "bcs.java": "c8b1f84e2d48e963427f0c9dbfe1b92b414be86bfe9cda7771b46bf111f04fef",
+        "blb.java": "ad980f25d47335206177d309c69c4a324c64fc75098571ca9586787b0257ac61",
+        "cdz.java": "9d84457a751d7b626b2340d5ff9d4e9a7c2071de4165112a8cbe7a5f954df154",
+        "cel.java": "58a66196083147874500d5c92689162df78fd29b9f1a7bd04252cb4ccf23fe56",
+        "ces.java": "86b8f848f41f6dcbebbc76035b392625ee741cb6bb0c49f65ce80b2ef8bdb967",
+        "cev.java": "aa175681c6ab0d45bbb508a5a50db0292a996448043ea24db8cf50bbf51d3b96",
+        "eq.java": "a7cdb47bca9eadae2b7a0a029195e5af775cc75360e8c284535a34aa161eb979",
+        "pf.java": "335f0b13832b6374434903aad5006fff593e9f2a1bd34537cb4910ba438b1f8f"
+      }
+    },
+    {
+      "version": "1.13.2",
+      "bootstrap": "pf",
+      "boot": "c",
+      "block": "bcs",
+      "blocks": "bct",
+      "air": "a",
+      "default_state": "p",
+      "state": "blc",
+      "registry_field": "e",
+      "state_id": "l",
+      "collision": "h",
+      "reader": "axk",
+      "position": "el",
+      "shape": "cew",
+      "discrete": "cem",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "eq$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "cea",
+      "shapes": "cet",
+      "full": "b",
+      "empty": {
+        "state": "blc",
+        "fluid_type": "byw",
+        "fluid_getter": "s",
+        "constants": {
+          "K": 15
+        }
+      },
+      "sources_sha256": {
+        "axk.java": "a016f3790ba0219b357fb5209e17450456febdc899fc5c7ea5ee0abab3c1bdd1",
+        "bcs.java": "e934b44f4a49de1123316eda92d8ffeaf4e529e8373f0325488eeb5c89a1d893",
+        "bct.java": "d84ecd7a7f482897ac3413feff4b6fb477145bb2c9d3931eb34ce9f3d987dd4f",
+        "blc.java": "27d9945d0b1b5ca06e2fda1dc0e56e4485cda92c65cca9ce4df05154edd3ca52",
+        "cea.java": "67ca55d00b9e33beca56248b13704306d888363e0fb8e248757e8e32b1235a14",
+        "cem.java": "07868b9c5e25bf825d33997a74e1f8f208bd21bdd1ae34f72ec06c299b5c7fc6",
+        "cet.java": "fc2695d689047c221e9e8305a6ccf72b2070bf58eb85e3c7a69362708605833b",
+        "cew.java": "6908a6ba9a8bbd7ff25ffa57f22c97a277fd889c0b6f9daf3c75411836e7d798",
+        "eq.java": "a7cdb47bca9eadae2b7a0a029195e5af775cc75360e8c284535a34aa161eb979",
+        "pf.java": "a235a953d5d07dcde9e5697c29d0bdec5c3cbfedf027e87f6f8c9c22d7ea8de1"
+      }
+    },
+    {
+      "version": "1.13",
+      "bootstrap": "pf",
+      "boot": "c",
+      "block": "bcj",
+      "blocks": "bck",
+      "air": "a",
+      "default_state": "p",
+      "state": "bkt",
+      "registry_field": "f",
+      "state_id": "l",
+      "collision": "h",
+      "reader": "axg",
+      "position": "ej",
+      "shape": "cel",
+      "discrete": "ceb",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "ep$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "cdp",
+      "shapes": "cei",
+      "full": "b",
+      "empty": {
+        "state": "bkt",
+        "fluid_type": "byn",
+        "fluid_getter": "s",
+        "constants": {
+          "J": 15
+        }
+      },
+      "sources_sha256": {
+        "axg.java": "84197cbf72b40bbac8afb2d121117b72ed5be8dba0c89641de5994ebef411d46",
+        "bcj.java": "c42268487bd5c366836d9726c0f077ab1eb8e74e1d94bf8de1190f0a3064aac4",
+        "bck.java": "30991f0765f669ce65e9a43324af7295ec3b76732d850e76d58f78ab59d0a770",
+        "bkt.java": "fd04a86ef06870c1528260ce9c1954fa63e0e1cdb52874a5ac527bdafd53e36b",
+        "cdp.java": "8c989df4f9e306aa045da3d49185f8169e134bf1586a455b2b3fcdb0c06ff874",
+        "ceb.java": "0355aeafbd727e302b3416c33fbe32fcb65ae2bc20429291f283a167caab7785",
+        "cei.java": "1741e5e911e5991a0e54f79998996e7dd0d2889edc3e1471af946923cbf02f15",
+        "cel.java": "3a94c9803ba0b60fc66d50822f6913278b35c1879b334879bdab7ebce3ee837f",
+        "ep.java": "7b26471d7c50c2f1cc178dba9c52709351c2c9d5ac5ac4eae33f7c01d284107a",
+        "pf.java": "9492a183ab20f0bf855af6070b51f465e8091e4ef29bc5ff97174f247ec4224f"
+      }
+    },
+    {
+      "version": "1.14.1",
+      "bootstrap": "qu",
+      "boot": "a",
+      "block": "bmm",
+      "blocks": "bmn",
+      "air": "a",
+      "default_state": "o",
+      "state": "bvk",
+      "registry_field": "m",
+      "state_id": "k",
+      "collision": "i",
+      "reader": "bgs",
+      "position": "ev",
+      "shape": "csr",
+      "discrete": "csg",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "fa$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "crs",
+      "shapes": "cso",
+      "full": "b",
+      "empty": {
+        "type": "bgy",
+        "field": "a"
+      },
+      "sources_sha256": {
+        "bgs.java": "3b1c88b3f58cb282351395accf7b01da5e6ca90484a076e77642f3dcb4e609d3",
+        "bgy.java": "de0474fb0dbd8b9ac5726b0f75c4b6daaef3e1105a738f9299eecbbb3dc1ac2d",
+        "bmm.java": "6fe7299e9a9c688b46ab97c96568c5eabbfd166cbbb54cb48d207c2fef5c55d1",
+        "bmn.java": "eab2c96a8aec12ccc7bae7038001afd9ef1fd53baded0c478d7bbff2bc3a57ea",
+        "bvk.java": "bd1abf1c933ed831ca0eedd0741b6bdc3528ea6d58809ace0c61dbc7239d9ecd",
+        "crs.java": "017880eb7dcc47b7f38e7ade5e8dbb7facb5f7f6a79ccf09405e6054ddf8bdd2",
+        "csg.java": "13229474c8b74fd5a2a4eb5cebe5ac62ada48105447f0530b3860b3b6d63c7b0",
+        "cso.java": "a35f988febea2a9e96dfda0aa8574619e5a8ab9f00c37459b9325e36a68af665",
+        "csr.java": "08761ccb5ed15ebc3f59803eff1c519521987ceae762375aaf7bc6258ad716e5",
+        "fa.java": "081ae32c3fe74a4efaa133302d9bfc90daa491e161c989012d79de41d9c6bc97",
+        "qu.java": "0323d116c1d789267ed66f768c8fdce6a0706c206e8aff3077457964ac1d900f"
+      }
+    },
+    {
+      "version": "1.14.2",
+      "bootstrap": "qu",
+      "boot": "a",
+      "block": "bmm",
+      "blocks": "bmn",
+      "air": "a",
+      "default_state": "o",
+      "state": "bvk",
+      "registry_field": "m",
+      "state_id": "k",
+      "collision": "i",
+      "reader": "bgs",
+      "position": "ev",
+      "shape": "csr",
+      "discrete": "csg",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "fa$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "crs",
+      "shapes": "cso",
+      "full": "b",
+      "empty": {
+        "type": "bgy",
+        "field": "a"
+      },
+      "sources_sha256": {
+        "bgs.java": "3b1c88b3f58cb282351395accf7b01da5e6ca90484a076e77642f3dcb4e609d3",
+        "bgy.java": "de0474fb0dbd8b9ac5726b0f75c4b6daaef3e1105a738f9299eecbbb3dc1ac2d",
+        "bmm.java": "34f153391b54f03833740085128ec8d55204d875a689e2e084400f6d73d24b67",
+        "bmn.java": "eab2c96a8aec12ccc7bae7038001afd9ef1fd53baded0c478d7bbff2bc3a57ea",
+        "bvk.java": "bd1abf1c933ed831ca0eedd0741b6bdc3528ea6d58809ace0c61dbc7239d9ecd",
+        "crs.java": "017880eb7dcc47b7f38e7ade5e8dbb7facb5f7f6a79ccf09405e6054ddf8bdd2",
+        "csg.java": "13229474c8b74fd5a2a4eb5cebe5ac62ada48105447f0530b3860b3b6d63c7b0",
+        "cso.java": "a35f988febea2a9e96dfda0aa8574619e5a8ab9f00c37459b9325e36a68af665",
+        "csr.java": "08761ccb5ed15ebc3f59803eff1c519521987ceae762375aaf7bc6258ad716e5",
+        "fa.java": "081ae32c3fe74a4efaa133302d9bfc90daa491e161c989012d79de41d9c6bc97",
+        "qu.java": "0323d116c1d789267ed66f768c8fdce6a0706c206e8aff3077457964ac1d900f"
+      }
+    },
+    {
+      "version": "1.14.3",
+      "bootstrap": "qv",
+      "boot": "a",
+      "block": "bmq",
+      "blocks": "bmr",
+      "air": "a",
+      "default_state": "o",
+      "state": "bvo",
+      "registry_field": "m",
+      "state_id": "k",
+      "collision": "i",
+      "reader": "bgw",
+      "position": "ev",
+      "shape": "csv",
+      "discrete": "csk",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "fa$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "crw",
+      "shapes": "css",
+      "full": "b",
+      "empty": {
+        "type": "bhc",
+        "field": "a"
+      },
+      "sources_sha256": {
+        "bgw.java": "1229e37497b9c70ad3b94876e3026f0bd3865c190de87783993f92b6d4047ac5",
+        "bhc.java": "2d01dc898834fae27c7891ce401f1a5a8f223b3dc6febe9cd7fde234b4be3ec5",
+        "bmq.java": "015bdcbdaca5797165b28c4c901ff57568bf446bfd5fd37f34b56cc35ca64fa2",
+        "bmr.java": "7e591424e87cd96cc924d6300bfd538e1337ae8fc483b892c9e0673634e8185d",
+        "bvo.java": "b66e6828ffbe2f4ea4a629fa06699bed4373c42126da4bbd388ac2bba747ac3d",
+        "crw.java": "102e83f5738ed864babbb346e287bc24a1e0825b29bc9da4df8358519d6a8db7",
+        "csk.java": "dbb0e7956214fd441dbb7cdfdfc06545ac9c912b827f808da88d36f473b199d6",
+        "css.java": "42e35a44abf9c8932d88472a20721fd5cc997b73733ed58ae0da24a55658deda",
+        "csv.java": "f87400ead65e58154fee042073173708114fef8198b2e62357ba3985c3924ef0",
+        "fa.java": "bbccf97950cf99a89e00b54f9c4c1c378d8d2bc6a410afe2a0c8c683adcd79c9",
+        "qv.java": "5ca0bb7cf667705f17a931207e75fd10df8a4b088c827f1bd8f5577cdad12ff9"
+      }
+    },
+    {
+      "version": "1.14",
+      "bootstrap": "qu",
+      "boot": "a",
+      "block": "bml",
+      "blocks": "bmm",
+      "air": "a",
+      "default_state": "o",
+      "state": "bvj",
+      "registry_field": "m",
+      "state_id": "k",
+      "collision": "i",
+      "reader": "bgr",
+      "position": "ev",
+      "shape": "csp",
+      "discrete": "cse",
+      "discrete_field": "a",
+      "filled": "c",
+      "axis": "fa$a",
+      "axes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "coordinates": "a",
+      "boxes": "d",
+      "bounds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "box": "crq",
+      "shapes": "csm",
+      "full": "b",
+      "empty": {
+        "type": "bgx",
+        "field": "a"
+      },
+      "sources_sha256": {
+        "bgr.java": "162f455cfad6bdf9792ff8753656f24b462cba000004c9d35011d1358cc81a56",
+        "bgx.java": "666858f29c9b9941d313dd59ec7d13bfab0184a8bb05c00035af9728a744555a",
+        "bml.java": "4e90bc209c40f61f15a3f3843ae6fda217dbe365ecbbb362758fa8f095a95813",
+        "bmm.java": "5efaa4e88025fd097f04a52f2e673e9af8b4599784472407a7ca6cb78caa5e67",
+        "bvj.java": "845cd2e03da62361fb8e42c871aabf61c94efbb287cca1d496a5fd958715b252",
+        "crq.java": "1d6bc6a6db817ab348d1d37038a01fde4e3feb4de5787cdd38e42a855974d790",
+        "cse.java": "19837703d894d0fc02bc4cb0716707903a5cc2099b975c68763aaacc8bd88f19",
+        "csm.java": "a38ea2868600bc441deaea7385e97ad71c30d4ca58a61f6e2330434eafc76ba9",
+        "csp.java": "e01cb08966c3079550bb090baf60636d94bb1154fa56fdc7339d583603c0a7d3",
+        "fa.java": "e5675b3e7ff52c634f9be6facb3c9080af9a8ec11167a8067594e3ec381d2f9c",
+        "qu.java": "c26fcd5730606a0e9116410039c244dc3808201b13f59bacaaf3b6071f983fe3"
+      }
+    }
+  ]
+}

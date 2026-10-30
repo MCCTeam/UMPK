@@ -61,17 +61,26 @@ internal sealed class MovingPistonTracker
     /// <summary>The number of moving pistons currently being simulated. Exposed for tests.</summary>
     public int ActiveCount => _active.Count;
 
+    /// <summary>Whether every observed movement source was retained. Unknown remote-entity displacement cannot be cleared merely by retiring the retained subset.</summary>
+    internal bool ContextComplete { get; private set; } = true;
+
     /// <summary>Applies the client-relevant piston state transition. Ignores every block event that is not a piston, exactly as vanilla does by dispatching on the block state the CLIENT holds rather than on the block id in the packet.</summary>
     public void OnBlockEvent(BlockPos position, int action, int param)
     {
         _ = param;
         Game.World.World? world = _world();
         if (world is null || world.BlockData.IsLegacy)
+        {
+            ContextComplete = false;
             return;
+        }
 
         BlockState state = world.GetBlock(position);
         if (state.IsDefault || !state.IsValid)
+        {
+            ContextComplete = false;
             return;
+        }
 
         Identifier block = state.Block.Id;
         if (block != PistonId && block != StickyPistonId)
@@ -79,7 +88,10 @@ internal sealed class MovingPistonTracker
 
         if (!state.TryGetProperty("facing", out string facingName)
             || !TryParseDirection(facingName, out Direction facing))
+        {
+            ContextComplete = false;
             return;
+        }
 
         switch (action)
         {
@@ -140,7 +152,11 @@ internal sealed class MovingPistonTracker
     }
 
     /// <summary>Drops every tracked piston. Called when the world is replaced.</summary>
-    public void Clear() => _active.Clear();
+    public void Clear()
+    {
+        _active.Clear();
+        ContextComplete = true;
+    }
 
     /// <summary>Resolves the piston structure and creates one moving block entity at each moved block's destination, carrying the block's original state.</summary>
     /// <remarks>
@@ -152,7 +168,10 @@ internal sealed class MovingPistonTracker
     {
         var resolver = new PistonStructureResolver(world, _push, pistonPos, facing, extending, _borderEra, clearedHead);
         if (!resolver.Resolve())
+        {
+            ContextComplete = false;
             return;
+        }
 
         Direction movement = extending ? facing : facing.Opposite();
         foreach (BlockPos source in resolver.ToPush)
@@ -182,8 +201,13 @@ internal sealed class MovingPistonTracker
 
         BlockPos pulled = position.Offset(facing, 2);
         BlockState state = world.GetBlock(pulled);
-        if (state.IsAir || !_push.TryGet(state.Block.Id, out BlockPushInfo info))
+        if (state.IsAir)
             return false;
+        if (!_push.TryGet(state.Block.Id, out BlockPushInfo info))
+        {
+            ContextComplete = false;
+            return false;
+        }
 
         Identifier id = state.Block.Id;
         if (info.Reaction != PistonPushReaction.Normal && id != PistonId && id != StickyPistonId)
@@ -195,7 +219,10 @@ internal sealed class MovingPistonTracker
     private void Add(MovingPiston piston)
     {
         if (_active.Count >= MaxTracked)
+        {
+            ContextComplete = false;
             return;
+        }
 
         _active.Add(piston);
     }
@@ -215,6 +242,7 @@ internal sealed class MovingPistonTracker
         if (_headShapes.TryGetValue((facing, isShort), out Aabb[]? cached))
         {
             shape = cached;
+            ContextComplete &= cached.Length > 0;
             return cached.Length > 0;
         }
 
@@ -223,6 +251,7 @@ internal sealed class MovingPistonTracker
         if (!data.Blocks.TryGet(PistonHeadId, out RegistryEntry<BlockDefinition> entry))
         {
             _headShapes[(facing, isShort)] = shape;
+            ContextComplete = false;
             return false;
         }
 
@@ -242,6 +271,7 @@ internal sealed class MovingPistonTracker
         }
 
         _headShapes[(facing, isShort)] = shape;
+        ContextComplete &= shape.Length > 0;
         return shape.Length > 0;
     }
 

@@ -108,7 +108,7 @@ public class WorldTests
         Assert.Equal(123, world.WorldAge);
         Assert.Equal(6000, world.TimeOfDay);
 
-        var border = new WorldBorderState(10, -5, 100, 50, 2000, 8, 20);
+        var border = new WorldBorderState(10, -5, 100, 50, 2000, 8, 20, 29_999_984, WorldBorderInterpolationClock.Milliseconds, new BorderTimeProvider());
         world.SetBorder(border);
         Assert.Equal(100, world.Border.Size);
         Assert.Equal(50, world.Border.TargetSize);

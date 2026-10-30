@@ -14,7 +14,7 @@ Login Serverbound 0x01 minecraft:key LoginCodecs.Key read:2 shape:bytes,bytes
 Play Clientbound 0x00 minecraft:add_entity EntitySpawnCodecs.AddEntityV1_9 read:54 shape:opaque
 Play Clientbound 0x01 minecraft:add_experience_orb EntitySpawnCodecs.AddExperienceOrbV1_9 read:27 shape:opaque
 Play Clientbound 0x02 minecraft:add_global_entity marker n/a shape:opaque
-Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_12 fault:ProtocolViolationException shape:varint,uuid,byte,3*double,3*angle,3*short,metadata|varinttype=0,PrePacked114,metadata/deacb1c3
+Play Clientbound 0x03 minecraft:add_mob EntitySpawnCodecs.AddMobV1_12 fault:ProtocolViolationException shape:varint,uuid,varint,3*double,3*angle,3*short,metadata|varinttype=1,PrePacked114,metadata/deacb1c3
 Play Clientbound 0x04 minecraft:add_painting EntitySpawnCodecs.AddPaintingV1_9 read:27 shape:opaque
 Play Clientbound 0x05 minecraft:add_player EntitySpawnCodecs.AddPlayerV1_12 fault:ProtocolViolationException shape:varint,uuid,3*double,2*angle,metadata|PrePacked114,metadata/deacb1c3
 Play Clientbound 0x06 minecraft:animate EntityStateCodecs.Animate read:2 shape:opaque
@@ -66,7 +66,7 @@ Play Clientbound 0x33 minecraft:resource_pack ResourcePackCodecs.LegacyResourceP
 Play Clientbound 0x34 minecraft:respawn WorldStateCodecs.RespawnV1_8 read:7 shape:opaque
 Play Clientbound 0x35 minecraft:rotate_head EntityMoveCodecs.RotateHead read:2 shape:opaque
 Play Clientbound 0x36 minecraft:select_advancements_tab AdvancementCodecs.SelectAdvancementsTabV1_12 read:1 shape:opaque
-Play Clientbound 0x37 minecraft:set_border marker n/a shape:opaque
+Play Clientbound 0x37 minecraft:set_border WorldBorderCodecs.SetBorderV1_9 read:9 shape:opaque
 Play Clientbound 0x38 minecraft:set_camera EntityStateCodecs.SetCamera read:1 shape:opaque
 Play Clientbound 0x39 minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 read:1 via:minecraft:set_carried_item shape:opaque
 Play Clientbound 0x3A minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 read:2 shape:opaque

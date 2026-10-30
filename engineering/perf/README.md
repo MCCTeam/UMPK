@@ -35,6 +35,8 @@ UMPK_UPDATE_ALLOCATION_BUDGETS=1 dotnet test tests/Umpk.Protocol.Java.Tests \
   --filter "FullyQualifiedName~PinnedBudgets_AreExactlyTheCorpusCoveredFamilies"
 ```
 
+To add coverage for a newly implemented packet, also set `UMPK_PRESERVE_EXISTING_ALLOCATION_BUDGETS=1`. The generator measures every covered family, fails if an existing family exceeds its limit, and preserves existing rows while adding the missing ones. Review and approve the generated diff before applying it to the repository.
+
 **Time is not a gate.** BenchmarkDotNet runs on an unpinned workstation, and any threshold tight enough to be interesting sits below the run-to-run noise floor. The rule is a procedure instead: pin the run conditions (the same `[SimpleJob]` settings, the same machine, no other load), report the confidence interval the tool prints, and treat a change as real only when the intervals do not overlap. The verdict is a human's.
 
 ## Coverage, stated honestly

@@ -37,11 +37,13 @@ public class MutationContractTests
         Exception? readerFailure = null;
         Exception? writerFailure = null;
         using var cts = new CancellationTokenSource();
+        using var start = new Barrier(2);
 
         var writer = new Thread(() =>
         {
             try
             {
+                WaitForConcurrentStart(start);
                 var clock = Stopwatch.StartNew();
                 while (!cts.IsCancellationRequested && clock.Elapsed < Duration)
                 {
@@ -67,6 +69,7 @@ public class MutationContractTests
         {
             try
             {
+                WaitForConcurrentStart(start);
                 while (!cts.IsCancellationRequested)
                 {
                     ChunkSection current = Volatile.Read(ref shared);
@@ -106,6 +109,7 @@ public class MutationContractTests
         Exception? failure = null;
         Exception? writerFailure = null;
         using var cts = new CancellationTokenSource();
+        using var start = new Barrier(2);
 
         static int CellValue(int i) => (i + 1) * 2;
 
@@ -113,6 +117,7 @@ public class MutationContractTests
         {
             try
             {
+                WaitForConcurrentStart(start);
                 var clock = Stopwatch.StartNew();
                 while (!cts.IsCancellationRequested && clock.Elapsed < Duration)
                 {
@@ -140,6 +145,7 @@ public class MutationContractTests
         {
             try
             {
+                WaitForConcurrentStart(start);
                 while (!cts.IsCancellationRequested)
                 {
                     ChunkSection current = Volatile.Read(ref shared);
@@ -170,5 +176,12 @@ public class MutationContractTests
         Assert.Null(failure);
         Assert.True(Interlocked.Read(ref reads) >= MinReads, $"reader was starved: only {Interlocked.Read(ref reads)} reads");
         Assert.True(Interlocked.Read(ref writerCycles) >= MinWriterCycles, $"writer completed only {Interlocked.Read(ref writerCycles)} sweeps");
+    }
+
+    private static void WaitForConcurrentStart(Barrier start)
+    {
+        // Thread startup can exceed the measurement window on a busy runner. Start the same bounded stress interval only after both workers reach their loops.
+        if (!start.SignalAndWait(TimeSpan.FromSeconds(30)))
+            throw new TimeoutException("The concurrent section workers did not both reach their start barrier.");
     }
 }

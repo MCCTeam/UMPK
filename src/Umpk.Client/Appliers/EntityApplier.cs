@@ -1,5 +1,8 @@
+using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Internal;
+using Umpk.Client.Navigation;
+using Umpk.Data.Java;
 using Umpk.Game.Entities;
 using Umpk.Game.Players;
 using Umpk.Game.Registries;
@@ -23,21 +26,22 @@ internal sealed class EntityApplier : IApplier
             case ClientboundAddEntityPacket add:
                 Vec3d addVelocity = SpawnVelocity(add.VelocityX, add.VelocityY, add.VelocityZ, add.ModernVelocityRaw);
                 await SpawnAsync(store, context, add.EntityId, add.Uuid, add.TypeId, EntitySpawnSpace.Object,
-                    add.X, add.Y, add.Z, add.YRot, add.XRot, add.YHeadRot, addVelocity).ConfigureAwait(false);
+                    add.X, add.Y, add.Z, add.YRot, add.XRot, add.YHeadRot, addVelocity, objectData: add.Data).ConfigureAwait(false);
                 TryApplySelfVelocity(context, add.EntityId, addVelocity);
                 return true;
 
             case ClientboundAddMobPacket mob:
                 Vec3d mobVelocity = SpawnVelocity(mob.VelocityX, mob.VelocityY, mob.VelocityZ, modernVelocityRaw: null);
+                mobVelocity = LegacyAmbientMobProfile.SpawnVelocity(context.Version.Version.Protocol, mob.TypeId, mob.VelocityX, mob.VelocityY, mob.VelocityZ, mobVelocity);
                 await SpawnAsync(store, context, mob.EntityId, mob.Uuid, mob.TypeId, EntitySpawnSpace.Living,
-                    mob.X, mob.Y, mob.Z, mob.Yaw, mob.Pitch, mob.HeadPitch, mobVelocity).ConfigureAwait(false);
+                    mob.X, mob.Y, mob.Z, mob.Yaw, mob.Pitch, mob.HeadPitch, mobVelocity, mob.Metadata).ConfigureAwait(false);
                 TryApplySelfVelocity(context, mob.EntityId, mobVelocity);
                 return true;
 
             // add_player and add_experience_orb carry no type id: the packet identity is the type, so the type is resolved by key rather than by a made-up id. None of these three frames carries a velocity on any protocol, so they spawn at rest and the velocity parameter is left at its default.
             case ClientboundAddPlayerPacket player:
                 await SpawnKeyedAsync(store, context, player.EntityId, player.Uuid, PlayerType,
-                    player.X, player.Y, player.Z, player.Yaw, player.Pitch, player.Yaw).ConfigureAwait(false);
+                    player.X, player.Y, player.Z, player.Yaw, player.Pitch, player.Yaw, player.Metadata).ConfigureAwait(false);
                 return true;
 
             case ClientboundAddExperienceOrbPacket orb:
@@ -53,7 +57,13 @@ internal sealed class EntityApplier : IApplier
             case ClientboundRemoveEntitiesPacket remove:
                 foreach (int id in remove.EntityIds)
                 {
-                    store.Remove(id);
+                    if (store.Remove(id) is { } removed)
+                    {
+                        context.State.PacketBases.Remove(removed);
+                        context.State.EntityMotion.Remove(removed);
+                        context.State.EntityGeometry.Remove(removed);
+                        context.State.EntityMembership.Remove(removed);
+                    }
                     await context.PublishAsync(new EntityRemoved(id)).ConfigureAwait(false);
                 }
 
@@ -62,11 +72,18 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosPacket move:
                 if (store.TryGet(move.EntityId, out Entity? posEntity) && posEntity is not null)
                 {
-                    // 26.3 may carry stepped deltas: apply every step cumulatively, not just the mirrored first one.
-                    (double dx, double dy, double dz) = SumSteps(move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ);
-                    posEntity.Position = posEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
+                    Vec3d target = DecodeRelative(posEntity, context, move.Steps, move.DeltaX, move.DeltaY, move.DeltaZ, out VanillaPositionStep[] movePath);
+                    bool deferred = (movePath.Length != 0 && context.State.EntityMotion.TryObservePath(posEntity, movePath, null, null))
+                        || context.State.EntityMotion.TryObserveInterpolation(posEntity, target, null, null);
+                    if (!deferred)
+                    {
+                        posEntity.Position = target;
+                        context.State.EntityGeometry.ObservePosition(posEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(posEntity);
+                    }
                     posEntity.OnGround = move.OnGround;
-                    await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
+                    if (!deferred)
+                        await context.PublishAsync(new EntityMoved(move.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -74,9 +91,28 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityRotPacket rot:
                 if (store.TryGet(rot.EntityId, out Entity? rotEntity) && rotEntity is not null)
                 {
-                    rotEntity.Yaw = rot.Yaw;
-                    rotEntity.Pitch = rot.Pitch;
+                    Vec3d previous = rotEntity.Position;
+                    Vec3d? target = null;
+                    EntityPacketPosition profile = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol);
+                    if (profile.RotationUsesPacketBase)
+                    {
+                        target = profile.Decode(context.State.PacketBases.Get(rotEntity), 0, 0, 0);
+                        context.State.PacketBases.Set(rotEntity, target.Value);
+                    }
+                    if (!context.State.EntityMotion.TryObserveInterpolation(rotEntity, target, SignedPacketAngle(rot.Yaw), SignedPacketAngle(rot.Pitch)))
+                    {
+                        if (target is { } current)
+                        {
+                            rotEntity.Position = current;
+                            context.State.EntityGeometry.ObservePosition(rotEntity);
+                            context.State.EntityMembership.ObserveShulkerPosition(rotEntity);
+                        }
+                        rotEntity.Yaw = SignedPacketAngle(rot.Yaw);
+                        rotEntity.Pitch = SignedPacketAngle(rot.Pitch);
+                    }
                     rotEntity.OnGround = rot.OnGround;
+                    if (rotEntity.Position != previous)
+                        await context.PublishAsync(new EntityMoved(rot.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -84,12 +120,20 @@ internal sealed class EntityApplier : IApplier
             case ClientboundMoveEntityPosRotPacket posRot:
                 if (store.TryGet(posRot.EntityId, out Entity? prEntity) && prEntity is not null)
                 {
-                    (double dx, double dy, double dz) = SumSteps(posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ);
-                    prEntity.Position = prEntity.Position.Add(dx / 4096.0, dy / 4096.0, dz / 4096.0);
-                    prEntity.Yaw = posRot.Yaw;
-                    prEntity.Pitch = posRot.Pitch;
+                    Vec3d target = DecodeRelative(prEntity, context, posRot.Steps, posRot.DeltaX, posRot.DeltaY, posRot.DeltaZ, out VanillaPositionStep[] rotationPath);
+                    bool deferred = (rotationPath.Length != 0 && context.State.EntityMotion.TryObservePath(prEntity, rotationPath, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch)))
+                        || context.State.EntityMotion.TryObserveInterpolation(prEntity, target, SignedPacketAngle(posRot.Yaw), SignedPacketAngle(posRot.Pitch));
+                    if (!deferred)
+                    {
+                        prEntity.Position = target;
+                        prEntity.Yaw = SignedPacketAngle(posRot.Yaw);
+                        prEntity.Pitch = SignedPacketAngle(posRot.Pitch);
+                        context.State.EntityGeometry.ObservePosition(prEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(prEntity);
+                    }
                     prEntity.OnGround = posRot.OnGround;
-                    await context.PublishAsync(new EntityMoved(posRot.EntityId)).ConfigureAwait(false);
+                    if (!deferred)
+                        await context.PublishAsync(new EntityMoved(posRot.EntityId)).ConfigureAwait(false);
                 }
 
                 return true;
@@ -97,11 +141,43 @@ internal sealed class EntityApplier : IApplier
             case ClientboundTeleportEntityPacket teleport:
                 if (store.TryGet(teleport.EntityId, out Entity? tpEntity) && tpEntity is not null)
                 {
-                    tpEntity.Position = new Vec3d(teleport.X, teleport.Y, teleport.Z);
-                    tpEntity.Yaw = teleport.Yaw;
-                    tpEntity.Pitch = teleport.Pitch;
+                    // A modern relative teleport changes displayed state; the independent base is replaced by entity_position_sync instead.
+                    _ = context.State.PacketBases.Get(tpEntity);
+                    Vec3d previous = tpEntity.Position;
+                    bool deferred;
+                    if (teleport.ModernValues is { } change)
+                    {
+                        deferred = context.State.EntityMotion.TryObserveTeleport(tpEntity, change, teleport.Relatives);
+                        if (!deferred)
+                        {
+                            var source = new PositionMoveRotation(tpEntity.Position, tpEntity.Velocity, tpEntity.Yaw, tpEntity.Pitch);
+                            PositionMoveRotation destination = EntityTeleportProfile.ForProtocol(context.Version.Version.Protocol).Resolve(source, change, teleport.Relatives);
+                            tpEntity.Position = destination.Position;
+                            context.State.EntityMotion.SetCurrentVelocity(tpEntity, destination.DeltaMovement);
+                            tpEntity.Yaw = destination.YRot;
+                            tpEntity.Pitch = destination.XRot;
+                        }
+                    }
+                    else
+                    {
+                        var target = new Vec3d(teleport.X, teleport.Y, teleport.Z);
+                        deferred = context.State.EntityMotion.TryObserveLegacyTeleport(tpEntity, target, SignedPacketAngle(teleport.Yaw), SignedPacketAngle(teleport.Pitch));
+                        if (!deferred)
+                        {
+                            tpEntity.Position = target;
+                            tpEntity.Yaw = SignedPacketAngle(teleport.Yaw);
+                            tpEntity.Pitch = SignedPacketAngle(teleport.Pitch);
+                        }
+                    }
+                    if (EntityPacketPosition.ForProtocol(context.Version.Version.Protocol).TeleportResetsPacketBase)
+                        context.State.PacketBases.Set(tpEntity, new Vec3d(teleport.X, teleport.Y, teleport.Z));
                     tpEntity.OnGround = teleport.OnGround;
-                    await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
+                    if (!deferred || tpEntity.Position != previous)
+                    {
+                        context.State.EntityGeometry.ObservePosition(tpEntity, independent: teleport.ModernValues is null || (teleport.Relatives & 7) == 0);
+                        context.State.EntityMembership.ObserveShulkerPosition(tpEntity);
+                        await context.PublishAsync(new EntityMoved(teleport.EntityId)).ConfigureAwait(false);
+                    }
                 }
 
                 return true;
@@ -109,19 +185,29 @@ internal sealed class EntityApplier : IApplier
             case ClientboundEntityPositionSyncPacket sync:
                 if (store.TryGet(sync.EntityId, out Entity? syncEntity) && syncEntity is not null)
                 {
-                    syncEntity.Position = sync.Values.Position;
-                    syncEntity.Velocity = sync.Values.DeltaMovement;
-                    syncEntity.Yaw = sync.Values.YRot;
-                    syncEntity.Pitch = sync.Values.XRot;
+                    Vec3d previous = syncEntity.Position;
+                    context.State.PacketBases.Set(syncEntity, sync.Values.Position);
+                    bool deferred = context.State.EntityMotion.TryObservePositionSync(syncEntity, sync.Values, DecodePath(sync.Path));
+                    if (!deferred)
+                    {
+                        syncEntity.Position = sync.Values.Position;
+                        syncEntity.Yaw = sync.Values.YRot;
+                        syncEntity.Pitch = sync.Values.XRot;
+                    }
                     syncEntity.OnGround = sync.OnGround;
-                    await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
+                    if (!deferred || syncEntity.Position != previous)
+                    {
+                        context.State.EntityGeometry.ObservePosition(syncEntity, independent: true);
+                        context.State.EntityMembership.ObserveShulkerPosition(syncEntity);
+                        await context.PublishAsync(new EntityMoved(sync.EntityId)).ConfigureAwait(false);
+                    }
                 }
 
                 return true;
 
             case ClientboundRotateHeadPacket head:
                 if (store.TryGet(head.EntityId, out Entity? headEntity) && headEntity is not null)
-                    headEntity.HeadYaw = head.HeadYaw;
+                    headEntity.HeadYaw = SignedPacketAngle(head.HeadYaw);
 
                 return true;
 
@@ -130,7 +216,7 @@ internal sealed class EntityApplier : IApplier
                 Vec3d motionVelocity = ReadVelocity(motion);
                 if (!TryApplySelfVelocity(context, motion.EntityId, motionVelocity)
                     && store.TryGet(motion.EntityId, out Entity? motionEntity) && motionEntity is not null)
-                    motionEntity.Velocity = motionVelocity;
+                    context.State.EntityMotion.ObserveVelocity(motionEntity, motionVelocity);
 
                 return true;
 
@@ -138,10 +224,7 @@ internal sealed class EntityApplier : IApplier
             case ClientboundSetEntityDataPacket metadata:
                 if (store.TryGet(metadata.EntityId, out Entity? metadataEntity) && metadataEntity is not null)
                 {
-                    foreach (EntityDataEntry entry in metadata.Metadata.Entries)
-                        metadataEntity.Metadata.Set(entry.Index, entry.Value);
-
-                    ProjectSemanticMetadata(metadataEntity);
+                    ApplyMetadata(metadataEntity, metadata.Metadata, context);
                     await context.PublishAsync(new EntityMetadataChanged(metadata.EntityId)).ConfigureAwait(false);
                 }
 
@@ -184,16 +267,97 @@ internal sealed class EntityApplier : IApplier
                 return true;
 
             case ClientboundSetPassengersPacket passengers:
-                ApplyPassengers(store, passengers);
+                ApplyPassengers(store, passengers, context);
                 await context.PublishAsync(new EntityPassengersChanged(passengers.VehicleId)).ConfigureAwait(false);
                 return true;
 
+            case ClientboundSetEntityLinkPacket link:
+                if (store.TryGet(link.SourceId, out Entity? envelopeSource) && envelopeSource is not null)
+                    context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopeSource);
+                if (store.TryGet(link.DestId, out Entity? envelopeDestination) && envelopeDestination is not null)
+                    context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopeDestination);
+                Entity? previousVehicle = store.Get(link.SourceId)?.Vehicle;
+                if (link.LegacyLeash == false && store.TryGet(link.SourceId, out Entity? linkedActor) && linkedActor is not null && store.TryGet(link.DestId, out _))
+                    context.State.EntityGeometry.InvalidateFallingBlock(linkedActor);
+                context.State.EntityMotion.ObserveLocalLegacyMount(context.State.Self.EntityId, link.SourceId, link.DestId, link.LegacyLeash);
+                context.State.EntityMotion.ObserveLegacyLink(store, context.State.EntityGeometry, context.Version.Version.Protocol, context.State.Self.EntityId, link);
+                if (EntityMotionState.UsesLegacyMountTraversal(context.Version.Version.Protocol) && link.LegacyLeash == false)
+                {
+                    if (store.TryGet(link.SourceId, out Entity? source) && !context.State.EntityGeometry.IsPositionKnown(source))
+                        context.State.EntityMembership.InvalidateLegacyRiderRegistration(source);
+                    if (store.TryGet(link.DestId, out Entity? destination) && !context.State.EntityGeometry.IsPositionKnown(destination))
+                        context.State.EntityMembership.InvalidateLegacyRiderRegistration(destination);
+                }
+                Entity? currentVehicle = store.Get(link.SourceId)?.Vehicle;
+                if (!ReferenceEquals(previousVehicle, currentVehicle))
+                {
+                    if (previousVehicle is not null)
+                        await context.PublishAsync(new EntityPassengersChanged(previousVehicle.Id)).ConfigureAwait(false);
+                    if (currentVehicle is not null)
+                        await context.PublishAsync(new EntityPassengersChanged(currentVehicle.Id)).ConfigureAwait(false);
+                }
+                return true;
+
+            case ClientboundUseBedPacket bed:
+                if (store.TryGet(bed.PlayerId, out Entity? sleepingPlayer) && sleepingPlayer is not null)
+                {
+                    Vec3d previous = sleepingPlayer.Position;
+                    if (context.State.EntityGeometry.BeginLegacySleep(sleepingPlayer, context.State.WorldOrNull,
+                        JavaGameData.BedInteractionData(context.Version.Version.Protocol), bed.Position, context.State.EntityMembership))
+                        context.State.EntityMotion.SetCurrentVelocity(sleepingPlayer, Vec3d.Zero);
+                    if (sleepingPlayer.Position != previous)
+                        await context.PublishAsync(new EntityMoved(bed.PlayerId)).ConfigureAwait(false);
+                }
+                return true;
+
+            case ClientboundAnimatePacket { Action: 2 } wake:
+                if (store.TryGet(wake.EntityId, out Entity? wakingPlayer) && wakingPlayer is not null)
+                {
+                    Vec3d previous = wakingPlayer.Position;
+                    context.State.EntityGeometry.WakeLegacyPlayer(wakingPlayer, context.State.WorldOrNull,
+                        JavaGameData.BedInteractionData(context.Version.Version.Protocol), context.State.EntityMembership);
+                    if (wakingPlayer.Position != previous)
+                        await context.PublishAsync(new EntityMoved(wake.EntityId)).ConfigureAwait(false);
+                }
+                return true;
+
             case ClientboundTakeItemEntityPacket pickup:
-                store.Remove(pickup.ItemEntityId);
+                if (store.Remove(pickup.ItemEntityId) is { } pickedUp)
+                {
+                    context.State.PacketBases.Remove(pickedUp);
+                    context.State.EntityMotion.Remove(pickedUp);
+                    context.State.EntityGeometry.Remove(pickedUp);
+                    context.State.EntityMembership.Remove(pickedUp);
+                }
                 await context.PublishAsync(new ItemPickedUp(pickup.ItemEntityId, pickup.CollectorEntityId, pickup.Amount ?? 0)).ConfigureAwait(false);
                 return true;
 
             case ClientboundEntityEventPacket entityEvent:
+                if (entityEvent.EventId == 3 && store.TryGet(entityEvent.EntityId, out Entity? dyingPlayer) && dyingPlayer is not null
+                    && context.State.EntityGeometry.ObserveLegacyDeath(dyingPlayer))
+                {
+                    if (context.MetadataKeys.TryResolveIndex(dyingPlayer.Type, EntityMetadataKeys.Health, out int healthIndex))
+                        dyingPlayer.Metadata.Set(healthIndex, MetadataValue.Float(0));
+                    LegacyPlayerGeometryProfile profile = LegacyPlayerGeometryProfile.ForProtocol(context.Version.Version.Protocol);
+                    // Original remote-player damage overrides perform no local damage calculation. These packet paths retain the constructor/reset damage yaw of zero.
+                    context.State.EntityMotion.SetCurrentVelocity(dyingPlayer, profile.DeathVelocity(dyingPlayer.Yaw, damageYaw: 0));
+                    if (profile.ClearsFireOnDeath && (!dyingPlayer.Metadata.TryGet(0, out MetadataValue flags) || flags.Kind == MetadataValueKind.Byte))
+                    {
+                        byte value = flags.Kind == MetadataValueKind.Byte ? unchecked((byte)flags.AsByte()) : (byte)0;
+                        dyingPlayer.Metadata.Set(0, MetadataValue.Byte(unchecked((sbyte)(value & ~1))));
+                        context.State.EntityGeometry.ObserveMetadata(dyingPlayer, 0);
+                    }
+                }
+                if (entityEvent.EventId == 3 && ModernHardCollisionProfile.Supports(context.Version.Version.Protocol)
+                    && store.TryGet(entityEvent.EntityId, out Entity? dyingShulker) && dyingShulker is not null && dyingShulker.Type.Id == Identifier.Minecraft("shulker")
+                    && context.MetadataKeys.TryResolveIndex(dyingShulker.Type, EntityMetadataKeys.Health, out int shulkerHealth))
+                    // Original LivingEntity.handleEntityEvent(3) sets non-player health to zero before publishing the death effects. The hard-box predicate reads that health independently of placement obstruction.
+                    dyingShulker.Metadata.Set(shulkerHealth, MetadataValue.Float(0));
+                if (store.TryGet(entityEvent.EntityId, out Entity? statusCow) && statusCow is not null)
+                {
+                    context.State.EntityMotion.ObserveCowStatus(statusCow, entityEvent.EventId);
+                    _ = context.State.EntityMotion.ObserveLegacyAmbientStatus(statusCow, entityEvent.EventId);
+                }
                 await context.PublishAsync(new EntityStatusChanged(entityEvent.EntityId, entityEvent.EventId)).ConfigureAwait(false);
                 return true;
 
@@ -217,29 +381,11 @@ internal sealed class EntityApplier : IApplier
     private static Vec3d ReadVelocity(ClientboundSetEntityMotionPacket motion)
         => SpawnVelocity(motion.VelocityX, motion.VelocityY, motion.VelocityZ, motion.ModernVelocityRaw);
 
-    /// <summary>Sums a 26.3+ stepped relative move into raw wire deltas. An empty step list falls back to the legacy single-delta fields, so pre-26.3 packets and zero-step frames take the same path.</summary>
-    private static (double Dx, double Dy, double Dz) SumSteps(
-        IReadOnlyList<EntityMoveStep> steps, short deltaX, short deltaY, short deltaZ)
-    {
-        if (steps.Count == 0)
-            return (deltaX, deltaY, deltaZ);
-
-        long dx = 0, dy = 0, dz = 0;
-        foreach (EntityMoveStep step in steps)
-        {
-            dx += step.DeltaX;
-            dy += step.DeltaY;
-            dz += step.DeltaZ;
-        }
-
-        return (dx, dy, dz);
-    }
-
     /// <summary>The velocity a spawn frame (<c>add_entity</c> / <c>add_mob</c>) or a <c>set_entity_motion</c> frame carries, in blocks per tick. One decode for both, so the two paths cannot drift apart.</summary>
     /// <remarks>
     /// <para>Wire form. Through protocol 772 the value is three shorts of <c>value * 8000</c>, clamped server-side to +/-3.9 before encoding. Spawn and motion packets use identical arithmetic, so the client applies no clamp of its own. From 1.21.9 (protocol 773) the three shorts are replaced by the low-precision quantized block, and the bound codec parks it in <c>ModernVelocityRaw</c> with the shorts left at literal zero.</para>
     /// <para>One era omits the field: on 1.8 the three shorts are written ONLY when <c>data &gt; 0</c>, so the codec leaves them at zero otherwise and this returns the zero vector, which is what the vanilla client does too. <c>add_player</c>, <c>add_experience_orb</c> and <c>add_painting</c> carry no velocity at all.</para>
-    /// <para>From 1.21.5 every spawned type applies the wire velocity directly. Earlier clients applied it in selected entity types. UMPK applies it uniformly because its entities do not re-derive motion; <see cref="Entity.Velocity"/> is a tracked report of what the server last said for every type.</para>
+    /// <para>From 1.21.5 every spawned type applies the wire velocity directly. Earlier clients applied it in selected entity types. Remote players use their native spawn policy below; other types currently retain the decoded wire report pending their controller integration.</para>
     /// </remarks>
     private static Vec3d SpawnVelocity(short velocityX, short velocityY, short velocityZ, byte[]? modernVelocityRaw)
         => modernVelocityRaw is { } raw
@@ -258,36 +404,70 @@ internal sealed class EntityApplier : IApplier
         return true;
     }
 
+    private static Vec3d DecodeRelative(Entity entity, ApplierContext context, IReadOnlyList<EntityMoveStep> steps, short x, short y, short z, out VanillaPositionStep[] path)
+    {
+        EntityPacketPosition profile = EntityPacketPosition.ForProtocol(context.Version.Version.Protocol);
+        Vec3d position = context.State.PacketBases.Get(entity);
+        path = [];
+        if (steps.Count != 0 && context.Version.Version.Protocol == 777)
+        {
+            path = new VanillaPositionStep[steps.Count];
+            for (int index = 0; index < steps.Count; index++)
+            {
+                EntityMoveStep step = steps[index];
+                position = profile.Decode(position, step.DeltaX, step.DeltaY, step.DeltaZ);
+                path[index] = new(position, step.Ticks);
+            }
+        }
+        else
+            position = profile.Decode(position, steps, x, y, z);
+        context.State.PacketBases.Set(entity, position);
+        return position;
+    }
+
+    private static VanillaPositionStep[] DecodePath(EntityPositionPath? path)
+    {
+        if (path is not EntityPositionPath.Stepped stepped)
+            return [];
+        var result = new VanillaPositionStep[stepped.Steps.Count];
+        for (int index = 0; index < result.Length; index++)
+            result[index] = new(stepped.Steps[index].Position, stepped.Steps[index].TickOffset);
+        return result;
+    }
+
+    // 1.8.9-client-decompiled gv.java and 26.3-client-decompiled ClientboundMoveEntityPacket.java expose signed angles; PacketReader.ReadAngle intentionally exposes unsigned degrees.
+    private static float SignedPacketAngle(float angle) => angle >= 180.0F ? angle - 360.0F : angle;
+
     private static readonly Identifier PlayerType = Identifier.Minecraft("player");
     private static readonly Identifier ExperienceOrbType = Identifier.Minecraft("experience_orb");
     private static readonly Identifier PaintingType = Identifier.Minecraft("painting");
 
     private static ValueTask SpawnAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid, int typeId, EntitySpawnSpace space,
-        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity)
+        double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity, EntityMetadataList? initialMetadata = null, int? objectData = null)
     {
         RegistryEntry<EntityTypeDefinition> type =
             context.EntityTypes.Resolve(context.State.Registries, typeId < 0 ? 0 : typeId, space);
 
         // From 1.20.2 add_player is gone and players arrive here, on the generic spawn path, carrying the player entity type. That is the only signal available, so the profile hook keys on it.
         return AddAsync(store, context, entityId, uuid, type, x, y, z, yaw, pitch, headYaw, velocity,
-            isPlayer: type.Id == PlayerType);
+            isPlayer: type.Id == PlayerType, initialMetadata, objectData);
     }
 
     private static ValueTask SpawnKeyedAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid, Identifier typeKey,
-        double x, double y, double z, float yaw, float pitch, float headYaw) =>
+        double x, double y, double z, float yaw, float pitch, float headYaw, EntityMetadataList? initialMetadata = null) =>
         AddAsync(store, context, entityId, uuid,
             context.EntityTypes.ResolveByKey(context.State.Registries, typeKey),
             x, y, z, yaw, pitch, headYaw, Vec3d.Zero,
             // The packet identity IS the type here, so a player spawn stays a player spawn even when the era's registry has no player key and the type degrades to the unknown placeholder.
-            isPlayer: typeKey == PlayerType);
+            isPlayer: typeKey == PlayerType, initialMetadata);
 
     private static async ValueTask AddAsync(
         EntityStore store, ApplierContext context, int entityId, Guid uuid,
         RegistryEntry<EntityTypeDefinition> type,
         double x, double y, double z, float yaw, float pitch, float headYaw, Vec3d velocity,
-        bool isPlayer)
+        bool isPlayer, EntityMetadataList? initialMetadata, int? objectData = null)
     {
         // The key source is what makes the typed metadata properties readable at all: Entity builds its metadata store around it, and an entity constructed without one answers false to every tier-2 lookup no matter how complete the raw store is.
         //
@@ -295,9 +475,9 @@ internal sealed class EntityApplier : IApplier
         var entity = new Entity(entityId, uuid, type, context.MetadataKeys)
         {
             Position = new Vec3d(x, y, z),
-            Yaw = yaw,
-            Pitch = pitch,
-            HeadYaw = headYaw,
+            Yaw = SignedPacketAngle(yaw),
+            Pitch = SignedPacketAngle(pitch),
+            HeadYaw = SignedPacketAngle(headYaw),
             Velocity = velocity,
         };
 
@@ -305,8 +485,44 @@ internal sealed class EntityApplier : IApplier
         if (isPlayer && context.State.TabList.TryGet(uuid, out TabListEntry? tabEntry))
             entity.PlayerProfile = tabEntry.Profile;
 
+        // Through 1.14.4 the spawn frame itself carries metadata. Install it before publishing the completed spawn, since an unchanged native field may never arrive again in a dirty-only update.
+        context.State.EntityGeometry.RegisterPlacementEnvelope(entity, context.Version.Version.Protocol, store);
+        context.State.EntityGeometry.Register(entity, JavaGameData.EntityGeometryData(context.Version.Version.Protocol), context.Version.Version.Protocol, isPlayer);
+        context.State.EntityMotion.RegisterFallingBlock(entity, context.Version.Version.Protocol, objectData, context.State.EntityGeometry);
+        int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
+        context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
+        context.State.EntityMotion.RegisterCow(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership);
+        context.State.EntityMotion.RegisterLegacyAmbient(entity, context.State.EntityGeometry);
+        if (initialMetadata is not null)
+            ApplyMetadata(entity, initialMetadata, context);
+        if (isPlayer)
+            context.State.EntityMotion.RegisterRemotePlayer(entity, context.Version.Version.Protocol);
+        else if (context.State.EntityGeometry.IgnoresVelocity(entity))
+            context.State.EntityMotion.RegisterImmovable(entity);
+        context.State.PacketBases.Set(entity, new Vec3d(x, y, z));
+
+        // Native client insertion discards the previous entity with this id before installing the new instance.
+        if (store.Remove(entityId) is { } previous)
+        {
+            context.State.PacketBases.Remove(previous);
+            context.State.EntityMotion.Remove(previous);
+            context.State.EntityGeometry.Remove(previous);
+            context.State.EntityMembership.Remove(previous);
+            await context.PublishAsync(new EntityRemoved(entityId)).ConfigureAwait(false);
+        }
         store.Add(entity);
+        context.State.EntityGeometry.RefreshPlacementEnvelopes(store);
         await context.PublishAsync(new EntitySpawned(entityId, entity)).ConfigureAwait(false);
+    }
+
+    private static void ApplyMetadata(Entity entity, EntityMetadataList metadata, ApplierContext context)
+    {
+        foreach (EntityDataEntry entry in metadata.Entries)
+        {
+            entity.Metadata.Set(entry.Index, entry.Value);
+            ProjectSemanticMetadata(entity);
+            context.State.EntityGeometry.ObserveMetadata(entity, entry.Index);
+        }
     }
 
     /// <summary>Projects the semantic metadata keys onto the typed <see cref="Entity"/> properties (tier 2). The raw store keeps every index; this is what a consumer that asks for the custom name actually reads.</summary>
@@ -386,6 +602,7 @@ internal sealed class EntityApplier : IApplier
         }
 
         bool appliedAny = false;
+        bool scaleDirty = false;
         foreach (AttributeSnapshot snapshot in packet.Attributes)
         {
             if (!TryResolveAttribute(registries, snapshot, out RegistryEntry<Game.Registries.AttributeDefinition> attribute))
@@ -396,6 +613,9 @@ internal sealed class EntityApplier : IApplier
                 ? context.State.Self.Attributes.GetOrCreate(canonical, attribute)
                 : entity!.Attributes.GetOrCreate(canonical, attribute);
 
+            // Native setBaseValue dirties only a changed double; removing or adding any modifier also dirties, even when the final float remains the same.
+            if (canonical == Identifier.Minecraft("scale"))
+                scaleDirty |= instance.BaseValue != snapshot.BaseValue || instance.Modifiers.Count != 0 || snapshot.Modifiers.Count != 0;
             instance.BaseValue = snapshot.BaseValue;
             instance.ClearModifiers();
             foreach (AttributeModifierEntry modifier in snapshot.Modifiers)
@@ -411,7 +631,12 @@ internal sealed class EntityApplier : IApplier
         }
 
         if (isSelf && appliedAny)
+        {
+            context.State.SelfScaleDirty |= scaleDirty;
             context.PhysicsConditionsDirty();
+        }
+        else if (appliedAny && entity is not null)
+            context.State.EntityGeometry.ObserveAttributes(entity, scaleDirty);
 
     }
 
@@ -457,16 +682,34 @@ internal sealed class EntityApplier : IApplier
 
     }
 
-    private static void ApplyPassengers(EntityStore store, ClientboundSetPassengersPacket packet)
+    private static void ApplyPassengers(EntityStore store, ClientboundSetPassengersPacket packet, ApplierContext context)
     {
-        if (!store.TryGet(packet.VehicleId, out Entity? vehicle) || vehicle is null)
+        bool hasVehicle = store.TryGet(packet.VehicleId, out Entity? vehicle);
+        context.State.EntityMotion.ObserveLocalPassengers(context.State.Self.EntityId, packet.VehicleId, packet.Passengers, vehicle);
+        if (vehicle is not null)
+        {
+            context.State.EntityGeometry.InvalidatePlacementEnvelope(vehicle);
+            foreach (Entity oldPassenger in vehicle.Passengers)
+                context.State.EntityGeometry.InvalidatePlacementEnvelope(oldPassenger);
+        }
+        foreach (int id in packet.Passengers)
+            if (store.TryGet(id, out Entity? envelopePassenger) && envelopePassenger is not null)
+                context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopePassenger);
+        if (!hasVehicle || vehicle is null)
             return;
 
         var passengers = new List<Entity>();
+        var mounts = new List<Entity>();
         foreach (int id in packet.Passengers)
             if (store.TryGet(id, out Entity? passenger) && passenger is not null)
+            {
                 passengers.Add(passenger);
+                if (passenger.Vehicle != vehicle && context.State.EntityGeometry.IgnoresVelocity(passenger))
+                    mounts.Add(passenger);
+            }
 
         store.SetPassengers(vehicle, passengers);
+        foreach (Entity passenger in mounts)
+            context.State.EntityGeometry.ObserveMount(passenger);
     }
 }

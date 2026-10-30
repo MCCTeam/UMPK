@@ -23,6 +23,9 @@ public sealed record ClientboundSectionBlocksUpdatePacket(
     IReadOnlyList<SectionBlockChange> Changes,
     bool IsLegacy = false) : IPacket
 {
+    /// <summary>Whether the section update suppresses light updates, carried by protocols 751–762.</summary>
+    public bool SuppressLightUpdates { get; init; }
+
     /// <inheritdoc />
     public PacketType Type => WorldPackets.Clientbound.SectionBlocksUpdate;
 }

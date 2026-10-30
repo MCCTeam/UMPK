@@ -19,8 +19,9 @@ Initialize the shared skills with `git submodule update --init MCC-Skills`.
 | `.skills/dmcbk-marketplace-authoring/SKILL.md` | Schema-2 plugin catalogues and releases |
 | `.skills/asd-ste100/SKILL.md` | Unambiguous procedures, errors, and agent instructions |
 | `.skills/umpk-integration-testing/SKILL.md` | Isolated live tests against vanilla servers |
+| `.skills/umpk-version-adaptation/SKILL.md` | Source-backed version changes through the owning library and package boundaries |
 
-Eight `.skills` entries, including ASD-STE100, link to the pinned [MCC Skills](https://github.com/MCCTeam/MCC-Skills) submodule under `MCC-Skills/skills`. UMPK integration testing remains local. `.claude/skills`, `.agents/skills`, `.codex/skill` and `.codex/skills` link to `.skills`.
+Eight `.skills` entries, including ASD-STE100, link to the pinned [MCC Skills](https://github.com/MCCTeam/MCC-Skills) submodule under `MCC-Skills/skills`. UMPK integration testing and version adaptation remain local. `.claude/skills`, `.agents/skills`, `.codex/skill` and `.codex/skills` link to `.skills`.
 
 Read a matching `SKILL.md` before using a skill. Resolve its relative references from its own directory. Edit shared skills in MCC Skills rather than creating another local copy. Read [agent skills](docs/contributing/agent-skills.md) before updating the submodule revision.
 
@@ -38,6 +39,25 @@ Read a matching `SKILL.md` before using a skill. Resolve its relative references
 | Test counts | `python3 engineering/testcounts/check_test_counts.py /tmp/umpk-test.log --baseline engineering/testcounts/expected_counts.json` |
 
 For the count gate, capture the unfiltered full test output in `/tmp/umpk-test.log`. Never store raw test logs in the repository.
+
+## Shared vanilla artifacts
+
+Use `/home/anon/Projects/MinecraftOfficial` on this workstation. The portable default is `~/Projects/MinecraftOfficial`. Read [the artifact tool guide](tools/minecraft-official/README.md) before provisioning or starting a server.
+
+```bash
+export MINECRAFT_OFFICIAL_ROOT="$HOME/Projects/MinecraftOfficial"
+export UMPK_ORACLE_ROOT="$MINECRAFT_OFFICIAL_ROOT"
+export UMPK_SERVER_ROOT="$MINECRAFT_OFFICIAL_ROOT/downloads"
+export MCC_SERVERS="$UMPK_SERVER_ROOT"
+export UMPK_JAVA11="$MINECRAFT_OFFICIAL_ROOT/runtimes/java11/bin/java"
+export UMPK_JAVA25="$MINECRAFT_OFFICIAL_ROOT/runtimes/java25/bin/java"
+```
+
+Official jars and available mappings live in `downloads/<version>/`. Server source lives in `<version>-decompiled/`. Client source lives in `<version>-client-decompiled/` when requested. Check `artifacts.json` and `.complete.json` before using them as evidence. Legacy trees marked `obfuscated-no-community-mappings` do not provide readable MCP names.
+
+Use `bash tools/decompile.sh --version <version>` for server source. Add `--side client` for client source. Use `--all-releases --through 26.3 --side both --download-only` to provision both jars across the stable release range. Add `--accept-eula` only with the user's EULA acceptance. Never commit official artifacts, source trees, worlds, credentials, or raw logs.
+
+Use `bash tools/start-server.sh <version> --port <unused-port> --rcon-port <unused-rcon-port>` for an isolated local server. The launcher copies a seed into a fresh run directory. Keep shared seeds unchanged during live tests. Stop only processes owned by the run. Server startup and RCON readiness do not prove client behavior.
 
 ## Architecture
 

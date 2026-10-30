@@ -7,7 +7,20 @@
    "minecraft-data pc/1.11/blocks.json (meta-0 base table; ids need not be gapless)"
   ],
   "kind": "extracted",
-  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one)."
+  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one).",
+  "vanilla_corrections": {
+   "version": "1.11.2",
+   "server_sha256": "dec47d36b429fd05076b90b1f42c2a25138bc39204aa51b9674ef2a98d64d88a",
+   "source": "1.11.2-decompiled/alu.java",
+   "source_sha256": "1287526e0f93fa260a0637190f0a30723031274a2fdc83523fe8f24e3b96ca4c",
+   "rows": [
+    {
+     "id": 227,
+     "name": "silver_shulker_box"
+    }
+   ],
+   "note": "Native registration IDs and names verified against this release; preserves existing provenance for the remaining rows."
+  }
  },
  "identity": "legacy",
  "identity_formula": "(block_id << 4) | meta",
@@ -1605,7 +1618,7 @@
    "block_id": 227,
    "meta": 0,
    "state_id": 3632,
-   "material": "light_gray_shulker_box",
+   "material": "silver_shulker_box",
    "curated": false
   },
   {

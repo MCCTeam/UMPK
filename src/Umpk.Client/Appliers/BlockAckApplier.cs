@@ -10,6 +10,8 @@ internal sealed class BlockAckApplier : IApplier
     {
         if (packet is ClientboundBlockChangedAckPacket ack)
         {
+            if (context.State.WorldOrNull is { } world)
+                context.State.JukeboxPrediction.Acknowledge(world, ack.Sequence, context.RestorePredictedPosition, context.Sequences.CanRestoreCapturedPosition(ack.Sequence));
             context.Sequences.Acknowledge(ack.Sequence);
             return ValueTask.FromResult(true);
         }

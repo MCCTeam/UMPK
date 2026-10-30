@@ -253,6 +253,8 @@ public sealed class WireDecodedWaterMovementEfficiencyTests
 
         harness.State.Registries = JavaGameData.Registries(protocol);
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, 60.0, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
 

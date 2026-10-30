@@ -55,7 +55,7 @@ One protocol descriptor can be self-consistent and still choose the wrong era co
 - `fixtures/timelines/bands.txt` transposes those per-protocol rows into each packet's contiguous codec bands. It makes a release boundary visible as a local band change.
 - `fixtures/witness/<protocol>.txt` renders the result of authored, value-carrying witness payloads. Their `reject:` clauses prove that a neighbouring band cannot successfully read the same payload, except for explicitly justified pairs in `IntentionalTwins.cs`.
 
-The corpus has captures for all 49 protocols. The witness directory still has one rendered file per protocol, but its authored witnesses cover only 20 packet families. Band, witness, and shape pins are separate checks with different blind spots, not a full conformance proof.
+The committed corpus has captures for 49 of the 50 supported protocols; protocol 777 has no committed corpus directory. The witness directory still has one rendered file per protocol, but its authored witnesses cover only 20 packet families. Band, witness, and shape pins are separate checks with different blind spots, not a full conformance proof.
 
 The fixture renderings are mechanical and regenerated only through their environment-gated test paths. The witness payload catalog, intentional-marker list, and intentional-twin list are hand-authored; they must not be regenerated to make a failure disappear.
 

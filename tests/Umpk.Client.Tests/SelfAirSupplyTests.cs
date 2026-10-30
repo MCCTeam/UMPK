@@ -328,6 +328,9 @@ public sealed class SelfAirSupplyTests
             for (int z = 3; z <= 10; z++)
                 world.SetBlockStateId(new BlockPos(x, FloorY, z), stone!.DefaultStateId);
 
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
+
     }
 
     private static void FillWater(ApplierHarness harness)
@@ -441,7 +444,11 @@ public sealed class SelfAirSupplyTests
         await joined.Task.WaitAsync(Budget, ct);
 
         // The tick gate needs the player's own column and a spawn position, or nothing ticks at all.
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
 
         var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         using IDisposable positionSubscription = client.Events.Subscribe<Umpk.Client.Events.PositionCorrected>(

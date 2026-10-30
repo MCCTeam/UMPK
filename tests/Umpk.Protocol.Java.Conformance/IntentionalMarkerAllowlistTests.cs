@@ -15,7 +15,7 @@ public sealed class IntentionalMarkerAllowlistTests
     private static readonly string[] PlaceholderWords =
         ["todo", "tbd", "fixme", "xxx", "placeholder", "unknown", "not sure", "n/a", "see above", "ditto"];
 
-    /// <summary>How many of the 71 allowances the binding surface declares today. Twenty is where the first pass stopped: every allowance whose reason is a decision, plus nothing from the backlog yet.</summary>
+    /// <summary>How many of the 70 allowances the binding surface declares today. Twenty is where the first pass stopped: every allowance whose reason is a decision, plus nothing from the backlog yet.</summary>
     private const int DeclaredRatchet = 20;
 
     /// <summary>Every marker in the catalog is declared, and every declaration matches the catalog exactly. One test rather than one per protocol: the failure is a diff of two sets, and splitting it per protocol would report the same missing entry forty-nine times.</summary>
@@ -177,14 +177,14 @@ public sealed class IntentionalMarkerAllowlistTests
             .GroupBy(a => a.Reason)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        // These exact totals make every marker addition, removal, and reason change an explicit update.
-        Assert.Equal(71, IntentionalMarkers.All.Count);
-        Assert.Equal(1146, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
+        // The enabled-feature codec removes one KnownGap on protocols 761–763; all other marker reasons retain their exact totals.
+        Assert.Equal(66, IntentionalMarkers.All.Count);
+        Assert.Equal(1052, IntentionalMarkers.All.Sum(a => a.Protocols.Count));
         Assert.Equal(2, byReason[MarkerReason.HandledElsewhere]);
         Assert.Equal(4, byReason[MarkerReason.WrongCodecWouldBeWorse]);
         Assert.Equal(2, byReason[MarkerReason.DatasetArtifact]);
         Assert.Equal(12, byReason[MarkerReason.NoConsumerWorthWriting]);
-        Assert.Equal(51, byReason[MarkerReason.KnownGap]);
+        Assert.Equal(46, byReason[MarkerReason.KnownGap]);
     }
 
     private static Dictionary<(ProtocolPhase, PacketFlow, string), SortedSet<int>> ActualMarkers()

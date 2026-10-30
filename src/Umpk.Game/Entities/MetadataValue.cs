@@ -123,6 +123,10 @@ public readonly struct MetadataValue : IEquatable<MetadataValue>
     /// <summary>An entity pose.</summary>
     public static MetadataValue Pose(EntityPose value) => new(MetadataValueKind.Pose, (long)value, 0, 0, 0, null, true);
 
+    /// <summary>A canonical pose with its preserved native identifier, used when a wire fallback maps an unknown id to a known pose.</summary>
+    public static MetadataValue PoseWithWireId(EntityPose value, int wireId) =>
+        new(MetadataValueKind.Pose, ((long)(uint)wireId << 32) | (uint)(int)value, 1, 0, 0, null, true);
+
     /// <summary>An item slot; pass null for the empty slot.</summary>
     public static MetadataValue Slot(IMetadataSlot? slot) => new(MetadataValueKind.Slot, 0, 0, 0, 0, slot, true);
 
@@ -208,7 +212,14 @@ public readonly struct MetadataValue : IEquatable<MetadataValue>
     public GlobalPosition AsGlobalPosition() => (GlobalPosition)Require(MetadataValueKind.GlobalPosition)._ref!;
 
     /// <summary>Reads a <see cref="MetadataValueKind.Pose"/> value.</summary>
-    public EntityPose AsPose() => (EntityPose)Require(MetadataValueKind.Pose)._scalar;
+    public EntityPose AsPose() => (EntityPose)unchecked((int)Require(MetadataValueKind.Pose)._scalar);
+
+    /// <summary>Reads the preserved native pose identifier, or null when the value has no wire alias.</summary>
+    public int? AsPoseWireId()
+    {
+        MetadataValue value = Require(MetadataValueKind.Pose);
+        return value._f1 == 0 ? null : unchecked((int)(value._scalar >> 32));
+    }
 
     /// <summary>Reads a <see cref="MetadataValueKind.Slot"/> placeholder; null for the empty slot.</summary>
     public IMetadataSlot? AsSlot() => (IMetadataSlot?)Require(MetadataValueKind.Slot)._ref;

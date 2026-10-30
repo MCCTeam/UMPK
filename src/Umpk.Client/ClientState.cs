@@ -14,8 +14,10 @@ public sealed class ClientState
 {
     private readonly ClientFeatures _features;
     private World? _world;
+    private Identifier? _worldDimension;
     private EntityStore? _entities;
     private InventoryState? _inventory;
+    private bool _nativePlayerPresent;
 
     /// <summary>The composed feature toggles for this session.</summary>
     public ClientFeatures Features => _features;
@@ -23,6 +25,7 @@ public sealed class ClientState
     internal ClientState(ClientFeatures features)
     {
         _features = features;
+        JukeboxPrediction = new Internal.JukeboxPredictionState(EntityMembership);
         if (features.Entities)
             _entities = new EntityStore();
 
@@ -44,6 +47,12 @@ public sealed class ClientState
 
     /// <summary>The network-synced registries. Populated during configuration.</summary>
     public RegistryAccess? Registries { get; internal set; }
+
+    /// <summary>Tag membership belongs to the connection, including configuration-to-play and data-pack reloads.</summary>
+    internal Internal.ClientRegistryTags RegistryTags { get; } = new();
+
+    /// <summary>Native connection features survive world and configuration transitions.</summary>
+    internal Internal.EnabledFeatureState EnabledFeatures { get; } = new();
 
     /// <summary>The scoreboard/teams model. Always present.</summary>
     public Scoreboard Scoreboard { get; } = new();
@@ -109,9 +118,133 @@ public sealed class ClientState
 
     internal World? WorldOrNull => _world;
 
-    internal void InstallWorld(World world) => _world = world;
+    internal Internal.EntityPacketBases PacketBases { get; } = new();
 
-    internal void ResetForRespawn(World world) => _world = world;
+    internal Internal.EntityMotionState EntityMotion { get; } = new();
+
+    internal Internal.EntityGeometryState EntityGeometry { get; } = new();
+
+    internal Internal.EntityMembershipState EntityMembership { get; } = new();
+
+    internal Internal.JukeboxPredictionState JukeboxPrediction { get; }
+
+    internal List<int>? TickEntities(int protocol, IBlockShapeSource shapes, List<int> moved, Aabb? localBody = null)
+    {
+        if (_entities is null)
+            return null;
+        List<int>? changedVehicles = null;
+        EntityMembership.BeginEntityPhase();
+        bool legacyMounts = Internal.EntityMotionState.UsesLegacyMountTraversal(protocol);
+        foreach (Entity entity in EntityMembership.ShulkerTickActors(_entities.All))
+        {
+            if (legacyMounts && entity.Vehicle is { } vehicle)
+            {
+                if (!EntityMembership.IsLegacyRemoved(vehicle) && vehicle.Passengers.Count == 1 && ReferenceEquals(vehicle.Passengers[0], entity))
+                    continue;
+                _entities.SetVehicle(entity, null);
+                (changedVehicles ??= []).Add(vehicle.Id);
+            }
+            Entity current = entity;
+            // The legacy graph has one passenger per vehicle. Iterate its chain after each parent's registration, independently of table insertion order.
+            for (int depth = 0; depth < _entities.Count; depth++)
+            {
+                if (EntityMembership.CanTick(current, WorldTicks.RunsNormally))
+                {
+                    EntityMembership.BeginPlayerTick(current);
+                    EntityMotion.BeginShulkerPushPlayerTick(current, TabList);
+                    EntityMotion.TickEntity(current, moved, EntityGeometry, TabList, _world, shapes, EntityMembership, _entities, WorldTicks.TickRate, Self, localBody);
+                    EntityGeometry.TickLegacyPlayer(current, _world, shapes, protocol, EntityMembership);
+                    EntityGeometry.TickLivingScale(current, WorldTicks.RunsNormally, EntityMembership.HasColumn(BlockPos.Containing(current.Position)));
+                    if (WorldTicks.RunsNormally)
+                        EntityGeometry.TickShulkerPush(current, this, shapes, protocol, moved, localBody);
+                    if (legacyMounts)
+                    {
+                        if (current.Vehicle is { } parent && (!EntityMembership.IsHealthyLegacyRider(current) || !EntityMembership.IsHealthyLegacyRider(parent)))
+                            EntityGeometry.InvalidatePosition(current);
+                        else
+                            EntityMotion.PositionLegacyRider(current, EntityGeometry, moved);
+                    }
+                }
+                if (legacyMounts && !EntityGeometry.IsPositionKnown(current))
+                    EntityMembership.InvalidateLegacyRiderRegistration(current);
+                EntityMembership.AfterEntityPhase(current);
+                if (!legacyMounts || current.Passengers.Count != 1
+                    || !EntityMembership.CanTraverseLegacyPassengers(current))
+                    break;
+                Entity passenger = current.Passengers[0];
+                if (EntityMembership.IsLegacyRemoved(passenger) || !ReferenceEquals(passenger.Vehicle, current))
+                {
+                    Entity? previousVehicle = passenger.Vehicle;
+                    _entities.SetVehicle(passenger, null);
+                    if (previousVehicle is not null)
+                        (changedVehicles ??= []).Add(previousVehicle.Id);
+                    break;
+                }
+                current = passenger;
+            }
+        }
+        return changedVehicles;
+    }
+
+    internal Internal.WorldTickState WorldTicks { get; } = new();
+
+    internal Identifier? WorldDimension => _worldDimension;
+
+    internal long PlayerLifetime { get; private set; }
+
+    internal bool SelfScaleDirty { get; set; }
+
+    internal Internal.TrackedLegacySelfGeometry? LegacySelfGeometry { get; private set; }
+
+    internal Internal.TrackedLegacySelfGeometry? GetLegacySelfGeometry(int protocol)
+        => Actions.LegacyPlayerGeometryProfile.Supports(protocol)
+            ? LegacySelfGeometry ??= new Internal.TrackedLegacySelfGeometry(this, protocol)
+            : null;
+
+
+    /// <summary>Initializes inventory and selection when the native client constructs a local player; a repeated join can reuse the existing player.</summary>
+    internal void InitializePlayerInventory(bool replacesExistingPlayer)
+    {
+        if (_nativePlayerPresent && !replacesExistingPlayer)
+            return;
+
+        _inventory?.Clear();
+        Self.HeldSlot = 0;
+        _nativePlayerPresent = true;
+    }
+
+    internal void AdvancePlayerLifetime()
+    {
+        PlayerLifetime++;
+        LegacySelfGeometry = null;
+        Self.ClearItemCooldowns();
+        SelfScaleDirty = false;
+        EntityMotion.ResetLocalMount();
+    }
+
+    /// <summary>The native game-mode controller is created on join and retained across respawn.</summary>
+    internal long InteractionLifetime { get; private set; }
+
+    internal void AdvanceInteractionLifetime() => InteractionLifetime++;
+
+    internal void InstallWorld(World world) => InstallWorld(world.Dimension.DimensionName, world);
+
+    internal void InstallWorld(Identifier dimension, World? world)
+    {
+        if (!ReferenceEquals(_world, world))
+            JukeboxPrediction.Clear();
+        LegacySelfGeometry = null;
+        _world = world;
+        _worldDimension = dimension;
+        _entities?.Clear();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        EntityMembership.Clear();
+        WorldTicks.Reset();
+    }
+
+    internal void ResetForRespawn(World world) => InstallWorld(world);
 
     /// <summary>
     /// Tears down everything the play phase built, for a play-to-configuration re-entry (<c>minecraft:start_configuration</c>, 1.20.2+). The protocol's re-entry behavior determines what survives:
@@ -127,9 +260,18 @@ public sealed class ClientState
     /// </summary>
     internal void ResetForConfigurationReentry()
     {
+        _nativePlayerPresent = false;
+        JukeboxPrediction.Clear();
         // Level-owned in vanilla: cleared with the level, refilled by the join that ends the re-entry.
         _world = null;
+        _worldDimension = null;
+        AdvancePlayerLifetime();
         _entities?.Clear();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        EntityMembership.Clear();
+        WorldTicks.Reset();
         Scoreboard.Clear();
         Maps.Clear();
 
@@ -154,9 +296,20 @@ public sealed class ClientState
     /// <returns>True when a dialog was open and has been cleared.</returns>
     internal bool ResetForSessionEnd()
     {
+        _nativePlayerPresent = false;
+        JukeboxPrediction.Clear();
         bool wasShowing = Dialogs.IsShowing;
+        LegacySelfGeometry = null;
         Dialogs.Clear();
+        Self.ClearItemCooldowns();
         Server.ResetForSessionEnd();
+        RegistryTags.Clear();
+        EnabledFeatures.Reset();
+        PacketBases.Clear();
+        EntityMotion.Clear();
+        EntityGeometry.Clear();
+        EntityMembership.Clear();
+        WorldTicks.Reset();
 
         // The chat-signing counters describe ONE connection's profile key: the coordinator that owns them is built per connect and per negotiated version. Leaving them behind lets a 1.19.3 session that rotated once reconnect to a 1.19.2 server and report ProfileKeyRotationSupported == false beside ProfileKeyRotations == 1, plus a refresh instant belonging to a key this session never held.
         Chat.ResetProfileKeyState();

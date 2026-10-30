@@ -1,0 +1,1256 @@
+{
+  "schema": 1,
+  "scope": "Read-only residual entity query decisions. Does not replace native/session/live acceptance or mark broadmilestones complete.",
+  "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7",
+  "inventory_keys": 178,
+  "protocol_datasets": 50,
+  "named_releases": 75,
+  "original_inventory_producer": "dd1424159418381e2cfd548c6dc381216939e365",
+  "evidence": {
+    "inventory": {
+      "path": "/home/anon/Projects/UMPK/docs/verification/interaction-inventory.json",
+      "sha256": "3e762ff7229b87ff4737da75e7cbd19f3f9e5a04c8992c19e1f27bb3578b12b5",
+      "original_producer": "dd1424159418381e2cfd548c6dc381216939e365",
+      "scope": "Default canonical geometry/item classification, not dynamic query completion"
+    },
+    "family_source": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/remaining-moving-entity-families-source-audit-20261022-v1/classification.json",
+      "sha256": "190d82ba2151d4cf48ba9b66e9409aa094fce1401bcdad73306dcb4f775b19a4",
+      "producer": "0c0fbfb9b0391421db88608fdb4b468ef2e295e7",
+      "scope": "178-key partition and13-release native predicate inheritance, source only"
+    },
+    "family_provenance": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/remaining-moving-entity-families-source-audit-20261022-v1/combined-provenance-supplement.json",
+      "sha256": "e6d0d91b695dcaff9fcb27fd71cc9050f38cf809a5f6a9904631b541459db178",
+      "scope": "Prior audit provenance and39base/42special dimension owners"
+    },
+    "hard_source": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/hard-entity-collision-20261021-v1/modern-source-audit.json",
+      "sha256": "8df9bce5e8a246457cdb20af8cc290cfce62714a3a2e9053dc54731b1baf9ba5",
+      "scope": "2,005 original registry rows; modern ordinary vs vehicle-source hard predicates"
+    },
+    "hard107_source": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/hard-entity-collision-20261021-v1/legacy-source-audit.json",
+      "sha256": "f5e5ad926e089e69ca85032439618cf9c7d9dc6f4c9a1a9d2f73051c436d0b23",
+      "scope": "Protocol107 original target/source rules and15executed query witnesses; not all legacy eras"
+    },
+    "modern_pick_runtime": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/modern-pick-nonparticipant-runtime-20261022-v1/finished-v2.json",
+      "sha256": "48c65047d4331330effc0ab0453e6c575cca76396aa0a29e7a9769cde9ca1cba",
+      "producer": "0c0fbfb+recordedthree-fileoverlay; merged27f3641/e60c360",
+      "scope": "416actualsessioncases;9additionalmodernexclusions, controls and lifetime; no live targeting"
+    },
+    "cow_runtime": {
+      "path": "docs/verification/cow-motion-769-770.md",
+      "sha256": "b45529d495b54791a28088b4b643e72fc7cbb343ffb97aae7c4f54577574e48b",
+      "producer": "2bd92c4 integratedinebbf545",
+      "scope": "158actualsessioncases+originalnativeCowtick/sync; no fresh liveCowacceptance"
+    },
+    "scale_runtime": {
+      "path": "docs/verification/living-scale-runtime.md",
+      "sha256": "c69438c721ac1f97ddb454e9c5871ebb2fdced611fd743765604b612c5ac759d",
+      "producer": "193178f",
+      "scope": "nine families766..777; clamping/dirty/pose/localgeometry; notothermovingfamilies/riders"
+    },
+    "shulker_runtime": {
+      "path": "docs/verification/shulker-runtime.md",
+      "sha256": "85311cadae5658ee694cc7136a8fbf89acf16921636a209f6716abde8f66b97f",
+      "producer": "32f4ac1a99d8ec0a0d1cd9a6e8613019376d2dff",
+      "scope": "770..777lid/face/scaleand120stationaryliveplacements; no expansion push"
+    },
+    "runtime": {
+      "commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7",
+      "files": {
+        "docs/verification/interaction-inventory.json": "3e762ff7229b87ff4737da75e7cbd19f3f9e5a04c8992c19e1f27bb3578b12b5",
+        "docs/verification/interaction-completion.md": "ffcad66567b042b52a74d493a5473df07c91d54d0420318ec668580d0375468a",
+        "docs/verification/modern-pick-nonparticipants.md": "896f99c5053c00a8199b95e12f167f2fb6420908b917ac2b3c1b5884833c2c9c",
+        "docs/verification/interaction-picking.md": "50499dbafee645204f7cf316c4346d050920a4af4a0936ce80057e0e2f557119",
+        "docs/verification/cow-motion-769-770.md": "b45529d495b54791a28088b4b643e72fc7cbb343ffb97aae7c4f54577574e48b",
+        "docs/verification/living-scale-runtime.md": "c69438c721ac1f97ddb454e9c5871ebb2fdced611fd743765604b612c5ac759d",
+        "docs/verification/shulker-runtime.md": "85311cadae5658ee694cc7136a8fbf89acf16921636a209f6716abde8f66b97f",
+        "docs/verification/hard-entity-collision-classification.md": "725f94166216c2a7eae24360e6efbe5b8b036a264d9fbd2a5678c3a2d654f5ca",
+        "docs/verification/protocol47-falling-blocks.md": "f180cf5ec6ff7c1946813c911b03e8f0fbdcea82fc9a85c9d28491fbdfeb5bea",
+        "docs/verification/falling-block-runtime.md": "d11296de29ee8106c63e895a68d0ce21eca71b412d401d09f3a3e9e66a2d38e3",
+        "src/Umpk.Client/Internal/InteractionPicker.cs": "f438348ff410ad1a0642272e5ac81c566f6666e398720b1cbca6bcb95ac062f3",
+        "src/Umpk.Client/Internal/EntityGeometryState.cs": "f8d44bf9a131c9208d100408b40afae790c79eecd0f11c167b7cf5971849f130",
+        "src/Umpk.Client/Internal/EntityMotionState.cs": "8d31a1ade6178d65e4c0ecc4b073f26103c50d1b12e2b127bb5a025421182686",
+        "src/Umpk.Client/Internal/EntityMotionState.Cow.cs": "30ec85a63e18c50988dd0505d43f82f360972ee14a52bd961fc0c5d6a459c8eb",
+        "src/Umpk.Client/Internal/CowMotionProfile.cs": "c8137eda80246cdc79995ee6e00694ff8c8ffb9578b53235c44bf06021636643",
+        "src/Umpk.Client/Internal/LivingScaleProfile.cs": "6f26a0273282221d8b09475393d6f63d1464d4e80044e3f9f41619366a25c2b4",
+        "src/Umpk.Client/Navigation/WorldPhysicsView.cs": "de49fbda51f9f1f27cca7e9adfcfb075df9003be45a5752b04ff435248af4cd5",
+        "src/Umpk.Client/Actions/InteractionActions.Placement.cs": "53f1885e07f3cfe8ad5f88c11ccb8f06707cda1d1bb6aed65fa76ce2b00cab28",
+        "src/Umpk.Client/Appliers/EntityApplier.cs": "8cbb6fec4446c56557ea9dbbbe8d7d5a5a4b9d9101ae2f577b566daba62d1050"
+      },
+      "scope": "Current checked-in callers, notnewruntime/liveacceptancefromthisaudit"
+    }
+  },
+  "entity_partition": {
+    "boats_and_rafts": [
+      "minecraft:acacia_boat",
+      "minecraft:acacia_chest_boat",
+      "minecraft:bamboo_chest_raft",
+      "minecraft:bamboo_raft",
+      "minecraft:birch_boat",
+      "minecraft:birch_chest_boat",
+      "minecraft:boat",
+      "minecraft:cherry_boat",
+      "minecraft:cherry_chest_boat",
+      "minecraft:chest_boat",
+      "minecraft:dark_oak_boat",
+      "minecraft:dark_oak_chest_boat",
+      "minecraft:jungle_boat",
+      "minecraft:jungle_chest_boat",
+      "minecraft:mangrove_boat",
+      "minecraft:mangrove_chest_boat",
+      "minecraft:oak_boat",
+      "minecraft:oak_chest_boat",
+      "minecraft:pale_oak_boat",
+      "minecraft:pale_oak_chest_boat",
+      "minecraft:poplar_boat",
+      "minecraft:poplar_chest_boat",
+      "minecraft:spruce_boat",
+      "minecraft:spruce_chest_boat"
+    ],
+    "remaining_living": [
+      "minecraft:allay",
+      "minecraft:armadillo",
+      "minecraft:armor_stand",
+      "minecraft:axolotl",
+      "minecraft:bat",
+      "minecraft:bee",
+      "minecraft:blaze",
+      "minecraft:bogged",
+      "minecraft:breeze",
+      "minecraft:camel",
+      "minecraft:camel_husk",
+      "minecraft:cave_spider",
+      "minecraft:cod",
+      "minecraft:copper_golem",
+      "minecraft:creaking",
+      "minecraft:creeper",
+      "minecraft:dolphin",
+      "minecraft:donkey",
+      "minecraft:drowned",
+      "minecraft:elder_guardian",
+      "minecraft:enderman",
+      "minecraft:endermite",
+      "minecraft:evoker",
+      "minecraft:fox",
+      "minecraft:frog",
+      "minecraft:ghast",
+      "minecraft:giant",
+      "minecraft:glow_squid",
+      "minecraft:goat",
+      "minecraft:guardian",
+      "minecraft:hoglin",
+      "minecraft:husk",
+      "minecraft:illusioner",
+      "minecraft:llama",
+      "minecraft:magma_cube",
+      "minecraft:mannequin",
+      "minecraft:mooshroom",
+      "minecraft:mule",
+      "minecraft:nautilus",
+      "minecraft:ocelot",
+      "minecraft:panda",
+      "minecraft:parched",
+      "minecraft:parrot",
+      "minecraft:phantom",
+      "minecraft:piglin",
+      "minecraft:piglin_brute",
+      "minecraft:pillager",
+      "minecraft:polar_bear",
+      "minecraft:pufferfish",
+      "minecraft:rabbit",
+      "minecraft:ravager",
+      "minecraft:salmon",
+      "minecraft:silverfish",
+      "minecraft:skeleton",
+      "minecraft:skeleton_horse",
+      "minecraft:slime",
+      "minecraft:sniffer",
+      "minecraft:snow_golem",
+      "minecraft:spider",
+      "minecraft:squid",
+      "minecraft:stray",
+      "minecraft:strider",
+      "minecraft:sulfur_cube",
+      "minecraft:tadpole",
+      "minecraft:trader_llama",
+      "minecraft:tropical_fish",
+      "minecraft:turtle",
+      "minecraft:vex",
+      "minecraft:vindicator",
+      "minecraft:wandering_trader",
+      "minecraft:warden",
+      "minecraft:witch",
+      "minecraft:wither",
+      "minecraft:wither_skeleton",
+      "minecraft:wolf",
+      "minecraft:zoglin",
+      "minecraft:zombie",
+      "minecraft:zombie_horse",
+      "minecraft:zombie_nautilus",
+      "minecraft:zombie_villager",
+      "minecraft:zombified_piglin"
+    ],
+    "display_effect_item_and_interaction": [
+      "minecraft:area_effect_cloud",
+      "minecraft:block_display",
+      "minecraft:experience_orb",
+      "minecraft:interaction",
+      "minecraft:item",
+      "minecraft:item_display",
+      "minecraft:lightning_bolt",
+      "minecraft:marker",
+      "minecraft:ominous_item_spawner",
+      "minecraft:text_display"
+    ],
+    "projectiles_and_fishing_hook": [
+      "minecraft:arrow",
+      "minecraft:breeze_wind_charge",
+      "minecraft:dragon_fireball",
+      "minecraft:egg",
+      "minecraft:ender_pearl",
+      "minecraft:evoker_fangs",
+      "minecraft:experience_bottle",
+      "minecraft:eye_of_ender",
+      "minecraft:fireball",
+      "minecraft:firework_rocket",
+      "minecraft:fishing_bobber",
+      "minecraft:lingering_potion",
+      "minecraft:llama_spit",
+      "minecraft:potion",
+      "minecraft:shulker_bullet",
+      "minecraft:small_fireball",
+      "minecraft:snowball",
+      "minecraft:spectral_arrow",
+      "minecraft:splash_potion",
+      "minecraft:trident",
+      "minecraft:wind_charge",
+      "minecraft:wither_skull"
+    ],
+    "eight_owned_living_families": [
+      "minecraft:cat",
+      "minecraft:chicken",
+      "minecraft:cow",
+      "minecraft:horse",
+      "minecraft:iron_golem",
+      "minecraft:pig",
+      "minecraft:sheep",
+      "minecraft:villager"
+    ],
+    "minecarts": [
+      "minecraft:chest_minecart",
+      "minecraft:command_block_minecart",
+      "minecraft:commandblock_minecart",
+      "minecraft:furnace_minecart",
+      "minecraft:hopper_minecart",
+      "minecraft:minecart",
+      "minecraft:spawner_minecart",
+      "minecraft:tnt_minecart"
+    ],
+    "historical_keys_requiring_explicit_source_binding": [
+      "minecraft:creaking_transient",
+      "minecraft:evocation_fangs",
+      "minecraft:evocation_illager",
+      "minecraft:eye_of_ender_signal",
+      "minecraft:fireworks_rocket",
+      "minecraft:illusion_illager",
+      "minecraft:snowman",
+      "minecraft:villager_golem",
+      "minecraft:vindication_illager",
+      "minecraft:xp_bottle",
+      "minecraft:xp_orb",
+      "minecraft:zombie_pigman"
+    ],
+    "attached_entities": [
+      "minecraft:cushion",
+      "minecraft:glow_item_frame",
+      "minecraft:item_frame",
+      "minecraft:leash_knot",
+      "minecraft:painting"
+    ],
+    "end_crystal": [
+      "minecraft:end_crystal",
+      "minecraft:ender_crystal"
+    ],
+    "dragon_and_nonregistry_parts": [
+      "minecraft:ender_dragon"
+    ],
+    "falling_blocks_and_primed_tnt": [
+      "minecraft:falling_block",
+      "minecraft:tnt"
+    ],
+    "happy_ghast": [
+      "minecraft:happy_ghast"
+    ],
+    "players": [
+      "minecraft:player"
+    ],
+    "shulker": [
+      "minecraft:shulker"
+    ]
+  },
+  "closed_bounded_decisions": [
+    {
+      "id": "placement-permanent-nonparticipants",
+      "axis": "placement_obstruction",
+      "status": "passed",
+      "evidence": [
+        "inventory",
+        "family_source",
+        "runtime"
+      ],
+      "production_owner": "InteractionActions.PredictBlockUse: IsAlwaysNonObstructingEntity before membership/mount/bounds",
+      "decision_closed": "These actors need no own moving bounds for placement on the listed protocols. Do not discard their relationships or infer pickability.",
+      "remaining": "Earlier absent table entries remain unclassified; riders/push contexts of other actors remain independent.",
+      "entity_protocol_bands": {
+        "minecraft:area_effect_cloud": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:arrow": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:block_display": [
+          [
+            762,
+            777
+          ]
+        ],
+        "minecraft:breeze_wind_charge": [
+          [
+            766,
+            777
+          ]
+        ],
+        "minecraft:cushion": [
+          [
+            777,
+            777
+          ]
+        ],
+        "minecraft:dragon_fireball": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:egg": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:ender_pearl": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:evoker_fangs": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:experience_bottle": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:experience_orb": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:eye_of_ender": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:fireball": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:firework_rocket": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:fishing_bobber": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:glow_item_frame": [
+          [
+            755,
+            777
+          ]
+        ],
+        "minecraft:interaction": [
+          [
+            762,
+            777
+          ]
+        ],
+        "minecraft:item": [
+          [
+            47,
+            777
+          ]
+        ],
+        "minecraft:item_display": [
+          [
+            762,
+            777
+          ]
+        ],
+        "minecraft:item_frame": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:leash_knot": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:lightning_bolt": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:lingering_potion": [
+          [
+            770,
+            777
+          ]
+        ],
+        "minecraft:llama_spit": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:marker": [
+          [
+            755,
+            777
+          ]
+        ],
+        "minecraft:ominous_item_spawner": [
+          [
+            766,
+            777
+          ]
+        ],
+        "minecraft:painting": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:potion": [
+          [
+            498,
+            769
+          ]
+        ],
+        "minecraft:shulker_bullet": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:small_fireball": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:snowball": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:spectral_arrow": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:splash_potion": [
+          [
+            770,
+            777
+          ]
+        ],
+        "minecraft:text_display": [
+          [
+            762,
+            777
+          ]
+        ],
+        "minecraft:trident": [
+          [
+            498,
+            777
+          ]
+        ],
+        "minecraft:wind_charge": [
+          [
+            765,
+            777
+          ]
+        ],
+        "minecraft:wither_skull": [
+          [
+            498,
+            777
+          ]
+        ]
+      }
+    },
+    {
+      "id": "modern-own-query-nonparticipants",
+      "axis": [
+        "picking",
+        "placement_obstruction"
+      ],
+      "status": "passed",
+      "protocols": [
+        769,
+        770,
+        771,
+        772,
+        773,
+        774,
+        775,
+        776,
+        777
+      ],
+      "entities": [
+        "minecraft:area_effect_cloud",
+        "minecraft:block_display",
+        "minecraft:evoker_fangs",
+        "minecraft:experience_orb",
+        "minecraft:eye_of_ender",
+        "minecraft:item",
+        "minecraft:item_display",
+        "minecraft:lightning_bolt",
+        "minecraft:marker",
+        "minecraft:ominous_item_spawner",
+        "minecraft:text_display"
+      ],
+      "evidence": [
+        "family_source",
+        "modern_pick_runtime",
+        "runtime"
+      ],
+      "production_owner": "InteractionPickProfile.IsNativeNonparticipant -> InteractionPicker.Cast -> public initial/held view mining",
+      "decision_closed": "All11constant-false nonpickable modern families are already skipped before bounds lookup; their own bounds need not be implemented for these two query axes.",
+      "remaining": "Native live targeting/final producer acceptance and all relationships remain separate. EnderDragon root is expressly excluded from this closure."
+    },
+    {
+      "id": "ordinary-source-hard-nonparticipants",
+      "axis": "hard_collision_as_target",
+      "status": "passed",
+      "protocols": [
+        770,
+        771,
+        772,
+        773,
+        774,
+        775,
+        776,
+        777
+      ],
+      "evidence": [
+        "hard_source",
+        "runtime"
+      ],
+      "production_owner": "ModernHardCollisionProfile.HasNoHardPeerBox -> WorldPhysicsView.TryCollectModern",
+      "decision_closed": "Every retained registered target with inherited false Entity.canBeCollidedWith matches the current whitelist; those targets need no hard box for the bounded ordinary player/Cow source.",
+      "remaining": "Not vehicle-source collisions, soft pushes, placement, picking or unsupported source contexts.",
+      "nonhard_counts_by_release": {
+        "1.21.5": {
+          "nonhard_target": 129,
+          "contextual_hard_target": 21
+        },
+        "1.21.6": {
+          "nonhard_target": 129,
+          "contextual_hard_target": 22
+        },
+        "1.21.7": {
+          "nonhard_target": 129,
+          "contextual_hard_target": 22
+        },
+        "1.21.8": {
+          "nonhard_target": 129,
+          "contextual_hard_target": 22
+        },
+        "1.21.9": {
+          "nonhard_target": 131,
+          "contextual_hard_target": 22
+        },
+        "1.21.10": {
+          "nonhard_target": 131,
+          "contextual_hard_target": 22
+        },
+        "1.21.11": {
+          "nonhard_target": 135,
+          "contextual_hard_target": 22
+        },
+        "26.1": {
+          "nonhard_target": 135,
+          "contextual_hard_target": 22
+        },
+        "26.1.1": {
+          "nonhard_target": 135,
+          "contextual_hard_target": 22
+        },
+        "26.1.2": {
+          "nonhard_target": 135,
+          "contextual_hard_target": 22
+        },
+        "26.2": {
+          "nonhard_target": 136,
+          "contextual_hard_target": 22
+        },
+        "26.3": {
+          "nonhard_target": 137,
+          "contextual_hard_target": 24
+        }
+      },
+      "native_selector": "Select modern-source-audit/classification rows whose hard_target_owner is net.minecraft.world.entity.Entity; exact current whitelist equality verified for every registered row on770..777."
+    },
+    {
+      "id": "existing-owned-runtime-families",
+      "axis": [
+        "dimensions",
+        "motion"
+      ],
+      "status": "passed",
+      "evidence": [
+        "scale_runtime",
+        "cow_runtime",
+        "shulker_runtime",
+        "runtime"
+      ],
+      "scopes": {
+        "scale": "player,villager,cat,cow,horse,iron_golem,chicken,pig,sheep766..777; dirty boundary770; respawn767",
+        "cow": "adult standing healthy dry unmounted defaultscale769/770 only",
+        "remote_player": "existing all-era profiles; bounded collision-aware770..777; fullpose/authority/rider/live acceptance open",
+        "falling_block": "47and107only, recorded native/liquid/callback limits",
+        "shulker": "770..777lid/face/scale/immovable and mountcallback; no push trajectory"
+      },
+      "remaining": "Do not reopen these recorded scopes or promote them to every family/context."
+    }
+  ],
+  "residual_decisions": [
+    {
+      "id": "fixed-crystal-picking",
+      "status": "not run",
+      "families": [
+        "end_crystal"
+      ],
+      "applicable_scope": "First proposed slice: modern769\u2013777. Existing fixed placement is498\u2013777. Historical ender_crystal47\u2013340 stays separate.",
+      "known": "Modern EndCrystal is always pickable and uses immediate base positioning. Mapped placement already uses its fixed two-by-two bounds.",
+      "missing_production_decision": "Can the narrow picker consume the existing fixed2x2 bounds and true native pickability without loading all block-use tables?",
+      "missing_fact_or_defect": "The narrow geometry source has no fixed-crystal rule, and the picker accepts only player/Cow participants. Complete radius, filter, positioning and lifetime bindings are required before promotion.",
+      "production_owners": [
+        "InteractionPicker.Cast.TryBounds",
+        "EntityGeometryState.TryGet",
+        "EntityApplier packet positioning"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "hard_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "local mount/shared-root context",
+        "narrow-data AOT lesson"
+      ],
+      "required_next_checks": "Read retained native methods, then actual framed near/far, block precedence, initial/held mining, placement, mounts, removal, replacement ID and world/session controls. Native live/final-producer acceptance follows separately.",
+      "priority": 1,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "other-owned-living-picking-and-motion",
+      "status": "not run",
+      "families": [
+        "eight_owned_living_families"
+      ],
+      "applicable_scope": "Exact existing geometry bands. Modern predicate evidence covers769\u2013777. Scale766/770 and Cow769/770 are separate boundaries.",
+      "known": "Cat, chicken, horse, iron_golem, pig, sheep and villager already have owned dimensions. The nine-family scale owner on766\u2013777 is complete within its recorded scope.",
+      "missing_production_decision": "Which of the seven non-Cow owned families can use the picker, and which inherited actor motion profile updates their query bounds?",
+      "missing_fact_or_defect": "The picker rejects an intersecting nonplayer/nonCow even when its dimensions are known. Their native motion is not registered by the existing motion owner.",
+      "production_owners": [
+        "InteractionPicker.Cast",
+        "EntityMotionState",
+        "EntityGeometryState"
+      ],
+      "evidence": [
+        "family_source",
+        "scale_runtime",
+        "cow_runtime",
+        "runtime"
+      ],
+      "dependencies": [
+        "membership",
+        "local/peer pushes",
+        "riders"
+      ],
+      "required_next_checks": "Separate stationary predicate/radius integration from motion. Use original actor/listener facts only where missing, then framed view-mining and moving-placement observables.",
+      "priority": 2,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "cow-residual-contexts",
+      "status": "not run",
+      "families": [
+        "eight_owned_living_families"
+      ],
+      "applicable_scope": "Cow datasets47\u2013777; moving owner769/770 only, with768/771 adjacent controls.",
+      "known": "Cow769/770 already has a connected actor-specific owner for adult, standing, healthy, dry, unmounted, default-scale contexts.",
+      "missing_production_decision": "When may Cow bounds stay known outside the accepted769/770ordinary profile?",
+      "missing_fact_or_defect": "Other protocols and baby, pose, scale, health, equipment, fluid and push contexts remain unsupported; recovery after unknown is also incomplete.",
+      "production_owners": [
+        "CowMotionProfile",
+        "EntityMotionState.Cow",
+        "EntityGeometryState"
+      ],
+      "evidence": [
+        "cow_runtime",
+        "scale_runtime",
+        "family_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "riders",
+        "Shulker expansion",
+        "local push authority"
+      ],
+      "required_next_checks": "Reuse completed Cow witnesses. Select the next source boundary before any experiment, then add genuine session and final-producer live acceptance.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "ordinary-living-dimensions",
+      "status": "not run",
+      "families": [
+        "remaining_living"
+      ],
+      "applicable_scope": "Per-key inventory bands. The39-key dimension grouping is26.3 only; modern predicate evidence covers769\u2013777.",
+      "known": "The retained latest-release source audit identifies39 keys with base dimension owners.",
+      "missing_production_decision": "Which of the39base-dimension-owner keys need only owned native dimensions plus the measured family motion/picking contract?",
+      "missing_fact_or_defect": "These keys have no owned geometry rule. Shared inheritance does not prove every era, transition, actor tick or push contract.",
+      "production_owners": [
+        "EntityGeometryState",
+        "EntityMotionState",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "family_source",
+        "family_provenance",
+        "runtime"
+      ],
+      "dependencies": [
+        "membership",
+        "scale",
+        "push/rider context"
+      ],
+      "required_next_checks": "Bind retained constructor/pose/age/scale/refresh/lifetime facts. Measure only a missing relevant transition, then add real query-caller red/green cases.",
+      "priority": 3,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "special-living-dimensions",
+      "status": "not run",
+      "families": [
+        "remaining_living"
+      ],
+      "applicable_scope": "Per-key inventory bands. New names and historical aliases retain their own source requirements.",
+      "known": "The retained latest-release audit identifies42 specialized dimension or age owners. ArmorStand also has a marker-dependent picking predicate.",
+      "missing_production_decision": "Which of the42special-dimension/age-owner keys participate under metadata-dependent bounds?",
+      "missing_fact_or_defect": "Special metadata, pose, size, age and marker transitions cannot use an ordinary default box.",
+      "production_owners": [
+        "EntityGeometryState",
+        "InteractionPicker",
+        "EntityMotionState"
+      ],
+      "evidence": [
+        "family_source",
+        "family_provenance",
+        "runtime"
+      ],
+      "dependencies": [
+        "scale",
+        "metadata",
+        "riders"
+      ],
+      "required_next_checks": "Prioritize only source-proven participating families; preserve exact callbacks and add framed query observables before considering that family complete.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "interaction-volume",
+      "status": "not run",
+      "families": [
+        "display_effect_item_and_interaction"
+      ],
+      "applicable_scope": "Introduced762; audited pick predicate769\u2013777.",
+      "known": "Interaction is permanently nonblocking from762 and is always pickable in the audited modern source.",
+      "missing_production_decision": "How do native width/height metadata refresh an Interaction query box?",
+      "missing_fact_or_defect": "Its width/height metadata box and picker classification are unowned. Placement nonobstruction does not imply nonpickability.",
+      "production_owners": [
+        "EntityGeometryState",
+        "InteractionPicker",
+        "EntityApplier metadata"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "metadata",
+        "loaded query membership"
+      ],
+      "required_next_checks": "Bind initial dimensions, callbacks, zero/tiny boxes and lifetime. Real framed metadata changes must alter view mining while preserving placement exclusion.",
+      "priority": 4,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "attached-picking",
+      "status": "not run",
+      "families": [
+        "attached_entities"
+      ],
+      "applicable_scope": "Exact per-key bands; glow_item_frame begins755 and cushion777. Earlier placement exclusions apply only where recorded.",
+      "known": "Painting, item_frame, glow_item_frame, leash_knot and777 cushion are nonblocking where the permanent table applies, but are pickable in modern native source.",
+      "missing_production_decision": "Which orientation/variant metadata determines each attached actor pick box?",
+      "missing_fact_or_defect": "Orientation, variant, metadata and current picking boxes are unowned.",
+      "production_owners": [
+        "EntityApplier attachedspawns",
+        "EntityGeometryState",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "orientation/variant metadata",
+        "mount context"
+      ],
+      "required_next_checks": "Reuse retained source, bind each actual box family, then framed near/far, rotation/variant, precedence and teardown cases.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "projectile-picking-context",
+      "status": "not run",
+      "families": [
+        "projectiles_and_fishing_hook"
+      ],
+      "applicable_scope": "Modern source audit769\u2013777. The777 redirectable provider includes fireball, wind_charge and breeze_wind_charge; do not assume that set in other eras.",
+      "known": "Modern evoker_fangs and eye_of_ender are already excluded. ShulkerBullet is always pickable; other projectiles can depend on tags or in-ground state.",
+      "missing_production_decision": "Which projectiles are actually pickable under received tags/in-ground state/radius and where are their current query bounds?",
+      "missing_fact_or_defect": "Received REDIRECTABLE_PROJECTILE context, per-actor radius, state and current trajectory boxes are incomplete.",
+      "production_owners": [
+        "InteractionPicker",
+        "EntityGeometryState",
+        "EntityApplier",
+        "EntityMotionState"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "hard_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "tags",
+        "metadata",
+        "native trajectory",
+        "riders"
+      ],
+      "required_next_checks": "Classify native participation before adding geometry. Use actual received tag/state context and preserve false-clear controls.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "boats-rafts",
+      "status": "not run",
+      "families": [
+        "boats_and_rafts"
+      ],
+      "applicable_scope": "Historical generic names47\u2013767; per-wood registry768; source-dependent collision771; poplar variants777.",
+      "known": "Twenty-four keys include historical generic boat names and modern wood/raft variants. Modern boats are hard targets and pickable.",
+      "missing_production_decision": "What current vehicle box, authority and passenger layout may be used for placement/picking/hard collisions?",
+      "missing_fact_or_defect": "Current vehicle bounds, interpolation, authority and passenger layout are unowned. Packet positions cannot prove a distant hard box irrelevant.",
+      "production_owners": [
+        "EntityMotionState",
+        "EntityGeometryState",
+        "WorldPhysicsView",
+        "EntityApplier relationships"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "hard_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "riders",
+        "sourceauthority",
+        "pushability"
+      ],
+      "required_next_checks": "Bind the actual movement/authority/passenger families, then framed placement/picking and ordinary-source collision controls, followed by live vehicle acceptance.",
+      "priority": 5,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "minecarts",
+      "status": "not run",
+      "families": [
+        "minecarts"
+      ],
+      "applicable_scope": "Exact per-key inventory bands. Do not infer an experimental/default cart behavior boundary from protocol alone.",
+      "known": "Eight keys include one historical spelling. All modern cart variants are false hard targets for ordinary sources.",
+      "missing_production_decision": "Which nativecart movement/passenger family supplies placement/pickbounds and vehicle-source collision?",
+      "missing_fact_or_defect": "They still participate in placement and picking. Cart motion, passengers and vehicle-source pushability rules are unowned.",
+      "production_owners": [
+        "EntityMotionState",
+        "EntityGeometryState",
+        "WorldPhysicsView",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "hard_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "riders",
+        "sourcepushability",
+        "authority"
+      ],
+      "required_next_checks": "Establish the native old/new cart behavior boundary and passenger layout, preserving ordinary hard-target exclusion while testing moving query bounds.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "happy-ghast",
+      "status": "not run",
+      "families": [
+        "happy_ghast"
+      ],
+      "applicable_scope": "Introduced771. A null source has its own native meaning.",
+      "known": "From771, native hard collision depends on adult/alive/still state, source identity and source height or a vehicle relationship with another Ghast.",
+      "missing_production_decision": "When does a source-dependent Ghast hard target provide its current box?",
+      "missing_fact_or_defect": "Age/scale/current bounds, still state and mount/source context are unowned. The current adapter returns unknown.",
+      "production_owners": [
+        "WorldPhysicsView",
+        "EntityGeometryState",
+        "EntityMotionState"
+      ],
+      "evidence": [
+        "family_source",
+        "hard_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "riders",
+        "health/age/stillmetadata",
+        "sourceidentity"
+      ],
+      "required_next_checks": "Bind original metadata and predicates, then actual framed source/height/still/mount controls and live collision observations.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "dragon-parts",
+      "status": "not run",
+      "families": [
+        "dragon_and_nonregistry_parts"
+      ],
+      "applicable_scope": "Dragon inventory47\u2013777; retained modern source769\u2013777 does not establish every legacy part-ID convention.",
+      "known": "The root is not pickable, but eight nonregistry parts are pickable and are appended by native world queries.",
+      "missing_production_decision": "How are the eight nonregistry dragon parts inserted and positioned for picking?",
+      "missing_fact_or_defect": "Part IDs, phase-updated bounds, membership and lifetime are unowned. Skipping the root would create false-clear mining.",
+      "production_owners": [
+        "EntityApplier",
+        "EntityGeometryState",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "family_source",
+        "hard_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "multipartmembership",
+        "phaseownedpositions"
+      ],
+      "required_next_checks": "Bind complete part publication, positioning and lifetime, then an actual query-caller proof with explicit native substitutions.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "falling-and-tnt",
+      "status": "not run",
+      "families": [
+        "falling_blocks_and_primed_tnt"
+      ],
+      "applicable_scope": "Implemented moving falling profiles47/107 only. Modern predicate evidence769\u2013777; other entries remain unknown.",
+      "known": "Falling blocks47/107 have bounded native/runtime/live placement and motion proof. Modern falling blocks/TNT are pickable and false ordinary hard targets.",
+      "missing_production_decision": "Which remaining falling/TNT eras need current box motion for placement or view mining?",
+      "missing_fact_or_defect": "Other falling eras/callbacks, TNT motion/lifetime and picker participation remain incomplete.",
+      "production_owners": [
+        "EntityMotionState",
+        "EntityGeometryState",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "family_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "hardpeers",
+        "fluid/blockcallbacks",
+        "membership"
+      ],
+      "required_next_checks": "Reuse all47/107 campaigns. Select the next source boundary and query observable rather than repeat completed physics measurements.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "shulker-push-and-picking",
+      "status": "not run",
+      "families": [
+        "shulker"
+      ],
+      "applicable_scope": "Lid geometry770\u2013777. The type exists from107; legacy107 hard-target evidence remains separately bounded.",
+      "known": "Modern770\u2013777 lid/face/scale and stationary placement are complete. Alive hard-target context is connected; closing bounds are preserved.",
+      "missing_production_decision": "How does opening swept lid volume displace eligible actors through the existing movement owner?",
+      "missing_fact_or_defect": "Expansion pushes, swept volume, native exclusions, picker participation and older Shulker eras remain unfinished.",
+      "production_owners": [
+        "TrackedShulkerGeometry",
+        "EntityMotionState",
+        "WorldPhysicsView",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "shulker_runtime",
+        "hard_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "predicteddisplacement",
+        "riders",
+        "source/targetexclusions"
+      ],
+      "required_next_checks": "Reuse geometry/mount evidence. Bind all six push faces and actor exclusions, then framed and live displacement through the existing movement owner.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "player-remaining-contexts",
+      "status": "not run",
+      "families": [
+        "players"
+      ],
+      "applicable_scope": "Legacy47\u2013404 with477 adjacency;769 control and770\u2013777 motion bands; Player picking predicate changes at775.",
+      "known": "Remote lifecycle/interpolation, bounded modern motion, nine-family scale and local legacy body ownership are connected.",
+      "missing_production_decision": "When may pose/scale/rider/local-authority changes retain known player bounds and query order?",
+      "missing_fact_or_defect": "Remaining poses, authority, riders, local outer ticks, live behavior and recovery from unknown remain open. Remote proof is not local proof.",
+      "production_owners": [
+        "SelfApplier",
+        "EntityGeometryState",
+        "EntityMotionState",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "family_source",
+        "scale_runtime",
+        "runtime"
+      ],
+      "dependencies": [
+        "riders",
+        "localphysics",
+        "livephaseordering"
+      ],
+      "required_next_checks": "Retain completed campaigns and test only the missing native/session/live context. A measurement helper alone cannot close the caller.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "historical-bindings",
+      "status": "not run",
+      "families": [
+        "historical_keys_requiring_explicit_source_binding"
+      ],
+      "applicable_scope": "Exact historical per-key bands. Do not copy modern alias behavior.",
+      "known": "The twelve historical-only keys and their exact inventory bands are already finite. They are not twelve automatic implementation tasks.",
+      "missing_production_decision": "Are historical registry keys exposed by current packet callers, and which native predicate family owns them?",
+      "missing_fact_or_defect": "Original predicate and packet identity bindings outside the modern audit remain incomplete.",
+      "production_owners": [
+        "EntityApplier spawnidentity",
+        "InteractionPicker",
+        "EntityGeometryState"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "runtime"
+      ],
+      "dependencies": [],
+      "required_next_checks": "Trace actual packet-established identifiers and original classes first. Close proven aliases/nonparticipation, or implement only the participating family.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "earlier-predicates-and-spatial-unknown",
+      "status": "not run",
+      "families": [
+        "all"
+      ],
+      "applicable_scope": "All supported datasets below769, with only the explicitly recorded completed exceptions.",
+      "known": "Permanent placement exclusions, protocol107 hard-collision rules and selected early cow/player picking facts already have evidence.",
+      "missing_production_decision": "Which remaining earlier-era actors actually participate and can relevance be bounded?",
+      "missing_fact_or_defect": "Older complete predicate classification and relevance bounds are missing. An unknown table entry does not establish a native participant.",
+      "production_owners": [
+        "InteractionActions.PredictBlockUse",
+        "InteractionPicker.Cast",
+        "WorldPhysicsView"
+      ],
+      "evidence": [
+        "inventory",
+        "family_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "source-awarequery",
+        "native membership"
+      ],
+      "required_next_checks": "Prove the predicate first. Use proven bounds or an explicitly conservative influence envelope before excluding distant actors; otherwise retain unknown.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    },
+    {
+      "id": "riders-and-soft-push-crosscut",
+      "status": "not run",
+      "families": [
+        "all"
+      ],
+      "applicable_scope": "Protocol47 links versus leash; later passenger lists; family-specific source boundaries must be established before implementation.",
+      "known": "Remote relationship storage, local mount-unknown routing and Shulker mount callbacks already exist.",
+      "missing_production_decision": "Which native rider positions and push updates feed another actor query bounds?",
+      "missing_fact_or_defect": "Passenger positions/order, nested/self authority, legacy remote mount/leash routing and soft-push trajectories remain unowned.",
+      "production_owners": [
+        "EntityApplier relationships",
+        "EntityMotionState",
+        "EntityGeometryState",
+        "WorldPhysicsView",
+        "InteractionPicker"
+      ],
+      "evidence": [
+        "family_source",
+        "hard_source",
+        "hard107_source",
+        "runtime"
+      ],
+      "dependencies": [
+        "singleexistingmotionclock",
+        "actororder"
+      ],
+      "required_next_checks": "Use framed transfer/dismount/missing/replaced-endpoint controls and native family positioning. Clear broad mount unknowns only after these facts exist.",
+      "priority": null,
+      "audited_runtime_commit": "ad5cbc452a1b9897c0a03c9a3db1e1500c1b58b7"
+    }
+  ],
+  "counts_are_not_implementation_tasks": true,
+  "unknown_is_not_clear": true,
+  "no_new_native_measurements": true,
+  "native_servers_started": 0,
+  "builds_started": 0,
+  "tests_started": 0,
+  "shared_edits": 0,
+  "band_semantics": "Inclusive endpoints select only the50 supported protocols listed in source-protocol-bands.json. A missing band is not a native exclusion.",
+  "current_runtime_reconciliation": {
+    "date": "2026-10-24",
+    "historical_audit_preserved": true,
+    "resolved_bounded_slice": {
+      "residual_id": "other-owned-living-picking-and-motion",
+      "status": "passed",
+      "protocols": [
+        769,
+        770
+      ],
+      "named_releases": [
+        "1.21.4",
+        "1.21.5"
+      ],
+      "families": [
+        "cat",
+        "chicken",
+        "horse",
+        "iron_golem",
+        "pig",
+        "sheep",
+        "villager"
+      ],
+      "scope": "default adult standing dry unmounted default-scale constructor-health context only",
+      "owners": [
+        "EntityMotionState",
+        "EntityMembershipState",
+        "EntityGeometryState",
+        "InteractionPicker"
+      ],
+      "callers": [
+        "DigBlockInViewAsync",
+        "PlaceBlockAsync"
+      ],
+      "evidence": "ordinary-living-motion-769-770.md",
+      "producer": "immutable8efa plus six exact source overlays, including1a9 lectern; fresh final producer gates remain required",
+      "completion_sha256": "dad9c94f05c8b6e6ef1a8b8403aed997e8330348c3813671cf15359ce47251ca",
+      "new_cases": 309,
+      "combined_focused_passes": 609,
+      "full_client_passes": 34171,
+      "root_after_integration_passes": 609,
+      "aot_bytes": 25157376,
+      "aot_smoke_executed_passes": 1
+    },
+    "remaining": "The historical residual remains open for other eras and contexts, native live, riders, pushes, special geometry and final producer acceptance. Cached geometry does not establish current query position; no unknown is relabelled clear."
+  }
+}

@@ -29,7 +29,7 @@ The analyzer still makes every public change visible as a diff on a checked-in t
 
 ## Data coverage
 
-Recorded packet captures exist for all 49 protocols. A capture can still omit the packet or behavior that failed, so codec work also relies on the dataset and on hand-authored frames.
+Recorded packet captures cover 49 of the 50 protocols; protocol 777 does not yet have a committed corpus directory. A capture can still omit the packet or behavior that failed, so codec work also relies on the dataset and on hand-authored frames.
 
 Piston push data exists for 31 protocols. A protocol without it gets an empty table, which the client reads as "the blocks a piston pushes are not modeled here". That is deliberately not the same statement as "every block behaves normally", and nothing in the pipeline is allowed to collapse the two.
 
@@ -144,7 +144,7 @@ Submerged air budgeting is optimistic for short diagonal segments with startup, 
 
 ### Smaller sharp edges
 
-`RealmServerAddress.Port` is an `int` while `ServerEndpoint.Port` is a `ushort`, so joining a Realm requires a cast. `Umpk.Protocol.Java.ProtocolViolationException` collides by simple name with `System.Net.ProtocolViolationException`. Three unrelated `ProfileProperty` types exist in different namespaces. `JavaVersions` exposes 72 named versions but `All` has 49 entries, and the aliases return the same object, so a lookup by protocol 47 always reports its representative name as `1.8.9` whichever 1.8.x release the server runs.
+`RealmServerAddress.Port` is an `int` while `ServerEndpoint.Port` is a `ushort`, so joining a Realm requires a cast. `Umpk.Protocol.Java.ProtocolViolationException` collides by simple name with `System.Net.ProtocolViolationException`. Three unrelated `ProfileProperty` types exist in different namespaces. `JavaVersions` accepts 75 named versions but `All` has 50 entries, and the aliases return the same object, so a lookup by protocol 47 always reports its representative name as `1.8.9` whichever 1.8.x release the server runs.
 
 ## What is not on this list
 

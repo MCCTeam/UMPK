@@ -316,6 +316,8 @@ public sealed class SprintAnnouncementTests
                 {
                     c.State.World.LoadColumn(new ChunkPos(0, 0));
                     c.State.World.LoadColumn(new ChunkPos(1, 0));
+                    c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+                    c.State.EntityMembership.LoadColumn(new ChunkPos(1, 0));
                     for (int x = -4; x <= 24; x++)
                         for (int z = -4; z <= 4; z++)
                             c.State.World.SetBlockStateId(new BlockPos(x, FloorY, z), stoneState);

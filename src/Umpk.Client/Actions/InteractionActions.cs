@@ -3,6 +3,7 @@ using Umpk.Client.Events;
 using Umpk.Client.Internal;
 using Umpk.Client.Snapshots;
 using Umpk.Game.Items;
+using Umpk.Game.Players;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Packets;
@@ -20,35 +21,63 @@ public enum Hand
 }
 
 /// <summary>Block/entity interaction. Dig uses the player-action start/finish sequence; place/use carry the 1.19+ action sequence where the version exposes it. On versions with the block-change-ack protocol, dig/place complete when the server acknowledges the action's sequence, bounded by a timeout that falls back to write-completion; on pre-1.19 versions completion is the write.</summary>
-public sealed class InteractionActions
+public sealed partial class InteractionActions
 {
     private readonly IPacketSink _sink;
     private readonly ClientSessionServices _services;
     private readonly SequenceTracker _sequences;
+    private readonly BlockInteractionProfile _blockProfile;
 
     internal InteractionActions(IPacketSink sink, ClientSessionServices services, SequenceTracker sequences)
     {
         _sink = sink;
         _services = services;
         _sequences = sequences;
+        _blockProfile = BlockInteractionProfile.ForProtocol(services.Version.Version.Protocol);
     }
 
-    /// <summary>Digs a block: sends start-digging then finish-digging, plus a swing.</summary>
-    public async Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
-    {
-        int? startSeq = NextSequence();
-        await _sink.SendAsync(new ServerboundPlayerActionPacket(0, position, (byte)face, startSeq), ct).ConfigureAwait(false);
-        await SwingAsync(Hand.Main, ct).ConfigureAwait(false);
-        int? finishSeq = NextSequence();
-        await _sink.SendAsync(new ServerboundPlayerActionPacket(2, position, (byte)face, finishSeq), ct).ConfigureAwait(false);
-        if (finishSeq is int fs && HasSequences())
-            await AwaitAckAsync(fs, ct).ConfigureAwait(false);
+    /// <summary>Holds the main-hand block attack until vanilla mining progress finishes. Sends animations on the session tick; instant breaking sends START without STOP. Unbreakable blocks keep the attack held until cancellation or server removal. A piercing item uses its charged attack and suppresses ordinary held mining. Cancellation releases the input; a suspended destroy operation stops when ordinary release handling resumes.</summary>
+    public Task DigBlockAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
+        => DigBlockCoreAsync(position, face, viewDistance: null, ct);
 
+    /// <summary>Mines one block while it remains under the current block view ray. Leaving that block releases the attack and cancels the operation. The session tick owns view checks, progress and animations.</summary>
+    /// <param name="position">The single block to mine; another block under the view never replaces it.</param>
+    /// <param name="maxDistance">The maximum block view distance. Must be positive and finite.</param>
+    /// <param name="ct">Releases the held attack when canceled.</param>
+    public Task DigBlockInViewAsync(BlockPos position, double maxDistance = PlayerReach.SurvivalBlockReach, CancellationToken ct = default)
+    {
+        if (!(maxDistance > 0) || !double.IsFinite(maxDistance))
+            throw new ArgumentOutOfRangeException(nameof(maxDistance));
+        return DigBlockCoreAsync(position, Direction.Up, maxDistance, ct);
+    }
+
+    private async Task DigBlockCoreAsync(BlockPos position, Direction face, double? viewDistance, CancellationToken ct)
+    {
+        if (_services.Scheduler.IsCurrent)
+            throw new InvalidOperationException("A held block attack must be awaited outside the session loop so ticks can advance.");
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        MiningRequest request = await _services.Scheduler.InvokeAsync(
+            () => QueueMining(position, face, viewDistance, lifetime.Token), lifetime.Token).ConfigureAwait(false);
+        try
+        {
+            int? sequence = await request.Completion.Task.WaitAsync(lifetime.Token).ConfigureAwait(false);
+            lifetime.Token.ThrowIfCancellationRequested();
+            if (sequence is int acknowledged && HasSequences())
+                await AwaitAckAsync(new SequenceTracker.Ticket(acknowledged, request.SequenceLifetime), lifetime.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (lifetime.IsCancellationRequested)
+        {
+            await _services.Scheduler.InvokeAsync(
+                () => ReleaseMiningOnLoopAsync(request, session), CancellationToken.None).ConfigureAwait(false);
+            throw;
+        }
     }
 
     /// <summary>Cancels an in-progress dig at a position.</summary>
     public Task CancelDigAsync(BlockPos position, Direction face = Direction.Up, CancellationToken ct = default)
-        => _sink.SendAsync(new ServerboundPlayerActionPacket(1, position, (byte)face, NextSequence()), ct).AsTask();
+        => _services.Scheduler.InvokeAsync(() => CancelMiningOnLoopAsync(position, ct), ct);
 
     /// <summary>How long <see cref="DigBlockVerifiedAsync"/> waits for the server to say what happened to the block before it gives up and reports <see cref="DigOutcome.Unconfirmed"/>.</summary>
     public static readonly TimeSpan DefaultDigConfirmationWindow = TimeSpan.FromSeconds(1);
@@ -68,8 +97,23 @@ public sealed class InteractionActions
     /// <param name="confirmationWindow">How long to wait for a settled answer before reporting <see cref="DigOutcome.Unconfirmed"/>; defaults to <see cref="DefaultDigConfirmationWindow"/>.</param>
     /// <param name="ct">Cancels the send and the wait.</param>
     /// <exception cref="InvalidOperationException"><see cref="ClientSessionServices.Events"/> is null on this session. A poll-only read cannot tell an observed refusal (the server re-asserting the block) from silence, so this refuses rather than degrading to a guess.</exception>
-    public async Task<DigOutcome> DigBlockVerifiedAsync(
+    public Task<DigOutcome> DigBlockVerifiedAsync(
         BlockPos position, Direction face = Direction.Up, TimeSpan? confirmationWindow = null, CancellationToken ct = default)
+        => DigBlockVerifiedCoreAsync(position, face, viewDistance: null, confirmationWindow, ct);
+
+    /// <summary>Mines one block under the current block view ray and then verifies the server's block state. Leaving the requested block releases the attack and cancels the operation.</summary>
+    /// <param name="position">The single block to mine.</param>
+    /// <param name="maxDistance">The maximum block view distance. Must be positive and finite.</param>
+    /// <param name="confirmationWindow">The server confirmation window, or the default when null.</param>
+    /// <param name="ct">Releases the held attack and cancels confirmation.</param>
+    public Task<DigOutcome> DigBlockInViewVerifiedAsync(BlockPos position, double maxDistance = PlayerReach.SurvivalBlockReach, TimeSpan? confirmationWindow = null, CancellationToken ct = default)
+    {
+        if (!(maxDistance > 0) || !double.IsFinite(maxDistance))
+            throw new ArgumentOutOfRangeException(nameof(maxDistance));
+        return DigBlockVerifiedCoreAsync(position, Direction.Up, maxDistance, confirmationWindow, ct);
+    }
+
+    private async Task<DigOutcome> DigBlockVerifiedCoreAsync(BlockPos position, Direction face, double? viewDistance, TimeSpan? confirmationWindow, CancellationToken ct)
     {
         EventBus events = _services.Events
             ?? throw new InvalidOperationException(
@@ -86,7 +130,7 @@ public sealed class InteractionActions
 
         });
 
-        await DigBlockAsync(position, face, ct).ConfigureAwait(false);
+        await DigBlockCoreAsync(position, face, viewDistance, ct).ConfigureAwait(false);
 
         long deadline = Environment.TickCount64 + (long)window.TotalMilliseconds;
         while (true)
@@ -152,11 +196,17 @@ public sealed class InteractionActions
             ?? throw new InvalidOperationException(
                 $"{nameof(UseBlockVerifiedAsync)} requires an event bus (ClientSessionServices.Events), and none is wired on this session.");
 
-        // Both refusals happen BEFORE the send, because both describe a packet the server would do nothing with, and a send nobody acts on costs a whole confirmation window.
-        if (!IsWithinReach(target))
+        (bool WithinReach, bool HeldItemPreventsUse) ReadPreflight()
+            => (IsWithinReach(target), _services.Self.Sneaking && !HasUnavailableTrackedHeldItem() && !HeldItem().IsEmpty);
+
+        // Read both preflight facts on the session owner. An unavailable held stack cannot prove a refusal.
+        var preflight = _services.Scheduler.IsCurrent
+            ? ReadPreflight()
+            : await _services.Scheduler.InvokeAsync(ReadPreflight, ct).ConfigureAwait(false);
+        if (!preflight.WithinReach)
             return UseBlockOutcome.OutOfReach;
 
-        if (_services.Self.Sneaking && !HeldItem().IsEmpty)
+        if (preflight.HeldItemPreventsUse)
         {
             // When secondary use is active and a hand holds an item, the held item is used on the block instead of invoking the block's own action. Against a door this means trying to place the held item. Sneaking with empty hands still opens the door, so the refusal is on the pair.
             return UseBlockOutcome.NotUsed;
@@ -266,12 +316,11 @@ public sealed class InteractionActions
     /// <summary>Whether the player's eye is within <see cref="BlockInteractionRange"/> of the nearest point of the target's unit cube.</summary>
     private bool IsWithinReach(BlockPos target)
     {
-        Vec3d feet = _services.Self.Position;
-        double eyeY = feet.Y + Umpk.Physics.PhysicsConstants.PlayerStandingEyeHeight;
+        Vec3d eye = _services.EyePosition;
 
-        double dx = Nearest(feet.X, target.X);
-        double dy = Nearest(eyeY, target.Y);
-        double dz = Nearest(feet.Z, target.Z);
+        double dx = Nearest(eye.X, target.X);
+        double dy = Nearest(eye.Y, target.Y);
+        double dz = Nearest(eye.Z, target.Z);
         return (dx * dx) + (dy * dy) + (dz * dz) <= BlockInteractionRange * BlockInteractionRange;
 
         // The gap between a coordinate and the [min, min+1] span of the cube on that axis; zero inside.
@@ -279,39 +328,64 @@ public sealed class InteractionActions
             => value < min ? min - value : value > min + 1 ? value - (min + 1) : 0.0;
     }
 
-    /// <summary>Places / uses an item against a block face at a hit position.</summary>
+    /// <summary>Places / uses an item against a block face at a hit position. A known successful local placement sends its vanilla animation before acknowledgment. Specialized rules without a prediction retain the packet-only behavior.</summary>
     /// <remarks>1.8 has no <c>use_item_on</c>: the whole interaction travels on <c>block_place</c>, a different record with a different field set. This routes on the version rather than on a codec. Nothing routed before, so on protocol 47 the send resolved no outbound entry and threw, which is why 1.8 could neither place a block nor open a container.</remarks>
     public async Task PlaceBlockAsync(
         BlockPos position, Direction face, Vec3d cursor, Hand hand = Hand.Main,
         bool insideBlock = false, CancellationToken ct = default)
     {
-        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn))
+        if (_services.Scheduler.IsCurrent)
+            throw new InvalidOperationException("Block use must be awaited outside the session loop so acknowledgments can be processed.");
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        SequenceTracker.Lifetime? sequenceLifetime = null;
+        int? sequence = await _services.Scheduler.InvokeAsync(() =>
         {
-            await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, ct).ConfigureAwait(false);
-            return;
-        }
-
-        int seq = _sequences.Next();
-        await _sink.SendAsync(
-            new ServerboundUseItemOnPacket(
-                (int)hand, position, (int)face,
-                (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, seq),
-            ct).ConfigureAwait(false);
-        if (HasSequences())
-            await AwaitAckAsync(seq, ct).ConfigureAwait(false);
-
+            sequenceLifetime = _sequences.CaptureLifetime();
+            return SendBlockUseOnLoopAsync(position, face, cursor, hand, insideBlock, lifetime.Token, session);
+        }, lifetime.Token).ConfigureAwait(false);
+        if (sequence is int acknowledged && HasSequences())
+            await AwaitAckAsync(new SequenceTracker.Ticket(acknowledged, sequenceLifetime!), lifetime.Token).ConfigureAwait(false);
     }
 
     /// <summary>Uses the held item in the air.</summary>
     /// <remarks>Same era split as <see cref="PlaceBlockAsync"/>. 1.8 spells "use the held item in the air" as a <c>block_place</c> at the sentinel position (-1, -1, -1) with face 255. The 1.8 form carries only the held item stack.</remarks>
-    public Task UseItemAsync(Hand hand = Hand.Main, CancellationToken ct = default)
+    public async Task UseItemAsync(Hand hand = Hand.Main, CancellationToken ct = default)
     {
-        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItem))
-            return SendLegacyBlockPlaceAsync(nameof(UseItemAsync), LegacyUseItemPosition, LegacyUseItemFace, default, ct);
+        RequireBlockUseHand(hand, nameof(UseItemAsync));
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await UseItemOnLoopAsync(hand, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => UseItemOnLoopAsync(hand, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
 
-        return _sink.SendAsync(
-            new ServerboundUseItemPacket((int)hand, _sequences.Next(), _services.Self.Yaw, _services.Self.Pitch),
-            ct).AsTask();
+    private async ValueTask UseItemOnLoopAsync(Hand hand, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        // The native air-use controller returns for spectator before synchronizing the selected slot.
+        if (_services.Self.GameMode == GameMode.Spectator)
+            return;
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
+        if (_blockProfile.AirUsePublishesPosition)
+        {
+            Vec3d position = _services.Self.Position;
+            await sink.SendAsync(new ServerboundMovePlayerPosRotPacket(position.X, position.Y, position.Z,
+                _services.Self.Yaw, _services.Self.Pitch, _services.Self.OnGround, HorizontalCollision: false), session).ConfigureAwait(false);
+        }
+        if (!_services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItem))
+            await SendLegacyBlockPlaceAsync(nameof(UseItemAsync), LegacyUseItemPosition, LegacyUseItemFace, default, session, sink).ConfigureAwait(false);
+        else
+            await sink.SendAsync(new ServerboundUseItemPacket((int)hand, _sequences.Next(), _services.Self.Yaw, _services.Self.Pitch), session).ConfigureAwait(false);
+    }
+
+    private ValueTask<IPacketSink> PrepareInteractionPacketSinkAsync(CancellationToken session)
+    {
+        session.ThrowIfCancellationRequested();
+        return _services.PrepareInteractionPacketSink is { } prepare ? prepare(session) : ValueTask.FromResult(_sink);
     }
 
     /// <summary>The sentinel position 1.8 sends for "use the held item in the air".</summary>
@@ -321,7 +395,7 @@ public sealed class InteractionActions
     private const int LegacyUseItemFace = 255;
 
     /// <summary>Sends the pre-1.9 <c>block_place</c>. The held item comes from the client's inventory snapshot. The server acts on its own held-stack state and uses the packet copy for resynchronization, so a session without inventory state sends an empty stack and may receive a corrective slot update.</summary>
-    private Task SendLegacyBlockPlaceAsync(string action, BlockPos position, int face, Vec3d cursor, CancellationToken ct)
+    private Task SendLegacyBlockPlaceAsync(string action, BlockPos position, int face, Vec3d cursor, CancellationToken ct, IPacketSink? packetSink = null)
     {
         Require(
             _services.Wire.CanSendPlay(ItemPackets.Serverbound.LegacyBlockPlace),
@@ -329,7 +403,7 @@ public sealed class InteractionActions
             ItemPackets.Serverbound.LegacyBlockPlace.Id,
             "Neither use_item_on nor the 1.8 block_place is sendable on this version.");
 
-        return _sink.SendAsync(
+        return (packetSink ?? _sink).SendAsync(
             new ServerboundLegacyBlockPlacePacket(
                 position, face, HeldItem(), LegacyCursor(cursor.X), LegacyCursor(cursor.Y), LegacyCursor(cursor.Z)),
             ct).AsTask();
@@ -340,21 +414,38 @@ public sealed class InteractionActions
         ? PlayerInventorySnapshot.ResolveHeldItem(_services.State.Inventory.PlayerSlots, _services.State.Self.HeldSlot)
         : ItemStack.Empty;
 
-    /// <summary>Converts a 0..1 in-block cursor coordinate to the 1.8 wire byte. Vanilla writes <c>(int)(facing * 16.0F)</c> and reads <c>readUnsignedByte() / 16.0F</c>. The clamp keeps the value inside the record's documented 0..15 domain; the only input it changes is an exact 1.0, and 15/16 lands on the same side of every half-block test vanilla applies to this field.</summary>
-    private static byte LegacyCursor(double value) => (byte)Math.Clamp((int)(value * 16.0), 0, 15);
+    /// <summary>Converts the hit coordinate to vanilla's float before writing <c>(int)(facing * 16.0F)</c> as a byte. The upper face at 1.0 becomes 16, which the server reads back as 1.0.</summary>
+    private static byte LegacyCursor(double value) => unchecked((byte)(int)((float)value * 16.0F));
 
     /// <summary>Attacks an entity (uses the 26.1+ dedicated attack packet where available).</summary>
-    public Task AttackEntityAsync(int entityId, CancellationToken ct = default)
+    public async Task AttackEntityAsync(int entityId, CancellationToken ct = default)
     {
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await AttackEntityOnLoopAsync(entityId, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => AttackEntityOnLoopAsync(entityId, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
+
+    private async ValueTask AttackEntityOnLoopAsync(int entityId, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
         int attackId = _services.Wire.ServerboundPlay(Identifier.Minecraft("attack"));
         if (attackId >= 0)
-            return _sink.SendAsync(new ServerboundAttackPacket(entityId), ct).AsTask();
-
-        // Legacy: interact with action = attack, no hand.
-        return _sink.SendAsync(
-            new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
-                UsingSecondaryAction: _services.Self.Sneaking),
-            ct).AsTask();
+            await sink.SendAsync(new ServerboundAttackPacket(entityId), session).ConfigureAwait(false);
+        else
+        {
+            // Legacy: interact with action = attack, no hand.
+            await sink.SendAsync(
+                new ServerboundInteractPacket(entityId, 1, Hand: null, InteractAt: null,
+                    UsingSecondaryAction: _services.Self.Sneaking),
+                session).ConfigureAwait(false);
+        }
+        _attackCharge.Synchronize(_services.State.PlayerLifetime);
+        _attackCharge.Reset();
     }
 
     /// <summary>Interacts with an entity (right-click).</summary>
@@ -367,11 +458,14 @@ public sealed class InteractionActions
     /// <summary>Swings the given arm.</summary>
     /// <remarks>26.3 removes the swing-arm send in favour of the handless punch: when the session binds punch, both hands send it (the packet carries no hand to choose with); older eras keep the hand-carrying swing. The branch reads the bound outbound table, never a protocol number.</remarks>
     public Task SwingAsync(Hand hand = Hand.Main, CancellationToken ct = default)
+        => SendSwingAsync(_sink, hand, ct).AsTask();
+
+    private ValueTask SendSwingAsync(IPacketSink sink, Hand hand, CancellationToken ct)
     {
         if (_services.Wire.CanSendPlay(EntityPackets.Serverbound.Punch))
-            return _sink.SendAsync(new ServerboundPunchPacket(), ct).AsTask();
+            return sink.SendAsync(new ServerboundPunchPacket(), ct);
 
-        return _sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct).AsTask();
+        return sink.SendAsync(new ServerboundSwingPacket((int)hand, HasHand: true), ct);
     }
 
     /// <summary>Updates the text of the sign at <paramref name="position"/> (the sign whose editor the server opened). The <paramref name="isFrontText"/> flag selects the front/back side on 1.20+ and is ignored on older versions. Lines beyond four are dropped and missing lines are sent empty.</summary>
@@ -430,15 +524,15 @@ public sealed class InteractionActions
     // A bounded wait for the block-change ack; a silent server falls back to write-completion.
     private const double AckTimeoutSeconds = 5.0;
 
-    private async Task AwaitAckAsync(int sequence, CancellationToken ct)
+    private async Task AwaitAckAsync(SequenceTracker.Ticket ticket, CancellationToken ct)
     {
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(TimeSpan.FromSeconds(AckTimeoutSeconds));
         try
         {
-            await _sequences.WaitForAsync(sequence, cts.Token).ConfigureAwait(false);
+            await _sequences.WaitForAsync(ticket, cts.Token).ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        catch (OperationCanceledException error) when (!ct.IsCancellationRequested && error is not SequenceTracker.LifetimeEndedException)
         {
             // Timed out waiting for the acknowledgment: fall back to write-completion.
         }

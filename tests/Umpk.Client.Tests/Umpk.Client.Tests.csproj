@@ -6,8 +6,64 @@
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/LegacyAmbientMob315.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyBatFluid315.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/PlacementCollision.native.json" />
+    <EmbeddedResource Include="Fixtures/SpawnMetadata.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityPacketPosition.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityPacketAngles.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityIngressAngles.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityBounds.native.json" />
+    <EmbeddedResource Include="Fixtures/LegacyVillagerGeometry.native.json" />
+    <EmbeddedResource Include="Fixtures/ClassicVillagerGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/ClassicFarmGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyFarmGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/PoseFarmGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/MappedFarmGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/EntityRoleGeometry.native.json" />
+    <EmbeddedResource Include="Fixtures/MappedEntityRoleGeometry.native.json.gz" />
+    <EmbeddedResource Include="../../tools/extraction/tests/fixtures/villager-box-transitions-1.14.4.json" Link="Fixtures/VillagerGeometry1.14.4.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityInterpolation.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityInterpolationEdges.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityTeleport.native.json" />
+    <EmbeddedResource Include="Fixtures/EntityTeleportController.native.json" />
+    <EmbeddedResource Include="Fixtures/RemotePlayer.native.json" />
+    <EmbeddedResource Include="Fixtures/ShulkerGeometry.native.json" />
+    <EmbeddedResource Include="Fixtures/ShulkerGeometryEdges.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/PlayerEntityGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPosePlayerGeometry.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerClearance.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyCompositeClearance.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerLifecycle.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyLocalPlayerLifecycle.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerSizePhase.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerWake.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyBedOccupied.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerTraversal.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/Protocol47FallingBlock.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/OrdinaryLivingScale.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/OrdinaryLivingScaleMotion.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LocalPlayerScale.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LocalScaleRespawn.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerBedAvailability.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerSpawn.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerDeath.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerDeathTraversal.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerBlockContext.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerEmptyAlias.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/LegacyPlayerPartialContext.native.json.gz" />
+    <EmbeddedResource Include="Fixtures/PlayerInfoLookup.native.json" />
+    <EmbeddedResource Include="Fixtures/LegacyRemotePlayer.native.json" />
+    <EmbeddedResource Include="Fixtures/LegacyTeleportInterpolation.native.json" />
+    <EmbeddedResource Include="Fixtures/MappedPlayerInterpolation.native.json" />
+    <EmbeddedResource Include="Fixtures/AttackCharge.native.json" />
+    <EmbeddedResource Include="Fixtures/PistonPublication.native.json" />
     <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
     <ProjectReference Include="../../src/Umpk.Data.Java/Umpk.Data.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../Umpk.Physics.Tests/Fixtures/BlockCollisionGrid.native.json" Link="Fixtures/BlockCollisionGrid.native.json" />
+    <EmbeddedResource Include="Fixtures/OffsetCollision.native.json" />
   </ItemGroup>
 </Project>

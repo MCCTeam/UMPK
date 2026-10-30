@@ -44,11 +44,11 @@ public sealed class PhysicsProfileSelectionTests
             $"legacy and modern water motion did not diverge (dist={distance}); legacy={legacyPos}, modern={modernPos}");
     }
 
-    // (b) ForProtocol feature-era breakpoints. Expected values read from PhysicsProfile.ForProtocol: <= 47: Legacy fluid, no elytra/swim/crawl, PreCrawl pose, Legacy cadence 48.. 392: Legacy fluid, elytra, no swim/crawl, PreCrawl pose, DirtyChecked cadence 393.. 476: SwimmingUpdate, elytra, swim pose, no crawl, PreCrawl pose, DirtyChecked
+    // (b) ForProtocol feature-era breakpoints. Expected values read from PhysicsProfile.ForProtocol: <= 47: Legacy fluid, no elytra/swim/crawl, LegacyStanding pose, Legacy cadence 48.. 392: Legacy fluid, elytra, no swim/crawl, PreCrawl pose, DirtyChecked cadence 393.. 476: SwimmingUpdate, elytra, swim pose, no crawl, PreCrawl pose, DirtyChecked
     // >= 477: Modern (SwimmingUpdate, elytra, swim + crawl, ModernCrawl pose, DirtyChecked)
     [Theory]
-    [InlineData(46, FluidMovementEra.Legacy, false, false, false, PoseDimensionsEra.PreCrawl, PositionSendCadence.Legacy)]
-    [InlineData(47, FluidMovementEra.Legacy, false, false, false, PoseDimensionsEra.PreCrawl, PositionSendCadence.Legacy)]
+    [InlineData(46, FluidMovementEra.Legacy, false, false, false, PoseDimensionsEra.LegacyStanding, PositionSendCadence.Legacy)]
+    [InlineData(47, FluidMovementEra.Legacy, false, false, false, PoseDimensionsEra.LegacyStanding, PositionSendCadence.Legacy)]
     [InlineData(48, FluidMovementEra.Legacy, true, false, false, PoseDimensionsEra.PreCrawl, PositionSendCadence.DirtyChecked)]
     [InlineData(392, FluidMovementEra.Legacy, true, false, false, PoseDimensionsEra.PreCrawl, PositionSendCadence.DirtyChecked)]
     [InlineData(393, FluidMovementEra.SwimmingUpdate, true, true, false, PoseDimensionsEra.PreCrawl, PositionSendCadence.DirtyChecked)]

@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "entities": {
+    "armor_stand": 0,
+    "arrow": 0,
+    "bat": 0,
+    "blaze": 0,
+    "boat": 0,
+    "cat": 0,
+    "cave_spider": 0,
+    "chest_minecart": 0,
+    "chicken": 0,
+    "command_block_minecart": 0,
+    "cow": 0,
+    "creeper": 0,
+    "egg": 0,
+    "end_crystal": 0,
+    "ender_dragon": 0,
+    "ender_pearl": 0,
+    "enderman": 0,
+    "endermite": 0,
+    "experience_bottle": 0,
+    "experience_orb": 1,
+    "eye_of_ender": 0,
+    "falling_block": 0,
+    "fireball": 0,
+    "firework_rocket": 0,
+    "fishing_bobber": 0,
+    "furnace_minecart": 0,
+    "ghast": 0,
+    "giant": 0,
+    "guardian": 0,
+    "hopper_minecart": 0,
+    "horse": 0,
+    "iron_golem": 0,
+    "item": 1,
+    "item_frame": 0,
+    "leash_knot": 0,
+    "magma_cube": 0,
+    "minecart": 0,
+    "mooshroom": 0,
+    "painting": 0,
+    "pig": 0,
+    "potion": 0,
+    "rabbit": 0,
+    "sheep": 0,
+    "silverfish": 0,
+    "skeleton": 0,
+    "slime": 0,
+    "small_fireball": 0,
+    "snow_golem": 0,
+    "snowball": 0,
+    "spawner_minecart": 0,
+    "spider": 0,
+    "squid": 0,
+    "tnt": 0,
+    "tnt_minecart": 0,
+    "villager": 0,
+    "witch": 0,
+    "wither": 0,
+    "wither_skull": 0,
+    "wolf": 0,
+    "zombie": 0,
+    "zombified_piglin": 0
+  },
+  "fixed_boxes": {},
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_legacy_item_obstruction.py",
+    "tool_sha256": "c0618a3aaeacc42f0502029669eb354f0ac005dae77dae6f494c0f20feca58d4",
+    "version": "1.8.9",
+    "protocol": 47,
+    "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+    "server_sha256": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312",
+    "measurement_sha256": "5904935ead5c10fe2451676ee942ea6dd7e823dd4c06fe0255db90d046ced38c",
+    "audit_sha256": "1df5f7f0ad97dac308d7cef72972d93ec468b1934252479403a9ba0852035371",
+    "preservation": {
+      "unchanged_class_files": 2507,
+      "unsigned_jar_sha256": "de6f21e9548af2dcd77e4158355f02908e6bc65e370e10a8bc021d2713e15480",
+      "classes_sha256": "25e6298ea893dae01583fd24745239e970d811f5410f8dc3e66b926c37290e96"
+    },
+    "building_flag_source_sha256": {
+      "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+      "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+      "pr.java": "df49f566c9875133134d74dc37f879ea57070827dda979f2a4226f76bd9ffab4",
+      "uf.java": "2e805f25d311ce7a647ccab9f2d2295e50757a08319928a91158c4aab1235d2d",
+      "ux.java": "e05979c5f15528a97dfe14cb1c1534e3cc9f692c37790228a37e259f4effdfb1",
+      "uy.java": "8fcd0d5726517f623166bad55dca34d88247cde5381bca38e5fc986c5048b1b1",
+      "uz.java": "6735693c2519493bd9780c20f7b27c6ccc675713b7ca5d30f03b4eb518567cea",
+      "va.java": "333519e7896f7a5de05985a2d88eecc7a01c403ac064a1bc51c3da2812babccb",
+      "vj.java": "fb2f9de158a5ed416ed51bab891c3cc104aa5067e764faeba0530b1d75d84db5"
+    },
+    "note": "The original item and XP-orb entities are permanently nonblocking. Item constructor measurements are unchanged. The XP-orb rule follows the reviewed source and original-bytecode proof: its base flag stays false and all flag writers target unrelated entity classes. No XP constructor, entity/world tick or native world-query invocation was executed for this proof. Other entries remain unknown (0).",
+    "aliases": [
+      {
+        "version": "1.8",
+        "client_sha256": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+        "server_sha256": "40e23f3823d6f0e3cbadc491cedb55b8ba53f8ab516b68182ddd1536babeb291",
+        "measurement_sha256": "a730a7db59b0b99b09be49d745a49a98c475624319e08a51b250cbe58b80a693",
+        "audit_sha256": "4c1c596d16608b9219b86346eafe49b4dff6280d6716290c6496e2b9918ba910"
+      },
+      {
+        "version": "1.8.1",
+        "client_sha256": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+        "server_sha256": "ef5f5a1a1a78087859b18153acf97efc6ecb12540ac08d82b9c95024249b9845",
+        "measurement_sha256": "dee9e809a013f8e33feac6695751fcf742fdfc8cec758450e9e773eea33b25c7",
+        "audit_sha256": "004a7738f7fc14b722b88b3acdd75d51994e1c0f3e78bb231913ac91904bbc1a"
+      },
+      {
+        "version": "1.8.2",
+        "client_sha256": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+        "server_sha256": "d99f3b3478018cb454fbee36fd60e3c4acbe1132f1cb26b3657f9ad291e7035c",
+        "measurement_sha256": "9cae3e0da3cf69f442b1a4eb08b39b470b37410219a306eaaa1b9506f971509b",
+        "audit_sha256": "76481d5b32a1a12e2bf6519cfbaba59dc1fce5383d7839477aade824eb60bd75"
+      },
+      {
+        "version": "1.8.3",
+        "client_sha256": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+        "server_sha256": "a26751b18ccc80ceef488da645c3b785aa528e2ae20a6a6dbd46f6dc754e62bd",
+        "measurement_sha256": "5149f6b517dd7276413bc561f0e9272151aeeee8d2c8d41df8d05471493c7f29",
+        "audit_sha256": "1c34e56a5cf65a047598b6ac53f8d2e4463636e0ade4cbccf337845341d0363a"
+      },
+      {
+        "version": "1.8.4",
+        "client_sha256": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+        "server_sha256": "394a9d0d5bcd03272a58f036b8736a47d26d63b45a4e7c820629114876e72107",
+        "measurement_sha256": "099a78c1c30870192ed83e1ff40828cb2acc8d06c4f935afb5d2f7d14555cc2f",
+        "audit_sha256": "a6da0283a553b49f486923f3ed935a18d3755c148ac7054a9633f3188b87148a"
+      },
+      {
+        "version": "1.8.5",
+        "client_sha256": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+        "server_sha256": "6a412e89009acfcd5c56084ddab4f9676c5561bb58a3f22d5ea4ba4ac5d3503e",
+        "measurement_sha256": "d5c39c25e82154061eae57a74cca42170cd51f86fdb62b241027e974b19a45fc",
+        "audit_sha256": "e1cd6419037e626b0bdd6c0ac0ba8b0e1f962a07faa0710a49027ab9e4cdddab"
+      },
+      {
+        "version": "1.8.6",
+        "client_sha256": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+        "server_sha256": "7fc66b2b54f0f4d65fdd6d6484a50f432c144ef02072d3435d5660f120f58e0d",
+        "measurement_sha256": "138b58188239167e3f6db1a225cc208e2ee130b8e0ec1a112c35c671273bc8e1",
+        "audit_sha256": "58d3f9f85b92ce70e6f5db17988c3ec2cc531bf3cad7f4b66d0695f86b6abee6"
+      },
+      {
+        "version": "1.8.7",
+        "client_sha256": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+        "server_sha256": "5cf4a49762c996c94f6b8b119f1c80b4de3c12b2f5c53268801905bb7daa0644",
+        "measurement_sha256": "c3591eaf25999621952bffc151458208a7e9333947b5e1af5e633e8fd2010afe",
+        "audit_sha256": "707087250442e9c53bab276f8bfdad406fc0effd79cdb7c6b81babbd5160bf72"
+      },
+      {
+        "version": "1.8.8",
+        "client_sha256": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+        "server_sha256": "39aef720dc5309476f56f2e96a516f3dd3041bbbf442cbfd47d63acbd06af31e",
+        "measurement_sha256": "974349921ad49534c194aaf3995c484b4be95a0433bd0d51be3118d0eee8be8a",
+        "audit_sha256": "cc8992cc02b2623c90500577291c6a233aee645cac402c523a71de1cbf53d49d"
+      },
+      {
+        "version": "1.8.9",
+        "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+        "server_sha256": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312",
+        "measurement_sha256": "5904935ead5c10fe2451676ee942ea6dd7e823dd4c06fe0255db90d046ced38c",
+        "audit_sha256": "1df5f7f0ad97dac308d7cef72972d93ec468b1934252479403a9ba0852035371"
+      }
+    ],
+    "source_nonblocking_proof": {
+      "binding_sha256": "125b0f16e25844d46e69c773e96bc426f802d2326184d8a9bbca2ca382ed772e",
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "entity": "minecraft:experience_orb",
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
+  }
+}

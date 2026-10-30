@@ -21,6 +21,61 @@ public class ItemComponentPayloadCodecTests
 {
     private const string SetSlot = "minecraft:container_set_slot";
 
+    [Theory]
+    [InlineData(766, 22)]
+    [InlineData(767, 22)]
+    [InlineData(768, 26)]
+    [InlineData(769, 26)]
+    public void Tool_Before1_21_5HasNoTrailingCreativeFlag(int protocol, int wireId)
+    {
+        byte[] frame = SetSlotFrame(protocol, wireId, static (ref PacketWriter writer) =>
+        {
+            writer.WriteVarInt(0);
+            writer.WriteFloat(7.5F);
+            writer.WriteVarInt(2);
+        });
+
+        ToolComponent tool = Decode(protocol, frame, DataComponents.Tool, out byte[] reEncoded);
+
+        Assert.Equal(7.5F, tool.DefaultMiningSpeed);
+        Assert.Equal(2, tool.DamagePerBlock);
+        Assert.Empty(tool.Rules);
+        Assert.True(tool.CanDestroyBlocksInCreative);
+        Assert.Equal(frame, reEncoded);
+        ToolComponent duplicate = Decode(protocol, frame, DataComponents.Tool, out _);
+        Assert.Equal(tool, duplicate);
+        Assert.Equal(tool.GetHashCode(), duplicate.GetHashCode());
+    }
+
+    [Theory]
+    [InlineData(770, 25)]
+    [InlineData(771, 25)]
+    [InlineData(772, 25)]
+    [InlineData(773, 25)]
+    [InlineData(774, 28)]
+    [InlineData(775, 28)]
+    [InlineData(776, 28)]
+    [InlineData(777, 28)]
+    public void Tool_From1_21_5PreservesAnExplicitFalseCreativeFlag(int protocol, int wireId)
+    {
+        byte[] frame = SetSlotFrame(protocol, wireId, static (ref PacketWriter writer) =>
+        {
+            writer.WriteVarInt(0);
+            writer.WriteFloat(7.5F);
+            writer.WriteVarInt(2);
+            writer.WriteBool(false);
+        });
+
+        ToolComponent tool = Decode(protocol, frame, DataComponents.Tool, out byte[] reEncoded);
+
+        Assert.Equal(7.5F, tool.DefaultMiningSpeed);
+        Assert.False(tool.CanDestroyBlocksInCreative);
+        Assert.Equal(frame, reEncoded);
+        ToolComponent duplicate = Decode(protocol, frame, DataComponents.Tool, out _);
+        Assert.Equal(tool, duplicate);
+        Assert.Equal(tool.GetHashCode(), duplicate.GetHashCode());
+    }
+
     // banner_patterns has the same wire form on all ten eras.
 
     /// <summary>(protocol, <c>minecraft:banner_patterns</c> wire id) for every component era. This is the component at wire id 48 on protocol 766.</summary>
@@ -193,15 +248,28 @@ public class ItemComponentPayloadCodecTests
         }
     }
 
-    /// <summary><c>can_break</c> still costs the packet on 770-776, because 1.21.5 appended <c>DataComponentMatchers</c> to <c>BlockPredicate</c>, and its exact-match half is a list of <c>TypedDataComponent</c> whose recursive compact payloads can name unmodeled components and cannot be skipped (the predicate-dispatch half is self-delimiting NBT and could be; see the codec's remarks).</summary>
+    /// <summary>The measured 770 codec accepts vanilla's legal empty predicate wire list; 776 retains its explicit unmodeled boundary. This does not establish a DATA hash for an empty list or support for later predicate layouts.</summary>
     [Theory]
     [InlineData(770, 12)]
     [InlineData(776, 15)]
-    public void CanBreak_StillCostsThePacketOn1_21_5AndUp(int protocol, int wireId)
+    public void CanBreak_IsTypedOnlyOnTheMeasured770Boundary(int protocol, int wireId)
     {
         byte[] frame = SetSlotFrame(protocol, wireId, static (ref PacketWriter w) => w.WriteVarInt(0));
 
         BoundPacketCodec bound = BoundCodec.At(protocol, PacketFlow.Clientbound, SetSlot);
+        if (protocol == 770)
+        {
+            var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.DecodeFrame(frame));
+            Assert.Equal(0, packet.ContainerId);
+            Assert.Equal(1, packet.StateId);
+            Assert.Equal(3, packet.Slot);
+            Assert.Equal(1, packet.Item.Count);
+            Assert.Equal(Identifier.Minecraft("stone"), packet.Item.Item.Id);
+            var predicate = Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(DataComponents.CanBreak));
+            Assert.Empty(predicate.Predicates);
+            Assert.Equal(frame, bound.Encode(packet));
+            return;
+        }
         var ex = Assert.Throws<UnmodeledItemComponentException>(() => bound.DecodeFrame(frame));
         Assert.Equal(Identifier.Minecraft("can_break"), ex.ComponentId);
     }

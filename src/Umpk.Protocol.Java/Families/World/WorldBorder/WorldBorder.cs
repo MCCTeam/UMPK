@@ -12,6 +12,10 @@ public static partial class WorldPackets
         /// <summary>1.8 combined world border packet (<c>minecraft:world_border</c>, action-tagged).</summary>
         public static readonly PacketType<ClientboundWorldBorderPacket> WorldBorder =
             new(ProtocolPhase.Play, PacketFlow.Clientbound, Identifier.Minecraft("world_border"));
+
+        /// <summary>1.9 through 1.16.5 combined world border packet (<c>minecraft:set_border</c>, action-tagged).</summary>
+        public static readonly PacketType<ClientboundSetBorderPacket> SetBorder =
+            new(ProtocolPhase.Play, PacketFlow.Clientbound, Identifier.Minecraft("set_border"));
     }
 }
 
@@ -29,6 +33,22 @@ public sealed record ClientboundWorldBorderPacket(
 {
     /// <inheritdoc />
     public PacketType Type => WorldPackets.Clientbound.WorldBorder;
+}
+
+/// <summary>The 1.9 through 1.16.5 combined world-border packet. Only fields selected by <see cref="Action"/> occur on the wire.</summary>
+public sealed record ClientboundSetBorderPacket(
+    WorldBorderAction Action,
+    double CenterX,
+    double CenterZ,
+    double OldSize,
+    double NewSize,
+    long LerpTime,
+    int PortalTeleportBoundary,
+    int WarningTime,
+    int WarningBlocks) : IPacket
+{
+    /// <inheritdoc />
+    public PacketType Type => WorldPackets.Clientbound.SetBorder;
 }
 
 /// <summary>The action tag of the 1.8 combined world-border packet.</summary>

@@ -98,6 +98,8 @@ public sealed class BubbleColumnAirTests
         {
             harness.State.Registries = JavaGameData.Registries(Protocol);
             harness.State.InstallWorld(world);
+            foreach (var loadedColumn in world.LoadedColumns)
+                harness.State.EntityMembership.LoadColumn(loadedColumn.Position);
             harness.State.Self.Position = new Vec3d(0.5, BedY + 4, 0.5);
             harness.State.Self.Velocity = Vec3d.Zero;
             holder.EnsureEngine();

@@ -1,0 +1,176 @@
+{
+  "metadata_index": 12,
+  "blocks_building": true,
+  "positions": [
+    [
+      -2.539794921875,
+      4.0,
+      1.647216796875
+    ]
+  ],
+  "rows": [
+    {
+      "from": 0,
+      "to": 0,
+      "position": 0,
+      "before_size": [
+        0.6,
+        1.95
+      ],
+      "before": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.239794909954071,
+        5.950000047683716,
+        1.947216808795929
+      ],
+      "after_size": [
+        0.6,
+        1.95
+      ],
+      "after_sync": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.239794909954071,
+        5.950000047683716,
+        1.947216808795929
+      ],
+      "intersects_destination": false,
+      "after_position": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.239794909954071,
+        5.950000047683716,
+        1.947216808795929
+      ]
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "position": 0,
+      "before_size": [
+        0.6,
+        1.95
+      ],
+      "before": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.239794909954071,
+        5.950000047683716,
+        1.947216808795929
+      ],
+      "after_size": [
+        0.3,
+        0.975
+      ],
+      "after_sync": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.539794921875,
+        4.975000023841858,
+        1.647216796875
+      ],
+      "intersects_destination": false,
+      "after_position": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.3897949159145355,
+        4.975000023841858,
+        1.7972168028354645
+      ]
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "position": 0,
+      "before_size": [
+        0.3,
+        0.975
+      ],
+      "before": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.3897949159145355,
+        4.975000023841858,
+        1.7972168028354645
+      ],
+      "after_size": [
+        0.6,
+        1.95
+      ],
+      "after_sync": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.0897949039936066,
+        5.950000047683716,
+        2.0972168147563934
+      ],
+      "intersects_destination": false,
+      "after_position": [
+        -2.839794933795929,
+        4.0,
+        1.347216784954071,
+        -2.239794909954071,
+        5.950000047683716,
+        1.947216808795929
+      ]
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "position": 0,
+      "before_size": [
+        0.3,
+        0.975
+      ],
+      "before": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.3897949159145355,
+        4.975000023841858,
+        1.7972168028354645
+      ],
+      "after_size": [
+        0.3,
+        0.975
+      ],
+      "after_sync": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.3897949159145355,
+        4.975000023841858,
+        1.7972168028354645
+      ],
+      "intersects_destination": false,
+      "after_position": [
+        -2.6897949278354645,
+        4.0,
+        1.4972167909145355,
+        -2.3897949159145355,
+        4.975000023841858,
+        1.7972168028354645
+      ]
+    }
+  ],
+  "origins": {
+    "zn": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "rt": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "sm": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "sf": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "rw": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "ry": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "kk": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "kh": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar",
+    "bby": "/home/anon/Projects/MinecraftOfficial/runs/legacy-villager-geometry-20261017-v1/client-unsigned.jar"
+  }
+}

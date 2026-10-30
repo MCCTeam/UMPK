@@ -13,9 +13,9 @@ internal static class BoundPacketApplierHarness
         return version!;
     }
 
-    internal static async Task<ApplierHarness> JoinedAsync(int protocol)
+    internal static async Task<ApplierHarness> JoinedAsync(int protocol, TimeProvider? time = null)
     {
-        var harness = new ApplierHarness(Version(protocol));
+        var harness = new ApplierHarness(Version(protocol), time: time);
         var spawn = new CommonPlayerSpawnInfo(
             DimensionTypeId: -1, Dimension: "minecraft:overworld", Seed: 0, GameType: 0,
             PreviousGameType: -1, IsDebug: false, IsFlat: false, LastDeathDimensionAndPos: null,

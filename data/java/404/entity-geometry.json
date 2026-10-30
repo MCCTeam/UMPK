@@ -1,0 +1,352 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "version": "1.13.2",
+    "protocol": 404,
+    "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+    "server_sha256": "ffd3aa2c25c5ba68a706b59f2abdc69ac1748e115ca9d3b47941e197736f088e",
+    "measurement_sha256": "4df8d7ac2f4c089a294cc0b996d7dbd3fd25c948ee7c826e9049d5c84c2e06a3",
+    "native_witnesses": 12,
+    "scope": "Original vanilla villager dimensions, age/pose callbacks and bounds refresh; controlled world inputs, no entity/world tick or attribute-scale sweep",
+    "legacy_ageable_roles": {
+      "measurement": "legacy-farm-geometry-all-20261017-v2",
+      "scope": "Original constructor, registry lookup, Boolean child predicate, metadata callback and position setter with controlled world inputs; no entity/world tick",
+      "helper_source_sha256": "1bb69a9efc770210d6a4db5527817085cc6ce7e70b11c0095a5d94c2771a8444",
+      "helper_class_sha256": "595555e8bc5baee2b932240abb80ca5b61bb8293eae6ca88544561bb843a6c78",
+      "releases": [
+        {
+          "version": "1.13.2",
+          "entity": "minecraft:chicken",
+          "protocol": 404,
+          "measurement_sha256": "86f452212b17f99bc886890b49c6f7dadff27851221baa7f52c136dabc43dbd6",
+          "binding_sha256": "e3ea86d87f9ffa96537088f4486027e2fb6fc9d3e83bfa702297d5cba62815bc",
+          "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+          "server_sha256": "ffd3aa2c25c5ba68a706b59f2abdc69ac1748e115ca9d3b47941e197736f088e",
+          "registry_class": "ajr",
+          "registry_numeric_id": 7,
+          "sources_sha256": {
+            "aeo.java": "3c4fd91943cd6a44c565728290d6f1eac47e068e507c6549af7a5f2083cc1b36",
+            "aer.java": "f8476bca0649e7bdd712042949087b218ba5cc7c844434e4d85430f8d44b1ed9",
+            "aev.java": "2e06db7eaa4d861c1450a750bfa355973255cdfe568fc448cd2a56875635e222",
+            "afa.java": "e94003702fb4e0aaeadcec97a060f288f1005aa5143d638e4310bac44568fa02",
+            "aix.java": "03356ec98edf58125134deb9c278c71a5d87309f5d4f1b8458ab773897860341",
+            "ajq.java": "998d7702042084c1b19f8b6920372e08f425d4867ad67b8e7b405625091fcc94",
+            "ajr.java": "c130018358f05e55b4206cd17db12969bef6db3216f78e43b5dba2f8699a05da",
+            "amm.java": "891633365756705806ed66ef5d8c5d9256a4f8f805481d27dc9babe4242b60d3",
+            "axy.java": "19326d6789d3dca300b1fba4c15f6eaad2ee8d9386259ad5c7e2ef85c6ac3a30",
+            "cea.java": "67ca55d00b9e33beca56248b13704306d888363e0fb8e248757e8e32b1235a14",
+            "ey.java": "44f989c5c46164a92930ef2faf4bde70f1a4a016308cd3ece1420d4bf9e110a5",
+            "fc.java": "cc76da202251b77967747ffcf2590916310f5cfd2a301f63e4bb09d1bcec7ef8",
+            "or.java": "797f98ea3daf99032ddef856087ce88f2ef17e0f6aef4c3dfea1e5598dfcb840",
+            "ou.java": "c19685a9f3204befc657653e16c1e5b9b6de78fafd7794f0ea2ca3da88818d3a",
+            "pf.java": "a235a953d5d07dcde9e5697c29d0bdec5c3cbfedf027e87f6f8c9c22d7ea8de1",
+            ".complete.json": "342b8b866d2ea452f7a9d5668c663a87104ab34dd43ab277a004748f60ae7579"
+          },
+          "preservation": {
+            "unchanged_class_files": 4027,
+            "unsigned_jar_sha256": "c75993221b6fa11a3305eb973b45a1e721f0ba5466abe8fbeebdf2ef1cbd4199",
+            "classes_sha256": "989fb43466349df3c905c248a753e313dcb0cb9dd517a0e8eafbd2e297ddc404"
+          },
+          "callback_delegation": [
+            {
+              "class": "ajr",
+              "override": false,
+              "unconditional_single_super_call": null
+            },
+            {
+              "class": "ajq",
+              "override": false,
+              "unconditional_single_super_call": null
+            }
+          ]
+        },
+        {
+          "version": "1.13.2",
+          "entity": "minecraft:cow",
+          "protocol": 404,
+          "measurement_sha256": "4350d8db32c7f66a0295d4b0583d9430ac3cd33d07e2aa86a8b6d78a5ae23466",
+          "binding_sha256": "9c70a38d099ab52b25848f8ef4a2b1a2c3dd835b024a65801f8acacc2fe690c2",
+          "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+          "server_sha256": "ffd3aa2c25c5ba68a706b59f2abdc69ac1748e115ca9d3b47941e197736f088e",
+          "registry_class": "ajt",
+          "registry_numeric_id": 9,
+          "sources_sha256": {
+            "aeo.java": "3c4fd91943cd6a44c565728290d6f1eac47e068e507c6549af7a5f2083cc1b36",
+            "aer.java": "f8476bca0649e7bdd712042949087b218ba5cc7c844434e4d85430f8d44b1ed9",
+            "aev.java": "2e06db7eaa4d861c1450a750bfa355973255cdfe568fc448cd2a56875635e222",
+            "afa.java": "e94003702fb4e0aaeadcec97a060f288f1005aa5143d638e4310bac44568fa02",
+            "aix.java": "03356ec98edf58125134deb9c278c71a5d87309f5d4f1b8458ab773897860341",
+            "ajq.java": "998d7702042084c1b19f8b6920372e08f425d4867ad67b8e7b405625091fcc94",
+            "ajt.java": "60d1a7e0c37a73fc02a57139b42a48ba29b8d121db1db784979d1fc7f59799ad",
+            "amm.java": "891633365756705806ed66ef5d8c5d9256a4f8f805481d27dc9babe4242b60d3",
+            "axy.java": "19326d6789d3dca300b1fba4c15f6eaad2ee8d9386259ad5c7e2ef85c6ac3a30",
+            "cea.java": "67ca55d00b9e33beca56248b13704306d888363e0fb8e248757e8e32b1235a14",
+            "ey.java": "44f989c5c46164a92930ef2faf4bde70f1a4a016308cd3ece1420d4bf9e110a5",
+            "fc.java": "cc76da202251b77967747ffcf2590916310f5cfd2a301f63e4bb09d1bcec7ef8",
+            "or.java": "797f98ea3daf99032ddef856087ce88f2ef17e0f6aef4c3dfea1e5598dfcb840",
+            "ou.java": "c19685a9f3204befc657653e16c1e5b9b6de78fafd7794f0ea2ca3da88818d3a",
+            "pf.java": "a235a953d5d07dcde9e5697c29d0bdec5c3cbfedf027e87f6f8c9c22d7ea8de1",
+            ".complete.json": "342b8b866d2ea452f7a9d5668c663a87104ab34dd43ab277a004748f60ae7579"
+          },
+          "preservation": {
+            "unchanged_class_files": 4027,
+            "unsigned_jar_sha256": "c75993221b6fa11a3305eb973b45a1e721f0ba5466abe8fbeebdf2ef1cbd4199",
+            "classes_sha256": "989fb43466349df3c905c248a753e313dcb0cb9dd517a0e8eafbd2e297ddc404"
+          },
+          "callback_delegation": [
+            {
+              "class": "ajt",
+              "override": false,
+              "unconditional_single_super_call": null
+            },
+            {
+              "class": "ajq",
+              "override": false,
+              "unconditional_single_super_call": null
+            }
+          ]
+        },
+        {
+          "version": "1.13.2",
+          "entity": "minecraft:pig",
+          "protocol": 404,
+          "measurement_sha256": "6ce4e6c289cf8e535758eab61cefa8df4d5cb707821611fb7ec230e3298087fc",
+          "binding_sha256": "30ade847676026e0bc269970d246456fa2edf0a60652009511d0634f976b443b",
+          "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+          "server_sha256": "ffd3aa2c25c5ba68a706b59f2abdc69ac1748e115ca9d3b47941e197736f088e",
+          "registry_class": "aka",
+          "registry_numeric_id": 51,
+          "sources_sha256": {
+            "aeo.java": "3c4fd91943cd6a44c565728290d6f1eac47e068e507c6549af7a5f2083cc1b36",
+            "aer.java": "f8476bca0649e7bdd712042949087b218ba5cc7c844434e4d85430f8d44b1ed9",
+            "aev.java": "2e06db7eaa4d861c1450a750bfa355973255cdfe568fc448cd2a56875635e222",
+            "afa.java": "e94003702fb4e0aaeadcec97a060f288f1005aa5143d638e4310bac44568fa02",
+            "aix.java": "03356ec98edf58125134deb9c278c71a5d87309f5d4f1b8458ab773897860341",
+            "ajq.java": "998d7702042084c1b19f8b6920372e08f425d4867ad67b8e7b405625091fcc94",
+            "aka.java": "e5ed14ddc54486ed0fd57647b31927de67ed9fe1837e24f1772f2c5483e60c9c",
+            "amm.java": "891633365756705806ed66ef5d8c5d9256a4f8f805481d27dc9babe4242b60d3",
+            "axy.java": "19326d6789d3dca300b1fba4c15f6eaad2ee8d9386259ad5c7e2ef85c6ac3a30",
+            "cea.java": "67ca55d00b9e33beca56248b13704306d888363e0fb8e248757e8e32b1235a14",
+            "ey.java": "44f989c5c46164a92930ef2faf4bde70f1a4a016308cd3ece1420d4bf9e110a5",
+            "fc.java": "cc76da202251b77967747ffcf2590916310f5cfd2a301f63e4bb09d1bcec7ef8",
+            "or.java": "797f98ea3daf99032ddef856087ce88f2ef17e0f6aef4c3dfea1e5598dfcb840",
+            "ou.java": "c19685a9f3204befc657653e16c1e5b9b6de78fafd7794f0ea2ca3da88818d3a",
+            "pf.java": "a235a953d5d07dcde9e5697c29d0bdec5c3cbfedf027e87f6f8c9c22d7ea8de1",
+            ".complete.json": "342b8b866d2ea452f7a9d5668c663a87104ab34dd43ab277a004748f60ae7579"
+          },
+          "preservation": {
+            "unchanged_class_files": 4027,
+            "unsigned_jar_sha256": "c75993221b6fa11a3305eb973b45a1e721f0ba5466abe8fbeebdf2ef1cbd4199",
+            "classes_sha256": "989fb43466349df3c905c248a753e313dcb0cb9dd517a0e8eafbd2e297ddc404"
+          },
+          "callback_delegation": [
+            {
+              "class": "aka",
+              "override": true,
+              "unconditional_single_super_call": true
+            },
+            {
+              "class": "ajq",
+              "override": false,
+              "unconditional_single_super_call": null
+            }
+          ]
+        },
+        {
+          "version": "1.13.2",
+          "entity": "minecraft:sheep",
+          "protocol": 404,
+          "measurement_sha256": "e2c106edae209159d9b69044c767bbcfd87292443adf5c5992d81ad6503b509d",
+          "binding_sha256": "855d7b8858705e27ff3bd76b3a887778b366101e7d0576a1c065af9fe6a2136d",
+          "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+          "server_sha256": "ffd3aa2c25c5ba68a706b59f2abdc69ac1748e115ca9d3b47941e197736f088e",
+          "registry_class": "akf",
+          "registry_numeric_id": 58,
+          "sources_sha256": {
+            "aeo.java": "3c4fd91943cd6a44c565728290d6f1eac47e068e507c6549af7a5f2083cc1b36",
+            "aer.java": "f8476bca0649e7bdd712042949087b218ba5cc7c844434e4d85430f8d44b1ed9",
+            "aev.java": "2e06db7eaa4d861c1450a750bfa355973255cdfe568fc448cd2a56875635e222",
+            "afa.java": "e94003702fb4e0aaeadcec97a060f288f1005aa5143d638e4310bac44568fa02",
+            "aix.java": "03356ec98edf58125134deb9c278c71a5d87309f5d4f1b8458ab773897860341",
+            "ajq.java": "998d7702042084c1b19f8b6920372e08f425d4867ad67b8e7b405625091fcc94",
+            "akf.java": "3f4c4e0bbe5e7e632aecc7c993ff02994d70df3cb1870b7fbedc9f33f62db141",
+            "amm.java": "891633365756705806ed66ef5d8c5d9256a4f8f805481d27dc9babe4242b60d3",
+            "axy.java": "19326d6789d3dca300b1fba4c15f6eaad2ee8d9386259ad5c7e2ef85c6ac3a30",
+            "cea.java": "67ca55d00b9e33beca56248b13704306d888363e0fb8e248757e8e32b1235a14",
+            "ey.java": "44f989c5c46164a92930ef2faf4bde70f1a4a016308cd3ece1420d4bf9e110a5",
+            "fc.java": "cc76da202251b77967747ffcf2590916310f5cfd2a301f63e4bb09d1bcec7ef8",
+            "or.java": "797f98ea3daf99032ddef856087ce88f2ef17e0f6aef4c3dfea1e5598dfcb840",
+            "ou.java": "c19685a9f3204befc657653e16c1e5b9b6de78fafd7794f0ea2ca3da88818d3a",
+            "pf.java": "a235a953d5d07dcde9e5697c29d0bdec5c3cbfedf027e87f6f8c9c22d7ea8de1",
+            ".complete.json": "342b8b866d2ea452f7a9d5668c663a87104ab34dd43ab277a004748f60ae7579"
+          },
+          "preservation": {
+            "unchanged_class_files": 4027,
+            "unsigned_jar_sha256": "c75993221b6fa11a3305eb973b45a1e721f0ba5466abe8fbeebdf2ef1cbd4199",
+            "classes_sha256": "989fb43466349df3c905c248a753e313dcb0cb9dd517a0e8eafbd2e297ddc404"
+          },
+          "callback_delegation": [
+            {
+              "class": "akf",
+              "override": false,
+              "unconditional_single_super_call": null
+            },
+            {
+              "class": "ajq",
+              "override": false,
+              "unconditional_single_super_call": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "schema": 1,
+  "entities": {
+    "minecraft:villager": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.6,
+          1.95,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.3,
+          0.975,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:chicken": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.4,
+          0.7,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.2,
+          0.35,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:cow": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.9,
+          1.4,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.45,
+          0.7,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:pig": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.9,
+          0.9,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.45,
+          0.45,
+          false,
+          true
+        ]
+      ]
+    },
+    "minecraft:sheep": {
+      "selector": [
+        12,
+        "boolean",
+        1,
+        0
+      ],
+      "pose_index": -1,
+      "refresh": "retain_minimum_on_growth",
+      "scale_attribute": "",
+      "variants": [
+        [
+          0,
+          0,
+          0.9,
+          1.3,
+          false,
+          true
+        ],
+        [
+          1,
+          0,
+          0.45,
+          0.65,
+          false,
+          true
+        ]
+      ]
+    }
+  }
+}

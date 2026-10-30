@@ -27,16 +27,20 @@ jobs:
           dotnet-version: 10.0.401
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
+      # Run one test project at a time; each assembly keeps its own concurrency.
       - name: Test
         if: matrix.os != 'ubuntu-latest'
-        run: dotnet test --no-build -c Release
+        run: dotnet test --no-build -c Release -m:1
       - name: Test with count gate
         if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: |
           set -o pipefail
-          dotnet test UMPK.sln --no-build -c Release 2>&1 | tee /tmp/umpk-test.log
+          dotnet test UMPK.sln --no-build -c Release -m:1 2>&1 | tee /tmp/umpk-test.log
           python3 engineering/testcounts/check_test_counts.py /tmp/umpk-test.log --baseline engineering/testcounts/expected_counts.json
+      - name: Test owned vanilla launcher and RCON
+        if: matrix.os == 'ubuntu-latest'
+        run: python3 -m unittest discover -s tools/minecraft-official -p 'test_*.py' -v
 
   format:
     name: format check

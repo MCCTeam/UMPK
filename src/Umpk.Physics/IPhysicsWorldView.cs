@@ -12,8 +12,17 @@ public interface IPhysicsWorldView
     /// <summary>The collision AABBs for a block state, in local (0..1) block coordinates.</summary>
     ReadOnlySpan<Aabb> GetCollisionShapes(BlockState state);
 
+    /// <summary>The block iterator's native voxel-query behavior. Views without exact grid data keep their bounding-box behavior.</summary>
+    BlockCollisionQueryEra CollisionQueryEra => BlockCollisionQueryEra.BoundingBoxes;
+
+    /// <summary>An exact block-local collision grid, or null when this view has only bounding boxes or requires a separate contextual shape.</summary>
+    BlockCollisionGrid? GetCollisionGrid(BlockState state) => null;
+
     /// <summary>Whether the chunk containing the given position is loaded (vanilla off-world fall behavior).</summary>
     bool IsChunkLoaded(BlockPos pos);
+
+    /// <summary>Whether the proposed box collides with the world border for the source's current position. The view owns the border's era and settings. Views without a border return false.</summary>
+    bool CollidesWithBorder(in Aabb box, Vec3d sourcePosition) => false;
 
     /// <summary>Appends the hard hitboxes of nearby entities (boats, shulkers) that overlap <paramref name="region"/> into <paramref name="into"/>. The default implementation adds nothing; hosts with entity tracking override it. Colliders are in world coordinates.</summary>
     void CollectEntityColliders(in Aabb region, ICollection<Aabb> into)

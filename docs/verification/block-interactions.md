@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Enchantment packet validation, 2026-11-01
+
+Code `f2b2d70` rejects invalid final enchantment levels after the native last-wins map and legacy tooltip fields, while preserving accepted duplicate bytes. The [admission report](enchantment-level-admission.md) records 192 causal failures/152 controls before the fix, the same 344 passing afterward, all 1,324 retained checks and the complete 6,959-case Protocol suite. Normal selected-two formatting changes zero files. ROOT receipts 88acb237/ce985395/12863b1a retain source, binary and cleanup proof. The expected seventeen-suite total is now 50,462; no new seventeen-suite, consumer, AOT or live result is implied.
+
+The preceding published `2c19272` has all seven CI jobs passing in [run 41350348597](https://github.com/MCCTeam/UMPK/actions/runs/41350348597): 17 totals 50,118 per OS with unchanged normal skips, healthy full 47-project formatting and 24,787,528-byte AOT/exactly one executed smoke. ROOT CI receipt 2fab4acb verifies the actual tested merge/head tree and raw logs. New-head CI and the remaining final acceptance stay separate.
+
 ## Component interaction continuation, 2026-11-01
 
 Implementation `b03301b` extends measured Adventure mining and cube-placement permissions through protocols 771–773 (1.21.6–1.21.10) and preserves held mining across equivalent enchantment-map inventory updates on 766–777. Meaningful changes still reset mining; unavailable context remains unknown. The [scoped component report](component-interactions-771-773.md) records 33 native codec checks, 190 native enchantment checks, framed callers, failures, exact binaries and remaining work.

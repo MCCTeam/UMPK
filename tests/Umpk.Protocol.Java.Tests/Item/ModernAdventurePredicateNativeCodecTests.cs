@@ -21,6 +21,24 @@ public sealed class ModernAdventurePredicateNativeCodecTests
     [InlineData("770-partial-damage-defaults-omitted", 770, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
     [InlineData("770-partial-damage-defaults-explicit", 770, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
     [InlineData("770-can-place-singleton-control", 770, "minecraft:can_place_on", "AAcAJAEBAQALAQAAAAAA", 1, -982207288)]
+    [InlineData("771-wire-zero-predicates", 771, "minecraft:can_break", "AAcAJAEBAQAMAA==", 0, null)]
+    [InlineData("771-singleton-empty", 771, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAAA", 1, -982207288)]
+    [InlineData("771-exact-recursive", 771, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAIDAQwBAAAAAAAA", 1, 663199827)]
+    [InlineData("771-partial-damage-defaults-omitted", 771, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("771-partial-damage-defaults-explicit", 771, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("771-can-place-singleton-control", 771, "minecraft:can_place_on", "AAcAJAEBAQALAQAAAAAA", 1, -982207288)]
+    [InlineData("772-wire-zero-predicates", 772, "minecraft:can_break", "AAcAJAEBAQAMAA==", 0, null)]
+    [InlineData("772-singleton-empty", 772, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAAA", 1, -982207288)]
+    [InlineData("772-exact-recursive", 772, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAIDAQwBAAAAAAAA", 1, 663199827)]
+    [InlineData("772-partial-damage-defaults-omitted", 772, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("772-partial-damage-defaults-explicit", 772, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("772-can-place-singleton-control", 772, "minecraft:can_place_on", "AAcAJAEBAQALAQAAAAAA", 1, -982207288)]
+    [InlineData("773-wire-zero-predicates", 773, "minecraft:can_break", "AAcAJAEBAQAMAA==", 0, null)]
+    [InlineData("773-singleton-empty", 773, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAAA", 1, -982207288)]
+    [InlineData("773-exact-recursive", 773, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAIDAQwBAAAAAAAA", 1, 663199827)]
+    [InlineData("773-partial-damage-defaults-omitted", 773, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("773-partial-damage-defaults-explicit", 773, "minecraft:can_break", "AAcAJAEBAQAMAQAAAAABAAoKAAZkYW1hZ2UDAANtaW4AAAABAwADbWF4AAAAAgAA", 1, 1831699757)]
+    [InlineData("773-can-place-singleton-control", 773, "minecraft:can_place_on", "AAcAJAEBAQALAQAAAAAA", 1, -982207288)]
     [InlineData("769-predecessor-tooltip-false", 769, "minecraft:can_break", "AAcAJAEBAQAMAQECAQAAAA==", 1, null)]
     public void NativeSetSlotPreservesPredicatesBytesAndKnownDataHashes(string vector, int protocol, string componentName, string nativePayload, int predicateCount, int? expectedHash)
     {
@@ -38,11 +56,11 @@ public sealed class ModernAdventurePredicateNativeCodecTests
         var value = Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(key));
         Assert.Equal(predicateCount, value.Predicates.Count);
         Assert.Equal(protocol != 769, value.ShowInTooltip);
-        if (protocol == 770)
+        if (protocol is >= 770 and <= 773)
         {
             foreach (BlockPredicateEntry predicate in value.Predicates)
                 Assert.IsType<BlockPredicateComponentMatchers>(predicate.ComponentMatchers);
-            if (vector == "770-exact-recursive")
+            if (vector.EndsWith("-exact-recursive", StringComparison.Ordinal))
             {
                 BlockPredicateComponentMatchers matchers = Assert.Single(value.Predicates).ComponentMatchers!;
                 Assert.Equal(2, matchers.Exact.Count);
@@ -55,7 +73,7 @@ public sealed class ModernAdventurePredicateNativeCodecTests
                 Assert.Empty(inner.Partial);
                 Assert.Empty(matchers.Partial);
             }
-            else if (vector.StartsWith("770-partial-damage-", StringComparison.Ordinal))
+            else if (vector.Contains("-partial-damage-", StringComparison.Ordinal))
             {
                 BlockPredicateComponentMatchers matchers = Assert.Single(value.Predicates).ComponentMatchers!;
                 Assert.Empty(matchers.Exact);
@@ -101,8 +119,45 @@ public sealed class ModernAdventurePredicateNativeCodecTests
         bound.Encode(ref writer, packet, context);
         Assert.Equal(payload, output.WrittenSpan.ToArray());
         if (expectedHash is { } hash)
-            Assert.Equal(hash, ItemComponentTable.V1_21_5().ByKey(key).Hash(new HashOps(), value, context));
+            Assert.Equal(hash, Table(protocol).ByKey(key).Hash(new HashOps(), value, context));
     }
+
+    [Fact]
+    public void Protocol774RetainsItsUnmodeledAdventureBoundary()
+    {
+        var registries = JavaGameData.Registries(774);
+        ItemComponentTable table = ItemComponentTable.V1_21_11();
+        int componentId = table.WireId(DataComponents.CanBreak);
+        Assert.Equal(15, componentId);
+        Assert.Equal(Identifier.Minecraft("can_break"), table.KeyByWireId(componentId));
+        Assert.False(table.TryGetCodec(componentId, out _));
+        // Source-composed 774 control: its own component ID and the legal zero-predicate STREAM payload; this is not a native 774 capture.
+        var output = new ArrayBufferWriter<byte>();
+        var writer = new PacketWriter(output);
+        writer.WriteVarInt(0);
+        writer.WriteVarInt(7);
+        writer.WriteShort(36);
+        writer.WriteVarInt(1);
+        writer.WriteVarInt(registries.Items[Identifier.Minecraft("stone")].NetworkId);
+        writer.WriteVarInt(1);
+        writer.WriteVarInt(0);
+        writer.WriteVarInt(componentId);
+        writer.WriteVarInt(0);
+        byte[] payload = output.WrittenSpan.ToArray();
+        Assert.Equal("AAcAJAEBAQAPAA==", Convert.ToBase64String(payload));
+        var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
+        BoundPacketCodec bound = BoundCodec.At(774, PacketFlow.Clientbound, "minecraft:container_set_slot");
+        var error = Assert.Throws<UnmodeledItemComponentException>(() => bound.Decode(payload, context));
+        Assert.Equal(Identifier.Minecraft("can_break"), error.ComponentId);
+    }
+
+    private static ItemComponentTable Table(int protocol) => protocol switch
+    {
+        770 => ItemComponentTable.V1_21_5(),
+        771 or 772 => ItemComponentTable.V1_21_6(),
+        773 => ItemComponentTable.V1_21_9(),
+        _ => throw new ArgumentOutOfRangeException(nameof(protocol)),
+    };
 
     [Fact]
     public void NativeUnmodeledRecursiveExactComponentKeepsPacketScopedIdentity()

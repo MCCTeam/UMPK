@@ -213,9 +213,9 @@ public sealed class ComponentAdventureMiningSessionTests
     }
 
     [Fact]
-    public async Task Protocol771RemainsOutsideTheBoundComponentPayloadAndPermissionSlice()
+    public async Task Protocol774RemainsOutsideTheBoundComponentPayloadAndPermissionSlice()
     {
-        await using Session session = await Session.Create(771);
+        await using Session session = await Session.Create(774);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold("diamond_pickaxe");
         Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
@@ -252,14 +252,16 @@ public sealed class ComponentAdventureMiningSessionTests
         private readonly CancellationTokenSource _budget = new(TimeSpan.FromSeconds(40));
         private readonly JavaVersion _version;
         private readonly int _protocol;
+        private readonly ClientboundConfigRegistryDataPacket? _configurationEnchantments;
         internal int Protocol => _protocol;
         private long _barrier;
         internal CancellationToken Token => _budget.Token;
         private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
 
-        private Session(int protocol)
+        private Session(int protocol, ClientboundConfigRegistryDataPacket? configurationEnchantments = null)
         {
             _protocol = protocol;
+            _configurationEnchantments = configurationEnchantments;
             Assert.True(JavaVersions.TryGetByProtocol(protocol, out _version!));
             Client = new UmpkClientBuilder().UseVersion(_version)
                 .UseProfile(new GameProfile(RequestedId, "CreativeSession"))
@@ -269,9 +271,9 @@ public sealed class ComponentAdventureMiningSessionTests
                 .Build();
         }
 
-        internal static async Task<Session> Create(int protocol)
+        internal static async Task<Session> Create(int protocol, bool observeTags = true, ClientboundConfigRegistryDataPacket? configurationEnchantments = null)
         {
-            var session = new Session(protocol);
+            var session = new Session(protocol, configurationEnchantments);
             try
             {
                 await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session.Token), session.DriveToPlay());
@@ -287,12 +289,24 @@ public sealed class ComponentAdventureMiningSessionTests
                 await corrected.Task.WaitAsync(session.Token);
                 Assert.Equal(AssignedId, session.Client.State.Self.Uuid);
                 Assert.NotEqual(RequestedId, session.Client.State.Self.Uuid);
+                if (configurationEnchantments is { } announced)
+                {
+                    Assert.True(protocol >= 767);
+                    Assert.Equal(2, session.Client.State.Registries!.Enchantments.Count);
+                    for (int id = 0; id < announced.Entries.Count; id++)
+                    {
+                        Assert.True(session.Client.State.Registries.Enchantments.TryGet(announced.Entries[id].Id, out var installed));
+                        Assert.False(installed.IsDefault);
+                        Assert.Equal(id, installed.NetworkId);
+                        Assert.Equal(3, installed.Value.MaxLevel);
+                    }
+                }
                 await session.Terrain();
                 for (int x = 1; x <= 3; x++)
                     for (int z = 1; z <= 3; z++)
                         await session.Block(new BlockPos(x, 64, z), "stone");
                 await session.Block(Target, "stone");
-                if (protocol >= 766)
+                if (protocol >= 766 && observeTags)
                 {
                     int stone = session.Client.State.Registries!.Blocks[Identifier.Minecraft("stone")].NetworkId;
                     await session.Send(new ClientboundUpdateTagsPacket([new TagRegistry(RegistryIds.Block, [new TagEntry(Identifier.Minecraft("mineable/pickaxe"), [stone]), new TagEntry(Identifier.Minecraft("incorrect_for_diamond_tool"), [])])]));
@@ -326,11 +340,72 @@ public sealed class ComponentAdventureMiningSessionTests
                 await Server.NextFrameAsync(Token);
                 Server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
                 await Server.NextFrameAsync(Token);
+                if (_configurationEnchantments is { } announced)
+                    await SendConfigurationEnchantments(announced);
                 await ScriptedServer.SendAsync(Server, _version.Protocol, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), Token);
                 await Server.NextFrameAsync(Token);
             }
             Server.ServerConnection.SetPhase(ProtocolPhase.Play);
             await ScriptedServer.SendPlayReadinessFrameAsync(Server, _version.Protocol, Token);
+        }
+
+        private async Task SendConfigurationEnchantments(ClientboundConfigRegistryDataPacket announced)
+        {
+            Assert.True(_protocol >= 767);
+            Assert.Equal(RegistryIds.Enchantment, announced.Registry);
+            PhaseRegistry registry = _version.Protocol.GetRegistry(ProtocolPhase.Configuration, PacketFlow.Clientbound);
+            var entry = Assert.Single(registry.Packets, pair => pair.Type.Id == Identifier.Minecraft("registry_data"));
+            Assert.True(registry.TryGetInbound(entry.WireId, out BoundPacketCodec codec));
+            Assert.True(codec.IsImplemented);
+            var context = new PacketCodecContext(JavaGameData.Registries(_protocol), IConnectionCodecState.Empty);
+            byte[] EncodeRegistry(object value)
+            {
+                var buffer = new ArrayBufferWriter<byte>();
+                var writer = new PacketWriter(buffer);
+                codec.Encode(ref writer, value, context);
+                return buffer.WrittenSpan.ToArray();
+            }
+            byte[] bytes = EncodeRegistry(announced);
+            var decoded = Assert.IsType<ClientboundConfigRegistryDataPacket>(codec.Decode(bytes, context));
+            Assert.Equal(bytes, EncodeRegistry(decoded));
+            Assert.Equal(announced.Registry, decoded.Registry);
+            Assert.Equal(announced.Entries.Count, decoded.Entries.Count);
+            for (int index = 0; index < announced.Entries.Count; index++)
+            {
+                Assert.Equal(announced.Entries[index].Id, decoded.Entries[index].Id);
+                Assert.NotNull(announced.Entries[index].Data);
+                Assert.Equal(announced.Entries[index].Data, decoded.Entries[index].Data);
+            }
+            var received = new TaskCompletionSource<ClientboundConfigRegistryDataPacket>(TaskCreationOptions.RunContinuationsAsynchronously);
+            int rawFrames = 0;
+            void Observe(PacketObservation observation)
+            {
+                if (observation.Flow == PacketFlow.Clientbound && observation.Phase == ProtocolPhase.Configuration && observation.WireId == entry.WireId && observation.RawPayload.SequenceEqual(bytes))
+                    Interlocked.Increment(ref rawFrames);
+            }
+            using IDisposable subscription = Client.Events.Subscribe<PacketReceived>(message =>
+            {
+                if (message.Phase == ProtocolPhase.Configuration && message.Packet is ClientboundConfigRegistryDataPacket { Registry: var id } packet && id == RegistryIds.Enchantment)
+                    received.TrySetResult(packet);
+            });
+            Client.PacketFrameObserved += Observe;
+            try
+            {
+                await Server.SendFrameAsync(entry.WireId, bytes, Token);
+                ClientboundConfigRegistryDataPacket arrived = await received.Task.WaitAsync(Token);
+                Assert.Equal(1, Volatile.Read(ref rawFrames));
+                Assert.Equal(bytes, EncodeRegistry(arrived));
+                Assert.Equal(announced.Entries.Count, arrived.Entries.Count);
+                for (int index = 0; index < announced.Entries.Count; index++)
+                {
+                    Assert.Equal(announced.Entries[index].Id, arrived.Entries[index].Id);
+                    Assert.Equal(announced.Entries[index].Data, arrived.Entries[index].Data);
+                }
+            }
+            finally
+            {
+                Client.PacketFrameObserved -= Observe;
+            }
         }
 
         internal async Task Mode(GameMode mode, bool instantBuild)
@@ -365,9 +440,9 @@ public sealed class ComponentAdventureMiningSessionTests
 
         internal Task HoldStonePermission() => HoldPermission("stone");
 
-        internal async Task HoldPermission(string kind, bool showInTooltip = true)
+        internal async Task HoldPermission(string kind, bool showInTooltip = true, string itemName = "diamond_pickaxe")
         {
-            ItemStack stack = new(Client.State.Registries!.Items[Identifier.Minecraft("diamond_pickaxe")], 1);
+            ItemStack stack = new(Client.State.Registries!.Items[Identifier.Minecraft(itemName)], 1);
             if (_protocol == 765)
                 stack = stack.With(DataComponents.LegacyNbt, new LegacyNbtComponent(new NbtCompound { ["CanDestroy"] = new NbtList(NbtTagType.String) { new NbtString("minecraft:stone") } }));
             else if (kind != "absent")
@@ -378,7 +453,7 @@ public sealed class ComponentAdventureMiningSessionTests
                 NbtCompound? nbt = kind == "nbt" ? new NbtCompound { ["CustomName"] = new NbtString("unavailable full native save") } : null;
                 var entry = new BlockPredicateEntry(kind == "tag" ? new HolderSetRef(Identifier.Minecraft("permission_probe"), []) : new HolderSetRef(null, [block]), properties, nbt)
                 {
-                    ComponentMatchers = _protocol == 770 ? new([], []) : null,
+                    ComponentMatchers = _protocol is >= 770 and <= 773 ? new([], []) : null,
                 };
                 stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent([entry], showInTooltip));
             }
@@ -399,21 +474,21 @@ public sealed class ComponentAdventureMiningSessionTests
                 Assert.Equal(expected.Properties, predicate.Properties);
                 Assert.Equal(expected.Nbt, predicate.Nbt);
                 Assert.Equal(showInTooltip, observed.ShowInTooltip);
-                if (_protocol == 770)
+                if (_protocol is >= 770 and <= 773)
                     AssertKnownEmptyMatchers(predicate);
             }
         }
 
         internal async Task HoldPredicates(IReadOnlyList<BlockPredicateEntry> predicates)
         {
-            if (_protocol == 770)
+            if (_protocol is >= 770 and <= 773)
                 predicates = predicates.Select(predicate => predicate.ComponentMatchers is null ? predicate with { ComponentMatchers = new([], []) } : predicate).ToArray();
             ItemStack stack = new(Client.State.Registries!.Items[Identifier.Minecraft("diamond_pickaxe")], 1);
             stack = stack.With(DataComponents.CanBreak, new AdventureModePredicateComponent(predicates, true));
             await Send(new ClientboundContainerSetSlotPacket(0, 0, 36, stack));
             Assert.Empty(await Barrier());
             AssertPredicates(predicates, Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!.Predicates);
-            if (_protocol == 770)
+            if (_protocol is >= 770 and <= 773)
                 foreach (BlockPredicateEntry predicate in Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!.Predicates)
                     AssertKnownEmptyMatchers(predicate);
         }
@@ -564,7 +639,7 @@ public sealed class ComponentAdventureMiningSessionTests
                         AdventureModePredicateComponent actualPredicate = item.Components.Get(DataComponents.CanBreak)!;
                         Assert.Equal(expectedPredicate.ShowInTooltip, actualPredicate.ShowInTooltip);
                         AssertPredicates(expectedPredicate.Predicates, actualPredicate.Predicates);
-                        if (_protocol == 770)
+                        if (_protocol is >= 770 and <= 773)
                             for (int index = 0; index < expectedPredicate.Predicates.Count; index++)
                                 if (expectedPredicate.Predicates[index].ComponentMatchers is { Exact.Count: 0, Partial.Count: 0 })
                                     AssertKnownEmptyMatchers(actualPredicate.Predicates[index]);

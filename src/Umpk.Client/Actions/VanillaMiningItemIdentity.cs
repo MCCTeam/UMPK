@@ -1,5 +1,6 @@
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
+using Umpk.Game.Registries;
 using Umpk.Nbt;
 
 namespace Umpk.Client.Actions;
@@ -9,6 +10,8 @@ internal static class VanillaMiningItemIdentity
 {
     private const int ItemComponentsProtocol = 766;
     private const int ModernPredicateProtocol = 770;
+    private const int LastMeasuredPredicateProtocol = 773;
+    private const int LastMeasuredEnchantmentProtocol = 777;
 
     public static bool Matches(ItemStack current, ItemStack previous, int protocol)
     {
@@ -19,7 +22,7 @@ internal static class VanillaMiningItemIdentity
         {
             if (current.IsSameItemSameComponents(previous))
                 return true;
-            if (protocol is < ItemComponentsProtocol or > ModernPredicateProtocol || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
+            if (protocol is < ItemComponentsProtocol or > LastMeasuredEnchantmentProtocol || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
                 return false;
             return ComponentMapsMatch(current.Components, previous.Components, protocol);
         }
@@ -59,9 +62,45 @@ internal static class VanillaMiningItemIdentity
     }
 
     private static bool ComponentValuesMatch(object? current, object? previous, int protocol)
-        => current is AdventureModePredicateComponent predicate && previous is AdventureModePredicateComponent otherPredicate
-            ? PredicateValuesMatch(predicate, otherPredicate, protocol)
-            : Equals(current, previous);
+    {
+        if (current is EnchantmentsComponent enchantments && previous is EnchantmentsComponent otherEnchantments)
+            return EnchantmentValuesMatch(enchantments.Enchantments, otherEnchantments.Enchantments, enchantments.ShowInTooltip, otherEnchantments.ShowInTooltip, protocol);
+        if (current is StoredEnchantmentsComponent stored && previous is StoredEnchantmentsComponent otherStored)
+            return EnchantmentValuesMatch(stored.Enchantments, otherStored.Enchantments, stored.ShowInTooltip, otherStored.ShowInTooltip, protocol);
+        if (current is AdventureModePredicateComponent predicate && previous is AdventureModePredicateComponent otherPredicate)
+            return protocol <= LastMeasuredPredicateProtocol && PredicateValuesMatch(predicate, otherPredicate, protocol);
+        return Equals(current, previous);
+    }
+
+    private static bool EnchantmentValuesMatch(IReadOnlyList<EnchantmentInstance> current, IReadOnlyList<EnchantmentInstance> previous, bool currentTooltip, bool previousTooltip, int protocol)
+    {
+        if (protocol < ModernPredicateProtocol && currentTooltip != previousTooltip)
+            return false;
+        if (current.Count == 0 || previous.Count == 0)
+            return current.Count == previous.Count;
+
+        // Both native component forms use ItemEnchantments: map equality ignores insertion order, keeps explicit zero values and compares the final value of each duplicate key.
+        var currentLevels = new Dictionary<RegistryEntry<EnchantmentDefinition>, int>(current.Count);
+        foreach (EnchantmentInstance entry in current)
+        {
+            if (entry.Enchantment.IsDefault)
+                return false;
+            currentLevels[entry.Enchantment] = entry.Level;
+        }
+        var previousLevels = new Dictionary<RegistryEntry<EnchantmentDefinition>, int>(previous.Count);
+        foreach (EnchantmentInstance entry in previous)
+        {
+            if (entry.Enchantment.IsDefault)
+                return false;
+            previousLevels[entry.Enchantment] = entry.Level;
+        }
+        if (currentLevels.Count != previousLevels.Count)
+            return false;
+        foreach ((RegistryEntry<EnchantmentDefinition> key, int level) in currentLevels)
+            if (!previousLevels.TryGetValue(key, out int otherLevel) || level != otherLevel)
+                return false;
+        return true;
+    }
 
     private static bool PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous, int protocol)
     {
@@ -87,7 +126,7 @@ internal static class VanillaMiningItemIdentity
                 return false;
             if (entry.Nbt is null ? other.Nbt is not null : !entry.Nbt.Equals(other.Nbt))
                 return false;
-            if (protocol == ModernPredicateProtocol && !MatcherValuesMatch(entry.ComponentMatchers, other.ComponentMatchers, protocol))
+            if (protocol >= ModernPredicateProtocol && protocol <= LastMeasuredPredicateProtocol && !MatcherValuesMatch(entry.ComponentMatchers, other.ComponentMatchers, protocol))
                 return false;
         }
         return true;

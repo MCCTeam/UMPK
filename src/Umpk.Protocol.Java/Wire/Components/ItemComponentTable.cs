@@ -146,11 +146,11 @@ internal sealed partial class ItemComponentTable
 
     /// <summary>Builds the 1.21.6-1.21.8 (protocols 771/772) table. The component id ORDERING is byte-for-byte the 770 ordering, but <c>attribute_modifiers</c> is not the 770 payload: protocol 771 appended a display field after each entry's attribute, modifier, and slot, so 771 onward needs the display-carrying codec.</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V1_21_6() => Build(ItemComponentLayout.V1_21_6);
+    public static ItemComponentTable V1_21_6() => BuildModern(ItemComponentLayout.V1_21_6, bindMeasuredAdventure: true);
 
     /// <summary>Builds the 1.21.9/1.21.10 (protocol 773) table: the 770 ordering, the 1.21.6 attribute payload, and the 1.21.9 forms of the three components that release re-shaped (see <c>ItemComponentLayout.TypedEntityData</c>).</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V1_21_9() => Build(ItemComponentLayout.V1_21_9);
+    public static ItemComponentTable V1_21_9() => BuildModern(ItemComponentLayout.V1_21_9, bindMeasuredAdventure: true);
 
     /// <summary>Builds the 1.21.11 (protocol 774) table: its own ordering, the 1.21.9 payload family.</summary>
     /// <returns>The table.</returns>
@@ -196,7 +196,7 @@ internal sealed partial class ItemComponentTable
             wireById[id] = i;
         }
 
-        // Only the measured 770 factory binds these codecs. Later tables remain unbound until their boundary witnesses are accepted.
+        // Only the measured 770–773 factories bind these codecs. Later tables remain unbound until their boundary witnesses are accepted.
         ItemComponentCodecs.ModernAdventurePredicateCodec? canBreak = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanBreak) : null;
         ItemComponentCodecs.ModernAdventurePredicateCodec? canPlaceOn = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanPlaceOn) : null;
 

@@ -28,6 +28,36 @@ public sealed class ComponentPredicateIdentity770SessionTests
     [InlineData(770, "canonical-any", false, false)]
     [InlineData(770, "canonical-point", false, false)]
     [InlineData(770, "ignored-damage-keys", false, false)]
+    [InlineData(771, "duplicate-exact", false, true)]
+    [InlineData(771, "duplicate-recursive", false, true)]
+    [InlineData(771, "duplicate-partial", false, true)]
+    [InlineData(771, "changed-exact-damage", true, false)]
+    [InlineData(771, "changed-recursive-can-break", true, false)]
+    [InlineData(771, "changed-partial-damage", true, false)]
+    [InlineData(771, "reordered-exact", true, false)]
+    [InlineData(771, "canonical-any", false, false)]
+    [InlineData(771, "canonical-point", false, false)]
+    [InlineData(771, "ignored-damage-keys", false, false)]
+    [InlineData(772, "duplicate-exact", false, true)]
+    [InlineData(772, "duplicate-recursive", false, true)]
+    [InlineData(772, "duplicate-partial", false, true)]
+    [InlineData(772, "changed-exact-damage", true, false)]
+    [InlineData(772, "changed-recursive-can-break", true, false)]
+    [InlineData(772, "changed-partial-damage", true, false)]
+    [InlineData(772, "reordered-exact", true, false)]
+    [InlineData(772, "canonical-any", false, false)]
+    [InlineData(772, "canonical-point", false, false)]
+    [InlineData(772, "ignored-damage-keys", false, false)]
+    [InlineData(773, "duplicate-exact", false, true)]
+    [InlineData(773, "duplicate-recursive", false, true)]
+    [InlineData(773, "duplicate-partial", false, true)]
+    [InlineData(773, "changed-exact-damage", true, false)]
+    [InlineData(773, "changed-recursive-can-break", true, false)]
+    [InlineData(773, "changed-partial-damage", true, false)]
+    [InlineData(773, "reordered-exact", true, false)]
+    [InlineData(773, "canonical-any", false, false)]
+    [InlineData(773, "canonical-point", false, false)]
+    [InlineData(773, "ignored-damage-keys", false, false)]
     [InlineData(769, "legacy-duplicate", false, true)]
     [InlineData(769, "legacy-tooltip-change", true, false)]
     public async Task FramedSurvivalReplacementUsesNativePredicateIdentity(int protocol, string scenario, bool reset, bool identicalWire)
@@ -119,7 +149,7 @@ public sealed class ComponentPredicateIdentity770SessionTests
         BlockPredicateEntry Block(string block, IReadOnlyList<DataComponentEntry> exact, IReadOnlyList<BlockPredicatePartialMatcher> partial)
             => new(new HolderSetRef(null, [session.Client.State.Registries!.Blocks[Identifier.Minecraft(block)].NetworkId]), null, null)
             {
-                ComponentMatchers = session.Protocol == 770 ? new(exact, partial) : null,
+                ComponentMatchers = session.Protocol is >= 770 and <= 773 ? new(exact, partial) : null,
             };
 
         DataComponentEntry Damage(int value) => DataComponentEntry.Set(DataComponents.Damage, new DamageComponent(value));

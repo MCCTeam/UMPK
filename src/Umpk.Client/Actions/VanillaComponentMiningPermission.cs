@@ -7,18 +7,18 @@ using Umpk.Game.Registries;
 
 namespace Umpk.Client.Actions;
 
-/// <summary>The typed 1.20.5–1.21.5 Adventure predicates and their native component-owned last-state cache. Null retains missing tag, native property-kind/range or full block-entity context.</summary>
+/// <summary>The typed 1.20.5–1.21.10 Adventure predicates and their native component-owned last-state cache. Null retains missing tag, native property-kind/range or full block-entity context.</summary>
 internal sealed class VanillaComponentMiningPermission
 {
     private const int ItemComponentsProtocol = 766;
-    private const int LastMeasuredPredicateProtocol = 770;
+    private const int LastMeasuredPredicateProtocol = 773;
     private readonly ConditionalWeakTable<AdventureModePredicateComponent, CachedPermission> _cache = new();
 
     private sealed record CachedPermission(BlockState State, bool Allowed);
 
     public static bool Supports(int protocol) => protocol is >= ItemComponentsProtocol and <= LastMeasuredPredicateProtocol;
 
-    public static bool SupportsPlacement(int protocol) => protocol == 770;
+    public static bool SupportsPlacement(int protocol) => protocol is >= 770 and <= LastMeasuredPredicateProtocol;
 
     public bool? Allows(ItemStack item, BlockState target, ClientRegistryTags tags, int protocol)
         => Allows(item.IsEmpty ? null : item.Components.Get(DataComponents.CanBreak), target, tags, protocol);

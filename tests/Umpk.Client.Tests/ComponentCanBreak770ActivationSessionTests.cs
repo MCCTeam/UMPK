@@ -13,14 +13,17 @@ using Session = ComponentAdventureMiningSessionTests.Session;
 
 public sealed class ComponentCanBreak770ActivationSessionTests
 {
-    private const int Protocol = 770;
     private const string UnavailableGate = "This game mode requires an allowed block interaction before mining.";
     private const string UnavailableContext = "The Adventure permission requires unavailable tag, property-kind or block-entity facts.";
 
-    [Fact]
-    public async Task Matching770BlockIgnoresNonmatchingComponentMatchers()
+    [Theory]
+    [InlineData(770)]
+    [InlineData(771)]
+    [InlineData(772)]
+    [InlineData(773)]
+    public async Task Matching770BlockIgnoresNonmatchingComponentMatchers(int protocol)
     {
-        await using Session session = await Adventure();
+        await using Session session = await Adventure(protocol);
         int stone = session.Client.State.Registries!.Blocks[Identifier.Minecraft("stone")].NetworkId;
         var damageBounds = new NbtCompound
         {
@@ -68,29 +71,7 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             await session.Client.InvokeAsync(_ => true, session.Token);
             List<IPacket> initial = await session.Tick();
             await RequirePending(action, session.Token);
-            Assert.Collection(initial, packet => AssertAction(packet, 0), AssertSwing, AssertSwing);
-            await FinishAfter(session, action, 5);
-            Assert.False(session.Client.State.World.GetBlock(Session.Target).IsAir);
-        }
-        finally
-        {
-            await Release(session, caller, action);
-        }
-    }
-
-    [Fact]
-    public async Task MatchingFramed770PermissionCompletesOnlyAfterStopAcknowledgment()
-    {
-        await using Session session = await Adventure();
-        await session.HoldStonePermission();
-        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
-        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, caller.Token);
-        try
-        {
-            await session.Client.InvokeAsync(_ => true, session.Token);
-            List<IPacket> initial = await session.Tick();
-            await RequirePending(action, session.Token);
-            Assert.Collection(initial, packet => AssertAction(packet, 0), AssertSwing, AssertSwing);
+            Assert.Collection(initial, packet => AssertAction(session.Protocol, packet, 0), AssertSwing, AssertSwing);
             await FinishAfter(session, action, 5);
             Assert.False(session.Client.State.World.GetBlock(Session.Target).IsAir);
         }
@@ -101,11 +82,43 @@ public sealed class ComponentCanBreak770ActivationSessionTests
     }
 
     [Theory]
-    [InlineData("absent")]
-    [InlineData("nonmatch")]
-    public async Task Denied770RequestStartsOnlyAfterFreshMatchingWireComponent(string kind)
+    [InlineData(770)]
+    [InlineData(771)]
+    [InlineData(772)]
+    [InlineData(773)]
+    public async Task MatchingFramed770PermissionCompletesOnlyAfterStopAcknowledgment(int protocol)
     {
-        await using Session session = await Adventure();
+        await using Session session = await Adventure(protocol);
+        await session.HoldStonePermission();
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, caller.Token);
+        try
+        {
+            await session.Client.InvokeAsync(_ => true, session.Token);
+            List<IPacket> initial = await session.Tick();
+            await RequirePending(action, session.Token);
+            Assert.Collection(initial, packet => AssertAction(session.Protocol, packet, 0), AssertSwing, AssertSwing);
+            await FinishAfter(session, action, 5);
+            Assert.False(session.Client.State.World.GetBlock(Session.Target).IsAir);
+        }
+        finally
+        {
+            await Release(session, caller, action);
+        }
+    }
+
+    [Theory]
+    [InlineData(770, "absent")]
+    [InlineData(770, "nonmatch")]
+    [InlineData(771, "absent")]
+    [InlineData(771, "nonmatch")]
+    [InlineData(772, "absent")]
+    [InlineData(772, "nonmatch")]
+    [InlineData(773, "absent")]
+    [InlineData(773, "nonmatch")]
+    public async Task Denied770RequestStartsOnlyAfterFreshMatchingWireComponent(int protocol, string kind)
+    {
+        await using Session session = await Adventure(protocol);
         await session.HoldPermission(kind);
         AdventureModePredicateComponent? before = session.Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak);
         using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
@@ -120,7 +133,7 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             Assert.NotSame(before, session.Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak));
             List<IPacket> allowed = await session.Tick();
             await RequirePending(action, session.Token);
-            Assert.Collection(allowed, packet => AssertAction(packet, 0), AssertSwing);
+            Assert.Collection(allowed, packet => AssertAction(session.Protocol, packet, 0), AssertSwing);
             await FinishAfter(session, action, 6);
         }
         finally
@@ -129,10 +142,14 @@ public sealed class ComponentCanBreak770ActivationSessionTests
         }
     }
 
-    [Fact]
-    public async Task Denied770ReplacementChecksPermissionBeforeAbortOrStart()
+    [Theory]
+    [InlineData(770)]
+    [InlineData(771)]
+    [InlineData(772)]
+    [InlineData(773)]
+    public async Task Denied770ReplacementChecksPermissionBeforeAbortOrStart(int protocol)
     {
-        await using Session session = await Adventure();
+        await using Session session = await Adventure(protocol);
         await session.HoldStonePermission();
         AdventureModePredicateComponent original = session.Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!;
         using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
@@ -142,7 +159,7 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             await session.Client.InvokeAsync(_ => true, session.Token);
             List<IPacket> initial = await session.Tick();
             await RequirePending(action, session.Token);
-            Assert.Collection(initial, packet => AssertAction(packet, 0), AssertSwing, AssertSwing);
+            Assert.Collection(initial, packet => AssertAction(session.Protocol, packet, 0), AssertSwing, AssertSwing);
             Assert.Collection(await session.Tick(), AssertSwing);
             await session.HoldPermission("nonmatch");
             Assert.Empty(await session.Tick());
@@ -160,11 +177,17 @@ public sealed class ComponentCanBreak770ActivationSessionTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task TagReloadRetains770ComponentCacheAndFreshWirePredicateRecomputes(bool initiallyAllowed)
+    [InlineData(770, false)]
+    [InlineData(770, true)]
+    [InlineData(771, false)]
+    [InlineData(771, true)]
+    [InlineData(772, false)]
+    [InlineData(772, true)]
+    [InlineData(773, false)]
+    [InlineData(773, true)]
+    public async Task TagReloadRetains770ComponentCacheAndFreshWirePredicateRecomputes(int protocol, bool initiallyAllowed)
     {
-        await using Session session = await Adventure();
+        await using Session session = await Adventure(protocol);
         int state = session.Client.State.World.GetBlock(Session.Target).StateId;
         await session.Tags(initiallyAllowed);
         await session.HoldPermission("tag");
@@ -180,13 +203,23 @@ public sealed class ComponentCanBreak770ActivationSessionTests
     }
 
     [Theory]
-    [InlineData("range")]
-    [InlineData("nbt")]
-    public async Task Unowned770ContextRemainsUnavailableAtThePermissionOwner(string kind)
+    [InlineData(770, "range")]
+    [InlineData(770, "nbt")]
+    [InlineData(770, "tag")]
+    [InlineData(771, "range")]
+    [InlineData(771, "nbt")]
+    [InlineData(771, "tag")]
+    [InlineData(772, "range")]
+    [InlineData(772, "nbt")]
+    [InlineData(772, "tag")]
+    [InlineData(773, "range")]
+    [InlineData(773, "nbt")]
+    [InlineData(773, "tag")]
+    public async Task Unowned770ContextRemainsUnavailableAtThePermissionOwner(int protocol, string kind)
     {
-        await using Session session = await Adventure();
-        await session.Block(Session.Target, kind == "range" ? "oak_log" : "chest");
-        await session.HoldPermission(kind);
+        await using Session session = await Adventure(protocol, observeTags: kind != "tag");
+        await session.Block(Session.Target, kind switch { "range" => "oak_log", "nbt" => "chest", _ => "stone" });
+        await session.HoldPermission(kind, itemName: kind == "tag" ? "stone" : "diamond_pickaxe");
         AdventureModePredicateComponent component = session.Client.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak)!;
         BlockPredicateEntry predicate = Assert.Single(component.Predicates);
         if (kind == "range")
@@ -197,8 +230,22 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             Assert.Equal("x", property.MinValue);
             Assert.Equal("z", property.MaxValue);
         }
-        else
+        else if (kind == "nbt")
             Assert.Equal("unavailable full native save", predicate.Nbt!.GetString("CustomName"));
+        else
+        {
+            ItemStack held = session.Client.State.Inventory.GetSlot(36);
+            Assert.Equal(Identifier.Minecraft("stone"), held.Item.Id);
+            Assert.Equal(1, held.Count);
+            Assert.False(held.Components.Has(DataComponents.Tool));
+            Assert.Equal(Identifier.Minecraft("permission_probe"), predicate.Blocks!.Tag);
+            Assert.Empty(predicate.Blocks.Ids);
+            Assert.Null(predicate.Properties);
+            Assert.Null(predicate.Nbt);
+            Assert.Null(await session.Client.InvokeAsync(client => client.State.RegistryTags.Contains(
+                Umpk.Game.Registries.RegistryIds.Block, Identifier.Minecraft("permission_probe"),
+                client.State.Registries!.Blocks[Identifier.Minecraft("stone")].NetworkId), session.Token));
+        }
         Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
         await session.Client.InvokeAsync(_ => true, session.Token);
         Assert.Empty(await session.Tick());
@@ -210,9 +257,9 @@ public sealed class ComponentCanBreak770ActivationSessionTests
     }
 
     [Fact]
-    public async Task Protocol771RemainsOutsideThePermissionSlice()
+    public async Task Protocol774RemainsOutsideThePermissionSlice()
     {
-        await using Session session = await Session.Create(771);
+        await using Session session = await Session.Create(774);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold("diamond_pickaxe");
         Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
@@ -222,9 +269,9 @@ public sealed class ComponentCanBreak770ActivationSessionTests
         Assert.Equal(UnavailableGate, error.Message);
     }
 
-    private static async Task<Session> Adventure()
+    private static async Task<Session> Adventure(int protocol, bool observeTags = true)
     {
-        Session session = await Session.Create(Protocol);
+        Session session = await Session.Create(protocol, observeTags);
         try
         {
             await session.Mode(GameMode.Adventure, instantBuild: false);
@@ -248,7 +295,7 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             List<IPacket> sent = await session.Tick();
             await RequirePending(action, session.Token);
             if (allowed)
-                Assert.Collection(sent, packet => AssertAction(packet, 0), AssertSwing, AssertSwing);
+                Assert.Collection(sent, packet => AssertAction(session.Protocol, packet, 0), AssertSwing, AssertSwing);
             else if (sameRetainedTarget)
                 Assert.Collection(sent, AssertSwing, AssertSwing);
             else
@@ -270,7 +317,7 @@ public sealed class ComponentCanBreak770ActivationSessionTests
                 Assert.Collection(sent, AssertSwing);
             else
             {
-                Assert.Collection(sent, packet => AssertAction(packet, 2), AssertSwing);
+                Assert.Collection(sent, packet => AssertAction(session.Protocol, packet, 2), AssertSwing);
                 await session.Complete(action, Assert.IsType<ServerboundPlayerActionPacket>(sent[0]));
                 Assert.True(action.IsCompletedSuccessfully);
             }
@@ -292,8 +339,8 @@ public sealed class ComponentCanBreak770ActivationSessionTests
             await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await action.WaitAsync(session.Token));
     }
 
-    private static void AssertAction(IPacket packet, int expected)
-        => ComponentAdventureMiningSessionTests.AssertAction(Assert.IsType<ServerboundPlayerActionPacket>(packet), Protocol, expected);
+    private static void AssertAction(int protocol, IPacket packet, int expected)
+        => ComponentAdventureMiningSessionTests.AssertAction(Assert.IsType<ServerboundPlayerActionPacket>(packet), protocol, expected);
 
     private static void AssertSwing(IPacket packet)
     {

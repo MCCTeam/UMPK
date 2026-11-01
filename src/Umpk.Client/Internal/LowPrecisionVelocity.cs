@@ -1,5 +1,5 @@
-using Umpk.Protocol.Java.Codecs;
 using Umpk.Geometry;
+using Umpk.Protocol.Java.Codecs;
 
 namespace Umpk.Client.Internal;
 

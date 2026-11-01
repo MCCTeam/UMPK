@@ -1,4 +1,5 @@
 using System.Buffers;
+using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
@@ -8,7 +9,6 @@ using Umpk.Nbt;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
-using Umpk.Client.Tests.Support;
 using Xunit;
 using Fixture = Umpk.Client.Tests.MiningItemIdentityRuntimeTests.Fixture;
 

@@ -213,7 +213,7 @@ Play Serverbound 0x16 minecraft:custom_payload marker n/a shape:opaque
 Play Serverbound 0x17 minecraft:debug_subscription_request marker n/a shape:opaque
 Play Serverbound 0x18 minecraft:edit_book UiMiscCodecs.EditBookV1_17 read:3 shape:opaque
 Play Serverbound 0x19 minecraft:entity_tag_query marker n/a shape:opaque
-Play Serverbound 0x1A minecraft:interact EntityServerboundCodecs.InteractV1_16 read:4 shape:opaque
+Play Serverbound 0x1A minecraft:interact EntityServerboundCodecs.InteractV26_1 read:4 shape:opaque
 Play Serverbound 0x1B minecraft:jigsaw_generate marker n/a shape:opaque
 Play Serverbound 0x1C minecraft:keep_alive PlayKeepAliveCodecs.ServerV1_12_2 read:8 shape:long
 Play Serverbound 0x1D minecraft:lock_difficulty marker n/a shape:opaque

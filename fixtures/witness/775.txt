@@ -220,7 +220,7 @@ Play Serverbound 0x13 minecraft:container_close ContainerCodecs.ContainerCloseSe
 Play Serverbound 0x14 minecraft:container_slot_state_changed ContainerCodecs.ContainerSlotStateChangedModern src:none
 Play Serverbound 0x15 minecraft:cookie_response PlayCommonCodecs.CookieResponse src:none
 Play Serverbound 0x18 minecraft:edit_book UiMiscCodecs.EditBookV1_17 src:none
-Play Serverbound 0x1A minecraft:interact EntityServerboundCodecs.InteractV1_16 src:none
+Play Serverbound 0x1A minecraft:interact EntityServerboundCodecs.InteractV26_1 src:none
 Play Serverbound 0x1C minecraft:keep_alive PlayKeepAliveCodecs.ServerV1_12_2 src:none
 Play Serverbound 0x1E minecraft:move_player_pos EntityServerboundCodecs.MovePlayerPosV1_14 src:none
 Play Serverbound 0x1F minecraft:move_player_pos_rot EntityServerboundCodecs.MovePlayerPosRotV1_14 src:none

@@ -276,7 +276,7 @@ Play          Serverbound minecraft:debug_sample_subscription              766-7
 Play          Serverbound minecraft:debug_subscription_request             773- marker
 Play          Serverbound minecraft:edit_book                              393 UiMiscCodecs.EditBookV1_13 | 401 UiMiscCodecs.EditBookV1_13_1 | 404-754 UiMiscCodecs.EditBookV1_13_2 | 755- UiMiscCodecs.EditBookV1_17
 Play          Serverbound minecraft:entity_tag_query                       393- marker
-Play          Serverbound minecraft:interact                               47 EntityServerboundCodecs.InteractV1_8 | 107-578 EntityServerboundCodecs.InteractV1_9 | 735- EntityServerboundCodecs.InteractV1_16
+Play          Serverbound minecraft:interact                               47 EntityServerboundCodecs.InteractV1_8 | 107-578 EntityServerboundCodecs.InteractV1_9 | 735-774 EntityServerboundCodecs.InteractV1_16 | 775- EntityServerboundCodecs.InteractV26_1
 Play          Serverbound minecraft:jigsaw_generate                        735- marker
 Play          Serverbound minecraft:keep_alive                             47-338 PlayKeepAliveCodecs.ServerV1_8 | 340- PlayKeepAliveCodecs.ServerV1_12_2
 Play          Serverbound minecraft:lock_difficulty                        477- marker

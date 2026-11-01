@@ -384,8 +384,8 @@ public sealed partial class InteractionActions
         RegistryAccess registries = _services.State.Registries ?? JavaGameData.Registries(protocol);
         bool efficiencyAttribute = HasMiningAttribute(registries, "mining_efficiency");
         float efficiency = efficiencyAttribute ? (float)_services.Self.Attributes.Value(Identifier.Minecraft("mining_efficiency"), 0) : 0;
-        if (!efficiencyAttribute && item.TryGetEnchantmentLevel(Identifier.Minecraft("efficiency"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int level) && level > 0)
-            efficiency = level * (float)level + 1.0F;
+        if (!efficiencyAttribute && VanillaMiningEnchantments.TryGetLevel(item, Identifier.Minecraft("efficiency"), _blockProfile.MiningEnchantments, out int level) && level > 0)
+            efficiency = unchecked(level * level + 1);
         float submerged = (float)_services.Self.Attributes.Value(Identifier.Minecraft("submerged_mining_speed"), 0.2);
         bool underwater = _services.ReadPhysicsState()?.IsUnderWater ?? false;
         bool legacyUnderwaterPenalty = !HasMiningAttribute(registries, "submerged_mining_speed");
@@ -401,7 +401,7 @@ public sealed partial class InteractionActions
                     continue;
                 }
                 ItemStack armor = _services.State.Inventory.PlayerSlots[slot];
-                if (armor.TryGetEnchantmentLevel(Identifier.Minecraft("aqua_affinity"), JavaGameData.LegacyItemBridgeEra, JavaGameData.LegacyItemBridgeSource, out int aqua) && aqua > 0)
+                if (VanillaMiningEnchantments.TryGetLevel(armor, Identifier.Minecraft("aqua_affinity"), _blockProfile.MiningEnchantments, out int aqua) && aqua > 0)
                 {
                     submerged = 1.0F;
                     legacyUnderwaterPenalty = false;

@@ -571,14 +571,22 @@ internal static partial class ItemComponentCodecs
                     $"Enchantment map length {count} is implausible for {reader.Remaining} remaining bytes.");
 
             var list = new List<EnchantmentInstance>(count);
+            HashSet<int>? invalidLevels = null;
             for (int i = 0; i < count; i++)
             {
                 int enchId = ItemCodecPrimitives.ReadHolderId(ref reader);
                 int level = reader.ReadVarInt();
                 list.Add(new EnchantmentInstance(ItemCodecPrimitives.ResolveEnchantment(context, enchId), level));
+                // The native map keeps the last value for each raw holder id before its constructor checks levels. Preserve the wire list while a later valid duplicate clears an earlier invalid value.
+                if (level is < 0 or > 255)
+                    (invalidLevels ??= []).Add(enchId);
+                else
+                    invalidLevels?.Remove(enchId);
             }
 
             bool showInTooltip = !hasShowInTooltip || reader.ReadBool();
+            if (invalidLevels is { Count: > 0 })
+                throw new ProtocolViolationException("Enchantment map contains a final level outside 0..255.");
             return stored
                 ? new StoredEnchantmentsComponent(list, showInTooltip)
                 : new EnchantmentsComponent(list, showInTooltip);

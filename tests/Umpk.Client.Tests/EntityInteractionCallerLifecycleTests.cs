@@ -157,9 +157,20 @@ public sealed partial class ImmediateCarriedItemSynchronizationSessionTests
                 if (frames.Count == 2)
                     disconnected = session.Client.DisconnectAsync(session.Token);
             };
+            session.BeforeClientFlush = async cancellationToken =>
+            {
+                if (frames.Count != 2)
+                    return;
+                Assert.True(cancellationToken.CanBeCanceled);
+                var canceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                using CancellationTokenRegistration registration = cancellationToken.Register(() => canceled.TrySetResult());
+                await canceled.Task.WaitAsync(session.Token);
+                Assert.True(cancellationToken.IsCancellationRequested);
+            };
             Task action = session.Client.Actions.Interaction.InteractEntityAsync(EntityId, Hand.Main, session.Token);
             Exception? ended = await Record.ExceptionAsync(() => action.WaitAsync(session.Token));
             session.BeforeFramedWrite = null;
+            session.BeforeClientFlush = null;
             Assert.NotNull(disconnected);
             Assert.Equal(2, frames.Count);
             AssertCarriedFrame(session, frames[0], Selected);
@@ -183,6 +194,7 @@ public sealed partial class ImmediateCarriedItemSynchronizationSessionTests
         finally
         {
             session.BeforeFramedWrite = null;
+            session.BeforeClientFlush = null;
             await DisconnectAndObserveEof(session, primaryFailure, [disconnected]);
         }
     }

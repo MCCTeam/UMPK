@@ -40,6 +40,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
     private readonly bool _observeWrites;
     internal Action? BeforeClientWrite { get; set; }
     internal Action<ReadOnlyMemory<byte>>? BeforeFramedWrite { get; set; }
+    internal Func<CancellationToken, ValueTask>? BeforeClientFlush { get; set; }
     private readonly bool _featureFlags;
     internal int Protocol => _protocol;
     private long _barrier;
@@ -538,7 +539,16 @@ internal sealed class BlockUseSession : IAsyncDisposable
         public override void CancelPendingFlush() => inner.CancelPendingFlush();
         public override void Complete(Exception? exception = null) => inner.Complete(exception);
         public override ValueTask CompleteAsync(Exception? exception = null) => inner.CompleteAsync(exception);
-        public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default) => inner.FlushAsync(cancellationToken);
+        public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default)
+            => owner.BeforeClientFlush is { } before
+                ? FlushObservedAsync(before, cancellationToken)
+                : inner.FlushAsync(cancellationToken);
+
+        private async ValueTask<FlushResult> FlushObservedAsync(Func<CancellationToken, ValueTask> before, CancellationToken cancellationToken)
+        {
+            await before(cancellationToken);
+            return await inner.FlushAsync(cancellationToken);
+        }
         public override Memory<byte> GetMemory(int sizeHint = 0) => _buffer = inner.GetMemory(sizeHint);
         public override Span<byte> GetSpan(int sizeHint = 0) => GetMemory(sizeHint).Span;
     }

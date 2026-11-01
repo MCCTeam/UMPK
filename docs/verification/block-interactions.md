@@ -4,6 +4,20 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Component interaction continuation, 2026-11-01
+
+Implementation `b03301b` extends measured Adventure mining and cube-placement permissions through protocols 771–773 (1.21.6–1.21.10) and preserves held mining across equivalent enchantment-map inventory updates on 766–777. Meaningful changes still reset mining; unavailable context remains unknown. The [scoped component report](component-interactions-771-773.md) records 33 native codec checks, 190 native enchantment checks, framed callers, failures, exact binaries and remaining work.
+
+| Check | Current scoped result |
+| --- | --- |
+| Runtime | Full Client 36,131 and Protocol 6,615 pass with zero skips; all 1,324 focused/regression cases pass. The Protocol wrapper's single shape-derived display mismatch is source-bound offline; the successful suite is retained and the failed wrapper remains failed. |
+| Native | Thirty-three original-codec cases and 190 original enchantment identity/admission/definition checks pass. These are controlled original-method checks, separate from native client input and live-server acceptance. |
+| Conformance | Exactly three identity pins regenerate through the documented gate; 33 lines/36 nested tokens change and 404 other fixtures retain their hashes. Strict focused 302/full 892 pass with update switches absent. |
+| Formatting and counts | Normal formatting of all eleven reviewed files passes with zero source changes. Deliberate additions are Client +190 and Protocol +19; the expected seventeen-suite total is 50,118. A fresh local seventeen-suite aggregate remains pending. |
+| Publication and final acceptance | The earlier published `1c31d97` has all seven CI jobs passing, healthy full formatting and strict AOT; those results identify that earlier checkpoint. New-head CI, fresh consumers/AOT/package runtime, the remaining interaction inventory and 50-protocol/75-release acceptance remain separate. DMCBK draft [#7](https://github.com/MCCTeam/DMCBK/pull/7) contains its committed command changes; stock CI awaits APIs absent from pinned UMPK 0.9.0-beta.7, while matched local-source tests pass. |
+
+The new libraries retain D5 compiler metadata and have explicit source/PDB equivalence to `b03301b`; this report does not relabel them as binaries built from the later commit. ROOT receipts are `869f4138` (Client), `7c98e017` (Protocol prefix), `420e8aa5` (Conformance), `46f4142e` (focused 1,324), `bd492c27` (native 190) and `ce39d3b8` (selected format). Normal opt-in skips, required executed live/AOT results and historical failures remain distinct. Protocol 47 keeps its 1.8.9 client profile.
+
 ## Current runtime checks, 2026-11-01
 
 The saved changes through `cb3a9e3` correct mining enchantment formats and the protocol-775 entity-interaction packet/caller. The production libraries identify `d5ef155`; the two repaired test documents match `0c371ba`, and `8d14b5f` records the deliberate count changes. These results cover this checkpoint. The complete vanilla interaction objective remains open.

@@ -23,6 +23,8 @@ public sealed class ClientActionCapabilities
 
     /// <summary>The LAST protocol whose server still handles the <c>MC|ItemName</c> anvil-rename channel: 340 (1.12.2). 1.13 replaced the legacy plugin channel with the dedicated <c>rename_item</c> packet.</summary>
     private const int LastLegacyItemNameProtocol = 340;
+    private const int FirstEntityOffHandProtocol = 107;
+    private const int FirstEntityInteractionLocationProtocol = 775;
 
     private readonly WireIndex _wire;
     private readonly Func<ProtocolPhase> _currentPhase;
@@ -32,6 +34,8 @@ public sealed class ClientActionCapabilities
         _wire = wire;
         _currentPhase = currentPhase;
         Protocol = protocol;
+        EntityInteractionHasOffHand = protocol >= FirstEntityOffHandProtocol;
+        EntityInteractionRequiresLocation = protocol >= FirstEntityInteractionLocationProtocol;
 
         CanClickContainerButton = wire.CanSendPlay(ItemPackets.Serverbound.ContainerButtonClick);
         CanEditBook = wire.CanSendPlay(UiPackets.Serverbound.EditBook);
@@ -61,6 +65,12 @@ public sealed class ClientActionCapabilities
 
     /// <summary>The negotiated wire protocol number these answers were resolved for.</summary>
     public int Protocol { get; }
+
+    /// <summary>The entity-interaction hand field begins at 1.9; 1.8 always uses the main hand.</summary>
+    internal bool EntityInteractionHasOffHand { get; }
+
+    /// <summary>The native 26.1+ interaction form requires the picked hit relative to the observed actor position.</summary>
+    internal bool EntityInteractionRequiresLocation { get; }
 
     /// <summary>Whether <see cref="Actions.InventoryActions.ClickContainerButtonAsync"/> can send.</summary>
     public bool CanClickContainerButton { get; }

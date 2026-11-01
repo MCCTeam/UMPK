@@ -15,7 +15,7 @@ public static partial class EntityPackets
     }
 }
 
-/// <summary>Interact entity: entity id, action VarInt (0 interact, 1 attack, 2 interact-at). Interact carries a hand VarInt; interact-at carries three floats then a hand; attack carries nothing. Modern (1.9+) adds a trailing using-secondary-action boolean (<see cref="UsingSecondaryAction"/> set).</summary>
+/// <summary>Entity interaction. Through 1.21.11, Action selects interact (0), attack (1) or interact-at (2); 1.9 adds the hand and 1.16 adds UsingSecondaryAction. From 26.1, the wire has no action field: Action is 0, Hand and the entity-relative InteractAt are required, and the location uses LP vector encoding. Attacks use the separate packet.</summary>
 public sealed record ServerboundInteractPacket(
     int EntityId,
     int Action,

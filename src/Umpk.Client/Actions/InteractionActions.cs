@@ -448,12 +448,42 @@ public sealed partial class InteractionActions
         _attackCharge.Reset();
     }
 
-    /// <summary>Interacts with an entity (right-click).</summary>
-    public Task InteractEntityAsync(int entityId, Hand hand = Hand.Main, CancellationToken ct = default)
-        => _sink.SendAsync(
-            new ServerboundInteractPacket(entityId, 0, (int)hand, InteractAt: null,
-                UsingSecondaryAction: _services.Self.Sneaking),
-            ct).AsTask();
+    /// <summary>Interacts with an entity (right-click). From 26.1, the entity must be the known current view target so the packet can carry its actual relative hit.</summary>
+    public async Task InteractEntityAsync(int entityId, Hand hand = Hand.Main, CancellationToken ct = default)
+    {
+        if (hand is not Hand.Main and not Hand.Off)
+            throw new ArgumentOutOfRangeException(nameof(hand));
+        Require(hand == Hand.Main || _services.Capabilities.EntityInteractionHasOffHand,
+            nameof(InteractEntityAsync), EntityPackets.Serverbound.Interact.Id,
+            "This version cannot interact with the offhand; its entity-interaction packet always uses the main hand.");
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await InteractEntityOnLoopAsync(entityId, hand, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => InteractEntityOnLoopAsync(entityId, hand, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
+
+    private async ValueTask InteractEntityOnLoopAsync(int entityId, Hand hand, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        Vec3d? location = null;
+        if (_services.Capabilities.EntityInteractionRequiresLocation)
+        {
+            InteractionPickResult pick = _services.ReadInteractionPick(double.PositiveInfinity);
+            if (pick.Kind != InteractionPickKind.Entity || pick.EntityId != entityId
+                || pick.EntityHitPoint is not { } point || pick.EntityPosition is not { } position)
+                throw new InvalidOperationException("The entity is not a known current view target; an entity-relative hit is unavailable.");
+            Vec3d relative = point.Subtract(position);
+            if (!double.IsFinite(relative.X) || !double.IsFinite(relative.Y) || !double.IsFinite(relative.Z))
+                throw new InvalidOperationException("The entity-relative interaction hit is unavailable.");
+            location = relative;
+        }
+        bool secondary = _services.Self.Sneaking;
+        IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
+        await sink.SendAsync(new ServerboundInteractPacket(entityId, 0, (int)hand, location, secondary), session).ConfigureAwait(false);
+    }
 
     /// <summary>Swings the given arm.</summary>
     /// <remarks>26.3 removes the swing-arm send in favour of the handless punch: when the session binds punch, both hands send it (the packet carries no hand to choose with); older eras keep the hand-carrying swing. The branch reads the bound outbound table, never a protocol number.</remarks>

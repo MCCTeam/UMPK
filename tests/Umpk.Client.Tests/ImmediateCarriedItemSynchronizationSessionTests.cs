@@ -17,7 +17,7 @@ namespace Umpk.Client.Tests;
 using Session = Support.BlockUseSession;
 
 /// <summary>Immediate controller entry after framed hand changes. These prove send/cache ownership, not native client execution or777 entity-interaction wire parity.</summary>
-public sealed class ImmediateCarriedItemSynchronizationSessionTests
+public sealed partial class ImmediateCarriedItemSynchronizationSessionTests
 {
     private const int Protocol = 770;
     private const int Selected = 5;
@@ -150,6 +150,7 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
     [InlineData("place")]
     [InlineData("air")]
     [InlineData("attack")]
+    [InlineData("interact")]
     public async Task UnchangedSelectionPreservesTheActionWithoutAnExtraCarriedFrame(string kind)
     {
         Session session = await Prepared(Protocol, 0);
@@ -224,6 +225,7 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
     [InlineData("place")]
     [InlineData("air")]
     [InlineData("attack")]
+    [InlineData("interact")]
     public async Task CallerCancellationBeforeAdmissionDoesNotWriteOrAdvanceTheCache(string kind)
     {
         Session session = await Prepared(Protocol, Selected);
@@ -252,6 +254,7 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
     [InlineData("place")]
     [InlineData("air")]
     [InlineData("attack")]
+    [InlineData("interact")]
     public async Task CallerCancellationAtTheCarriedWriteFinishesTheCapturedPacketGroup(string kind)
     {
         Session session = await Prepared(Protocol, Selected);
@@ -299,6 +302,8 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
     [InlineData("air", true)]
     [InlineData("attack", false)]
     [InlineData("attack", true)]
+    [InlineData("interact", false)]
+    [InlineData("interact", true)]
     public async Task FailedCarriedWriteStopsTheActionWithTheSameValidPositiveControl(string kind, bool fault)
     {
         Session session = await Prepared(Protocol, Selected);
@@ -492,12 +497,12 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
         finally { await DisconnectAndObserveEof(session, primaryFailure); }
     }
 
-    private static async Task<Session> Prepared(int protocol, int selected, string block = "lever", ISessionScheduler? scheduler = null)
+    private static async Task<Session> Prepared(int protocol, int selected, string block = "lever", ISessionScheduler? scheduler = null, bool physics = false)
     {
         Session? session = null;
         try
         {
-            session = await Session.Create(protocol, block, observeWrites: true, scheduler: scheduler);
+            session = await Session.Create(protocol, block, physics: physics, observeWrites: true, scheduler: scheduler);
             await session.Mode(GameMode.Survival, instantBuild: false);
             await Slot(session, selected, "stone");
             if (selected != 0)
@@ -539,6 +544,7 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
             "place" => session.Client.Actions.Interaction.PlaceBlockAsync(Session.Target, Direction.Up, Cursor, ct: token),
             "air" => session.Client.Actions.Interaction.UseItemAsync(Hand.Main, token),
             "attack" => session.Client.Actions.Interaction.AttackEntityAsync(EntityId, token),
+            "interact" => session.Client.Actions.Interaction.InteractEntityAsync(EntityId, Hand.Main, token),
             _ => throw new ArgumentOutOfRangeException(nameof(kind)),
         };
 
@@ -594,6 +600,14 @@ public sealed class ImmediateCarriedItemSynchronizationSessionTests
             Assert.Equal(1 + offset, packets.Length);
             var use = Assert.IsType<ServerboundUseItemPacket>(packets[offset]);
             Assert.Equal((0, 1, 0F, 0F), (use.Hand, use.Sequence, use.YRot, use.XRot));
+        }
+        else if (kind == "interact")
+        {
+            Assert.Equal(1 + offset, packets.Length);
+            var interact = Assert.IsType<ServerboundInteractPacket>(packets[offset]);
+            Assert.Equal((EntityId, 0, 0, (Vec3d?)null, (bool?)false),
+                (interact.EntityId, interact.Action, interact.Hand, interact.InteractAt, interact.UsingSecondaryAction));
+            Assert.Equal(new byte[] { EntityId, 0, 0, 0 }, BoundDescriptorCodec.EncodeServerbound(session.Protocol, interact));
         }
         else
         {

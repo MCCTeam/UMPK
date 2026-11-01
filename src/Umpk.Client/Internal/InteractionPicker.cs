@@ -21,6 +21,9 @@ internal enum InteractionPickKind
 
 internal readonly record struct InteractionPickResult(InteractionPickKind Kind, BlockHitResult? BlockHit = null, int? EntityId = null)
 {
+    public Vec3d? EntityHitPoint { get; init; }
+    public Vec3d? EntityPosition { get; init; }
+
     public static InteractionPickResult Unknown => new(InteractionPickKind.Unknown);
     public static InteractionPickResult Miss => new(InteractionPickKind.Miss);
 }
@@ -154,7 +157,15 @@ internal static class InteractionPicker
             if (!profile.AttributeReach && services.Self.GameMode != GameMode.Creative && distance > entityRange * entityRange)
                 return InteractionPickResult.Miss;
             if ((profile.AttributeReach ? distance : nearest) < blockDistance || block is null)
-                return profile.AttributeReach && !(distance < entityRange * entityRange) ? InteractionPickResult.Miss : new(InteractionPickKind.Entity, EntityId: selected.Id);
+            {
+                if (profile.AttributeReach && !(distance < entityRange * entityRange))
+                    return InteractionPickResult.Miss;
+                return new(InteractionPickKind.Entity, EntityId: selected.Id)
+                {
+                    EntityHitPoint = selectedPoint,
+                    EntityPosition = selected.Position,
+                };
+            }
         }
         if (block is null || profile.AttributeReach && !(blockDistance < blockRange * blockRange))
             return InteractionPickResult.Miss;

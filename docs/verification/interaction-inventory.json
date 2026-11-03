@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "producer_commit": "dd1424159418381e2cfd548c6dc381216939e365",
+  "producer_commit": "d13f88e2a8ab5fce21a8dc9dcc3140642fdfb3a9",
   "scope": "Current canonical default-geometry and default-item-use coverage. Geometry categories do not prove nondefault scaling, movement, riders, picking or hard collisions. Missing predicate classifications remain open in the completion ledger.",
   "band_semantics": "Inclusive endpoints select only protocols listed below. Missing bands mean the type has no inventory entry in that protocol; they are not a native nonparticipation claim.",
   "protocols": [
@@ -21,14 +21,14 @@
       "source_sha256": {
         "entities.json": "5e718086719e43c2fbdbc68bf7a4d82f62c3841d16c5d25cbac7871b6c972c6c",
         "items.json": "57437ea807ccb44cd9a8bba3fc76f7a921db67b0e358516747b515a67da4fc4a",
-        "entity-obstruction.json": "f9d0d82501b39cc0a63481eeee1074e7c7bd37260674b324a1f82966629f0617",
+        "entity-obstruction.json": "6029690b4cd0adddd240a3ae344073bcfffb10f164311056eba45105e5566c40",
         "entity-geometry.json": "21d08b27dabf282c2be5c6f8db813e3bbd69c4236c639b3a68c82c0033ece623",
         "block-interactions.json": "716b78d1910a2bedb6570bcf672150f632a226fd3cce02c98ab86b5806349c4b"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 55
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 54
       },
       "item_use_counts": {
         "pass": 129,
@@ -44,14 +44,14 @@
       "source_sha256": {
         "entities.json": "5fc3094603ca99ab53adde57bd20602398a97874457612f4562b4d1653a59aee",
         "items.json": "a872b08ed70200f0dce701daf41da15221260a3dd252e6d3a50b77f1293517c5",
-        "entity-obstruction.json": "9bc379c7d764f6ed94770120c5c8f476f874460d476db04a0ae22b9dbcbc6bbd",
+        "entity-obstruction.json": "a4e656caf5b731d9ac596dacecf478a28ed3071e958afa592070fa2c83502499",
         "entity-geometry.json": "06878582081f5076efb98fb37f50b7121d65cd68b7e30027beca29c807c1c2aa",
         "block-interactions.json": "422972946ed70ef25588ddd9f6807387ca119058f49653a06ab4f75847e3945d"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 60
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 59
       },
       "item_use_counts": {
         "pass": 139,
@@ -67,14 +67,14 @@
       "source_sha256": {
         "entities.json": "ac310fbaae419f41fbe48acb2fddf7c75fd4554b37e6402045d7f158d44bdd6f",
         "items.json": "3569ba143c2bd4ededb1d7292778795cc2964d62ff84802c65e90dbd9983c389",
-        "entity-obstruction.json": "7bde5c94489aa072d14d017dafcda6a651e5d5dcb7cfa4e5ae01f245429d4bd4",
+        "entity-obstruction.json": "17f862241417a85f7ae17c3d56b08db24b0db8b8bb0e23f3d670182b286c731c",
         "entity-geometry.json": "bb23694f334a00028fef563ee4c1b86af768ccef0f438b14a6adf85eb7c3848d",
         "block-interactions.json": "fb9b999d9f496f69fe89ac3794130d3a20bfc85d719145c17e8410d7ed9eeb1a"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 60
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 59
       },
       "item_use_counts": {
         "pass": 139,
@@ -90,14 +90,14 @@
       "source_sha256": {
         "entities.json": "893d8cf6d2998cb09f2d9853e876ba20101098d4e82029a466951d96a5f6ac30",
         "items.json": "5a0fb7b3d16223098e2f2dec878d3e6b48ef860e4046624a6c4a08b14c36d886",
-        "entity-obstruction.json": "9b06a0d85f12f1607aec97ef53409d7250411b40d9132683898bc66b110a06f2",
+        "entity-obstruction.json": "74dec1d39196713dd9915ddd5197aa51e423e84dc18ef1bd3da930c506896eb1",
         "entity-geometry.json": "8668921f0a5037bd302c57e0a2ecdbec0ed4a2bb04515034dbac90ab3f57d601",
         "block-interactions.json": "d6a104885db42fee8f9ec875f5789ec1b930cc0a4b4cf4818eb00b72e1c17b87"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 60
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 59
       },
       "item_use_counts": {
         "pass": 139,
@@ -114,14 +114,14 @@
       "source_sha256": {
         "entities.json": "3a9382682df7283baa4cc06dc0c2e2b953028df4fa45ecf149a4c911b99eb603",
         "items.json": "a9763eacdd0c60063b8a7dd8e95a9821e03ba648ac485a7c477705e51b2791a3",
-        "entity-obstruction.json": "0a41af07ab86c8344c0fc6a5ac6fa23ecfd0d9d981a91ac3eb4d3f261d01d7bf",
+        "entity-obstruction.json": "d813c9a60f0bdc2d784595a2170f3762aa31ff25ce2f0bf1948e9669ff3f5652",
         "entity-geometry.json": "5a2ad0b2d2c8625948eac785848bc6bd046377a0f1e5bc74127132525c7b855a",
         "block-interactions.json": "ab4da59bc82ff800c504c3b340b57f64f4b74ab762f359bda975350f405baeec"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 60
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 59
       },
       "item_use_counts": {
         "pass": 139,
@@ -139,14 +139,14 @@
       "source_sha256": {
         "entities.json": "62c25d735cac8bd67502941116491b060392c29d372ef12f7339a9382049a77d",
         "items.json": "7fa385c64a895b85eeb1d35c5a3cf6652062cef20804f48a6d7b619d321fadbd",
-        "entity-obstruction.json": "f744fd7118e3849e0147ac0584a2007ad8bee793f76747869d565b348fc32ff3",
+        "entity-obstruction.json": "162d6421a6378abea0082b4223b1fd484097b9b29d375486fab904977c2cdb24",
         "entity-geometry.json": "5390d5cb56bcb2817287253af6771f35860ca21881084cd5e6051c5feef5501a",
         "block-interactions.json": "83cd136915eae3e5b820e6362270057bae77dd03312d58a896e2b122e66273c4"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 61
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 60
       },
       "item_use_counts": {
         "pass": 139,
@@ -162,14 +162,14 @@
       "source_sha256": {
         "entities.json": "ab8c9ac0dff439f83b43e1c476249bf2ed709035f173858d9ee185680551525f",
         "items.json": "9d1c013b8080da6f16f85c46a48623a0a4d2554a07f732b75f9d13ebbc958db1",
-        "entity-obstruction.json": "eadbba82994967d4fda153b79e967918e387df6697d0332c463c28fe44155d89",
+        "entity-obstruction.json": "cd945f99bebcfd16716abce956e8a801edf90bbb4c2b28bd782ec1bfe33284b3",
         "entity-geometry.json": "eebf7fb1341aa28c47c7c7f22833d43771e9dc693ff965c528caac96ec18beaf",
         "block-interactions.json": "bef075aed4543e3b522f4989ece378d74f8ca66035096599cb17aece9f0c109a"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 76
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 75
       },
       "item_use_counts": {
         "pass": 142,
@@ -186,14 +186,14 @@
       "source_sha256": {
         "entities.json": "5d7f95b26227616cf032e876504cebb3adca8b3c8514d3ed04ab986530af1676",
         "items.json": "a113664d624025087e406e53f143c67947283691a128dfa5d6819f53bd95f8e1",
-        "entity-obstruction.json": "2e08f69f2fd65c8e2e13ab7b226ccb7ff77809815d528e13711ae101ff67392d",
+        "entity-obstruction.json": "95a38c4ca4b075b320975a2172e4149a8ecc82b5d35c632db9aa59c40cda4ef3",
         "entity-geometry.json": "d526be14550d9fa449634247f6f3842198a8fbca2f75eed417117a185a1a3f35",
         "block-interactions.json": "68731cef87bb28308a69fff659ccb68af058c4458ddfb1934662ba2ba263a87e"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 76
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 75
       },
       "item_use_counts": {
         "pass": 143,
@@ -209,14 +209,14 @@
       "source_sha256": {
         "entities.json": "6efbcf40b475c3a108363f96fe03caff11e09b341d7b3b8e5e61a386531986ab",
         "items.json": "d7b088e79ebe3d1fbb5683e983e9b4a1526857144615eaa9ec50d816f3fd35a3",
-        "entity-obstruction.json": "3d3e527b688c82e8d2680d76545e1492a9a65595b34074aaf3b28dec1e1210c5",
+        "entity-obstruction.json": "0f22dc8a6aba202b23e7c9b6f591a2c25317313896d69d6f6245ed067c0e51fc",
         "entity-geometry.json": "30737e8df06196c4fae6354ba617d3475a9c5eef0e4d8ffc60f09a8f9ecbc8fc",
         "block-interactions.json": "25831b8df2095ac07599b27ba0041eadae8817189318c84588e089d49199ff03"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 78
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 77
       },
       "item_use_counts": {
         "pass": 144,
@@ -232,14 +232,14 @@
       "source_sha256": {
         "entities.json": "7ee6b08db7a22eb52042910d066b5bc872a052933852cac7ff3aae20f07a1203",
         "items.json": "ddaaef0a2dd686333a6091041224b10d6380cb68776110bbd069153aa3bac121",
-        "entity-obstruction.json": "d7ae4faec1c719de328dc4d265b52a85f2d3ecfd3e46a5056676770e8dc6f27c",
+        "entity-obstruction.json": "4f9e11d9b5ccab9926664c48c660434aece2f29e583fb97c52d6c9d6bd33c076",
         "entity-geometry.json": "58cfecbb7f9df73df550beb2bb7f771506190ee89b6bf377e6d350e6a629410a",
         "block-interactions.json": "ed2397abd188296f87ba27b5b6d814517f91b6a61f428365bfbc6746930a3cb3"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 78
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 77
       },
       "item_use_counts": {
         "pass": 144,
@@ -255,14 +255,14 @@
       "source_sha256": {
         "entities.json": "9162e65b12f34370ae88fe5e217c73b9f70437943aa7399434806d854b3a0a86",
         "items.json": "d9d78f089def414150001c9b55169e610f31227be33bc7c9e8764a274323431c",
-        "entity-obstruction.json": "ee38052fc2937c57aa8c1a9daa7b6469045e2ddd797470dacac49580241e473c",
+        "entity-obstruction.json": "2024a2d094d1233316440c7ede48ac9f1f9e69d824801ee3f2417a76f08f7bcc",
         "entity-geometry.json": "ed03d24799998bc16b2aa1212c53a026820bcea214eeb87adc1965b1c1eeef25",
         "block-interactions.json": "1d319d29deaee1aa1312fc32fdb8e8e585ccabb4ce75e30ad4591bd7e7a4cd8a"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 78
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 77
       },
       "item_use_counts": {
         "pass": 144,
@@ -278,14 +278,14 @@
       "source_sha256": {
         "entities.json": "3baa173c16380015adc98b0b9ee25407302dcb130520730ec7dab40594d054e2",
         "items.json": "5a4be79ad0f4fc100e948cfd637fda4666303da8beaa78d922804ff3b9bbff87",
-        "entity-obstruction.json": "191b4e14f6fd744caa26442edfa9889447cd2df9492c533d48fe30a53c5f03c1",
+        "entity-obstruction.json": "75875f92c28cf37ceeb4bc48855384b528a76c4962deebc6690f202bdc1c8249",
         "entity-geometry.json": "0229cf8a88690e819a74858ecccafe735ffb7ab19b19a100bfb023b6e949d201",
         "block-interactions.json": "578d430caec8b799c060e14cd711027dbda112cf8f2dad512f459adfce6f71f0"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 89
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 88
       },
       "item_use_counts": {
         "pass": 169,
@@ -301,14 +301,14 @@
       "source_sha256": {
         "entities.json": "9c5f1de449551f57fa2b487f490e157093367e2794d981fd0d39d07c8f85d00c",
         "items.json": "0c71d51bdb0f83f8dd9e46539b61ebcbbdf0df99f9d1d3a85f20c497d7068924",
-        "entity-obstruction.json": "39fb8c57039054c7e2cd1ba55ef60faf0f36a3eb4ef87dad9535b552e8af0dea",
+        "entity-obstruction.json": "7383e1d74c6b9ddb2e7c7e73a43a482bdbf96e42ac9dfd2dd30dc13804fae5be",
         "entity-geometry.json": "47d8e352a097a4cca7696311d4af513d1b0003b5ccc17a4e2f278b07b633be3f",
         "block-interactions.json": "f174fd21164b13eb07f8abad8047df466ea35492ab28dec5d5f6e6b3a50d5fc7"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 89
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 88
       },
       "item_use_counts": {
         "pass": 169,
@@ -324,14 +324,14 @@
       "source_sha256": {
         "entities.json": "f5581a8192ef60aad9e8a21f070a6bc4c8e29f4882be980f8c4a24b20eaef6f0",
         "items.json": "a02c87f1cd050ee6317ce6c456f463b074f156687a33dbe915dce0e99ed741e1",
-        "entity-obstruction.json": "cc8deadcb849ef5f6f245d5382f597c14ce19e899bc3f7125c03f0737e3c190d",
+        "entity-obstruction.json": "22b2e0ccab1010a0bdc111ef33bf414f12d8db40aab10844feeeacf8325f4300",
         "entity-geometry.json": "7e9a02c550aaad72fb7065cf7386ae550faffb9fe53bcfa4ca83a9f17bf855f8",
         "block-interactions.json": "c1415fdf7814bf8e200dbff269935ef6c794f19684dfafb57dd99e353b6f2224"
       },
       "entity_counts": {
         "measured_geometry": 5,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 89
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 88
       },
       "item_use_counts": {
         "pass": 169,
@@ -347,14 +347,14 @@
       "source_sha256": {
         "entities.json": "ad075b0f9fa1b91efbdeee2e4ec911487f95063a30682d6829071bbb1a41f269",
         "items.json": "53133d69bc272cc87e6043a51b0d9648387140e03489bcdc610e3a04770f0edd",
-        "entity-obstruction.json": "befd0d1e88c0d04f9c8a648c5ba33dceefe8f5366ea2e839496517d4c3e76236",
+        "entity-obstruction.json": "a5026a28cb3ccd4b385c288043d3b46a296261eb32ff1e79f7451a211950ce2b",
         "entity-geometry.json": "d5451052e27a87a8d444d9d09f08771b183b7374b447ec76a8e7694c58e3bbb6",
         "block-interactions.json": "0a4ca2eb1b711a30aa7f3b37a7b5250ba165f2aafaa62a692be338ab01d2f7c9"
       },
       "entity_counts": {
         "measured_geometry": 9,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 92
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 91
       },
       "item_use_counts": {
         "pass": 179,
@@ -370,14 +370,14 @@
       "source_sha256": {
         "entities.json": "3b5f0a876ed5b4651809e1382a43d100cfeae4b4eac78c77e278e9c47c8d0954",
         "items.json": "35cac43cb81b9cd0af4be1e2b83b07914bd23f14d54b8b2ff77da89327992fce",
-        "entity-obstruction.json": "afa018f6c95066e9ca8175bd474643f0651a6a0c2508c6e453acf39b76037e6b",
+        "entity-obstruction.json": "cfa5b4a6d42203d1f298840b21dcc9b028dd536dcf9a6fc0ed31ff1cfe2ce85a",
         "entity-geometry.json": "f8ba60fe75ec9c14fb11442f7379dee0142fe762a0f5488a026478ccbec7c476",
         "block-interactions.json": "bd1577409f7938268ca7ae6dfb5dcdad23de57a7e34669ccabe9eced5b69e09d"
       },
       "entity_counts": {
         "measured_geometry": 9,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 92
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 91
       },
       "item_use_counts": {
         "pass": 179,
@@ -393,14 +393,14 @@
       "source_sha256": {
         "entities.json": "58e2abc98cf1f79cce59f5652fad185d7c702843cfdfa6a3952edab8935d448c",
         "items.json": "31427e0f61bf57ed06ebd191946b9a2f586d66b6291b340bd76e31bfe91f8d13",
-        "entity-obstruction.json": "0195cbb2cf75c6a7d15cf411d154489d17b7a25e1096bf01d15d1fc0af5584f7",
+        "entity-obstruction.json": "ef2e18d227e2b8f8798616cc404cdcf193e568f5eee7558e67c2baab579e5593",
         "entity-geometry.json": "1378a072d991cb48f96017342d4287a7ae240e4ce4bd5523c50a264b64e8ccde",
         "block-interactions.json": "382f8f03bee5aee03840d3ca7eb6879914f43b7bac1dc532f51f6cca118903d2"
       },
       "entity_counts": {
         "measured_geometry": 9,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 92
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 91
       },
       "item_use_counts": {
         "pass": 179,
@@ -416,14 +416,14 @@
       "source_sha256": {
         "entities.json": "5d76836e9386c312c254fac76a78b2303588715e1d11a5d8c8f87889358974c2",
         "items.json": "11a41a593ac7288c4b43b89aeae119b98808cda2c5878feae2359fc716be378f",
-        "entity-obstruction.json": "daf45ca37c5be5cebc292692afbd63d2fb3f6bfe72a1eeecb5f237ee3ef1f0cd",
+        "entity-obstruction.json": "5e31bf2b5242f2c2ea452c909b6e4058643f76b03e3ab09d6533d05f1cae3c5d",
         "entity-geometry.json": "795bc3cb874d9e0dcfbc4b44d66026c6d65b36637cd4281336dab3afa2f904f0",
         "block-interactions.json": "a1a7a7fcdda9f5b845f061a08ff0bae2e4bb47ef1db0ad5c30edd8205336f2c0"
       },
       "entity_counts": {
         "measured_geometry": 9,
-        "permanent_nonobstruction": 1,
-        "unclassified_geometry": 92
+        "permanent_nonobstruction": 2,
+        "unclassified_geometry": 91
       },
       "item_use_counts": {
         "pass": 179,
@@ -1684,15 +1684,10 @@
       [
         47,
         47,
-        "unclassified_geometry"
+        "permanent_nonobstruction"
       ],
       [
         393,
-        490,
-        "unclassified_geometry"
-      ],
-      [
-        498,
         777,
         "permanent_nonobstruction"
       ]
@@ -2605,7 +2600,7 @@
       [
         107,
         340,
-        "unclassified_geometry"
+        "permanent_nonobstruction"
       ]
     ],
     "minecraft:zoglin": [

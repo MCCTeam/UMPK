@@ -13,7 +13,6 @@ using Session = ComponentAdventureMiningSessionTests.Session;
 
 public sealed class ComponentCanBreak770ActivationSessionTests
 {
-    private const string UnavailableGate = "This game mode requires an allowed block interaction before mining.";
     private const string UnavailableContext = "The Adventure permission requires unavailable tag, property-kind or block-entity facts.";
 
     [Theory]
@@ -257,16 +256,26 @@ public sealed class ComponentCanBreak770ActivationSessionTests
     }
 
     [Fact]
-    public async Task Protocol774RemainsOutsideThePermissionSlice()
+    public async Task Protocol774MissingPermissionKeepsTheHeldRequestDenied()
     {
         await using Session session = await Session.Create(774);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold("diamond_pickaxe");
-        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
-        await session.Client.InvokeAsync(_ => true, session.Token);
-        Assert.Empty(await session.Tick());
-        InvalidOperationException error = await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => await action.WaitAsync(session.Token));
-        Assert.Equal(UnavailableGate, error.Message);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, caller.Token);
+        try
+        {
+            await session.Client.InvokeAsync(_ => true, session.Token);
+            Assert.IsType<ServerboundSwingPacket>(Assert.Single(await session.Tick()));
+            Assert.False(action.IsCompleted);
+        }
+        finally
+        {
+            await caller.CancelAsync();
+            if (!action.IsCompleted)
+                await session.Tick();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => action.WaitAsync(session.Token));
+        }
     }
 
     private static async Task<Session> Adventure(int protocol, bool observeTags = true)

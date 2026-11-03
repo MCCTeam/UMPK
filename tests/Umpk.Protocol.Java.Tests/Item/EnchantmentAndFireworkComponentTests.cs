@@ -583,8 +583,8 @@ public class EnchantmentAndFireworkComponentTests
     /// <remarks>
     /// Typing <c>enchantments</c>, <c>stored_enchantments</c>, <c>fireworks</c> and <c>firework_explosion</c> moved these from 18/19/25/25/40/40/40/47/51/51. Typing <c>pot_decorations</c> on <c>BuildPreV1_21_5</c> then moved 766/767/768/769 down by one more each (14/15/21/21 -&gt; 13/14/20/20).
     /// <para>Typing the fifteen components that previously had no codec on any protocol moved the untyped counts to <c>6/6/5/5/25/25/25/32/36/36</c> for 766/767/768/769/770/771/773/774/775/776. Typing <c>painting/variant</c> then moved the 770+ counts down once more to <c>24/24/24/24/31/35/35/47</c> for 770/771/772/773/774/775/776/777. It remains absent before 770, matching vanilla's introduction boundary.</para>
-    /// <para>The measured 770–773 Adventure pair reduces those tables from 24 untyped components to 22. Later tables retain their existing unmodeled boundary.</para>
-    /// <para>What is still untyped is now dominated by 1.21.5+ additions no normal session needs to decode (<c>weapon</c>, <c>blocks_attacks</c>, the mob <c>*/variant</c> family, <c>break_sound</c>), plus <c>can_break</c>/<c>can_place_on</c> on 774+, and on 766-769 the six components whose pre-1.21.5 wire shape genuinely differs (<c>attribute_modifiers</c>, <c>dyed_color</c>, <c>potion_contents</c>, <c>trim</c>, <c>tool</c>, and on 766/767 <c>food</c>). A drop in a number here without a corresponding new codec means the table lost entries, which is the opposite of progress.</para>
+    /// <para>The measured 770–777 Adventure pair reduces each affected table by two untyped components; later profiles preserve their Either and predicate-registry boundaries.</para>
+    /// <para>What is still untyped is now dominated by 1.21.5+ additions no normal session needs to decode (<c>weapon</c>, <c>blocks_attacks</c>, the mob <c>*/variant</c> family, <c>break_sound</c>), and on 766-769 the six components whose pre-1.21.5 wire shape genuinely differs (<c>attribute_modifiers</c>, <c>dyed_color</c>, <c>potion_contents</c>, <c>trim</c>, <c>tool</c>, and on 766/767 <c>food</c>). A drop in a number here without a corresponding new codec means the table lost entries, which is the opposite of progress.</para>
     /// </remarks>
     [Theory]
     [InlineData(766, 56, 5)]
@@ -595,10 +595,10 @@ public class EnchantmentAndFireworkComponentTests
     [InlineData(771, 96, 22)]
     [InlineData(772, 96, 22)]
     [InlineData(773, 96, 22)]
-    [InlineData(774, 104, 30)]
-    [InlineData(775, 110, 34)]
-    [InlineData(776, 111, 34)]
-    [InlineData(777, 122, 46)]
+    [InlineData(774, 104, 28)]
+    [InlineData(775, 110, 32)]
+    [InlineData(776, 111, 32)]
+    [InlineData(777, 122, 44)]
     public void WireLayoutTable_DeclaresAndTypesTheseManyComponents(int protocol, int declared, int untyped)
     {
         ItemComponentTable table = TableFor(protocol);

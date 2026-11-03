@@ -10,7 +10,7 @@ internal static class VanillaMiningItemIdentity
 {
     private const int ItemComponentsProtocol = 766;
     private const int ModernPredicateProtocol = 770;
-    private const int LastMeasuredPredicateProtocol = 773;
+    private const int LastMeasuredPredicateProtocol = 777;
     private const int LastMeasuredEnchantmentProtocol = 777;
 
     public static bool Matches(ItemStack current, ItemStack previous, int protocol)

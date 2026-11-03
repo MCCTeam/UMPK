@@ -82,6 +82,6 @@ public sealed class ModernAdventurePredicateGuardTests
         var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(codec.Decode(Convert.FromBase64String("AAcAJAEBAQAMAA=="), context));
         AdventureModePredicateComponent value = packet.Item.Components.Get(DataComponents.CanBreak)!;
         Assert.Empty(value.Predicates);
-        Assert.ThrowsAny<InvalidOperationException>(() => ItemComponentTable.V1_21_5().ByKey(DataComponents.CanBreak).Hash(new HashOps(), value, context));
+        Assert.Throws<ArgumentException>(() => ItemComponentTable.V1_21_5().ByKey(DataComponents.CanBreak).Hash(new HashOps(), value, context));
     }
 }

@@ -8,12 +8,14 @@ namespace Umpk.Protocol.Java.Codecs;
 
 internal static partial class ItemComponentCodecs
 {
-    /// <summary>Creates one 1.21.5 Adventure codec. Its exact matcher values recurse through the same table, bound once after construction.</summary>
-    public static ModernAdventurePredicateCodec MakeAdventureV1_21_5(DataComponentType type) => new(type);
+    /// <summary>Creates a modern Adventure codec for its native partial-predicate profile. Its exact matcher values recurse through the same table, bound once after construction.</summary>
+    public static ModernAdventurePredicateCodec MakeAdventureV1_21_5(DataComponentType type, AdventurePredicateForm form = AdventurePredicateForm.Plain14) => new(type, form);
 
-    internal sealed class ModernAdventurePredicateCodec(DataComponentType type) : ItemComponentCodec(type)
+    internal enum AdventurePredicateForm { Plain14, Either14, Either15 }
+
+    internal sealed class ModernAdventurePredicateCodec(DataComponentType type, AdventurePredicateForm form) : ItemComponentCodec(type)
     {
-        // Original 1.21.5 DataComponentPredicates static registration order. Only Damage's measured integer/default DATA form is owned below.
+        // Original predicate registration order; the final villager entry exists only in the 26.1 profile. Only Damage's selected concrete DATA form is owned below.
         private static readonly Identifier[] PartialTypes =
         [
             Identifier.Minecraft("damage"),
@@ -30,7 +32,10 @@ internal static partial class ItemComponentCodecs
             Identifier.Minecraft("attribute_modifiers"),
             Identifier.Minecraft("trim"),
             Identifier.Minecraft("jukebox_playable"),
+            Identifier.Minecraft("villager/variant"),
         ];
+
+        internal AdventurePredicateForm Form => form;
 
         private ItemComponentTable? _table;
         private ItemComponentTable Table => _table ?? throw new InvalidOperationException("Adventure codec has no owning item table.");
@@ -62,10 +67,21 @@ internal static partial class ItemComponentCodecs
                 throw new ProtocolViolationException($"Invalid partial component predicate count {count}.");
             var partial = new BlockPredicatePartialMatcher[count];
             var seen = new HashSet<int>();
+            int concreteTypeCount = form == AdventurePredicateForm.Either15 ? PartialTypes.Length : PartialTypes.Length - 1;
             for (int index = 0; index < count; index++)
             {
+                bool anyValue = form != AdventurePredicateForm.Plain14 && !reader.ReadBool();
                 int id = reader.ReadVarInt();
-                if (id < 0 || id >= PartialTypes.Length)
+                if (anyValue)
+                {
+                    Identifier component = Table.KeyByWireId(id);
+                    NbtTag unitValue = reader.ReadNbt(ItemCodecPrimitives.NetworkNbt);
+                    if (unitValue is not NbtCompound)
+                        throw new ProtocolViolationException("An AnyValue predicate CODEC requires an NBT map.");
+                    partial[index] = new BlockPredicatePartialMatcher(component, true, unitValue);
+                    continue;
+                }
+                if (id < 0 || id >= concreteTypeCount)
                     throw new ProtocolViolationException($"Partial component predicate type {id} is out of range.");
                 if (!seen.Add(id))
                     throw new ProtocolViolationException("A partial component predicate type occurs more than once.");
@@ -120,10 +136,24 @@ internal static partial class ItemComponentCodecs
                 var seen = new HashSet<Identifier>();
                 foreach (BlockPredicatePartialMatcher partial in matchers.Partial)
                 {
+                    if (partial.IsAnyValue)
+                    {
+                        if (form == AdventurePredicateForm.Plain14)
+                            throw Table.UnmodeledValue(Type, "This predicate profile has no component-presence branch.");
+                        if (!Table.TryGetWireId(partial.Type, out int componentId) || partial.Value is not NbtCompound)
+                            throw new ProtocolViolationException("An AnyValue predicate requires a declared component and an NBT map.");
+                        // Native presence types are fresh identity keys and may repeat the same component identifier.
+                        writer.WriteBool(false);
+                        writer.WriteVarInt(componentId);
+                        writer.WriteNbt(partial.Value, ItemCodecPrimitives.NetworkNbt);
+                        continue;
+                    }
                     if (!seen.Add(partial.Type))
-                        throw new ProtocolViolationException("A partial component predicate type occurs more than once.");
-                    if (partial.IsAnyValue || partial.Type != PartialTypes[0] || !IsOwnedDamage(partial.Value))
+                        throw new ProtocolViolationException("A concrete partial predicate type occurs more than once.");
+                    if (partial.Type != PartialTypes[0] || !IsOwnedDamage(partial.Value))
                         throw Table.UnmodeledValue(Type, "The selected partial predicate CODEC or numeric canonicalization is not owned.");
+                    if (form != AdventurePredicateForm.Plain14)
+                        writer.WriteBool(true);
                     writer.WriteVarInt(0);
                     writer.WriteNbt(partial.Value, ItemCodecPrimitives.NetworkNbt);
                 }
@@ -134,7 +164,7 @@ internal static partial class ItemComponentCodecs
         {
             var component = (AdventureModePredicateComponent)value;
             if (component.Predicates.Count == 0)
-                throw new ComponentHashUnavailableException("Native Adventure DATA encoding rejects an empty predicate list.");
+                throw new ArgumentException("Native Adventure DATA encoding rejects an empty predicate list.", nameof(value));
             var hashes = new int[component.Predicates.Count];
             for (int index = 0; index < hashes.Length; index++)
                 hashes[index] = HashPredicate(ops, component.Predicates[index], context);
@@ -213,7 +243,14 @@ internal static partial class ItemComponentCodecs
                 var types = new HashSet<Identifier>();
                 foreach (BlockPredicatePartialMatcher partial in matchers.Partial)
                 {
-                    if (!types.Add(partial.Type) || partial.IsAnyValue || partial.Type != PartialTypes[0] || !IsOwnedDamage(partial.Value))
+                    if (partial.IsAnyValue)
+                    {
+                        if (form == AdventurePredicateForm.Plain14 || !Table.TryGetWireId(partial.Type, out _) || partial.Value is not NbtCompound)
+                            throw new ComponentHashUnavailableException("The component-presence predicate has no owned DATA form.");
+                        partials.Add((ops.String(partial.Type.ToString()), ops.EmptyMap));
+                        continue;
+                    }
+                    if (!types.Add(partial.Type) || partial.Type != PartialTypes[0] || !IsOwnedDamage(partial.Value))
                         throw new ComponentHashUnavailableException("The partial matcher's selected DATA hash is not owned.");
                     partials.Add((ops.String(partial.Type.ToString()), HashDamage(ops, (NbtCompound)partial.Value)));
                 }

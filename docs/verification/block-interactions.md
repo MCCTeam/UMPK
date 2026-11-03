@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Adventure mining and placement, 2026-11-03
+
+The [later Adventure boundary](component-interactions-774-777.md) connects native predicate forms, permission and held-item identity on protocols 774–777. The original 80-row campaign records 72 hashes and eight expected DATA errors; all 333 focused cases, the 7,222-case Protocol suite, 402 adjacent Client cases and all 892 strict Conformance cases pass without skips. Four generated identity pins change only their component digests; all 403 other fixture entries stay identical.
+
+Normal formatting of the four changed project workspaces changes zero source bytes. The complete local solution formatter fails with memory exhaustion under its unchanged limit; full formatting on the final CI head remains required. The expected seventeen-suite total is 50,795 after 143 deliberate additions. Fresh live, consumer, AOT, package-runtime and complete local gates remain open. Published `130e973` has all seven verified CI jobs passing in [run 41711596096](https://github.com/MCCTeam/UMPK/actions/runs/41711596096), covering its earlier 50,652-case baseline.
+
 ## Enchantment click hashes, 2026-11-03
 
 The [enchantment DATA hash correction](enchantment-data-hashes.md) reduces duplicate enchantment holders to their last value and rejects known DATA-invalid levels before sending a modern inventory click. Wire-valid zero remains represented; an unavailable holder retains the existing unknown-hash policy. Original methods at 1.21.5 and 26.3 provide 40 observations: 32 hashes and eight expected DATA errors.

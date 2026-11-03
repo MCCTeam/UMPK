@@ -193,15 +193,27 @@ public sealed class LegacyAdventureMiningRuntimeTests
     [Theory]
     [InlineData(774)]
     [InlineData(777)]
-    public async Task UnsupportedAdventurePredicateErasRemainExplicitFailures(int protocol)
+    public async Task LaterMissingAdventurePermissionKeepsTheHeldRequestDenied(int protocol)
     {
         await using var fixture = new Fixture(protocol);
         await SetModeAsync(fixture, GameMode.Adventure);
         await fixture.HoldAsync("diamond_pickaxe", 0);
-        Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North);
-        await fixture.TickAsync();
-        await Assert.ThrowsAnyAsync<InvalidOperationException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
-        Assert.Empty(fixture.Sent);
+        using var caller = new CancellationTokenSource();
+        Task mining = fixture.Actions.DigBlockAsync(Fixture.Target, Direction.North, caller.Token);
+        try
+        {
+            await fixture.TickAsync();
+            Assert.Empty(fixture.ActionsSent);
+            if (protocol == 777)
+                Assert.IsType<ServerboundPunchPacket>(Assert.Single(fixture.Sent));
+            else
+                Assert.IsType<ServerboundSwingPacket>(Assert.Single(fixture.Sent));
+            Assert.False(mining.IsCompleted);
+        }
+        finally
+        {
+            await ReleaseAsync(caller, mining);
+        }
     }
 
     [Fact]

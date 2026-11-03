@@ -106,6 +106,9 @@ internal sealed partial class ItemComponentTable
         return _codecByKey.ContainsKey(type) || _wireById.ContainsKey(type.Id);
     }
 
+    /// <summary>Resolves any declared component identifier, including a payload-free presence check on an otherwise unmodeled component.</summary>
+    internal bool TryGetWireId(Identifier id, out int wireId) => _wireById.TryGetValue(id, out wireId);
+
     /// <summary>The typed codec for a component key.</summary>
     internal ItemComponentCodec ByKey(DataComponentType type)
     {
@@ -136,6 +139,8 @@ internal sealed partial class ItemComponentTable
         {
             string type = codecByWire.TryGetValue(i, out ItemComponentCodec? codec) ? codec.Type.Id.ToString() : "-";
             yield return $"{i}:{idByWire[i]}:{type}";
+            if (codec is ItemComponentCodecs.ModernAdventurePredicateCodec { Form: not ItemComponentCodecs.AdventurePredicateForm.Plain14 } adventure)
+                yield return $"adventure/{i}:{adventure.Form}";
         }
 
         yield return layout.ToString();
@@ -154,19 +159,19 @@ internal sealed partial class ItemComponentTable
 
     /// <summary>Builds the 1.21.11 (protocol 774) table: its own ordering, the 1.21.9 payload family.</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V1_21_11() => Build(ItemComponentLayout.V1_21_11);
+    public static ItemComponentTable V1_21_11() => BuildModern(ItemComponentLayout.V1_21_11, bindMeasuredAdventure: true, adventureForm: ItemComponentCodecs.AdventurePredicateForm.Either14);
 
     /// <summary>Builds the 26.1 (protocol 775) table: its own ordering (110 entries; 776 inserts <c>sulfur_cube_content</c> at wire id 78), the 26.x payload family, and the 26.1 nested-stack TEMPLATE form on <c>container</c> / <c>bundle_contents</c> / <c>charged_projectiles</c>.</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V26_1() => Build(ItemComponentLayout.V26_1);
+    public static ItemComponentTable V26_1() => BuildModern(ItemComponentLayout.V26_1, bindMeasuredAdventure: true, adventureForm: ItemComponentCodecs.AdventurePredicateForm.Either15);
 
     /// <summary>Builds the 26.2 (protocol 776) component id table: its own 111-id ordering, the 26.x payload family, and the 26.1 nested-stack template form.</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V26_2() => Build(ItemComponentLayout.V26_2);
+    public static ItemComponentTable V26_2() => BuildModern(ItemComponentLayout.V26_2, bindMeasuredAdventure: true, adventureForm: ItemComponentCodecs.AdventurePredicateForm.Either15);
 
     /// <summary>Builds the 26.3 (protocol 777) component id table: its own 122-id ordering, the 26.x payload family, and the 26.1 nested-stack template form.</summary>
     /// <returns>The table.</returns>
-    public static ItemComponentTable V26_3() => Build(ItemComponentLayout.V26_3);
+    public static ItemComponentTable V26_3() => BuildModern(ItemComponentLayout.V26_3, bindMeasuredAdventure: true, adventureForm: ItemComponentCodecs.AdventurePredicateForm.Either15);
 
     /// <summary>
     /// The three components whose payload shapes change at 1.21.9 and therefore require codecs from protocol 773 onward that differ from their 1.21.5 codecs.
@@ -184,7 +189,7 @@ internal sealed partial class ItemComponentTable
     private static ItemComponentTable Build(ItemComponentLayout layout) =>
         layout.Dialect == ComponentWireEra.Modern ? BuildModern(layout) : BuildLegacyDialect(layout);
 
-    private static ItemComponentTable BuildModern(ItemComponentLayout layout, bool bindMeasuredAdventure = false)
+    private static ItemComponentTable BuildModern(ItemComponentLayout layout, bool bindMeasuredAdventure = false, ItemComponentCodecs.AdventurePredicateForm adventureForm = ItemComponentCodecs.AdventurePredicateForm.Plain14)
     {
         string[] identifiers = layout.Ordering;
         var idByWire = new Identifier[identifiers.Length];
@@ -196,9 +201,9 @@ internal sealed partial class ItemComponentTable
             wireById[id] = i;
         }
 
-        // Only the measured 770–773 factories bind these codecs. Later tables remain unbound until their boundary witnesses are accepted.
-        ItemComponentCodecs.ModernAdventurePredicateCodec? canBreak = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanBreak) : null;
-        ItemComponentCodecs.ModernAdventurePredicateCodec? canPlaceOn = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanPlaceOn) : null;
+        // Named factories select the measured plain or Either partial-predicate profile; 26.1 also adds the villager predicate registry entry.
+        ItemComponentCodecs.ModernAdventurePredicateCodec? canBreak = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanBreak, adventureForm) : null;
+        ItemComponentCodecs.ModernAdventurePredicateCodec? canPlaceOn = bindMeasuredAdventure ? ItemComponentCodecs.MakeAdventureV1_21_5(DataComponents.CanPlaceOn, adventureForm) : null;
 
         // The typed component set. Nested-stack codecs are created fresh per table and bound below so their nested decoding uses this era's table.
         NestedStackComponentCodec container = ItemComponentCodecs.MakeContainer(layout.NestedStacks);

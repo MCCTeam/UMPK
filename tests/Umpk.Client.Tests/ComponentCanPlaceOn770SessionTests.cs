@@ -38,7 +38,7 @@ public sealed class ComponentCanPlaceOn770SessionTests
     [InlineData(773, "can-break-only")]
     [InlineData(773, "activation-first")]
     [InlineData(773, "unobserved-tag")]
-    [InlineData(774, "unsupported-era")]
+    [InlineData(774, "can-break-only")]
     public async Task FramedCanPlaceOnKeepsTheNativePostSendResult(int protocol, string scene)
     {
         await using BlockUseSession session = await BlockUseSession.Create(protocol, scene == "activation-first" ? "stone_button" : "stone", physics: true);

@@ -213,16 +213,26 @@ public sealed class ComponentAdventureMiningSessionTests
     }
 
     [Fact]
-    public async Task Protocol774RemainsOutsideTheBoundComponentPayloadAndPermissionSlice()
+    public async Task Protocol774MissingPermissionKeepsTheHeldRequestDenied()
     {
         await using Session session = await Session.Create(774);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold("diamond_pickaxe");
-        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, session.Token);
-        await session.Client.InvokeAsync(_ => true, session.Token);
-        Assert.Empty(await session.Tick());
-        InvalidOperationException error = await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => await action.WaitAsync(session.Token));
-        Assert.Equal("This game mode requires an allowed block interaction before mining.", error.Message);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task action = session.Client.Actions.Interaction.DigBlockAsync(Session.Target, Direction.North, caller.Token);
+        try
+        {
+            await session.Client.InvokeAsync(_ => true, session.Token);
+            Assert.IsType<ServerboundSwingPacket>(Assert.Single(await session.Tick()));
+            Assert.False(action.IsCompleted);
+        }
+        finally
+        {
+            await caller.CancelAsync();
+            if (!action.IsCompleted)
+                await session.Tick();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => action.WaitAsync(session.Token));
+        }
     }
 
     internal static void AssertAction(ServerboundPlayerActionPacket action, int protocol, int expected)

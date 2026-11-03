@@ -248,30 +248,26 @@ public class ItemComponentPayloadCodecTests
         }
     }
 
-    /// <summary>The measured 770 codec accepts vanilla's legal empty predicate wire list; 776 retains its explicit unmodeled boundary. This does not establish a DATA hash for an empty list or support for later predicate layouts.</summary>
+    /// <summary>The measured profiles accept vanilla's empty predicate wire list, while the native DATA form used before a click rejects that value.</summary>
     [Theory]
     [InlineData(770, 12)]
     [InlineData(776, 15)]
-    public void CanBreak_IsTypedOnlyOnTheMeasured770Boundary(int protocol, int wireId)
+    public void CanBreak_AdmitsNativeEmptyWirePredicatesOnMeasuredProfiles(int protocol, int wireId)
     {
         byte[] frame = SetSlotFrame(protocol, wireId, static (ref PacketWriter w) => w.WriteVarInt(0));
-
         BoundPacketCodec bound = BoundCodec.At(protocol, PacketFlow.Clientbound, SetSlot);
-        if (protocol == 770)
-        {
-            var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.DecodeFrame(frame));
-            Assert.Equal(0, packet.ContainerId);
-            Assert.Equal(1, packet.StateId);
-            Assert.Equal(3, packet.Slot);
-            Assert.Equal(1, packet.Item.Count);
-            Assert.Equal(Identifier.Minecraft("stone"), packet.Item.Item.Id);
-            var predicate = Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(DataComponents.CanBreak));
-            Assert.Empty(predicate.Predicates);
-            Assert.Equal(frame, bound.Encode(packet));
-            return;
-        }
-        var ex = Assert.Throws<UnmodeledItemComponentException>(() => bound.DecodeFrame(frame));
-        Assert.Equal(Identifier.Minecraft("can_break"), ex.ComponentId);
+        var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.DecodeFrame(frame));
+        Assert.Equal(0, packet.ContainerId);
+        Assert.Equal(1, packet.StateId);
+        Assert.Equal(3, packet.Slot);
+        Assert.Equal(1, packet.Item.Count);
+        Assert.Equal(Identifier.Minecraft("stone"), packet.Item.Item.Id);
+        var predicate = Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(DataComponents.CanBreak));
+        Assert.Empty(predicate.Predicates);
+        Assert.True(predicate.ShowInTooltip);
+        Assert.Equal(frame, bound.Encode(packet));
+        ItemComponentTable table = protocol == 770 ? ItemStackCodecs.ComponentsV1_21_5 : ItemStackCodecs.ComponentsV26_2;
+        Assert.Throws<ArgumentException>(() => ItemStackCodecs.ToHashedStack(packet.Item, table, ItemTestRegistries.Context));
     }
 
     // consumable / death_protection - both carry the ConsumeEffect dispatch.

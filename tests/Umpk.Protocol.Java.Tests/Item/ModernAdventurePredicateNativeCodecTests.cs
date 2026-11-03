@@ -123,15 +123,15 @@ public sealed class ModernAdventurePredicateNativeCodecTests
     }
 
     [Fact]
-    public void Protocol774RetainsItsUnmodeledAdventureBoundary()
+    public void Protocol774UsesItsMeasuredEmptyPredicateWireBoundary()
     {
         var registries = JavaGameData.Registries(774);
         ItemComponentTable table = ItemComponentTable.V1_21_11();
         int componentId = table.WireId(DataComponents.CanBreak);
         Assert.Equal(15, componentId);
         Assert.Equal(Identifier.Minecraft("can_break"), table.KeyByWireId(componentId));
-        Assert.False(table.TryGetCodec(componentId, out _));
-        // Source-composed 774 control: its own component ID and the legal zero-predicate STREAM payload; this is not a native 774 capture.
+        Assert.True(table.TryGetCodec(componentId, out _));
+        // This control matches the original774 empty-wire-list witness, whose DATA form is invalid.
         var output = new ArrayBufferWriter<byte>();
         var writer = new PacketWriter(output);
         writer.WriteVarInt(0);
@@ -147,8 +147,9 @@ public sealed class ModernAdventurePredicateNativeCodecTests
         Assert.Equal("AAcAJAEBAQAPAA==", Convert.ToBase64String(payload));
         var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
         BoundPacketCodec bound = BoundCodec.At(774, PacketFlow.Clientbound, "minecraft:container_set_slot");
-        var error = Assert.Throws<UnmodeledItemComponentException>(() => bound.Decode(payload, context));
-        Assert.Equal(Identifier.Minecraft("can_break"), error.ComponentId);
+        var packet = Assert.IsType<ClientboundContainerSetSlotPacket>(bound.Decode(payload, context));
+        Assert.Empty(Assert.IsType<AdventureModePredicateComponent>(packet.Item.Components.Get(DataComponents.CanBreak)).Predicates);
+        Assert.Throws<ArgumentException>(() => ItemStackCodecs.ToHashedStack(packet.Item, table, context));
     }
 
     private static ItemComponentTable Table(int protocol) => protocol switch

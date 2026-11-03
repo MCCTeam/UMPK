@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Enchantment click hashes, 2026-11-03
+
+The [enchantment DATA hash correction](enchantment-data-hashes.md) reduces duplicate enchantment holders to their last value and rejects known DATA-invalid levels before sending a modern inventory click. Wire-valid zero remains represented; an unavailable holder retains the existing unknown-hash policy. Original methods at 1.21.5 and 26.3 provide 40 observations: 32 hashes and eight expected DATA errors.
+
+The same 190 focused cases pass after reproducing 90 failures and 100 controls, including eight connected client sessions. The complete Protocol suite passes all 7,129 cases without skips. Selected normal formatting changes zero files. The 17-suite baseline increases by the deliberate 170 Protocol and 20 Client additions to 50,652; fresh full-suite, consumer, AOT, package-runtime and release-matrix checks remain separate. The previous published checkpoint at `72873c0` retains its independently verified seven passing CI jobs.
+
 ## Enchantment packet validation, 2026-11-01
 
 Code `f2b2d70` rejects invalid final enchantment levels after the native last-wins map and legacy tooltip fields, while preserving accepted duplicate bytes. The [admission report](enchantment-level-admission.md) records 192 causal failures/152 controls before the fix, the same 344 passing afterward, all 1,324 retained checks and the complete 6,959-case Protocol suite. Normal selected-two formatting changes zero files. ROOT receipts 88acb237/ce985395/12863b1a retain source, binary and cleanup proof. The expected seventeen-suite total is now 50,462; no new seventeen-suite, consumer, AOT or live result is implied.

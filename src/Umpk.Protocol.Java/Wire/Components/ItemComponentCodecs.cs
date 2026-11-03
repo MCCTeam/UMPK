@@ -611,8 +611,28 @@ internal static partial class ItemComponentCodecs
         {
             IReadOnlyList<EnchantmentInstance> enchantments = Enchantments(value);
             var entries = new List<(int, int)>(enchantments.Count);
-            foreach (EnchantmentInstance instance in enchantments)
-                entries.Add((ops.String(instance.Enchantment.Id.ToString()), ops.Int(instance.Level)));
+            if (!hasShowInTooltip)
+            {
+                var finalLevels = new Dictionary<RegistryEntry<EnchantmentDefinition>, int>(enchantments.Count);
+                foreach (EnchantmentInstance instance in enchantments)
+                {
+                    if (instance.Enchantment.IsDefault)
+                        throw new ComponentHashUnavailableException("An enchantment holder is unavailable in the current registry.");
+                    finalLevels[instance.Enchantment] = instance.Level;
+                }
+                foreach ((RegistryEntry<EnchantmentDefinition> enchantment, int level) in finalLevels)
+                {
+                    // Native wire values allow zero, but the DATA codec used before a container click requires final map values in 1..255.
+                    if (level is < 1 or > 255)
+                        throw new ArgumentException("Enchantment DATA cannot hash a final level outside 1..255.", nameof(value));
+                    entries.Add((ops.String(enchantment.Id.ToString()), ops.Int(level)));
+                }
+            }
+            else
+            {
+                foreach (EnchantmentInstance instance in enchantments)
+                    entries.Add((ops.String(instance.Enchantment.Id.ToString()), ops.Int(instance.Level)));
+            }
 
             int levels = ops.Map(entries);
             if (!hasShowInTooltip)

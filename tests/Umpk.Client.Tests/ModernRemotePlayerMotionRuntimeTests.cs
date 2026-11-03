@@ -62,6 +62,80 @@ public sealed class ModernRemotePlayerMotionRuntimeTests
         Assert.True((await session.Bounds()).Intersects(Aabb.BlockAt(1, 65, 1)));
     }
 
+    public static IEnumerable<object[]> CrouchCollisionCases()
+    {
+        foreach (int protocol in Enumerable.Range(769, 9))
+            foreach (bool crouching in new[] { false, true })
+                yield return [protocol, crouching];
+    }
+
+    [Theory]
+    [MemberData(nameof(CrouchCollisionCases))]
+    public async Task CrouchPoseUsesNativeHeadClearanceAndModernCarriedTarget(int protocol, bool crouching)
+    {
+        await using var session = await Session.Create(protocol);
+        await session.SpawnPeer();
+        await session.Pose(crouching ? EntityPose.Crouching : EntityPose.Standing);
+        int queryX = protocol == 770 ? 202 : 101;
+        int queryY = protocol == 770 ? 130 : 65;
+        await session.Terrain(queryX >> 4);
+        await session.TopSlab(new BlockPos(queryX, queryY + 1, 0));
+        await session.Move();
+        await session.Sync(new Vec3d(100.5, 65, .5));
+        Assert.Equal(new Vec3d(100.5, 65, .5), await session.Position());
+        double[] expected = crouching && protocol >= 770
+            ? protocol == 777 ? [101, 101.5, 101.5] : [100.83333333333333, 101.16666666666666, 101.5]
+            : protocol == 777 ? [1, 1.5, 1.5] : [67.5, 34.5, 1.5];
+        float height = crouching ? 1.5f : 1.8f;
+        foreach (double x in expected)
+        {
+            await session.Tick();
+            Assert.Equal(new Vec3d(x, 65, .5), await session.Position());
+            Assert.Equal(new Vec3d(100.5, 65, .5), await session.PacketBase());
+            Assert.True(await session.GeometryKnown());
+            Aabb box = await session.Bounds();
+            Assert.Equal(new Aabb(x - (double)(.6f / 2f), 65, .5 - (double)(.6f / 2f), x + (double)(.6f / 2f), 65d + height, .5 + (double)(.6f / 2f)), box);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(Protocols))]
+    public async Task CrouchPoseRefreshesDimensionsDuringAnActiveTarget(int protocol)
+    {
+        await using var session = await Session.Create(protocol);
+        await session.SpawnPeer();
+        await session.Move();
+        await session.Tick();
+        int length = protocol == 777 ? 2 : 3;
+        Assert.Equal(new Vec3d(.5 + 1d / length, 65, .5), await session.Position());
+        await session.Pose(EntityPose.Crouching);
+        Assert.Equal(66.5, (await session.Bounds()).MaxY);
+        await session.Tick();
+        Assert.Equal(new Vec3d(.5 + 2d / length, 65, .5), await session.Position());
+        Assert.True(await session.GeometryKnown());
+        Assert.Equal(66.5, (await session.Bounds()).MaxY);
+        Assert.Equal(new Vec3d(1.5, 65, .5), await session.PacketBase());
+    }
+
+    [Theory]
+    [MemberData(nameof(Protocols))]
+    public async Task CrouchPoseMovementFeedsPlacementCandidates(int protocol)
+    {
+        await using var session = await Session.Create(protocol);
+        await session.SpawnPeer(z: 1.5);
+        await session.Pose(EntityPose.Crouching);
+        await session.Move();
+        Assert.Equal(protocol == 777 ? 1 : 2, (await session.Use()).Count);
+        await session.Tick();
+        int length = protocol == 777 ? 2 : 3;
+        Assert.Equal(new Vec3d(.5 + 1d / length, 65, 1.5), await session.Position());
+        Assert.True(await session.GeometryKnown());
+        Aabb box = await session.Bounds();
+        Assert.Equal(66.5, box.MaxY);
+        Assert.True(box.Intersects(Aabb.BlockAt(1, 65, 1)));
+        Assert.Single(await session.Use());
+    }
+
     public static IEnumerable<object[]> CollisionCases()
     {
         foreach (int protocol in Enumerable.Range(770, 8))
@@ -463,6 +537,13 @@ public sealed class ModernRemotePlayerMotionRuntimeTests
             });
         }
         public Task Block(BlockPos cell, string name) => Send(new ClientboundBlockUpdatePacket(cell, Client.State.Registries!.Blocks[Identifier.Minecraft(name)].Value.DefaultStateId));
+        public Task Pose(EntityPose pose) => Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(pose))], [])));
+        public Task TopSlab(BlockPos cell)
+        {
+            BlockDefinition slab = Client.State.Registries!.Blocks[Identifier.Minecraft("oak_slab")].Value;
+            int state = Enumerable.Range(slab.MinStateId, slab.StateCount).Single(id => slab.TryGetPropertyValue(id, "type", out string type) && type == "top" && slab.TryGetPropertyValue(id, "waterlogged", out string waterlogged) && waterlogged == "false");
+            return Send(new ClientboundBlockUpdatePacket(cell, state));
+        }
         public Task Health(int id, float value)
         {
             Entity entity = Client.State.Entities.Get(id)!;
@@ -547,7 +628,7 @@ public sealed class ModernRemotePlayerMotionRuntimeTests
                     EntityDataEntry actual = observed.Metadata.Entries[index];
                     Assert.Equal(expected.Index, actual.Index);
                     Assert.Equal(expected.Value, actual.Value);
-                    Assert.Equal(expected.Value.Kind == MetadataValueKind.Float ? 3 : _protocol == 770 ? 21 : 20, actual.WireSerializerId);
+                    Assert.Equal(expected.Value.Kind == MetadataValueKind.Float ? 3 : _protocol <= 772 ? 21 : 20, actual.WireSerializerId);
                 }
                 Assert.Equal(metadata.Metadata.RawTail, observed.Metadata.RawTail);
             }

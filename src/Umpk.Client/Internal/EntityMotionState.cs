@@ -322,7 +322,7 @@ internal sealed partial class EntityMotionState
             if (motion.Profile.UsesWorldCollision && reappliesPosition)
             {
                 if (world is null || shapes is null || membership is null || entities is null || geometry is null || !positionKnown
-                    || entity.Pose != EntityPose.Standing || entity.Vehicle is not null || entity.Passengers.Count != 0 || IsLocalMountUnresolved
+                    || entity.Pose is not (EntityPose.Standing or EntityPose.Crouching) || entity.Vehicle is not null || entity.Passengers.Count != 0 || IsLocalMountUnresolved
                     || !geometry.TryGetDimensions(entity, out EntityGeometryDimensions dimensions))
                     positionKnown = false;
                 else

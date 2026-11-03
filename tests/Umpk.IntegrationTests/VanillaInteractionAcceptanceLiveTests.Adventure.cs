@@ -29,7 +29,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.NotEmpty(releases);
         foreach (string release in releases)
         {
-            Assert.Contains(release, new[] { "1.20.6", "1.21.1", "1.21.3", "1.21.4" });
+            Assert.Contains(release, new[] { "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5", "1.21.11", "26.1", "26.2", "26.3" });
             Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
             yield return [release, version.Version.Protocol];
         }
@@ -89,8 +89,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             int z = ((int)Math.Floor(initial.Z) >> 4) * 16 + 8;
             await VerifyAdventureFlatGenerator(server, client, x, z, ct);
             await server.ConsoleAsync("difficulty peaceful", ct);
-            await server.ConsoleAsync("gamerule doMobSpawning false", ct);
-            await server.ConsoleAsync("gamerule doTileDrops false", ct);
+            await server.ConsoleAsync(protocol < 774 ? "gamerule doMobSpawning false" : "gamerule minecraft:spawn_mobs false", ct);
+            await server.ConsoleAsync(protocol < 774 ? "gamerule doTileDrops false" : "gamerule minecraft:block_drops false", ct);
             await server.ConsoleAsync($"fill {x - 4} 99 {z - 4} {x + 4} 99 {z + 4} minecraft:stone", ct);
             await server.ConsoleAsync($"fill {x - 4} 100 {z - 4} {x + 4} 104 {z + 4} minecraft:air", ct);
             await server.ConsoleAsync(FormattableString.Invariant($"tp {Username} {x + .5:R} 100 {z + .5:R}"), ct);
@@ -118,8 +118,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await Ordinary("survival-control", new(x + 2, 100, z - 2), GameMode.Survival, "absent");
             await Ordinary("adventure-direct", new(x + 2, 100, z - 1), GameMode.Adventure, "direct");
             await Ordinary("adventure-native-tag", new(x + 2, 100, z), GameMode.Adventure, "tag");
-            await Identity(new(x - 1, 100, z + 2), changedTooltip: false);
-            await Identity(new(x - 2, 100, z + 2), changedTooltip: true);
+            if (protocol < 770)
+            {
+                await Identity(new(x - 1, 100, z + 2), kind: "direct", resetExpected: false);
+                await Identity(new(x - 2, 100, z + 2), kind: "direct", resetExpected: true);
+            }
+            else
+            {
+                await Identity(new(x - 1, 100, z + 2), kind: "concrete", resetExpected: false);
+                if (protocol >= 774)
+                    await Identity(new(x - 2, 100, z + 2), kind: "presence-rarity", resetExpected: true);
+                await Placement(new(x + 1, 100, z - 2));
+            }
 
             int ordinaryReplay = capture.AssertRoundTrips(client.State.Registries!);
             AdventureTagFrame[] tags;
@@ -177,23 +187,34 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await Marker($"execute if block {target.X} {target.Y} {target.Z} minecraft:{block}", "target");
             }
 
-            async Task<AdventureHeldObservation> Hold(string item, string kind, int count = 1, bool tooltip = true)
+            string NativeHeldCondition(string item, string kind, int count, bool tooltip, bool placement = false)
+            {
+                string componentName = placement ? "minecraft:can_place_on" : "minecraft:can_break";
+                string componentTest = kind == "absent" ? "!" + componentName : kind == "presence-rarity" ? componentName : componentName + "=" + AdventureComponentSyntax(kind, tooltip, protocol);
+                string condition = $"execute if items entity {Username} weapon.mainhand minecraft:{item}[count={count},{componentTest}]";
+                // Native exact item predicates compare fresh presence keys by identity. Inspect the saved native component structure instead of parsing another unequal value.
+                if (kind == "presence-rarity")
+                    condition += $" if data entity {Username} SelectedItem.components.\"{componentName}\".predicates.\"minecraft:rarity\"";
+                return condition;
+            }
+
+            async Task<AdventureHeldObservation> Hold(string item, string kind, int count = 1, bool tooltip = true, bool placement = false)
             {
                 int mark = capture.Mark();
                 var applied = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
                 using IDisposable changed = client.Events.Subscribe<ContainerContentChanged>(evt =>
                 {
-                    if (evt.WindowId == 0 && client.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft(item) && client.State.Inventory.GetSlot(36).Count == count && AdventureWirePredicateMatches(client.State.Inventory.GetSlot(36), kind, tooltip, client.State.Registries!))
+                    if (evt.WindowId == 0 && client.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft(item) && client.State.Inventory.GetSlot(36).Count == count && AdventureWirePredicateMatches(client.State.Inventory.GetSlot(36), kind, tooltip, client.State.Registries!, protocol, placement))
                         applied.TrySetResult(capture.Mark());
                 });
-                string component = AdventureComponentSyntax(kind, tooltip);
-                await server.ConsoleAsync($"item replace entity {Username} weapon.mainhand with minecraft:{item}{(component.Length == 0 ? "" : "[minecraft:can_break=" + component + "]")} {count}", ct);
-                await WaitAsync(() => capture.Since(mark).Any(frame => frame.Packet is ClientboundContainerSetSlotPacket { ContainerId: 0, Slot: 36 } slot && slot.Item.Item.Id == Identifier.Minecraft(item) && slot.Item.Count == count && AdventureWirePredicateMatches(slot.Item, kind, tooltip, client.State.Registries!)), "actual native replacement slot packet", ct);
+                string component = AdventureComponentSyntax(kind, tooltip, protocol);
+                string componentName = placement ? "minecraft:can_place_on" : "minecraft:can_break";
+                await server.ConsoleAsync($"item replace entity {Username} weapon.mainhand with minecraft:{item}{(component.Length == 0 ? "" : "[" + componentName + "=" + component + "]")} {count}", ct);
+                await WaitAsync(() => capture.Since(mark).Any(frame => frame.Packet is ClientboundContainerSetSlotPacket { ContainerId: 0, Slot: 36 } slot && slot.Item.Item.Id == Identifier.Minecraft(item) && slot.Item.Count == count && AdventureWirePredicateMatches(slot.Item, kind, tooltip, client.State.Registries!, protocol, placement)), "actual native replacement slot packet", ct);
                 int ownerMark = await applied.Task.WaitAsync(ct);
-                await WaitAsync(client, c => c.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft(item) && c.State.Inventory.GetSlot(36).Count == count && AdventureWirePredicateMatches(c.State.Inventory.GetSlot(36), kind, tooltip, c.State.Registries!), "replacement packet applied by inventory owner", ct);
-                string predicate = $"minecraft:{item}[count={count}," + (kind == "absent" ? "!minecraft:can_break" : "minecraft:can_break=" + component) + "]";
-                await Marker($"execute if items entity {Username} weapon.mainhand {predicate}", "held-item");
-                AdventureModePredicateComponent? observed = await client.InvokeAsync(c => c.State.Inventory.GetSlot(36).Components.Get(DataComponents.CanBreak), ct);
+                await WaitAsync(client, c => c.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft(item) && c.State.Inventory.GetSlot(36).Count == count && AdventureWirePredicateMatches(c.State.Inventory.GetSlot(36), kind, tooltip, c.State.Registries!, protocol, placement), "replacement packet applied by inventory owner", ct);
+                await Marker(NativeHeldCondition(item, kind, count, tooltip, placement), "held-item");
+                AdventureModePredicateComponent? observed = await client.InvokeAsync(c => c.State.Inventory.GetSlot(36).Components.Get(placement ? DataComponents.CanPlaceOn : DataComponents.CanBreak), ct);
                 return new(observed, ownerMark);
             }
 
@@ -221,13 +242,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 CapturedFrame[] frames = capture.Since(mark);
                 CapturedFrame[] actions = frames.Where(IsMiningOrAnimation).ToArray();
                 Assert.Equal(9 + expectedNativeDestroyDelay, actions.Length);
-                Assert.Equal(7 + expectedNativeDestroyDelay, actions.Count(frame => frame.Packet is ServerboundSwingPacket));
+                Assert.Equal(7 + expectedNativeDestroyDelay, actions.Count(frame => frame.Packet is ServerboundSwingPacket or ServerboundPunchPacket));
                 Assert.Equal(0, Assert.IsType<ServerboundPlayerActionPacket>(actions[0].Packet).Action);
-                Assert.Equal(2, Assert.IsType<ServerboundPlayerActionPacket>(actions[^2].Packet).Action);
-                AssertAdventureSwing(actions[^1].Packet);
-                Assert.All(actions.Skip(1).SkipLast(2), frame => AssertAdventureSwing(frame.Packet));
+                Assert.Equal(protocol == 777 ? 3 : 2, Assert.IsType<ServerboundPlayerActionPacket>(actions[^2].Packet).Action);
+                AssertAdventureSwing(actions[^1].Packet, protocol);
+                Assert.All(actions.Skip(1).SkipLast(2), frame => AssertAdventureSwing(frame.Packet, protocol));
                 Assert.True(actions[^2].Milliseconds - actions[0].Milliseconds >= 150);
-                AssertAdventureActionFields(frames, target);
+                AssertAdventureActionFields(frames, target, protocol);
                 scenarios.Add(new { label, mode, target, kind, nativeBlockAfter = "air", precedingNativeDestroyDelay = expectedNativeDestroyDelay, actionOrder = actions.Select(frame => AdventurePacketName(frame.Packet)).ToArray() });
                 expectedNativeDestroyDelay = 5;
             }
@@ -244,7 +265,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await WaitAsync(() => capture.Since(mark).Any(IsMiningOrAnimation), "native initial denied attack swing", ct);
                     await ObserveWindow(mark, target, "stone");
                     Assert.False(mining.IsCompleted);
-                    AssertAdventureSwing(Assert.Single(capture.Since(mark), IsMiningOrAnimation).Packet);
+                    AssertAdventureSwing(Assert.Single(capture.Since(mark), IsMiningOrAnimation).Packet, protocol);
                 }
                 finally
                 {
@@ -252,7 +273,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(TimeSpan.FromSeconds(5)));
                 }
                 await ObserveWindow(mark, target, "stone");
-                AssertAdventureSwing(Assert.Single(capture.Since(mark), IsMiningOrAnimation).Packet);
+                AssertAdventureSwing(Assert.Single(capture.Since(mark), IsMiningOrAnimation).Packet, protocol);
                 scenarios.Add(new { label = "known-denial-" + kind, target, noStartOrAbort = true, initialMainHandSwing = 1, heldRequestRetained = true, nativeBlockAfter = "stone" });
             }
 
@@ -261,7 +282,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await Prepare(target, block, GameMode.Adventure);
                 await Hold("diamond_pickaxe", kind);
                 if (kind == "state")
+                {
+                    await WaitAsync(client, c => c.State.World.GetBlock(target).TryGetProperty("axis", out string actual) && actual == "y", "packet-owned current native axis", ct);
                     await Marker($"execute if block {target.X} {target.Y} {target.Z} minecraft:oak_log[axis=y]", "native-state-context");
+                }
                 else
                     await Marker($"execute if block {target.X} {target.Y} {target.Z} minecraft:chest{{id:\"minecraft:chest\"}}", "native-nbt-context");
                 int mark = capture.Mark();
@@ -272,31 +296,76 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 scenarios.Add(new { label = "explicit-unknown-" + kind, target, error = error.Message, nativeBlockAfter = block, nativePermissionNotClaimedExecuted = true });
             }
 
-            async Task Identity(BlockPos target, bool changedTooltip)
+            async Task Placement(BlockPos support)
+            {
+                BlockPos target = support.Above();
+                await Prepare(support, "stone", GameMode.Adventure);
+                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:air", ct);
+                await WaitAsync(client, c => c.State.World.GetBlock(target).IsAir, "native clear placement cell", ct);
+                await AssertBlockAsync(server, protocol, target, "air", ct);
+                await Hold("stone", "direct", 32, placement: true);
+                await AssertCountAsync(server, protocol, 32, ct);
+                int mark = capture.Mark();
+                await client.Actions.Interaction.PlaceBlockAsync(support, Direction.Up, new Vec3d(.5, 1, .5), ct: ct);
+                await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft("stone") && c.State.Inventory.GetSlot(36).Count == 31, "Adventure placement block and stack updates", ct);
+                await AssertBlockAsync(server, protocol, target, "stone", ct);
+                await AssertCountAsync(server, protocol, 31, ct);
+                await ObserveWindow(mark, target, "stone");
+                CapturedFrame[] accepted = capture.Since(mark);
+                AssertPlacement(accepted, protocol, support);
+                var use = Assert.IsType<ServerboundUseItemOnPacket>(accepted.First(IsUseOrAnimation).Packet);
+                Assert.False(use.Inside);
+                Assert.False(use.WorldBorderHit);
+                Assert.True(use.Sequence > 0);
+                await Marker($"execute if items entity {Username} weapon.mainhand minecraft:stone[count=31,minecraft:can_place_on={AdventureComponentSyntax("direct", true, protocol)}]", "placed-stack");
+
+                int rejectedMark = capture.Mark();
+                await client.Actions.Interaction.PlaceBlockAsync(support, Direction.Up, new Vec3d(.5, 1, .5), ct: ct);
+                await ObserveWindow(rejectedMark, target, "stone");
+                CapturedFrame rejected = Assert.Single(capture.Since(rejectedMark), IsUseOrAnimation);
+                AssertUsePacket(rejected, protocol, support);
+                var rejectedUse = Assert.IsType<ServerboundUseItemOnPacket>(rejected.Packet);
+                Assert.False(rejectedUse.Inside);
+                Assert.False(rejectedUse.WorldBorderHit);
+                Assert.True(rejectedUse.Sequence > use.Sequence);
+                await AssertBlockAsync(server, protocol, target, "stone", ct);
+                await AssertCountAsync(server, protocol, 31, ct);
+                scenarios.Add(new { label = "adventure-can-place-on-stone", support, target, permissionFromActualComponent = true, nativeStackBefore = 32, nativeStackAfter = 31, acceptedUsePackets = 1, acceptedSwingPackets = protocol == 777 ? 0 : 1, rejectedOccupiedUsePackets = 1, rejectedOccupiedSwingPackets = 0, nativeBlockAfter = "stone", renderedLocalSwingNotObserved = protocol == 777 });
+            }
+
+            async Task Identity(BlockPos target, string kind, bool resetExpected)
             {
                 await Prepare(target, "stone", GameMode.Adventure);
-                AdventureModePredicateComponent original = (await Hold("stick", "direct")).Component!;
+                AdventureModePredicateComponent original = (await Hold("stick", kind)).Component!;
                 int mark = capture.Mark();
                 using var held = CancellationTokenSource.CreateLinkedTokenSource(ct);
                 Task mining = client.Actions.Interaction.DigBlockAsync(target, Direction.West, held.Token);
                 try
                 {
                     // Native STOP retained five delay calls. Consume them through actual held input, then observe two progress phases before the replacement.
-                    await WaitAsync(() => capture.Since(mark).Count(frame => IsMiningOrAnimation(frame) && frame.Packet is ServerboundSwingPacket) >= expectedNativeDestroyDelay + 3, "native delay consumed and progress-phase swings before replacement", ct);
+                    await WaitAsync(() => capture.Since(mark).Count(frame => IsMiningOrAnimation(frame) && frame.Packet is (ServerboundSwingPacket or ServerboundPunchPacket)) >= expectedNativeDestroyDelay + 3, "native delay consumed and progress-phase swings before replacement", ct);
                     Assert.False(mining.IsCompleted);
                     Assert.Equal(0, Assert.IsType<ServerboundPlayerActionPacket>(Assert.Single(capture.Since(mark), frame => frame.Packet is ServerboundPlayerActionPacket).Packet).Action);
                     int replacementMark = capture.Mark();
-                    AdventureHeldObservation applied = await Hold("stick", "direct", 2, tooltip: !changedTooltip);
+                    AdventureHeldObservation applied = await Hold("stick", kind, 2, tooltip: protocol >= 770 || !resetExpected);
                     AdventureModePredicateComponent replacement = applied.Component!;
                     Assert.NotSame(original, replacement);
-                    Assert.Equal(!changedTooltip, original.ShowInTooltip == replacement.ShowInTooltip);
+                    Assert.Equal(protocol >= 770 || !resetExpected, original.ShowInTooltip == replacement.ShowInTooltip);
+                    if (protocol >= 770)
+                    {
+                        var matcher = Assert.Single(Assert.Single(replacement.Predicates).ComponentMatchers!.Partial);
+                        Assert.Equal(kind == "presence-rarity", matcher.IsAnyValue);
+                        Assert.Equal(Identifier.Minecraft(kind == "presence-rarity" ? "rarity" : "damage"), matcher.Type);
+                    }
                     await mining.WaitAsync(ct);
                     await WaitAsync(client, c => c.State.World.GetBlock(target).IsAir, "native identity-control stone destruction", ct);
                     await ObserveWindow(mark, target, "air");
                     CapturedFrame[] frames = capture.Since(mark);
-                    AssertAdventureActionFields(frames, target);
+                    AssertAdventureActionFields(frames, target, protocol);
                     var actions = frames.Where(frame => frame.Flow == PacketFlow.Serverbound && frame.Packet is ServerboundPlayerActionPacket).Select(frame => Assert.IsType<ServerboundPlayerActionPacket>(frame.Packet)).ToArray();
-                    Assert.Equal(changedTooltip ? new[] { 0, 1, 0, 2 } : new[] { 0, 2 }, actions.Select(action => action.Action));
+                    int abort = protocol == 777 ? 2 : 1;
+                    int stop = protocol == 777 ? 3 : 2;
+                    Assert.Equal(resetExpected ? new[] { 0, abort, 0, stop } : new[] { 0, stop }, actions.Select(action => action.Action));
                     CapturedFrame[] afterReplacement = capture.Since(replacementMark);
                     int slotIndex = Array.FindIndex(afterReplacement, frame => frame.Packet is ClientboundContainerSetSlotPacket { ContainerId: 0, Slot: 36, Item.Count: 2 });
                     Assert.True(slotIndex >= 0);
@@ -304,17 +373,17 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.InRange(appliedIndex, slotIndex + 1, afterReplacement.Length);
                     // Raw observations run on the read loop. The inventory event runs after application on the session owner, before the next mining tick.
                     var firstAfterSlot = afterReplacement.Skip(appliedIndex).Where(IsMiningOrAnimation).ToArray();
-                    if (changedTooltip)
+                    if (resetExpected)
                     {
                         Assert.True(firstAfterSlot.Length >= 3);
-                        Assert.Equal(1, Assert.IsType<ServerboundPlayerActionPacket>(firstAfterSlot[0].Packet).Action);
+                        Assert.Equal(abort, Assert.IsType<ServerboundPlayerActionPacket>(firstAfterSlot[0].Packet).Action);
                         Assert.Equal(0, Assert.IsType<ServerboundPlayerActionPacket>(firstAfterSlot[1].Packet).Action);
-                        AssertAdventureSwing(firstAfterSlot[2].Packet);
+                        AssertAdventureSwing(firstAfterSlot[2].Packet, protocol);
                     }
                     else
-                        AssertAdventureSwing(firstAfterSlot[0].Packet);
-                    await Marker($"execute if items entity {Username} weapon.mainhand minecraft:stick[count=2,minecraft:can_break={AdventureComponentSyntax("direct", !changedTooltip)}]", "post-identity-item");
-                    scenarios.Add(new { label = changedTooltip ? "tooltip-difference-restarts" : "equal-wire-predicate-retains-progress", target, precedingNativeDestroyDelay = expectedNativeDestroyDelay, progressPhasePreconditionSwings = expectedNativeDestroyDelay + 3, actualCountReplacement = "1-to-2", actualFreshComponent = true, nativeSlotFrameIndex = slotIndex, inventoryOwnerAppliedIndex = appliedIndex, nativeBlockAfter = "air", actionOrder = actions.Select(action => action.Action).ToArray(), packetOrder = frames.Where(IsMiningOrAnimation).Select(frame => AdventurePacketName(frame.Packet)).ToArray() });
+                        AssertAdventureSwing(firstAfterSlot[0].Packet, protocol);
+                    await Marker(NativeHeldCondition("stick", kind, 2, protocol >= 770 || !resetExpected), "post-identity-item");
+                    scenarios.Add(new { label = resetExpected ? protocol >= 774 ? "fresh-any-rarity-key-restarts" : "tooltip-difference-restarts" : protocol >= 770 ? "fresh-concrete-predicate-retains-progress" : "equal-wire-predicate-retains-progress", target, precedingNativeDestroyDelay = expectedNativeDestroyDelay, progressPhasePreconditionSwings = expectedNativeDestroyDelay + 3, actualCountReplacement = "1-to-2", actualFreshComponent = true, nativeSlotFrameIndex = slotIndex, inventoryOwnerAppliedIndex = appliedIndex, nativeBlockAfter = "air", actionOrder = actions.Select(action => action.Action).ToArray(), packetOrder = frames.Where(IsMiningOrAnimation).Select(frame => AdventurePacketName(frame.Packet)).ToArray() });
                     expectedNativeDestroyDelay = 5;
                 }
                 finally
@@ -341,7 +410,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         }
     }
 
-    private static string AdventureComponentSyntax(string kind, bool tooltip)
+    private static string AdventureComponentSyntax(string kind, bool tooltip, int protocol)
     {
         string predicate = kind switch
         {
@@ -349,37 +418,50 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             "direct" => "{blocks:[\"minecraft:stone\"]}",
             "tag" => "{blocks:\"#minecraft:mineable/pickaxe\"}",
             "nonmatch" => "{blocks:[\"minecraft:dirt\"]}",
-            "state" => "{blocks:[\"minecraft:oak_log\"],state:{axis:\"y\"}}",
+            "state" => "{blocks:[\"minecraft:oak_log\"],state:{axis:{min:\"x\",max:\"z\"}}}",
             "nbt" => "{blocks:[\"minecraft:chest\"],nbt:{id:\"minecraft:chest\"}}",
+            "concrete" => "{blocks:[\"minecraft:stone\"],predicates:{\"minecraft:damage\":{}}}",
+            "presence-rarity" => "{blocks:[\"minecraft:stone\"],predicates:{\"minecraft:rarity\":{}}}",
             _ => throw new ArgumentOutOfRangeException(nameof(kind)),
         };
+        if (protocol >= 770)
+            return predicate;
         return kind == "absent" ? "" : "{predicates:[" + predicate + "],show_in_tooltip:" + (tooltip ? "true" : "false") + "}";
     }
 
-    private static bool AdventureWirePredicateMatches(ItemStack item, string kind, bool tooltip, RegistryAccess registries)
+    private static bool AdventureWirePredicateMatches(ItemStack item, string kind, bool tooltip, RegistryAccess registries, int protocol, bool placement)
     {
-        AdventureModePredicateComponent? component = item.Components.Get(DataComponents.CanBreak);
+        AdventureModePredicateComponent? component = item.Components.Get(placement ? DataComponents.CanPlaceOn : DataComponents.CanBreak);
         if (kind == "absent")
             return component is null;
-        if (component is null || component.ShowInTooltip != tooltip || component.Predicates.Count != 1)
+        if (component is null || protocol < 770 && component.ShowInTooltip != tooltip || component.Predicates.Count != 1)
             return false;
         BlockPredicateEntry predicate = component.Predicates[0];
         string block = kind switch { "nonmatch" => "dirt", "state" => "oak_log", "nbt" => "chest", _ => "stone" };
         bool blocks = kind == "tag" ? predicate.Blocks is { Tag: { } tag, Ids.Count: 0 } && tag == Identifier.Minecraft("mineable/pickaxe")
             : predicate.Blocks is { Tag: null } set && set.Ids.SequenceEqual([registries.Blocks[Identifier.Minecraft(block)].NetworkId]);
-        bool state = kind == "state" ? predicate.Properties is { Count: 1 } properties && properties[0] == new StatePropertyMatcher("axis", true, "y") : predicate.Properties is null;
+        bool state = kind == "state" ? predicate.Properties is { Count: 1 } properties && properties[0] == new StatePropertyMatcher("axis", false, MinValue: "x", MaxValue: "z") : predicate.Properties is null;
         bool nbt = kind == "nbt" ? predicate.Nbt?.GetString("id") == "minecraft:chest" : predicate.Nbt is null;
-        return blocks && state && nbt;
+        bool matchers = protocol < 770 ? predicate.ComponentMatchers is null
+            : predicate.ComponentMatchers is { Exact.Count: 0 } modern && (kind is "concrete" or "presence-rarity"
+                ? modern.Partial.Count == 1 && modern.Partial[0].IsAnyValue == (kind == "presence-rarity") && modern.Partial[0].Type == Identifier.Minecraft(kind == "presence-rarity" ? "rarity" : "damage") && modern.Partial[0].Value is NbtCompound { Count: 0 }
+                : modern.Partial.Count == 0);
+        return blocks && state && nbt && matchers;
     }
 
-    private static void AssertAdventureSwing(object? packet)
+    private static void AssertAdventureSwing(object? packet, int protocol)
     {
+        if (protocol == 777)
+        {
+            Assert.IsType<ServerboundPunchPacket>(packet);
+            return;
+        }
         var swing = Assert.IsType<ServerboundSwingPacket>(packet);
         Assert.Equal(0, swing.Hand);
         Assert.True(swing.HasHand);
     }
 
-    private static void AssertAdventureActionFields(CapturedFrame[] frames, BlockPos target)
+    private static void AssertAdventureActionFields(CapturedFrame[] frames, BlockPos target, int protocol)
     {
         int priorSequence = -1;
         foreach (CapturedFrame frame in frames.Where(IsMiningOrAnimation))
@@ -388,7 +470,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             {
                 Assert.Equal(target, action.Position);
                 Assert.Equal((byte)Direction.West, action.Direction);
-                if (action.Action == 1)
+                if (action.Action == (protocol == 777 ? 2 : 1))
                     Assert.Equal(0, action.Sequence);
                 else
                 {
@@ -397,7 +479,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 }
             }
             else
-                AssertAdventureSwing(frame.Packet);
+                AssertAdventureSwing(frame.Packet, protocol);
         }
     }
 
@@ -405,6 +487,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     {
         ServerboundPlayerActionPacket action => $"action{action.Action}/sequence{action.Sequence}",
         ServerboundSwingPacket swing => $"swing/hand{swing.Hand}/hasHand{swing.HasHand}",
+        ServerboundPunchPacket => "punch",
         _ => throw new InvalidOperationException("Unexpected mining packet."),
     };
 
@@ -417,7 +500,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         int count = ReplayAdventureConfigurationTags(tags, version, registries);
         foreach (CapturedFrame frame in frames)
         {
-            if (frame.Packet is not (ServerboundPlayerActionPacket or ServerboundSwingPacket or ClientboundContainerSetSlotPacket or ClientboundContainerSetContentPacket or ClientboundBlockUpdatePacket or ClientboundBlockChangedAckPacket or ClientboundUpdateTagsPacket))
+            if (frame.Packet is not (ServerboundPlayerActionPacket or ServerboundSwingPacket or ServerboundPunchPacket or ServerboundUseItemOnPacket or ClientboundContainerSetSlotPacket or ClientboundContainerSetContentPacket or ClientboundBlockUpdatePacket or ClientboundBlockChangedAckPacket or ClientboundUpdateTagsPacket))
                 continue;
             PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, frame.Flow);
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
@@ -428,6 +511,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 Assert.Equal((slot.ContainerId, slot.StateId, slot.Slot), (actual.ContainerId, actual.StateId, actual.Slot));
                 Assert.Equal((slot.Item.Item.Id, slot.Item.Count, slot.Item.Damage), (actual.Item.Item.Id, actual.Item.Count, actual.Item.Damage));
                 ComparePredicate(slot.Item.Components.Get(DataComponents.CanBreak), actual.Item.Components.Get(DataComponents.CanBreak));
+                ComparePredicate(slot.Item.Components.Get(DataComponents.CanPlaceOn), actual.Item.Components.Get(DataComponents.CanPlaceOn));
             }
             else if (frame.Packet is ClientboundContainerSetContentPacket content)
             {
@@ -437,9 +521,11 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 {
                     Assert.Equal((content.Items[index].Item.Id, content.Items[index].Count), (actual.Items[index].Item.Id, actual.Items[index].Count));
                     ComparePredicate(content.Items[index].Components.Get(DataComponents.CanBreak), actual.Items[index].Components.Get(DataComponents.CanBreak));
+                    ComparePredicate(content.Items[index].Components.Get(DataComponents.CanPlaceOn), actual.Items[index].Components.Get(DataComponents.CanPlaceOn));
                 }
                 Assert.Equal((content.CarriedItem.Item.Id, content.CarriedItem.Count, content.CarriedItem.Damage), (actual.CarriedItem.Item.Id, actual.CarriedItem.Count, actual.CarriedItem.Damage));
                 ComparePredicate(content.CarriedItem.Components.Get(DataComponents.CanBreak), actual.CarriedItem.Components.Get(DataComponents.CanBreak));
+                ComparePredicate(content.CarriedItem.Components.Get(DataComponents.CanPlaceOn), actual.CarriedItem.Components.Get(DataComponents.CanPlaceOn));
             }
             else if (frame.Packet is ClientboundUpdateTagsPacket tagPacket)
                 CompareAdventureTagRegistries(tagPacket.Registries, Assert.IsType<ClientboundUpdateTagsPacket>(decoded).Registries);
@@ -476,6 +562,20 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 Assert.Equal(first.Blocks?.Ids, second.Blocks?.Ids);
                 Assert.Equal(first.Properties, second.Properties);
                 Assert.Equal(first.Nbt, second.Nbt);
+                if (first.ComponentMatchers is null)
+                    Assert.Null(second.ComponentMatchers);
+                else
+                {
+                    Assert.NotNull(second.ComponentMatchers);
+                    Assert.Equal(first.ComponentMatchers.Exact, second.ComponentMatchers.Exact);
+                    Assert.Equal(first.ComponentMatchers.Partial.Count, second.ComponentMatchers.Partial.Count);
+                    for (int matcherIndex = 0; matcherIndex < first.ComponentMatchers.Partial.Count; matcherIndex++)
+                    {
+                        BlockPredicatePartialMatcher firstMatcher = first.ComponentMatchers.Partial[matcherIndex], secondMatcher = second.ComponentMatchers.Partial[matcherIndex];
+                        Assert.Equal((firstMatcher.Type, firstMatcher.IsAnyValue), (secondMatcher.Type, secondMatcher.IsAnyValue));
+                        Assert.Equal(firstMatcher.Value, secondMatcher.Value);
+                    }
+                }
             }
         }
     }

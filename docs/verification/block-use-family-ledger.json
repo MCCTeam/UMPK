@@ -1096,7 +1096,7 @@
       "status": "not run",
       "nativeDecision": "Nineteen exact registered menu keys now have original client-success prediction, with smithing-table false/PASS through 1.15.2 and success from 1.16. Lectern, jukebox, campfire, cake/candle and other conditional overrides still inspect their own item/state/recipe context.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Empty lectern/book insertion, empty jukebox/record insertion, modern jukebox native-instance validity, campfire recipes and specialized/custom cake/candle contexts remain. Filled lectern has seven-version native acceptance; bounded default cake eating now passes six boundaries; state-only filled jukebox has runtime/AOT proof and awaits native acceptance.",
+      "missing": "Modern empty lectern insertion has bounded runtime and three native passing legs, with fresh768 spectator still pending. Legacy empty lecterns, jukebox validity/insertion, campfire recipes and specialized/custom cake/candle contexts remain separate; final combined producer gates remain open.",
       "focusedFailingPublicSession": "The bounded menus have 160 native-result reds/53 controls followed by the same 213 framed public-session passes. Remaining conditional families require their own source-proven client branches and missing-context controls.",
       "nativeLiveNeed": "The nineteen unconditional-client menu keys have passed their seven-row native contract on the current harness. Preserve these source/runtime/live regressions. Conditional activation families still need their own native facts and production/runtime/live acceptance; later shared-source commits require the final producer-matched repository/consumer/package/AOT/CI gates.",
       "statusDetail": "Published 8efa passes its normal immutable repository/consumer/package/AOT certificate and all seven CI jobs. The corrected current harness preserves all 58 normal Integration identities and passes all seven native boundary rows: 194 scenarios, 119 new-key visits, exact action/menu/swing and phase-aware replay, active experimental crafter packs, saved-world facts and owned cleanup. Historical failures remain failed. Conditional activation families remain unfinished.",
@@ -1459,6 +1459,45 @@
             "limits": "Unsafe Minecraft/ClientLevel bootstrap; originalLocalPlayer and measured state/ACK/collision methods; declared rendering/BE callbacks suppressed; no packetlistener/fullworldconstructor/live proof"
           }
         }
+      },
+      "emptyLecternModernRuntimeSlice": {
+        "status": "passed",
+        "behavior": "Empty modern lectern/book insertion, hand default results, secondary-use/Adventure and swing through actual public session caller",
+        "protocols": "766\u2013777; twelve datasets/nineteen named source bindings",
+        "productionOwner": "InteractionActions.Placement.cs; connection-owned ClientRegistryTags",
+        "productionCaller": "PlaceBlockAsync -> session owner -> typed block-use prediction",
+        "sourceCommit": "d13f88e2a8ab5fce21a8dc9dcc3140642fdfb3a9",
+        "clientSha256": "2c208915154c9f08b4a7ea5696d9ecef8c73ae12707f302e31b959182af57c74",
+        "protocolSha256": "5868755addfaf956af5338400edb3ac2165183e643e925d24146b575cdabbb20",
+        "framedFocused": "288lectern+33phase cases pass;1370adjacent;36522fullClient",
+        "nativeOriginalMethods": "40rows770/777; source19 separately bound; constructorlesscontrolledClientLevel scope retained",
+        "nativeLive": "3executedPASS/no skips at1.20.5/766,1.21.5/770,26.3/777;37scenes;21newempty; exact native tags/book count/stacks/menus/wire/replay/physics/EOF/cleanup",
+        "terminalReceipt": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/combined-interaction-live-entry-20261103-v1/lectern-live-v2/TERMINAL-ACCEPTANCE.json",
+          "bytes": 4644,
+          "sha256": "beb7d92bb861530f28154649c06706249407cfa6eedb51ae80581ffe8dc233f3"
+        },
+        "normalIntegration": "49executedPASS+22exactnamedoptinskips=71total; no count change",
+        "report": "docs/verification/empty-lectern-tags.md",
+        "remaining": "Fresh1.21.2/768 spectator native acceptance; final combined repository/consumer/package/AOT/CI and release matrix; legacy pre766 empty-lectern proof and unrelated conditional families remain separately classified.",
+        "nativeLivePassedProtocols": [
+          766,
+          770,
+          777
+        ],
+        "nativeLivePassedScenes": 37,
+        "nativeLiveUnexecutedBoundaries": [
+          {
+            "release": "1.21.2",
+            "protocol": 768,
+            "behavior": "Spectator controller changes from pre768 SUCCESS/swing to CONSUME/no swing, before lectern/item dispatch",
+            "status": "not run",
+            "framedRuntime": "Passed ContextCases includes766/768/770/774/777 spectator control",
+            "nativeLive": "No spectator scene occurs in the completed37scenes. Existing768 release row has not executed against this producer, and running its existing nonspectator pack alone would not close this boundary.",
+            "required": "Fresh isolated1.21.2/768 actual public-action spectator scenario with packet/populated game mode, exact use/no-swing, native unchanged book/stacks/menu, replay and cleanup; retain adjacent pre768 source/runtime control.",
+            "reason770WasSelected": "ROOT explicitly selected766/770/777 for this bounded live task;770 follows retained native hook bindings and its offhand stack representation. This selection does not substitute for768."
+          }
+        ]
       }
     },
     {

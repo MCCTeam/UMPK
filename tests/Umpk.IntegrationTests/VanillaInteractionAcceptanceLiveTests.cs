@@ -415,7 +415,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
         public ProtocolPhase Phase { get; init; } = ProtocolPhase.Play;
     }
 
-    private sealed class Capture(JavaVersion version, bool includeEnabledFeatures = false)
+    private sealed class Capture(JavaVersion version, bool includeEnabledFeatures = false, bool includeRegistryTags = false)
     {
         private const int Limit = 20 * 1024 * 1024;
         private readonly Lock _gate = new();
@@ -432,7 +432,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
 
         public void Observe(PacketObservation observation)
         {
-            if (observation.Phase != ProtocolPhase.Play && !(includeEnabledFeatures && observation.Phase == ProtocolPhase.Configuration && observation.DecodedPacket is ClientboundConfigUpdateEnabledFeaturesPacket))
+            if (observation.Phase != ProtocolPhase.Play && !(observation.Phase == ProtocolPhase.Configuration && (includeEnabledFeatures && observation.DecodedPacket is ClientboundConfigUpdateEnabledFeaturesPacket || includeRegistryTags && observation.DecodedPacket is ClientboundConfigUpdateTagsPacket)))
                 return;
             lock (_gate)
             {

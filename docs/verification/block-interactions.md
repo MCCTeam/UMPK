@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Modern native interaction acceptance, 2026-11-03
+
+Eight dedicated real-server legs pass **86 scenarios** on the source-equivalent `d13f88e` libraries. The [Adventure pack](component-interactions-774-777.md#native-server-acceptance-2026-11-03) passes 49 scenes at 770/774/775/776/777, and the [lectern pack](empty-lectern-tags.md#native-live-insertion-2026-11-03) passes 37 scenes at 766/770/777. Both exercise actual public actions with physics, independent native block/stack observations, exact packet order, bounded capture/replay and peer-observed disconnect. Every owned server exits naturally and all owned ports close.
+
+The reports retain the two exact Integration entry hashes, unchanged thirteen-library producer, normal 49 passes/22 named skips and the failed 774 marker attempt. Its corrected native saved-component witness preserves the original decoded-item and action assertions. These results give no credit toward the final 125 version rows. Fresh 768 spectator, consumer/AOT/package-runtime, complete local gates and final-head CI remain required; the finite remaining behavior boundaries stay open in the [completion ledger](interaction-completion.md#remaining-behavior-boundaries-2026-11-03).
+
 ## Empty lecterns and tag publication, 2026-11-03
 
 The [empty-lectern and tag-owner fix](empty-lectern-tags.md) predicts native book insertion, main/offhand results and swing on protocols 766–777. The existing connection owner now commits configuration tags before play and follows the measured reset/merge boundaries. Missing registry observations remain unknown. Server-owned book and inventory effects stay separate from prediction.

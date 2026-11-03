@@ -17,9 +17,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
 {
     public static IEnumerable<object[]> LecternReleaseCases()
     {
-        (string Release, int Protocol)[] rows = [("1.14", 477), ("1.15", 573), ("1.20.4", 765), ("1.20.5", 766), ("1.21.2", 768), ("26.2", 776), ("26.3", 777)];
+        (string Release, int Protocol)[] rows = [("1.14", 477), ("1.15", 573), ("1.20.4", 765), ("1.20.5", 766), ("1.21.2", 768), ("1.21.5", 770), ("26.2", 776), ("26.3", 777)];
         string? requested = Environment.GetEnvironmentVariable("UMPK_LECTERN_RELEASE");
-        Assert.True(requested is null || rows.Any(row => row.Release == requested), "UMPK_LECTERN_RELEASE must name one of the seven bound native releases.");
+        Assert.True(requested is null || rows.Any(row => row.Release == requested), "UMPK_LECTERN_RELEASE must name one of the eight bound native releases.");
         foreach ((string release, int protocol) in rows)
             if (requested is null || release == requested)
                 yield return [release, protocol];
@@ -34,7 +34,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         CancellationToken ct = deadline.Token;
         await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
-        var capture = new Capture(version, includeEnabledFeatures: true);
+        var capture = new Capture(version, includeEnabledFeatures: true, includeRegistryTags: true);
         client.PacketFrameObserved += capture.Observe;
         int opens = 0;
         using IDisposable opened = client.Events.Subscribe<ContainerOpened>(_ => Interlocked.Increment(ref opens));
@@ -42,6 +42,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         int score = 0;
         int previousSequence = -1;
         var scenarios = new List<object>();
+        var emptyScenarios = new List<object>();
         var markers = new List<string>();
         var closeFences = new List<object>();
         capture.Start();
@@ -89,13 +90,33 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await Use("adventure-stick", Hand.Main, false, "stick", null, true, true);
             }
             Assert.Equal(protocol is 477 or 766 or 777 ? 7 : 2, scenarios.Count);
+            if (protocol >= 766)
+            {
+                CapturedFrame[] tagFrames = capture.Frames.Where(frame => frame.Packet is ClientboundConfigUpdateTagsPacket or ClientboundUpdateTagsPacket).ToArray();
+                Assert.NotEmpty(tagFrames);
+                int writable = client.State.Registries!.Items[Identifier.Minecraft("writable_book")].NetworkId;
+                int written = client.State.Registries!.Items[Identifier.Minecraft("written_book")].NetworkId;
+                TagEntry[] bookTags = tagFrames.SelectMany(frame => frame.Packet is ClientboundConfigUpdateTagsPacket config ? config.Registries : Assert.IsType<ClientboundUpdateTagsPacket>(frame.Packet).Registries)
+                    .Where(registry => registry.Registry == RegistryIds.Item).SelectMany(registry => registry.Tags).Where(tag => tag.TagId == Identifier.Minecraft("lectern_books")).ToArray();
+                TagEntry bookTag = Assert.Single(bookTags);
+                Assert.Contains(writable, bookTag.Ids);
+                Assert.Contains(written, bookTag.Ids);
+                await UseEmpty("empty-main-pass", Hand.Main, false, null, null, false, null, "Pass");
+                await UseEmpty("stick-main-consume", Hand.Main, false, "stick", null, false, null, "Consume");
+                await UseEmpty("writable-main-insertion", Hand.Main, false, "writable_book", null, false, "writable_book", "Success");
+                await UseEmpty("written-off-insertion", Hand.Off, false, null, "written_book", false, "written_book", "Success");
+                await UseEmpty("secondary-main-book-pass", Hand.Main, true, "writable_book", null, false, null, "Pass");
+                await UseEmpty("secondary-main-empty-off-book-pass", Hand.Main, true, null, "writable_book", false, null, "Pass");
+                await UseEmpty("adventure-main-insertion", Hand.Main, false, "writable_book", null, true, "writable_book", "Success");
+                Assert.Equal(7, emptyScenarios.Count);
+            }
             int replayed = capture.AssertRoundTrips(client.State.Registries!);
             var dispositions = new List<object>();
             int menuReplayed = ReplayMenuFrames(capture.Frames, version, client.State.Registries!, markers, dispositions);
             await server.WriteAsync("lectern-replay.json", new { replayed, menuReplayed, exactMarkers = markers, frames = dispositions });
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "lectern server-observed disconnect", ct);
-            await server.WriteAsync("lectern-acceptance.json", new { release, protocol, physics = true, actualNativeFullColumn = true, target, face, cursor, scenarios, closeFences, finalNativeStat = score, replayed, menuReplayed, peerObservedDisconnect = true, scope = "Filled lectern only; local-only777 policy is corroborated by framed/source evidence, while this headless leg proves wire absence and native server outcomes." });
+            await server.WriteAsync("lectern-acceptance.json", new { release, protocol, physics = true, actualNativeFullColumn = true, target, face, cursor, scenarios, emptyScenarios, closeFences, finalNativeStat = score, replayed, menuReplayed, peerObservedDisconnect = true, scope = protocol >= 766 ? "Filled and empty lectern activation/insertion with native tags, block entities, stacks and menus; local-only777 policy is source/runtime-backed while this headless leg proves wire absence and server outcomes." : "Filled lectern activation; empty/insertion branches are outside the legacy leg." });
             passed = true;
 
             async Task Use(string scene, Hand hand, bool sneaking, string? main, string? off, bool adventure, bool success)
@@ -176,6 +197,66 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await CloseWithNativeFence(id);
             }
 
+            async Task UseEmpty(string scene, Hand hand, bool sneaking, string? main, string? off, bool adventure, string? insertedBook, string nativeResult)
+            {
+                Assert.False(await client.InvokeAsync(c => c.State.Inventory.HasOpenContainer, ct));
+                await client.Actions.Movement.SetSneakingAsync(false, ct);
+                await server.ConsoleAsync($"gamemode {(adventure ? "adventure" : "survival")} {Username}", ct);
+                await server.ConsoleAsync($"clear {Username}", ct);
+                // Remove the previous stored book through native commands before block replacement can release an item into the next scene.
+                await server.ConsoleAsync($"execute if data block {target.X} {target.Y} {target.Z} Book run data remove block {target.X} {target.Y} {target.Z} Book", ct);
+                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:air", ct);
+                await server.ConsoleAsync($"setblock {target.X} {target.Y} {target.Z} minecraft:lectern[facing=north,powered=false,has_book=false]", ct);
+                if (main is not null)
+                    await server.ConsoleAsync($"give {Username} minecraft:{main} 1", ct);
+                if (off is not null)
+                    await server.ConsoleAsync($"item replace entity {Username} weapon.offhand with minecraft:{off}", ct);
+                await client.Actions.Inventory.SelectHeldSlotAsync(0, ct);
+                await NativePredicate($"execute if block {target.X} {target.Y} {target.Z} minecraft:lectern[has_book=false,powered=false] unless data block {target.X} {target.Y} {target.Z} Book if block {adjacent.X} {adjacent.Y} {adjacent.Z} minecraft:air if block {floor.X} {floor.Y} {floor.Z} minecraft:stone", "native empty lectern precondition");
+                await WaitAsync(client, c => Matches(c.State.Inventory.GetSlot(36), main) && Matches(c.State.Inventory.GetSlot(45), off)
+                    && c.State.Self.GameMode == (adventure ? GameMode.Adventure : GameMode.Survival)
+                    && c.State.World.GetBlock(target).TryGetProperty("has_book", out string hasBook) && hasBook == "false", "native empty lectern hand/world setup", ct);
+                await client.Actions.Movement.SetSneakingAsync(sneaking, ct);
+                await NativeHands(main, off);
+                await client.InvokeAsync(c =>
+                {
+                    Assert.Equal(sneaking, c.State.Self.Sneaking);
+                    Assert.True(c.State.Features.Physics);
+                    Assert.True(c.State.Self.OnGround);
+                    Assert.True(Math.Abs(c.State.Self.Position.Y - 100) < .01);
+                    return true;
+                }, ct);
+                int mark = capture.Mark();
+                int beforeOpens = Volatile.Read(ref opens);
+                int state = await client.InvokeAsync(c => c.State.World.GetBlock(target).StateId, ct);
+                int neighbor = await client.InvokeAsync(c => c.State.World.GetBlock(adjacent).StateId, ct);
+                await client.Actions.Interaction.PlaceBlockAsync(target, face, cursor, hand, ct: ct);
+                CapturedFrame processed = await ProcessingWitness(mark, target, adjacent, state, neighbor);
+                await Task.Delay(TimeSpan.FromSeconds(2.1), ct);
+                CapturedFrame observed = await NativePredicate("execute", "empty lectern post-action observation");
+                Assert.True(observed.Milliseconds - processed.Milliseconds >= 2000);
+                CapturedFrame[] frames = capture.Since(mark);
+                CapturedFrame[] actions = frames.Where(IsUseOrAnimation).ToArray();
+                bool success = insertedBook is not null;
+                Assert.Equal(success && protocol != 777 ? 2 : 1, actions.Length);
+                AssertUse(actions[0], target, face, cursor, hand);
+                if (success && protocol != 777)
+                    Assert.Equal((int)hand, Assert.IsType<ServerboundSwingPacket>(actions[1].Packet).Hand);
+                Assert.DoesNotContain(frames, frame => frame.Packet is ServerboundPlayerActionPacket or ServerboundPunchPacket or ClientboundOpenScreenPacket);
+                Assert.Equal(beforeOpens, Volatile.Read(ref opens));
+                Assert.False(await client.InvokeAsync(c => c.State.Inventory.HasOpenContainer, ct));
+                string? afterMain = success && hand == Hand.Main ? null : main;
+                string? afterOff = success && hand == Hand.Off ? null : off;
+                await NativeHands(afterMain, afterOff);
+                string bookPredicate = success ? $"if data block {target.X} {target.Y} {target.Z} Book{{id:\"minecraft:{insertedBook}\",count:1}}" : $"unless data block {target.X} {target.Y} {target.Z} Book";
+                await NativePredicate($"execute if block {target.X} {target.Y} {target.Z} minecraft:lectern[has_book={(success ? "true" : "false")},powered=false] {bookPredicate} if block {adjacent.X} {adjacent.Y} {adjacent.Z} minecraft:air if score {Username} lecternUse matches {score}", "native post-action book/block/stat outcome");
+                await WaitAsync(client, c => Matches(c.State.Inventory.GetSlot(36), afterMain) && Matches(c.State.Inventory.GetSlot(45), afterOff)
+                    && c.State.World.GetBlock(target).TryGetProperty("has_book", out string hasBook) && hasBook == (success ? "true" : "false"), "server-observed insertion stack/state", ct);
+                Assert.Equal(neighbor, await client.InvokeAsync(c => c.State.World.GetBlock(adjacent).StateId, ct));
+                emptyScenarios.Add(new { scene, hand, sneaking, main, off, adventure, nativeResult, insertedBook, afterMain, afterOff, nativeOpen = false, nativeStat = score, actionPackets = actions.Length, swing = success ? protocol == 777 ? "local policy; no wire swing" : "packet" : "none", processingMilliseconds = processed.Milliseconds, postObservationMilliseconds = observed.Milliseconds });
+                await server.WriteAsync("lectern-empty-scenarios.json", emptyScenarios);
+            }
+
             async Task<CapturedFrame> NativePredicate(string command, string purpose)
             {
                 string marker = "lectern-" + Guid.NewGuid().ToString("N");
@@ -253,7 +334,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         {
             capture.Stop();
             await server.WriteAsync("capture.json", capture.Frames);
-            await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "filled lectern activation", capture.PayloadBytes, capture.Overflowed });
+            await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "filled and modern empty lectern activation", capture.PayloadBytes, capture.Overflowed });
             if (client.Status != ClientStatus.Disconnected)
             {
                 using var disconnectDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));

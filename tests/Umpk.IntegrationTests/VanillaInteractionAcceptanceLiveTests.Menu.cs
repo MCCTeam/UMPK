@@ -490,7 +490,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         foreach (CapturedFrame frame in frames)
         {
             frameIndex++;
-            if (frame.Packet is not (ClientboundConfigUpdateEnabledFeaturesPacket or ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket))
+            if (frame.Packet is not (ClientboundConfigUpdateTagsPacket or ClientboundUpdateTagsPacket or ClientboundConfigUpdateEnabledFeaturesPacket or ClientboundOpenScreenPacket or ClientboundContainerSetContentPacket or ClientboundContainerSetSlotPacket or ClientboundContainerClosePacket or ServerboundContainerClosePacket or ClientboundBlockChangedAckPacket or ClientboundLevelChunkPacket or ClientboundMapChunkBulkPacket or ClientboundSystemChatPacket or ClientboundLegacyChatPacket or ClientboundDisguisedChatPacket))
                 continue;
             PhaseRegistry registry = version.Protocol.GetRegistry(frame.Phase, frame.Flow);
             Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
@@ -503,6 +503,12 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 Assert.True(seenMarkers.Add(marker));
             switch (frame.Packet)
             {
+                case ClientboundConfigUpdateTagsPacket expectedTags:
+                    AssertTagGroups(expectedTags.Registries, Assert.IsType<ClientboundConfigUpdateTagsPacket>(decoded).Registries);
+                    break;
+                case ClientboundUpdateTagsPacket expectedPlayTags:
+                    AssertTagGroups(expectedPlayTags.Registries, Assert.IsType<ClientboundUpdateTagsPacket>(decoded).Registries);
+                    break;
                 case ClientboundConfigUpdateEnabledFeaturesPacket expectedFeatures:
                     var actualFeatures = Assert.IsType<ClientboundConfigUpdateEnabledFeaturesPacket>(decoded);
                     Assert.Equal(expectedFeatures.Features, actualFeatures.Features);
@@ -581,5 +587,20 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         }
         Assert.Equal(observationMarkers.Count, seenMarkers.Count);
         return count;
+
+        static void AssertTagGroups(IReadOnlyList<TagRegistry> expected, IReadOnlyList<TagRegistry> actual)
+        {
+            Assert.Equal(expected.Count, actual.Count);
+            for (int registry = 0; registry < expected.Count; registry++)
+            {
+                Assert.Equal(expected[registry].Registry, actual[registry].Registry);
+                Assert.Equal(expected[registry].Tags.Count, actual[registry].Tags.Count);
+                for (int tag = 0; tag < expected[registry].Tags.Count; tag++)
+                {
+                    Assert.Equal(expected[registry].Tags[tag].TagId, actual[registry].Tags[tag].TagId);
+                    Assert.Equal(expected[registry].Tags[tag].Ids, actual[registry].Tags[tag].Ids);
+                }
+            }
+        }
     }
 }

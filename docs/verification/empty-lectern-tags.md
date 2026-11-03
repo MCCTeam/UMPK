@@ -43,6 +43,30 @@ The tested Client DLL is `2c208915154c9f08b4a7ea5696d9ecef8c73ae12707f302e31b959
 
 Exact commands, inputs, compiler source/reference/analyzer lists, binaries, TRX results and resource observations are indexed in `/home/anon/Projects/MinecraftOfficial/runs/lectern-tag-phase328-managed-20261103-v1/CONFIGURATION.json` and its completion receipt. Native evidence is indexed by `.scratch/lectern-empty-modern-20261103-v1/NATIVE-ACCEPTANCE.json`; the original source indexes are `.scratch/lectern-empty-modern-20261103-v1/SOURCE-AUDIT.json` and `.scratch/tag-reload-source-20261103-v1/SOURCE-AUDIT19.json`. Raw evidence stays outside Git.
 
+## Native live insertion, 2026-11-03
+
+The existing filled-lectern live test now also exercises empty lecterns through public `PlaceBlockAsync`, with physics enabled and real server tag, inventory, terrain and game-mode packets. Three isolated native servers pass all 37 scenarios on the admitted source-equivalent `d13f88e` producer. The same existing opt-in theory retains its filled scenarios and adds no normal skip identity.
+
+| Native release | Protocol | Filled scenarios | Empty/book scenarios | Total | Captured bytes | Test seconds |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1.20.5 | 766 | 7 | 7 | 14 | 4,354,599 | 64.17 |
+| 1.21.5 | 770 | 2 | 7 | 9 | 4,976,155 | 54.50 |
+| 26.3 | 777 | 7 | 7 | 14 | 5,430,181 | 60.82 |
+
+Each empty-lectern leg covers empty main hand, an ordinary main-hand stick, writable-book main-hand insertion, written-book offhand insertion, secondary-use main book, secondary-use empty main with an offhand book, and Adventure-mode main-hand insertion. Native server predicates establish the initial terrain and exact hand stacks. After the public action, they independently verify `has_book`, the stored book identifier and count one, consumed or unchanged hand stacks, unchanged neighboring air and the unchanged lectern-interaction statistic. No insertion opens a menu. The client waits for the server-driven stack and block state; the fixture does not inject local book, inventory or world effects.
+
+Every action has one use packet and the applicable following hand swing. Successful protocol-777 uses have no wire swing. A native sequence acknowledgment and at least two seconds of subsequent traffic precede the final observation. Received native `lectern_books` tags contain both book identifiers. The fixture replays their decoded registry/tag/member values and requires byte-identical tags, use, swing, inventory, menu, block and acknowledgment frames where selected. All observation markers round-trip exactly. Capture remains bounded by the existing 20 MiB limit.
+
+Pass/consume classification and protocol-777 local swing remain supported by the original client methods and framed runtime tests. The live pass/consume controls establish the expected use-only traffic and unchanged native state. This headless leg does not observe a rendered arm animation.
+
+The completed campaign selected protocols 766, 770 and 777. The earlier ledger also named the 1.21.2/protocol-768 spectator boundary. None of these 37 scenes uses spectator mode, so that native boundary remains **not run**. The framed runtime cases cover the spectator result before and after 768; a fresh 768 spectator live scenario remains required. The existing nonspectator 768 release row would not establish that result by itself. Protocol 770 was selected for this bounded campaign alongside its retained native hook evidence and modern offhand stack representation; it does not replace 768.
+
+The combined Integration entry is compiled once against the admitted thirteen-library producer; no producer library is rebuilt. Its DLL is `6928f6f7510cb4303e14c271d6347a7436da2ebde63a2420ce29a957265d42ab`, PDB `2405d0c8fcfb45c36fa709f0c9c827a97f9b7be6dfc3b27b8ffa64bf19da4830`. The actual compiler records 51 sources, 201 references and 10 analyzers. Normal formatting changes none of the five combined live source files. The normal Integration suite passes 49 executed tests with the exact existing 22 opt-in skip identities, matching its 71-total baseline. An initial wrapper misread 71 as the passing count and stopped before any native server; its valid suite result and failed wrapper are retained. The authorized continuation reuses that suite result and runs only the three live legs.
+
+All 136 runtime files, all 20 frozen references, the source snapshot and all three shared seed directories remain unchanged. Each native server and launcher exits naturally with code zero, the peer observes disconnect and both owned ports close. The serial native campaign takes 181.41 seconds, peaks at 1,516,982,272 bytes under the unchanged 4 GiB limit and records zero final limit/OOM events. All 16 observed HOST PIDs are absent; the exact owned unit is inactive with an empty or removed cgroup.
+
+Exact commands, TRX results, native predicates, frames, binary/source manifests and cleanup are indexed in `/home/anon/Projects/MinecraftOfficial/runs/combined-interaction-live-entry-20261103-v1/BUILD-RESULT.json` and `lectern-live-v2/TERMINAL-ACCEPTANCE.json`. The terminal receipt SHA-256 is `beb7d92bb861530f28154649c06706249407cfa6eedb51ae80581ffe8dc233f3`. The preserved count-guard correction is `lectern-live-v1/NORMAL-GUARD-CORRECTION.json`, SHA-256 `69ba2b6bc41a68c9034ddab30553da4f5bbbd1591ee2d82f0b7a6af647b44904`. ROOT's source-equivalence admission is `.scratch/composite13-d13f88e-root-admission-20261103-v1.json`. Raw captures and server evidence remain outside Git.
+
 ## Remaining acceptance
 
-Exact source promotion, formatting, current producer-matched consumer and AOT checks, native live book insertion and final repository/version-matrix gates remain separate requirements. Earlier filled-lectern live results keep their original producer and scope. This checkpoint does not complete the broader interaction inventory or the 50-protocol/75-release acceptance pack.
+Fresh protocol-768 spectator native acceptance, current-producer consumer, AOT and package checks, final repository gates and the complete version matrix remain separate requirements. Earlier filled-lectern results retain their original producers. These three empty-lectern boundary legs do not complete the broader interaction inventory or the 50-protocol/75-release acceptance pack.

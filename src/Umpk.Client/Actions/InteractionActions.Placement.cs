@@ -213,9 +213,9 @@ public sealed partial class InteractionActions
             return BlockUsePrediction.Unknown;
         if (!itemKnown)
             return BlockUsePrediction.Unknown;
-        // The legacy controller checks ItemBlock placement before sending and before cooldown/Adventure item use. Only default ordinary cube items have their complete precheck represented here; specialized items keep their own result and unknown context.
+        // The legacy controller checks ItemBlock placement before sending and before cooldown/Adventure item use. Default ordinary cubes and source-bound full-cube pillars share this precheck; other specialized items keep their own result and unknown context.
         if (_blockProfile.PrechecksBlockItemPlacement && !item.IsEmpty && item.Components.HasNoPatch
-            && data.TryGetItem(item.Item.Id, out ItemUseOnInfo legacyUse) && legacyUse.Kind == ItemUseOnKind.SimpleCubePlacement)
+            && data.TryGetItem(item.Item.Id, out ItemUseOnInfo legacyUse) && IsOrdinaryCubeItem(item.Item.Id, legacyUse))
         {
             BlockUsePrediction precheck = PredictCubePlacement(preSend: true);
             if (precheck.Result != BlockUseResult.Success)
@@ -229,7 +229,7 @@ public sealed partial class InteractionActions
         if (_services.Self.GameMode == GameMode.Adventure)
         {
             if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)
-                || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || adventureUse.Kind != ItemUseOnKind.SimpleCubePlacement)
+                || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || !IsOrdinaryCubeItem(item.Item.Id, adventureUse))
                 return BlockUsePrediction.Unknown;
             // ItemStack.useOn checks the clicked block's can_place_on before ordinary item use. Native denial is PASS after the controller commits USE.
             bool? allowed = _componentMiningPermission.Allows(item.Components.Get(DataComponents.CanPlaceOn), clicked, _services.State.RegistryTags, _services.Version.Version.Protocol);
@@ -267,9 +267,12 @@ public sealed partial class InteractionActions
         VanillaSlabPlacement slab = VanillaSlabPlacement.ForProtocol(_services.Version.Version.Protocol);
         if (slab.Supports(item.Item.Id, use))
             return PredictSlabPlacement(slab, item.Item.Id);
-        if (use.Kind != ItemUseOnKind.SimpleCubePlacement || !_services.State.Features.Entities)
+        if (!IsOrdinaryCubeItem(item.Item.Id, use) || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
         return PredictCubePlacement(preSend: false);
+
+        bool IsOrdinaryCubeItem(Identifier id, ItemUseOnInfo contract)
+            => contract.Kind == ItemUseOnKind.SimpleCubePlacement || VanillaPillarPlacement.Supports(_services.Version.Version.Protocol, id, contract, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol));
 
         BlockUsePrediction PredictCubePlacement(bool preSend)
         {

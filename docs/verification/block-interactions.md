@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Log and pillar placement, 2026-11-04
+
+Default full-cube logs and pillars now use the existing placement validation and native result/swing owner across all 50 profiles. The [scoped report](pillar-placement-runtime-20261103.md) records 64 names, 1,761 source-bound item/profile rows and the preserved axis, collision, inherited survival and legacy pre-send rules. Unsupported patches, other specialized blocks and missing context remain unknown.
+
+The same 339 framed cases first reproduce 268 failures with 71 controls, remain unchanged with an unused helper, then all pass once the production caller is connected. All 4,304 adjacent cases also pass without skips. The deliberate Client baseline becomes 36,861 and the expected seventeen-suite total 51,455. Dedicated native six-face checks, the combined full suite, final consumer/AOT/package checks and actual new-head CI remain pending.
+
 ## Modern native interaction acceptance, 2026-11-03
 
 Eight dedicated real-server legs pass **86 scenarios** on the source-equivalent `d13f88e` libraries. The [Adventure pack](component-interactions-774-777.md#native-server-acceptance-2026-11-03) passes 49 scenes at 770/774/775/776/777, and the [lectern pack](empty-lectern-tags.md#native-live-insertion-2026-11-03) passes 37 scenes at 766/770/777. Both exercise actual public actions with physics, independent native block/stack observations, exact packet order, bounded capture/replay and peer-observed disconnect. Every owned server exits naturally and all owned ports close.

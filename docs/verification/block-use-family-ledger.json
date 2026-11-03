@@ -1506,9 +1506,62 @@
       "status": "not run",
       "nativeDecision": "Unknown BlockItem subclasses have placement/state/survival/shape or feature differences; raw unknown does not identify which decision differs.",
       "caller": "InteractionActions.PlaceBlockAsync -> SendBlockUseOnLoopAsync -> PredictBlockUse",
-      "missing": "Modern slab placement/merging has connected runtime and five-version native acceptance. Remaining legacy slabs, orientation, attachments/support, multi-cell placement and component/survival contexts stay open. PredictBlockUse now receives position/face/cursor/hand; family-specific inside-block context still requires native proof.",
+      "missing": "Modern slabs and default source-bound full-cube log/pillar runtime are connected. Pillar live47/393/777, legacy quartz metadata, stairs/fences/beds, attachments/support, multi-cell placement and component/survival contexts remain open. Inside-block context still needs family-specific native proof.",
       "focusedFailingPublicSession": "Start with one source-proven slab merge/top/bottom/cursor case, then attachments/multicell in separate slices; preserve explicit-coordinate API.",
-      "nativeLiveNeed": "Original placement context and independent server states/stacks with genuine session callers; no whole rendering model."
+      "nativeLiveNeed": "Original placement context and independent server states/stacks with genuine session callers; no whole rendering model.",
+      "defaultFullCubePillarSlice": {
+        "id": "default-full-cube-log-pillar-placement",
+        "scope": "50 datasets / 1761 default item-profile rows / 64 names / 66 retained named client source bindings; protocol47 keeps1.8.9",
+        "productionOwner": "InteractionActions.Placement.PredictBlockUse +existing cube placement validation; internal VanillaPillarPlacement admission",
+        "productionCaller": "public PlaceBlockAsync on session owner with framed real-codec inputs",
+        "nativeSourceStatus": "passed finite bindings/registrations/orientation/inherited survival/full grids",
+        "sessionStatus": "passed339 after observed268causal red;4304adjacent passed",
+        "liveStatus": "not run",
+        "consumerAotFinalStatus": "not run for candidate",
+        "privateCandidateDll": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/pillar339-managed-20261103-v1/source/.build-owner/bin/Umpk.Client/release/Umpk.Client.dll",
+          "bytes": 1160192,
+          "sha256": "40de5a727723f9c947e2c705184ccbb8bee655a256b5533c053b2e20ff0b5d31"
+        },
+        "sourceAudit": {
+          "path": "/home/anon/Projects/UMPK/.scratch/rotated-pillar-placement-preparation-20261103-v1/SOURCE-ACCEPTANCE.json",
+          "bytes": 14196,
+          "sha256": "86ffd62d55286b611717ccf1ae0f01416b9c11d523cc1e5fbf386523a9157fb2"
+        },
+        "terminal": {
+          "path": "/home/anon/Projects/UMPK/.scratch/rotated-pillar-placement-preparation-20261103-v2/TERMINAL-ACCEPTANCE.json",
+          "bytes": 4570,
+          "sha256": "8e404abcd65e50c4749c367eae69bbc91c12cca94d5f425143b823cafb2074bb"
+        },
+        "requiredLiveReleases": [
+          {
+            "release": "1.8.9",
+            "protocol": 47,
+            "faces": 6,
+            "status": "not run"
+          },
+          {
+            "release": "1.13",
+            "protocol": 393,
+            "faces": 6,
+            "status": "not run"
+          },
+          {
+            "release": "26.3",
+            "protocol": 777,
+            "faces": 6,
+            "status": "not run"
+          }
+        ],
+        "unknownsRetained": [
+          "unsupported stack components",
+          "unavailable world/geometry",
+          "unowned early Adventure context",
+          "other context-dependent axis families"
+        ],
+        "testCountDelta": 339,
+        "sharedLedgerMutation": false
+      }
     },
     {
       "id": "777-transformers",

@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Empty lecterns and tag publication, 2026-11-03
+
+The [empty-lectern and tag-owner fix](empty-lectern-tags.md) predicts native book insertion, main/offhand results and swing on protocols 766–777. The existing connection owner now commits configuration tags before play and follows the measured reset/merge boundaries. Missing registry observations remain unknown. Server-owned book and inventory effects stay separate from prediction.
+
+All 328 focused, 1,370 adjacent and 36,522 unfiltered Client cases pass without skips on combined Client `2c208915` and Protocol `5868755a`. The native witness contributes 40 original-hook observations; source bindings cover all 19 modern named releases. The 321 deliberate Client additions bring the expected seventeen-suite total to 51,116. Four changed project workspaces pass normal formatting with zero source changes; the full local formatter's memory failure remains recorded. Dedicated real-server insertion and later Adventure legs, fresh consumers/AOT/package runtime, final repository gates and the complete version matrix remain open.
+
 ## Adventure mining and placement, 2026-11-03
 
 The [later Adventure boundary](component-interactions-774-777.md) connects native predicate forms, permission and held-item identity on protocols 774–777. The original 80-row campaign records 72 hashes and eight expected DATA errors; all 333 focused cases, the 7,222-case Protocol suite, 402 adjacent Client cases and all 892 strict Conformance cases pass without skips. Four generated identity pins change only their component digests; all 403 other fixture entries stay identical.

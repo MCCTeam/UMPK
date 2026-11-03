@@ -543,9 +543,14 @@ public sealed class CandleAttachmentSessionRuntimeTests
         Assert.Equal(Identifier.Minecraft("candles"), tag.TagId);
         Assert.Equal(ids, tag.Ids);
         Assert.Equal(bytes, Encode(codec, decoded, context));
+        int candleId = session.Client.State.Registries!.Items.TryGet(Identifier.Minecraft("candle"), out var candle) ? candle.NetworkId : -1;
+        bool? previous = session.Client.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("candles"), candleId);
+        bool? expectedMembership = session.Protocol < 768 || decoded.Registries.Any(group => group.Registry == RegistryIds.Item)
+            ? !blockOnly && names.Contains("candle", StringComparer.Ordinal)
+            : previous;
         await session.Send(packet);
         Assert.Empty(await session.Barrier());
-        Assert.Equal(!blockOnly && names.Contains("candle", StringComparer.Ordinal), session.Client.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("candles"), session.Client.State.Registries!.Items.TryGet(Identifier.Minecraft("candle"), out var candle) ? candle.NetworkId : -1));
+        Assert.Equal(expectedMembership, session.Client.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("candles"), candleId));
     }
 
     private static async Task Info(Session session, GameMode mode, bool update = false)

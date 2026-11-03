@@ -81,15 +81,16 @@ internal sealed class ConnectionApplier : IApplier
                 return true;
 
             case ClientboundConfigUpdateTagsPacket tags:
-                context.State.RegistryTags.Install(tags.Registries);
+                context.State.RegistryTags.StageConfiguration(tags.Registries, context.Version.Version.Protocol);
                 return true;
 
             case ClientboundUpdateTagsPacket tags:
-                context.State.RegistryTags.Install(tags.Registries);
+                context.State.RegistryTags.ApplyPlay(tags.Registries, context.Version.Version.Protocol);
                 return true;
 
             // 1.20.2+ registry data. Three registries are kept, and only three, because they are the three this client acts on: minecraft:dimension_type decides where every decoded chunk column lands, minecraft:chat_type decides how a 1.19+ chat body is composed into the line a consumer sees, and minecraft:enchantment is the only thing that can name the numeric holder id a 1.21+ enchantment component carries. From protocol 767 there is no built-in table to fall back on and an uninstalled one decodes every enchantment to an unbound handle). Every other registry in this packet is deliberately dropped rather than half-modelled; decoding one with no consumer would only move the drop one layer up. Claiming the packet either way keeps it from falling through the chain as unhandled.
             case ClientboundConfigRegistryDataPacket registry:
+                context.State.RegistryTags.RecordConfigurationContents();
                 if (registry.Registry == RegistryIds.DimensionType)
                     InstallServerRegistry(
                         DimensionTypes.FromPackedEntries(registry.Entries, context.Version.Version.Protocol), context,

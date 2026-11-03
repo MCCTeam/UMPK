@@ -133,6 +133,28 @@ public sealed partial class InteractionActions
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? _services.State.JukeboxPrediction.GetBlock(world, position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
+        // Modern LecternBlock.useItemOn checks the received item tag before cooldown or Adventure item permissions. Its client tryPlaceBook returns success without changing the stack, block state or block entity.
+        if (!suppressActivation && activation.EmptyHandActivationIsMainHandOnly && clicked.Block.Id.IsMinecraft && clicked.Block.Id.Path == "lectern"
+            && clicked.TryGetProperty("has_book", out string lecternHasBook) && lecternHasBook == "false")
+        {
+            if (!itemKnown)
+                return BlockUsePrediction.Unknown;
+            // Native empty stacks use the AIR holder for tag membership too.
+            int lecternItem = item.Item.NetworkId;
+            if (item.IsEmpty)
+            {
+                if (_services.State.Registries is not { } registries || !registries.Items.TryGet(Identifier.Minecraft("air"), out var air))
+                    return BlockUsePrediction.Unknown;
+                lecternItem = air.NetworkId;
+            }
+            bool? lecternBook = _services.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("lectern_books"), lecternItem);
+            if (lecternBook is null)
+                return BlockUsePrediction.Unknown;
+            if (lecternBook is true)
+                return BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal);
+            hasActivation = true;
+            activationResult = hand == Hand.Main && !item.IsEmpty ? BlockUseResult.Consume : BlockUseResult.Pass;
+        }
         VanillaCakeUse cake = VanillaCakeUse.ForProtocol(_services.Version.Version.Protocol);
         if (!suppressActivation && cake.Supports(clicked))
         {

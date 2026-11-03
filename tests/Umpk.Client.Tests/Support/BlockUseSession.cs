@@ -42,14 +42,16 @@ internal sealed class BlockUseSession : IAsyncDisposable
     internal Action<ReadOnlyMemory<byte>>? BeforeFramedWrite { get; set; }
     internal Func<CancellationToken, ValueTask>? BeforeClientFlush { get; set; }
     private readonly bool _featureFlags;
+    private readonly IPacket[] _initialConfigurationPackets;
     internal int Protocol => _protocol;
     private long _barrier;
     internal CancellationToken Token => _budget.Token;
     private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
 
-    private BlockUseSession(int protocol, bool physics, bool featureFlags, bool observeWrites, ISessionScheduler? scheduler)
+    private BlockUseSession(int protocol, bool physics, bool featureFlags, bool observeWrites, ISessionScheduler? scheduler, IReadOnlyList<IPacket>? configurationPackets, Action<UmpkClient, PacketReceived>? observePackets)
     {
         _protocol = protocol;
+        _initialConfigurationPackets = configurationPackets is null ? [] : [.. configurationPackets];
         _featureFlags = featureFlags;
         _observeWrites = observeWrites;
         Assert.True(JavaVersions.TryGetByProtocol(protocol, out _version!));
@@ -64,6 +66,7 @@ internal sealed class BlockUseSession : IAsyncDisposable
         Client = builder.Build();
         Client.Events.Subscribe<PacketReceived>(received =>
         {
+            observePackets?.Invoke(Client, received);
             if (received.Packet is ClientboundConfigUpdateEnabledFeaturesPacket)
             {
                 FeatureFrames.Add(received);
@@ -72,9 +75,9 @@ internal sealed class BlockUseSession : IAsyncDisposable
         });
     }
 
-    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true, bool observeWrites = false, ISessionScheduler? scheduler = null)
+    internal static async Task<BlockUseSession> Create(int protocol, string block, bool terrain = true, bool physics = false, bool featureFlags = true, bool observeWrites = false, ISessionScheduler? scheduler = null, IReadOnlyList<IPacket>? configurationPackets = null, Action<UmpkClient, PacketReceived>? observePackets = null)
     {
-        var session = new BlockUseSession(protocol, physics, featureFlags, observeWrites, scheduler);
+        var session = new BlockUseSession(protocol, physics, featureFlags, observeWrites, scheduler, configurationPackets, observePackets);
         try
         {
             await Task.WhenAll(session.Client.ConnectAsync(new ServerEndpoint("test", 25565), session.Token), session.DriveToPlay());
@@ -141,6 +144,8 @@ internal sealed class BlockUseSession : IAsyncDisposable
             Server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
             await Server.NextFrameAsync(Token);
             await Features(ProtocolPhase.Configuration);
+            foreach (IPacket packet in _initialConfigurationPackets)
+                await SendConfiguration(packet);
             await ScriptedServer.SendAsync(Server, _version.Protocol, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), Token);
             await Server.NextFrameAsync(Token);
         }
@@ -250,7 +255,26 @@ internal sealed class BlockUseSession : IAsyncDisposable
 
 
 
-    internal async Task Reconfigure(Identifier[]? flags)
+    internal async Task Reconfigure(Identifier[]? flags, IReadOnlyList<IPacket>? packets = null)
+    {
+        await BeginReconfiguration();
+        if (flags is not null)
+            await SendFeatures(ProtocolPhase.Configuration, flags);
+        if (packets is not null)
+            foreach (IPacket packet in packets)
+                await SendConfiguration(packet);
+        await ScriptedServer.SendAsync(Server, _version.Protocol, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), Token);
+        InboundFrame finished = await Server.NextFrameAsync(Token);
+        var config = _version.Protocol.GetRegistry(ProtocolPhase.Configuration, PacketFlow.Serverbound);
+        Assert.True(config.TryGetInbound(finished.WireId, out BoundPacketCodec finishCodec));
+        Assert.Equal("finish_configuration", finishCodec.Type.Id.Path);
+        object finish = finishCodec.Decode(finished.Payload, Context);
+        Assert.Equal(finished.Payload.ToArray(), Encode(finishCodec, finish));
+        Server.ServerConnection.SetPhase(ProtocolPhase.Play);
+        Assert.Empty(await Barrier());
+    }
+
+    internal async Task BeginReconfiguration()
     {
         Assert.Empty(await Barrier());
         await Send(new ClientboundStartConfigurationPacket());
@@ -261,17 +285,6 @@ internal sealed class BlockUseSession : IAsyncDisposable
         object ack = acknowledgmentCodec.Decode(acknowledged.Payload, Context);
         Assert.Equal(acknowledged.Payload.ToArray(), Encode(acknowledgmentCodec, ack));
         Server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
-        if (flags is not null)
-            await SendFeatures(ProtocolPhase.Configuration, flags);
-        await ScriptedServer.SendAsync(Server, _version.Protocol, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), Token);
-        InboundFrame finished = await Server.NextFrameAsync(Token);
-        var config = _version.Protocol.GetRegistry(ProtocolPhase.Configuration, PacketFlow.Serverbound);
-        Assert.True(config.TryGetInbound(finished.WireId, out BoundPacketCodec finishCodec));
-        Assert.Equal("finish_configuration", finishCodec.Type.Id.Path);
-        object finish = finishCodec.Decode(finished.Payload, Context);
-        Assert.Equal(finished.Payload.ToArray(), Encode(finishCodec, finish));
-        Server.ServerConnection.SetPhase(ProtocolPhase.Play);
-        Assert.Empty(await Barrier());
     }
 
     internal async Task Respawn()
@@ -373,6 +386,42 @@ internal sealed class BlockUseSession : IAsyncDisposable
         var cell = new BlockPos(chunkX * 16 + 1, 65, chunkZ * 16 + 1);
         Assert.NotNull(Client.State.World.GetColumn(cell));
         Assert.True(Client.State.EntityMembership.HasColumn(cell));
+    }
+
+    internal async Task SendConfiguration(IPacket packet)
+    {
+        var registry = _version.Protocol.GetRegistry(ProtocolPhase.Configuration, PacketFlow.Clientbound);
+        var pair = Assert.Single(registry.Packets, pair => pair.Type.Id == packet.Type.Id);
+        Assert.True(registry.TryGetInbound(pair.WireId, out BoundPacketCodec codec));
+        Assert.True(codec.IsImplemented);
+        byte[] bytes = Encode(codec, packet);
+        object decoded = codec.Decode(bytes, Context);
+        Assert.Equal(packet.GetType(), decoded.GetType());
+        if (packet is ClientboundConfigUpdateTagsPacket tags)
+        {
+            var observed = Assert.IsType<ClientboundConfigUpdateTagsPacket>(decoded);
+            Assert.Equal(tags.Registries.Count, observed.Registries.Count);
+            for (int index = 0; index < tags.Registries.Count; index++)
+            {
+                Assert.Equal(tags.Registries[index].Registry, observed.Registries[index].Registry);
+                Assert.Equal(tags.Registries[index].Tags.Count, observed.Registries[index].Tags.Count);
+                for (int tag = 0; tag < tags.Registries[index].Tags.Count; tag++)
+                {
+                    Assert.Equal(tags.Registries[index].Tags[tag].TagId, observed.Registries[index].Tags[tag].TagId);
+                    Assert.Equal(tags.Registries[index].Tags[tag].Ids, observed.Registries[index].Tags[tag].Ids);
+                }
+            }
+        }
+        else if (packet is ClientboundConfigRegistryDataPacket contents)
+        {
+            var observed = Assert.IsType<ClientboundConfigRegistryDataPacket>(decoded);
+            Assert.Equal(contents.Registry, observed.Registry);
+            Assert.Equal(contents.Entries.Select(entry => entry.Id), observed.Entries.Select(entry => entry.Id));
+            for (int index = 0; index < contents.Entries.Count; index++)
+                Assert.Equal(Assert.IsType<NbtCompound>(contents.Entries[index].Data).GetString("message_id"), Assert.IsType<NbtCompound>(observed.Entries[index].Data).GetString("message_id"));
+        }
+        Assert.Equal(bytes, Encode(codec, decoded));
+        await Server.SendFrameAsync(pair.WireId, bytes, Token);
     }
 
     internal async Task Send(IPacket packet)

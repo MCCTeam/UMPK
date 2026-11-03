@@ -426,6 +426,7 @@ public sealed class UmpkClient : IAsyncDisposable
                 _logger.LogWarning(ex, "Chat-signing certificate acquisition for login start failed; logging in without a profile key.");
             }
 
+        State.RegistryTags.BeginConfiguration();
         var loginOptions = new JavaLoginOptions
         {
             Username = _settings.Profile.Name,
@@ -447,7 +448,7 @@ public sealed class UmpkClient : IAsyncDisposable
             LoginQueries = LoginQueries,
             Cookies = Cookies,
             TransferIntent = transferIntent,
-            BeforePlay = _ => ValueTask.FromResult(State.Registries),
+            BeforePlay = CommitConfigurationRegistriesAsync,
             // Only reaches the wire on a version that HAS a configuration phase. The pre-1.20.2 eras announce the brand in play instead, which is done below once play is live.
             ClientBrand = _settings.Options.ClientBrand,
         };
@@ -804,6 +805,13 @@ public sealed class UmpkClient : IAsyncDisposable
         };
     }
 
+    private ValueTask<Umpk.Game.Registries.RegistryAccess?> CommitConfigurationRegistriesAsync(CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        State.RegistryTags.CommitConfiguration(_settings.Version.Version.Protocol);
+        return ValueTask.FromResult(State.Registries);
+    }
+
     /// <summary>Takes the live connection into the configuration phase and runs it until the server ends it, at which point the connection is back in play. Called by the <c>start_configuration</c> applier, on the session loop, AFTER it has acknowledged.</summary>
     /// <remarks>
     /// This runs the same configuration driver as login. The only difference is the client-information announcement, which is sent on login but not on re-entry because the server preserves it.
@@ -821,6 +829,7 @@ public sealed class UmpkClient : IAsyncDisposable
         // Releases the read loop, which is parked at the start_configuration frame boundary, and swaps the descriptor so the following frames decode as configuration packets.
         connection.SetPhase(ProtocolPhase.Configuration);
 
+        State.RegistryTags.BeginConfiguration();
         await JavaClientLogin.RunConfigurationPhaseAsync(
             connection,
             _settings.Version,
@@ -833,7 +842,7 @@ public sealed class UmpkClient : IAsyncDisposable
                 AnnounceClientInformation = null,
                 PlayRegistries = _settings.StaticRegistries,
                 Cookies = Cookies,
-                BeforePlay = _ => ValueTask.FromResult(State.Registries),
+                BeforePlay = CommitConfigurationRegistriesAsync,
             },
             ct).ConfigureAwait(false);
 

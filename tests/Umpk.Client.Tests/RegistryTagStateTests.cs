@@ -15,7 +15,7 @@ public sealed class RegistryTagStateTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task ConfigurationAndPlayTagsReachTheSameConnectionOwner(bool configuration)
+    public async Task ConfigurationAndPlayTagsUseTheirNativePublicationPhase(bool configuration)
     {
         var harness = new ApplierHarness(JavaVersions.V1_21_11);
         TagRegistry[] groups = [new(RegistryIds.Block, [new TagEntry(Mineable, [1])])];
@@ -23,7 +23,7 @@ public sealed class RegistryTagStateTests
 
         await harness.ApplyAsync(packet);
 
-        Assert.True(harness.State.RegistryTags.Contains(RegistryIds.Block, Mineable, 1));
+        Assert.Equal(configuration ? null : (bool?)true, harness.State.RegistryTags.Contains(RegistryIds.Block, Mineable, 1));
     }
 
     [Fact]

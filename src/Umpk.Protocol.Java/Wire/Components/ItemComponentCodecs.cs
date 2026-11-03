@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Runtime.CompilerServices;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Registries;
@@ -496,30 +498,128 @@ internal static partial class ItemComponentCodecs
             ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(unwrap(value), era));
     }
 
+    /// <summary>Whether received lore retains every native value kind needed for semantic equality.</summary>
+    internal static bool IsLoreIdentityComplete(LoreComponent lore)
+        => ((LoreCodecImpl)Lore).IsIdentityComplete(lore) && ((LoreCodecImpl)LoreLegacy).IsIdentityComplete(lore);
+
     private sealed class LoreCodecImpl(ComponentWireEra era) : ItemComponentCodec(DataComponents.Lore)
     {
+        private readonly ConditionalWeakTable<Component, ReceivedLoreLine> _received = new();
+
         public override object Decode(ref PacketReader reader, PacketCodecContext context)
+            => new LoreComponent(reader.ReadList(ReadLine));
+
+        private Component ReadLine(ref PacketReader reader)
         {
-            ComponentWireEra e = era;
-            Component[] lines = reader.ReadList((ref PacketReader r) => ItemCodecPrimitives.ReadNetworkComponent(ref r, e));
-            return new LoreComponent(lines);
+            PacketReader original = reader;
+            NbtTag tag = reader.ReadNbt(ItemCodecPrimitives.NetworkNbt);
+            Component line = ComponentNbt.From(tag, era);
+            if (tag is NbtString)
+                return line;
+
+            ReadOnlySpan<byte> raw = original.ReadBytes(reader.Position - original.Position);
+            var canonical = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(canonical);
+            ItemCodecPrimitives.WriteNetworkComponent(ref writer, line, era);
+            bool complete = HasCompleteComponentValue(tag);
+            if (!complete || !raw.SequenceEqual(canonical.WrittenSpan))
+                _received.Add(line, new(raw.ToArray(), canonical.WrittenSpan.ToArray(), complete));
+            return line;
         }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
+            => writer.WriteList(((LoreComponent)value).Lines, WriteLine);
+
+        private void WriteLine(ref PacketWriter writer, Component line)
         {
-            var lore = (LoreComponent)value;
-            ComponentWireEra e = era;
-            writer.WriteList(lore.Lines, (ref PacketWriter w, Component c) => ItemCodecPrimitives.WriteNetworkComponent(ref w, c, e));
+            if (!_received.TryGetValue(line, out ReceivedLoreLine? received))
+            {
+                ItemCodecPrimitives.WriteNetworkComponent(ref writer, line, era);
+                return;
+            }
+            // Opaque style NBT can change without replacing its Component. Compare an immutable encoded snapshot before replaying received bytes.
+            var canonical = new ArrayBufferWriter<byte>(received.Canonical.Length);
+            var current = new PacketWriter(canonical);
+            ItemCodecPrimitives.WriteNetworkComponent(ref current, line, era);
+            if (canonical.WrittenSpan.SequenceEqual(received.Canonical))
+                writer.WriteBytes(received.Raw);
+            else
+                writer.WriteBytes(canonical.WrittenSpan);
+        }
+
+        public bool IsIdentityComplete(LoreComponent lore)
+        {
+            foreach (Component line in lore.Lines)
+                if (_received.TryGetValue(line, out ReceivedLoreLine? received) && !received.Complete)
+                    return false;
+            return true;
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
             var lore = (LoreComponent)value;
+            if (!IsLoreIdentityComplete(lore))
+                throw new ComponentHashUnavailableException("Lore contains a received native value kind that its text model cannot represent.");
             var hashes = new int[lore.Lines.Count];
             for (int i = 0; i < hashes.Length; i++)
                 hashes[i] = ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(lore.Lines[i], era));
-
             return ops.List(hashes);
+        }
+
+        private static bool HasCompleteComponentValue(NbtTag tag)
+        {
+            if (tag is NbtNumeric)
+                return false;
+            if (tag is NbtList list)
+            {
+                foreach (NbtTag item in list)
+                    if (!HasCompleteComponentValue(item))
+                        return false;
+                return true;
+            }
+            if (tag is not NbtCompound compound)
+                return true;
+            if (compound.TryGet("text", out NbtTag? text) && text is not NbtString)
+                return false;
+            if (!compound.ContainsKey("text") && compound.TryGet("translate", out NbtString? _) && compound.TryGet("with", out NbtTag? arguments))
+            {
+                // Legacy NbtOps compresses homogeneous numeric arguments into array tags; the text model does not read those arguments.
+                if (arguments is NbtByteArray bytes && bytes.Value.Length != 0
+                    || arguments is NbtIntArray integers && integers.Value.Length != 0
+                    || arguments is NbtLongArray longs && longs.Value.Length != 0)
+                    return false;
+                if (arguments is NbtList values)
+                    foreach (NbtTag argument in values)
+                        if (!HasCompleteComponentValue(argument))
+                            return false;
+            }
+            if (compound.GetList("extra") is { } children)
+                foreach (NbtTag child in children)
+                    if (!HasCompleteComponentValue(child))
+                        return false;
+            if (compound.TryGet("separator", out NbtTag? separator) && !HasCompleteComponentValue(separator))
+                return false;
+            NbtCompound? hover = compound.GetCompound("hover_event") ?? compound.GetCompound("hoverEvent");
+            if (hover?.GetString("action") == "show_text")
+            {
+                NbtTag? content = hover.TryGet("value", out NbtTag? modern) ? modern : hover.TryGet("contents", out NbtTag? legacy) ? legacy : null;
+                if (content is not null && !HasCompleteComponentValue(content))
+                    return false;
+            }
+            else if (hover is not null && hover.GetString("action") == "show_entity")
+            {
+                NbtCompound content = hover.GetCompound("contents") ?? hover;
+                if (content.TryGet("name", out NbtTag? name) && !HasCompleteComponentValue(name))
+                    return false;
+            }
+            return true;
+        }
+
+        private sealed class ReceivedLoreLine(byte[] raw, byte[] canonical, bool complete)
+        {
+            public byte[] Raw { get; } = raw;
+            public byte[] Canonical { get; } = canonical;
+            public bool Complete { get; } = complete;
         }
     }
 

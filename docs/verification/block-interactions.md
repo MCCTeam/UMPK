@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Lore packet preservation, 2026-11-04
+
+The [Lore codec correction](lore-wire-preservation.md) preserves original rich component bytes while keeping semantic hashes and item identity separate. Unrepresentable primitive translation arguments remain explicitly unavailable. The 24 focused cases, 341 adjacent checks and complete 7,246-case Protocol suite pass without skips; the original byte failures and build-override setup failures remain recorded.
+
+The deliberate Protocol increase is 24, bringing the expected seventeen-suite total to 51,479 alongside the published pillar tests. Combined Client integration is running separately. Fresh allocation/AOT, consumer, package, repository and final version checks remain open.
+
 ## Log and pillar placement, 2026-11-04
 
 Default full-cube logs and pillars now use the existing placement validation and native result/swing owner across all 50 profiles. The [scoped report](pillar-placement-runtime-20261103.md) records 64 names, 1,761 source-bound item/profile rows and the preserved axis, collision, inherited survival and legacy pre-send rules. Unsupported patches, other specialized blocks and missing context remain unknown.

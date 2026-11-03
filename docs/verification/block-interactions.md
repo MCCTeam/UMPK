@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Lore mining identity, 2026-11-04
+
+The [mining identity correction](lore-mining-identity.md) retains progress across equal Lore updates, distinguishes empty defaults from removals and ends held mining when a fresh comparison depends on unrepresented primitive arguments. The original native24/14 observations, exact packet bytes and legacy controls are retained. The connected 65 cases and 426 adjacent checks pass after their causal failures.
+
+The combined pillar/Lore Client passes all 36,926 cases without skips. Three fixture-root display keys covering 127 occurrences are reconciled offline against identical captures and enumerators; the raw wrapper failure stays recorded. Normal formatting changes zero bytes. The deliberate Client increase is 65 and the expected seventeen-suite total is 51,544. The later crouching integration, final repository/consumer/AOT/package/CI checks and version matrix remain separate.
+
 ## Lore packet preservation, 2026-11-04
 
 The [Lore codec correction](lore-wire-preservation.md) preserves original rich component bytes while keeping semantic hashes and item identity separate. Unrepresentable primitive translation arguments remain explicitly unavailable. The 24 focused cases, 341 adjacent checks and complete 7,246-case Protocol suite pass without skips; the original byte failures and build-override setup failures remain recorded.

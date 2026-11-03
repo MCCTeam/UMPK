@@ -252,7 +252,12 @@ public sealed partial class InteractionActions
     }
 
     private bool SameDestroyTarget(BlockPos position, ItemStack item)
-        => _destroyTarget is { } target && target.Position == position && VanillaMiningItemIdentity.Matches(item, target.Item, _services.Version.Version.Protocol);
+    {
+        if (_destroyTarget is not { } target || target.Position != position)
+            return false;
+        bool? matches = VanillaMiningItemIdentity.TryMatches(item, target.Item, _services.Version.Version.Protocol);
+        return matches ?? throw new MiningUnavailableException("The held item's native lore identity is unavailable.");
+    }
 
     private void SynchronizeMiningOwner()
     {

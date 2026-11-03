@@ -2,6 +2,7 @@ using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Registries;
 using Umpk.Nbt;
+using Umpk.Protocol.Java.Codecs;
 
 namespace Umpk.Client.Actions;
 
@@ -11,15 +12,25 @@ internal static class VanillaMiningItemIdentity
     private const int ItemComponentsProtocol = 766;
     private const int ModernPredicateProtocol = 770;
     private const int LastMeasuredPredicateProtocol = 777;
+    private const int LastMeasuredLoreProtocol = 777;
     private const int LastMeasuredEnchantmentProtocol = 777;
 
     public static bool Matches(ItemStack current, ItemStack previous, int protocol)
+        => TryMatches(current, previous, protocol) is true;
+
+    public static bool? TryMatches(ItemStack current, ItemStack previous, int protocol)
     {
         if (ReferenceEquals(current, previous))
             return true;
         // The flattening moved damage into the compared tag. Component-era clients compare the complete effective component map.
         if (protocol >= 393)
         {
+            if (HasNativeLoreIdentity(protocol) && !current.IsEmpty && !previous.IsEmpty && current.Item.Equals(previous.Item) && !ReferenceEquals(current.Components, previous.Components))
+            {
+                bool? lore = LoreMapsMatch(current.Components, previous.Components);
+                if (lore is not true)
+                    return lore;
+            }
             if (current.IsSameItemSameComponents(previous))
                 return true;
             if (protocol is < ItemComponentsProtocol or > LastMeasuredEnchantmentProtocol || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
@@ -40,13 +51,18 @@ internal static class VanillaMiningItemIdentity
             || Math.Max(0, current.Damage) == Math.Max(0, previous.Damage);
     }
 
-    private static bool ComponentMapsMatch(DataComponentMap current, DataComponentMap previous, int protocol)
+    private static bool? ComponentMapsMatch(DataComponentMap current, DataComponentMap previous, int protocol)
     {
-        if (current.Count != previous.Count)
+        bool nativeLore = HasNativeLoreIdentity(protocol);
+        int currentCount = current.Count - (nativeLore && current.Has(DataComponents.Lore) ? 1 : 0);
+        int previousCount = previous.Count - (nativeLore && previous.Has(DataComponents.Lore) ? 1 : 0);
+        if (currentCount != previousCount)
             return false;
         foreach (DataComponentEntry entry in current.Effective)
         {
-            bool match = false;
+            if (nativeLore && entry.Type.Equals(DataComponents.Lore))
+                continue;
+            bool? match = false;
             foreach (DataComponentEntry other in previous.Effective)
             {
                 if (!entry.Type.Equals(other.Type))
@@ -55,20 +71,58 @@ internal static class VanillaMiningItemIdentity
                 match = ComponentValuesMatch(entry.Value, other.Value, protocol);
                 break;
             }
-            if (!match)
-                return false;
+            if (match is not true)
+                return match;
         }
         return true;
     }
 
-    private static bool ComponentValuesMatch(object? current, object? previous, int protocol)
+    private static bool HasNativeLoreIdentity(int protocol)
+        => protocol is >= ItemComponentsProtocol and <= LastMeasuredLoreProtocol;
+
+    private static bool? LoreMapsMatch(DataComponentMap current, DataComponentMap previous)
     {
+        LoreComponent? lore = current.Get(DataComponents.Lore);
+        LoreComponent? other = previous.Get(DataComponents.Lore);
+        if (lore is not null && other is not null)
+            return LoreValuesMatch(lore, other);
+        bool removed = lore is null && HasLoreRemoval(current);
+        bool otherRemoved = other is null && HasLoreRemoval(previous);
+        if (removed || otherRemoved)
+            return removed == otherRemoved;
+        // Every vanilla item carries Lore.EMPTY by default, including when the bounded local prototype omits it. Explicit wire removal is distinct.
+        return (lore?.Lines.Count ?? 0) == 0 && (other?.Lines.Count ?? 0) == 0;
+    }
+
+    private static bool? LoreValuesMatch(LoreComponent current, LoreComponent previous)
+    {
+        if (ReferenceEquals(current, previous))
+            return true;
+        if (!ItemComponentCodecs.IsLoreIdentityComplete(current) || !ItemComponentCodecs.IsLoreIdentityComplete(previous))
+            return null;
+        return current.Lines.SequenceEqual(previous.Lines);
+    }
+
+    private static bool HasLoreRemoval(DataComponentMap components)
+    {
+        if (components.HasNoPatch)
+            return false;
+        foreach (DataComponentEntry entry in components.Patch)
+            if (entry.IsRemoval && entry.Type.Equals(DataComponents.Lore))
+                return true;
+        return false;
+    }
+
+    private static bool? ComponentValuesMatch(object? current, object? previous, int protocol)
+    {
+        if (HasNativeLoreIdentity(protocol) && current is LoreComponent lore && previous is LoreComponent otherLore)
+            return LoreValuesMatch(lore, otherLore);
         if (current is EnchantmentsComponent enchantments && previous is EnchantmentsComponent otherEnchantments)
             return EnchantmentValuesMatch(enchantments.Enchantments, otherEnchantments.Enchantments, enchantments.ShowInTooltip, otherEnchantments.ShowInTooltip, protocol);
         if (current is StoredEnchantmentsComponent stored && previous is StoredEnchantmentsComponent otherStored)
             return EnchantmentValuesMatch(stored.Enchantments, otherStored.Enchantments, stored.ShowInTooltip, otherStored.ShowInTooltip, protocol);
         if (current is AdventureModePredicateComponent predicate && previous is AdventureModePredicateComponent otherPredicate)
-            return protocol <= LastMeasuredPredicateProtocol && PredicateValuesMatch(predicate, otherPredicate, protocol);
+            return protocol <= LastMeasuredPredicateProtocol ? PredicateValuesMatch(predicate, otherPredicate, protocol) : false;
         return Equals(current, previous);
     }
 
@@ -102,7 +156,7 @@ internal static class VanillaMiningItemIdentity
         return true;
     }
 
-    private static bool PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous, int protocol)
+    private static bool? PredicateValuesMatch(AdventureModePredicateComponent current, AdventureModePredicateComponent previous, int protocol)
     {
         if (protocol < ModernPredicateProtocol && current.ShowInTooltip != previous.ShowInTooltip || current.Predicates.Count != previous.Predicates.Count)
             return false;
@@ -126,13 +180,17 @@ internal static class VanillaMiningItemIdentity
                 return false;
             if (entry.Nbt is null ? other.Nbt is not null : !entry.Nbt.Equals(other.Nbt))
                 return false;
-            if (protocol >= ModernPredicateProtocol && protocol <= LastMeasuredPredicateProtocol && !MatcherValuesMatch(entry.ComponentMatchers, other.ComponentMatchers, protocol))
-                return false;
+            if (protocol >= ModernPredicateProtocol && protocol <= LastMeasuredPredicateProtocol)
+            {
+                bool? match = MatcherValuesMatch(entry.ComponentMatchers, other.ComponentMatchers, protocol);
+                if (match is not true)
+                    return match;
+            }
         }
         return true;
     }
 
-    private static bool MatcherValuesMatch(BlockPredicateComponentMatchers? current, BlockPredicateComponentMatchers? previous, int protocol)
+    private static bool? MatcherValuesMatch(BlockPredicateComponentMatchers? current, BlockPredicateComponentMatchers? previous, int protocol)
     {
         if (current is null || previous is null || current.Exact.Count != previous.Exact.Count || current.Partial.Count != previous.Partial.Count)
             return false;
@@ -141,8 +199,11 @@ internal static class VanillaMiningItemIdentity
         {
             DataComponentEntry entry = current.Exact[index];
             DataComponentEntry other = previous.Exact[index];
-            if (entry.IsRemoval || other.IsRemoval || !entry.Type.Equals(other.Type) || !ComponentValuesMatch(entry.Value, other.Value, protocol))
+            if (entry.IsRemoval || other.IsRemoval || !entry.Type.Equals(other.Type))
                 return false;
+            bool? match = ComponentValuesMatch(entry.Value, other.Value, protocol);
+            if (match is not true)
+                return match;
         }
         // Only Damage is owned by the measured selected-predicate codec, so the native partial map has at most one owned entry.
         if (current.Partial.Count > 1)

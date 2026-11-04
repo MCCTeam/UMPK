@@ -3746,5 +3746,102 @@
       "final125/repository17/currentconsumer/packageAOT/publishedCI"
     ],
     "fullGoalClosed": false
+  },
+  "componentAdventurePlacement766To76920261104": {
+    "status": "passed bounded source/session/fullClient; finalacceptanceopen",
+    "report": "docs/verification/component-adventure-placement-766-769.md",
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/component-placement27-runtime-continuation-preparation-20261104-v4/ROOT-ACCEPTANCE.json",
+      "bytes": 3810,
+      "sha256": "5f06bb263623992a15d667d2994c3e2cfa791ee4b9e10d125917e78c41264ae0"
+    },
+    "actual": {
+      "path": "/home/anon/Projects/UMPK/.scratch/component-placement27-runtime-continuation-preparation-20261104-v4/ACTUAL-MANAGED24.json",
+      "bytes": 75271,
+      "sha256": "e71e66b1380be0f055b1558e5e0c0d4b510d4853dd844b095d81411fe7124542"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement27-runtime-20261104-v3/TERMINAL-CLEANUP.json",
+      "bytes": 2413,
+      "sha256": "f7161c7ce6e73c1a276f7d79dd8956aea230835cda5b7772d983723856f4769c"
+    },
+    "sourceProtocols": [
+      766,
+      767,
+      768,
+      769
+    ],
+    "namedSourceReleases": 7,
+    "sourceFacts": 105,
+    "productionOwner": "existingVanillaComponentMiningPermission.SupportsPlacement; floor770\u2192766",
+    "caller": "publicPlaceBlockAsync/sessionprediction/USEswingACK",
+    "cases": {
+      "baselineControls": 13,
+      "causalFailures": 14,
+      "green": 27,
+      "newCases": 24,
+      "adjacent": 1164,
+      "unfilteredFull": 38885,
+      "skips": 0,
+      "finalPdbDocumentsPhysicallyVerified": 617,
+      "exactSourceTestNameMigrations": 3,
+      "fixtureKeys": 3,
+      "fixtureOccurrences": 127,
+      "ownedHostIdentitiesAbsent": 10
+    },
+    "actualClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement24-managed-20261104-v1/stage-producers/permission/Umpk.Client.dll",
+        "bytes": 1243648,
+        "sha256": "7f5e57534e09ca1a8d5d18644ccffbe7a712458e1bc023297a6c375464b037d9"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement24-managed-20261104-v1/stage-producers/permission/Umpk.Client.pdb",
+        "bytes": 298200,
+        "sha256": "9edbff21875f5816387d12aa0aab765a90827e9c9775ebfa8fbf20d92d4535b6"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement24-managed-20261104-v1/stage-producers/permission/Umpk.Client.xml",
+        "bytes": 856086,
+        "sha256": "0726022beacb1a46c484436ae53cf301562190346cefd8d4046fbc417ac7eae6"
+      }
+    ],
+    "actualTestPair": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement27-managed-20261104-v2/source/tests/Umpk.Client.Tests/bin/Release/net10.0-runtime-continuation-v3/Umpk.Client.Tests.dll",
+        "bytes": 24867328,
+        "sha256": "c67e81b8f5b82cf29e864f1652ebcea5b5a36aa0704999f81df738941edd1018"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/component-placement27-managed-20261104-v2/source/tests/Umpk.Client.Tests/bin/Release/net10.0-runtime-continuation-v3/Umpk.Client.Tests.pdb",
+        "bytes": 1113800,
+        "sha256": "3860fd199f78158fd12d266450b7276d407c3589d99350216a609de615de3f3e"
+      }
+    ],
+    "sourceBuildOrigins": "Client from first failedwhole24v1/bd54+permissionprofile; Testpair frommanual27v2; final runtimecontinuationzeroCsc usesbothretained; source/PDBpathsunchanged.",
+    "compilerScopes": {
+      "historicalClient": 1,
+      "historicalTest": 2,
+      "finalContinuation": 0
+    },
+    "retainedFailures": [
+      "initial24full38883PASS2oldPillarUnknownexpectationsFAIL",
+      "manual27valid13P14F thenwrongassertionlocalnameguardFAIL",
+      "sourceonlypreparerexternalPDBdocumentrootguard"
+    ],
+    "semanticMigration": "3Pillarmethodnames preserved1occurrenceeach;766769expectedPASS/47Unknown; canonicalNoPatch/nullsetupassertionsadded",
+    "unknownsRetained": [
+      "tags",
+      "blockentityNBT/cache",
+      "nativepropertykind/order/ranges",
+      "numeric aliases",
+      "otherpatches",
+      "pre766NBTplacement",
+      "localBlockItemeffects"
+    ],
+    "unexecuted": [
+      "current13admission/live/final17/currentconsumers/packagesAOT/currentpublishedCI"
+    ],
+    "fullGoalClosed": false
   }
 }

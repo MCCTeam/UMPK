@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Component Adventure placement, 4 November 2026
+
+The [Adventure placement correction for 766–769](component-adventure-placement-766-769.md) connects the existing typed permission owner to ordinary placement on Minecraft 1.20.5–1.21.4. Received allow predicates now reach placement; absent or nonmatching permissions produce native PASS/USE-only behavior. Missing tag, NBT and property context stays Unknown. The change moves one profile boundary and preserves the existing parser, cache, codecs, public API and ownership.
+
+Seven native-source releases support the behavior. After the source-backed migration of two old default-log expectations, 27 focused, 1,164 adjacent and 38,885 unfiltered Client tests pass without skips. The final runtime uses Client `7f5e5753`/PDB `9edbff21` and the corrected Test assembly; it performs no recompilation. The exact old 38,861 plus 24 cases are retained, with three literal fixture-root keys/127 occurrences and three explicit renamed Pillar cases. Root `5f06bb26` and cleanup `f7161c7c` bind source/PDB checks and all 10 final HOST exits. Earlier failed full and checker attempts remain preserved.
+
+Local block/stack prediction, further permission contexts, live acceptance, new thirteen-library admission, final repository/consumer/package/AOT and new published-head CI checks remain separate.
+
 ## Destination terrain availability, 4 November 2026
 
 The [ordinary cube availability correction](ordinary-cube-terrain-availability.md) requires received destination terrain before predicting replacement or successful placement. Synthesized storage and valid AIR/VOID_AIR cannot establish chunk availability. Seven native-source boundaries support the distinction between a missing-cache write failure and the library’s conservative Unknown/USE-only decision; an original native missing-cache experiment remains unexecuted.

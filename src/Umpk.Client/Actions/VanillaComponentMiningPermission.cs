@@ -18,7 +18,7 @@ internal sealed class VanillaComponentMiningPermission
 
     public static bool Supports(int protocol) => protocol is >= ItemComponentsProtocol and <= LastMeasuredPredicateProtocol;
 
-    public static bool SupportsPlacement(int protocol) => protocol is >= 770 and <= LastMeasuredPredicateProtocol;
+    public static bool SupportsPlacement(int protocol) => protocol is >= ItemComponentsProtocol and <= LastMeasuredPredicateProtocol;
 
     public bool? Allows(ItemStack item, BlockState target, ClientRegistryTags tags, int protocol)
         => Allows(item.IsEmpty ? null : item.Components.Get(DataComponents.CanBreak), target, tags, protocol);

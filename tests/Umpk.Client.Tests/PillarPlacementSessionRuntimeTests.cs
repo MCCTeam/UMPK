@@ -209,12 +209,15 @@ public sealed class PillarPlacementSessionRuntimeTests
     [InlineData(47)]
     [InlineData(766)]
     [InlineData(769)]
-    public async Task EarlierUnownedAdventureContextsRemainUnknown(int protocol)
+    public async Task EarlierAdventureContextsKeepNativePermissionBoundaries(int protocol)
     {
         await using Session session = await Session.Create(protocol, "stone", physics: true);
         await session.Mode(GameMode.Adventure, instantBuild: false);
         await session.Hold(DefaultLog(protocol));
-        await AssertUse(session, BlockUsePrediction.Unknown);
+        ItemStack held = session.Client.State.Inventory.GetSlot(36);
+        Assert.True(held.Components.HasNoPatch);
+        Assert.Null(held.Components.Get(DataComponents.CanPlaceOn));
+        await AssertUse(session, protocol >= 766 ? BlockUsePrediction.Pass : BlockUsePrediction.Unknown);
     }
 
     [Theory]

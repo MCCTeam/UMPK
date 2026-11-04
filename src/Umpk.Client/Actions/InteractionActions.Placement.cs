@@ -219,6 +219,7 @@ public sealed partial class InteractionActions
             }
         }
         VanillaStairPlacement stair = VanillaStairPlacement.ForProtocol(_services.Version.Version.Protocol);
+        VanillaChainPlacement chain = VanillaChainPlacement.ForProtocol(_services.Version.Version.Protocol);
         if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass) && (hasActivation || !stair.HasPassiveUse(clicked)))
             return BlockUsePrediction.Unknown;
         if (!itemKnown)
@@ -256,6 +257,9 @@ public sealed partial class InteractionActions
             // Original legacy ItemBlock checks player permission after the controller's placement precheck and USE send. Default quartz has neither CanPlaceOn NBT nor canEditBlocks.
             if (VanillaPillarPlacement.IsLegacyQuartz(_services.Version.Version.Protocol, item) && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
                 return BlockUsePrediction.Fail;
+            // Native ItemStack denies a default chain without CanPlaceOn before entering BlockItem placement, including an occupied destination. The controller still commits USE.
+            if (item.Components.HasNoPatch && data.TryGetItem(item.Item.Id, out ItemUseOnInfo chainUse) && chain.Supports(item.Item.Id, chainUse, clicked.Source))
+                return BlockUsePrediction.Pass;
             if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)
                 || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || !IsOrdinaryCubeItem(item.Item.Id, adventureUse))
                 return BlockUsePrediction.Unknown;
@@ -297,6 +301,8 @@ public sealed partial class InteractionActions
             return PredictSlabPlacement(slab, item.Item.Id);
         if (stair.Supports(item.Item.Id, use, clicked.Source))
             return PredictStairPlacement(stair, item.Item.Id);
+        if (chain.Supports(item.Item.Id, use, clicked.Source))
+            return PredictChainPlacement(chain, item.Item.Id);
         if (!IsOrdinaryCubeItem(item.Item.Id, use) || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
         return PredictCubePlacement(preSend: false);
@@ -394,6 +400,28 @@ public sealed partial class InteractionActions
                 position, destination, face, cursor, _services.Self.Yaw, out BlockState selected))
                 return BlockUsePrediction.Unknown;
             if (JavaGameData.BlockShapes(_services.Version.Version.Protocol) is not IBlockCollisionGridSource grids
+                || grids.GetCollisionGrid(selected) is not { } grid)
+                return BlockUsePrediction.Unknown;
+            return PredictPlacementObstruction(destination, preSend: false, grid.Boxes);
+        }
+
+        BlockUsePrediction PredictChainPlacement(VanillaChainPlacement chain, Identifier chainId)
+        {
+            if (!_services.State.Features.Entities || !_services.State.EntityMembership.HasColumn(position)
+                || !TryReplacement(position, clicked, out BlockReplacementInfo replacement))
+                return BlockUsePrediction.Unknown;
+            BlockPos destination = replacement.ReplacesClickedBlock ? position : position.Offset(face);
+            if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
+                return BlockUsePrediction.Fail;
+            if (world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
+                return BlockUsePrediction.Unknown;
+            BlockState previous = _services.State.JukeboxPrediction.GetBlock(world, destination);
+            if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+                return BlockUsePrediction.Unknown;
+            if (!replacement.AllowsPlacement)
+                return BlockUsePrediction.Fail;
+            if (!chain.TryGetCollisionRepresentative(chainId, face, previous.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol), out BlockState selected)
+                || JavaGameData.BlockShapes(_services.Version.Version.Protocol) is not IBlockCollisionGridSource grids
                 || grids.GetCollisionGrid(selected) is not { } grid)
                 return BlockUsePrediction.Unknown;
             return PredictPlacementObstruction(destination, preSend: false, grid.Boxes);

@@ -3366,5 +3366,33 @@
       "src/Umpk.Client/Internal/LegacyFallingBlockProfile.cs": "7cf4bb5678087aeba4bde44d6c527371bbe5541cd2157133ff1ce0c0cad8d08a"
     },
     "scopedReport": "docs/verification/protocol393-falling-blocks.md"
+  },
+  "acceptedChainPlacement20261104": {
+    "scope": "28protocols735\u2013777/40nativeprofiles/68registrations/400states; exactnames and native schema only",
+    "productionOwner": "VanillaChainPlacement + existing InteractionActions.Placement.PredictBlockUse -> publicPlaceBlockAsync",
+    "nativeStatus": "PASSED360 original state/shape/collision/survival getter operations; controlledLevel, no controller/network/worldtick claim",
+    "sourceStatus": "PASSED40defaultAdventureItemStack/GameType/controller source bindings and era send ordering",
+    "runtimeStatus": "PASSED217 causal/12257adjacent/full38088 exact37871+217",
+    "liveStatus": "not run",
+    "producerCommit": "df9579f plus3actualcompiledpostimages; ROOT publication pending",
+    "receipt": {
+      "path": "/home/anon/Projects/UMPK/.scratch/chain-placement-managed-preparation-20261104-v1/ACTUAL-MANAGED217.json",
+      "bytes": 13486,
+      "sha256": "904dd1c873e9cbd6c3f0d78e29e83bd00e7ba32f846860e054090074c87fb1dc"
+    },
+    "unknownsRetained": [
+      "customcomponents",
+      "missingphysics/body",
+      "unavailablepacket-establishedterrain",
+      "unownedrelevantentityormountgeometry"
+    ],
+    "finalGates": "not run on final producer",
+    "scopedReport": "docs/verification/chain-placement.md",
+    "compiledProductionPostimages": {
+      "src/Umpk.Client/Actions/InteractionActions.Placement.cs": "0f980c4e0ab1de43d66823079de658a1c470242e54e4a5c60d455eb5c2af10f8",
+      "src/Umpk.Client/Actions/VanillaChainPlacement.cs": "9910b3b18c528a66e5c56773c5cb82563cc7cfc2b820cc583f126d8bfd86f803"
+    },
+    "actualBuildSourceCommit": "df9579f566a9bbc7a1c97277b53f2c5f2c88fcaa",
+    "fullGoalClosed": false
   }
 }

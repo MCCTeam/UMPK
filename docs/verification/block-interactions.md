@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Chain placement runtime, 4 November 2026
+
+The [default-chain placement profile](chain-placement.md) now supplies native rod geometry and result/swing decisions to the public placement caller across all 28 applicable datasets. Original native360 measurements and 40 Adventure source profiles support 217 connected tests, 12,257 adjacent regressions and the full 38,088 Client suite, all passing without skips.
+
+Dedicated chain live and final composed-producer consumer/AOT/package/CI checks remain open. The earlier checkpoint reports retain their original producer and test scope.
+
 ## Protocol 393 falling-block runtime, 4 November 2026
 
 The [bounded 1.13 falling-block runtime](protocol393-falling-blocks.md) now connects native vertical motion, packet chunk membership and current bounds to placement decisions. All 68 focused tests, 11,716 adjacent regressions and the unfiltered 37,871-case Client suite pass without skips; the exact original 37,803-case multiset is preserved. The Client retains its actual v4 build origin, and the corrected Test pair is a v5 build.

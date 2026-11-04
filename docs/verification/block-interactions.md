@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Ordinary stair placement, 2026-11-04
+
+The [stair placement slice](ordinary-stair-placement.md) selects native facing, half and corner bounds on protocols 393–777. Exact grids determine self and peer obstruction. Original vanilla passes 24 state/query/controller scenes and 32 yaw cases; the finite source audit covers the registered materials and their clicked-use delegation.
+
+All 350 focused, 234 existing, 7,169 adjacent and full 37,638 Client cases pass without skips. The final fix connects known passive stair activation, including 764/765 boundary controls with both stone and stairs. The deliberate increase is 257 cases, after the separate tool increase of 23. Legacy stairs, local BlockItem terrain/stack prediction, other placement families and final native/live/producer gates remain open.
+
 ## Known tool terrain prediction, 2026-11-04
 
 The [26.3 tool prediction slice](tool-transformer-local-prediction.md) applies known hoe, shovel and axe changes before USE through the existing prediction owner, including native neighbor-before-clicked copper door/chest ordering. The independent known-only caller passes all 23 connected cases after 22 causal failures and one control.

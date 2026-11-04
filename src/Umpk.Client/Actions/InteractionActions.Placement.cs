@@ -218,7 +218,8 @@ public sealed partial class InteractionActions
                 };
             }
         }
-        if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass))
+        VanillaStairPlacement stair = VanillaStairPlacement.ForProtocol(_services.Version.Version.Protocol);
+        if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass) && (hasActivation || !stair.HasPassiveUse(clicked)))
             return BlockUsePrediction.Unknown;
         if (!itemKnown)
             return BlockUsePrediction.Unknown;
@@ -291,6 +292,8 @@ public sealed partial class InteractionActions
         VanillaSlabPlacement slab = VanillaSlabPlacement.ForProtocol(_services.Version.Version.Protocol);
         if (slab.Supports(item.Item.Id, use))
             return PredictSlabPlacement(slab, item.Item.Id);
+        if (stair.Supports(item.Item.Id, use, clicked.Source))
+            return PredictStairPlacement(stair, item.Item.Id);
         if (!IsOrdinaryCubeItem(item.Item.Id, use) || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
         return PredictCubePlacement(preSend: false);
@@ -367,6 +370,30 @@ public sealed partial class InteractionActions
             if (!VanillaSlabPlacement.TryGetCollisionShape(previous.Source, slabId, type, JavaGameData.BlockShapes(_services.Version.Version.Protocol), out Aabb shape))
                 return BlockUsePrediction.Unknown;
             return PredictPlacementObstruction(destination, preSend: false, [shape]);
+        }
+
+        BlockUsePrediction PredictStairPlacement(VanillaStairPlacement stair, Identifier stairId)
+        {
+            if (!_services.State.Features.Entities || !_services.State.EntityMembership.HasColumn(position)
+                || !TryReplacement(position, clicked, out BlockReplacementInfo replacement))
+                return BlockUsePrediction.Unknown;
+            BlockPos destination = replacement.ReplacesClickedBlock ? position : position.Offset(face);
+            if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
+                return BlockUsePrediction.Fail;
+            if (world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
+                return BlockUsePrediction.Unknown;
+            BlockState previous = _services.State.JukeboxPrediction.GetBlock(world, destination);
+            if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+                return BlockUsePrediction.Unknown;
+            if (!replacement.AllowsPlacement)
+                return BlockUsePrediction.Fail;
+            if (!stair.TryGetCollisionRepresentative(stairId, previous.Source, world, _services.State.EntityMembership, _services.State.JukeboxPrediction,
+                position, destination, face, cursor, _services.Self.Yaw, out BlockState selected))
+                return BlockUsePrediction.Unknown;
+            if (JavaGameData.BlockShapes(_services.Version.Version.Protocol) is not IBlockCollisionGridSource grids
+                || grids.GetCollisionGrid(selected) is not { } grid)
+                return BlockUsePrediction.Unknown;
+            return PredictPlacementObstruction(destination, preSend: false, grid.Boxes);
         }
 
         BlockUsePrediction PredictPlacementObstruction(BlockPos destination, bool preSend, ReadOnlySpan<Aabb> shapes)

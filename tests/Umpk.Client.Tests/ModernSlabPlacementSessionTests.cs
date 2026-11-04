@@ -188,7 +188,8 @@ public sealed class ModernSlabPlacementSessionTests
             await session.Block(Session.Target, "stone");
             await session.Block(Session.Target.Above(), "air");
         }
-        await AssertPredictionAndUse(session, protocol, BlockUseResult.Unknown);
+        // Preserve the old stair row as a deliberate positive admission regression; actual missing-context rows stay Unknown.
+        await AssertPredictionAndUse(session, protocol, condition == "stairs" ? BlockUseResult.Success : BlockUseResult.Unknown);
         if (condition is "body" or "far-body")
         {
             await Send(session, protocol, new ClientboundRemoveEntitiesPacket([42]));

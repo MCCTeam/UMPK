@@ -211,6 +211,7 @@ public sealed class LocalServer : IAsyncDisposable
             ["server-port"] = port.ToString(CultureInfo.InvariantCulture),
             ["query.port"] = port.ToString(CultureInfo.InvariantCulture),
             ["online-mode"] = "false",
+            ["use-native-transport"] = "false",
             // Vanilla 26.3 flips the white-list default to true, so a fresh isolated server would reject every login; force it (and its enforcer) off on every era, where it was already the default.
             ["white-list"] = "false",
             ["enforce-whitelist"] = "false",

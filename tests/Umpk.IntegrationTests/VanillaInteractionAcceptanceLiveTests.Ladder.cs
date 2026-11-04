@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using Umpk.Client;
 using Umpk.Client.Actions;
 using Umpk.Data.Java;
@@ -33,7 +34,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.Equal(protocol, version.Version.Protocol);
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
+        const string flatWorldSettings = """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""";
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: protocol == 777 ? flatWorldSettings : null);
         output.WriteLine($"Evidence: {server.DirectoryPath}");
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
         var capture = new Capture(version);
@@ -53,6 +55,20 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             Vec3d spawn = await client.InvokeAsync(c => c.State.Self.Position, ct);
             int x = ((int)Math.Floor(spawn.X) >> 4) * 16 + 8;
             int z = ((int)Math.Floor(spawn.Z) >> 4) * 16 + 8;
+            if (protocol == 777)
+            {
+                string[] lines = await File.ReadAllLinesAsync(Path.Combine(server.DirectoryPath, "server.properties"), ct);
+                var properties = lines.Where(line => line.StartsWith("level-type=", StringComparison.Ordinal) || line.StartsWith("generator-settings=", StringComparison.Ordinal))
+                    .ToDictionary(line => line[..line.IndexOf('=')], line => line[(line.IndexOf('=') + 1)..].Replace("\\:", ":", StringComparison.Ordinal).Replace("\\=", "=", StringComparison.Ordinal).Replace("\\\\", "\\", StringComparison.Ordinal));
+                Assert.Equal("flat", properties["level-type"]);
+                using JsonDocument expected = JsonDocument.Parse(flatWorldSettings);
+                using JsonDocument actual = JsonDocument.Parse(properties["generator-settings"]);
+                Assert.True(JsonElement.DeepEquals(expected.RootElement, actual.RootElement));
+                Assert.Equal(-64, await client.InvokeAsync(c => c.State.World.Dimension.MinY, ct));
+                foreach (string condition in new[] { $"execute if biome {x} 100 {z} minecraft:the_void", $"execute if block {x} -64 {z} minecraft:stone", $"execute if block {x} 99 {z} minecraft:stone", $"execute if block {x} 100 {z} minecraft:air" })
+                    Assert.Equal("Test passed", await server.CommandAsync(condition, ct));
+                await server.WriteAsync("ladder-generator-preconditions.json", new { properties, minY = -64, floorY = 99, preScenarioFill = true });
+            }
             Vec3d self = new(x + .5, 100, z + .5);
             var destination = new BlockPos(x + 2, 100, z + 1);
             await server.ConsoleAsync("difficulty peaceful", ct);
@@ -198,7 +214,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 observations.Add(new { scene.Name, scene.Face, scene.Hand, scene.Body, clicked, destination, cursor, slot, facing, resultState, nativeCount = count, inputs.prediction, expectedResult, expectedSwing, expectedPackets, observedPackets = actions.Length, actions = actions.Select(frame => new { frame.Flow, frame.WireId, packet = frame.Packet!.GetType().Name, payload = Convert.ToHexStringLower(frame.Payload), frame.Milliseconds }).ToArray() });
                 await server.WriteAsync("ladder-scenes.json", observations);
                 await server.WriteAsync("capture.json", capture.Frames);
-                Assert.Equal(inputs.before, inputs.after);
+                JsonSerializerOptions diagnosticOptions = new() { IncludeFields = true };
+                Assert.Equal(JsonSerializer.Serialize(inputs.before, diagnosticOptions), JsonSerializer.Serialize(inputs.after, diagnosticOptions));
                 Assert.True(inputs.prediction.SendPacket);
                 Assert.Equal(expectedResult, inputs.prediction.Result);
                 Assert.Equal(expectedSwing, inputs.prediction.Swing);

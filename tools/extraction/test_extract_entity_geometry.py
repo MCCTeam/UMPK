@@ -275,5 +275,180 @@ class VillagerGeometryExtractionTests(unittest.TestCase):
                     villager_profile(raw, scale_attribute="")
 
 
+
+class GeometryArtifactStreamingTests(unittest.TestCase):
+    """Exercise importer validation with tiny controlled archives, not a native campaign."""
+
+    def setUp(self) -> None:
+        import hashlib
+        import tempfile
+        import zipfile
+
+        self.directory = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        self.measurement = self.directory / "measurement"
+        self.measurement.mkdir()
+        self.official = self.directory / "official"
+        self.downloads = self.official / "downloads/1.10.2"
+        self.downloads.mkdir(parents=True)
+        self.client = self.downloads / "client.jar"
+        with zipfile.ZipFile(self.client, "w") as archive:
+            archive.writestr("controlled/Actor.class", b"unchanged-class")
+        self.server = self.downloads / "server.jar"
+        self.server.write_bytes(b"controlled-server-artifact")
+        self.preserved = self.directory / "client-unsigned.jar"
+        self.preserved.write_bytes(self.client.read_bytes())
+        self.raw = json.loads((Path(__file__).parent / "tests/fixtures/villager-box-transitions-1.10.2.json").read_text(encoding="utf-8"))
+        self.raw["origins"] = {"controlled.Actor": str(self.preserved)}
+        geometry = self.measurement / "geometry.json"
+        geometry.write_text(json.dumps(self.raw), encoding="utf-8")
+        self.metadata = {"downloads": {side: {"sha1": hashlib.sha1(path.read_bytes()).hexdigest()} for side, path in (("client", self.client), ("server", self.server))}}
+        self.receipt = {"version": "1.10.2", "protocol": 210, "status": "complete", "measurement_sha256": hashlib.sha256(geometry.read_bytes()).hexdigest(), "client_sha256": hashlib.sha256(self.client.read_bytes()).hexdigest(), "server_sha256": hashlib.sha256(self.server.read_bytes()).hexdigest(), "sources_sha256": {}, "preservation": {"unsigned_jar_sha256": hashlib.sha256(self.preserved.read_bytes()).hexdigest(), "unchanged_class_files": 1}}
+        self.write_receipts()
+
+    def write_receipts(self) -> None:
+        (self.downloads / "version.json").write_text(json.dumps(self.metadata), encoding="utf-8")
+        (self.measurement / "result.json").write_text(json.dumps(self.receipt), encoding="utf-8")
+
+    def read(self) -> dict:
+        from extract_entity_geometry import read_legacy
+
+        return read_legacy(self.measurement, self.official, [{"name": "1.10.2", "protocol": 210}])
+
+    def test_complete_record_preserves_every_returned_value(self) -> None:
+        self.assertEqual({"version": "1.10.2", "protocol": 210, "raw": self.raw, "receipt": self.receipt}, self.read())
+
+    def test_complete_record_does_not_require_contiguous_artifact_buffers(self) -> None:
+        from unittest.mock import patch
+
+        with patch.object(Path, "read_bytes", side_effect=AssertionError("Whole-file artifact buffers are forbidden in this test")):
+            self.assertEqual({"version": "1.10.2", "protocol": 210, "raw": self.raw, "receipt": self.receipt}, self.read())
+
+    def test_each_official_artifact_hash_still_rejects_corruption(self) -> None:
+        for side in ("client", "server"):
+            for algorithm in ("sha1", "sha256"):
+                with self.subTest(side=side, algorithm=algorithm):
+                    metadata, receipt = copy.deepcopy(self.metadata), copy.deepcopy(self.receipt)
+                    try:
+                        if algorithm == "sha1":
+                            self.metadata["downloads"][side]["sha1"] = "0" * 40
+                        else:
+                            self.receipt[side + "_sha256"] = "0" * 64
+                        self.write_receipts()
+                        with self.assertRaisesRegex(ValueError, f"^Official {side} artifact mismatch: 1[.]10[.]2$"):
+                            self.read()
+                    finally:
+                        self.metadata, self.receipt = metadata, receipt
+                        self.write_receipts()
+
+    def test_preserved_class_bytes_are_still_compared(self) -> None:
+        import hashlib
+        import zipfile
+
+        with zipfile.ZipFile(self.preserved, "w") as archive:
+            archive.writestr("controlled/Actor.class", b"changed-class")
+        self.receipt["preservation"]["unsigned_jar_sha256"] = hashlib.sha256(self.preserved.read_bytes()).hexdigest()
+        self.write_receipts()
+        with self.assertRaisesRegex(ValueError, "^Original geometry client class preservation failed$"):
+            self.read()
+
+
+class GeometryOwnedFileCacheTests(unittest.TestCase):
+    def setUp(self) -> None:
+        from tempfile import TemporaryDirectory
+        self.directory = Path(self.enterContext(TemporaryDirectory()))
+        self.path = self.directory / "artifact.bin"
+        self.payload = bytes(range(256)) * 32
+        self.path.write_bytes(self.payload)
+
+    def test_both_streamed_algorithms_preserve_independent_known_bytes(self) -> None:
+        import hashlib
+        from unittest.mock import patch
+        from extract_entity_geometry import sha
+        for payload in (b"", b"abc", self.payload):
+            self.path.write_bytes(payload)
+            for algorithm in ("sha1", "sha256"):
+                with self.subTest(algorithm=algorithm, bytes=len(payload)):
+                    expected = getattr(hashlib, algorithm)(payload).hexdigest()
+                    with patch.object(Path, "read_bytes", side_effect=AssertionError("Whole-file reads are forbidden")):
+                        self.assertEqual(expected, sha(self.path, algorithm))
+                    self.assertEqual(payload, self.path.read_bytes())
+
+    def test_cache_advice_uses_only_the_owned_open_file_descriptor(self) -> None:
+        import os
+        from unittest.mock import patch
+        from extract_entity_geometry import sha
+        original = self.path.stat()
+        unrelated = self.directory / "unrelated.bin"
+        unrelated.write_bytes(b"unrelated")
+        observed = []
+        with unrelated.open("rb") as other:
+            def advise(fd, offset, length, advice):
+                stat = os.fstat(fd)
+                self.assertEqual((original.st_dev, original.st_ino), (stat.st_dev, stat.st_ino))
+                self.assertNotEqual(other.fileno(), fd)
+                self.assertEqual((0, 0, os.POSIX_FADV_DONTNEED), (offset, length, advice))
+                observed.append(fd)
+            with patch.object(os, "posix_fadvise", side_effect=advise):
+                sha(self.path)
+            self.assertEqual(1, len(observed))
+            with self.assertRaises(OSError):
+                os.fstat(observed[0])
+            self.assertEqual(b"unrelated", other.read())
+
+    def test_missing_platform_advice_keeps_the_digest_contract(self) -> None:
+        import os
+        import hashlib
+        from unittest.mock import patch
+        from extract_entity_geometry import sha
+        with patch.object(os, "posix_fadvise", None):
+            self.assertEqual(hashlib.sha256(self.payload).hexdigest(), sha(self.path))
+
+    def test_advice_io_failure_is_not_hidden_as_a_successful_digest(self) -> None:
+        import errno
+        import os
+        from unittest.mock import patch
+        from extract_entity_geometry import sha
+        error = OSError(errno.EIO, "controlled advice failure")
+        with patch.object(os, "posix_fadvise", side_effect=error):
+            with self.assertRaises(OSError) as actual:
+                sha(self.path)
+        self.assertIs(error, actual.exception)
+
+    def test_failed_hash_retains_the_primary_error_without_attempting_advice(self) -> None:
+        import hashlib
+        import os
+        from unittest.mock import patch
+        from extract_entity_geometry import sha
+        error = OSError("controlled hash read failure")
+        with patch.object(hashlib, "file_digest", side_effect=error), patch.object(os, "posix_fadvise", side_effect=OSError("secondary advice failure")) as advice:
+            with self.assertRaises(OSError) as actual:
+                sha(self.path)
+            advice.assert_not_called()
+        self.assertIs(error, actual.exception)
+
+    def test_successful_class_verification_releases_both_owned_archive_readers(self) -> None:
+        import os
+        import zipfile
+        from unittest.mock import patch
+        import extract_entity_geometry as geometry
+        control = GeometryArtifactStreamingTests("test_complete_record_preserves_every_returned_value")
+        self.addCleanup(control.doCleanups)
+        control.setUp()
+        constructor = zipfile.ZipFile
+        opened, advised = [], set()
+        def open_archive(*args, **kwargs):
+            archive = constructor(*args, **kwargs)
+            opened.append(archive)
+            return archive
+        def advise(fd, offset, length, advice):
+            self.assertEqual((0, 0, os.POSIX_FADV_DONTNEED), (offset, length, advice))
+            for archive in opened:
+                if archive.fp is not None and archive.fp.fileno() == fd:
+                    advised.add(Path(archive.filename))
+        with patch.object(geometry.zipfile, "ZipFile", side_effect=open_archive), patch.object(os, "posix_fadvise", side_effect=advise):
+            self.assertEqual(control.raw, control.read()["raw"])
+        self.assertEqual({control.client, control.preserved}, advised)
+        self.assertTrue(all(archive.fp is None for archive in opened))
+
 if __name__ == "__main__":
     unittest.main()

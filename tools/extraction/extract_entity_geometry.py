@@ -5,8 +5,10 @@ import gzip
 import hashlib
 import io
 import json
+import os
 import re
 from pathlib import Path
+from typing import BinaryIO
 import zipfile
 
 from verify_entity_box_transitions import centered, finite, refresh, size, verify
@@ -254,9 +256,18 @@ def fixture_bytes(document: dict, *, compressed: bool) -> bytes:
     return output.getvalue()
 
 
-def sha(path: Path) -> str:
+def _discard_file_cache(stream: BinaryIO) -> None:
+    advise = getattr(os, "posix_fadvise", None)
+    dont_need = getattr(os, "POSIX_FADV_DONTNEED", None)
+    if advise is not None and dont_need is not None:
+        advise(stream.fileno(), 0, 0, dont_need)
+
+
+def sha(path: Path, algorithm: str = "sha256") -> str:
     with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+        digest = hashlib.file_digest(stream, algorithm).hexdigest()
+        _discard_file_cache(stream)
+        return digest
 
 
 def group_legacy(records: list[dict]) -> dict[int, list[dict]]:
@@ -334,7 +345,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict], *, source_audit
     metadata = json.loads((seed / "version.json").read_text(encoding="utf-8"))
     for side in ("client", "server"):
         artifact = seed / (side + ".jar")
-        if sha(artifact) != receipt[side + "_sha256"] or hashlib.sha1(artifact.read_bytes()).hexdigest() != metadata["downloads"][side]["sha1"]:
+        if sha(artifact) != receipt[side + "_sha256"] or sha(artifact, "sha1") != metadata["downloads"][side]["sha1"]:
             raise ValueError(f"Official {side} artifact mismatch: {version}")
     source_hashes = receipt.get("sources_sha256")
     if source_hashes is None:
@@ -402,7 +413,7 @@ def read_legacy(root: Path, official: Path, catalog: list[dict], *, source_audit
         scale_attribute = living_scale_attribute((official / f"{version}-client-decompiled" / source_name).read_text(encoding="utf-8"))
         mappings = seed / "client_mappings.txt"
         if "client_mappings" in metadata["downloads"]:
-            if sha(mappings) != receipt.get("mappings_sha256") or hashlib.sha1(mappings.read_bytes()).hexdigest() != metadata["downloads"]["client_mappings"]["sha1"]:
+            if sha(mappings) != receipt.get("mappings_sha256") or sha(mappings, "sha1") != metadata["downloads"]["client_mappings"]["sha1"]:
                 raise ValueError("Official entity geometry mappings changed")
         elif receipt.get("mappings_sha256") is not None:
             raise ValueError("Native entity geometry names an unavailable mappings artifact")
@@ -429,6 +440,8 @@ def read_legacy(root: Path, official: Path, catalog: list[dict], *, source_audit
         classes = {name for name in original.namelist() if name.endswith(".class")}
         if classes != {name for name in measured.namelist() if name.endswith(".class")} or len(classes) != receipt["preservation"]["unchanged_class_files"] or any(original.read(name) != measured.read(name) for name in classes):
             raise ValueError("Original geometry client class preservation failed")
+        _discard_file_cache(original.fp)
+        _discard_file_cache(measured.fp)
     return {"version": version, "protocol": protocol, "raw": raw, "receipt": receipt} | ({"entity": receipt["entity"]} if role else {}) | ({"scale_attribute": scale_attribute} if mapped or mapped_farm else {})
 
 

@@ -3186,7 +3186,7 @@
   },
   "acceptedLegacyQuartzPlacement20261104": {
     "status": "passed",
-    "scope": "Bounded native source/getter/stream and connected runtime pre-send/result/swing; dedicated live and final composed producer gates not run",
+    "scope": "Bounded native source/getter/stream, connectedruntime and dedicated actual47/340live acceptance; final newproducer gates separate",
     "protocols": [
       47,
       107,
@@ -3219,6 +3219,26 @@
     "all17Expected": 52481,
     "IntegrationUnchanged": 72,
     "report": "docs/verification/legacy-quartz-placement.md",
-    "remaining": "Dedicated native server quartz acceptance; fresh new-source13/finalconsumer/package/AOT/publishedCI; customNBT/components/unrepresentablecounts and localBlockItemeffects stay separate."
+    "remaining": "Fresh finalconsumer/package/AOT/actualpublishedheadCI and fullversionmatrix; customNBT/components/unrepresentablecounts/localBlockItemeffects stay separate",
+    "live": {
+      "status": "passed",
+      "releases": [
+        "1.8.9",
+        "1.12.2"
+      ],
+      "protocols": [
+        47,
+        340
+      ],
+      "currentWholeLegPasses": 2,
+      "currentScenes": 24,
+      "old47": "Genuine wholelegfailure retained; nativeblock/count31+USEonly beforeexpected2actual1 swing assertion",
+      "entry": "5eef303b/ae5e6d14,53actualsource/PDBdocs/formatter0",
+      "evidence": "/home/anon/Projects/MinecraftOfficial/runs/quartz-live-entry-a4ebcaa-20261104-v2/normal73-quartz-red-green-v1/TERMINAL-ACCEPTANCE.json",
+      "sha256": "cd06826bd71c4b92b68976d6daf7f5d1e21e9a48714dfa96c3417d83c40d94cf",
+      "cleanup": "78cb3d1f/all52HOSTgone/3nativeexit0/strictEOF/ports/maxOOMzero"
+    },
+    "normalIntegrationAfterLiveTest": 73,
+    "all17ExpectedAfterLiveTest": 52482
   }
 }

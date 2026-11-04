@@ -8,7 +8,7 @@ The first committed implementation checkpoint was `c015405` on `codex/vanilla-bl
 
 The [legacy quartz slice](legacy-quartz-placement.md) connects all eleven datasets from 47 through 340 to the existing full-box placement owner. Original vanilla verifies 351 getter/stream operations; source separates blocked pre-send rejection from default Adventure failure after USE. Protocol 47 captures native nonnegative metadata for block and air actions while preserving raw received stack bytes.
 
-All 165 connected, 8,084 adjacent and full 37,803 Client cases pass without skips after the three measured owner stages. The deliberate addition is 165; the expected seventeen-suite total becomes 52,481, with Integration unchanged at 72. Dedicated quartz live acceptance, the new composed producer gates, custom permission NBT and local BlockItem effects remain open.
+All 165 connected, 8,084 adjacent and full 37,803 Client cases pass without skips after the three measured owner stages. The deliberate addition is 165; the expected seventeen-suite total becomes 52,481, with Integration unchanged at 72. Dedicated 1.8.9/47 and 1.12.2/340 live legs now pass all twenty-four scenes after reproducing the old missing swing. The new live theory changes normal Integration to 73 (49 passes and 24 named opt-in skips), so the expected total is 52,482. Fresh final producer gates, custom permission NBT and local BlockItem effects remain separate.
 
 ## Native interaction live checkpoint, 2026-11-04
 

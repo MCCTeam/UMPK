@@ -16,7 +16,7 @@ public sealed class ButtonPreUsePredictionSessionRuntimeTests
 {
     private sealed record Observation(int Current, int Received, BlockUseResult NextUse);
 
-    public static IEnumerable<object[]> Cases() => new[] { 766, 777 }.SelectMany(protocol => new[] { "unpowered-main", "powered-main", "unpowered-offhand", "cancel-before" }.Select(scene => new object[] { protocol, scene }));
+    public static IEnumerable<object[]> Cases() => new[] { 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777 }.SelectMany(protocol => new[] { "unpowered-main", "powered-main", "unpowered-offhand", "cancel-before" }.Select(scene => new object[] { protocol, scene }));
 
     [Theory]
     [MemberData(nameof(Cases))]

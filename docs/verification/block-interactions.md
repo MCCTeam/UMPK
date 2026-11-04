@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Fresh consumer, AOT and package checkpoint, 2026-11-04
+
+The [current consumer checkpoint](interaction-checkpoint-20261104.md) binds all thirteen source-equivalent libraries to `beda621`. Fresh DMCBK 1,999 and MCC 918 tests pass without skips, along with 14 pose and 17 action checks. All 33 dependency and 26 test-runtime DLL comparisons match, all 143 recorded UMPK compiler references match, sibling state stays unchanged, and the complete 145-file MCC output is frozen.
+
+The native executable fits the unchanged size limit at 24,849,120 bytes. After correcting the fixture location, the unchanged smoke test executes and passes once with the exact CI counter guard; the original failed attempt remains recorded. All fourteen local packages and thirteen symbol packages verify, with exact producer DLL/XML/PDB contents and commit metadata. After fixing a signed-package hash comparison in the harness, the isolated package consumer constructs and disposes protocols 47/777 with all thirteen libraries matched. All seven CI jobs succeed on published `beda621`. Remaining behavior and final native/live/repository acceptance remain required.
+
 ## Legacy custom model mining, 2026-11-04
 
 The [legacy mining identity fix](legacy-custom-model-mining-identity.md) uses preserved original integers on protocols 766–768 before generic component equality. Equal values retain progress, different integers reset it even when their float projections match, and unavailable originals end the held request safely. Native frames and explicitly local copy/mutation controls stay distinct.

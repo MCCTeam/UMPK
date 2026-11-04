@@ -1,0 +1,49 @@
+# Consumer, Native AOT and package checkpoint, 2026-11-04
+
+## Scope and producer
+
+Fresh DMCBK and MCC builds and tests pass against the source-equivalent producer for `beda621d89bdecff50a62fda87d0a336b486e129`. This checkpoint includes the modern crouching-motion fix, default protocol-777 tool transformations, modern custom model mining identity and legacy custom model wire/mining fixes. It does not complete the interaction inventory or final release acceptance.
+
+The immutable archive SHA256 is `766f6398d3eb83d228968a50969bfe8903bf7742e739393d643bc8b0f9fedb02`. `/home/anon/Projects/MinecraftOfficial/runs/final-interaction-producer13-beda621-20261104-v1` contains the thirteen DLL/PDB/XML triples, source archive and proof. `PRODUCER13.json` has SHA256 `a8b5a0c801798a14536861436da5bc023a27df3f72bed42ff99c66aaaa315998`; `SOURCE-EQUIVALENCE13.json` has SHA256 `799ae08e98ffd19089adcbb409be18b98743ab308ad231901e4c3f816e9470c3`. All 1,280 authored library sources match the retained PDB source records. The retained binaries have separately recorded build origins; they were not all rebuilt from this commit. Project definitions and public API files remain unchanged.
+
+The Client DLL is `1eed2ecc481dff943f7a9e0ad44392d70a66eef32bc6b78eea0293557ffd8aef` and Protocol DLL is `83d64ac9697d9918a2937440100c3bea265c659329ab28e03082d75755ced4ee`. Their focused and unfiltered suite results are retained in the [legacy mining](legacy-custom-model-mining-identity.md) and [codec](legacy-custom-model-data.md) reports. This checkpoint reuses those tests and does not claim a new unfiltered seventeen-suite run.
+
+## Consumer results
+
+The external run is `/home/anon/Projects/MinecraftOfficial/runs/consumer-beda621-current-20261104-v1`. SDK 10.0.401 restores and builds the existing sibling projects through `local-projects.targets`, with separate artifacts and the admitted libraries. DMCBK source stays at `af22688e783fb2876ad55f06e0654a7a4c6c5641`; MCC stays at `ea4d8f011608ad993808afa0e53ded40c0ac3f80`. Existing sibling edits remain intact.
+
+| Check | Executed result |
+| --- | --- |
+| DMCBK pose targeting | 14 passed, zero skipped |
+| DMCBK held/view mining and block commands | 17 passed, zero skipped |
+| Full DMCBK suite | 1,999 passed, zero skipped |
+| Full MCC suite | 918 passed, zero skipped |
+| Dependency DLL equality | All 33 comparisons match |
+| Test-runtime DLL equality | All 26 comparisons match before and after testing |
+| Actual compiler inputs | 143 UMPK references across twelve main compiler profiles match the thirteen-library producer |
+| Frozen MCC output | All 145 files recorded in the complete binary manifest |
+| Preserved state | Sibling source/Git state, 24 original output roots, 39 producer files and producer receipts unchanged |
+
+There are twelve main consumer Csc processes plus one French satellite resource compile, with no producer compiler. The exact actual-reference audit is separate from copy-local equality and runs offline over the recorded compiler inputs; no build or test is repeated for that audit. The whole consumer run takes 122.034 seconds and peaks at 2,642,284,544 bytes under the 4 GiB/200% CPU/no-swap/no-core-dump cap.
+
+`commands.json`, SHA256 `1b882f8ae5dbe0c2338539c542c4e3a5bd44f945336b9428f6beeb7f54ff39e3`, records all eight exact restore/build/test command argument arrays, working directories, processor settings, timings and log hashes. `ACTUAL-REFERENCE-EQUALITY13.json`, SHA256 `9f8d2d871a3e54e1b27b73685c0ed1c3c016414ece7306a18c51251ba3eab61f`, records every compiler-reference comparison. `frozen-mcc-manifest.json`, SHA256 `d63c6336fbff9550cb34cc2acf869015762a256573677a02291cb8541b3bb1d5`, is the complete reusable MCC output manifest. Raw logs and binaries remain outside Git.
+
+`TERMINAL-ACCEPTANCE.json`, SHA256 `a376f68828c9f71331f01edb446460326b8e430f2b0b65e55a1c0de76ac108c5`, verifies all 37 observed HOST process identities absent, the successful exact unit inactive with MainPID zero, and its cgroup removed or empty. The unit is `umpk-beda-consumers-20261104-v1.service`, invocation `2e64393c3a814c56a9756d4b982fdbc5`. There is no automatic retry.
+
+## Native AOT acceptance and retained harness failure
+
+The separate `aot-package-beda621-current-20261104-v2` run publishes a 24,849,120-byte native MinimalBot, SHA256 `4eaa4dbc699d5053b668625dddd2dcee5a401fb7a2fe4ef207869a59d4cb1d89`, below the strict 25,165,824-byte limit by 316,704 bytes. Its 184 actual Csc references and eleven actual ILC producer references match the frozen producer. Publishing leaves the tested producer files unchanged.
+
+The first smoke attempt fails before launching that bot because it cannot find a small implemented protocol-47 corpus frame. The compiled fixture resolves its corpus relative to an actual solution ancestor or testhost working directory; the previous preflight established the launcher directory but did not prove the testhost directory. That harness failure and its original TRX remain preserved. The corrected continuation copies the identical 136-file runtime beneath a fresh exact source copy, providing a physical solution ancestor independently of the testhost working directory. It changes no test, corpus or production source and repeats no compiler or publish.
+
+`AOT-TERMINAL-CLEANUP.json`, SHA256 `10814b032a4bb5eb8d4c4873812e2e9242c24b0135545ec9b4d1d3011393132a`, verifies all fourteen observed HOST process identities from the first attempt absent, MainPID zero, cgroup removal, and unchanged source, producer files and receipts.
+
+The continuation is `/home/anon/Projects/MinecraftOfficial/runs/aot-smoke-beda621-fixture-root-20261104-v3`. The unchanged test executes and passes once, with zero skips, decoding protocol-47 and protocol-776 frames and joining the protocol-777 fake server through the native bot. The byte-identical CI guard independently requires exactly one executed passing test and matching TRX counters. The actual native `MinimalBot --aot-smoke` process is observed. `aot-RESULT.json` has SHA256 `104717577172a13062484da65b1675f3ac78c5e285dd48452a883c14b7e075f6`; the passing TRX has SHA256 `eb9f7ae808c066adbb1de9d5805662f92ae1de28f5f233487da3c648ec7279f6`. Both runtime copies, both 4,436-file source copies, all 39 producer files, proof receipts and the published binary remain unchanged. This result completes the required smoke for the retained publish. `TERMINAL-ACCEPTANCE.json`, SHA256 `fadaa96297a25e32e856569efed8b9fe23ead6ed32ace2612067dcace4e59120`, verifies all six observed HOST process identities absent, the exact successful unit inactive/dead with MainPID zero, and its cgroup removed.
+
+The first local package run creates and verifies fourteen primary packages and thirteen symbol packages. All thirteen DLL, thirteen XML and thirteen PDB contents match the frozen producer, and all twenty-seven nuspec repository commits identify `beda621`. The run then stops before isolated consumer restore because its dependency-feed guard compares raw ZIP SHA512 with NuGet signed-package content hashes. The first mismatch is signed Brigadier.NET 2.0.15-beta; NuGet records these as different hash meanings, as described by its [package metadata contract](https://github.com/NuGet/Home/wiki/Nupkg-Metadata-File) and [reader implementation](https://source.dot.net/NuGet.Packaging/PackageArchiveReader.cs.html). The completed packages and failed guard remain retained. The continuation uses the pinned SDK NuGet reader to compute canonical content hashes and validate signed archive integrity, while independently requiring raw ZIP SHA512 and SHA256. All nine dependency packages pass these checks; no cache bytes or expected hashes change.
+
+`package-beda621-current-20261104-v1/TERMINAL-CLEANUP.json`, SHA256 `5284d975b3f7c3c3af15ade900f7102ddb61713c40c2324d6ba16627e735596d`, verifies all twenty-nine observed HOST process identities absent, MainPID zero and cgroup removal. No packages are publicly published.
+
+The consumer-only continuation is `package-consumer-beda621-continuation-20261104-v2`. It reuses all twenty-seven unchanged archives and runs a program from an isolated feed/cache that constructs and disposes clients for protocols 47 and 777. All thirteen runtime DLL hashes match the producer. Its six commands pass in 4.52 seconds; exactly two small harness Csc processes compile the SDK hash reader and package consumer, with no producer/AOT compiler or repack. This proves package installation and public client construction/disposal, not live-server interactions. Source, siblings, all producer files and AOT proof remain unchanged.
+
+`packages-RESULT.json` has SHA256 `64025db37a2cdf7df18ac338e4e928dc16cebd1198d5042c2f589154fdf8ab44`; `ACTUAL-SDK-CONTENT-HASH9.json` has SHA256 `debea34278975c48058eb0ad19f9191c011b6681b103252a085ca458a91612bf`; the six exact command arrays and log hashes are in `packages-commands.json`, SHA256 `e0dd2b02ed6c923364659b0ae402ce049f1dec7096043d4c093d137da3cc1979`. `TERMINAL-ACCEPTANCE.json`, SHA256 `faa8a12153a659b034ff55e0fae9f806b2c784c5649e7ace8f202f696383a79e`, verifies all ten observed HOST identities absent, the successful exact unit inactive/dead with MainPID zero, and cgroup removal. Final repository gates, specialized native/live scenarios and the fifty-protocol/seventy-five-release matrix remain separate requirements. All seven jobs succeed on [the published beda621 CI run](https://github.com/MCCTeam/UMPK/actions/runs/41753009720): package validation, format, AOT smoke/size, dataset/generated freshness, and build/tests on macOS, Ubuntu and Windows. The compact status receipt is `.scratch/pr10-ci-beda621-status-20261104-v1.json`, SHA256 `4459cd77faf45ad4a6f08bc46329a6b803dbe0776730968a1ec81f00894700b0`. That receipt records actual head and job conclusions; it provides no separate raw-log/count/skip/size audit, and later published heads require their own CI result.

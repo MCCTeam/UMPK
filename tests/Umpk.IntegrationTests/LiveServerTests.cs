@@ -535,11 +535,21 @@ public sealed class LiveServerTests
                         client, c => (c.State.HasWorld ? c.State.World.GetBlockStateId(chestPos) : 0) != 0, TimeSpan.FromSeconds(6), ct.Token);
                 }
 
-                // Fill chest slot 0 with stone from the console. 1.17 replaced `replaceitem` with `item replace`; the chest leg's drivable band starts at 1.14, so only those two forms apply (the pre-1.13 setblock-with-Items-NBT form never runs here).
+                // Native replaceitem uses slot.container.N through1.12.2;1.13 removes slot. and1.17 replaces the command with item replace.
+                string containerSlot = protocol < 393 ? "slot.container.0" : "container.0";
                 string fill = protocol >= 755
                     ? $"item replace block {chestPos.X} {chestPos.Y} {chestPos.Z} container.0 with minecraft:stone 5"
-                    : $"replaceitem block {chestPos.X} {chestPos.Y} {chestPos.Z} container.0 minecraft:stone 5";
+                    : $"replaceitem block {chestPos.X} {chestPos.Y} {chestPos.Z} {containerSlot} minecraft:stone 5";
                 await server.SendConsoleAsync(fill, ct.Token);
+                string legacyChestFound = $"Successfully found the block at {chestPos.X},{chestPos.Y},{chestPos.Z}.";
+                if (protocol < 393)
+                {
+                    int fillLogStart = server.LogText.Length;
+                    await server.SendConsoleAsync($"testforblock {chestPos.X} {chestPos.Y} {chestPos.Z} minecraft:chest -1 {{Items:[{{Slot:0b,id:\"minecraft:stone\",Count:5b}}]}}", ct.Token);
+                    Assert.True(await WaitUntilAsync(
+                        () => server.LogText[Math.Min(fillLogStart, server.LogText.Length)..].Contains(legacyChestFound, StringComparison.Ordinal),
+                        TimeSpan.FromSeconds(8), ct.Token), $"{versionName}: native chest slot0 did not report minecraft:stone count5 before client opening.");
+                }
 
                 // Look at the chest so the use_item_on hit lands on the intended block, then right-click.
                 if (canMove)
@@ -578,7 +588,9 @@ public sealed class LiveServerTests
                             client,
                             c => c.State.Inventory.HasOpenContainer
                                 && c.State.Inventory.ContainerSlots is { Count: > 0 } slots
-                                && !slots[0].IsEmpty,
+                                && !slots[0].IsEmpty
+                                && slots[0].Item.Id == Identifier.Minecraft("stone")
+                                && slots[0].Count == 5,
                             TimeSpan.FromSeconds(8), ct.Token);
 
                         // Click: quick-move the stone out of chest slot 0, then prove the round-trip on BOTH sides. Client side: the moved slot must stay empty after reconciliation (a rejected click is resynced by the server, refilling it). Server side: the chest block entity must actually have lost the stone, probed authoritatively through the console (`data get block ... Items`) since an exactly-correct prediction produces zero container traffic on the 1.17.1+ state-id protocol (the click's changed-slots map already matches the server result, so nothing is broadcast).
@@ -597,12 +609,16 @@ public sealed class LiveServerTests
                             bool serverEmptied = false;
                             for (int attempt = 0; attempt < 3 && !serverEmptied; attempt++)
                             {
-                                await server.SendConsoleAsync(
-                                    $"data get block {chestPos.X} {chestPos.Y} {chestPos.Z} Items", ct.Token);
+                                string emptyProbe = protocol < 393
+                                    ? $"testforblock {chestPos.X} {chestPos.Y} {chestPos.Z} minecraft:chest -1 {{Items:[]}}"
+                                    : $"data get block {chestPos.X} {chestPos.Y} {chestPos.Z} Items";
+                                await server.SendConsoleAsync(emptyProbe, ct.Token);
                                 serverEmptied = await WaitUntilAsync(
                                     () =>
                                     {
                                         string tail = server.LogText[Math.Min(logStart, server.LogText.Length)..];
+                                        if (protocol < 393)
+                                            return tail.Contains(legacyChestFound, StringComparison.Ordinal);
                                         return tail.Contains("block data: []", StringComparison.Ordinal)
                                             || (tail.Contains("block data:", StringComparison.Ordinal)
                                                 && !tail.Contains("stone", StringComparison.Ordinal));

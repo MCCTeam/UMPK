@@ -3396,7 +3396,7 @@
     "fullGoalClosed": false
   },
   "copperStatuePropertiesCandidate20261104": {
-    "status": "not run: compiled corrected Data/GREEN pending",
+    "status": "passed bounded native/data/connected runtime; final acceptance open",
     "scopedReport": "docs/verification/copper-statue-properties.md",
     "nativeEvidence": "102a6d71:40blocks/1280identities/5originalregistryJVMs;cleanup41bc7f14",
     "causalFailures": "312e0f5d:5missing-domainData failures+mappingFact+7exacttarget-before-USE failures;no setup faults",
@@ -3407,8 +3407,10 @@
       "Data": 2498,
       "all17": 52779
     },
-    "compiledGreen": "not run",
+    "compiledGreen": "5Data+8Client+unfiltered2498Data executedPASS0skip;63f88816/cleanup685e0010",
     "ordinaryActivationAndBlockEntityContinuity": "unknown/unimplemented; no claim",
-    "fullGoalClosed": false
+    "fullGoalClosed": false,
+    "producer13": "Rootadmittedacd203db;source6984e32/Client3943+Datadb998/1282PDBsources/39files",
+    "localFullClient38095": "not run; plannedjointfullwithnextboundedruntime"
   }
 }

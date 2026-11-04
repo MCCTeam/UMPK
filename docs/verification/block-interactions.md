@@ -1,10 +1,10 @@
 # Vanilla block interaction audit
 
-## Copper-statue data candidate, 4 November 2026
+## Copper-statue property acceptance, 4 November 2026
 
-The [copper-statue property correction](copper-statue-properties.md) adds the missing native pose domain and restores wet-state flags on the eight statue variants in protocols 773–777. Original native 1,280-state observations, thirteen causal failing assertions and the exact 40-record generated comparison support the candidate; the other 60 generated files are unchanged.
+The [copper-statue property correction](copper-statue-properties.md) now passes its exact five Data and eight connected runtime checks against the source-verified CI library, followed by all 2,498 Data tests without skips. The composed source-equivalent producer is `6984e32`, with chain Client `39430914` and corrected Data.Java `db9983c0`; actual compiler references and runtime origins stay separate.
 
-Corrected library compilation and passing runtime checks are pending CI and exact artifact admission. Earlier chain, falling-block and consumer checkpoints below retain their separate producer and executed results.
+The local combined Client suite and final live, repository, consumer, package/AOT and published-head checks remain open. Earlier checkpoint reports below retain their own source and executed scope.
 
 ## Chain placement runtime, 4 November 2026
 

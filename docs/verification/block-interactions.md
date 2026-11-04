@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Current accepted evidence, 4 November 2026
+
+The [current checkpoint](interaction-checkpoint-20261104-current.md) retains the unchanged `d24824e` thirteen-library tuple, actual Client 630/3,837/full 39,003 and the prior d9 local 17 suites (53,663 passes/27 named skips, total 53,690). Current consumers14/17/1999/918, local AOT24890480bytes/exactly1smoke and14primary/13symbol packages/13triples/isolated47+777 pass with owned cleanup. Actual mixed build origins remain explicit; no build at the later fixture publication is claimed.
+
+Entry7 `19552216`, DLL`0b1169ad`/PDB`71ac7c2c`, binds52authored/56PDB sources and passes normal49/27 (`987884a8`, cleanup`ffd43686`). Its dedicated ladder777 test executes and passes all 10 scenes with physics/native block and stack/packet/replay checks; acceptance`e6d21b7f`/cleanup`10a82350` verifies21owned exits, native unforced0 and closed ports. This is10/91 specialized scenes with81 remaining, separate from60/125 BASIC/general acceptance. The old45 entry3/71 and new15 entry5/d9 rows retain actual binaries/source provenance; BASIC05 is running and receives no credit before canonical terminal audit. Earlier failed Ladder trials retain their2scene and9scene prefixes and JSON structural-fix history; these are not added to the current10scenes.
+
+Prior published d9 CI run41903242091 attempt2 completes all seven jobs successfully, with actual Ubuntu53662passes/28namedCI skips and separate remote AOT24886328bytes/one smoke. The prepared test-only fixture commit`76f7863` has its next CI pending; Root admission`78b14b8a` verifies all 52 authored Git/PDB bytes at local fixture commit`76f7863`, with production files unchanged from d248. This does not relabel prior d9 tests or binaries as a new-head run. Counts, dataset/language, both Python suites, replacement50 and legacy18 reconstruction stages pass as retained prefixes; geometry FAILED_RESOURCE at4GiB/max23/OOM0, six selected stages remain unaccepted and11other reconstruction groups are blocked. No complete33-gate,125-row,91-scene or interaction-goal closure is claimed.
+
 ## Native fixture cleanup correction, 4 November 2026
 
 The first26.3 ladder pilot stopped before placement because killed chest minecarts spilled item entities. Captured packets prove all13 original removals and55 residual items; the fixture adds an explicit native item kill and retains its strict empty-entity checks. The [current entry](final-interaction-live-entry.md) passes its corrected one-compiler build and normal49PASS/27namedSKIP again. The original failed pilot and exact unforced server/process/port cleanup remain recorded; corrected native/live125 acceptance is still pending.

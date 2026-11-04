@@ -1,5 +1,9 @@
 # Vanilla block interaction audit
 
+## Native fixture cleanup correction, 4 November 2026
+
+The first26.3 ladder pilot stopped before placement because killed chest minecarts spilled item entities. Captured packets prove all13 original removals and55 residual items; the fixture adds an explicit native item kill and retains its strict empty-entity checks. The [current entry](final-interaction-live-entry.md) passes its corrected one-compiler build and normal49PASS/27namedSKIP again. The original failed pilot and exact unforced server/process/port cleanup remain recorded; corrected native/live125 acceptance is still pending.
+
 ## Published live entry and current consumers, 4 November 2026
 
 The [dedicated interaction entry](final-interaction-live-entry.md) adds chain, falling393 and ladder native legs through the existing physics-enabled harness. Its corrected one-compiler build binds 52 authored sources/56 PDB documents and the exact d248 libraries. Normal76 is49 executed passes/27 named opt-in skips; this enables the future deep legs and final125, with no live acceptance claimed yet. The prior chain-fixture compile failure remains preserved.

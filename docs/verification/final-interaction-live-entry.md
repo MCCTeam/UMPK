@@ -1,5 +1,13 @@
 # Final interaction live-test entry
 
+## Native dropped-item precondition, 4 November 2026
+
+The first26.3 pilot failed before any ladder action while waiting for an empty entity store. The wire trace confirms all13 original entities were removed; five chest minecarts emitted99 item entities and55 remained after merges. Original container removal drops cargo independently of the ordinary entity-drop gamerule. The fixture now performs one explicit native item-entity kill after the original global kill, then retains both the strict received-empty-store and independent native no-entity checks. No production lifecycle change, relaxed assertion or increased timeout is used.
+
+Corrected entry acceptance `3d70e448` under `final-entry118-ladder-chain-falling-d248-20261104-v3` binds DLL `a8b8a97ec78f3e9e050293c9d071b959b9347a5d865a1d6afd71f7f99495a66a` and PDB `5f35625ce8cb8c677ceca79c289d012833a64ec0cbf46ed9b77e59eb369ec7a3`, all56 compiler/PDB documents and eight owned exits. Normal acceptance `070c3b91` under `final-entry118-d248-normal76-20261104-v2` again verifies49 executed passes/27 literal skips and four owned exits, with unchanged source/runtime/producer files. The failed pilot remains failed, cleanup `be655c75` records unforced native exit0, seven observed HOST exits and both ports closed. The corrected native pilot and final125 still must execute; no live pass is claimed by the setup correction.
+
+## Earlier published entry checkpoint
+
 The dedicated physics-enabled live entry now includes chain placement, protocol-393 falling bounds and stone-wall ladder scenarios. It adds three opt-in tests through the existing harness. The planned deep legs contain 46 chain scenes, five falling scenes and 40 ladder scenes. Their native server runs have not executed at this publication checkpoint; building the harness does not close those behavior rows or the final125 version matrix.
 
 The corrected entry passes normal formatting and one Integration compiler against the admitted d248 thirteen-library tuple. DLL `4279a064daf9f6a8ed53b39d3a3bad3b2dd1e12883129dd6634d94c5ab366e1a` and PDB `e815d4f3e883cd6d6b61ab1195db1371559ff1dcc11654a6dd8661cae1d8e9b6` bind 56 actual compiler/PDB documents, including 52 authored Integration sources. All 20 frozen references and 39 producer files match; no producer or TestKit compiler runs. The earlier compile failure in the chain fixture remains failed; its one-line RegistryEntry.Value correction changes no assertion or scenario count.

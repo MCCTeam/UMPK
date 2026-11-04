@@ -4073,29 +4073,29 @@
     "status": "passed build/normal/currentconsumers; requiredliveNOTRUN",
     "report": "docs/verification/final-interaction-live-entry.md",
     "entryAcceptance": {
-      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/ACCEPTANCE.json",
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v3/ACCEPTANCE.json",
       "bytes": 64927,
-      "sha256": "1c229e0ddc2a17bd1f8e05f017e5192413af5a89d7e8f55b54f35251ebd3911f"
+      "sha256": "3d70e4486264d9e91596edd680ad18c9edc4e741859fadfe6ea40f4cd594afc4"
     },
     "entryDll": {
-      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.dll",
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v3/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.dll",
       "bytes": 1696256,
-      "sha256": "4279a064daf9f6a8ed53b39d3a3bad3b2dd1e12883129dd6634d94c5ab366e1a"
+      "sha256": "a8b8a97ec78f3e9e050293c9d071b959b9347a5d865a1d6afd71f7f99495a66a"
     },
     "entryPdb": {
-      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.pdb",
-      "bytes": 221956,
-      "sha256": "e815d4f3e883cd6d6b61ab1195db1371559ff1dcc11654a6dd8661cae1d8e9b6"
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v3/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.pdb",
+      "bytes": 221976,
+      "sha256": "5f35625ce8cb8c677ceca79c289d012833a64ec0cbf46ed9b77e59eb369ec7a3"
     },
     "normalAcceptance": {
-      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v1/TERMINAL-ACCEPTANCE.json",
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v2/TERMINAL-ACCEPTANCE.json",
       "bytes": 60333,
-      "sha256": "557f624ed1e9d52a3a3171bc5efddfc6b080728b0c3a068bc1ac680d870ec73b"
+      "sha256": "070c3b91365afb343d68dc0f4d51b578214b24425c4c4a9836548ee641535f3f"
     },
     "normalRawTrx": {
-      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v1/normal76/results/result.trx",
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v2/normal76/results/result.trx",
       "bytes": 157027,
-      "sha256": "a3be1fc051d05f19f1df801ac126654616583affd23cbee561793677443380a8"
+      "sha256": "978665d455976d8eb227013ecd78f90f57c9a9e47bd11129e49ee668d2473d75"
     },
     "normalCases": {
       "total": 76,
@@ -4114,6 +4114,23 @@
     "final125Executed": 0,
     "full17Executed": false,
     "reconstructionGroupsBlocked": 11,
-    "fullGoalClosed": false
+    "fullGoalClosed": false,
+    "earlierEntryAcceptance": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/ACCEPTANCE.json",
+      "bytes": 64927,
+      "sha256": "1c229e0ddc2a17bd1f8e05f017e5192413af5a89d7e8f55b54f35251ebd3911f"
+    },
+    "earlierNormalAcceptance": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v1/TERMINAL-ACCEPTANCE.json",
+      "bytes": 60333,
+      "sha256": "557f624ed1e9d52a3a3171bc5efddfc6b080728b0c3a068bc1ac680d870ec73b"
+    },
+    "failedNativePilotCleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-ladder777-20261104-v2/FAILED-TERMINAL-CLEANUP.json",
+      "bytes": 7303,
+      "sha256": "be655c75ee6c7ba93900b7e080b471c13e1cc0d595371e76f28a093b1c8f9319"
+    },
+    "nativePreconditionCorrection": "One nativeitemkill aftercontainercargo spawned99items/55remain; all13originalentities removed; strictempty+nativechecks retained",
+    "requiredLivePassed": false
   }
 }

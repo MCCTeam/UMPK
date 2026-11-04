@@ -43,12 +43,12 @@ public sealed partial class ToolTransformer777SessionRuntimeTests
         var lookup = typeof(Umpk.Client.Internal.VanillaToolTransformerDefinitions).GetMethod("TryGetAxeTarget", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
         Assert.NotNull(lookup);
         HashSet<Identifier> mappedInputs = [];
-        string[] unresolvedStatueInputs =
+        string[] statueInputs =
         [
             "exposed_copper_golem_statue", "weathered_copper_golem_statue", "oxidized_copper_golem_statue",
             "waxed_copper_golem_statue", "waxed_exposed_copper_golem_statue", "waxed_weathered_copper_golem_statue", "waxed_oxidized_copper_golem_statue"
         ];
-        HashSet<string> unresolvedInputs = [];
+        HashSet<string> resolvedStatueInputs = [];
         int resolvedDefaultRows = 0;
         foreach (NbtTag transform in Assert.IsType<NbtList>(packet.Entries[0].Data))
             foreach (NbtTag raw in (NbtList)((NbtCompound)((NbtCompound)transform)["block_state_provider"])["rules"])
@@ -68,23 +68,19 @@ public sealed partial class ToolTransformer777SessionRuntimeTests
                 Assert.Equal(before.Properties.Select(property => property.Name), after.Properties.Select(property => property.Name));
                 foreach (BlockPropertyDefinition property in before.Properties)
                     Assert.Equal(property.Values, Assert.Single(after.Properties, next => next.Name == property.Name).Values);
-                if (unresolvedStatueInputs.Contains(input.Path, StringComparer.Ordinal))
+                if (statueInputs.Contains(input.Path, StringComparer.Ordinal))
                 {
-                    Assert.True(unresolvedInputs.Add(input.Path));
+                    Assert.True(resolvedStatueInputs.Add(input.Path));
                     var properties = Assert.IsType<NbtCompound>(source["properties"]);
                     Assert.Equal(new[] { "copper_golem_pose", "facing", "waterlogged" }, properties.Select(pair => pair.Key).Order(StringComparer.Ordinal));
                     Assert.Equal("standing", properties.GetString("copper_golem_pose"));
                     Assert.Equal("north", properties.GetString("facing"));
                     Assert.Equal("false", properties.GetString("waterlogged"));
                     Assert.Equal(new[] { "copper_golem_pose", "facing", "waterlogged" }, after.Properties.Select(property => property.Name));
-                    foreach (BlockPropertyDefinition property in after.Properties)
-                    {
-                        Assert.Empty(property.Values);
-                        Assert.False(after.TryGetPropertyValue(after.DefaultStateId, property.Name, out string value));
-                        Assert.Empty(value);
-                    }
+                    Assert.Equal(new[] { "standing", "sitting", "running", "star" }, after.Properties[0].Values);
+                    Assert.Equal(new[] { "north", "south", "west", "east" }, after.Properties[1].Values);
+                    Assert.Equal(new[] { "true", "false" }, after.Properties[2].Values);
                 }
-                else
                 {
                     resolvedDefaultRows++;
                     if (source.TryGet("properties", out NbtTag? properties))
@@ -102,8 +98,8 @@ public sealed partial class ToolTransformer777SessionRuntimeTests
                 }
             }
         Assert.Equal(130, mappedInputs.Count);
-        Assert.Equal(123, resolvedDefaultRows);
-        Assert.Equal(unresolvedStatueInputs.Order(StringComparer.Ordinal), unresolvedInputs.Order(StringComparer.Ordinal));
+        Assert.Equal(130, resolvedDefaultRows);
+        Assert.Equal(statueInputs.Order(StringComparer.Ordinal), resolvedStatueInputs.Order(StringComparer.Ordinal));
 
     }
 

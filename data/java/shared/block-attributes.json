@@ -126,6 +126,7 @@
 
     "attachment": { "kind": "enum", "candidates": [["floor", "ceiling", "single_wall", "double_wall"]] },
     "axis": { "kind": "enum", "candidates": [["x", "y", "z"], ["x", "z"]] },
+    "copper_golem_pose": { "kind": "enum", "candidates": [["standing", "sitting", "running", "star"]] },
     "creaking_heart_state": { "kind": "enum", "candidates": [["uprooted", "dormant", "awake"]] },
     "east": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] },
     "face": { "kind": "enum", "candidates": [["floor", "wall", "ceiling"]] },

@@ -3394,5 +3394,21 @@
     },
     "actualBuildSourceCommit": "df9579f566a9bbc7a1c97277b53f2c5f2c88fcaa",
     "fullGoalClosed": false
+  },
+  "copperStatuePropertiesCandidate20261104": {
+    "status": "not run: compiled corrected Data/GREEN pending",
+    "scopedReport": "docs/verification/copper-statue-properties.md",
+    "nativeEvidence": "102a6d71:40blocks/1280identities/5originalregistryJVMs;cleanup41bc7f14",
+    "causalFailures": "312e0f5d:5missing-domainData failures+mappingFact+7exacttarget-before-USE failures;no setup faults",
+    "generation": "Oneenum;40domainrecords+640wetbit4/640dryclear;other60files/fields exact;Rootfieldreviewd677257b;cleanupf683faed",
+    "producerBaseline": "Admitteddf13/Client2f4ead/Data669 forRED; publicationparenta8/currentchainClient3943",
+    "expectedCounts": {
+      "Client": 38095,
+      "Data": 2498,
+      "all17": 52779
+    },
+    "compiledGreen": "not run",
+    "ordinaryActivationAndBlockEntityContinuity": "unknown/unimplemented; no claim",
+    "fullGoalClosed": false
   }
 }

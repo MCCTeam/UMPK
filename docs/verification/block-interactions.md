@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Copper-statue data candidate, 4 November 2026
+
+The [copper-statue property correction](copper-statue-properties.md) adds the missing native pose domain and restores wet-state flags on the eight statue variants in protocols 773–777. Original native 1,280-state observations, thirteen causal failing assertions and the exact 40-record generated comparison support the candidate; the other 60 generated files are unchanged.
+
+Corrected library compilation and passing runtime checks are pending CI and exact artifact admission. Earlier chain, falling-block and consumer checkpoints below retain their separate producer and executed results.
+
 ## Chain placement runtime, 4 November 2026
 
 The [default-chain placement profile](chain-placement.md) now supplies native rod geometry and result/swing decisions to the public placement caller across all 28 applicable datasets. Original native360 measurements and 40 Adventure source profiles support 217 connected tests, 12,257 adjacent regressions and the full 38,088 Client suite, all passing without skips.

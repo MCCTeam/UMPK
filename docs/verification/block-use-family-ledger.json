@@ -3036,5 +3036,26 @@
         "Final producer-matched repository/consumer/package/version acceptance"
       ]
     }
+  },
+  "acceptedKnownToolPrediction20261104": {
+    "status": "passed",
+    "scope": "bounded native/runtime acceptance only; final live/consumer/AOT/CI not run",
+    "protocols": [
+      777
+    ],
+    "releases": [
+      "26.3"
+    ],
+    "caller": "InteractionActions.Placement -> Vanilla777ToolUse -> existing JukeboxPredictionState",
+    "native": "12 original scenes and 26 USE round trips; ACTUAL-NATIVE12.json",
+    "runtime": "Known-only23GREEN on4b71435b; final350/234/7169/full37638 on c0046a41",
+    "evidence": ".scratch/known23-stair350-managed-preparation-20261104-v6/ACTUAL-JOINT350.json (71a89b45)",
+    "sourceEquivalentBase": "84b797f0c2c5eb8552059bfb9b5e475afa2c2ea5 plus exact reviewed postimages; actual build origins retained",
+    "knownMappingRows": 130,
+    "resolvedDefaultRows": 123,
+    "unresolvedStatueRules": 7,
+    "unresolvedStatueStatus": "not run",
+    "unresolvedStatueNeed": "Complete ordered property/state identities, nondefault copies and local mutation/geometry/physics acceptance. Native participation is proven; empty domains are not nonparticipation.",
+    "otherLimits": "Custom/unavailable definitions, unproved neighbor cascades and unknown-target physics remain unfinished."
   }
 }

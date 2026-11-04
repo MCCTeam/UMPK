@@ -21,7 +21,7 @@ public sealed partial class InteractionActions
         if (IsBlockUseItemEnabled(hand) is false)
             return null;
         IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation);
         if (!prediction.SendPacket)
             return null;
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
@@ -42,6 +42,14 @@ public sealed partial class InteractionActions
             _services.Self.Food = eaten.Food;
             _services.Self.Saturation = eaten.Saturation;
             _services.State.JukeboxPrediction.Commit(_services.State.World, position, eaten.State, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
+        }
+        if (toolMutation is { } transformed)
+        {
+            Vec3d capturedPosition = _services.ReadPhysicsState()?.Position ?? _services.Self.Position;
+            // Original recursive neighbor writes retain their server states before the outer clicked-cell write returns. Both local writes precede USE and share the captured lifetime/sequence.
+            if (transformed.NeighborPosition is { } neighbor && transformed.NeighborState is int neighborState)
+                _services.State.JukeboxPrediction.Commit(_services.State.World, neighbor, neighborState, sequence, capturedPosition);
+            _services.State.JukeboxPrediction.Commit(_services.State.World, transformed.Position, transformed.State, sequence, capturedPosition);
         }
         if (sequence is null)
             await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session, sink).ConfigureAwait(false);
@@ -80,13 +88,14 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
-        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _);
+        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation)
     {
         localState = null;
         cakeConsumption = null;
         cakeAttachment = null;
+        toolMutation = null;
         bool inventoryKnown = _services.State.Features.Inventory;
         bool hasOffhand = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn);
         bool mainKnown = inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(36 + _services.Self.HeldSlot);
@@ -238,7 +247,7 @@ public sealed partial class InteractionActions
                     return BlockUsePrediction.Unknown;
             }
             return Vanilla777ToolUse.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position)
-                ? Vanilla777ToolUse.Predict(transformer, clicked, world, position, face, hand, off, offKnown, _services.Self.Sneaking, _services.State.ToolTransformers, _services.State.RegistryTags, _services.State.JukeboxPrediction)
+                ? Vanilla777ToolUse.Predict(transformer, clicked, world, position, face, hand, off, offKnown, _services.Self.Sneaking, _services.State.ToolTransformers, _services.State.RegistryTags, _services.State.JukeboxPrediction, out toolMutation)
                 : BlockUsePrediction.Unknown;
         }
         if (_services.Self.GameMode == GameMode.Adventure)

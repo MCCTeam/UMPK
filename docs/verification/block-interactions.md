@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Known tool terrain prediction, 2026-11-04
+
+The [26.3 tool prediction slice](tool-transformer-local-prediction.md) applies known hoe, shovel and axe changes before USE through the existing prediction owner, including native neighbor-before-clicked copper door/chest ordering. The independent known-only caller passes all 23 connected cases after 22 causal failures and one control.
+
+The final combined caller passes 350 focused, 234 existing, 7,169 adjacent and all 37,638 Client cases without skips; a separate known-only full run is not claimed. The exact count increase for this intent is 23. Seven statue rules, other neighbor cascades and unknown-target physics stay unfinished, along with final new-producer acceptance.
+
 ## Copper-chest properties, 2026-11-04
 
 The [copper-chest state correction](copper-chest-properties.md) fixes the eight variants on protocols 773–777. Original vanilla verifies all 960 states. Five causal data failures become five passes and the full 2,493 passes without skips, with the exact old 2,488 plus five multiset. Generation changes only the forty expected property rows; the other sixty files stay identical.

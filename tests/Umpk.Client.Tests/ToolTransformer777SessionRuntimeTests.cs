@@ -19,7 +19,7 @@ namespace Umpk.Client.Tests;
 
 using Session = Support.BlockUseSession;
 
-public sealed class ToolTransformer777SessionRuntimeTests
+public sealed partial class ToolTransformer777SessionRuntimeTests
 {
     private static readonly Identifier Transformers = Identifier.Minecraft("block_transformer");
     private static readonly string[] Families = ["hoe", "shovel", "axe"];
@@ -38,6 +38,73 @@ public sealed class ToolTransformer777SessionRuntimeTests
         Assert.Equal(130, NativeAxeInputs.Distinct(StringComparer.Ordinal).Count());
         Assert.Contains("poplar_log", NativeAxeInputs);
         Assert.Contains("poplar_wood", NativeAxeInputs);
+        var blocks = JavaGameData.Registries(777).Blocks;
+        // Baseline Test Csc binds the existing type without requiring the new member. This fact executes after the Definitions stage; its fixed method name is not a production reflection contract.
+        var lookup = typeof(Umpk.Client.Internal.VanillaToolTransformerDefinitions).GetMethod("TryGetAxeTarget", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+        Assert.NotNull(lookup);
+        HashSet<Identifier> mappedInputs = [];
+        string[] unresolvedStatueInputs =
+        [
+            "exposed_copper_golem_statue", "weathered_copper_golem_statue", "oxidized_copper_golem_statue",
+            "waxed_copper_golem_statue", "waxed_exposed_copper_golem_statue", "waxed_weathered_copper_golem_statue", "waxed_oxidized_copper_golem_statue"
+        ];
+        HashSet<string> unresolvedInputs = [];
+        int resolvedDefaultRows = 0;
+        foreach (NbtTag transform in Assert.IsType<NbtList>(packet.Entries[0].Data))
+            foreach (NbtTag raw in (NbtList)((NbtCompound)((NbtCompound)transform)["block_state_provider"])["rules"])
+            {
+                var rule = (NbtCompound)raw;
+                Identifier input = Identifier.Parse(((NbtCompound)rule["if_true"]).GetString("blocks")!);
+                var provider = (NbtCompound)rule["then"];
+                Assert.Equal("minecraft:copy_properties", provider.GetString("type"));
+                var source = (NbtCompound)provider["source"];
+                Identifier target = Identifier.Parse(source.GetString("id")!);
+                Assert.True(mappedInputs.Add(input));
+                object?[] arguments = [input, default(Identifier)];
+                Assert.True(Assert.IsType<bool>(lookup.Invoke(null, arguments)));
+                Assert.Equal(target, Assert.IsType<Identifier>(arguments[1]));
+                BlockDefinition before = blocks[input].Value;
+                BlockDefinition after = blocks[target].Value;
+                Assert.Equal(before.Properties.Select(property => property.Name), after.Properties.Select(property => property.Name));
+                foreach (BlockPropertyDefinition property in before.Properties)
+                    Assert.Equal(property.Values, Assert.Single(after.Properties, next => next.Name == property.Name).Values);
+                if (unresolvedStatueInputs.Contains(input.Path, StringComparer.Ordinal))
+                {
+                    Assert.True(unresolvedInputs.Add(input.Path));
+                    var properties = Assert.IsType<NbtCompound>(source["properties"]);
+                    Assert.Equal(new[] { "copper_golem_pose", "facing", "waterlogged" }, properties.Select(pair => pair.Key).Order(StringComparer.Ordinal));
+                    Assert.Equal("standing", properties.GetString("copper_golem_pose"));
+                    Assert.Equal("north", properties.GetString("facing"));
+                    Assert.Equal("false", properties.GetString("waterlogged"));
+                    Assert.Equal(new[] { "copper_golem_pose", "facing", "waterlogged" }, after.Properties.Select(property => property.Name));
+                    foreach (BlockPropertyDefinition property in after.Properties)
+                    {
+                        Assert.Empty(property.Values);
+                        Assert.False(after.TryGetPropertyValue(after.DefaultStateId, property.Name, out string value));
+                        Assert.Empty(value);
+                    }
+                }
+                else
+                {
+                    resolvedDefaultRows++;
+                    if (source.TryGet("properties", out NbtTag? properties))
+                        foreach (var pair in (NbtCompound)properties)
+                        {
+                            Assert.True(after.TryGetPropertyValue(after.DefaultStateId, pair.Key, out string value));
+                            Assert.Equal(((NbtCompound)properties).GetString(pair.Key), value);
+                        }
+                    else
+                    {
+                        Assert.Empty(after.Properties);
+                        Assert.Equal(1, after.StateCount);
+                        Assert.Equal(after.MinStateId, after.DefaultStateId);
+                    }
+                }
+            }
+        Assert.Equal(130, mappedInputs.Count);
+        Assert.Equal(123, resolvedDefaultRows);
+        Assert.Equal(unresolvedStatueInputs.Order(StringComparer.Ordinal), unresolvedInputs.Order(StringComparer.Ordinal));
+
     }
 
     [Theory]
@@ -365,7 +432,7 @@ public sealed class ToolTransformer777SessionRuntimeTests
         Assert.Equal(((float)cursor.X, (float)cursor.Y, (float)cursor.Z), (use.CursorX, use.CursorY, use.CursorZ));
         Assert.False(use.Inside || use.WorldBorderHit);
         Assert.DoesNotContain(packets, packet => packet is ServerboundSwingPacket or ServerboundPunchPacket or ServerboundPlayerActionPacket);
-        // This slice predicts native send/result/swing. Server-owned terrain, stack damage, loot and effects are not fabricated by the fixture.
+        // This slice checks send/result/swing against received terrain. Native local block prediction has separate connected cases; default tool damage and loot require server context.
         Assert.Equal(state, session.Client.State.World.GetBlock(target).StateId);
         Assert.Equal(before, session.Client.State.Inventory.GetSlot(hand == Hand.Main ? 36 : 45));
         Assert.Equal(ClientStatus.Playing, session.Client.Status);

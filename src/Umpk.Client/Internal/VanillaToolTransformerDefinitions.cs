@@ -10,18 +10,26 @@ internal static class VanillaToolTransformerDefinitions
     private static readonly NbtTag Hoe = NbtReader.Read(HoeBytes, NbtWireFormat.JavaRootTagOrString);
     private static readonly NbtTag Shovel = NbtReader.Read(ShovelBytes, NbtWireFormat.JavaRootTagOrString);
 
-    private static readonly FrozenSet<Identifier> AxeInputs = ReadAxeInputs();
+    private static readonly FrozenDictionary<Identifier, Identifier> AxeTargets = ReadAxeTargets();
 
-    public static bool IsAxeInput(Identifier block) => AxeInputs.Contains(block);
+    public static bool IsAxeInput(Identifier block) => AxeTargets.ContainsKey(block);
 
-    private static FrozenSet<Identifier> ReadAxeInputs()
+    public static bool TryGetAxeTarget(Identifier block, out Identifier target) => AxeTargets.TryGetValue(block, out target);
+
+    private static FrozenDictionary<Identifier, Identifier> ReadAxeTargets()
     {
-        HashSet<Identifier> inputs = [];
-        // The exact native definition has seven ordered providers whose predicates each match one registered block. This reads the immutable verified defaults, never arbitrary server schema.
+        Dictionary<Identifier, Identifier> targets = [];
+        // Read only the immutable verified defaults: every rule names one input and an exact copy-properties target. No item/block name transformation supplies this mapping.
         foreach (NbtTag transform in (NbtList)Axe)
             foreach (NbtTag rule in (NbtList)((NbtCompound)((NbtCompound)transform)["block_state_provider"])["rules"])
-                inputs.Add(Identifier.Parse(((NbtCompound)((NbtCompound)rule)["if_true"]).GetString("blocks")!));
-        return inputs.ToFrozenSet();
+            {
+                var entry = (NbtCompound)rule;
+                Identifier input = Identifier.Parse(((NbtCompound)entry["if_true"]).GetString("blocks")!);
+                var provider = (NbtCompound)entry["then"];
+                Identifier target = Identifier.Parse(((NbtCompound)provider["source"]).GetString("id")!);
+                targets.Add(input, target);
+            }
+        return targets.ToFrozenDictionary();
     }
 
     public static bool Matches(Identifier key, NbtTag? received) => key.IsMinecraft && (key.Path switch

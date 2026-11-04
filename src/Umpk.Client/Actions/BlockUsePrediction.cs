@@ -31,15 +31,18 @@ internal readonly record struct BlockUsePrediction(bool SendPacket, BlockUseResu
     public static BlockUsePrediction Success(bool localSwing) => new(true, BlockUseResult.Success, localSwing ? BlockUseSwing.Local : BlockUseSwing.Packet);
 }
 
-internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse, bool HasTrapdoorGateRules, bool SmithingTablePassesUse, bool HasStateOnlyJukeboxRules, bool HasCopperStatueAxeRules = false)
+internal readonly record struct BlockUseActivationProfile(bool HasActivationRules, bool EmptyHandActivationIsMainHandOnly, bool PoweredButtonConsumes, bool HasMenuActivationRules, bool HasDoorActivationRules, bool LegacyDoorLowerCell, bool IronDoorConsumesUse, bool HasTrapdoorGateRules, bool SmithingTablePassesUse, bool HasStateOnlyJukeboxRules, bool HasCopperStatueAxeRules = false, bool HasButtonPreUseMutation = false)
 {
     // Original registered lever/button use methods return client true from 1.8 through 1.14.4; powered buttons introduce CONSUME in 1.15. Main-hand-only useWithoutItem fallback begins 1.20.5; source bindings cover all 31 earlier named releases and preserve the later profile.
-    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735, protocol is >= 47 and <= 761, protocol is >= 773 and <= 777);
+    public static BlockUseActivationProfile ForProtocol(int protocol) => new(protocol is >= 47 and <= 777, protocol >= 766, protocol >= 573, protocol is >= 47 and <= 777, protocol is >= 47 and <= 777, protocol <= 340, protocol <= 210, protocol is >= 47 and <= 777, protocol < 735, protocol is >= 47 and <= 761, protocol is >= 773 and <= 777, protocol is 766 or 777);
 
     // Native waxed statues return PASS for ItemTags.AXES before touching the world. The three aged unwaxed overrides return PASS for those stacks with or without a statue block entity; unaffected unwaxed statues retain their separate golem branch.
     public bool HasCopperStatueAxePassRule(BlockState block)
         => HasCopperStatueAxeRules && block.Block.Id.IsMinecraft && block.Block.Id.Path is "exposed_copper_golem_statue" or "weathered_copper_golem_statue" or "oxidized_copper_golem_statue"
             or "waxed_copper_golem_statue" or "waxed_exposed_copper_golem_statue" or "waxed_weathered_copper_golem_statue" or "waxed_oxidized_copper_golem_statue";
+
+    internal bool CommitsButtonMutationBeforeUse(BlockState block)
+        => HasButtonPreUseMutation && PoweredButtonConsumes && IsButton(block);
 
     internal bool TryGetLocalMutation(BlockState block, out int state)
     {

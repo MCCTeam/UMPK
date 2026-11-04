@@ -21,7 +21,7 @@ public sealed partial class InteractionActions
         if (IsBlockUseItemEnabled(hand) is false)
             return null;
         IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out bool localStatePrecedesUse, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement);
         if (!prediction.SendPacket)
             return null;
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
@@ -58,13 +58,15 @@ public sealed partial class InteractionActions
             int slot = hand == Hand.Main ? 36 + _services.Self.HeldSlot : 45;
             _services.State.Inventory.SetSlot(InventoryState.PlayerWindowId, slot, placed.RemainingStack);
         }
+        if (localState is int pressed && localStatePrecedesUse)
+            _services.State.JukeboxPrediction.Commit(_services.State.World, position, pressed, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         if (sequence is null)
             await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session, sink).ConfigureAwait(false);
         else
         {
             await sink.SendAsync(new ServerboundUseItemOnPacket((int)hand, position, (int)face, (float)cursor.X, (float)cursor.Y, (float)cursor.Z, insideBlock, WorldBorderHit: false, sequence.Value), session).ConfigureAwait(false);
         }
-        if (localState is int changed)
+        if (localState is int changed && !localStatePrecedesUse)
             _services.State.JukeboxPrediction.Commit(_services.State.World, position, changed, HasSequences() ? sequence : null, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         if (prediction.Swing == BlockUseSwing.Packet)
             await SendSwingAsync(sink, hand, session).ConfigureAwait(false);
@@ -95,11 +97,12 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
-        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _, out _, out _);
+        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _, out _, out _, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out bool localStatePrecedesUse, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement)
     {
         localState = null;
+        localStatePrecedesUse = false;
         cakeConsumption = null;
         cakeAttachment = null;
         toolMutation = null;
@@ -234,7 +237,10 @@ public sealed partial class InteractionActions
             if (activationResult != BlockUseResult.Pass)
             {
                 if (activationResult == BlockUseResult.Success && activation.TryGetLocalMutation(clicked, out int changed))
+                {
                     localState = changed;
+                    localStatePrecedesUse = activation.CommitsButtonMutationBeforeUse(clicked);
+                }
                 return activationResult switch
                 {
                     BlockUseResult.Success => BlockUsePrediction.Success(_blockProfile.UseSwingIsLocal),

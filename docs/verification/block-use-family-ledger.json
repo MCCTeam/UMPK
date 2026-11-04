@@ -3520,5 +3520,84 @@
       "custom patches/unsupported permission contexts",
       "remaining cascades and live behavior"
     ]
+  },
+  "tooltipDisplayMiningIdentity20261104": {
+    "status": "passed bounded native/session/fullClient; final acceptance open",
+    "scopedReport": "docs/verification/tooltip-display-mining-identity.md",
+    "receipt": {
+      "path": "/home/anon/Projects/UMPK/.scratch/tooltip-display-mining-preparation-20261104-v4/ACTUAL-MANAGED166.json",
+      "bytes": 69821,
+      "sha256": "8cc4dcfadd61f6e19945b898e5de7947ecfec43e6040ce64ded77861611e97f6"
+    },
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/tooltip-display-mining-preparation-20261104-v4/ROOT-ACCEPTANCE.json",
+      "bytes": 2550,
+      "sha256": "eca3531a7ce147a5c11140522056c213327415178b043006f3f007df1a42830d"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/TERMINAL-CLEANUP.json",
+      "bytes": 3544,
+      "sha256": "1f1f4271bf81e6e57bc6facff807382b83b24312e85e83ae7cb3084b9f2e1871"
+    },
+    "nativeAdmission": {
+      "path": "/home/anon/Projects/UMPK/.scratch/tooltip-display-identity-source-20261104-v1/COORDINATOR-ACTUAL-NATIVE24.json",
+      "bytes": 1884,
+      "sha256": "d0118949646bd30f0286f8eba8d556d61b80193d309e52d027ad8f29f068c126"
+    },
+    "protocols": "770\u2013777/eightdatasets;12namedsourceclients",
+    "cases": {
+      "actualNativeFrameCases": 24,
+      "sourceBoundFrameCases": 72,
+      "modeledApiCases": 70,
+      "total": 166,
+      "baselineControls": 84,
+      "baselineCausalFailures": 82,
+      "green": 166,
+      "adjacent": 560,
+      "fullClient": 38508
+    },
+    "actualClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.dll",
+        "bytes": 1240064,
+        "sha256": "1d06a532b282d4d1e70bc9c1a91f8723455d64d2e25df61aefda9b6171b9fa19"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.pdb",
+        "bytes": 297296,
+        "sha256": "4c36457b47bc6819a7c99a6ed840d054e0390cbb7fe3247ef55658663c3f9a4b"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.xml",
+        "bytes": 855526,
+        "sha256": "600f8945b5948de1e1d675159af2d7cf75ea2de1e71eaf2632407da7ee62c0d7"
+      }
+    ],
+    "actualTestPair": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.dll",
+        "bytes": 24822272,
+        "sha256": "1920c483575a879369f862dd83948d2e674d2b5ee17550ff7b988cdade0d0eee"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/tooltip166-managed-20261104-v2/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.pdb",
+        "bytes": 1105420,
+        "sha256": "73500c9c8cfa9838096c6955a5b65a441c54c0587e1c802eba49e3fa5b3892b4"
+      }
+    ],
+    "compilerBaseline": "Admitted9a66/f24a; actualprivateClient1d06 compiled9a66+oneexistingidentityowner, separate from later source-equivalentpublication",
+    "formatReuse": {
+      "path": "/home/anon/Projects/UMPK/.scratch/tooltip-display-mining-preparation-20261104-v4/FORMAT-REUSE.json",
+      "bytes": 8079,
+      "sha256": "e1bf4bc3bfe855fc869491396bf7ba912aa12ecbc25277275f7bea9fa365db2b"
+    },
+    "unknownsRetained": [
+      "unproven supplied defaults",
+      "direct undeclared component IDs",
+      "unmeasured nested graphs/other component families",
+      "separate numeric DATAhash/inventory-click intent"
+    ],
+    "finalGates": "not run on eventual final producer; live/currentconsumers/localpackageAOT/final17/currentnewheadCI remain open",
+    "fullGoalClosed": false
   }
 }

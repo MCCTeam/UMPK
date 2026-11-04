@@ -1,3 +1,4 @@
+using Umpk.Data.Java;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Registries;
@@ -22,11 +23,22 @@ internal static class VanillaMiningItemIdentity
 
     public static bool? TryMatches(ItemStack current, ItemStack previous, int protocol)
     {
+        // A locally supplied out-of-era component ID has no native registry key, even when both stacks share that invalid value.
+        if (HasNativeTooltipIdentity(protocol)
+            && (!TooltipKeysAreDeclared(current.Components.Get(DataComponents.TooltipDisplay), protocol)
+                || !TooltipKeysAreDeclared(previous.Components.Get(DataComponents.TooltipDisplay), protocol)))
+            return null;
         if (ReferenceEquals(current, previous))
             return true;
         // The flattening moved damage into the compared tag. Component-era clients compare the complete effective component map.
         if (protocol >= 393)
         {
+            if (HasNativeTooltipIdentity(protocol) && !current.IsEmpty && !previous.IsEmpty && current.Item.Equals(previous.Item) && !ReferenceEquals(current.Components, previous.Components))
+            {
+                bool? tooltip = TooltipMapsMatch(current, previous, protocol);
+                if (tooltip is not true)
+                    return tooltip;
+            }
             if (HasNativeLoreIdentity(protocol) && !current.IsEmpty && !previous.IsEmpty && current.Item.Equals(previous.Item) && !ReferenceEquals(current.Components, previous.Components))
             {
                 bool? lore = LoreMapsMatch(current.Components, previous.Components);
@@ -62,13 +74,14 @@ internal static class VanillaMiningItemIdentity
     private static bool? ComponentMapsMatch(DataComponentMap current, DataComponentMap previous, int protocol)
     {
         bool nativeLore = HasNativeLoreIdentity(protocol);
-        int currentCount = current.Count - (nativeLore && current.Has(DataComponents.Lore) ? 1 : 0);
-        int previousCount = previous.Count - (nativeLore && previous.Has(DataComponents.Lore) ? 1 : 0);
+        bool nativeTooltip = HasNativeTooltipIdentity(protocol);
+        int currentCount = current.Count - (nativeLore && current.Has(DataComponents.Lore) ? 1 : 0) - (nativeTooltip && current.Has(DataComponents.TooltipDisplay) ? 1 : 0);
+        int previousCount = previous.Count - (nativeLore && previous.Has(DataComponents.Lore) ? 1 : 0) - (nativeTooltip && previous.Has(DataComponents.TooltipDisplay) ? 1 : 0);
         if (currentCount != previousCount)
             return false;
         foreach (DataComponentEntry entry in current.Effective)
         {
-            if (nativeLore && entry.Type.Equals(DataComponents.Lore))
+            if (nativeLore && entry.Type.Equals(DataComponents.Lore) || nativeTooltip && entry.Type.Equals(DataComponents.TooltipDisplay))
                 continue;
             bool? match = false;
             foreach (DataComponentEntry other in previous.Effective)
@@ -83,6 +96,75 @@ internal static class VanillaMiningItemIdentity
                 return match;
         }
         return true;
+    }
+
+    private static bool HasNativeTooltipIdentity(int protocol) => protocol is >= 770 and <= 777;
+
+    private static bool TooltipKeysAreDeclared(TooltipDisplayComponent? display, int protocol)
+    {
+        if (display is null)
+            return true;
+        int count = protocol switch
+        {
+            >= 770 and <= 773 => ComponentIds.V1_21_5.Length,
+            774 => ComponentIds.V1_21_11.Length,
+            775 => ComponentIds.V26_1.Length,
+            776 => ComponentIds.V26_2.Length,
+            777 => ComponentIds.V26_3.Length,
+            _ => 0,
+        };
+        foreach (int id in display.HiddenComponents)
+            if (id < 0 || id >= count)
+                return false;
+        return true;
+    }
+
+    private static bool? TooltipMapsMatch(ItemStack current, ItemStack previous, int protocol)
+    {
+        TooltipDisplayComponent? display = current.Components.Get(DataComponents.TooltipDisplay);
+        TooltipDisplayComponent? other = previous.Components.Get(DataComponents.TooltipDisplay);
+        bool removed = display is null && HasTooltipRemoval(current.Components);
+        bool otherRemoved = other is null && HasTooltipRemoval(previous.Components);
+        if (removed || otherRemoved)
+        {
+            if (removed && otherRemoved)
+                return true;
+            if (removed ? other is not null : display is not null)
+                return false;
+            return HasCanonicalTooltipDefault(current.Item, protocol) ? false : null;
+        }
+        // Equal omissions share this item's same prototype. Comparing an omission with a value needs the source-proven native default.
+        if (display is null && other is null)
+            return true;
+        if ((display is null || other is null) && !HasCanonicalTooltipDefault(current.Item, protocol))
+            return null;
+        return TooltipValuesMatch(display, other);
+    }
+
+    private static bool HasCanonicalTooltipDefault(RegistryEntry<ItemDefinition> item, int protocol)
+        => !item.IsDefault && JavaGameData.Registries(protocol).Items.TryGet(item.NetworkId, out RegistryEntry<ItemDefinition> native)
+            && native.Id.Equals(item.Id) && ReferenceEquals(native.Value, item.Value);
+
+    private static bool TooltipValuesMatch(TooltipDisplayComponent? current, TooltipDisplayComponent? previous)
+    {
+        if ((current?.HideTooltip ?? false) != (previous?.HideTooltip ?? false))
+            return false;
+        IReadOnlyList<int> hidden = current?.HiddenComponents ?? [];
+        IReadOnlyList<int> other = previous?.HiddenComponents ?? [];
+        if (hidden.Count == 0 || other.Count == 0)
+            return hidden.Count == other.Count;
+        // Original ReferenceLinkedOpenHashSet equality ignores order and duplicate input. Re-read mutable modeled values; no cached identity proof is retained.
+        return ReferenceEquals(hidden, other) || new HashSet<int>(hidden).SetEquals(other);
+    }
+
+    private static bool HasTooltipRemoval(DataComponentMap components)
+    {
+        if (components.HasNoPatch)
+            return false;
+        foreach (DataComponentEntry entry in components.Patch)
+            if (entry.IsRemoval && entry.Type.Equals(DataComponents.TooltipDisplay))
+                return true;
+        return false;
     }
 
     private static bool HasNativeLoreIdentity(int protocol)
@@ -143,6 +225,10 @@ internal static class VanillaMiningItemIdentity
 
     private static bool? ComponentValuesMatch(object? current, object? previous, int protocol)
     {
+        if (HasNativeTooltipIdentity(protocol) && current is TooltipDisplayComponent display && previous is TooltipDisplayComponent otherDisplay)
+            return !TooltipKeysAreDeclared(display, protocol) || !TooltipKeysAreDeclared(otherDisplay, protocol)
+                ? null
+                : TooltipValuesMatch(display, otherDisplay);
         if (HasNativeLoreIdentity(protocol) && current is LoreComponent lore && previous is LoreComponent otherLore)
             return LoreValuesMatch(lore, otherLore);
         if (protocol is >= ItemComponentsProtocol and <= LastMeasuredCustomModelDataProtocol && current is CustomModelDataComponent customModel && previous is CustomModelDataComponent otherModel)

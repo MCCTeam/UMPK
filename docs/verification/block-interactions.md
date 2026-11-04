@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Tooltip identity while mining, 4 November 2026
+
+The [TooltipDisplay mining identity correction](tooltip-display-mining-identity.md) now keeps progress for equal hidden-component sets, including reordered or duplicate values, on protocols 770–777. Changes reset progress; invalid supplied IDs and unproven defaults retain the existing unavailable-identity behavior. Original native24/48packet round trips support 96 framed and 70 supplied-value cases through the actual mining caller.
+
+The same 166 tests move from 84 controls and 82 causal failures to 166 passes after one existing Client owner changes. All 560 adjacent and 38,508 unfiltered Client tests pass without skips, preserving the exact earlier 38,342 plus 166 names with three literal fixture-root display substitutions. Root `eca3531a` and cleanup `1f1f4271` bind actual Client `1d06a532`/PDB `4c36457b`, unchanged remaining libraries and all 19 HOST process exits. The formatter-only failed attempt and its reused normal outputs keep their explicit scope.
+
+Numeric DATA hashes, other component families and final live, repository, current consumer, package/AOT and new published-head CI acceptance remain open. Earlier checkpoints below retain their actual source and producer scope.
+
 ## Heart and ordinary statue runtime, 4 November 2026
 
 The [creaking-heart placement caller](creaking-heart-placement.md) now admits bounded full-box obstruction/result decisions on protocols 768–777, with 87 connected cases. Four canonical native AXIS identities and ordered lazy getter reads remain explicit; unavailable destination packet membership returns Unknown even when public storage contains valid AIR. The separate [ordinary statue activation](statue-axe-activation.md) uses the received AXES tag for seven aged/waxed identities on protocols 773–777, followed by the existing item-use owner. Its 160 cases include the four default-axe Adventure denials on protocols 773–776.

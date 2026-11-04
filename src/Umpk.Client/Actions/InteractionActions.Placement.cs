@@ -224,7 +224,7 @@ public sealed partial class InteractionActions
         if (!itemKnown)
             return BlockUsePrediction.Unknown;
         // The legacy controller checks ItemBlock placement before sending and before cooldown/Adventure item use. Default ordinary cubes and source-bound full-cube pillars share this precheck; other specialized items keep their own result and unknown context.
-        if (_blockProfile.PrechecksBlockItemPlacement && !item.IsEmpty && item.Components.HasNoPatch
+        if (_blockProfile.PrechecksBlockItemPlacement && !item.IsEmpty && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item)
             && data.TryGetItem(item.Item.Id, out ItemUseOnInfo legacyUse) && IsOrdinaryCubeItem(item.Item.Id, legacyUse))
         {
             BlockUsePrediction precheck = PredictCubePlacement(preSend: true);
@@ -253,6 +253,9 @@ public sealed partial class InteractionActions
         }
         if (_services.Self.GameMode == GameMode.Adventure)
         {
+            // Original legacy ItemBlock checks player permission after the controller's placement precheck and USE send. Default quartz has neither CanPlaceOn NBT nor canEditBlocks.
+            if (VanillaPillarPlacement.IsLegacyQuartz(_services.Version.Version.Protocol, item) && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
+                return BlockUsePrediction.Fail;
             if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)
                 || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || !IsOrdinaryCubeItem(item.Item.Id, adventureUse))
                 return BlockUsePrediction.Unknown;
@@ -281,7 +284,7 @@ public sealed partial class InteractionActions
                     _services.State.RegistryTags.Contains(RegistryIds.Block, Identifier.Minecraft("campfires"), clicked.Block.NetworkId),
                     _services.State.RegistryTags.Contains(RegistryIds.Block, Identifier.Minecraft("candles"), clicked.Block.NetworkId))
                 : BlockUsePrediction.Unknown;
-        if (!item.Components.HasNoPatch)
+        if (!VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
             return BlockUsePrediction.Unknown;
         if (VanillaHoneycombUse.TryPredict(_services.Version.Version.Protocol, item.Item.Id, clicked, out BlockUsePrediction waxUse))
             return _services.State.EntityMembership.HasColumn(position) ? waxUse : BlockUsePrediction.Unknown;

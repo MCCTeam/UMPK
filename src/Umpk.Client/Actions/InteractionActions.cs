@@ -405,7 +405,7 @@ public sealed partial class InteractionActions
 
         return (packetSink ?? _sink).SendAsync(
             new ServerboundLegacyBlockPlacePacket(
-                position, face, HeldItem(), LegacyCursor(cursor.X), LegacyCursor(cursor.Y), LegacyCursor(cursor.Z)),
+                position, face, VanillaPillarPlacement.CaptureLegacyActionStack(_services.Version.Version.Protocol, HeldItem()), LegacyCursor(cursor.X), LegacyCursor(cursor.Y), LegacyCursor(cursor.Z)),
             ct).AsTask();
     }
 

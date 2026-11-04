@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Legacy quartz placement, 2026-11-04
+
+The [legacy quartz slice](legacy-quartz-placement.md) connects all eleven datasets from 47 through 340 to the existing full-box placement owner. Original vanilla verifies 351 getter/stream operations; source separates blocked pre-send rejection from default Adventure failure after USE. Protocol 47 captures native nonnegative metadata for block and air actions while preserving raw received stack bytes.
+
+All 165 connected, 8,084 adjacent and full 37,803 Client cases pass without skips after the three measured owner stages. The deliberate addition is 165; the expected seventeen-suite total becomes 52,481, with Integration unchanged at 72. Dedicated quartz live acceptance, the new composed producer gates, custom permission NBT and local BlockItem effects remain open.
+
 ## Native interaction live checkpoint, 2026-11-04
 
 The [live checkpoint](interaction-live-checkpoint-20261104.md) records a complete six-face log-placement pass on 1.13 and canonical general smoke passes on 1.8 and 1.21.11 using the current `f1fcdcf` producer. Earlier 26.3 placement, spectator-lectern and protocol-47 results retain their exact older binaries and scope. The new fixtures preserve physics, native block/stack observations, exact packet replay and process cleanup.

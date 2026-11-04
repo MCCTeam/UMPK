@@ -351,7 +351,7 @@ public sealed partial class InteractionActions
             // An out-of-height state/write is not a proven false ItemBlock precheck. Its original world/permission/write phases differ; retain packet-only uncertainty rather than turning a later failure into a pre-send rejection.
             if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
                 return preSend ? BlockUsePrediction.Unknown : BlockUsePrediction.Fail;
-            if (world.GetColumn(destination) is null || preSend && !_services.State.EntityMembership.HasColumn(destination))
+            if (world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
                 return BlockUsePrediction.Unknown;
             if (!replacesClicked)
             {

@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Destination terrain availability, 4 November 2026
+
+The [ordinary cube availability correction](ordinary-cube-terrain-availability.md) requires received destination terrain before predicting replacement or successful placement. Synthesized storage and valid AIR/VOID_AIR cannot establish chunk availability. Seven native-source boundaries support the distinction between a missing-cache write failure and the library’s conservative Unknown/USE-only decision; an original native missing-cache experiment remains unexecuted.
+
+The same 96 framed cases move from 54 controls and 42 false-success failures to all passes. Combined with the separate ladder correction, final Client `0e7dbe7d`/PDB `2ba83246` passes 353 focused, 3,885 adjacent and 38,861 unfiltered Client tests without skips, preserving the exact earlier 38,508 plus 353 names. Root `a26a2cf6`, independent review `776a0c88` and cleanup `0da7737a` bind the actual staged compilers, source/PDB/reference checks and all 38 owned process exits.
+
+The SDK-only checkpoint `dc524ed` passed all seven CI jobs, including 53,167 test passes/25 normal skips and strict CI AOT at 24,886,328 bytes with one executed smoke. Those remote results precede these placement commits. Fresh final producer, live matrix, repository, consumer, package/AOT and published-head checks remain required.
+
 ## Ladder placement on stone, 4 November 2026
 
 The [ladder placement correction](ladder-stone-placement.md) connects native horizontal stone support and the thin 3/16 collision plate to the existing placement action on 28 datasets, protocols 735–777. Canonical default stacks, received terrain, both hands, body obstruction and native result/swing policy are covered; other supports, older eras and unavailable context remain explicit Unknown.

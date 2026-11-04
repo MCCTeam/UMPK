@@ -427,6 +427,7 @@ public sealed class UmpkClient : IAsyncDisposable
             }
 
         State.RegistryTags.BeginConfiguration();
+        State.ToolTransformers.BeginConfiguration(_settings.Version.Version.Protocol);
         var loginOptions = new JavaLoginOptions
         {
             Username = _settings.Profile.Name,
@@ -809,6 +810,7 @@ public sealed class UmpkClient : IAsyncDisposable
     {
         ct.ThrowIfCancellationRequested();
         State.RegistryTags.CommitConfiguration(_settings.Version.Version.Protocol);
+        State.ToolTransformers.CommitConfiguration();
         return ValueTask.FromResult(State.Registries);
     }
 
@@ -830,6 +832,7 @@ public sealed class UmpkClient : IAsyncDisposable
         connection.SetPhase(ProtocolPhase.Configuration);
 
         State.RegistryTags.BeginConfiguration();
+        State.ToolTransformers.BeginConfiguration(_settings.Version.Version.Protocol);
         await JavaClientLogin.RunConfigurationPhaseAsync(
             connection,
             _settings.Version,

@@ -50,6 +50,7 @@ public sealed class ClientState
 
     /// <summary>Tag membership belongs to the connection, including configuration-to-play and data-pack reloads.</summary>
     internal Internal.ClientRegistryTags RegistryTags { get; } = new();
+    internal Internal.ClientToolTransformers ToolTransformers { get; } = new();
 
     /// <summary>Native connection features survive world and configuration transitions.</summary>
     internal Internal.EnabledFeatureState EnabledFeatures { get; } = new();
@@ -304,6 +305,7 @@ public sealed class ClientState
         Self.ClearItemCooldowns();
         Server.ResetForSessionEnd();
         RegistryTags.Clear();
+        ToolTransformers.Clear();
         EnabledFeatures.Reset();
         PacketBases.Clear();
         EntityMotion.Clear();

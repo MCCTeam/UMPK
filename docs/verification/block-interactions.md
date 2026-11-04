@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Default 26.3 tool use, 2026-11-04
+
+The [tool transformation owner](tool-transformers-777.md) connects default axes, hoes and shovels to the effective received protocol-777 definitions, tags and existing action controller. All 234 focused cases pass after their causal failures, including four height-boundary cases corrected to use native void air. Configuration lifetime, hands, Adventure, cooldowns and unsupported components retain explicit results and unknowns.
+
+The separate tool-only producer has focused 234-case proof. The combined producer with the following mining identity change passes all 6,328 adjacent and 37,304 unfiltered Client cases without skips; the report distinguishes both binaries and retains the failed test-setup attempt. The deliberate tool increase is 234, giving 37,196 Client cases and an expected seventeen-suite total of 51,814. Native live, repeated-use local prediction, consumer, AOT, package and final acceptance remain open.
+
 ## Crouching players and placement, 2026-11-04
 
 The [crouching motion correction](modern-crouching-motion.md) connects known crouching remote players to the existing collision-aware controller on protocols 770–777, with 769 as the adjacent control. Packet dispatch and session ticks now publish their moving bounds for placement queries. Other poses, riders and unresolved authority keep their existing unknown results.

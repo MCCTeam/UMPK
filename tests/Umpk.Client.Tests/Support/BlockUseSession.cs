@@ -418,7 +418,11 @@ internal sealed class BlockUseSession : IAsyncDisposable
             Assert.Equal(contents.Registry, observed.Registry);
             Assert.Equal(contents.Entries.Select(entry => entry.Id), observed.Entries.Select(entry => entry.Id));
             for (int index = 0; index < contents.Entries.Count; index++)
-                Assert.Equal(Assert.IsType<NbtCompound>(contents.Entries[index].Data).GetString("message_id"), Assert.IsType<NbtCompound>(observed.Entries[index].Data).GetString("message_id"));
+            {
+                Assert.Equal(contents.Entries[index].Data, observed.Entries[index].Data);
+                if (contents.Registry == Identifier.Minecraft("damage_type"))
+                    Assert.Equal(Assert.IsType<NbtCompound>(contents.Entries[index].Data).GetString("message_id"), Assert.IsType<NbtCompound>(observed.Entries[index].Data).GetString("message_id"));
+            }
         }
         Assert.Equal(bytes, Encode(codec, decoded));
         await Server.SendFrameAsync(pair.WireId, bytes, Token);

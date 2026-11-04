@@ -226,6 +226,21 @@ public sealed partial class InteractionActions
         VanillaEndCrystalUse crystal = VanillaEndCrystalUse.ForProtocol(_services.Version.Version.Protocol);
         if (crystal.Supports(item.Item.Id))
             return PredictEndCrystalUse(crystal, item, clicked, world, position, data);
+        if (Vanilla777ToolUse.Supports(_services.Version.Version.Protocol, item.Item.Id, out Identifier transformer))
+        {
+            // ItemStack.useOn checks Adventure before resolving the effective transformer. A known denial still passes after USE, even when transformer contents are unavailable.
+            if (_services.Self.GameMode == GameMode.Adventure)
+            {
+                bool? allowed = _componentMiningPermission.Allows(item.Components.Get(DataComponents.CanPlaceOn), clicked, _services.State.RegistryTags, _services.Version.Version.Protocol);
+                if (allowed is false)
+                    return BlockUsePrediction.Pass;
+                if (allowed is null)
+                    return BlockUsePrediction.Unknown;
+            }
+            return Vanilla777ToolUse.SupportsStack(item) && _services.State.EntityMembership.HasColumn(position)
+                ? Vanilla777ToolUse.Predict(transformer, clicked, world, position, face, hand, off, offKnown, _services.Self.Sneaking, _services.State.ToolTransformers, _services.State.RegistryTags, _services.State.JukeboxPrediction)
+                : BlockUsePrediction.Unknown;
+        }
         if (_services.Self.GameMode == GameMode.Adventure)
         {
             if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)

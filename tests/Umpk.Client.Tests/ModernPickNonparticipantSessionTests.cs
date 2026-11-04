@@ -3,8 +3,10 @@ using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Umpk.Client.Events;
+using Umpk.Client.Internal;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
+using Umpk.Game.Entities;
 using Umpk.Game.Registries;
 using Umpk.Game.World;
 using Umpk.Geometry;
@@ -31,6 +33,10 @@ public sealed class ModernPickNonparticipantSessionTests
                 foreach (bool far in new[] { false, true })
                     foreach (bool held in new[] { false, true })
                         yield return [protocol, kind, far, held];
+        foreach (int protocol in Enumerable.Range(755, 14))
+            foreach (string kind in protocol >= 762 ? new[] { "marker", "block_display", "item_display", "text_display" } : new[] { "marker" })
+                foreach (bool held in new[] { false, true })
+                    yield return [protocol, kind, false, held];
     }
 
     [Theory]
@@ -76,7 +82,7 @@ public sealed class ModernPickNonparticipantSessionTests
                 foreach (bool far in new[] { false, true })
                     foreach (bool held in new[] { false, true })
                         yield return [protocol, kind, far, held];
-        foreach (string kind in Excluded)
+        foreach (string kind in Excluded.Where(kind => kind is not ("marker" or "block_display" or "item_display" or "text_display")))
             foreach (bool held in new[] { false, true })
                 yield return [768, kind, false, held];
     }
@@ -237,6 +243,106 @@ public sealed class ModernPickNonparticipantSessionTests
         }
     }
 
+    public static IEnumerable<object[]> EarlierStaticLifetimes()
+    {
+        yield return [755, "marker"];
+        foreach (int protocol in new[] { 762, 768 })
+            foreach (string kind in new[] { "marker", "block_display", "item_display", "text_display" })
+                yield return [protocol, kind];
+    }
+
+    [Theory]
+    [MemberData(nameof(EarlierStaticLifetimes))]
+    public async Task EarlierStaticExclusionsSurviveReceivedMovementMetadataRemovalAndReplacement(int protocol, string kind)
+    {
+        await using Session session = await Session.Create(protocol);
+        await session.Spawn(kind, far: false);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task mining = session.Mine(caller.Token);
+        try
+        {
+            await session.Queued();
+            AssertStarted(await session.Tick(), protocol);
+            Vec3d point = new(8.5, 64, 8.5);
+            PositionMoveRotation? modernTeleport = protocol >= 768 ? new(point, Vec3d.Zero, 0, 0) : null;
+            await session.Send(new ClientboundTeleportEntityPacket(42, point.X, point.Y, point.Z, 0, 0, false, modernTeleport, default));
+            await session.Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(0, MetadataValue.Byte(0x20), 0)], [])));
+            Assert.Empty(await session.Barrier());
+            await session.Client.InvokeAsync(client =>
+            {
+                var actor = Assert.IsType<Entity>(client.State.Entities.Get(42));
+                Assert.Equal(point, actor.Position);
+                Assert.True(actor.Metadata.TryGet(0, out MetadataValue flags));
+                Assert.Equal(MetadataValue.Byte(0x20), flags);
+                return true;
+            }, session.Token);
+            AssertContinued(await session.Tick(), protocol);
+            await session.Send(new ClientboundRemoveEntitiesPacket([42]));
+            Assert.Empty(await session.Barrier());
+            await session.Client.InvokeAsync(client => { Assert.Null(client.State.Entities.Get(42)); return true; }, session.Token);
+            AssertContinued(await session.Tick(), protocol);
+            await session.Spawn(kind, far: false);
+            AssertContinued(await session.Tick(), protocol);
+            await session.Spawn(protocol >= 762 ? "interaction" : "armor_stand", far: false);
+            AssertAbort(await session.Tick(), protocol);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        }
+        finally
+        {
+            caller.Cancel();
+            if (!mining.IsCompleted)
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        }
+    }
+
+    [Theory]
+    [InlineData(755, "marker")]
+    [InlineData(762, "block_display")]
+    [InlineData(768, "text_display")]
+    public async Task EarlierStaticHeldMiningRetainsPeerEofAndSessionCancellation(int protocol, string kind)
+    {
+        await using Session session = await Session.Create(protocol);
+        await session.Spawn(kind, far: false);
+        Task mining = session.Mine(session.Token);
+        await session.Queued();
+        AssertStarted(await session.Tick(), protocol);
+        await session.Close();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        Assert.True(session.Ticks.SessionCancelled);
+    }
+
+    [Theory]
+    [InlineData(754)]
+    [InlineData(761)]
+    public async Task AdjacentEarlierErasKeepAnUnclassifiedParticipantBlockingHeldMining(int protocol)
+    {
+        await using Session session = await Session.Create(protocol);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task mining = session.Mine(caller.Token);
+        try
+        {
+            await session.Queued();
+            AssertStarted(await session.Tick(), protocol);
+            await session.Spawn("armor_stand", far: false);
+            AssertAbort(await session.Tick(), protocol);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        }
+        finally
+        {
+            caller.Cancel();
+            if (!mining.IsCompleted)
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        }
+    }
+
+    [Theory]
+    [InlineData(754, "marker")]
+    [InlineData(761, "block_display")]
+    [InlineData(761, "item_display")]
+    [InlineData(761, "text_display")]
+    public void APreintroductionNameDoesNotAcquireTheNativeExclusion(int protocol, string kind)
+        => Assert.False(InteractionPickProfile.ForProtocol(protocol).IsNativeNonparticipant(Identifier.Minecraft(kind)));
+
     private static void AssertStarted(IReadOnlyList<IPacket> packets, int protocol)
     {
         Assert.Equal(3, packets.Count);
@@ -244,7 +350,10 @@ public sealed class ModernPickNonparticipantSessionTests
         Assert.Equal(0, start.Action);
         Assert.Equal(Session.Target, start.Position);
         Assert.Equal((byte)Direction.North, start.Direction);
-        Assert.True(start.Sequence > 0);
+        if (protocol >= 759)
+            Assert.True(start.Sequence > 0);
+        else
+            Assert.Null(start.Sequence);
         AssertSwing(packets[1], protocol);
         AssertSwing(packets[2], protocol);
     }
@@ -308,7 +417,8 @@ public sealed class ModernPickNonparticipantSessionTests
                 var corrected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
                 using IDisposable correction = session.Client.Events.Subscribe<PositionCorrected>(_ => corrected.TrySetResult());
                 var position = new Vec3d(.5, 64, .5);
-                await session.Send(new ClientboundPlayerPositionPacket(position.X, position.Y, position.Z, 0, 0, 0, 1, new PositionMoveRotation(position, Vec3d.Zero, 0, 0)));
+                PositionMoveRotation? modernPosition = protocol >= 768 ? new(position, Vec3d.Zero, 0, 0) : null;
+                await session.Send(new ClientboundPlayerPositionPacket(position.X, position.Y, position.Z, 0, 0, 0, 1, modernPosition));
                 await corrected.Task.WaitAsync(session.Token);
                 await session.Terrain();
                 int stone = session.Client.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId;
@@ -358,24 +468,82 @@ public sealed class ModernPickNonparticipantSessionTests
 
         private async Task Terrain()
         {
-            var empty = new ChunkPalettedContainerWire(0, 0, null, []);
-            var sections = Enumerable.Range(0, Client.State.World.Dimension.SectionCount).Select(_ => new ChunkSectionWire(0, _protocol >= 775 ? (short)0 : null, empty, empty)).ToArray();
-            ChunkWireBody body = _protocol >= 770
-                ? new ModernChunkWireBody(0, 0, _protocol >= 775, [], sections, [], new byte[7])
-                : new NbtHeightmapChunkWireBody(0, 0, new NbtCompound(), sections, [], new byte[7]);
-            byte[] bytes = ChunkCodecs.EncodeStructural(body);
+            byte[] bytes;
+            if (_protocol == 47)
+                bytes = ChunkCodecs.EncodeStructural(new LegacyChunkWireBody(0, 0, true, 16, [new int[4096]], new byte[4096 + 256]));
+            else if (_protocol >= 757)
+            {
+                var empty = new ChunkPalettedContainerWire(0, 0, null, []);
+                var sections = Enumerable.Range(0, (Client.State.World.Dimension.MaxY - Client.State.World.Dimension.MinY) / 16)
+                    .Select(_ => new ChunkSectionWire(0, _protocol >= 775 ? (short)0 : null, empty, empty)).ToArray();
+                byte[] tail = new byte[_protocol <= 762 ? 8 : 7];
+                ChunkWireBody body = _protocol >= 770
+                    ? new ModernChunkWireBody(0, 0, _protocol >= 775, [], sections, [], tail)
+                    : _protocol >= 768 ? new NbtHeightmapChunkWireBody(0, 0, new NbtCompound(), sections, [], tail)
+                    : new Protocol764To767ChunkWireBody(0, 0, new NbtCompound(), sections, [], tail, _protocol >= 764 ? NbtWireFormat.JavaUnnamedRoot : NbtWireFormat.JavaNamedRoot);
+                bytes = ChunkCodecs.EncodeStructural(body);
+            }
+            else if (_protocol >= 735)
+            {
+                var output = new ArrayBufferWriter<byte>();
+                var writer = new PacketWriter(output);
+                writer.WriteInt(0);
+                writer.WriteInt(0);
+                if (_protocol < 755)
+                    writer.WriteBool(true);
+                if (_protocol <= 736)
+                    writer.WriteBool(false);
+                writer.WriteVarInt(0);
+                writer.WriteNbt(new NbtCompound(), NbtWireFormat.JavaNamedRoot);
+                if (_protocol <= 736)
+                    writer.WriteBytes(new byte[4096]);
+                else
+                {
+                    writer.WriteVarInt(1024);
+                    writer.WriteBytes(new byte[1024]);
+                }
+                writer.WriteVarInt(0);
+                writer.WriteVarInt(0);
+                bytes = output.WrittenSpan.ToArray();
+            }
+            else if (_protocol >= 477)
+                bytes = ChunkCodecs.EncodeStructural(new Pre1_18ChunkWireBody(0, 0, true, 0, new NbtCompound(), [], _protocol < 573 ? new byte[1024] : [], [0], _protocol >= 573 ? new byte[4096] : []));
+            else
+            {
+                var output = new ArrayBufferWriter<byte>();
+                var writer = new PacketWriter(output);
+                writer.WriteInt(0);
+                writer.WriteInt(0);
+                writer.WriteBool(true);
+                writer.WriteVarInt(0);
+                int biomes = _protocol >= 393 ? 1024 : 256;
+                writer.WriteVarInt(biomes);
+                writer.WriteBytes(new byte[biomes]);
+                if (_protocol >= 110)
+                    writer.WriteVarInt(0);
+                bytes = output.WrittenSpan.ToArray();
+            }
             BoundPacketCodec codec = BoundDescriptorCodec.Clientbound(_protocol, "level_chunk_with_light");
             var packet = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(bytes, Context));
             Assert.True(packet.FullChunk);
             Assert.Equal(0, packet.ChunkX);
             Assert.Equal(0, packet.ChunkZ);
-            Assert.Equal(sections.Length, packet.Column.SectionCount);
+            Assert.Equal(_protocol < 757 ? 1 : Client.State.World.Dimension.SectionCount, packet.Column.SectionCount);
             Assert.Equal(0, packet.Column.GetBlockStateId(Target.X, Target.Y, Target.Z));
             Assert.Equal(bytes, Encode(codec, packet));
             Assert.Equal(bytes, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(packet)));
             await Send(packet);
             Assert.Empty(await Barrier());
-            Assert.True(Client.State.EntityMembership.HasColumn(Target));
+            await Client.InvokeAsync(client =>
+            {
+                var installed = Assert.IsType<ChunkColumn>(client.State.World.GetColumn(Target));
+                Assert.Same(client.State.World.Dimension, installed.Dimension);
+                Assert.Equal(client.State.World.Dimension.SectionCount, installed.SectionCount);
+                Assert.True(client.State.EntityMembership.HasColumn(Target));
+                Assert.True(client.State.World.GetBlock(Target).IsValid);
+                Assert.True(client.State.World.GetBlock(Target).IsAir);
+                return true;
+            }, Token);
         }
 
         internal async Task Send(IPacket packet)
@@ -393,11 +561,37 @@ public sealed class ModernPickNonparticipantSessionTests
                     Assert.Equal(add.TypeId, observed.TypeId);
                     Assert.Equal(new Vec3d(add.X, add.Y, add.Z), new Vec3d(observed.X, observed.Y, observed.Z));
                     break;
+                case ClientboundSetEntityDataPacket metadata:
+                    var receivedMetadata = Assert.IsType<ClientboundSetEntityDataPacket>(decoded);
+                    Assert.Equal(metadata.EntityId, receivedMetadata.EntityId);
+                    Assert.Equal(metadata.Metadata.Entries, receivedMetadata.Metadata.Entries);
+                    break;
+                case ClientboundRemoveEntitiesPacket removed:
+                    Assert.Equal(removed.EntityIds, Assert.IsType<ClientboundRemoveEntitiesPacket>(decoded).EntityIds);
+                    break;
+                case ClientboundTeleportEntityPacket teleport:
+                    var teleported = Assert.IsType<ClientboundTeleportEntityPacket>(decoded);
+                    Assert.Equal(teleport.EntityId, teleported.EntityId);
+                    Assert.Equal(new Vec3d(teleport.X, teleport.Y, teleport.Z), new Vec3d(teleported.X, teleported.Y, teleported.Z));
+                    Assert.Equal(teleport.Yaw, teleported.Yaw);
+                    Assert.Equal(teleport.Pitch, teleported.Pitch);
+                    Assert.Equal(teleport.OnGround, teleported.OnGround);
+                    Assert.Equal(_protocol >= 768, teleported.ModernValues is not null);
+                    Assert.Equal(teleport.ModernValues, teleported.ModernValues);
+                    Assert.Equal(teleport.Relatives, teleported.Relatives);
+                    break;
                 case ClientboundLoginPacket login:
                     Assert.Equal(login.PlayerId, Assert.IsType<ClientboundLoginPacket>(decoded).PlayerId);
                     break;
                 case ClientboundPlayerPositionPacket correction:
-                    Assert.Equal(correction.ModernValues, Assert.IsType<ClientboundPlayerPositionPacket>(decoded).ModernValues);
+                    var receivedCorrection = Assert.IsType<ClientboundPlayerPositionPacket>(decoded);
+                    Assert.Equal(new Vec3d(correction.X, correction.Y, correction.Z), new Vec3d(receivedCorrection.X, receivedCorrection.Y, receivedCorrection.Z));
+                    Assert.Equal(correction.Yaw, receivedCorrection.Yaw);
+                    Assert.Equal(correction.Pitch, receivedCorrection.Pitch);
+                    Assert.Equal(correction.RelativeFlags, receivedCorrection.RelativeFlags);
+                    Assert.Equal(correction.TeleportId, receivedCorrection.TeleportId);
+                    Assert.Equal(_protocol >= 768, receivedCorrection.ModernValues is not null);
+                    Assert.Equal(correction.ModernValues, receivedCorrection.ModernValues);
                     break;
                 case ClientboundBlockUpdatePacket block:
                     Assert.Equal(block, Assert.IsType<ClientboundBlockUpdatePacket>(decoded));

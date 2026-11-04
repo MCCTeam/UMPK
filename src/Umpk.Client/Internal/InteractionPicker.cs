@@ -32,16 +32,22 @@ internal readonly record struct InteractionPickProfile(bool AttributeReach, bool
 {
     // Original 1.8.9 bfk/pk, 1.9 bng/rr, 1.13.2 cty/cea and mapped GameRenderer/ProjectileUtil: radius changes at 107, box clipping at 393, attribute reach at 766, and LocalPlayer's item-range override at 774.
     private bool LegacyExperienceOrbAlias { get; init; }
+    private bool EarlierMarker { get; init; }
+    private bool EarlierDisplays { get; init; }
 
     public static InteractionPickProfile ForProtocol(int protocol) => new(protocol >= 766, protocol < 393, protocol == 47 ? .1F : 0, protocol >= 774, protocol is >= 769 and <= 777)
     {
         LegacyExperienceOrbAlias = protocol is >= 107 and <= 340,
+        EarlierMarker = protocol is >= 755 and <= 768,
+        EarlierDisplays = protocol is >= 762 and <= 768,
     };
 
     public bool IsNativeNonparticipant(Identifier type)
         // Original inherited Entity.isPickable is false for these modern classes. The dragon root stays unknown because native queries also include its pickable parts.
         => type.IsMinecraft && (type.Path is "item" or "experience_orb"
             || LegacyExperienceOrbAlias && type.Path == "xp_orb"
+            || EarlierMarker && type.Path == "marker"
+            || EarlierDisplays && type.Path is "block_display" or "item_display" or "text_display"
             || ModernNonparticipants && type.Path is "area_effect_cloud" or "block_display" or "evoker_fangs" or "eye_of_ender" or "item_display" or "lightning_bolt" or "marker" or "ominous_item_spawner" or "text_display");
 
     public (double Block, double Entity) Ranges(ClientSessionServices services, double requestedBlockRange)

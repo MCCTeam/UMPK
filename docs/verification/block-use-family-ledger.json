@@ -3948,5 +3948,125 @@
       "final17/currentconsumers/packages/AOT/publishedCI"
     ],
     "fullGoalClosed": false
+  },
+  "earlierStaticEntityPicking20261104": {
+    "status": "passed bounded source/session/composedFullClient; fullgoalopen",
+    "report": "docs/verification/earlier-static-entity-picking.md",
+    "protocolTypePairs": 35,
+    "namedSourceReleases": 21,
+    "physicalNativeSourceFiles": 119,
+    "productionOwner": "existing InteractionPickProfile/InteractionPicker",
+    "caller": "public view-dependent mining",
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/stone38-picking80-managed118-preparation-20261104-v8/ROOT-ACCEPTANCE.json",
+      "bytes": 5453,
+      "sha256": "9d9e38409deeaa575e817320d935db98e5e7e158021bbc68378180dbf5973862"
+    },
+    "actual": {
+      "path": "/home/anon/Projects/UMPK/.scratch/stone38-picking80-managed118-preparation-20261104-v8/ACTUAL-MANAGED118.json",
+      "bytes": 31012,
+      "sha256": "db84689aac9f4822066dd8e7bb0f4351bb468d1b90a73b525ff9233bd4475e9d"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/TERMINAL-CLEANUP.json",
+      "bytes": 6230,
+      "sha256": "32513e348ed0c0232ab8742518f0ba04ad7d527e02772ef0446767f097082f5c"
+    },
+    "sourceBindings": {
+      "path": "/home/anon/Projects/UMPK/.scratch/earlier-static-pick-nonparticipants-source-20261104-v1/SOURCE-BINDINGS.json",
+      "bytes": 160772,
+      "sha256": "3c3c6da2556162719034680a63c9ec2ef1e371af7fc25c7824941989824aed77"
+    },
+    "cases": {
+      "stoneControls": 108,
+      "stoneCausalFailures": 26,
+      "stoneGreen": 134,
+      "pickingControls": 414,
+      "pickingCausalFailures": 82,
+      "pickingGreen": 496,
+      "focused": 630,
+      "adjacent": 3837,
+      "fullClient": 39003,
+      "newStone": 38,
+      "newPickingNet": 80,
+      "removedPicking": 8,
+      "addedPicking": 88,
+      "fixtureKeys": 3,
+      "fixtureOccurrences": 127,
+      "finalPdbDocumentsPhysicallyVerified": 619,
+      "ownedHostIdentitiesAbsent": 31
+    },
+    "actualClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.dll",
+        "bytes": 1249280,
+        "sha256": "452793812b67d50d0ed7b0ee666511dfcb4a5e1aae57f430eee264a555b98d54"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.pdb",
+        "bytes": 299352,
+        "sha256": "860ee7a6251eaef444281d030047f1fb276530ffac8682f4d2138acd2a387993"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.xml",
+        "bytes": 856545,
+        "sha256": "0c7cd0d340c11f4294d21d87126965932033ad2883975a32efd934359e6bd261"
+      }
+    ],
+    "actualTestPair": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.dll",
+        "bytes": 24912896,
+        "sha256": "697b52b3e92ccea5d1647fe555a287174641de41a6cc902b524e51a7564bfd2b"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.pdb",
+        "bytes": 1121872,
+        "sha256": "eb221e8abc258dba440289d7932ba7eb415cbadd259b8dee3f883082376e521b"
+      }
+    ],
+    "compilerOrigins": {
+      "client": {
+        "configuration": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/CONFIGURATION.json",
+          "bytes": 604646,
+          "sha256": "e2ab2f3a1a4a8c21370aac2536b0cec168216962dcef7426064651c77d215c01"
+        },
+        "completion": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/completion.json",
+          "bytes": 2054680,
+          "sha256": "1154d224042da4922c9db663fc59fde5fb52007dc2f011116ff25231cede90f4"
+        },
+        "cleanup": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/TERMINAL-CLEANUP.json",
+          "bytes": 6727,
+          "sha256": "b748f3c27fed59113dd1f7c5915a8a2d652a07bcf6f6c3278c183d55a1804c38"
+        }
+      },
+      "test": {
+        "configuration": {
+          "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/CONFIGURATION.json",
+          "bytes": 1659046,
+          "sha256": "2cc70d57beb7088d31f7c5f93ea8ba7af2506b885e2d2efd562fa1c6e7d4d221"
+        },
+        "source": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/source"
+      },
+      "historical": {
+        "Client": 3,
+        "Test": 4
+      },
+      "current": {
+        "Client": 0,
+        "Test": 1
+      }
+    },
+    "markerBroadcast": false,
+    "markerFramedCases": "defensivepeerinput",
+    "otherUnknownParticipantsRetained": true,
+    "unexecuted": [
+      "final13sourceadmission",
+      "finalnative/live125/full17/currentconsumers/packages/AOT/publishedCI"
+    ],
+    "fullGoalClosed": false
   }
 }

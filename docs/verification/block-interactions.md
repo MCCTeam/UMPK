@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Earlier marker and display picking, 4 November 2026
+
+The [source-backed static exclusions](earlier-static-entity-picking.md) let view mining continue past Marker755–768 and Display762–768 types that native picking ignores. The 35 protocol/type pairs cover 21 releases; Marker frames are defensive peer-input cases because vanilla does not broadcast their ordinary spawn packet. Other unknown participants and public raycast/coordinate contracts remain unchanged.
+
+The 496 cases move from 414 controls/82 causal failures to all passes, with the identical failures preserved on the STONE-only intermediate. The final composed producer passes 630 focused, 3,837 adjacent and 39,003 unfiltered Client tests without skips. Exact names include 38 STONE additions, 88 picking additions/eight deliberate migrations and three literal fixture-root keys/127 occurrences. Root `9d9e3840`, actual `db84689a` and cleanup `32513e34` bind original Client `45279381`/PDB `860ee7a6`, the fresh Test pair, source/reference invariance and all 31 owned exits. Earlier failed attempts remain failed. Final native/live/repository/consumer/package/AOT/published-head acceptance stays open.
+
 ## Local stone placement, 4 November 2026
 
 The [bounded local STONE prediction](stone-local-placement.md) updates the existing block shadow and main/offhand stack before USE on protocols 766 and 777. It requires canonical unpatched STONE, literal AIR, received terrain, safe AIR/STONE neighbors and observed current abilities. Other items, eras and unavailable contexts remain open.

@@ -6,9 +6,9 @@ The first committed implementation checkpoint was `c015405` on `codex/vanilla-bl
 
 ## Copper-chest properties, 2026-11-04
 
-The [copper-chest state correction](copper-chest-properties.md) adds eight missing names to the existing chest-type override on protocols 773–777. Original vanilla getters verify all 960 states. Five new data tests reproduce the incorrect domains, all 2,488 old tests pass, and fresh generation changes exactly forty block/protocol property rows while the other sixty generated files remain identical.
+The [copper-chest state correction](copper-chest-properties.md) fixes the eight variants on protocols 773–777. Original vanilla verifies all 960 states. Five causal data failures become five passes and the full 2,493 passes without skips, with the exact old 2,488 plus five multiset. Generation changes only the forty expected property rows; the other sixty files stay identical.
 
-The owning library compile hits its managed memory limit under the unchanged 4 GiB cap. Its failed prefix and complete cleanup are retained. Corrected GREEN/full 2,493, remote CI, producer admission and real-session caller acceptance remain pending; this is not a completed placement claim.
+The local owning compile hits its unchanged memory cap, and its failed prefix remains recorded. The successful continuation imports the exact source/PDB-verified CI library and runs no compiler. All seven CI jobs pass on `84b797f`; the raw Ubuntu audit matches all seventeen totals, with 52,012 passes and 23 named normal skips. CI AOT stays below the unchanged limit at 24,844,968 bytes with one executed passing smoke. The corrected source-equivalent thirteen-library tuple is admitted; joint placement/tool callers and final composed-producer gates remain open.
 
 ## Fresh consumer, AOT and package checkpoint, 2026-11-04
 

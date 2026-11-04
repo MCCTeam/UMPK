@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Ladder placement on stone, 4 November 2026
+
+The [ladder placement correction](ladder-stone-placement.md) connects native horizontal stone support and the thin 3/16 collision plate to the existing placement action on 28 datasets, protocols 735–777. Canonical default stacks, received terrain, both hands, body obstruction and native result/swing policy are covered; other supports, older eras and unavailable context remain explicit Unknown.
+
+Four native boundaries supply 192 controlled observations. The 257 connected cases move from 45 controls and 212 causal failures to all passes; adding the helper without its caller preserves the failures. The final combined ladder/cube producer also passes 353 focused, 3,885 adjacent and 38,861 unfiltered Client tests with no skips. Its full multiset is exactly the previous 38,508 plus 353 cases. Intermediate Client `607f30e0` passed focused 257; only final Client `0e7dbe7d` ran the combined adjacent/full checks. No standalone full 38,765 run is claimed.
+
+Cleanup `0da7737a` verifies all 38 observed HOST identities gone and unchanged source, references, remaining producers and final runtime. Dedicated live40, the final 50/75 matrix, current consumers, packages/AOT, full seventeen-suite gates and new published-head CI remain open. Earlier checkpoints below retain their actual source and producer scope.
+
 ## Tooltip identity while mining, 4 November 2026
 
 The [TooltipDisplay mining identity correction](tooltip-display-mining-identity.md) now keeps progress for equal hidden-component sets, including reordered or duplicate values, on protocols 770–777. Changes reset progress; invalid supplied IDs and unproven defaults retain the existing unavailable-identity behavior. Original native24/48packet round trips support 96 framed and 70 supplied-value cases through the actual mining caller.

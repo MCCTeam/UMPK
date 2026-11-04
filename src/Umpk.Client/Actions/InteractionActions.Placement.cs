@@ -237,6 +237,7 @@ public sealed partial class InteractionActions
         }
         VanillaStairPlacement stair = VanillaStairPlacement.ForProtocol(_services.Version.Version.Protocol);
         VanillaChainPlacement chain = VanillaChainPlacement.ForProtocol(_services.Version.Version.Protocol);
+        VanillaLadderPlacement ladder = VanillaLadderPlacement.ForProtocol(_services.Version.Version.Protocol);
         if (!block.PassiveUse && !suppressActivation && !activationPassesOffhand && !(hasActivation && activationResult == BlockUseResult.Pass) && (hasActivation || !stair.HasPassiveUse(clicked)))
             return BlockUsePrediction.Unknown;
         if (!itemKnown)
@@ -278,6 +279,8 @@ public sealed partial class InteractionActions
             // Original legacy ItemBlock checks player permission after the controller's placement precheck and USE send. Default quartz has neither CanPlaceOn NBT nor canEditBlocks.
             if (VanillaPillarPlacement.IsLegacyQuartz(_services.Version.Version.Protocol, item) && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
                 return BlockUsePrediction.Fail;
+            if (ladder.SupportsStack(_services.Version.Version.Protocol, item) && data.TryGetItem(item.Item.Id, out ItemUseOnInfo ladderUse) && ladder.Supports(item.Item.Id, ladderUse, clicked.Source))
+                return BlockUsePrediction.Pass;
             // Native ItemStack denies a default chain or heart without CanPlaceOn before entering BlockItem placement, including an occupied destination. The controller still commits USE.
             if (item.Components.HasNoPatch && data.TryGetItem(item.Item.Id, out ItemUseOnInfo chainUse)
                 && (chain.Supports(item.Item.Id, chainUse, clicked.Source)
@@ -324,6 +327,8 @@ public sealed partial class InteractionActions
             return PredictSlabPlacement(slab, item.Item.Id);
         if (stair.Supports(item.Item.Id, use, clicked.Source))
             return PredictStairPlacement(stair, item.Item.Id);
+        if (ladder.Supports(item.Item.Id, use, clicked.Source))
+            return ladder.SupportsStack(_services.Version.Version.Protocol, item) ? PredictLadderPlacement(ladder) : BlockUsePrediction.Unknown;
         if (chain.Supports(item.Item.Id, use, clicked.Source))
             return PredictChainPlacement(chain, item.Item.Id);
         if (!IsOrdinaryCubeItem(item.Item.Id, use) || !_services.State.Features.Entities)
@@ -427,6 +432,30 @@ public sealed partial class InteractionActions
                 position, destination, face, cursor, _services.Self.Yaw, out BlockState selected))
                 return BlockUsePrediction.Unknown;
             if (JavaGameData.BlockShapes(_services.Version.Version.Protocol) is not IBlockCollisionGridSource grids
+                || grids.GetCollisionGrid(selected) is not { } grid)
+                return BlockUsePrediction.Unknown;
+            return PredictPlacementObstruction(destination, preSend: false, grid.Boxes);
+        }
+
+        BlockUsePrediction PredictLadderPlacement(VanillaLadderPlacement ladder)
+        {
+            if (!_services.State.Features.Entities || !_services.State.EntityMembership.HasColumn(position)
+                || face.GetAxis() == Axis.Y || clicked.Block.Id != Identifier.Minecraft("stone")
+                || !TryReplacement(position, clicked, out BlockReplacementInfo replacement) || replacement.ReplacesClickedBlock)
+                return BlockUsePrediction.Unknown;
+            BlockPos destination = position.Offset(face);
+            if (destination.Y < world.Dimension.MinY || destination.Y >= world.Dimension.MaxY)
+                return BlockUsePrediction.Fail;
+            if (world.GetColumn(destination) is null || !_services.State.EntityMembership.HasColumn(destination))
+                return BlockUsePrediction.Unknown;
+            BlockState previous = _services.State.JukeboxPrediction.GetBlock(world, destination);
+            if (!previous.IsValid || !TryReplacement(destination, previous, out replacement))
+                return BlockUsePrediction.Unknown;
+            if (!replacement.AllowsPlacement)
+                return BlockUsePrediction.Fail;
+            // Nonreplacement horizontal placement tests the clicked face first. Literal stone is a proven support, so later view-dependent candidates are never selected.
+            if (!ladder.TryGetStoneWallCollisionRepresentative(clicked, face, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol), out BlockState selected)
+                || JavaGameData.BlockShapes(_services.Version.Version.Protocol) is not IBlockCollisionGridSource grids
                 || grids.GetCollisionGrid(selected) is not { } grid)
                 return BlockUsePrediction.Unknown;
             return PredictPlacementObstruction(destination, preSend: false, grid.Boxes);

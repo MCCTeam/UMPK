@@ -3599,5 +3599,85 @@
     ],
     "finalGates": "not run on eventual final producer; live/currentconsumers/localpackageAOT/final17/currentnewheadCI remain open",
     "fullGoalClosed": false
+  },
+  "defaultStoneWallLadderPlacement20261104": {
+    "status": "passed bounded native/session/fullcombinedClient; final acceptance open",
+    "report": "docs/verification/ladder-stone-placement.md",
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/ladder257-cube96-managed-preparation-20261104-v3/ROOT-ACCEPTANCE.json",
+      "bytes": 3874,
+      "sha256": "a26a2cf687d0244f2d920647db84f9b288c9b741b7ba34546cd42f5505b94844"
+    },
+    "native192": {
+      "path": "/home/anon/Projects/UMPK/.scratch/ladder-native192-root-union-20261104-v1.json",
+      "bytes": 3308,
+      "sha256": "a978753d6acca574c27d4a82f5af20b4e5df2f3587254dd933884156923e4c55"
+    },
+    "actual": {
+      "path": "/home/anon/Projects/UMPK/.scratch/ladder257-cube96-managed-preparation-20261104-v3/ACTUAL-MANAGED353.json",
+      "bytes": 32473,
+      "sha256": "ad6b64405480dddeeed6ec4ead90c448e51288e4db8ded200031b2cdb44f53cd"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/TERMINAL-CLEANUP.json",
+      "bytes": 7196,
+      "sha256": "0da7737abe06d2f66c99dbc57d70bc949dcc402414d8cbede09d6898908065a7"
+    },
+    "protocols": "735\u2013777/28datasets/224states;native735755766777",
+    "productionOwner": "InteractionActions.Placement with internalVanillaLadderPlacement",
+    "caller": "public PlaceBlockAsync through sessionowner",
+    "cases": {
+      "ladderControls": 45,
+      "ladderCausalRed": 212,
+      "cubeControls": 54,
+      "cubeCausalRed": 42,
+      "ladderGreen": 257,
+      "jointGreen": 353,
+      "adjacent": 3885,
+      "unfilteredFull": 38861,
+      "skips": 0
+    },
+    "intermediateClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/stage-producers/ladder/Umpk.Client.dll",
+        "bytes": 1243648,
+        "sha256": "607f30e0ebbfec13cf20a44578825194138e26bb351c0f0f056a70a859b267de"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/stage-producers/ladder/Umpk.Client.pdb",
+        "bytes": 298196,
+        "sha256": "70e361a23d8a36c1b5dfd3605fda09de73c116c367b76e80732068a9dc25e058"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/stage-producers/ladder/Umpk.Client.xml",
+        "bytes": 856086,
+        "sha256": "0726022beacb1a46c484436ae53cf301562190346cefd8d4046fbc417ac7eae6"
+      }
+    ],
+    "finalCombinedClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.dll",
+        "bytes": 1243648,
+        "sha256": "0e7dbe7de53e9e67f9805f28a18d53e820d962ce4cc9eb0b8ce495a78e3e0c2e"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.pdb",
+        "bytes": 298196,
+        "sha256": "2ba8324605816233001c926166080eccd8fdf49f24e06d5ac143356c6e3c5a1d"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/ladder257-cube96-managed353-20261104-v3/source/src/Umpk.Client/bin/Release/net10.0/Umpk.Client.xml",
+        "bytes": 856086,
+        "sha256": "0726022beacb1a46c484436ae53cf301562190346cefd8d4046fbc417ac7eae6"
+      }
+    ],
+    "noStandalone38765Full": true,
+    "unexecuted": [
+      "dedicatedladderlive40",
+      "otherladdermaterials/oldereras",
+      "localBlockItemterrain/fluid/stackprediction",
+      "final125/repository17/currentconsumer/packageAOT/publishedCI"
+    ],
+    "fullGoalClosed": false
   }
 }

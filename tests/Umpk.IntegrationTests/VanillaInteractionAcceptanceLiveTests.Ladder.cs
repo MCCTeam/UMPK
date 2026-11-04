@@ -148,8 +148,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             {
                 await RemoveActor();
                 await ClearCells();
-                await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
-                await server.ConsoleAsync("kill @e[type=minecraft:item]", ct);
+                await ClearNativeNonPlayerContextAsync(server, client, ct);
                 await WaitAsync(client, c => !c.State.Entities.All.Any(), "ladder received ambient removals", ct);
                 Assert.Equal("Test passed", await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct));
                 BlockPos clicked = destination.Offset(scene.Face.Opposite());

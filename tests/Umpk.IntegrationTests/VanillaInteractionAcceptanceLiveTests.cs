@@ -106,6 +106,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             await WaitAsync(client, c => c.State.Inventory.GetSlot(36).Item.Id == Identifier.Minecraft("stone") && c.State.Inventory.GetSlot(36).Count == 32, "placement stack", ct);
             await AssertCountAsync(server, protocol, 32, ct);
             await AssertBlockAsync(server, protocol, target, "air", ct);
+            if (protocol >= 758)
+                await ClearNativeNonPlayerContextAsync(server, client, ct);
             await server.WriteAsync("placement-inputs.json", await client.InvokeAsync(c => VanillaInteractionAcceptanceDiagnostics.Read(c, protocol, support, target), ct));
             int placementStart = capture.Mark();
             await client.Actions.Interaction.PlaceBlockAsync(support, Direction.Up, new Vec3d(0.5, 1, 0.5), ct: ct);
@@ -389,6 +391,25 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             Assert.Equal(1f, use.CursorY);
             Assert.Equal(0.5f, use.CursorZ);
         }
+    }
+
+    private static async Task ClearNativeNonPlayerContextAsync(VanillaInteractionAcceptanceHarness server, UmpkClient client, CancellationToken ct)
+    {
+        const string nativeEmptyQuery = "execute unless entity @e[type=!minecraft:player]";
+        for (int attempt = 0; attempt < 8; attempt++)
+        {
+            if (await server.CommandAsync(nativeEmptyQuery, ct) == "Test passed")
+            {
+                await WaitAsync(client, c => !c.State.Entities.All.Any(), "received native non-player removals", ct);
+                if (await server.CommandAsync(nativeEmptyQuery, ct) == "Test passed")
+                    return;
+            }
+            await server.ConsoleAsync("kill @e[type=!minecraft:player]", ct);
+            await server.ConsoleAsync("kill @e[type=minecraft:item]", ct);
+        }
+        Assert.Equal("Test passed", await server.CommandAsync(nativeEmptyQuery, ct));
+        await WaitAsync(client, c => !c.State.Entities.All.Any(), "received native non-player removals", ct);
+        Assert.Equal("Test passed", await server.CommandAsync(nativeEmptyQuery, ct));
     }
 
     private static Task WaitAsync(UmpkClient client, Func<UmpkClient, bool> condition, string description, CancellationToken ct)

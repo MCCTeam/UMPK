@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Published live entry and current consumers, 4 November 2026
+
+The [dedicated interaction entry](final-interaction-live-entry.md) adds chain, falling393 and ladder native legs through the existing physics-enabled harness. Its corrected one-compiler build binds 52 authored sources/56 PDB documents and the exact d248 libraries. Normal76 is49 executed passes/27 named opt-in skips; this enables the future deep legs and final125, with no live acceptance claimed yet. The prior chain-fixture compile failure remains preserved.
+
+Fresh DMCBK14/17/1,999 and MCC918 checks pass with33+26 DLL comparisons,143 references and frozen145. Actual `4a3d0f87`/cleanup `4524fe66` verify unchanged sibling source/Git/26 outputs and all40 owned exits. The seventeen-suite total becomes53,690 only for the deliberate three Integration additions; full17, native/live125, AOT/packages and current published-head CI remain open.
+
 ## Earlier marker and display picking, 4 November 2026
 
 The [source-backed static exclusions](earlier-static-entity-picking.md) let view mining continue past Marker755–768 and Display762–768 types that native picking ignores. The 35 protocol/type pairs cover 21 releases; Marker frames are defensive peer-input cases because vanilla does not broadcast their ordinary spawn packet. Other unknown participants and public raycast/coordinate contracts remain unchanged.

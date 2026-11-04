@@ -4068,5 +4068,52 @@
       "finalnative/live125/full17/currentconsumers/packages/AOT/publishedCI"
     ],
     "fullGoalClosed": false
+  },
+  "finalInteractionLiveEntry20261104": {
+    "status": "passed build/normal/currentconsumers; requiredliveNOTRUN",
+    "report": "docs/verification/final-interaction-live-entry.md",
+    "entryAcceptance": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/ACCEPTANCE.json",
+      "bytes": 64927,
+      "sha256": "1c229e0ddc2a17bd1f8e05f017e5192413af5a89d7e8f55b54f35251ebd3911f"
+    },
+    "entryDll": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.dll",
+      "bytes": 1696256,
+      "sha256": "4279a064daf9f6a8ed53b39d3a3bad3b2dd1e12883129dd6634d94c5ab366e1a"
+    },
+    "entryPdb": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-ladder-chain-falling-d248-20261104-v2/source-entry/.build-entry/bin/Umpk.IntegrationTests/release/Umpk.IntegrationTests.pdb",
+      "bytes": 221956,
+      "sha256": "e815d4f3e883cd6d6b61ab1195db1371559ff1dcc11654a6dd8661cae1d8e9b6"
+    },
+    "normalAcceptance": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v1/TERMINAL-ACCEPTANCE.json",
+      "bytes": 60333,
+      "sha256": "557f624ed1e9d52a3a3171bc5efddfc6b080728b0c3a068bc1ac680d870ec73b"
+    },
+    "normalRawTrx": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/final-entry118-d248-normal76-20261104-v1/normal76/results/result.trx",
+      "bytes": 157027,
+      "sha256": "a3be1fc051d05f19f1df801ac126654616583affd23cbee561793677443380a8"
+    },
+    "normalCases": {
+      "total": 76,
+      "passed": 49,
+      "namedSkipped": 27,
+      "trxNotExecutedCounter": 0
+    },
+    "consumerActual": {
+      "path": "/home/anon/Projects/UMPK/.scratch/consumer-final-d248-preparation-20261104-v1/ACTUAL-CONSUMERS.json",
+      "bytes": 7491,
+      "sha256": "4a3d0f877d92d731a2b554e7b7659c41758c82d46ba24c97e9279aa9c6d5f159"
+    },
+    "authoredEntrySources": 52,
+    "compilerPdbDocuments": 56,
+    "plannedDeepScenes": 91,
+    "final125Executed": 0,
+    "full17Executed": false,
+    "reconstructionGroupsBlocked": 11,
+    "fullGoalClosed": false
   }
 }

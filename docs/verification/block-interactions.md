@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Custom model data and mining, 2026-11-04
+
+The [mining identity fix](custom-model-mining-identity.md) retains progress across equivalent four-list custom model data on protocols 769–777. It preserves native list order, signed-zero and NaN comparisons, and distinguishes explicit empty data from absence. Native24 contributes 48 original packet round trips; all 108 connected cases pass after 27 causal failures and 81 controls.
+
+The combined producer passes all 342 new cases, 6,328 adjacent cases and 37,304 unfiltered Client tests without skips, with exact source/PDB and unchanged-input checks. All 73 owned processes exited and the unit/cgroup are clear. The deliberate mining increase is 108; the expected seventeen-suite total is 51,922. Legacy scalar custom model data, other component families, fresh live/consumer/AOT/package checks and final CI remain separate.
+
 ## Default 26.3 tool use, 2026-11-04
 
 The [tool transformation owner](tool-transformers-777.md) connects default axes, hoes and shovels to the effective received protocol-777 definitions, tags and existing action controller. All 234 focused cases pass after their causal failures, including four height-boundary cases corrected to use native void air. Configuration lifetime, hands, Adventure, cooldowns and unsupported components retain explicit results and unknowns.

@@ -10,6 +10,8 @@ namespace Umpk.Client.Actions;
 internal static class VanillaMiningItemIdentity
 {
     private const int ItemComponentsProtocol = 766;
+    private const int ListCustomModelDataProtocol = 769;
+    private const int LastMeasuredCustomModelDataProtocol = 777;
     private const int ModernPredicateProtocol = 770;
     private const int LastMeasuredPredicateProtocol = 777;
     private const int LastMeasuredLoreProtocol = 777;
@@ -117,6 +119,8 @@ internal static class VanillaMiningItemIdentity
     {
         if (HasNativeLoreIdentity(protocol) && current is LoreComponent lore && previous is LoreComponent otherLore)
             return LoreValuesMatch(lore, otherLore);
+        if (protocol is >= ListCustomModelDataProtocol and <= LastMeasuredCustomModelDataProtocol && current is CustomModelDataComponent customModel && previous is CustomModelDataComponent otherModel)
+            return CustomModelValuesMatch(customModel, otherModel);
         if (current is EnchantmentsComponent enchantments && previous is EnchantmentsComponent otherEnchantments)
             return EnchantmentValuesMatch(enchantments.Enchantments, otherEnchantments.Enchantments, enchantments.ShowInTooltip, otherEnchantments.ShowInTooltip, protocol);
         if (current is StoredEnchantmentsComponent stored && previous is StoredEnchantmentsComponent otherStored)
@@ -124,6 +128,23 @@ internal static class VanillaMiningItemIdentity
         if (current is AdventureModePredicateComponent predicate && previous is AdventureModePredicateComponent otherPredicate)
             return protocol <= LastMeasuredPredicateProtocol ? PredicateValuesMatch(predicate, otherPredicate, protocol) : false;
         return Equals(current, previous);
+    }
+
+    private static bool CustomModelValuesMatch(CustomModelDataComponent current, CustomModelDataComponent previous)
+    {
+        if (current.Floats.Count != previous.Floats.Count)
+            return false;
+        for (int index = 0; index < current.Floats.Count; index++)
+        {
+            // Java Float.equals distinguishes signed zero and canonicalizes NaNs in the ordered native lists.
+            int bits = float.IsNaN(current.Floats[index]) ? 0x7FC00000 : BitConverter.SingleToInt32Bits(current.Floats[index]);
+            int otherBits = float.IsNaN(previous.Floats[index]) ? 0x7FC00000 : BitConverter.SingleToInt32Bits(previous.Floats[index]);
+            if (bits != otherBits)
+                return false;
+        }
+        return current.Flags.SequenceEqual(previous.Flags)
+            && current.Strings.SequenceEqual(previous.Strings)
+            && current.Colors.SequenceEqual(previous.Colors);
     }
 
     private static bool EnchantmentValuesMatch(IReadOnlyList<EnchantmentInstance> current, IReadOnlyList<EnchantmentInstance> previous, bool currentTooltip, bool previousTooltip, int protocol)

@@ -529,6 +529,22 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             }
             else if (frame.Packet is ClientboundUpdateTagsPacket tagPacket)
                 CompareAdventureTagRegistries(tagPacket.Registries, Assert.IsType<ClientboundUpdateTagsPacket>(decoded).Registries);
+            else if (frame.Packet is ServerboundUseItemOnPacket use)
+            {
+                var actual = Assert.IsType<ServerboundUseItemOnPacket>(decoded);
+                int wireSequence = version.Version.Protocol >= 759 ? use.Sequence : 0;
+                Assert.Equal(wireSequence, actual.Sequence);
+                Assert.Equal(use with { Sequence = wireSequence }, actual);
+            }
+            else if (frame.Packet is ServerboundSwingPacket swing)
+            {
+                var actual = Assert.IsType<ServerboundSwingPacket>(decoded);
+                bool hasHand = version.Version.Protocol >= 107;
+                Assert.Equal(hasHand, actual.HasHand);
+                if (!hasHand)
+                    Assert.Equal(0, actual.Hand);
+                Assert.Equal(swing with { HasHand = hasHand }, actual);
+            }
             else
                 Assert.Equal(frame.Packet, decoded);
             RoundTrip(codec, frame.Payload, decoded);

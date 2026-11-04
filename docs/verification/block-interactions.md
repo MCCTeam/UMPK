@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Native interaction live checkpoint, 2026-11-04
+
+The [live checkpoint](interaction-live-checkpoint-20261104.md) records a complete six-face log-placement pass on 1.13 and one canonical 1.8 general smoke pass using the current `f1fcdcf` producer. Earlier 26.3 placement, spectator-lectern and protocol-47 results retain their exact older binaries and scope. The new fixtures preserve physics, native block/stack observations, exact packet replay and process cleanup.
+
+The canonical 1.8 Basic survival pilot also passes with actual legacy placement, native stack changes and 138 replayed frames. It is separate from general smoke; the matrix is one of fifty general rows and one of seventy-five Basic rows, with the rest unfinished. The deliberate new pillar test changes the expected normal Integration total from 71 to 72; the normal run passes 49 cases with 23 exact named opt-in skips, while the final seventeen-suite count gate remains pending. The modern mob-loot rule correction has source/compiler proof and still needs a general live row.
+
 ## Ordinary stair placement, 2026-11-04
 
 The [stair placement slice](ordinary-stair-placement.md) selects native facing, half and corner bounds on protocols 393–777. Exact grids determine self and peer obstruction. Original vanilla passes 24 state/query/controller scenes and 32 yaw cases; the finite source audit covers the registered materials and their clicked-use delegation.

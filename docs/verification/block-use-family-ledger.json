@@ -3113,5 +3113,41 @@
     "finalClient": 37638,
     "all17Expected": 52315,
     "remaining": "Local BlockItem terrain/stack prediction, native393/477 actors/controller, live boundaries, Adventure/custom components, legacy prechecks and final gates."
+  },
+  "acceptedLivePillar39320261104": {
+    "status": "passed",
+    "scope": "Current immutable f1 producer, one native 1.13 default-log six-face explicit-coordinate placement leg; not complete dynamic geometry or full placement inventory",
+    "protocols": [
+      393
+    ],
+    "releases": [
+      "1.13"
+    ],
+    "caller": "InteractionActions.PlaceBlockAsync -> owned prediction -> real server/native block and stack observations",
+    "producerCommit": "f1fcdcf5eed06ca9fd8fef8ff7be3a6dc287b11c",
+    "entryDllSha256": "88321274c48fd4f93663abc04b09e7392b81873785c40950c4e3156964210578",
+    "runtime": "Exactly one executed passing test, zero skips, six scenes; y/y/z/z/x/x and32-to31; exact use/swing ordering and replay; physics and native cleanup",
+    "evidence": "/home/anon/Projects/MinecraftOfficial/runs/interaction-final-entry-f1fcdcf-20261104-v10/pillar393-final-v10/TERMINAL-ACCEPTANCE.json",
+    "evidenceSha256": "cc48520ec46ed68fda700737679adcd13bf0ba6ec652e3268ef034ea4200ff44",
+    "remaining": "Historical North Unknown cause, unowned falling-actor geometry, local BlockItem prediction, final50/75 and fresh repository/consumer/package/AOT/CI gates remain unclosed",
+    "report": "docs/verification/interaction-live-checkpoint-20261104.md"
+  },
+  "acceptedBasic47Survival20261104": {
+    "status": "passed",
+    "scope": "One canonical Basic1.8 server-compatibility row using unchanged protocol47 client profile1.8.9; final75 incomplete",
+    "protocols": [
+      47
+    ],
+    "releases": [
+      "1.8"
+    ],
+    "productionCaller": "Interaction mining/placement controllers via public session actions with physics enabled",
+    "producerCommit": "f1fcdcf5eed06ca9fd8fef8ff7be3a6dc287b11c",
+    "entryDllSha256": "88321274c48fd4f93663abc04b09e7392b81873785c40950c4e3156964210578",
+    "observed": "Exactly1executedPASS0skip; survivalstoneprogress/nativeair; legacyblock_place/native32-to31/actionorder; occupiedrejection/bedrockcancellation;138byte-identicalreplays;strictnativeEOF/exit0/closedports",
+    "evidence": "/home/anon/Projects/MinecraftOfficial/runs/final-live-matrix-f1fcdcf-20261104-v1/basic47-pilot-v1/TERMINAL-ACCEPTANCE.json",
+    "evidenceSha256": "c51b0400f0531b0c3f5110f9a8a0c210f690930a08116833f5d31532ed7ca3f6",
+    "report": "docs/verification/interaction-live-checkpoint-20261104.md",
+    "remaining": "74Basic and49general rows, specialized behavior and final gates remain pending"
   }
 }

@@ -448,8 +448,9 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
             }
         }
 
-        public int AssertRoundTrips(Umpk.Game.Registries.RegistryAccess registries)
+        public int AssertRoundTrips(Umpk.Game.Registries.RegistryAccess registries, int minimumCount = 10)
         {
+            Assert.InRange(minimumCount, 1, 10);
             Assert.False(Overflowed, "The unchanged 20 MiB capture cap was exceeded.");
             var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
             int count = 0;
@@ -477,7 +478,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
                 Assert.Equal(frame.Payload, bytes.WrittenSpan.ToArray());
                 count++;
             }
-            Assert.True(count >= 10);
+            Assert.True(count >= minimumCount);
             return count;
         }
     }

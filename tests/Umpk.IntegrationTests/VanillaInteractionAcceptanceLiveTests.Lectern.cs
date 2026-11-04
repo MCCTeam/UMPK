@@ -1,3 +1,4 @@
+using System.Buffers;
 using Umpk.Client;
 using Umpk.Client.Actions;
 using Umpk.Client.Events;
@@ -7,6 +8,7 @@ using Umpk.Game.Players;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
 using Umpk.Text;
 using Xunit;
@@ -18,8 +20,11 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     public static IEnumerable<object[]> LecternReleaseCases()
     {
         (string Release, int Protocol)[] rows = [("1.14", 477), ("1.15", 573), ("1.20.4", 765), ("1.20.5", 766), ("1.21.2", 768), ("1.21.5", 770), ("26.2", 776), ("26.3", 777)];
+        bool spectatorOnly = Environment.GetEnvironmentVariable("UMPK_LECTERN_SPECTATOR_ONLY") is "1" or "true";
+        if (spectatorOnly)
+            rows = rows.Where(row => row.Protocol is 766 or 768 or 777).ToArray();
         string? requested = Environment.GetEnvironmentVariable("UMPK_LECTERN_RELEASE");
-        Assert.True(requested is null || rows.Any(row => row.Release == requested), "UMPK_LECTERN_RELEASE must name one of the eight bound native releases.");
+        Assert.True(requested is null || rows.Any(row => row.Release == requested), "UMPK_LECTERN_RELEASE must name a bound native release supported by the selected lectern pack.");
         foreach ((string release, int protocol) in rows)
             if (requested is null || release == requested)
                 yield return [release, protocol];
@@ -30,6 +35,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     public async Task FilledLecternUseMatchesNativeMenuHandAndSwingBoundaries(string release, int protocol)
     {
         Assert.True(JavaVersions.TryGetByName(release, out JavaVersion version));
+        bool spectatorOnly = Environment.GetEnvironmentVariable("UMPK_LECTERN_SPECTATOR_ONLY") is "1" or "true";
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
         await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
@@ -43,6 +49,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         int previousSequence = -1;
         var scenarios = new List<object>();
         var emptyScenarios = new List<object>();
+        var spectatorScenarios = new List<object>();
         var markers = new List<string>();
         var closeFences = new List<object>();
         capture.Start();
@@ -79,17 +86,20 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             await NativeBook();
             await server.ConsoleAsync($"clear {Username}", ct);
             await WaitAsync(client, c => c.State.World.GetBlock(target).Block.Id == Identifier.Minecraft("lectern") && c.State.World.GetBlock(target).TryGetProperty("has_book", out string hasBook) && hasBook == "true" && c.State.Inventory.GetSlot(36).IsEmpty && c.State.Inventory.GetSlot(45).IsEmpty, "real filled lectern and empty hands", ct);
-            await Use("main-empty", Hand.Main, false, null, null, false, true);
-            await Use("off-empty", Hand.Off, false, null, null, false, protocol < 766);
-            if (protocol is 477 or 766 or 777)
+            if (!spectatorOnly)
             {
-                await Use("standing-stick", Hand.Main, false, "stick", null, false, true);
-                await Use("sneaking-empty", Hand.Main, true, null, null, false, true);
-                await Use("sneaking-main-stick", Hand.Main, true, "stick", null, false, false);
-                await Use("sneaking-off-stick", Hand.Main, true, null, "stick", false, false);
-                await Use("adventure-stick", Hand.Main, false, "stick", null, true, true);
+                await Use("main-empty", Hand.Main, false, null, null, false, true);
+                await Use("off-empty", Hand.Off, false, null, null, false, protocol < 766);
+                if (protocol is 477 or 766 or 777)
+                {
+                    await Use("standing-stick", Hand.Main, false, "stick", null, false, true);
+                    await Use("sneaking-empty", Hand.Main, true, null, null, false, true);
+                    await Use("sneaking-main-stick", Hand.Main, true, "stick", null, false, false);
+                    await Use("sneaking-off-stick", Hand.Main, true, null, "stick", false, false);
+                    await Use("adventure-stick", Hand.Main, false, "stick", null, true, true);
+                }
+                Assert.Equal(protocol is 477 or 766 or 777 ? 7 : 2, scenarios.Count);
             }
-            Assert.Equal(protocol is 477 or 766 or 777 ? 7 : 2, scenarios.Count);
             if (protocol >= 766)
             {
                 CapturedFrame[] tagFrames = capture.Frames.Where(frame => frame.Packet is ClientboundConfigUpdateTagsPacket or ClientboundUpdateTagsPacket).ToArray();
@@ -101,22 +111,33 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 TagEntry bookTag = Assert.Single(bookTags);
                 Assert.Contains(writable, bookTag.Ids);
                 Assert.Contains(written, bookTag.Ids);
-                await UseEmpty("empty-main-pass", Hand.Main, false, null, null, false, null, "Pass");
-                await UseEmpty("stick-main-consume", Hand.Main, false, "stick", null, false, null, "Consume");
-                await UseEmpty("writable-main-insertion", Hand.Main, false, "writable_book", null, false, "writable_book", "Success");
-                await UseEmpty("written-off-insertion", Hand.Off, false, null, "written_book", false, "written_book", "Success");
-                await UseEmpty("secondary-main-book-pass", Hand.Main, true, "writable_book", null, false, null, "Pass");
-                await UseEmpty("secondary-main-empty-off-book-pass", Hand.Main, true, null, "writable_book", false, null, "Pass");
-                await UseEmpty("adventure-main-insertion", Hand.Main, false, "writable_book", null, true, "writable_book", "Success");
-                Assert.Equal(7, emptyScenarios.Count);
+                if (spectatorOnly)
+                {
+                    Assert.True(protocol is 766 or 768 or 777);
+                    Assert.Empty(scenarios);
+                    Assert.Empty(emptyScenarios);
+                    await UseEmpty("spectator-controller-before-book-hook", Hand.Main, false, "writable_book", null, false, null, protocol < 768 ? "Success" : "Consume", spectator: true);
+                    Assert.Single(spectatorScenarios);
+                }
+                else
+                {
+                    await UseEmpty("empty-main-pass", Hand.Main, false, null, null, false, null, "Pass");
+                    await UseEmpty("stick-main-consume", Hand.Main, false, "stick", null, false, null, "Consume");
+                    await UseEmpty("writable-main-insertion", Hand.Main, false, "writable_book", null, false, "writable_book", "Success");
+                    await UseEmpty("written-off-insertion", Hand.Off, false, null, "written_book", false, "written_book", "Success");
+                    await UseEmpty("secondary-main-book-pass", Hand.Main, true, "writable_book", null, false, null, "Pass");
+                    await UseEmpty("secondary-main-empty-off-book-pass", Hand.Main, true, null, "writable_book", false, null, "Pass");
+                    await UseEmpty("adventure-main-insertion", Hand.Main, false, "writable_book", null, true, "writable_book", "Success");
+                    Assert.Equal(7, emptyScenarios.Count);
+                }
             }
-            int replayed = capture.AssertRoundTrips(client.State.Registries!);
+            int replayed = capture.AssertRoundTrips(client.State.Registries!, minimumCount: spectatorOnly ? protocol < 768 ? 2 : 1 : 10);
             var dispositions = new List<object>();
             int menuReplayed = ReplayMenuFrames(capture.Frames, version, client.State.Registries!, markers, dispositions);
             await server.WriteAsync("lectern-replay.json", new { replayed, menuReplayed, exactMarkers = markers, frames = dispositions });
             await client.DisconnectAsync(ct);
             await WaitAsync(() => server.ServerLog.Contains(Username + " lost connection", StringComparison.Ordinal), "lectern server-observed disconnect", ct);
-            await server.WriteAsync("lectern-acceptance.json", new { release, protocol, physics = true, actualNativeFullColumn = true, target, face, cursor, scenarios, emptyScenarios, closeFences, finalNativeStat = score, replayed, menuReplayed, peerObservedDisconnect = true, scope = protocol >= 766 ? "Filled and empty lectern activation/insertion with native tags, block entities, stacks and menus; local-only777 policy is source/runtime-backed while this headless leg proves wire absence and server outcomes." : "Filled lectern activation; empty/insertion branches are outside the legacy leg." });
+            await server.WriteAsync("lectern-acceptance.json", new { release, protocol, spectatorOnly, physics = true, actualNativeFullColumn = true, target, face, cursor, scenarios, emptyScenarios, spectatorScenarios, closeFences, finalNativeStat = score, replayed, menuReplayed, peerObservedDisconnect = true, scope = spectatorOnly ? "General native spectator controller before lectern/book hooks; unchanged book, inventory and menu effects. This scenario does not exercise insertion prediction." : protocol >= 766 ? "Filled and empty lectern activation/insertion with native tags, block entities, stacks and menus; local-only777 policy is source/runtime-backed while this headless leg proves wire absence and server outcomes." : "Filled lectern activation; empty/insertion branches are outside the legacy leg." });
             passed = true;
 
             async Task Use(string scene, Hand hand, bool sneaking, string? main, string? off, bool adventure, bool success)
@@ -197,11 +218,13 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     await CloseWithNativeFence(id);
             }
 
-            async Task UseEmpty(string scene, Hand hand, bool sneaking, string? main, string? off, bool adventure, string? insertedBook, string nativeResult)
+            async Task UseEmpty(string scene, Hand hand, bool sneaking, string? main, string? off, bool adventure, string? insertedBook, string nativeResult, bool spectator = false)
             {
                 Assert.False(await client.InvokeAsync(c => c.State.Inventory.HasOpenContainer, ct));
                 await client.Actions.Movement.SetSneakingAsync(false, ct);
-                await server.ConsoleAsync($"gamemode {(adventure ? "adventure" : "survival")} {Username}", ct);
+                GameMode expectedMode = spectator ? GameMode.Spectator : adventure ? GameMode.Adventure : GameMode.Survival;
+                int modeMark = capture.Mark();
+                await server.ConsoleAsync($"gamemode {(spectator ? "spectator" : adventure ? "adventure" : "survival")} {Username}", ct);
                 await server.ConsoleAsync($"clear {Username}", ct);
                 // Remove the previous stored book through native commands before block replacement can release an item into the next scene.
                 await server.ConsoleAsync($"execute if data block {target.X} {target.Y} {target.Z} Book run data remove block {target.X} {target.Y} {target.Z} Book", ct);
@@ -214,15 +237,33 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await client.Actions.Inventory.SelectHeldSlotAsync(0, ct);
                 await NativePredicate($"execute if block {target.X} {target.Y} {target.Z} minecraft:lectern[has_book=false,powered=false] unless data block {target.X} {target.Y} {target.Z} Book if block {adjacent.X} {adjacent.Y} {adjacent.Z} minecraft:air if block {floor.X} {floor.Y} {floor.Z} minecraft:stone", "native empty lectern precondition");
                 await WaitAsync(client, c => Matches(c.State.Inventory.GetSlot(36), main) && Matches(c.State.Inventory.GetSlot(45), off)
-                    && c.State.Self.GameMode == (adventure ? GameMode.Adventure : GameMode.Survival)
+                    && c.State.Self.GameMode == expectedMode
                     && c.State.World.GetBlock(target).TryGetProperty("has_book", out string hasBook) && hasBook == "false", "native empty lectern hand/world setup", ct);
                 await client.Actions.Movement.SetSneakingAsync(sneaking, ct);
                 await NativeHands(main, off);
+                CapturedFrame? spectatorModeFrame = null;
+                if (spectator)
+                {
+                    await NativePredicate($"execute if entity @a[name={Username},gamemode=spectator]", "native spectator controller precondition");
+                    spectatorModeFrame = Assert.Single(capture.Since(modeMark), frame => frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundGameEventPacket { Event: 3, Param: 3 });
+                    PhaseRegistry phase = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound);
+                    Assert.True(phase.TryGetInbound(spectatorModeFrame.WireId, out BoundPacketCodec codec));
+                    var context = new PacketCodecContext(client.State.Registries!, IConnectionCodecState.Empty);
+                    var decoded = Assert.IsType<ClientboundGameEventPacket>(codec.Decode(spectatorModeFrame.Payload, context));
+                    Assert.Equal((3, 3F), ((int)decoded.Event, decoded.Param));
+                    var bytes = new ArrayBufferWriter<byte>();
+                    var writer = new PacketWriter(bytes);
+                    codec.Encode(ref writer, decoded, context);
+                    Assert.Equal(spectatorModeFrame.Payload, bytes.WrittenSpan.ToArray());
+                }
                 await client.InvokeAsync(c =>
                 {
                     Assert.Equal(sneaking, c.State.Self.Sneaking);
                     Assert.True(c.State.Features.Physics);
-                    Assert.True(c.State.Self.OnGround);
+                    Assert.Equal(expectedMode, c.State.Self.GameMode);
+                    // Spectator mode uses native flight; grounded survival setup is not a spectator invariant.
+                    if (!spectator)
+                        Assert.True(c.State.Self.OnGround);
                     Assert.True(Math.Abs(c.State.Self.Position.Y - 100) < .01);
                     return true;
                 }, ct);
@@ -238,9 +279,10 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 CapturedFrame[] frames = capture.Since(mark);
                 CapturedFrame[] actions = frames.Where(IsUseOrAnimation).ToArray();
                 bool success = insertedBook is not null;
-                Assert.Equal(success && protocol != 777 ? 2 : 1, actions.Length);
+                bool controllerSuccess = success || spectator && protocol < 768;
+                Assert.Equal(controllerSuccess && protocol != 777 ? 2 : 1, actions.Length);
                 AssertUse(actions[0], target, face, cursor, hand);
-                if (success && protocol != 777)
+                if (controllerSuccess && protocol != 777)
                     Assert.Equal((int)hand, Assert.IsType<ServerboundSwingPacket>(actions[1].Packet).Hand);
                 Assert.DoesNotContain(frames, frame => frame.Packet is ServerboundPlayerActionPacket or ServerboundPunchPacket or ClientboundOpenScreenPacket);
                 Assert.Equal(beforeOpens, Volatile.Read(ref opens));
@@ -253,8 +295,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await WaitAsync(client, c => Matches(c.State.Inventory.GetSlot(36), afterMain) && Matches(c.State.Inventory.GetSlot(45), afterOff)
                     && c.State.World.GetBlock(target).TryGetProperty("has_book", out string hasBook) && hasBook == (success ? "true" : "false"), "server-observed insertion stack/state", ct);
                 Assert.Equal(neighbor, await client.InvokeAsync(c => c.State.World.GetBlock(adjacent).StateId, ct));
-                emptyScenarios.Add(new { scene, hand, sneaking, main, off, adventure, nativeResult, insertedBook, afterMain, afterOff, nativeOpen = false, nativeStat = score, actionPackets = actions.Length, swing = success ? protocol == 777 ? "local policy; no wire swing" : "packet" : "none", processingMilliseconds = processed.Milliseconds, postObservationMilliseconds = observed.Milliseconds });
-                await server.WriteAsync("lectern-empty-scenarios.json", emptyScenarios);
+                object evidence = new { scene, hand, sneaking, main, off, adventure, spectator, gameMode = expectedMode, nativeResult, insertedBook, afterMain, afterOff, nativeOpen = false, nativeStat = score, actionPackets = actions.Length, swing = controllerSuccess ? protocol == 777 ? "local policy; no wire swing" : "packet" : "none", spectatorModeFrameMilliseconds = spectatorModeFrame?.Milliseconds, processingMilliseconds = processed.Milliseconds, postObservationMilliseconds = observed.Milliseconds };
+                if (spectator)
+                {
+                    // The native spectator controller returns before the lectern/book hooks; unchanged server book/stack effects are independently observed.
+                    spectatorScenarios.Add(evidence);
+                    await server.WriteAsync("lectern-spectator-scenarios.json", spectatorScenarios);
+                }
+                else
+                {
+                    emptyScenarios.Add(evidence);
+                    await server.WriteAsync("lectern-empty-scenarios.json", emptyScenarios);
+                }
             }
 
             async Task<CapturedFrame> NativePredicate(string command, string purpose)
@@ -334,7 +386,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         {
             capture.Stop();
             await server.WriteAsync("capture.json", capture.Frames);
-            await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "filled and modern empty lectern activation", capture.PayloadBytes, capture.Overflowed });
+            await server.WriteAsync("result.json", new { passed, release, protocol, scenario = spectatorOnly ? "general spectator controller before book hooks" : "filled and modern empty lectern activation", capture.PayloadBytes, capture.Overflowed });
             if (client.Status != ClientStatus.Disconnected)
             {
                 using var disconnectDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));

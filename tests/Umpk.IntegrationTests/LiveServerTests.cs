@@ -80,12 +80,20 @@ public sealed class LiveServerTests
 
             // provision the account for privileged/creative actions. All provisioning runs through the server CONSOLE, which is always op, so the account itself does not need to be op: creative, give, summon, effect, setblock and time all apply to the player regardless of its permission level. We deliberately do NOT `op` the account: opping raises the player's permission level, which makes the server RE-SEND the full (expanded) command tree, and that larger tree trips a pre-existing receive-path decode limitation on the mid-modern eras (1.16-1.20.1 fall back to the 1.21.5 argument-type registry, whose parser-id table misaligns on some older argument nodes - see the WALL note). The initial (non-op) command tree still decodes and validates the commands feature; the expanded-tree decode is a separate receive-path issue outside this run's send-side mandate.
             await server.SendConsoleAsync($"gamemode creative {Username}", ct.Token);
-            // Disable mob/tile drops so the client attack-kill and block dig do not spawn item entities: a dropped item's metadata carries an ItemStack (pre-1.13 that decode throws and drops the session, documented), and cow loot landing in the hotbar would displace the given block the held-slot selection targets. Stabilize time so the command-effect assert is deterministic. 1.21.11 (protocol 774) renamed the whole gamerule space to snake_case (verified vs 1.21.10 doMobLoot vs 1.21.11 entity_drops/block_drops/advance_time).
+            // Disable mob/tile drops so the client attack-kill and block dig do not spawn item entities: a dropped item's metadata carries an ItemStack (pre-1.13 that decode throws and drops the session, documented), and cow loot landing in the hotbar would displace the given block the held-slot selection targets. Stabilize time so the command-effect assert is deterministic. 1.21.11 (protocol 774) renamed the whole gamerule space to snake_case (verified vs 1.21.10 doMobLoot vs 1.21.11 mob_drops/block_drops/advance_time).
             if (protocol >= 774)
             {
-                await server.SendConsoleAsync("gamerule entity_drops false", ct.Token);
+                await server.SendConsoleAsync("gamerule mob_drops false", ct.Token);
                 await server.SendConsoleAsync("gamerule block_drops false", ct.Token);
                 await server.SendConsoleAsync("gamerule advance_time false", ct.Token);
+                int mobDropsLogStart = server.LogText.Length;
+                await server.SendConsoleAsync("gamerule mob_drops", ct.Token);
+                string mobDropsResponse = protocol == 777
+                    ? "Game rule mob_drops is currently set to false"
+                    : "Gamerule mob_drops is currently set to: false";
+                Assert.True(await WaitUntilAsync(
+                    () => server.LogText[mobDropsLogStart..].Contains(mobDropsResponse, StringComparison.Ordinal),
+                    TimeSpan.FromSeconds(10), ct.Token), $"{versionName}: native mob-drops rule did not report false.");
             }
             else
             {

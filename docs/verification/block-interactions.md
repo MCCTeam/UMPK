@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Legacy custom model packets, 2026-11-04
+
+The [legacy integer preservation fix](legacy-custom-model-data.md) retains exact custom model numbers on protocols 766–768 while preserving the public float-based model. Equal float projections no longer corrupt received packet bytes or native DATA hashes; lost provenance remains explicit. The original native campaign passes 39 pairs and 78 packet round trips.
+
+All 54 codec cases pass after 24 causal failures and 30 controls. The 365 adjacent and full 7,300 Protocol tests pass without skips, with exact source/PDB, binary and process cleanup checks. The deliberate increase is 54 and the expected seventeen-suite total is 51,976. The separate mining caller and final consumer/AOT/package/live/CI acceptance remain open.
+
 ## Custom model data and mining, 2026-11-04
 
 The [mining identity fix](custom-model-mining-identity.md) retains progress across equivalent four-list custom model data on protocols 769–777. It preserves native list order, signed-zero and NaN comparisons, and distinguishes explicit empty data from absence. Native24 contributes 48 original packet round trips; all 108 connected cases pass after 27 causal failures and 81 controls.

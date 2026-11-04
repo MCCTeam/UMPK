@@ -1,0 +1,27 @@
+# Legacy custom model integer preservation
+
+## Native behavior
+
+Protocols 766–768 carry custom model data as one signed integer. The shared UMPK model exposes a float list, which cannot retain every Int32 value. For example, native 16,777,216 and 16,777,217 compare different but project to identical float bits. Losing that original integer changes packet round trips, DATA hashes and the held mining comparison. Explicit component zero also differs from absence; the native DEFAULT constant is not installed as a common or item default.
+
+The original native record constructors, DATA codecs, stream codecs, ItemStack equality and set-slot packet codecs ran thirteen pairs in each of 1.20.5/766, 1.21/767 and 1.21.2/768. All 39 rows and 78 original packet round trips pass. Twenty-four stack pairs are equal and fifteen differ, including twelve distinct-integer pairs with equal float projections. Actual class origins and unchanged original bytes pass for 2,958, 2,999 and 3,087 loaded classes. The one compiler and three serial JVMs finished in 7.484 seconds; all five observed HOST processes exited and the exact unit/cgroup are gone.
+
+`ACTUAL-NATIVE39.json`, SHA256 `2d4faa3b5cccfd629ff34b14ce3be5c85e438ffe77d60b715b6554b3a43d6765`, in `.scratch/legacy-custom-model-identity-preparation-20261104-v1` indexes the observations, original artifacts, commands and cleanup. The native helpers replace no original method and run no server or native input. The source bindings remain separate from the accepted modern four-list comparison on 769–777.
+
+## Protocol preservation
+
+The existing legacy component codec retains the received original integer in a weak cache keyed by its float projection list. An unchanged received projection can write and hash the original integer, including Int32 limits. A record copy that shares that list retains its provenance. Edits invalidate the snapshot. Unique small integral projections still supply a known integer without a cache entry; ambiguous large copies, nonintegral or invalid projections remain unavailable for DATA hashing. New or edited public models keep their existing canonical writer behavior, which does not establish the unknown original value. The modern four-list codec does not consult this cache.
+
+The first 54-case runtime selection against retained Protocol `12a` passes 30 controls and fails 24 causal cases. One Protocol-owner change passes the unchanged 54, all 365 adjacent checks and all 7,300 unfiltered Protocol tests with zero skips. The exact test-name multiset preserves 7,246 old cases and adds 54. Those 54 comprise 39 genuine native packet pairs and fifteen record-copy, projection-edit, lost-provenance and modern 769 controls. Every native packet asserts decoded fields and byte-identical reencoding; DATA checks use the observed original integer.
+
+This proof is explicitly based on immutable `f4b5041` source and Protocol `12a`; it makes no claim about the newer Client producer. Both normal formatter commands change zero bytes. The candidate Protocol DLL is `83d64ac9697d9918a2937440100c3bea265c659329ab28e03082d75755ced4ee`, PDB `bb3298ae0891518e52722bd2c6b1a441bdb025390eac493697e29d9c7633a0e5`, XML `de53c8a279a3f113ffd653198b81835e4c21d7120e4be46dd764d79b291e66dd`. All 653 authored Protocol sources occur in its actual PDB. All 4,426 original source files match expected bytes, all 39 frozen producer inputs remain unchanged, and only the Protocol triple changes in the tested runtime. Public API, models, datasets, dependencies and DI lifetimes remain unchanged.
+
+`ACTUAL-PROTOCOL54.json`, SHA256 `edc5444186d00ab5523303bc098c38038b5354c4fb7718466b474757d48d8d88`, indexes exact commands/TRXs and source hashes. Its external job is `/home/anon/Projects/MinecraftOfficial/runs/legacy-custom-model-protocol54-20261104-v3`. Both actual Csc processes use CPU count one under the unchanged 4 GiB/200% CPU/no-swap/no-core-dump limits. Cleanup SHA256 `ecf29ba1b4a2138f5b43b5649478c2e949ffe5bb096496138077824a6a4ee1e2` verifies all 25 HOST PIDs absent, the exact successful unit inactive with MainPID zero, and its cgroup removed.
+
+## Retained preparation failures
+
+Native source preparation first searched an incomplete library cache and stopped before Java; a fresh attempt reused the exact existing libraries. The offline native receipt writer then needed a copied metadata filename corrected; original execution was not repeated. The first managed attempt stopped before compilation because the normal unused-parameter analyzer removed the native scenario name from a theory whose data still supplied it; the token guard caught the mismatch. The fixture now checks that name. The second attempt stopped at TestCsc because the new fixture lacked the Items namespace import. Both complete failed prefixes and exact cleanup are retained separately from the valid third attempt. No count, native byte, assertion or resource limit was relaxed.
+
+## Caller and final gates
+
+The legacy mining caller is a separate staged check on the admitted `2a66bef` Client and this tested Protocol. Its source-only 54-case proposal uses 39 native framed pairs plus 15 local mutation/copy controls. No Client 54 result is claimed by this wire report. Required remaining checks include that real caller RED/GREEN, fresh combined producer and consumer/AOT/package/live/final-head CI acceptance. This codec proof alone does not close legacy held-mining behavior.

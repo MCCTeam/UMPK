@@ -2087,21 +2087,77 @@ internal static partial class ItemComponentCodecs
     }
 
     /// <summary>The pre-1.21.4 single-VarInt form, carried in the shared record's float list.</summary>
+    /// <summary>Gets a known native integer from the legacy projection without guessing a rounded original value.</summary>
+    internal static bool TryGetLegacyCustomModelDataInteger(CustomModelDataComponent value, out int integer)
+        => ((LegacyCustomModelDataCodecImpl)CustomModelDataV1_20_5).TryGetKnownInteger(value, out integer);
+
     private sealed class LegacyCustomModelDataCodecImpl() : ItemComponentCodec(DataComponents.CustomModelData)
     {
-        public override object Decode(ref PacketReader reader, PacketCodecContext context) =>
-            new CustomModelDataComponent([reader.ReadVarInt()], [], [], []);
+        private readonly ConditionalWeakTable<object, ReceivedLegacyInteger> _received = new();
+
+        public override object Decode(ref PacketReader reader, PacketCodecContext context)
+        {
+            int integer = reader.ReadVarInt();
+            float[] projection = [integer];
+            // Small integral projections have one possible native source; retain provenance only where the public float can lose it.
+            if (integer is <= -16_777_216 or >= 16_777_216)
+                _received.Add(projection, new(integer, BitConverter.SingleToInt32Bits(projection[0])));
+            return new CustomModelDataComponent(projection, [], [], []);
+        }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
         {
-            IReadOnlyList<float> floats = ((CustomModelDataComponent)value).Floats;
-            writer.WriteVarInt(floats.Count > 0 ? (int)floats[0] : 0);
+            var data = (CustomModelDataComponent)value;
+            // New or edited models retain their existing legacy projection encoding; unchanged received values retain their exact original integer.
+            int integer = TryGetReceivedInteger(data, out int received) ? received : ProjectForWire(data);
+            writer.WriteVarInt(integer);
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
-            IReadOnlyList<float> floats = ((CustomModelDataComponent)value).Floats;
-            return ops.Int(floats.Count > 0 ? (int)floats[0] : 0);
+            if (!TryGetKnownInteger((CustomModelDataComponent)value, out int integer))
+                throw new ComponentHashUnavailableException("The original legacy custom model integer is unavailable.");
+            return ops.Int(integer);
+        }
+
+        public bool TryGetKnownInteger(CustomModelDataComponent value, out int integer)
+        {
+            if (TryGetReceivedInteger(value, out integer))
+                return true;
+            if (value.Floats.Count == 0)
+            {
+                integer = 0;
+                return true;
+            }
+            float projected = value.Floats[0];
+            if (float.IsFinite(projected) && projected > -16_777_216.0F && projected < 16_777_216.0F && projected == MathF.Truncate(projected))
+            {
+                integer = (int)projected;
+                return true;
+            }
+            integer = default;
+            return false;
+        }
+
+        private bool TryGetReceivedInteger(CustomModelDataComponent value, out int integer)
+        {
+            if (_received.TryGetValue(value.Floats, out ReceivedLegacyInteger? received)
+                && value.Floats.Count == 1 && BitConverter.SingleToInt32Bits(value.Floats[0]) == received.ProjectionBits)
+            {
+                integer = received.Integer;
+                return true;
+            }
+            integer = default;
+            return false;
+        }
+
+        private static int ProjectForWire(CustomModelDataComponent value)
+            => value.Floats.Count > 0 ? (int)value.Floats[0] : 0;
+
+        private sealed class ReceivedLegacyInteger(int integer, int projectionBits)
+        {
+            public int Integer { get; } = integer;
+            public int ProjectionBits { get; } = projectionBits;
         }
     }
 

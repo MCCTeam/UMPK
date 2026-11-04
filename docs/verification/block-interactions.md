@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Copper-chest properties, 2026-11-04
+
+The [copper-chest state correction](copper-chest-properties.md) adds eight missing names to the existing chest-type override on protocols 773–777. Original vanilla getters verify all 960 states. Five new data tests reproduce the incorrect domains, all 2,488 old tests pass, and fresh generation changes exactly forty block/protocol property rows while the other sixty generated files remain identical.
+
+The owning library compile hits its managed memory limit under the unchanged 4 GiB cap. Its failed prefix and complete cleanup are retained. Corrected GREEN/full 2,493, remote CI, producer admission and real-session caller acceptance remain pending; this is not a completed placement claim.
+
 ## Fresh consumer, AOT and package checkpoint, 2026-11-04
 
 The [current consumer checkpoint](interaction-checkpoint-20261104.md) binds all thirteen source-equivalent libraries to `beda621`. Fresh DMCBK 1,999 and MCC 918 tests pass without skips, along with 14 pose and 17 action checks. All 33 dependency and 26 test-runtime DLL comparisons match, all 143 recorded UMPK compiler references match, sibling state stays unchanged, and the complete 145-file MCC output is frozen.

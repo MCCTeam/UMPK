@@ -171,19 +171,19 @@
     "measurements": [
       {
         "version": "1.21.4",
-        "measurement_sha256": "48a4cf9e5e8acc141d9dd1393b8715e45adb3d3bc72967c18f0fa44561621690",
+        "measurement_sha256": "ec71ace06fbe75fa1ab727a05da1607e1c3832a2b092d82b2c81a8185fcbd984",
         "artifacts_sha256": {
           "client.jar": "c17c450c6e72cc51297daa57ce38f800aa01cf022b743daa21a0512d326d894e",
           "server.jar": "1066970b09e9c671844572291c4a871cc1ac2b85838bf7004fa0e778e10f1358",
           "client_mappings.txt": "48b502ccc5e855b49da8aa9c0c0d7c565bec54c9f5da3a3664528aff7b9fdf23"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bum",
-          "net.minecraft.world.phys.AABB": "faw",
           "net.minecraft.network.syncher.SynchedEntityData": "akc",
-          "net.minecraft.world.entity.EntityType": "but",
+          "net.minecraft.world.entity.Entity": "bum",
           "net.minecraft.world.entity.EntityDimensions": "bup",
-          "net.minecraft.world.entity.LivingEntity": "bvi"
+          "net.minecraft.world.entity.EntityType": "but",
+          "net.minecraft.world.entity.LivingEntity": "bvi",
+          "net.minecraft.world.phys.AABB": "faw"
         },
         "class_preservation": {
           "unchanged_class_files": 8857,

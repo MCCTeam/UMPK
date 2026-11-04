@@ -135,19 +135,19 @@
     "measurements": [
       {
         "version": "1.17.1",
-        "measurement_sha256": "1cdde43aef02e5c59de4fef1931ff5a643666be9b291fc96e6954c585630b211",
+        "measurement_sha256": "e9dac14096fc2fa3ecdc7673c9f53c4a1b48e186368d1f51815e425d165a3996",
         "artifacts_sha256": {
           "client.jar": "a49b4a56c5bbe15c9ed9fe53efa9a591f265a1f5ba7d6aa9739a58ea7a92b79d",
           "server.jar": "e8c211b41317a9f5a780c98a89592ecb72eb39a6e475d4ac9657e5bc9ffaf55f",
           "client_mappings.txt": "2b28ded68f8602aaf2f35ef92dd10ee41ba2cf9723e29570155d60e1723848e9"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "atg",
-          "net.minecraft.world.phys.AABB": "dmv",
           "net.minecraft.network.syncher.SynchedEntityData": "wi",
-          "net.minecraft.world.entity.EntityType": "atk",
+          "net.minecraft.world.entity.Entity": "atg",
           "net.minecraft.world.entity.EntityDimensions": "ath",
-          "net.minecraft.world.entity.LivingEntity": "atu"
+          "net.minecraft.world.entity.EntityType": "atk",
+          "net.minecraft.world.entity.LivingEntity": "atu",
+          "net.minecraft.world.phys.AABB": "dmv"
         },
         "class_preservation": {
           "unchanged_class_files": 6113,

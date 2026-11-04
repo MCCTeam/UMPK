@@ -135,19 +135,19 @@
     "measurements": [
       {
         "version": "1.18",
-        "measurement_sha256": "e1c1803c534d462e951c9df3ebc6b8282d7cc53e98cc8d16ee0babc968ed7813",
+        "measurement_sha256": "70fd095cb602168c9dd3ca7974a9d880e00b7476c23d441893c1188373e63be2",
         "artifacts_sha256": {
           "client.jar": "381e090ef22584526113bcccf26ae38a310a22094d14c2d0dec72b71fdf65aaa",
           "server.jar": "8417edceb471b38a59a6ce260f3aa1479e95264a38eb56283bdf24ec98647e6f",
           "client_mappings.txt": "b4c7d514328050fa09ac04818d21e4be0b58e75c6b0847e56ce09f6637b8877b"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "awt",
-          "net.minecraft.world.phys.AABB": "doh",
           "net.minecraft.network.syncher.SynchedEntityData": "xs",
-          "net.minecraft.world.entity.EntityType": "awx",
+          "net.minecraft.world.entity.Entity": "awt",
           "net.minecraft.world.entity.EntityDimensions": "awu",
-          "net.minecraft.world.entity.LivingEntity": "axh"
+          "net.minecraft.world.entity.EntityType": "awx",
+          "net.minecraft.world.entity.LivingEntity": "axh",
+          "net.minecraft.world.phys.AABB": "doh"
         },
         "class_preservation": {
           "unchanged_class_files": 6288,
@@ -170,19 +170,19 @@
       },
       {
         "version": "1.18.1",
-        "measurement_sha256": "785b7e37265f75a41c7e2e4eb96040ef17ed2347e50c0b98b6e6c8d4e8d065d2",
+        "measurement_sha256": "17fc515d3135c079402dd1d3da794022a071431ad64e992c32c9c4f010c96b38",
         "artifacts_sha256": {
           "client.jar": "737c28a56c8980fcd8574465c61538ebde8f511bdd035c69d0cbe27953f892aa",
           "server.jar": "ebcd120ad81480b968a548df6ffb83b88075e95195c8ff63d461c9df4df5dbdf",
           "client_mappings.txt": "a7a4109255dfb74b9552b339482f0714bb0e7e7143d1059b0bf62a526d2c2a84"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "awt",
-          "net.minecraft.world.phys.AABB": "doh",
           "net.minecraft.network.syncher.SynchedEntityData": "xs",
-          "net.minecraft.world.entity.EntityType": "awx",
+          "net.minecraft.world.entity.Entity": "awt",
           "net.minecraft.world.entity.EntityDimensions": "awu",
-          "net.minecraft.world.entity.LivingEntity": "axh"
+          "net.minecraft.world.entity.EntityType": "awx",
+          "net.minecraft.world.entity.LivingEntity": "axh",
+          "net.minecraft.world.phys.AABB": "doh"
         },
         "class_preservation": {
           "unchanged_class_files": 6288,

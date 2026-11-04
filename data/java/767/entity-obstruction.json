@@ -152,19 +152,19 @@
     "measurements": [
       {
         "version": "1.21",
-        "measurement_sha256": "8856477ccc47ba5d1f26a69b5c9703fc29b3b4bb2e4c289782e11552d4ec65ff",
+        "measurement_sha256": "c4e8bcda06ca26e02344872cfbfb3d1f4560177b8e5b778e482ac060cc8ca521",
         "artifacts_sha256": {
           "client.jar": "4b56bc9b44de7e88f9fbb52e716c18240da34469fcbafa5ed2e75b04d60617e8",
           "server.jar": "c96394da86f9d9f9ef7ca2d2ee1f2f0980c29b7aa5c94b43c02c50435dbcf53f",
           "client_mappings.txt": "127485d79248d4ae2955a7d061c3626d38853ecb054c4d008707732264b0aac1"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bsr",
-          "net.minecraft.world.phys.AABB": "ewx",
           "net.minecraft.network.syncher.SynchedEntityData": "aka",
-          "net.minecraft.world.entity.EntityType": "bsx",
+          "net.minecraft.world.entity.Entity": "bsr",
           "net.minecraft.world.entity.EntityDimensions": "bsu",
-          "net.minecraft.world.entity.LivingEntity": "btn"
+          "net.minecraft.world.entity.EntityType": "bsx",
+          "net.minecraft.world.entity.LivingEntity": "btn",
+          "net.minecraft.world.phys.AABB": "ewx"
         },
         "class_preservation": {
           "unchanged_class_files": 8269,
@@ -187,19 +187,19 @@
       },
       {
         "version": "1.21.1",
-        "measurement_sha256": "384c9c1ace1865f0f55d774049589d5d824949906b58bd79b9fd621d7ab8d43d",
+        "measurement_sha256": "7f107a47955cb1d4ec0aef1e3e12cd7386609a90eb0c90386e0cd437e633c6b4",
         "artifacts_sha256": {
           "client.jar": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
           "server.jar": "e3bc55693e93cda0188f2e60aea28113fc647c5e85a15fa3d1b347349231b4bb",
           "client_mappings.txt": "140c47931cccc8fc9e4c22d7603e2d714d1a953a146f51ea7397d95c955536ec"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bsr",
-          "net.minecraft.world.phys.AABB": "ewx",
           "net.minecraft.network.syncher.SynchedEntityData": "aka",
-          "net.minecraft.world.entity.EntityType": "bsx",
+          "net.minecraft.world.entity.Entity": "bsr",
           "net.minecraft.world.entity.EntityDimensions": "bsu",
-          "net.minecraft.world.entity.LivingEntity": "btn"
+          "net.minecraft.world.entity.EntityType": "bsx",
+          "net.minecraft.world.entity.LivingEntity": "btn",
+          "net.minecraft.world.phys.AABB": "ewx"
         },
         "class_preservation": {
           "unchanged_class_files": 8269,

@@ -146,19 +146,19 @@
     "measurements": [
       {
         "version": "1.20",
-        "measurement_sha256": "1e0341bf4aaee0059e1c508af9939f5474562c42dc3240b380a9ea3ce2c9dd4e",
+        "measurement_sha256": "c1ffd09df9c9757f8219d15e56dad46de3ff952c2d0ad2ff144365841ba35f47",
         "artifacts_sha256": {
           "client.jar": "5ac9ead135746f5f27048f2e01d8d5bdc2dabc4d91422f73ef2435f4c3d24aff",
           "server.jar": "ff41c542cec182ce74508a5e42194e0f4009341de75f0a7bf770d18cf701d56b",
           "client_mappings.txt": "fdd921d6bcc7657850f78514d36bb57af0b8a340786d12c46ec18d9c46c039de"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bfj",
-          "net.minecraft.world.phys.AABB": "eed",
           "net.minecraft.network.syncher.SynchedEntityData": "acb",
-          "net.minecraft.world.entity.EntityType": "bfn",
+          "net.minecraft.world.entity.Entity": "bfj",
           "net.minecraft.world.entity.EntityDimensions": "bfk",
-          "net.minecraft.world.entity.LivingEntity": "bfz"
+          "net.minecraft.world.entity.EntityType": "bfn",
+          "net.minecraft.world.entity.LivingEntity": "bfz",
+          "net.minecraft.world.phys.AABB": "eed"
         },
         "class_preservation": {
           "unchanged_class_files": 7436,
@@ -181,19 +181,19 @@
       },
       {
         "version": "1.20.1",
-        "measurement_sha256": "f01a4a44b2a4538ee521dec41a0a44844801755a206408f571f2b29943d66910",
+        "measurement_sha256": "626fea391e9e303ad10f0b78a2bf0d83ad21e9b4e36fd66b6e28de747ad0ceae",
         "artifacts_sha256": {
           "client.jar": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
           "server.jar": "3af73a9dc5a102e38147946360dd27d4d70bae7055bf91cf2151cd5d121b79e0",
           "client_mappings.txt": "67bfc33ef0c7103f002d6ac134f8eddd3d67e2ce45d266e83816d1a2e2c9b01d"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bfj",
-          "net.minecraft.world.phys.AABB": "eed",
           "net.minecraft.network.syncher.SynchedEntityData": "acb",
-          "net.minecraft.world.entity.EntityType": "bfn",
+          "net.minecraft.world.entity.Entity": "bfj",
           "net.minecraft.world.entity.EntityDimensions": "bfk",
-          "net.minecraft.world.entity.LivingEntity": "bfz"
+          "net.minecraft.world.entity.EntityType": "bfn",
+          "net.minecraft.world.entity.LivingEntity": "bfz",
+          "net.minecraft.world.phys.AABB": "eed"
         },
         "class_preservation": {
           "unchanged_class_files": 7436,

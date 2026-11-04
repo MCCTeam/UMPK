@@ -125,19 +125,19 @@
     "measurements": [
       {
         "version": "1.15.1",
-        "measurement_sha256": "44bd107db46c2a3baaa7bb423dcd52eff66252373b379ecaaa939976302885a6",
+        "measurement_sha256": "e147fa20745e844716a54a0d27ab17792e25a7ebc15f36a658662919f19bb23a",
         "artifacts_sha256": {
           "client.jar": "6e28ecd008d0ca5e1dcd346dbc2882430f02a77a78864d57acc49fc8bc1b5358",
           "server.jar": "a0c062686bee5a92d60802ca74d198548481802193a70dda6d5fe7ecb7207993",
           "client_mappings.txt": "f46186d0ed9d17e073e16ae2c98675dbbc70b4a29495700837aa5de9c1b42c34"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "akn",
-          "net.minecraft.world.phys.AABB": "cvc",
           "net.minecraft.network.syncher.SynchedEntityData": "se",
-          "net.minecraft.world.entity.EntityType": "akr",
+          "net.minecraft.world.entity.Entity": "akn",
           "net.minecraft.world.entity.EntityDimensions": "ako",
-          "net.minecraft.world.entity.LivingEntity": "akw"
+          "net.minecraft.world.entity.EntityType": "akr",
+          "net.minecraft.world.entity.LivingEntity": "akw",
+          "net.minecraft.world.phys.AABB": "cvc"
         },
         "class_preservation": {
           "unchanged_class_files": 5130,

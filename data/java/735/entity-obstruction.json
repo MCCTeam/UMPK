@@ -129,19 +129,19 @@
     "measurements": [
       {
         "version": "1.16",
-        "measurement_sha256": "966c5977410b31b44305e877d841024debd0ab9b36cab02f2159b28cbe772775",
+        "measurement_sha256": "468fff543ff361c526ec762582027465a6b154889ee0fbdecf46a8d8845911cc",
         "artifacts_sha256": {
           "client.jar": "00740ef4475d4cd0a1d7064f89602f759c45ff9afe29da9b0ee0b9037ebb2a71",
           "server.jar": "7d2d2d127b90baf2bd8fc61092cbff42bea1bdfae30a2838f45edb31294979b9",
           "client_mappings.txt": "53d46abe149aadd367be8789207c53a7cee46ba8382e5bfd60247eb22984119d"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "aom",
-          "net.minecraft.world.phys.AABB": "deg",
           "net.minecraft.network.syncher.SynchedEntityData": "tt",
-          "net.minecraft.world.entity.EntityType": "aoq",
+          "net.minecraft.world.entity.Entity": "aom",
           "net.minecraft.world.entity.EntityDimensions": "aon",
-          "net.minecraft.world.entity.LivingEntity": "aoy"
+          "net.minecraft.world.entity.EntityType": "aoq",
+          "net.minecraft.world.entity.LivingEntity": "aoy",
+          "net.minecraft.world.phys.AABB": "deg"
         },
         "class_preservation": {
           "unchanged_class_files": 5463,

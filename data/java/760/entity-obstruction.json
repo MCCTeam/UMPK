@@ -140,19 +140,19 @@
     "measurements": [
       {
         "version": "1.19.1",
-        "measurement_sha256": "83942684cd1f896f30ff2e34c5df39317b6869e9a35d2f39966226400164267f",
+        "measurement_sha256": "1bdd20fc368cd7fc7309e5d217fcebd8f8d3f926831a29f417e8ee3c22360ba4",
         "artifacts_sha256": {
           "client.jar": "146d4018cfed50c5e77483940653091f186d2eea9ad42fc40939f5c72d6b7f52",
           "server.jar": "f15b93c25ac7343ae8db6e7883a97f11777baaee924e7a3c7aeed826b155b233",
           "client_mappings.txt": "9b2dfe745719f4de1ce3fb23baeb24e31623c1fcc249e39bbdb068ad7f600236"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bbn",
-          "net.minecraft.world.phys.AABB": "dwl",
           "net.minecraft.network.syncher.SynchedEntityData": "aam",
-          "net.minecraft.world.entity.EntityType": "bbr",
+          "net.minecraft.world.entity.Entity": "bbn",
           "net.minecraft.world.entity.EntityDimensions": "bbo",
-          "net.minecraft.world.entity.LivingEntity": "bcc"
+          "net.minecraft.world.entity.EntityType": "bbr",
+          "net.minecraft.world.entity.LivingEntity": "bcc",
+          "net.minecraft.world.phys.AABB": "dwl"
         },
         "class_preservation": {
           "unchanged_class_files": 6858,
@@ -175,19 +175,19 @@
       },
       {
         "version": "1.19.2",
-        "measurement_sha256": "8c700aec8d3dfb16a189bd1bf7460ca19c0f41f3675bde490f27303a49dae90c",
+        "measurement_sha256": "b6489edd473e29b710c287d9f2b899123bf94bd8cce9d62733fc40eccfe2265a",
         "artifacts_sha256": {
           "client.jar": "e1ac65de9b471b6916cc457fdcff00c1bafac17027aa79100c4df893b3d956db",
           "server.jar": "b26727069ef5f61c704add9a378ac90e3d271fd7876c0bd3dcfbe9fd0bec4d96",
           "client_mappings.txt": "c5db94c44c1ce6c5d3bfce64152831090310c202f4abe4375adbb3454afcec76"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bbn",
-          "net.minecraft.world.phys.AABB": "dwl",
           "net.minecraft.network.syncher.SynchedEntityData": "aam",
-          "net.minecraft.world.entity.EntityType": "bbr",
+          "net.minecraft.world.entity.Entity": "bbn",
           "net.minecraft.world.entity.EntityDimensions": "bbo",
-          "net.minecraft.world.entity.LivingEntity": "bcc"
+          "net.minecraft.world.entity.EntityType": "bbr",
+          "net.minecraft.world.entity.LivingEntity": "bcc",
+          "net.minecraft.world.phys.AABB": "dwl"
         },
         "class_preservation": {
           "unchanged_class_files": 6859,

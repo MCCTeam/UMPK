@@ -146,19 +146,19 @@
     "measurements": [
       {
         "version": "1.20.2",
-        "measurement_sha256": "3b0d7b3da25222bcb9037bdf28722397ee1acae31ecd5893f3f5cb8be467af86",
+        "measurement_sha256": "2e8db7db5596e57e7df362e782dea2fe1887ce90774736ff0e4c769fd7539df6",
         "artifacts_sha256": {
           "client.jar": "fa1a19be56a506426308abbc1cad85f299a7fc6dae4335559351ba0246713fda",
           "server.jar": "1daee4838569ad46e41f0a6f459684c500c7f2685356a40cfb7e838d6e78eae8",
           "client_mappings.txt": "d4e2eb2b32ae7bd2e95ea3a8391813a7b6795e20884cf01d989dce68f906e2fd"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "biq",
-          "net.minecraft.world.phys.AABB": "ehi",
           "net.minecraft.network.syncher.SynchedEntityData": "aeh",
-          "net.minecraft.world.entity.EntityType": "biu",
+          "net.minecraft.world.entity.Entity": "biq",
           "net.minecraft.world.entity.EntityDimensions": "bir",
-          "net.minecraft.world.entity.LivingEntity": "bjg"
+          "net.minecraft.world.entity.EntityType": "biu",
+          "net.minecraft.world.entity.LivingEntity": "bjg",
+          "net.minecraft.world.phys.AABB": "ehi"
         },
         "class_preservation": {
           "unchanged_class_files": 7536,

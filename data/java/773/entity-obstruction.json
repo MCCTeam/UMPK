@@ -175,19 +175,19 @@
     "measurements": [
       {
         "version": "1.21.9",
-        "measurement_sha256": "26c0e7bbe5a2166c6565e252aad73f48398546875746454ce423990d1c532e83",
+        "measurement_sha256": "4e9da4df40c2a62d22c8d00343fa022fe77763fd8c0e68e806f650231a5df46a",
         "artifacts_sha256": {
           "client.jar": "40c0a32c46601f71f6a61dae9f126202ded5cc453cfb8da6e42ae73f2a3f5c1b",
           "server.jar": "ebc5161abcd57523c14a04ce108f0b671da0d0d74a28926b19a7d139ebabaf31",
           "client_mappings.txt": "f223e9775abb66b6712c505cb1a73b48d615efebaf43a9f81dd58df9a9b1c7b3"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "cdv",
-          "net.minecraft.world.phys.AABB": "foc",
           "net.minecraft.network.syncher.SynchedEntityData": "alq",
-          "net.minecraft.world.entity.EntityType": "cee",
+          "net.minecraft.world.entity.Entity": "cdv",
           "net.minecraft.world.entity.EntityDimensions": "cdy",
-          "net.minecraft.world.entity.LivingEntity": "cew"
+          "net.minecraft.world.entity.EntityType": "cee",
+          "net.minecraft.world.entity.LivingEntity": "cew",
+          "net.minecraft.world.phys.AABB": "foc"
         },
         "class_preservation": {
           "unchanged_class_files": 9969,
@@ -210,19 +210,19 @@
       },
       {
         "version": "1.21.10",
-        "measurement_sha256": "1b901af4298b011db71025de16ab5516cfcf1af8228a4063246b5c600f97d3a7",
+        "measurement_sha256": "b07e3f41be1de8a4215e678b46ed3cec88761ec25656013b6b79d339c546b9dd",
         "artifacts_sha256": {
           "client.jar": "e65ca028bc58da12bf8413066c90ecd4d48c94fb351d9bbd22ecdff5c87f9482",
           "server.jar": "5bb64dc47379903e8f288bd6a4b276e889075c5c0f4c0b714e958d835c1874e7",
           "client_mappings.txt": "2a6f53f4c1fd048e8fa956e3a3fbbb0afc02d5bbc23e52a16b328aed61b9bf39"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "cdv",
-          "net.minecraft.world.phys.AABB": "foc",
           "net.minecraft.network.syncher.SynchedEntityData": "alq",
-          "net.minecraft.world.entity.EntityType": "cee",
+          "net.minecraft.world.entity.Entity": "cdv",
           "net.minecraft.world.entity.EntityDimensions": "cdy",
-          "net.minecraft.world.entity.LivingEntity": "cew"
+          "net.minecraft.world.entity.EntityType": "cee",
+          "net.minecraft.world.entity.LivingEntity": "cew",
+          "net.minecraft.world.phys.AABB": "foc"
         },
         "class_preservation": {
           "unchanged_class_files": 9969,

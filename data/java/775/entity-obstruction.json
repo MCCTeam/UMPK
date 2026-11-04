@@ -179,18 +179,18 @@
     "measurements": [
       {
         "version": "26.1",
-        "measurement_sha256": "936758477e048edabf15bd1130b4e712efe8dd8cec22f1a07babff02b0d70ac7",
+        "measurement_sha256": "646e54cf4b3edbb52d548c2375f0b5d530ededff97c714d59302c6ebcf63bf19",
         "artifacts_sha256": {
           "client.jar": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
           "server.jar": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994"
         },
         "native_client_classes": {
           "net.minecraft.world.entity.Entity": "net.minecraft.world.entity.Entity",
-          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
           "net.minecraft.network.syncher.SynchedEntityData": "net.minecraft.network.syncher.SynchedEntityData",
           "net.minecraft.world.entity.EntityType": "net.minecraft.world.entity.EntityType",
-          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions",
-          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity"
+          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity",
+          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
+          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions"
         },
         "class_preservation": {
           "unchanged_class_files": 10682,
@@ -213,18 +213,18 @@
       },
       {
         "version": "26.1.1",
-        "measurement_sha256": "431fccea9af5b088e3597872d87c3cb9f8b07691e6ab4914530c43f00e30aad7",
+        "measurement_sha256": "8d3d80f9e2d966f60c18a3ea9483cdc9b3c0e078256455e2351aea53bda38fb0",
         "artifacts_sha256": {
           "client.jar": "8c109be6177f40d10d0afd820b06542f9609597874242b96e16c5b0dc9e1fef3",
           "server.jar": "d792784979722dc35144acffb953554e707445c62450550044c4281e632cbbcc"
         },
         "native_client_classes": {
           "net.minecraft.world.entity.Entity": "net.minecraft.world.entity.Entity",
-          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
           "net.minecraft.network.syncher.SynchedEntityData": "net.minecraft.network.syncher.SynchedEntityData",
           "net.minecraft.world.entity.EntityType": "net.minecraft.world.entity.EntityType",
-          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions",
-          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity"
+          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity",
+          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
+          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions"
         },
         "class_preservation": {
           "unchanged_class_files": 10682,
@@ -247,18 +247,18 @@
       },
       {
         "version": "26.1.2",
-        "measurement_sha256": "4b4aab5ddf5bc9f6485e44bdb72ac6d95af84144a2a134a13e1e6cf26b9b7ee4",
+        "measurement_sha256": "9bc67deceb9240d015d21e7061eec1f0f8b1ec485f140ab8e7476c507cc52124",
         "artifacts_sha256": {
           "client.jar": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
           "server.jar": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42"
         },
         "native_client_classes": {
           "net.minecraft.world.entity.Entity": "net.minecraft.world.entity.Entity",
-          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
           "net.minecraft.network.syncher.SynchedEntityData": "net.minecraft.network.syncher.SynchedEntityData",
           "net.minecraft.world.entity.EntityType": "net.minecraft.world.entity.EntityType",
-          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions",
-          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity"
+          "net.minecraft.world.entity.LivingEntity": "net.minecraft.world.entity.LivingEntity",
+          "net.minecraft.world.phys.AABB": "net.minecraft.world.phys.AABB",
+          "net.minecraft.world.entity.EntityDimensions": "net.minecraft.world.entity.EntityDimensions"
         },
         "class_preservation": {
           "unchanged_class_files": 10682,

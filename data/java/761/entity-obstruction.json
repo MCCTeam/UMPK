@@ -141,19 +141,19 @@
     "measurements": [
       {
         "version": "1.19.3",
-        "measurement_sha256": "6d77cc313f688ae9b2a840e5f380bf102477cd4ffd452edde0644b750380e531",
+        "measurement_sha256": "2a59bd8427c496735dbfe2f618e9b98bbdd03e85ddb8a5347358d0161ba72a78",
         "artifacts_sha256": {
           "client.jar": "b7228c23dbc8988129561af3918dd469577de842d2eb3c7dabe00316bf9a44d6",
           "server.jar": "4ebd3ad142512953d0193ae3a1d1a30c896907de7c68780977151f6cc79f1e1b",
           "client_mappings.txt": "f72a4675ae77fa16966a0338567e30ee3a64bb7476932e264e8b25937f664a1b"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bdr",
-          "net.minecraft.world.phys.AABB": "dzz",
           "net.minecraft.network.syncher.SynchedEntityData": "abq",
-          "net.minecraft.world.entity.EntityType": "bdv",
+          "net.minecraft.world.entity.Entity": "bdr",
           "net.minecraft.world.entity.EntityDimensions": "bds",
-          "net.minecraft.world.entity.LivingEntity": "beg"
+          "net.minecraft.world.entity.EntityType": "bdv",
+          "net.minecraft.world.entity.LivingEntity": "beg",
+          "net.minecraft.world.phys.AABB": "dzz"
         },
         "class_preservation": {
           "unchanged_class_files": 7135,

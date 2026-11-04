@@ -173,19 +173,19 @@
     "measurements": [
       {
         "version": "1.21.6",
-        "measurement_sha256": "ee14a191b021dc86ac982c4cdedab3dd5f3e72891a6174bf08fa152e2a3ed4c4",
+        "measurement_sha256": "19ee1ca80d5e81f8f8873e3aca4d9b2a480b5cf84964426e6f904d0c2598c8e9",
         "artifacts_sha256": {
           "client.jar": "9592df8587d6d3ec0334c873ad432dc76006d6129afdce9a7eac52638339a24a",
           "server.jar": "08abf384c48afb9e822144ad8a99166482857994389269e26c6a04c6c91d9171",
           "client_mappings.txt": "2ff82b34ce5f849aaafdff51e23b9448c4263881238b780a441fe1061a6fc261"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bzm",
-          "net.minecraft.world.phys.AABB": "fin",
           "net.minecraft.network.syncher.SynchedEntityData": "all",
-          "net.minecraft.world.entity.EntityType": "bzv",
+          "net.minecraft.world.entity.Entity": "bzm",
           "net.minecraft.world.entity.EntityDimensions": "bzp",
-          "net.minecraft.world.entity.LivingEntity": "cam"
+          "net.minecraft.world.entity.EntityType": "bzv",
+          "net.minecraft.world.entity.LivingEntity": "cam",
+          "net.minecraft.world.phys.AABB": "fin"
         },
         "class_preservation": {
           "unchanged_class_files": 9483,

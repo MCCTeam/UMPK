@@ -172,19 +172,19 @@
     "measurements": [
       {
         "version": "1.21.5",
-        "measurement_sha256": "2fc720a6f1d695c9e1a87f17f28a8c78913d4b7af801d7de751791feb00db6ef",
+        "measurement_sha256": "f140dcb6f46bd46169f872cf02b08c08012f4bac0a28ab4a5fe5f6af5620bdd0",
         "artifacts_sha256": {
           "client.jar": "522672ad20b460c02c2e39b6c5035ef6a849af28eb11ab2ac7eb293d395a8c11",
           "server.jar": "ae7681dadce21b6b4017d28e7eb567d86b6c100a6969994f540b9e54f812dc29",
           "client_mappings.txt": "3907657ade3e61bc8cffb4ca0a1bcba15f57986be4e613900947119364a206e5"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bxe",
-          "net.minecraft.world.phys.AABB": "ffx",
           "net.minecraft.network.syncher.SynchedEntityData": "aky",
-          "net.minecraft.world.entity.EntityType": "bxn",
+          "net.minecraft.world.entity.Entity": "bxe",
           "net.minecraft.world.entity.EntityDimensions": "bxh",
-          "net.minecraft.world.entity.LivingEntity": "byf"
+          "net.minecraft.world.entity.EntityType": "bxn",
+          "net.minecraft.world.entity.LivingEntity": "byf",
+          "net.minecraft.world.phys.AABB": "ffx"
         },
         "class_preservation": {
           "unchanged_class_files": 9148,

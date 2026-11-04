@@ -152,19 +152,19 @@
     "measurements": [
       {
         "version": "1.20.5",
-        "measurement_sha256": "9233020dfe96607f358da1234585e5493acc7b86fd48e58255503aba1fbfbaf1",
+        "measurement_sha256": "9a5b5322867427e2b522654b383fa4828b61b8b85f974ba16cb78d694686fe38",
         "artifacts_sha256": {
           "client.jar": "49d5949adbb1021a7eb00c1b949f9e39934b10249cbf86d25004774d1b3ff510",
           "server.jar": "f8f6a38fededc12d6bbac21e5341c168a7c9bf4ef90193fcf0abcc1366c42bac",
           "client_mappings.txt": "9afdb3b7fcc4c6acbec3bc6ccb46192bfc6460e12bf9e268e29bfee46bc7fbac"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bsv",
-          "net.minecraft.world.phys.AABB": "evn",
           "net.minecraft.network.syncher.SynchedEntityData": "ako",
-          "net.minecraft.world.entity.EntityType": "btb",
+          "net.minecraft.world.entity.Entity": "bsv",
           "net.minecraft.world.entity.EntityDimensions": "bsy",
-          "net.minecraft.world.entity.LivingEntity": "btq"
+          "net.minecraft.world.entity.EntityType": "btb",
+          "net.minecraft.world.entity.LivingEntity": "btq",
+          "net.minecraft.world.phys.AABB": "evn"
         },
         "class_preservation": {
           "unchanged_class_files": 8205,
@@ -187,19 +187,19 @@
       },
       {
         "version": "1.20.6",
-        "measurement_sha256": "ef5f77fa0124d697896426a7d690f2a336e12e04a36a8ed608204570a9ad2b18",
+        "measurement_sha256": "510d72ad637511f303f594dfb0986cf94525a79f64f2e236dc843703d15a4cdb",
         "artifacts_sha256": {
           "client.jar": "02dfd345ac1ad55692d5dbc8486ac7e4fea72cd54ac494a79cd48963048e56b2",
           "server.jar": "c6d01d018ca782e506f0ec60652d47fd565078be9122b625c1681bc86c29c7ec",
           "client_mappings.txt": "27f4ef3a9362e9874e2c33edac981b6f485ad97f92c4e35b497525b646aae745"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "bsw",
-          "net.minecraft.world.phys.AABB": "evo",
           "net.minecraft.network.syncher.SynchedEntityData": "ako",
-          "net.minecraft.world.entity.EntityType": "btc",
+          "net.minecraft.world.entity.Entity": "bsw",
           "net.minecraft.world.entity.EntityDimensions": "bsz",
-          "net.minecraft.world.entity.LivingEntity": "btr"
+          "net.minecraft.world.entity.EntityType": "btc",
+          "net.minecraft.world.entity.LivingEntity": "btr",
+          "net.minecraft.world.phys.AABB": "evo"
         },
         "class_preservation": {
           "unchanged_class_files": 8206,

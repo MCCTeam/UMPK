@@ -140,19 +140,19 @@
     "measurements": [
       {
         "version": "1.19",
-        "measurement_sha256": "e6c602808f9045e99a5058bfe8c5944f2d649c02c189659b3e0e813b5b406329",
+        "measurement_sha256": "e7b1b4e7c543c9885de8d7a0f171a6ac33d16bb62df67090c470c2ef1f19f41d",
         "artifacts_sha256": {
           "client.jar": "ffd4fb3037d4110085b4d3d2dc47b760695528eb14292c3e5f7c758983c6d764",
           "server.jar": "deefd056f0cf89c3d7fd48d03f56a8a73943586e8c061fdabd0fd92d32ced2b2",
           "client_mappings.txt": "9e31de7fc15b1bac0e58abc441a5e56c320266112feaea981bcffd41dd6201e1"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "baq",
-          "net.minecraft.world.phys.AABB": "dvo",
           "net.minecraft.network.syncher.SynchedEntityData": "zu",
-          "net.minecraft.world.entity.EntityType": "bau",
+          "net.minecraft.world.entity.Entity": "baq",
           "net.minecraft.world.entity.EntityDimensions": "bar",
-          "net.minecraft.world.entity.LivingEntity": "bbf"
+          "net.minecraft.world.entity.EntityType": "bau",
+          "net.minecraft.world.entity.LivingEntity": "bbf",
+          "net.minecraft.world.phys.AABB": "dvo"
         },
         "class_preservation": {
           "unchanged_class_files": 6735,

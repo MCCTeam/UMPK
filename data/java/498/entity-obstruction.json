@@ -124,19 +124,19 @@
     "measurements": [
       {
         "version": "1.14.4",
-        "measurement_sha256": "3d8d0daff739e7122608c92dd126374cfe44733c9c4dfe903df0ef8c4522431a",
+        "measurement_sha256": "dabbfaca99616935a92bded703449ea8c4528ba6466cf33ea9441dcf5271e308",
         "artifacts_sha256": {
           "client.jar": "b3b2a798e2d67b566008fe4a03767ae2c7ff3f8c7ba6751e7b71fc7299672d0a",
           "server.jar": "5ecdedab3a6e129321a444490d0a467c25ea702a24a99cebe3b6aed41f8f5729",
           "client_mappings.txt": "2dd53a5e70ba493cf6e33c0fc52bbdf4c57f9429c7a13842565aa825fd44d910"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "aio",
-          "net.minecraft.world.phys.AABB": "csc",
           "net.minecraft.network.syncher.SynchedEntityData": "qn",
-          "net.minecraft.world.entity.EntityType": "ais",
+          "net.minecraft.world.entity.Entity": "aio",
           "net.minecraft.world.entity.EntityDimensions": "aip",
-          "net.minecraft.world.entity.LivingEntity": "aix"
+          "net.minecraft.world.entity.EntityType": "ais",
+          "net.minecraft.world.entity.LivingEntity": "aix",
+          "net.minecraft.world.phys.AABB": "csc"
         },
         "class_preservation": {
           "unchanged_class_files": 4976,

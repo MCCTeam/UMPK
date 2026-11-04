@@ -130,19 +130,19 @@
     "measurements": [
       {
         "version": "1.16.4",
-        "measurement_sha256": "922c7a1b27379e0c2001bb90b3230595eaeb81db72a40e3daf272675eb2fbf40",
+        "measurement_sha256": "b2eab77a81f3bd5c07cb5c89a45a33cda333ecc6377582dda0be4932822af997",
         "artifacts_sha256": {
           "client.jar": "d6740464ee2bdf37d285c5d368d2e16497492427fb5783e2db3482bbf0079ed0",
           "server.jar": "444d30d903a1ef489b6737bb9d021494faf23434ca8568fd72ce2e3d40b32506",
           "client_mappings.txt": "93f188a0038fec8c2402d78e7acca983680978d6a9237c1fab80f22caddb00fe"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "aqa",
-          "net.minecraft.world.phys.AABB": "dci",
           "net.minecraft.network.syncher.SynchedEntityData": "uv",
-          "net.minecraft.world.entity.EntityType": "aqe",
+          "net.minecraft.world.entity.Entity": "aqa",
           "net.minecraft.world.entity.EntityDimensions": "aqb",
-          "net.minecraft.world.entity.LivingEntity": "aqm"
+          "net.minecraft.world.entity.EntityType": "aqe",
+          "net.minecraft.world.entity.LivingEntity": "aqm",
+          "net.minecraft.world.phys.AABB": "dci"
         },
         "class_preservation": {
           "unchanged_class_files": 5445,
@@ -165,19 +165,19 @@
       },
       {
         "version": "1.16.5",
-        "measurement_sha256": "a158de31c0a7ed89b188e931ede1adf57449dadf48811f4cd4d82b9ce1af4f30",
+        "measurement_sha256": "f73ae32be473f7b74e8173f315665bc123bbcc13a0c1bb7b0883da6e118f214d",
         "artifacts_sha256": {
           "client.jar": "00b5ebbc33e95ea88c1ab80601599c9827e9aa861d93ccc2cfcbbfd996e86263",
           "server.jar": "58f329c7d2696526f948470aa6fd0b45545039b64cb75015e64c12194b373da6",
           "client_mappings.txt": "7931ed6d723eceb1d621d05a76e10ddf643bf468c6ecf1c4ecf377bd72cf8b8c"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "aqa",
-          "net.minecraft.world.phys.AABB": "dci",
           "net.minecraft.network.syncher.SynchedEntityData": "uv",
-          "net.minecraft.world.entity.EntityType": "aqe",
+          "net.minecraft.world.entity.Entity": "aqa",
           "net.minecraft.world.entity.EntityDimensions": "aqb",
-          "net.minecraft.world.entity.LivingEntity": "aqm"
+          "net.minecraft.world.entity.EntityType": "aqe",
+          "net.minecraft.world.entity.LivingEntity": "aqm",
+          "net.minecraft.world.phys.AABB": "dci"
         },
         "class_preservation": {
           "unchanged_class_files": 5445,

@@ -135,19 +135,19 @@
     "measurements": [
       {
         "version": "1.18.2",
-        "measurement_sha256": "3f4c82fd2c3bd14510d766316112084c7d3892f132a3aadb2392ae71344e341d",
+        "measurement_sha256": "19a350fefd4aef80fafecb3151b22db43320468a9dbf86864fccf47b3523bf58",
         "artifacts_sha256": {
           "client.jar": "1d09e3639644b6b2254499469d0765cc005a286d19f3fa595b0ed8fb07971ec7",
           "server.jar": "57be9d1e35aa91cfdfa246adb63a0ea11a946081e0464d08bc3d36651718a343",
           "client_mappings.txt": "a2aa6ee1030bfef79e9b2e08e79de1637fdd7ecb5bf8891cf2e9a4b186042543"
         },
         "native_client_classes": {
-          "net.minecraft.world.entity.Entity": "axk",
-          "net.minecraft.world.phys.AABB": "dpj",
           "net.minecraft.network.syncher.SynchedEntityData": "ye",
-          "net.minecraft.world.entity.EntityType": "axo",
+          "net.minecraft.world.entity.Entity": "axk",
           "net.minecraft.world.entity.EntityDimensions": "axl",
-          "net.minecraft.world.entity.LivingEntity": "axy"
+          "net.minecraft.world.entity.EntityType": "axo",
+          "net.minecraft.world.entity.LivingEntity": "axy",
+          "net.minecraft.world.phys.AABB": "dpj"
         },
         "class_preservation": {
           "unchanged_class_files": 6399,

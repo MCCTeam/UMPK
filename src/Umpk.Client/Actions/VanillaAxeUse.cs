@@ -9,6 +9,9 @@ internal readonly record struct VanillaAxeUse(bool HasRules, bool StripsBlocks, 
     // Original clients: inherited pass through 1.12.2, stripping from 1.13, copper from 1.17, shield intent from 1.21 and effective offhand BLOCKS_ATTACKS from 1.21.5. Protocol 777 replaces this class with data-driven transformations.
     public static VanillaAxeUse ForProtocol(int protocol) => new(protocol is >= 47 and <= 776, protocol >= 393, protocol >= 755, protocol >= 770 ? AxeBlockingIntent.Components : protocol >= 767 ? AxeBlockingIntent.Shield : AxeBlockingIntent.None, protocol >= 766);
 
+    public bool IsDefaultStack(ItemStack stack)
+        => HasRules && UsesComponents && stack.Components.HasNoPatch && IsAxeItem(stack.Item.Id);
+
     public bool SupportsStack(ItemStack stack)
     {
         if (stack.Components.HasNoPatch)
@@ -22,7 +25,7 @@ internal readonly record struct VanillaAxeUse(bool HasRules, bool StripsBlocks, 
     public bool TryPredict(Identifier item, BlockState clicked, Hand hand, ItemStack offhand, bool secondaryUse, out BlockUsePrediction prediction, bool offhandKnown = true)
     {
         prediction = BlockUsePrediction.Unknown;
-        if (!HasRules || !item.IsMinecraft || item.Path is not ("wooden_axe" or "stone_axe" or "iron_axe" or "golden_axe" or "diamond_axe" or "netherite_axe" or "copper_axe"))
+        if (!HasRules || !IsAxeItem(item))
             return false;
         prediction = BlockUsePrediction.Pass;
         if (!StripsBlocks || !clicked.Block.Id.IsMinecraft)
@@ -50,6 +53,9 @@ internal readonly record struct VanillaAxeUse(bool HasRules, bool StripsBlocks, 
             prediction = BlockUsePrediction.Success(localSwing: false);
         return true;
     }
+
+    private static bool IsAxeItem(Identifier item)
+        => item.IsMinecraft && item.Path is "wooden_axe" or "stone_axe" or "iron_axe" or "golden_axe" or "diamond_axe" or "netherite_axe" or "copper_axe";
 
     private static bool IsCopperChange(ReadOnlySpan<char> block)
     {

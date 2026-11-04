@@ -1,0 +1,35 @@
+---
+title: "Ordinary statue axe activation"
+description: "Original AXES pass-through evidence and connected runtime acceptance for seven statue identities."
+---
+
+# Ordinary statue axe activation
+
+This slice admits the activation PASS that lets an ordinary axe click reach the existing tool-use owner on protocols 773–777. It covers three aged unwaxed and four waxed statue identities. The 160 connected cases pass without skips on the combined heart/statue Client. The combined unfiltered Client suite also passes all 38,342 cases without skips.
+
+The rule reads the received `minecraft:axes` item tag. A built-in axe name does not prove membership, and an arbitrary item can be a member. Original empty stacks use the AIR holder. Missing or false membership keeps the unowned pose/block-entity path unknown. The unaffected unwaxed statue is excluded because a matching native block entity can reach golem creation and damage.
+
+The four waxed statues inherit `CopperGolemStatueBlock.useItemOn`: AXES membership returns PASS before any world/player/state read. The three aged unwaxed statues override it and query the block entity first; matching AXES still returns PASS with either a missing or matching entity because their age is not UNAFFECTED. This activation result does not establish the later action result. Existing cooldown, Adventure, effective transformer, offhand intent, result/swing and acknowledgment owners still decide that continuation. Secondary use retains its existing suppression behavior.
+
+| Evidence | Executed result and limit |
+| --- | --- |
+| Source | Eight official named client artifacts, completed source trees and original AXES resource bytes bind five protocol representatives. No alias JVM claim. |
+| Retained native prefix | Protocols 773/774 each capture 66 original calls. An offline audit accepts these 132 rows and their original class origins; neither JVM was repeated. |
+| Corrected native continuation | Protocols 775/776/777 each capture 66 original calls. Together the five representatives cover 330 exact identities: 300 independent aged/waxed PASS rows and 30 limited unaffected-statue controls with no block entity. |
+| Tag distinction | Every representative executes the official AXES map with diamond axe, explicit custom AXES membership for stick, and explicit custom AXES membership for AIR with the original EMPTY stack. |
+| Native boundaries | The original BlockState wrapper, virtual hook, tag dispatch, block age and native block-entity constructor run unchanged. Waxed calls have a null Level. Aged calls control only `Level.getBlockEntity`, returning null or a genuinely constructed original entity. Full controller, item continuation, graphical swing, world lifecycle and server behavior are not measured. |
+| Integrity | All 18,922 loaded original class bytes/origins and 40,297 generated-class owner bindings verify. The generated controlled-Level class and exact getter footprint are recorded. |
+
+The first job compiled once and passed 773/774, then failed before any 775 row because its reflected tag receiver was wrong. `ItemStack.is(TagKey)` becomes inherited from `TypedInstance` at 775, not 777. The fresh manual continuation changes only that helper receiver and adds assignability/declaration/arity guards; all 22 late reflected API leaves have source bindings. It compiles once and runs only the three missing representatives. The whole first attempt remains failed. The accepted union records both helper/compiler origins and the extra failed adapter JVM separately.
+
+Raw evidence lives under `statue-axe-activation-native330-20261104-v1` and `statue-axe-activation-native198-20261104-v2` in the external runs directory. Prefix receipt `233c33d2`, continuation receipt `50db27b1` and union `52d2f8f8` retain exact argv, hashes and case identities. Cleanup receipts `252efef5` and `c9c4c7da` prove all five HOST identities from each owned attempt absent, MainPID zero, removed cgroups and zero memory max/OOM events. The continuation took 12.83 seconds with a 430,669,824-byte peak. Coordinator native admission is `9ee2d4dc`.
+
+The fixture has 70 default both-hand mapping cases and 90 finite context cases, all through real bound tags/slots/blocks and public actions. It checks exact use/swing groups, successful completion after acknowledgment, predicted state before the write and unchanged public received block/stack state. Source review corrected missing `observeWrites:true` before any managed run. The corrected causal baseline observes 109 statue failures and 51 controls. Connecting activation initially leaves four real Adventure failures on protocols 773–776; protocol 777 already passes through its earlier permission owner.
+
+For those four protocols, original `ItemStack.useOn` returns PASS when the default stack has no CAN_PLACE_ON component, before `AxeItem.useOn`. The correction recognizes only the existing seven canonical default axes with no patch, and only when nonsuppressed seven-statue activation PASS is already known. Custom patches, secondary suppression and other item contexts retain their existing unknown boundaries. Extracting the unused default-axe predicate preserves the four failures; connecting the caller passes all 160 statue and 79 original heart cases. That accepted combined Client passes 12,977 adjacent and all 38,334 Client tests without skips.
+
+The later heart destination-availability correction adds eight cases and compiles one new Test pair and one bounded Client helper. Its 247 focused and 12,985 adjacent cases now pass without skips. All 38,342 unfiltered Client cases pass without skips, with an exact earlier 38,334 plus eight-name multiset. Receipt `1e4174fe` binds final Client `f24a8699`/PDB `5fdd544b`, Test `60443178`/PDB `60f4d692` and their distinct actual compilation references. Cleanup `26069de2` proves all 25 HOST identities absent, removed cgroup, unchanged frozen inputs/runtime and zero memory max/OOM events. The unit requested OOMScoreAdjust 0; observed processes report 100. The final combined producer binds both source intents; a separate full 38,095 or intermediate heart-only suite is not claimed.
+
+The first joint attempt retains five fixture failures: absent packet membership yields the canonical valid VOID_AIR prediction query while public storage retains the received statue. The corrected fixture checks both facts explicitly without treating valid VOID_AIR as proof of received terrain. The next attempt retains the four genuine Adventure product failures. All raw failures and stage PDB source snapshots remain in the external managed run directories. The runs use normal audit-enabled SDK 10.0.403 restores, formatting and builds with Csc CPU 1, exact frozen references and no local Data.Java compile.
+
+Non-AXES pose mutation, unaffected matching-entity golem behavior and block-entity continuity remain unknown. This change neither simulates those effects nor closes other transformer/neighbor/physics contexts, local BlockItem terrain/stack prediction, required live acceptance or final producer/consumer/package/AOT/CI gates.

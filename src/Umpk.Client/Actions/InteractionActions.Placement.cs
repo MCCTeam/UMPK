@@ -142,6 +142,23 @@ public sealed partial class InteractionActions
         BlockUseActivationProfile activation = BlockUseActivationProfile.ForProtocol(_services.Version.Version.Protocol);
         BlockState lower = activation.RequiresLowerCell(clicked) && position.Y > world.Dimension.MinY ? _services.State.JukeboxPrediction.GetBlock(world, position.Below()) : default;
         bool hasActivation = activation.TryPredict(clicked, out BlockUseResult activationResult, lower);
+        if (!suppressActivation && activation.HasCopperStatueAxePassRule(clicked))
+        {
+            if (!itemKnown)
+                return BlockUsePrediction.Unknown;
+            int statueItem = item.Item.NetworkId;
+            if (item.IsEmpty)
+            {
+                if (_services.State.Registries is not { } registries || !registries.Items.TryGet(Identifier.Minecraft("air"), out var air))
+                    return BlockUsePrediction.Unknown;
+                statueItem = air.NetworkId;
+            }
+            // The native hook tests received item-tag membership, independently of the tool class or component patch. A missing or negative membership cannot prove the unowned pose/block-entity branch.
+            if (_services.State.RegistryTags.Contains(RegistryIds.Item, Identifier.Minecraft("axes"), statueItem) is not true)
+                return BlockUsePrediction.Unknown;
+            hasActivation = true;
+            activationResult = BlockUseResult.Pass;
+        }
         // Modern LecternBlock.useItemOn checks the received item tag before cooldown or Adventure item permissions. Its client tryPlaceBook returns success without changing the stack, block state or block entity.
         if (!suppressActivation && activation.EmptyHandActivationIsMainHandOnly && clicked.Block.Id.IsMinecraft && clicked.Block.Id.Path == "lectern"
             && clicked.TryGetProperty("has_book", out string lecternHasBook) && lecternHasBook == "false")
@@ -254,6 +271,10 @@ public sealed partial class InteractionActions
         }
         if (_services.Self.GameMode == GameMode.Adventure)
         {
+            // Native default axes have no CAN_PLACE_ON. After the measured statue activation PASS, ItemStack.useOn denies them before AxeItem.useOn or its offhand intent; custom patches retain the existing unknown result.
+            if (!suppressActivation && hasActivation && activationResult == BlockUseResult.Pass && activation.HasCopperStatueAxePassRule(clicked)
+                && VanillaAxeUse.ForProtocol(_services.Version.Version.Protocol).IsDefaultStack(item))
+                return BlockUsePrediction.Pass;
             // Original legacy ItemBlock checks player permission after the controller's placement precheck and USE send. Default quartz has neither CanPlaceOn NBT nor canEditBlocks.
             if (VanillaPillarPlacement.IsLegacyQuartz(_services.Version.Version.Protocol, item) && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
                 return BlockUsePrediction.Fail;

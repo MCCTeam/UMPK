@@ -3149,5 +3149,39 @@
     "evidenceSha256": "c51b0400f0531b0c3f5110f9a8a0c210f690930a08116833f5d31532ed7ca3f6",
     "report": "docs/verification/interaction-live-checkpoint-20261104.md",
     "remaining": "74Basic and49general rows, specialized behavior and final gates remain pending"
+  },
+  "currentAcceptanceCheckpoint20261104": {
+    "publishedHead": "d960c6b62db9e832f25fb15ad58ae63db15f8bf9",
+    "producerSourceCommit": "f1fcdcf5eed06ca9fd8fef8ff7be3a6dc287b11c",
+    "report": "docs/verification/interaction-live-checkpoint-20261104.md",
+    "finalAllScenariosStatus": "not run",
+    "currentBoundedChecks": {
+      "consumer": {
+        "status": "passed",
+        "scope": "Manual unchanged-binary TPS1/full1999/MCC918, reused14/17,33+26DLL,143retainedrefs,frozen145; original failed attempts retained",
+        "receipt": ".scratch/consumer-f1fcdcf-continuation-20261104-v3/ACTUAL-CONSUMERS.json",
+        "sha256Prefix": "8d26568f"
+      },
+      "publishedCI": {
+        "status": "passed",
+        "scope": "All7actuald960jobs;17totals52316=52292PASS+24exactnormalSKIP;strictAOT24865816/exact1executedPASS. This is CI rather than fresh local composed AOT.",
+        "run": "https://github.com/MCCTeam/UMPK/actions/runs/41782404084",
+        "auditSha256Prefix": "87ece8a5"
+      },
+      "general774": {
+        "status": "passed",
+        "scope": "Only generalcreative/physicsdisabled smoke:1.21.11; exactnative mob_drops query/oneJVM/strictpeerEOF/exit0/ports. No Basic or new family closure.",
+        "receipt": "/home/anon/Projects/MinecraftOfficial/runs/final-live-matrix-f1fcdcf-20261104-v1/smoke774-pilot-v1/TERMINAL-ACCEPTANCE.json",
+        "sha256": "45a65e2d20ce25041124dd206424d73f685108e3b8879ae404dbc4f87fb0c57d"
+      }
+    },
+    "versionCoverage": {
+      "generalPassed": 2,
+      "generalRequired": 50,
+      "basicPassed": 1,
+      "basicRequired": 75,
+      "scope": "Current f1 immutable producer; specialized old-producer results stay historical"
+    },
+    "remainingImplementation": "Specialized/multicell/attachment/fluid families; remaining777unknown targets/neighbor prediction and safe unknown physics/localBlockItemeffects; self/nestedpassenger authority/layouts; participating geometry/motion/picking contexts; remainingAdventureBE/range/activeuse contexts. Known23 and modern stairs are bounded completed slices, with final acceptance separate."
   }
 }

@@ -6,9 +6,13 @@ The first committed implementation checkpoint was `c015405` on `codex/vanilla-bl
 
 ## Native interaction live checkpoint, 2026-11-04
 
-The [live checkpoint](interaction-live-checkpoint-20261104.md) records a complete six-face log-placement pass on 1.13 and one canonical 1.8 general smoke pass using the current `f1fcdcf` producer. Earlier 26.3 placement, spectator-lectern and protocol-47 results retain their exact older binaries and scope. The new fixtures preserve physics, native block/stack observations, exact packet replay and process cleanup.
+The [live checkpoint](interaction-live-checkpoint-20261104.md) records a complete six-face log-placement pass on 1.13 and canonical general smoke passes on 1.8 and 1.21.11 using the current `f1fcdcf` producer. Earlier 26.3 placement, spectator-lectern and protocol-47 results retain their exact older binaries and scope. The new fixtures preserve physics, native block/stack observations, exact packet replay and process cleanup.
 
-The canonical 1.8 Basic survival pilot also passes with actual legacy placement, native stack changes and 138 replayed frames. It is separate from general smoke; the matrix is one of fifty general rows and one of seventy-five Basic rows, with the rest unfinished. The deliberate new pillar test changes the expected normal Integration total from 71 to 72; the normal run passes 49 cases with 23 exact named opt-in skips, while the final seventeen-suite count gate remains pending. The modern mob-loot rule correction has source/compiler proof and still needs a general live row.
+The canonical 1.8 Basic survival pilot also passes with actual legacy placement, native stack changes and 138 replayed frames. It is separate from general smoke; the matrix is two of fifty general rows and one of seventy-five Basic rows, with the rest unfinished. The deliberate new pillar test changes the expected normal Integration total from 71 to 72; the normal run passes 49 cases with 23 exact named opt-in skips, while the final local seventeen-suite count gate remains pending. The modern mob-loot correction also passes its actual 1.21.11 native query; the other modern query boundaries remain unexecuted.
+
+The source-equivalent `f1fcdcf` consumers also pass the unchanged-binary continuation: 1,999 DMCBK and 918 MCC cases, all thirty-three dependency and twenty-six runtime DLL comparisons, 143 retained compiler references and the complete 145-file frozen MCC manifest. The original TPS-window failure and zero-test launcher failure remain recorded separately; sibling source/Git and the original outputs remain unchanged.
+
+All seven CI jobs pass on published test head `d960c6b`, with 52,292 passes and twenty-four exact named normal skips across the seventeen matching suite totals. CI AOT remains below the unchanged limit at 24,865,816 bytes and executes its smoke once. Fresh local composed-producer AOT/package and final behavior/version acceptance remain required.
 
 ## Ordinary stair placement, 2026-11-04
 

@@ -3259,5 +3259,112 @@
     "externalPatchedSDK": "10.0.403/runtime+ILCompiler10.0.14, auditenabled/all; oldNU1903failure retained",
     "localPackages": "14primary13symbols/27A4nuspeccommits/exact13DLLXMLPDB/9signedhashchecks/isolated47+777; no publication",
     "remaining": "393runtime/chain/Creaking/specializedfamilies/unknownprediction/rider+otherparticipatinggeometry/Adventurecontexts/final125/finallocalgates remain separate."
+  },
+  "acceptedProtocol393FallingBlocks20261104": {
+    "status": "passed",
+    "scope": "Bounded native and connected session runtime; full objective remains incomplete",
+    "protocols": [
+      393
+    ],
+    "namedReleases": [
+      "1.13"
+    ],
+    "nativeEra": "Original official 1.13 client",
+    "producerBuildSourceCommit": "4cba2a0355b3435216457c02245aca2900c926c3",
+    "prospectivePublishedSourceCommit": null,
+    "productionOwners": [
+      "EntityMembershipState",
+      "LegacyFallingBlockProfile",
+      "LegacyFallingBlockCollision",
+      "EntityMotionState",
+      "EntityApplier",
+      "EntityGeometryState"
+    ],
+    "productionCaller": "Bound packet dispatch -> existing session entity/world phases -> current falling bounds and query membership -> connected public block-use obstruction/send/swing decision",
+    "nativeEvidence": {
+      "index": {
+        "path": "/home/anon/Projects/UMPK/.scratch/falling393-native-preparation-20261104-v1/ACTUAL-NATIVE393.json",
+        "bytes": 2381,
+        "sha256": "8566712294b134d2153208461a9cfb36d6fdf0bfdf8b3a2b0770bf52d53f6e80"
+      },
+      "receipt": {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/falling393-native-20261104-v1/OFFLINE-V3-ACCEPTANCE.json",
+        "bytes": 20856,
+        "sha256": "4f1a3112ebfc8271fbb1c8d65342aefea6f3463d09b5ae871f1519d0beaba5da"
+      },
+      "scenes": 16,
+      "snapshots": 400,
+      "packetRoundTrips": 88,
+      "hardTargetOwners": 95
+    },
+    "runtimeEvidence": {
+      "receipt": {
+        "path": "/home/anon/Projects/UMPK/.scratch/falling393-runtime-preparation-20261104-v5/ACTUAL-MANAGED68.json",
+        "bytes": 26064,
+        "sha256": "6705bdf89dd3cc73b5814df758358b3068b452e3a5555c681f98cd132b99438e"
+      },
+      "focus": 68,
+      "adjacent": 11716,
+      "fullClient": 37871,
+      "failed": 0,
+      "skipped": 0,
+      "exactFullCounter": {
+        "oldOccurrences": 37803,
+        "newFalling393Occurrences": 68,
+        "fullOccurrences": 37871,
+        "distinctNames": 37747,
+        "allOriginalMultiplicitiesPreserved": true
+      }
+    },
+    "requiredFinalAcceptance": {
+      "live393": "not run",
+      "committedSourceEquivalence": "not run",
+      "finalConsumerPackageAotCi": "not run"
+    },
+    "completedDecision": "Known vertical motion and separate query membership can support current placement obstruction; unmodeled contexts stay unknown across later packets and world transitions",
+    "explicitUnknowns": [
+      "General horizontal movement",
+      "Liquids, unclassified shapes and special source callbacks",
+      "Hard peer instances, border and mount contexts",
+      "Protocol 401/404 exact native client parity",
+      "Direct old-reference list membership",
+      "Native local BlockItem world and stack prediction",
+      "Server-owned item effects"
+    ],
+    "adjacentUnsupportedControls": [
+      340,
+      401,
+      404
+    ],
+    "publicApiDataDependencyChanges": false,
+    "normalIntegrationBaseline": 73,
+    "deliberateClientDelta": 68,
+    "expectedAll17": 52550,
+    "fullGoalClosed": false,
+    "actualClientTriple": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/falling393-managed68-20261104-v4/stage-producers/applier/Umpk.Client.dll",
+        "bytes": 1229312,
+        "sha256": "2f4ead16cb621df58cdf9f61fb7f053783b3e43f01601576ba3356acc2e38991"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/falling393-managed68-20261104-v4/stage-producers/applier/Umpk.Client.pdb",
+        "bytes": 294796,
+        "sha256": "a10280ba36b24bcbac0fc880bf438c685033b82275e592369c714accb9f208ac"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/falling393-managed68-20261104-v4/stage-producers/applier/Umpk.Client.xml",
+        "bytes": 854793,
+        "sha256": "92e4fbee55f8f344bf3b438c0fb799c5efd608767c13657e0cd76f263c30749b"
+      }
+    ],
+    "sourceOverlay": {
+      "src/Umpk.Client/Appliers/EntityApplier.cs": "a43b76c39420ed7a3b0744c631e132e1b7b7339e313b344cedd33887c46d7377",
+      "src/Umpk.Client/Internal/EntityMembershipState.cs": "2ef90afaed2fe4c801b4fb945cff0ab439deafc5b194a101c4bfc0df6b0e9940",
+      "src/Umpk.Client/Internal/EntityMotionState.cs": "56f53e034705f79c39bab8c953081a01a67096b8288748d827241e85a8cbeb6e",
+      "src/Umpk.Client/Internal/LegacyFallingBlockCollision.cs": "dc987476a2bd5ece35fa8c1d5a9dec199cc4ec344f13b3e6ea831f3955f8f6f6",
+      "src/Umpk.Client/Internal/LegacyFallingBlockProfile.cs": "7cf4bb5678087aeba4bde44d6c527371bbe5541cd2157133ff1ce0c0cad8d08a"
+    },
+    "scopedReport": "docs/verification/protocol393-falling-blocks.md"
   }
 }

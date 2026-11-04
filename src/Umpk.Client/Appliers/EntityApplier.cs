@@ -161,7 +161,7 @@ internal sealed class EntityApplier : IApplier
                     else
                     {
                         var target = new Vec3d(teleport.X, teleport.Y, teleport.Z);
-                        deferred = context.State.EntityMotion.TryObserveLegacyTeleport(tpEntity, target, SignedPacketAngle(teleport.Yaw), SignedPacketAngle(teleport.Pitch));
+                        deferred = context.State.EntityMotion.TryObserveLegacyTeleport(tpEntity, target, SignedPacketAngle(teleport.Yaw), SignedPacketAngle(teleport.Pitch), context.State.EntityGeometry);
                         if (!deferred)
                         {
                             tpEntity.Position = target;
@@ -278,7 +278,11 @@ internal sealed class EntityApplier : IApplier
                     context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopeDestination);
                 Entity? previousVehicle = store.Get(link.SourceId)?.Vehicle;
                 if (link.LegacyLeash == false && store.TryGet(link.SourceId, out Entity? linkedActor) && linkedActor is not null && store.TryGet(link.DestId, out _))
+                {
                     context.State.EntityGeometry.InvalidateFallingBlock(linkedActor);
+                    if (LegacyFallingBlockProfile.UsesVoxelCollisionQuery(context.Version.Version.Protocol))
+                        context.State.EntityMembership.InvalidateFallingRegistration(linkedActor);
+                }
                 context.State.EntityMotion.ObserveLocalLegacyMount(context.State.Self.EntityId, link.SourceId, link.DestId, link.LegacyLeash);
                 context.State.EntityMotion.ObserveLegacyLink(store, context.State.EntityGeometry, context.Version.Version.Protocol, context.State.Self.EntityId, link);
                 if (EntityMotionState.UsesLegacyMountTraversal(context.Version.Version.Protocol) && link.LegacyLeash == false)
@@ -491,6 +495,9 @@ internal sealed class EntityApplier : IApplier
         context.State.EntityMotion.RegisterFallingBlock(entity, context.Version.Version.Protocol, objectData, context.State.EntityGeometry);
         int? healthIndex = context.MetadataKeys.TryResolveIndex(entity.Type, EntityMetadataKeys.Health, out int resolvedHealthIndex) ? resolvedHealthIndex : null;
         context.State.EntityMembership.Register(entity, context.Version.Version.Protocol, isPlayer, healthIndex);
+        if (LegacyFallingBlockProfile.UsesVoxelCollisionQuery(context.Version.Version.Protocol) && LegacyFallingBlockProfile.Supports(entity, context.Version.Version.Protocol)
+            && !context.State.EntityGeometry.TryGetFallingBlock(entity, out _))
+            context.State.EntityMembership.InvalidateFallingRegistration(entity);
         context.State.EntityMotion.RegisterCow(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership);
         context.State.EntityMotion.RegisterLegacyAmbient(entity, context.State.EntityGeometry);
         if (initialMetadata is not null)
@@ -689,12 +696,20 @@ internal sealed class EntityApplier : IApplier
         if (vehicle is not null)
         {
             context.State.EntityGeometry.InvalidatePlacementEnvelope(vehicle);
+            if (vehicle.Passengers.Count != 0 || packet.Passengers.Count != 0)
+                InvalidateFallingMount(vehicle, context);
             foreach (Entity oldPassenger in vehicle.Passengers)
+            {
                 context.State.EntityGeometry.InvalidatePlacementEnvelope(oldPassenger);
+                InvalidateFallingMount(oldPassenger, context);
+            }
         }
         foreach (int id in packet.Passengers)
             if (store.TryGet(id, out Entity? envelopePassenger) && envelopePassenger is not null)
+            {
                 context.State.EntityGeometry.InvalidatePlacementEnvelope(envelopePassenger);
+                InvalidateFallingMount(envelopePassenger, context);
+            }
         if (!hasVehicle || vehicle is null)
             return;
 
@@ -711,5 +726,14 @@ internal sealed class EntityApplier : IApplier
         store.SetPassengers(vehicle, passengers);
         foreach (Entity passenger in mounts)
             context.State.EntityGeometry.ObserveMount(passenger);
+    }
+
+    private static void InvalidateFallingMount(Entity entity, ApplierContext context)
+    {
+        int protocol = context.Version.Version.Protocol;
+        if (!LegacyFallingBlockProfile.UsesVoxelCollisionQuery(protocol) || !LegacyFallingBlockProfile.Supports(entity, protocol))
+            return;
+        context.State.EntityGeometry.InvalidateFallingBlock(entity);
+        context.State.EntityMembership.InvalidateFallingRegistration(entity);
     }
 }

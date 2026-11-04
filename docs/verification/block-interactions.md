@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Protocol 393 falling-block runtime, 4 November 2026
+
+The [bounded 1.13 falling-block runtime](protocol393-falling-blocks.md) now connects native vertical motion, packet chunk membership and current bounds to placement decisions. All 68 focused tests, 11,716 adjacent regressions and the unfiltered 37,871-case Client suite pass without skips; the exact original 37,803-case multiset is preserved. The Client retains its actual v4 build origin, and the corrected Test pair is a v5 build.
+
+Protocol-393 live, composed-producer admission and fresh consumer/AOT/package/published-head checks remain open. The earlier quartz checkpoint below retains its own producer and completed checks.
+
 This work is in progress. The completed checks cover measured interaction paths and selected live versions. Full contextual targeting, specialized placement and acceptance on every server remain unproven.
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.

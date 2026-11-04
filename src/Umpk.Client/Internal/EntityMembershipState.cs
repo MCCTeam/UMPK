@@ -123,6 +123,13 @@ internal sealed partial class EntityMembershipState
             member.MembershipKnown = false;
     }
 
+    /// <summary>Retains a falling actor's last proven membership fields when unowned movement prevents current registration proof.</summary>
+    public void InvalidateFallingRegistration(Entity entity)
+    {
+        if (_players.TryGetValue(entity, out Membership? member) && !member.IsLiving)
+            member.MembershipKnown = false;
+    }
+
     /// <summary>The protocol-47 riding owner cannot use a retained position to prove current registration after an unresolved relation or unowned rider movement.</summary>
     public void InvalidateLegacyRiderRegistration(Entity entity)
     {

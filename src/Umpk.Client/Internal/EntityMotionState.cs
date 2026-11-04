@@ -230,7 +230,20 @@ internal sealed partial class EntityMotionState
     }
 
     public bool TryObserveLegacyTeleport(Entity entity, Vec3d target, float yaw, float pitch)
+        => TryObserveLegacyTeleport(entity, target, yaw, pitch, null);
+
+    public bool TryObserveLegacyTeleport(Entity entity, Vec3d target, float yaw, float pitch, EntityGeometryState? geometry)
     {
+        if (_fallingBlocks.TryGetValue(entity, out FallingBlockMotion? falling) && LegacyFallingBlockProfile.UsesVoxelCollisionQuery(falling.Protocol))
+        {
+            // Original ClientPacketListener suppresses a near target, then still reapplies the current position through the base setter.
+            if (Math.Abs(entity.Position.X - target.X) >= 0.03125 || Math.Abs(entity.Position.Y - target.Y) >= 0.015625 || Math.Abs(entity.Position.Z - target.Z) >= 0.03125)
+                entity.Position = target;
+            entity.Yaw = yaw;
+            entity.Pitch = pitch;
+            geometry?.ObservePosition(entity);
+            return true;
+        }
         if (TryObserveLegacyAmbientTeleport(entity, target, yaw, pitch))
             return true;
         if (InvalidateCowContext(entity))
@@ -368,9 +381,10 @@ internal sealed partial class EntityMotionState
         if (geometry is null)
             return;
         if (world is null || shapes is null || membership is null || entities is null || entity.Vehicle is not null || entity.Passengers.Count != 0
-            || !geometry.TryGetFallingBlock(entity, out Aabb box) || motion.ObjectData is not { } data || !world.BlockData.Blocks.TryGet(data & 4095, out var block) || block.NetworkId == 0)
+            || !geometry.TryGetFallingBlock(entity, out Aabb box) || motion.ObjectData is not { } data || !LegacyFallingBlockProfile.TryGetCarriedBlock(world.BlockData, motion.Protocol, data, out int blockId)
+            || !LegacyFallingBlockProfile.TryGetNoGravity(entity, motion.Protocol, out bool noGravity))
         {
-            geometry.InvalidateFallingBlock(entity);
+            InvalidateFallingMotion(entity, motion, geometry, membership);
             return;
         }
         motion.Collision ??= new LegacyFallingBlockCollision(world, new WorldPhysicsView(world, shapes, WorldBorderContainmentEra.Legacy,
@@ -382,16 +396,23 @@ internal sealed partial class EntityMotionState
             var original = motion.Collision.ReadBlock(cell);
             if (!original.IsValid)
             {
-                geometry.InvalidateFallingBlock(entity);
+                InvalidateFallingMotion(entity, motion, geometry, membership);
                 return;
             }
-            if (original.Block.NetworkId == block.NetworkId)
+            if (original.Block.NetworkId == blockId)
+            {
+                if (!LegacyFallingBlockProfile.HasSimpleSourceRemoval(blockId, motion.Protocol))
+                {
+                    InvalidateFallingMotion(entity, motion, geometry, membership);
+                    return;
+                }
                 world.SetBlockStateId(cell, 0);
+            }
         }
-        Vec3d requested = entity.Velocity.Subtract(0, .04F, 0);
+        Vec3d requested = noGravity ? entity.Velocity : entity.Velocity.Subtract(0, .04F, 0);
         if (!motion.Collision.TryCollide(box, requested, out Vec3d displacement))
         {
-            geometry.InvalidateFallingBlock(entity);
+            InvalidateFallingMotion(entity, motion, geometry, membership);
             return;
         }
         Vec3d before = entity.Position;
@@ -400,6 +421,13 @@ internal sealed partial class EntityMotionState
         entity.Velocity = new Vec3d(requested.X == displacement.X ? requested.X : 0, requested.Y == displacement.Y ? requested.Y : 0, requested.Z == displacement.Z ? requested.Z : 0).Scale(.98F);
         if (before != entity.Position)
             moved?.Add(entity.Id);
+    }
+
+    private static void InvalidateFallingMotion(Entity entity, FallingBlockMotion motion, EntityGeometryState geometry, EntityMembershipState? membership)
+    {
+        geometry.InvalidateFallingBlock(entity);
+        if (LegacyFallingBlockProfile.UsesVoxelCollisionQuery(motion.Protocol))
+            membership?.InvalidateFallingRegistration(entity);
     }
 
     public void Remove(Entity entity)

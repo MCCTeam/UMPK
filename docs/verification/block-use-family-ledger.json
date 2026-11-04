@@ -3240,5 +3240,24 @@
     },
     "normalIntegrationAfterLiveTest": 73,
     "all17ExpectedAfterLiveTest": 52482
+  },
+  "acceptedCurrentProducerCheckpoint20261104": {
+    "status": "passed",
+    "scope": "Bounded A4producer/d0test-source-equivalent nativeQuartz24/currentconsumer/localpatchedAOT/localpackage/publishedCI checks, not whole goal",
+    "producerCodeCommit": "a4ebcaad8d88ede29d72674afbc51c18fdee5a80",
+    "publishedTestCommit": "d0f8523a394fe79ac4f33035dda383b542aecae2",
+    "report": "docs/verification/interaction-checkpoint-20261104-current.md",
+    "consumerReceipt": "499620ef",
+    "AOTReceipt": "7ad62708",
+    "packageReceipt": "103420c6",
+    "CIReceipt": "d022674a",
+    "nativeLiveReceipt": "cd06826b",
+    "counts": "Client37803/Integration73/all17 52482=52457CIpasses+25namednormalSKIP",
+    "nativeBytes": 24865872,
+    "strictLimitBytes": 25165824,
+    "smoke": "Exactly1executedPASS0skip",
+    "externalPatchedSDK": "10.0.403/runtime+ILCompiler10.0.14, auditenabled/all; oldNU1903failure retained",
+    "localPackages": "14primary13symbols/27A4nuspeccommits/exact13DLLXMLPDB/9signedhashchecks/isolated47+777; no publication",
+    "remaining": "393runtime/chain/Creaking/specializedfamilies/unknownprediction/rider+otherparticipatinggeometry/Adventurecontexts/final125/finallocalgates remain separate."
   }
 }

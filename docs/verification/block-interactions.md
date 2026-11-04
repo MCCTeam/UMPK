@@ -4,6 +4,12 @@ This work is in progress. The completed checks cover measured interaction paths 
 
 The first committed implementation checkpoint was `c015405` on `codex/vanilla-block-interactions`. Its source, datasets and fixtures match the working tree checked at that stage. That full run passed 13,937 tests, failed the pre-existing vanilla-citation guard and skipped six opt-in AOT/live cases. Build, format, dataset, language and generated-output checks passed. Before committing, all eight artifact-tool tests and all 93 extraction tests also passed. The sections below retain each stage's results and limitations; the final sections record the latest checks.
 
+## Current patched consumer and package checkpoint, 2026-11-04
+
+The [current checkpoint](interaction-checkpoint-20261104-current.md) binds production `a4ebcaa` and test-only `d0f8523` to the exact thirteen-library tuple. Fresh DMCBK 1,999/MCC 918 and all dependency/reference checks pass; the dedicated quartz legs pass twenty-four scenes. All seven CI jobs pass with seventeen matching suite totals, 52,457 passes and twenty-five named normal skips.
+
+The patched external SDK 10.0.403/runtime and ILCompiler 10.0.14 produce a 24,865,872-byte native executable, below the unchanged 25,165,824-byte limit, with one executed passing smoke. Fourteen local packages/thirteen symbol packages and the isolated 47/777 consumer verify against the tested binaries; nothing was published. The earlier NU1903 restore failure remains recorded. Other behavior families and the final 50/75 matrix remain unfinished.
+
 ## Legacy quartz placement, 2026-11-04
 
 The [legacy quartz slice](legacy-quartz-placement.md) connects all eleven datasets from 47 through 340 to the existing full-box placement owner. Original vanilla verifies 351 getter/stream operations; source separates blocked pre-send rejection from default Adventure failure after USE. Protocol 47 captures native nonnegative metadata for block and air actions while preserving raw received stack bytes.

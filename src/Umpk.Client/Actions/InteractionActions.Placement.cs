@@ -257,8 +257,10 @@ public sealed partial class InteractionActions
             // Original legacy ItemBlock checks player permission after the controller's placement precheck and USE send. Default quartz has neither CanPlaceOn NBT nor canEditBlocks.
             if (VanillaPillarPlacement.IsLegacyQuartz(_services.Version.Version.Protocol, item) && VanillaPillarPlacement.SupportsStack(_services.Version.Version.Protocol, item))
                 return BlockUsePrediction.Fail;
-            // Native ItemStack denies a default chain without CanPlaceOn before entering BlockItem placement, including an occupied destination. The controller still commits USE.
-            if (item.Components.HasNoPatch && data.TryGetItem(item.Item.Id, out ItemUseOnInfo chainUse) && chain.Supports(item.Item.Id, chainUse, clicked.Source))
+            // Native ItemStack denies a default chain or heart without CanPlaceOn before entering BlockItem placement, including an occupied destination. The controller still commits USE.
+            if (item.Components.HasNoPatch && data.TryGetItem(item.Item.Id, out ItemUseOnInfo chainUse)
+                && (chain.Supports(item.Item.Id, chainUse, clicked.Source)
+                    || VanillaCreakingHeartPlacement.Supports(_services.Version.Version.Protocol, item.Item.Id, chainUse, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol))))
                 return BlockUsePrediction.Pass;
             if (!VanillaComponentMiningPermission.SupportsPlacement(_services.Version.Version.Protocol)
                 || !data.TryGetItem(item.Item.Id, out ItemUseOnInfo adventureUse) || !IsOrdinaryCubeItem(item.Item.Id, adventureUse))
@@ -308,7 +310,8 @@ public sealed partial class InteractionActions
         return PredictCubePlacement(preSend: false);
 
         bool IsOrdinaryCubeItem(Identifier id, ItemUseOnInfo contract)
-            => contract.Kind == ItemUseOnKind.SimpleCubePlacement || VanillaPillarPlacement.Supports(_services.Version.Version.Protocol, id, contract, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol));
+            => contract.Kind == ItemUseOnKind.SimpleCubePlacement || VanillaPillarPlacement.Supports(_services.Version.Version.Protocol, id, contract, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol))
+                || VanillaCreakingHeartPlacement.Supports(_services.Version.Version.Protocol, id, contract, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol));
 
         BlockUsePrediction PredictCubePlacement(bool preSend)
         {
@@ -332,6 +335,9 @@ public sealed partial class InteractionActions
             }
             if (!replacement.AllowsPlacement)
                 return preSend ? BlockUsePrediction.Rejected : BlockUsePrediction.Fail;
+            if (VanillaCreakingHeartPlacement.IsFamily(item.Item.Id)
+                && !VanillaCreakingHeartPlacement.HasSafeGetterContext(world, _services.State.EntityMembership, _services.State.JukeboxPrediction, _services.State.RegistryTags, destination, face))
+                return BlockUsePrediction.Unknown;
             return PredictPlacementObstruction(destination, preSend, [new(0, 0, 0, 1, 1, 1)]);
         }
 

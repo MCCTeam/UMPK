@@ -135,7 +135,7 @@ public sealed class LoreMiningIdentitySessionTests
             Assert.Equal((byte)Direction.Down, abort.Direction);
             Assert.Equal(0, abort.Sequence);
             InvalidOperationException error = await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => await action.WaitAsync(session.Token));
-            Assert.Contains("native lore identity is unavailable", error.Message, StringComparison.Ordinal);
+            Assert.Contains("native component identity is unavailable", error.Message, StringComparison.Ordinal);
             Assert.Empty(await session.Tick());
             Assert.Empty(await session.Tick());
             Assert.Equal(targetState, session.Client.State.World.GetBlock(Session.Target).StateId);

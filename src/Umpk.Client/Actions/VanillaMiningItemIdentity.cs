@@ -33,6 +33,12 @@ internal static class VanillaMiningItemIdentity
                 if (lore is not true)
                     return lore;
             }
+            if (protocol is >= ItemComponentsProtocol and < ListCustomModelDataProtocol && !current.IsEmpty && !previous.IsEmpty && current.Item.Equals(previous.Item) && !ReferenceEquals(current.Components, previous.Components))
+            {
+                bool? customModel = LegacyCustomModelMapsMatch(current.Components, previous.Components);
+                if (customModel is not true)
+                    return customModel;
+            }
             if (current.IsSameItemSameComponents(previous))
                 return true;
             if (protocol is < ItemComponentsProtocol or > LastMeasuredEnchantmentProtocol || current.IsEmpty || previous.IsEmpty || !current.Item.Equals(previous.Item))
@@ -115,12 +121,34 @@ internal static class VanillaMiningItemIdentity
         return false;
     }
 
+    private static bool? LegacyCustomModelMapsMatch(DataComponentMap current, DataComponentMap previous)
+    {
+        CustomModelDataComponent? model = current.Get(DataComponents.CustomModelData);
+        CustomModelDataComponent? other = previous.Get(DataComponents.CustomModelData);
+        if (model is null || other is null)
+            return model is null && other is null;
+        return LegacyCustomModelValuesMatch(model, other);
+    }
+
+    private static bool? LegacyCustomModelValuesMatch(CustomModelDataComponent current, CustomModelDataComponent previous)
+    {
+        if (ReferenceEquals(current, previous))
+            return true;
+        // The legacy stream carries an integer; the shared float projection alone cannot identify large received values.
+        if (!ItemComponentCodecs.TryGetLegacyCustomModelDataInteger(current, out int value)
+            || !ItemComponentCodecs.TryGetLegacyCustomModelDataInteger(previous, out int other))
+            return null;
+        return value == other;
+    }
+
     private static bool? ComponentValuesMatch(object? current, object? previous, int protocol)
     {
         if (HasNativeLoreIdentity(protocol) && current is LoreComponent lore && previous is LoreComponent otherLore)
             return LoreValuesMatch(lore, otherLore);
-        if (protocol is >= ListCustomModelDataProtocol and <= LastMeasuredCustomModelDataProtocol && current is CustomModelDataComponent customModel && previous is CustomModelDataComponent otherModel)
-            return CustomModelValuesMatch(customModel, otherModel);
+        if (protocol is >= ItemComponentsProtocol and <= LastMeasuredCustomModelDataProtocol && current is CustomModelDataComponent customModel && previous is CustomModelDataComponent otherModel)
+            return protocol < ListCustomModelDataProtocol
+                ? LegacyCustomModelValuesMatch(customModel, otherModel)
+                : CustomModelValuesMatch(customModel, otherModel);
         if (current is EnchantmentsComponent enchantments && previous is EnchantmentsComponent otherEnchantments)
             return EnchantmentValuesMatch(enchantments.Enchantments, otherEnchantments.Enchantments, enchantments.ShowInTooltip, otherEnchantments.ShowInTooltip, protocol);
         if (current is StoredEnchantmentsComponent stored && previous is StoredEnchantmentsComponent otherStored)

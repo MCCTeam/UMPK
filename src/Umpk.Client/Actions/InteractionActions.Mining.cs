@@ -256,7 +256,7 @@ public sealed partial class InteractionActions
         if (_destroyTarget is not { } target || target.Position != position)
             return false;
         bool? matches = VanillaMiningItemIdentity.TryMatches(item, target.Item, _services.Version.Version.Protocol);
-        return matches ?? throw new MiningUnavailableException("The held item's native lore identity is unavailable.");
+        return matches ?? throw new MiningUnavailableException("The held item's native component identity is unavailable.");
     }
 
     private void SynchronizeMiningOwner()

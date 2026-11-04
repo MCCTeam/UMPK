@@ -21,7 +21,7 @@ public sealed partial class InteractionActions
         if (IsBlockUseItemEnabled(hand) is false)
             return null;
         IPacketSink sink = await PrepareInteractionPacketSinkAsync(session).ConfigureAwait(false);
-        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation);
+        BlockUsePrediction prediction = PredictBlockUseCore(position, face, cursor, hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement);
         if (!prediction.SendPacket)
             return null;
         // Once the input is committed, finish its packet group while this session lives. Caller cancellation can stop the acknowledgment wait, but cannot omit an animation after an already-written use.
@@ -50,6 +50,13 @@ public sealed partial class InteractionActions
             if (transformed.NeighborPosition is { } neighbor && transformed.NeighborState is int neighborState)
                 _services.State.JukeboxPrediction.Commit(_services.State.World, neighbor, neighborState, sequence, capturedPosition);
             _services.State.JukeboxPrediction.Commit(_services.State.World, transformed.Position, transformed.State, sequence, capturedPosition);
+        }
+        if (stonePlacement is { } placed)
+        {
+            // Original BlockItem.place writes the client block before consuming the held stack; both precede construction and transport of USE.
+            _services.State.JukeboxPrediction.Commit(_services.State.World, placed.Position, placed.State, sequence, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
+            int slot = hand == Hand.Main ? 36 + _services.Self.HeldSlot : 45;
+            _services.State.Inventory.SetSlot(InventoryState.PlayerWindowId, slot, placed.RemainingStack);
         }
         if (sequence is null)
             await SendLegacyBlockPlaceAsync(nameof(PlaceBlockAsync), position, (int)face, cursor, session, sink).ConfigureAwait(false);
@@ -88,14 +95,15 @@ public sealed partial class InteractionActions
     }
 
     internal BlockUsePrediction PredictBlockUse(BlockPos position, Direction face, Vec3d cursor, Hand hand)
-        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _, out _);
+        => PredictBlockUseCore(position, face, cursor, hand, out _, out _, out _, out _, out _);
 
-    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation)
+    private BlockUsePrediction PredictBlockUseCore(BlockPos position, Direction face, Vec3d cursor, Hand hand, out int? localState, out CakeConsumption? cakeConsumption, out CakeAttachment? cakeAttachment, out ToolBlockMutation? toolMutation, out StonePlacementMutation? stonePlacement)
     {
         localState = null;
         cakeConsumption = null;
         cakeAttachment = null;
         toolMutation = null;
+        stonePlacement = null;
         bool inventoryKnown = _services.State.Features.Inventory;
         bool hasOffhand = _services.Wire.CanSendPlay(ItemPackets.Serverbound.UseItemOn);
         bool mainKnown = inventoryKnown && _services.State.Inventory.IsPlayerSlotAvailable(36 + _services.Self.HeldSlot);
@@ -333,7 +341,11 @@ public sealed partial class InteractionActions
             return PredictChainPlacement(chain, item.Item.Id);
         if (!IsOrdinaryCubeItem(item.Item.Id, use) || !_services.State.Features.Entities)
             return BlockUsePrediction.Unknown;
-        return PredictCubePlacement(preSend: false);
+        BlockUsePrediction cubePrediction = PredictCubePlacement(preSend: false);
+        if (cubePrediction.Result == BlockUseResult.Success
+            && VanillaStoneLocalPlacement.ForProtocol(_services.Version.Version.Protocol).TryCreate(_services.Version.Version.Protocol, _services.State, position, face, item, out StonePlacementMutation placement))
+            stonePlacement = placement;
+        return cubePrediction;
 
         bool IsOrdinaryCubeItem(Identifier id, ItemUseOnInfo contract)
             => contract.Kind == ItemUseOnKind.SimpleCubePlacement || VanillaPillarPlacement.Supports(_services.Version.Version.Protocol, id, contract, clicked.Source, JavaGameData.BlockShapes(_services.Version.Version.Protocol))

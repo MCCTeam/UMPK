@@ -1,5 +1,11 @@
 # Vanilla block interaction audit
 
+## Local stone placement, 4 November 2026
+
+The [bounded local STONE prediction](stone-local-placement.md) updates the existing block shadow and main/offhand stack before USE on protocols 766 and 777. It requires canonical unpatched STONE, literal AIR, received terrain, safe AIR/STONE neighbors and observed current abilities. Other items, eras and unavailable contexts remain open.
+
+The 134 cases move from 108 controls/26 causal failures to all passes only after the caller is connected. The retained STONE-only Client `1c6918ee` also preserves the isolated picking failures. The final composed Client `45279381`/PDB `860ee7a6` passes 630 focused, 3,837 adjacent and 39,003 unfiltered Client tests without skips. Root `9d9e3840` and cleanup `32513e34` verify exact names, source/PDB origins, unchanged inputs and all 31 owned process exits. No standalone full 38,923 run is claimed. Native cache measurements, further prediction contexts and final live/repository/consumer/package/AOT/published-head acceptance remain open.
+
 ## Component Adventure placement, 4 November 2026
 
 The [Adventure placement correction for 766–769](component-adventure-placement-766-769.md) connects the existing typed permission owner to ordinary placement on Minecraft 1.20.5–1.21.4. Received allow predicates now reach placement; absent or nonmatching permissions produce native PASS/USE-only behavior. Missing tag, NBT and property context stays Unknown. The change moves one profile boundary and preserves the existing parser, cache, codecs, public API and ownership.

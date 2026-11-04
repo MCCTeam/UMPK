@@ -3843,5 +3843,110 @@
       "current13admission/live/final17/currentconsumers/packagesAOT/currentpublishedCI"
     ],
     "fullGoalClosed": false
+  },
+  "defaultStoneLocalPrediction20261104": {
+    "status": "passed bounded source/session/composedFullClient; finalacceptanceopen",
+    "report": "docs/verification/stone-local-placement.md",
+    "protocols": [
+      766,
+      777
+    ],
+    "productionOwner": "existing placement/JukeboxPredictionState/InventoryState",
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/stone38-picking80-managed118-preparation-20261104-v8/ROOT-ACCEPTANCE.json",
+      "bytes": 5453,
+      "sha256": "9d9e38409deeaa575e817320d935db98e5e7e158021bbc68378180dbf5973862"
+    },
+    "actual": {
+      "path": "/home/anon/Projects/UMPK/.scratch/stone38-picking80-managed118-preparation-20261104-v8/ACTUAL-MANAGED118.json",
+      "bytes": 31012,
+      "sha256": "db84689aac9f4822066dd8e7bb0f4351bb468d1b90a73b525ff9233bd4475e9d"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v6/TERMINAL-CLEANUP.json",
+      "bytes": 6230,
+      "sha256": "32513e348ed0c0232ab8742518f0ba04ad7d527e02772ef0446767f097082f5c"
+    },
+    "sourceBindings": {
+      "path": "/home/anon/Projects/UMPK/.scratch/ordinary-stone-local-prediction-source-20261104-v1/SOURCE-BINDINGS.json",
+      "bytes": 104071,
+      "sha256": "45409a0634a435e45acd2b6f8f706f53b9019788eedb49435c5782fd1387e8ff"
+    },
+    "stoneOnlyClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/caller/Umpk.Client.dll",
+        "bytes": 1248768,
+        "sha256": "1c6918ee27e4d70df144dbfbb74505fa4044970f9fc90cebdf11ff241abbc05c"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/caller/Umpk.Client.pdb",
+        "bytes": 299244,
+        "sha256": "1883bf6ee11030a76c0e41710b0d636c15ffec03f2fe2e22608ad607d48f6706"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/caller/Umpk.Client.xml",
+        "bytes": 856545,
+        "sha256": "0c7cd0d340c11f4294d21d87126965932033ad2883975a32efd934359e6bd261"
+      }
+    ],
+    "composedClient": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.dll",
+        "bytes": 1249280,
+        "sha256": "452793812b67d50d0ed7b0ee666511dfcb4a5e1aae57f430eee264a555b98d54"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.pdb",
+        "bytes": 299352,
+        "sha256": "860ee7a6251eaef444281d030047f1fb276530ffac8682f4d2138acd2a387993"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/stone38-picking80-managed118-20261104-v4/stage-producers/picking/Umpk.Client.xml",
+        "bytes": 856545,
+        "sha256": "0c7cd0d340c11f4294d21d87126965932033ad2883975a32efd934359e6bd261"
+      }
+    ],
+    "cases": {
+      "stoneControls": 108,
+      "stoneCausalFailures": 26,
+      "stoneGreen": 134,
+      "pickingControls": 414,
+      "pickingCausalFailures": 82,
+      "pickingGreen": 496,
+      "focused": 630,
+      "adjacent": 3837,
+      "fullClient": 39003,
+      "newStone": 38,
+      "newPickingNet": 80,
+      "removedPicking": 8,
+      "addedPicking": 88,
+      "fixtureKeys": 3,
+      "fixtureOccurrences": 127,
+      "finalPdbDocumentsPhysicallyVerified": 619,
+      "ownedHostIdentitiesAbsent": 31
+    },
+    "compilerOrigins": {
+      "historical": {
+        "Client": 3,
+        "Test": 4
+      },
+      "current": {
+        "Client": 0,
+        "Test": 1
+      }
+    },
+    "noStandaloneStoneFullClaim": true,
+    "unknownsRetained": [
+      "othereras/items/neighbors",
+      "menus/pendingclick",
+      "unobservedabilities",
+      "VOID_AIR/missingterrain/customdefinitions"
+    ],
+    "unexecuted": [
+      "nativecache9",
+      "dedicatedlive/final125",
+      "final17/currentconsumers/packages/AOT/publishedCI"
+    ],
+    "fullGoalClosed": false
   }
 }

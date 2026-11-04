@@ -67,7 +67,9 @@ public sealed class OrdinaryCubeDestinationMembershipSessionRuntimeTests
         await AssertUse(session, clicked, face, expected);
         Assert.Equal(member, session.Client.State.EntityMembership.HasColumn(destination));
         Assert.Equal(stored.StateId, session.Client.State.World.GetBlock(destination).StateId);
-        Assert.Equal(1, session.Client.State.Inventory.GetSlot(36).Count);
+        // Original successful default stone placement consumes one item before USE; ACK restores terrain independently of inventory correction.
+        int expectedCount = protocol is 766 or 777 && availability == "known-air" ? 0 : 1;
+        Assert.Equal(expectedCount, session.Client.State.Inventory.GetSlot(36).Count);
     }
 
     [Theory]

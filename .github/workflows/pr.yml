@@ -89,6 +89,49 @@ jobs:
           dotnet add "$consumer/umpk-package-smoke.csproj" package Umpk --version "${{ steps.version.outputs.version }}" --no-restore
           dotnet restore "$consumer/umpk-package-smoke.csproj" --source "${{ github.workspace }}/artifacts/packages" --source https://api.nuget.org/v3/index.json
           dotnet build "$consumer/umpk-package-smoke.csproj" --no-restore -c Release
+      - name: Record package producer hashes
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          git diff --exit-code -- src data
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          def record(path):
+              path = Path(path)
+              return {"path": path.as_posix(), "bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+          packages = Path("artifacts/packages")
+          primary = sorted(packages.glob("*.nupkg"))
+          symbols = sorted(packages.glob("*.snupkg"))
+          if len(primary) != 14 or len(symbols) != 13:
+              raise SystemExit(f"expected 14 primary and 13 symbol packages, found {len(primary)} and {len(symbols)}")
+          sources = subprocess.check_output(["git", "ls-files", "-z", "--", "src"]).decode().split("\0")
+          manifest = {
+              "pullRequestHead": os.environ["PR_HEAD_SHA"],
+              "checkedOutCommit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "checkedOutTree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),
+              "workflowRunId": os.environ["WORKFLOW_RUN_ID"],
+              "workflowRunAttempt": os.environ["WORKFLOW_RUN_ATTEMPT"],
+              "sourceFiles": [record(path) for path in sorted(sources) if path],
+              "packages": [record(path) for path in primary + symbols],
+          }
+          (packages / "producer-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          PY
+      - name: Retain verified packages for producer checks
+        uses: actions/upload-artifact@v6
+        with:
+          name: pr-verified-packages-${{ github.run_id }}
+          path: artifacts/packages/
+          if-no-files-found: error
+          retention-days: 7
 
   aot-smoke:
     name: AOT publish smoke + size budget

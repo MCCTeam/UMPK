@@ -21,7 +21,7 @@ The seven new session cases retain the original transformer registry frame and r
 
 The correction was published on top of `a8e8ae3`, whose independently accepted chain change does not alter this data or these fixture preimages. Deliberate counts are Client 38,088 + 7 = 38,095; Data 2,493 + 5 = 2,498; all seventeen suites expect 52,779. The executed local Data total is 2,498, with an exact case-name multiset equal to the previous 2,493 plus the five additions. The retained test binaries were compiled against `df9579f` Client `2f4ead16`/Data.Java `669f88e2`; their GREEN runtime uses admitted chain Client `39430914` plus CI Data.Java `db9983c0`. The other eleven libraries remain exact. This runtime overlay is recorded separately from the original compiler references. Local full Client 38,095 remains not run.
 
-Ordinary statue activation remains unknown. The new cases use secondary use, which suppresses activation. Native AXES membership controls the separate activation path; unaffected unwaxed statue activation can create a golem. Native `COPPER_GOLEM_STATUES` membership also controls block-entity retention/recreation. This correction does not simulate or assert that continuity, block-entity contents, native rendering or dependent repeated activation.
+The later [ordinary statue activation slice](statue-axe-activation.md) separately passes 160 cases for seven aged/waxed identities using the received AXES tag. This data correction's seven cases use secondary use, which suppresses activation. Native AXES membership controls the separate activation path; unaffected unwaxed statue activation can create a golem. Native `COPPER_GOLEM_STATUES` membership also controls block-entity retention/recreation. This correction does not simulate or assert that continuity, block-entity contents, native rendering or dependent repeated activation.
 
 ## Commands and retained evidence
 
@@ -39,4 +39,4 @@ The completed Ubuntu CI raw-log audit `91939954` verifies all seventeen expected
 
 ## Pending acceptance
 
-The final combined Client suite, fresh matching consumers, local package/AOT budget and smoke, live requirements, repository gates and final published-head CI remain required. Ordinary statue activation and block-entity continuity remain unknown as described above. Both PRs stay open and draft; no package or release is published by this correction.
+The later combined heart/statue Client passes 38,342 cases as recorded in its scoped reports. Fresh matching consumers, local package/AOT budget and smoke, live requirements, final repository gates and final published-head CI remain required. Block-entity continuity and the excluded activation contexts remain unknown as described above. Both PRs stay open and draft; no package or release is published by this correction.

@@ -1,5 +1,13 @@
 # Vanilla block interaction audit
 
+## Heart and ordinary statue runtime, 4 November 2026
+
+The [creaking-heart placement caller](creaking-heart-placement.md) now admits bounded full-box obstruction/result decisions on protocols 768–777, with 87 connected cases. Four canonical native AXIS identities and ordered lazy getter reads remain explicit; unavailable destination packet membership returns Unknown even when public storage contains valid AIR. The separate [ordinary statue activation](statue-axe-activation.md) uses the received AXES tag for seven aged/waxed identities on protocols 773–777, followed by the existing item-use owner. Its 160 cases include the four default-axe Adventure denials on protocols 773–776.
+
+The final combined Client `f24a8699`/PDB `5fdd544b` passes all 247 focused, 12,985 adjacent and 38,342 unfiltered Client cases without skips. The full multiset is exactly the accepted earlier 38,334 plus eight destination-edge controls. Root `c3619d6a` and cleanup `26069de2` bind actual compiler/reference origins and all 25 HOST process exits. The retained 79-only heart stage and earlier full suites keep their historical source scope; a standalone 38,095 full run was never executed.
+
+Exact placed/activation state, local BlockItem terrain/stack effects, statue block-entity continuity, other placement families, riders and remaining geometry/motion remain open. The modern ordinary-cube destination-membership path is a separate source-level candidate requiring its own witness. Dedicated live and final composed-producer repository, consumer, package/AOT and published-head checks remain required.
+
 ## Copper-statue property acceptance, 4 November 2026
 
 The [copper-statue property correction](copper-statue-properties.md) now passes its exact five Data and eight connected runtime checks against the source-verified CI library, followed by all 2,498 Data tests without skips. The composed source-equivalent producer is `6984e32`, with chain Client `39430914` and corrected Data.Java `db9983c0`; actual compiler references and runtime origins stay separate.

@@ -3408,9 +3408,117 @@
       "all17": 52779
     },
     "compiledGreen": "5Data+8Client+unfiltered2498Data executedPASS0skip;63f88816/cleanup685e0010",
-    "ordinaryActivationAndBlockEntityContinuity": "unknown/unimplemented; no claim",
+    "ordinaryActivationAndBlockEntityContinuity": "Bounded seven-identity AXES activation passes in ordinaryStatueAxeActivation20261104; block-entity continuity remains unknown.",
     "fullGoalClosed": false,
     "producer13": "Rootadmittedacd203db;source6984e32/Client3943+Datadb998/1282PDBsources/39files",
-    "localFullClient38095": "not run; plannedjointfullwithnextboundedruntime"
+    "localFullClient38095": "not run as a standalone full suite; later combined38342 passes with exact prior38334+8"
+  },
+  "defaultCreakingHeartPlacement20261104": {
+    "status": "passed bounded native/session slice; final acceptance open",
+    "receipt": {
+      "path": "/home/anon/Projects/UMPK/.scratch/heart-statue247-managed-preparation-20261104-v4/ACTUAL-MANAGED247.json",
+      "bytes": 72341,
+      "sha256": "1e4174fe4ba3881a628356a80e9a1a5d5d248c3a8f7a0638aca66ab2ddc28570"
+    },
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/heart-statue247-managed-preparation-20261104-v4/ROOT-ACCEPTANCE.json",
+      "bytes": 2468,
+      "sha256": "c3619d6aabd108905ff22111b2c3ef55951377e176e9d5c5881b10a7c46a799e"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/TERMINAL-CLEANUP.json",
+      "bytes": 4167,
+      "sha256": "26069de21795f879d6192c240f89acc8151808fa88156c27df3e7b5bff2a5e24"
+    },
+    "actualCombinedClient": "f24a869905d7a64b4389048ba8b85f45c46e68c0ec45b80159532eb2be8acc51",
+    "actualClientPdb": "5fdd544b171296d4cfe9d1df8fd09753b2fadd4694ead4564c636a351f2a1ca4",
+    "actualTestPair": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.dll",
+        "bytes": 24770560,
+        "sha256": "60443178e4374d1599db15587401288af8640353f5b24a55a8a5027c635afe01"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.pdb",
+        "bytes": 1097472,
+        "sha256": "60f4d692bf7ff994f1693cebb240495f6ff02f20f9f2a82e0b2d4c2032778410"
+      }
+    ],
+    "combinedFocused": 247,
+    "adjacent": 12985,
+    "fullClient": 38342,
+    "fullGoalClosed": false,
+    "finalGates": "not run on final source-equivalent producer; dedicated live/current consumer/package/AOT/final17/CI remain required",
+    "scopedReport": "docs/verification/creaking-heart-placement.md",
+    "datasets": "768\u2013777; ten datasets/165fullgrids;768unresolveddomains remain result-only",
+    "native": "14retainedAXIS facts+17getter/predicate/controller union; no768 nativecontroller or repeated acceptedfacts",
+    "nativeAdmission": {
+      "path": "/home/anon/Projects/UMPK/.scratch/creaking-heart-runtime-preparation-20261104-v1/COORDINATOR-NATIVE17-ADMISSION.json",
+      "bytes": 3789,
+      "sha256": "bdefc993eb744a69158319072e977af9415167b4e9b8a6a30d1bbf4ada0dc835"
+    },
+    "newCases": 87,
+    "causal": "Original79=58causalFAIL21controls; unusedhelper unchanged; caller79GREEN. New8destination expectedUnknown/actualSuccess before bounded helperguard; same87GREEN.",
+    "unknownsRetained": [
+      "exact activation and placed state",
+      "local BlockItem terrain/stack mutation",
+      "unavailable destination/neighbor packet terrain",
+      "unsupported native AXIS identity",
+      "generic moderncube destination-membership candidate (source-only)"
+    ]
+  },
+  "ordinaryStatueAxeActivation20261104": {
+    "status": "passed bounded native/session slice; final acceptance open",
+    "receipt": {
+      "path": "/home/anon/Projects/UMPK/.scratch/heart-statue247-managed-preparation-20261104-v4/ACTUAL-MANAGED247.json",
+      "bytes": 72341,
+      "sha256": "1e4174fe4ba3881a628356a80e9a1a5d5d248c3a8f7a0638aca66ab2ddc28570"
+    },
+    "rootAcceptance": {
+      "path": "/home/anon/Projects/UMPK/.scratch/heart-statue247-managed-preparation-20261104-v4/ROOT-ACCEPTANCE.json",
+      "bytes": 2468,
+      "sha256": "c3619d6aabd108905ff22111b2c3ef55951377e176e9d5c5881b10a7c46a799e"
+    },
+    "cleanup": {
+      "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/TERMINAL-CLEANUP.json",
+      "bytes": 4167,
+      "sha256": "26069de21795f879d6192c240f89acc8151808fa88156c27df3e7b5bff2a5e24"
+    },
+    "actualCombinedClient": "f24a869905d7a64b4389048ba8b85f45c46e68c0ec45b80159532eb2be8acc51",
+    "actualClientPdb": "5fdd544b171296d4cfe9d1df8fd09753b2fadd4694ead4564c636a351f2a1ca4",
+    "actualTestPair": [
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.dll",
+        "bytes": 24770560,
+        "sha256": "60443178e4374d1599db15587401288af8640353f5b24a55a8a5027c635afe01"
+      },
+      {
+        "path": "/home/anon/Projects/MinecraftOfficial/runs/heart-statue247-managed-20261104-v4/source/tests/Umpk.Client.Tests/bin/Release/net10.0/Umpk.Client.Tests.pdb",
+        "bytes": 1097472,
+        "sha256": "60f4d692bf7ff994f1693cebb240495f6ff02f20f9f2a82e0b2d4c2032778410"
+      }
+    ],
+    "combinedFocused": 247,
+    "adjacent": 12985,
+    "fullClient": 38342,
+    "fullGoalClosed": false,
+    "finalGates": "not run on final source-equivalent producer; dedicated live/current consumer/package/AOT/final17/CI remain required",
+    "scopedReport": "docs/verification/statue-axe-activation.md",
+    "datasets": "773\u2013777; threeagedunwaxed+fourwaxed identities, actualreceivedAXES tag",
+    "native": "330rows=300independentPASS+30limitedunaffected-noBEcontrols; split132+198/twohelperorigins, failed775adapter0rows preserved",
+    "nativeAdmission": {
+      "path": "/home/anon/Projects/UMPK/.scratch/statue-axe-activation-native-continuation-20261104-v2/COORDINATOR-NATIVE330-ADMISSION.json",
+      "bytes": 3159,
+      "sha256": "9ee2d4dc94212610a5ab8d0f8c9822162fcbe7261c08f18e250e369a58c1c3db"
+    },
+    "newCases": 160,
+    "causal": "109causalFAIL51controls, activation caller235/4combined; bounded defaultaxeAdventure helper preserves4FAIL and caller239GREEN; later combined247/full38342 remainsGREEN.",
+    "unknownsRetained": [
+      "unaffected unwaxed matchingBE/golem behavior",
+      "nonAXES pose mutation",
+      "block-entity lifecycle and continuity",
+      "custom patches/unsupported permission contexts",
+      "remaining cascades and live behavior"
+    ]
   }
 }

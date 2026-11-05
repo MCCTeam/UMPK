@@ -10,6 +10,8 @@ internal sealed partial class EntityMembershipState
 {
     private readonly HashSet<ChunkPos> _columns = [];
     private readonly ConditionalWeakTable<Entity, object> _cows = new();
+    private readonly ConditionalWeakTable<Entity, object> _boats = new();
+    private static readonly object BoatMarker = new();
     private static readonly object CowMarker = new();
     private readonly Dictionary<Entity, Membership> _players = [];
     private readonly List<Membership> _reentry = [];
@@ -20,6 +22,11 @@ internal sealed partial class EntityMembershipState
     public void Register(Entity entity, int protocol, bool isPlayer, int? healthIndex = null)
     {
         RegisterShulkerTickOrder(entity, protocol, isPlayer);
+        if (BoatMotionProfile.Supports(entity, protocol))
+        {
+            _boats.Add(entity, BoatMarker);
+            return;
+        }
         if (CowMotionProfile.Supports(entity, protocol))
         {
             _cows.Add(entity, CowMarker);
@@ -84,7 +91,7 @@ internal sealed partial class EntityMembershipState
 
     public bool CanTick(Entity entity, bool runsNormally = true)
     {
-        if (_cows.TryGetValue(entity, out _))
+        if (_cows.TryGetValue(entity, out _) || _boats.TryGetValue(entity, out _))
             return runsNormally && double.IsFinite(entity.Position.X) && double.IsFinite(entity.Position.Z)
                 && entity.Position.X is > int.MinValue and < int.MaxValue && entity.Position.Z is > int.MinValue and < int.MaxValue
                 && HasColumn(BlockPos.Containing(entity.Position));
@@ -261,6 +268,7 @@ internal sealed partial class EntityMembershipState
     {
         RemoveShulkerTickOrder(entity);
         _cows.Remove(entity);
+        _boats.Remove(entity);
         if (_players.Remove(entity, out Membership? player))
             _reentry.Remove(player);
     }
@@ -269,6 +277,7 @@ internal sealed partial class EntityMembershipState
     {
         _players.Clear();
         _cows.Clear();
+        _boats.Clear();
         _columns.Clear();
         ClearShulkerTickOrder();
         _reentry.Clear();

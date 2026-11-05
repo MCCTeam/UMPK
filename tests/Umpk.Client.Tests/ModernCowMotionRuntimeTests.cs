@@ -2,6 +2,7 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
+using Umpk.Client.Actions;
 using Umpk.Client.Events;
 using Umpk.Client.Tests.Support;
 using Umpk.Data.Java;
@@ -22,6 +23,357 @@ namespace Umpk.Client.Tests;
 
 public sealed class ModernCowMotionRuntimeTests
 {
+    public static IEnumerable<object[]> BoatFamilies()
+    {
+        string[] names = ["acacia_boat", "acacia_chest_boat", "bamboo_raft", "bamboo_chest_raft", "birch_boat", "birch_chest_boat", "cherry_boat", "cherry_chest_boat", "dark_oak_boat", "dark_oak_chest_boat", "jungle_boat", "jungle_chest_boat", "mangrove_boat", "mangrove_chest_boat", "oak_boat", "oak_chest_boat", "pale_oak_boat", "pale_oak_chest_boat", "spruce_boat", "spruce_chest_boat"];
+        foreach (int protocol in new[] { 770 })
+            foreach (string name in names)
+                yield return [protocol, name];
+    }
+
+    public static IEnumerable<object[]> BoatProtocols()
+    {
+        foreach (int protocol in new[] { 770 })
+            yield return [protocol];
+    }
+
+    public static IEnumerable<object[]> BoatMovementCases()
+    {
+        foreach (int protocol in new[] { 770 })
+            foreach (string name in new[] { "acacia_boat", "acacia_chest_boat", "bamboo_raft", "bamboo_chest_raft" })
+                foreach (bool physics in new[] { false, true })
+                    yield return [protocol, name, physics];
+    }
+
+    public static IEnumerable<object[]> BoatMiningCases()
+    {
+        foreach (int protocol in new[] { 770 })
+            foreach (bool held in new[] { false, true })
+                yield return [protocol, held];
+    }
+
+    public static IEnumerable<object[]> BoatUnknownContexts()
+    {
+        foreach (int protocol in new[] { 770 })
+            foreach (string context in new[] { "vehicle", "passenger", "water", "unmodeled-block", "local-push", "pose", "no-gravity", "local-pose" })
+                yield return [protocol, context];
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatFamilies))]
+    public async Task FarCanonicalRemoteBoatAllowsThePublicPlacementGroup(int protocol, string name)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, name, new Vec3d(8.5, 65, 1.5));
+        BlockUsePrediction prediction = await BoatPrediction(session);
+        List<IPacket> actions = await session.Use();
+        Assert.Equal(2, actions.Count);
+        Assert.Equal(BlockUsePrediction.Success(localSwing: false), prediction);
+        AssertBoatBounds(new Vec3d(8.5, 65, 1.5), await session.Bounds());
+        await session.Close();
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatFamilies))]
+    public async Task NearCanonicalRemoteBoatReturnsKnownFailThroughThePublicCaller(int protocol, string name)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, name, new Vec3d(1.5, 65, 1.5));
+        BlockUsePrediction prediction = await BoatPrediction(session);
+        List<IPacket> actions = await session.Use();
+        Assert.Single(actions);
+        Assert.Equal(BlockUsePrediction.Fail, prediction);
+        AssertBoatBounds(new Vec3d(1.5, 65, 1.5), await session.Bounds());
+        await session.Close();
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatMovementCases))]
+    public async Task BoatPacketBaseAndNativeCurrentBoundsStaySeparateUntilEligibleTicks(int protocol, string name, bool physics)
+    {
+        await using Session session = await CreateBoatSession(protocol, physics);
+        await session.SpawnActor(42, name, new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(physics ? 2 : 1, (await session.Use()).Count);
+        await session.Block(new BlockPos(1, 65, 1), "air");
+        await session.Move(-28672);
+        Assert.Equal(new Vec3d(8.5, 65, 1.5), await session.Position());
+        Assert.Equal(new Vec3d(1.5, 65, 1.5), await session.PacketBase());
+        foreach (double expected in new[] { 6.166666666666667, 3.8333333333333335, 1.5 })
+        {
+            Assert.Empty(await session.Tick());
+            Assert.Equal(new Vec3d(expected, 65, 1.5), await session.Position());
+            AssertBoatBounds(new Vec3d(expected, 65, 1.5), await session.Bounds());
+        }
+        Assert.Equal(physics ? BlockUsePrediction.Fail : BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Close();
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatMiningCases))]
+    public async Task InitialAndHeldMiningFollowTheBoatCurrentBoxRatherThanItsEndpoint(int protocol, bool held)
+    {
+        await using Session session = await Session.Create(protocol, mining: true);
+        session.CaptureEntityAttacks = true;
+        await session.Terrain(-1, -1);
+        await session.Terrain(-1, 0);
+        await session.Terrain(0, -1);
+        await session.Block(new BlockPos(1, 64, 1), "stone");
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(2.5, 65.5, 2.5));
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task? mining = null;
+        try
+        {
+            if (held)
+            {
+                mining = session.Mine(caller.Token);
+                await session.Queued();
+                AssertStarted(await session.Tick());
+            }
+            await session.Move(-8192);
+            mining ??= session.Mine(caller.Token);
+            await session.Queued();
+            List<IPacket> first = await session.Tick();
+            if (held) AssertContinued(first); else AssertStarted(first);
+            AssertContinued(await session.Tick());
+            AssertAbort(await session.Tick());
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => mining.WaitAsync(session.Token));
+        }
+        finally
+        {
+            caller.Cancel();
+            if (mining is not null)
+            {
+                try { await mining.WaitAsync(session.Token); }
+                catch (OperationCanceledException) when (caller.IsCancellationRequested) { }
+            }
+        }
+        await session.Close();
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatUnknownContexts))]
+    public async Task UnsupportedBoatContextStaysUnknownThroughTheActualPlacementCaller(int protocol, string context)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        await session.Move(-4096);
+        if (context is "vehicle" or "passenger")
+        {
+            await session.SpawnActor(43, "acacia_boat", new Vec3d(12.5, 65, 8.5));
+            await session.Send(context == "vehicle" ? new ClientboundSetPassengersPacket(43, [42]) : new ClientboundSetPassengersPacket(42, [43]));
+        }
+        else if (context is "water" or "unmodeled-block")
+            await session.Block(new BlockPos(8, 65, 1), context == "water" ? "water" : "dirt");
+        else if (context == "local-push")
+            await session.CorrectSelf(new Vec3d(8.5, 64, 1.5));
+        else if (context == "pose")
+            await session.Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(6, MetadataValue.Pose(EntityPose.Sleeping))], [])));
+        else if (context == "no-gravity")
+            await session.Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(5, MetadataValue.Boolean(true))], [])));
+        else if (context == "local-pose")
+            await session.Send(new ClientboundSetEntityDataPacket(1, new EntityMetadataList([new(6, MetadataValue.Pose(EntityPose.Sleeping))], [])));
+        else
+            throw new ArgumentOutOfRangeException(nameof(context));
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        Assert.Equal(BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Close();
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatProtocols))]
+    public async Task BoatUnloadFreezesOwnedInterpolationAndOnlyReplacementRecoversLostContext(int protocol)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Block(new BlockPos(1, 65, 1), "air");
+        await session.Move(4096);
+        await session.Send(new ClientboundForgetLevelChunkPacket(new ChunkPos(0, 0)));
+        Assert.Empty(await session.Tick());
+        Assert.Equal(new Vec3d(8.5, 65, 1.5), await session.Position());
+        await session.Terrain();
+        await session.Block(new BlockPos(1, 64, 1), "stone");
+        Assert.Empty(await session.Tick());
+        Assert.Equal(new Vec3d(8.833333333333334, 65, 1.5), await session.Position());
+        await session.Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(5, MetadataValue.Boolean(true))], [])));
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        await session.Send(new ClientboundSetEntityDataPacket(42, new EntityMetadataList([new(5, MetadataValue.Boolean(false))], [])));
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        await session.Send(new ClientboundRemoveEntitiesPacket([42]));
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(769)]
+    [InlineData(771)]
+    [InlineData(772)]
+    [InlineData(773)]
+    [InlineData(774)]
+    [InlineData(775)]
+    [InlineData(776)]
+    [InlineData(777)]
+    public async Task UnmeasuredBoatInterpolationBandsKeepUnknownPlacement(int protocol)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Close();
+    }
+
+    public static IEnumerable<object[]> BoatModeledIdentityCases()
+    {
+        foreach (int protocol in new[] { 770 })
+            foreach (bool cloneDefinition in new[] { false, true })
+                yield return [protocol, cloneDefinition];
+    }
+
+    [Theory]
+    [MemberData(nameof(BoatModeledIdentityCases))]
+    public async Task ModeledBoatWithoutThePacketOwnedControllerRemainsUnknown(int protocol, bool cloneDefinition)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        await session.Client.InvokeAsync(client =>
+        {
+            Entity original = client.State.Entities.Get(42)!;
+            RegistryEntry<EntityTypeDefinition> type = cloneDefinition
+                ? Registry.Direct(original.Type.NetworkId, original.Type.Id, new EntityTypeDefinition(original.Type.Value.Width, original.Type.Value.Height))
+                : original.Type;
+            client.State.Entities.Remove(42);
+            client.State.Entities.Add(new Entity(42, original.Uuid, type) { Position = original.Position });
+            return true;
+        }, session.Token);
+        Assert.Equal(BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(770)]
+    public async Task ReceivedBoatLinkInvalidatesContextUntilOriginalSpawnReplacement(int protocol)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Send(new ClientboundSetEntityLinkPacket(42, 99, null));
+        Assert.False(await session.GeometryKnown());
+        Assert.Equal(BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Send(new ClientboundSetEntityLinkPacket(42, -1, null));
+        Assert.False(await session.GeometryKnown());
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(770, false)]
+    [InlineData(770, true)]
+    public async Task PendingLocalStoneAndSyncSnapKeepUnownedCollisionContextUnknown(int protocol, bool farPrediction)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Block(new BlockPos(1, 65, 1), "air");
+        await session.Move(-28672);
+        await session.Send(new ClientboundForgetLevelChunkPacket(new ChunkPos(0, 0)));
+        await session.Send(new ClientboundEntityPositionSyncPacket(42, new PositionMoveRotation(new Vec3d(8.75, 65, 1.5), Vec3d.Zero, 0, 0), false));
+        Assert.Equal(new Vec3d(8.75, 65, 1.5), await session.Position());
+        Assert.Equal(new Vec3d(8.75, 65, 1.5), await session.PacketBase());
+        await session.Terrain();
+        await session.Block(new BlockPos(1, 64, 1), "stone");
+        var clicked = new BlockPos(10, farPrediction ? 189 : 129, 3);
+        var destination = new BlockPos(10, clicked.Y + 1, 3);
+        await session.Block(clicked, "stone");
+        await session.Block(new BlockPos(10, clicked.Y - 1, 6), "stone");
+        await session.CorrectSelf(new Vec3d(10.5, clicked.Y, 6.5));
+        await session.Send(new ClientboundPlayerAbilitiesPacket(0, .05F, .1F));
+        Assert.Equal(session.Client.State.PlayerLifetime, session.Client.State.Self.AbilitiesObservationLifetime);
+        Assert.Equal(Umpk.Game.Players.GameMode.Survival, session.Client.State.Self.GameMode);
+        Assert.Equal(32, session.Client.State.Inventory.PlayerSlots[36].Count);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        long interactionLifetime = session.Client.State.InteractionLifetime;
+        long playerLifetime = session.Client.State.PlayerLifetime;
+        Task action = session.Client.Actions.Interaction.PlaceBlockAsync(clicked, Direction.Up, new Vec3d(.5, 1, .5), ct: caller.Token);
+        int? sequence = null;
+        try
+        {
+            await session.Queued();
+            List<IPacket> packets = await session.Barrier();
+            var use = Assert.IsType<ServerboundUseItemOnPacket>(packets[0]);
+            sequence = use.Sequence;
+            Assert.Equal(clicked, use.Position);
+            Assert.Equal((int)Direction.Up, use.Face);
+            Assert.Equal((int)Hand.Main, use.Hand);
+            Assert.Equal((.5F, 1F, .5F), (use.CursorX, use.CursorY, use.CursorZ));
+            Assert.Equal(2, packets.Count);
+            Assert.Equal((int)Hand.Main, Assert.IsType<ServerboundSwingPacket>(packets[1]).Hand);
+            Assert.False(action.IsCompleted);
+            await session.Client.InvokeAsync(client =>
+            {
+                Assert.Equal(Identifier.Minecraft("air"), client.State.World.GetBlock(destination).Block.Id);
+                Assert.Equal(Identifier.Minecraft("stone"), client.State.JukeboxPrediction.GetBlock(client.State.World, destination).Block.Id);
+                Assert.Equal(31, client.State.Inventory.PlayerSlots[36].Count);
+                return true;
+            }, session.Token);
+            Assert.Empty(await session.Tick());
+            Assert.Equal(farPrediction, await session.GeometryKnown());
+            Assert.Equal(new Vec3d(farPrediction ? 6.416666666666667 : 8.75, 65, 1.5), await session.Position());
+            await session.Send(new ClientboundBlockChangedAckPacket(sequence.Value));
+            await action.WaitAsync(session.Token);
+            Assert.Equal(farPrediction, await session.GeometryKnown());
+        }
+        finally
+        {
+            bool sameLifetime = session.Client.Status == ClientStatus.Playing
+                && session.Client.State.InteractionLifetime == interactionLifetime && session.Client.State.PlayerLifetime == playerLifetime;
+            if (!action.IsCompleted && sequence is int known && sameLifetime)
+                await session.Send(new ClientboundBlockChangedAckPacket(known));
+            if (!action.IsCompleted)
+                await caller.CancelAsync();
+            try { await action.WaitAsync(session.Token); }
+            catch (OperationCanceledException) when (caller.IsCancellationRequested) { }
+        }
+        await session.Close();
+    }
+
+    private static async Task<Session> CreateBoatSession(int protocol, bool physics = true)
+    {
+        Session session = await Session.Create(protocol, physics);
+        try
+        {
+            await session.Terrain(-1, -1);
+            await session.Terrain(-1, 0);
+            await session.Terrain(0, -1);
+            await session.Terrain(1, 0);
+            await session.Block(new BlockPos(1, 64, 1), "stone");
+            await session.Block(new BlockPos(1, 63, 4), "stone");
+            await session.CorrectSelf(new Vec3d(1.5, 64, 4.5));
+            Assert.Empty(await session.Tick());
+            return session;
+        }
+        catch
+        {
+            await session.DisposeAsync();
+            throw;
+        }
+    }
+
+    private static Task<BlockUsePrediction> BoatPrediction(Session session) => session.Client.InvokeAsync(client => client.Actions.Interaction.PredictBlockUse(new BlockPos(1, 64, 1), Direction.Up, new Vec3d(.5, 1, .5), Hand.Main), session.Token);
+
+    private static void AssertBoatBounds(Vec3d position, Aabb actual)
+        => Assert.Equal(new Aabb(position.X - (double)(1.375F / 2F), position.Y, position.Z - (double)(1.375F / 2F), position.X + (double)(1.375F / 2F), position.Y + (double).5625F, position.Z + (double)(1.375F / 2F)), actual);
+
     public static IEnumerable<object[]> Compositions()
     {
         foreach (int protocol in new[] { 769, 770 })
@@ -584,6 +936,7 @@ public sealed class ModernCowMotionRuntimeTests
         private bool _closed;
         internal ObservedTicks Ticks { get; } = new();
         internal UmpkClient Client { get; }
+        internal bool CaptureEntityAttacks { get; set; }
         internal CancellationToken Token => _budget.Token;
         private PacketCodecContext Context => new(Client.State.Registries!, IConnectionCodecState.Empty);
 
@@ -732,27 +1085,27 @@ public sealed class ModernCowMotionRuntimeTests
             return packets;
         }
 
-        internal async Task Terrain(int columnX = 0)
+        internal async Task Terrain(int columnX = 0, int columnZ = 0)
         {
             var empty = new ChunkPalettedContainerWire(0, 0, null, []);
             var sections = Enumerable.Range(0, Client.State.World.Dimension.SectionCount).Select(_ => new ChunkSectionWire(0, _protocol >= 775 ? (short)0 : null, empty, empty)).ToArray();
             ChunkWireBody body = _protocol >= 770
-                ? new ModernChunkWireBody(columnX, 0, _protocol >= 775, [], sections, [], new byte[7])
-                : new NbtHeightmapChunkWireBody(columnX, 0, new NbtCompound(), sections, [], new byte[7]);
+                ? new ModernChunkWireBody(columnX, columnZ, _protocol >= 775, [], sections, [], new byte[7])
+                : new NbtHeightmapChunkWireBody(columnX, columnZ, new NbtCompound(), sections, [], new byte[7]);
             byte[] bytes = ChunkCodecs.EncodeStructural(body);
             BoundPacketCodec codec = BoundDescriptorCodec.Clientbound(_protocol, "level_chunk_with_light");
             var packet = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(bytes, Context));
             Assert.True(packet.FullChunk);
             Assert.Equal(columnX, packet.ChunkX);
-            Assert.Equal(0, packet.ChunkZ);
+            Assert.Equal(columnZ, packet.ChunkZ);
             Assert.Equal(sections.Length, packet.Column.SectionCount);
             Assert.Equal(0, packet.Column.GetBlockStateId(Target.X, Target.Y, Target.Z));
             Assert.Equal(bytes, Encode(codec, packet));
             Assert.Equal(bytes, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(packet)));
             await Send(packet);
             Assert.Empty(await Barrier());
-            Assert.True(Client.State.EntityMembership.HasColumn(new BlockPos(columnX * 16, 65, 0)));
-            if (columnX == 0)
+            Assert.True(Client.State.EntityMembership.HasColumn(new BlockPos(columnX * 16, 65, columnZ * 16)));
+            if (columnX == 0 && columnZ == 0)
             {
                 await Block(new BlockPos(0, 63, 0), "stone");
                 await Block(new BlockPos(2, 63, 2), "stone");
@@ -815,6 +1168,12 @@ public sealed class ModernCowMotionRuntimeTests
                     Assert.Equal(attributes.Attributes[0].ModernId, observedAttributes.Attributes[0].ModernId);
                     Assert.Equal(attributes.Attributes[0].BaseValue, observedAttributes.Attributes[0].BaseValue);
                     Assert.Equal(attributes.Attributes[0].Modifiers, observedAttributes.Attributes[0].Modifiers);
+                    break;
+                case ClientboundPlayerAbilitiesPacket abilities:
+                    Assert.Equal(abilities, Assert.IsType<ClientboundPlayerAbilitiesPacket>(decoded));
+                    break;
+                case ClientboundSetEntityLinkPacket link:
+                    Assert.Equal(link, Assert.IsType<ClientboundSetEntityLinkPacket>(decoded));
                     break;
                 case ClientboundSetPassengersPacket passengers:
                     var observedPassengers = Assert.IsType<ClientboundSetPassengersPacket>(decoded);
@@ -880,7 +1239,8 @@ public sealed class ModernCowMotionRuntimeTests
                 Assert.Equal(frame.Payload.ToArray(), Encode(codec, packet));
                 if (packet is ServerboundPlayKeepAlivePacket { Id: var id } && id == nonce)
                     return packets;
-                if (packet is ServerboundPlayerActionPacket or ServerboundSwingPacket or ServerboundPunchPacket or ServerboundUseItemOnPacket)
+                if (packet is ServerboundPlayerActionPacket or ServerboundSwingPacket or ServerboundPunchPacket or ServerboundUseItemOnPacket
+                    || CaptureEntityAttacks && packet is ServerboundInteractPacket)
                     packets.Add(packet);
             }
         }

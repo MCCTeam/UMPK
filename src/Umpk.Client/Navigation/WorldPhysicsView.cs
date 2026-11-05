@@ -76,6 +76,8 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
 
     private static bool TryCollectModern(EntityCollisionContext context, in Aabb region, ICollection<Aabb> into)
     {
+        if (context.Motion.IsTrackedBoat(context.Source))
+            return TryCollectEmptyBoatContext(context, region);
         if ((!context.Motion.IsTrackedPlayer(context.Source) && !context.Motion.IsTrackedCowSource(context.Source)) || context.Geometry is null || context.GeometrySource is null)
             return false;
         // EntityGetter checks the mean size before resolving any candidates, then inflates its candidate query by exactly one epsilon.
@@ -103,6 +105,24 @@ internal sealed class WorldPhysicsView(Umpk.Game.World.World world, IBlockShapeS
                 return false;
             if (candidates.Intersects(box))
                 into.Add(box);
+        }
+        return true;
+    }
+
+    // Boat.canCollideWith includes pushable targets as well as hard targets. This bounded branch proves the candidate set empty without borrowing the player classification.
+    private static bool TryCollectEmptyBoatContext(EntityCollisionContext context, in Aabb region)
+    {
+        if (context.Geometry is null || context.GeometrySource is null)
+            return false;
+        Aabb query = region.Inflate(1.0E-7);
+        foreach (Entity peer in context.Entities.All)
+        {
+            if (ReferenceEquals(peer, context.Source) || context.Membership.IsWorldQueryMember(peer) is false)
+                continue;
+            if (context.Membership.IsWorldQueryMember(peer) is not true
+                || !context.Geometry.TryGet(peer, context.GeometrySource, out Aabb bounds, out _, context.Protocol)
+                || query.Intersects(bounds))
+                return false;
         }
         return true;
     }

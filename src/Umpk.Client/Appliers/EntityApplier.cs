@@ -498,6 +498,7 @@ internal sealed class EntityApplier : IApplier
         if (LegacyFallingBlockProfile.UsesVoxelCollisionQuery(context.Version.Version.Protocol) && LegacyFallingBlockProfile.Supports(entity, context.Version.Version.Protocol)
             && !context.State.EntityGeometry.TryGetFallingBlock(entity, out _))
             context.State.EntityMembership.InvalidateFallingRegistration(entity);
+        context.State.EntityMotion.RegisterBoat(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership, context.State.JukeboxPrediction);
         context.State.EntityMotion.RegisterCow(entity, context.Version.Version.Protocol, context.State.EntityGeometry, context.State.EntityMembership);
         context.State.EntityMotion.RegisterLegacyAmbient(entity, context.State.EntityGeometry);
         if (initialMetadata is not null)

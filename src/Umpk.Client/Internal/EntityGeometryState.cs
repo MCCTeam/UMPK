@@ -25,6 +25,7 @@ internal sealed partial class EntityGeometryState
     private bool _hasShulkers;
     private bool _hasFixedCrystals;
     internal Func<Entity, Aabb, bool>? FixedPositionContext { get; set; }
+    internal Func<Entity, bool?>? BoatPositionContext { get; set; }
 
     internal static bool IsFixedCrystal(Entity entity, int protocol)
         => protocol is >= 769 and <= 777 && entity.Type.Id.IsMinecraft && entity.Type.Id.Path == "end_crystal";
@@ -86,9 +87,12 @@ internal sealed partial class EntityGeometryState
         bool fixedCrystal = IsFixedCrystal(entity, protocol);
         if (fixedCrystal)
             source = FixedCrystalSource.Instance;
+        bool boat = BoatMotionProfile.Supports(entity, protocol);
+        if (boat)
+            source = BoatMotionProfile.GeometrySource.Instance;
         if (!source.TryGetRule(entity.Type.Id, out EntityGeometryRule rule))
             return;
-        var geometry = new Geometry(source, rule, rule.ScaleAttribute is not null && LivingScaleProfile.Supports(protocol) ? LivingScaleProfile.ForProtocol(protocol) : null, isPlayer) { FixedCrystal = fixedCrystal };
+        var geometry = new Geometry(source, rule, rule.ScaleAttribute is not null && LivingScaleProfile.Supports(protocol) ? LivingScaleProfile.ForProtocol(protocol) : null, isPlayer) { FixedCrystal = fixedCrystal, BoatProtocol = boat ? protocol : 0 };
         _entities.Add(entity, geometry);
         _hasLivingTickRules |= rule.RefreshTiming == EntityGeometryRefreshTiming.LivingTick;
         ReapplyPosition(entity, geometry);
@@ -213,7 +217,7 @@ internal sealed partial class EntityGeometryState
             return false;
         ObserveDimensions(entity, geometry);
         dimensions = geometry.Dimensions;
-        return geometry.Known && (!geometry.CowMotionActive || PositionKnown(entity, geometry));
+        return geometry.Known && (!(geometry.CowMotionActive || geometry.BoatProtocol != 0) || PositionKnown(entity, geometry));
     }
 
     /// <summary>A missing displacement decision makes the position unproven until the owning profile observes a supported recovery event.</summary>
@@ -249,6 +253,14 @@ internal sealed partial class EntityGeometryState
 
     private bool PositionKnown(Entity entity, Geometry geometry)
     {
+        if (geometry.BoatProtocol != 0)
+        {
+            bool? known = BoatPositionContext?.Invoke(entity);
+            if (known is null)
+                return false;
+            if (known is false)
+                geometry.PositionKnown = false;
+        }
         if (geometry.FixedCrystal && FixedPositionContext?.Invoke(entity, geometry.Bounds.Box) is not true)
             geometry.PositionKnown = false;
         if (geometry.CowMotionActive && !CowMotionProfile.IsKnownState(entity, geometry.Rule))
@@ -615,6 +627,7 @@ internal sealed partial class EntityGeometryState
         public bool HasDimensions { get; set; }
         public bool CowMotionActive { get; set; }
         public bool FixedCrystal { get; init; }
+        public int BoatProtocol { get; init; }
         public bool Selector { get; set; }
         public EntityPose Pose { get; set; }
         public EntityGeometryDimensions Dimensions { get; set; }

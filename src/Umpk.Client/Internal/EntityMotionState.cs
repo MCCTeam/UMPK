@@ -99,6 +99,9 @@ internal sealed partial class EntityMotionState
     /// <summary>Routes the measured legacy remote graph and the separate Pig/Horse leash state. Unsupported or contradictory edges do not weaken EntityStore invariants.</summary>
     public void ObserveLegacyLink(EntityStore entities, EntityGeometryState geometry, int protocol, int selfId, ClientboundSetEntityLinkPacket link)
     {
+        // A modern delayed leash receiver is not modeled by LeashHolder. Exclude this context until original replacement.
+        if (BoatMotionProfile.Supports(protocol) && entities.TryGet(link.SourceId, out Entity? boatSource))
+            _ = InvalidateBoatContext(boatSource);
         if (!UsesLegacyMountTraversal(protocol) || link.SourceId == selfId || !entities.TryGet(link.SourceId, out Entity? source))
             return;
         entities.TryGet(link.DestId, out Entity? destination);
@@ -209,6 +212,8 @@ internal sealed partial class EntityMotionState
     {
         if (TryObserveLegacyAmbientInterpolation(entity, target, yaw, pitch))
             return true;
+        if (TryObserveBoatInterpolation(entity, target, yaw, pitch))
+            return true;
         if (TryObserveCowInterpolation(entity, target, yaw, pitch))
             return true;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
@@ -246,7 +251,7 @@ internal sealed partial class EntityMotionState
         }
         if (TryObserveLegacyAmbientTeleport(entity, target, yaw, pitch))
             return true;
-        if (InvalidateCowContext(entity))
+        if (InvalidateBoatContext(entity) || InvalidateCowContext(entity))
             return false;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
@@ -264,7 +269,7 @@ internal sealed partial class EntityMotionState
 
     public bool TryObserveTeleport(Entity entity, PositionMoveRotation change, int flags)
     {
-        if (InvalidateCowContext(entity))
+        if (InvalidateBoatContext(entity) || InvalidateCowContext(entity))
             return false;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
             return false;
@@ -278,6 +283,8 @@ internal sealed partial class EntityMotionState
 
     public bool TryObservePositionSync(Entity entity, PositionMoveRotation values, ReadOnlySpan<VanillaPositionStep> path = default)
     {
+        if (TryObserveBoatSync(entity, values))
+            return true;
         if (TryObserveCowSync(entity, values))
             return true;
         if (!_remotePlayers.TryGetValue(entity, out RemotePlayerMotion? motion) || motion.Position is not { } position)
@@ -310,6 +317,11 @@ internal sealed partial class EntityMotionState
         if (_legacyAmbient.TryGetValue(entity, out LegacyAmbientMotion? ambient))
         {
             TickLegacyAmbient(entity, ambient, moved, world, shapes, membership, entities, localBody);
+            return;
+        }
+        if (_boats.TryGetValue(entity, out BoatMotion? boat))
+        {
+            TickBoat(entity, boat, moved, world, shapes, entities, self, localBody);
             return;
         }
         if (_cows.TryGetValue(entity, out CowMotion? cow))
@@ -435,6 +447,7 @@ internal sealed partial class EntityMotionState
         _remotePlayers.Remove(entity);
         _shulkerPushPlayers.Remove(entity);
         _cows.Remove(entity);
+        _boats.Remove(entity);
         _immovable.Remove(entity);
         _fallingBlocks.Remove(entity);
         _legacyAmbient.Remove(entity);
@@ -445,6 +458,7 @@ internal sealed partial class EntityMotionState
         _remotePlayers.Clear();
         _shulkerPushPlayers.Clear();
         _cows.Clear();
+        _boats.Clear();
         _immovable.Clear();
         _fallingBlocks.Clear();
         _legacyAmbient.Clear();

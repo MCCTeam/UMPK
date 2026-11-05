@@ -1,6 +1,10 @@
 # Vanilla block interaction audit
 
-## Current verified checkpoint, 5 November 2026
+## New protocol-770 boat runtime, 5 November 2026
+
+The [boat runtime report](boat-interactions-770.md) connects native current bounds to public placement and view mining on 1.21.5/protocol 770. Twenty canonical type names, 72 focused cases, 11,099 adjacent and 39,809 full Client passes verify Client ed120330, with original28-row native evidence and independent source/PDB/resource audits. Unknown contexts stay unknown, including the missing local self-body with physics disabled. Fresh repository/consumer/AOT/package/CI and dedicated live checks for this producer remain pending; the previous checkpoint below retains its own successful build.
+
+## Previous verified checkpoint, 5 November 2026
 
 The [022c934 checkpoint](interaction-checkpoint-022c934.md) verifies the legacy wake/mining correction on Client `8ad7ea6f`: 54,397 .NET passes and 33 declared Integration skips, all seventeen count baselines and full format, fresh DMCBK/MCC tests, strict Native AOT and local packages. All seven published-source CI jobs pass with independently checked raw counts, exact executed AOT smoke and matching source tree. Producer sources, actual compiler origins and earlier failures remain recorded.
 

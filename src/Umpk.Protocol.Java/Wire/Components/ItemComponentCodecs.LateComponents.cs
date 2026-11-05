@@ -10,7 +10,7 @@ namespace Umpk.Protocol.Java.Codecs;
 /// <summary>Codecs for fifteen item components and the shared readers used by their payloads. Unsupported component payloads are handled by the packet-scoped policy: one packet plus one warning, never the session.</summary>
 /// <remarks>
 /// Each codec is bound only to eras with the same wire shape. Where a record's shape moved, the codec takes an era flag and both forms are documented on it.
-/// <para><c>minecraft:can_break</c> and <c>minecraft:can_place_on</c> are bound on 766-769 ONLY. See <see cref="AdventureModePredicateCodecImpl"/> for the reason: protocol 770 added a matcher field whose second half is an open dispatch over recursive compact component payloads that cannot be skipped past (the predicate-dispatch half is self-delimiting NBT and could be).</para>
+/// <para><see cref="AdventureModePredicateCodecImpl"/> retains the 766-769 Adventure payload. The measured 770 table binds its own table-scoped modern codec; later modern tables remain unbound.</para>
 /// </remarks>
 internal static partial class ItemComponentCodecs
 {

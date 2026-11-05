@@ -75,11 +75,11 @@ internal static partial class EntityDataCodecs
 
     /// <summary>764 (1.20.2) entity metadata: the 28-entry V1_19_4 serializer table, JSON-string chat components, but the 1.20.2 UNNAMED-root network NBT. See the band note above.</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_20_2 =
-        SetEntityDataComponentJson(ModernMetadataTable.V1_19_4, VarIntIdItems, nbt: NbtWireFormat.JavaUnnamedRoot);
+        SetEntityDataComponentJson(ModernMetadataTable.V1_19_4, VarIntIdItems, nbt: NbtWireFormat.JavaUnnamedRoot, poses: MetadataPoseEra.V1_19_3);
 
     /// <summary>765 (1.20.3-1.20.4) entity metadata: network-NBT chat components (the 1.20.3 change) over the still-28-entry V1_19_4 serializer table. See the band note above.</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_20_3 =
-        SetEntityDataModern(ModernMetadataTable.V1_19_4, ComponentWireEra.Legacy, VarIntIdItems);
+        SetEntityDataModern(ModernMetadataTable.V1_19_4, ComponentWireEra.Legacy, VarIntIdItems, poses: MetadataPoseEra.V1_20_3);
 
     /// <summary>775 (26.1) entity metadata: serializer table V26_1, 775 particle and item eras.</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV26_1 =
@@ -92,33 +92,37 @@ internal static partial class EntityDataCodecs
     // Pre-1.20.2 entity metadata encodes COMPONENT and OPTIONAL_COMPONENT as JSON strings rather than network NBT, while compound tags use named-root NBT. The serializer id table is the 1.19-era order (no LONG before 1.19.3; OPTIONAL_BLOCK_STATE and the sniffer/vector3/quaternion tail arrive at 1.19.4).
 
     /// <summary>1.19-1.19.2 entity metadata (JSON-component era, serializer table V1_19).</summary>
-    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19 = SetEntityDataComponentJson(ModernMetadataTable.V1_19, PresentIdItems);
+    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19 = SetEntityDataComponentJson(ModernMetadataTable.V1_19, PresentIdItems, poses: MetadataPoseEra.V1_19);
 
     /// <summary>1.19.3 entity metadata (serializer table V1_19_3).</summary>
-    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19_3 = SetEntityDataComponentJson(ModernMetadataTable.V1_19_3, PresentIdItems);
+    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19_3 = SetEntityDataComponentJson(ModernMetadataTable.V1_19_3, PresentIdItems, poses: MetadataPoseEra.V1_19_3);
 
     /// <summary>1.19.4-1.20.1 entity metadata (serializer table V1_19_4).</summary>
-    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19_4 = SetEntityDataComponentJson(ModernMetadataTable.V1_19_4, PresentIdItems);
+    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_19_4 = SetEntityDataComponentJson(ModernMetadataTable.V1_19_4, PresentIdItems, poses: MetadataPoseEra.V1_19_3);
 
-    /// <summary>477-578 (1.14-1.15.2) entity metadata: the 19-serializer flattening-era table, JSON-string chat components, named-root NBT, varintId item stacks (shared with the 1.19 componentJson path).</summary>
+    /// <summary>477-754 (1.14-1.16.5) entity metadata: the 19-serializer table and seven native poses, including DYING at id 6.</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_14 =
         SetEntityDataComponentJson(ModernMetadataTable.V1_14, PresentIdItems);
 
+    /// <summary>755-758 (1.17-1.18.2) retains the serializer table and adds LONG_JUMPING before DYING in the pose enum.</summary>
+    public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_17 =
+        SetEntityDataComponentJson(ModernMetadataTable.V1_14, PresentIdItems, poses: MetadataPoseEra.V1_17);
+
     /// <summary>393-404 (1.13-1.13.2) entity metadata: the 16-serializer table ending at PARTICLE (no VILLAGER_DATA/OPTIONAL_UNSIGNED_INT/POSE), JSON-string chat components, named-root NBT. Shares the same componentJson decode loop as 1.14 (item stacks use the 1.13 short-id form).</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_13 =
-        SetEntityDataComponentJson(ModernMetadataTable.V1_13, ShortIdItems);
+        SetEntityDataComponentJson(ModernMetadataTable.V1_13, ShortIdItems, poses: MetadataPoseEra.None);
 
     /// <summary>404 (1.13.2) metadata uses the present-flag/VarInt-id item-stack form.</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_13_2 =
-        SetEntityDataComponentJson(ModernMetadataTable.V1_13, PresentIdItems);
+        SetEntityDataComponentJson(ModernMetadataTable.V1_13, PresentIdItems, poses: MetadataPoseEra.None);
 
     /// <summary>set_entity_data for 1.9-1.11.2 (protocols 107-316): the 13-serializer typed metadata table (<see cref="ModernMetadataTable.V1_9"/>). Same componentJson decode loop as 1.13 (JSON chat components, named-root NBT, decoded short-id item stacks), but block positions use the pre-1.14 y-in-the-middle packing (the 1.14 layout switch is later).</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_9 =
-        SetEntityDataComponentJson(ModernMetadataTable.V1_9, LegacyItems, BlockPosLayout.PrePacked114);
+        SetEntityDataComponentJson(ModernMetadataTable.V1_9, LegacyItems, BlockPosLayout.PrePacked114, poses: MetadataPoseEra.None);
 
     /// <summary>set_entity_data for 1.12-1.12.2 (protocols 335-340): the 14-serializer table (<see cref="ModernMetadataTable.V1_12"/>, adds COMPOUND_TAG). Otherwise identical to <see cref="SetEntityDataV1_9"/> (pre-1.14 block-position packing).</summary>
     public static readonly PacketCodec<ClientboundSetEntityDataPacket> SetEntityDataV1_12 =
-        SetEntityDataComponentJson(ModernMetadataTable.V1_12, LegacyItems, BlockPosLayout.PrePacked114);
+        SetEntityDataComponentJson(ModernMetadataTable.V1_12, LegacyItems, BlockPosLayout.PrePacked114, poses: MetadataPoseEra.None);
 
     // The tail versions 768/769, 773, and 774 each carry a serializer registration order that mid-list-reorders relative to the V1_21_5 table (see ModernMetadataTable), so a version reading its own metadata stream with the V1_21_5 table would mis-map serializer ids. 771/772 reuse V1_21_5 and 775 reuses V26_1, so no member is needed for those. The codec body is identical to SetEntityDataModern; only the serializer table differs, resolved once at construction.
 
@@ -196,7 +200,7 @@ internal static partial class EntityDataCodecs
     {
         // Entity metadata is a per-era serializer table: the 13-entry 1.9 table, +NBT at 1.12, the 16-entry 1.13 table ending at PARTICLE, then the 19-entry 1.14 flattening table which runs unchanged all the way to 1.18.2. From 1.19 the modern-tail tables mid-list-reorder repeatedly (1.19/1.19.3/1.19.4, the 1.21.2 pre-1.21.5 table, 1.21.9/1.21.11 resolvable-profile tables, 26.1).
         //
-        // The 19-entry table from BYTE through POSE is unchanged from 1.14.4 through 1.18.2. Components remain JSON strings, compound tags remain named-root NBT, and block positions retain the 1.14 X/Z/Y packing, so the 1.14 era codec covers that entire span.
+        // The serializer order remains unchanged through 1.18.2, but 1.17 inserts LONG_JUMPING into the pose value enum. Pose meanings therefore require their own codec step.
         bindings.Packet(EntityPackets.Clientbound.SetEntityData)
             .From(JavaProtocols.V1_8, EntityDataCodecs.SetEntityDataV1_8)
             .From(JavaProtocols.V1_9, EntityDataCodecs.SetEntityDataV1_9)
@@ -204,6 +208,7 @@ internal static partial class EntityDataCodecs
             .From(JavaProtocols.V1_13, EntityDataCodecs.SetEntityDataV1_13)
             .From(JavaProtocols.V1_13_2, EntityDataCodecs.SetEntityDataV1_13_2)
             .From(JavaProtocols.V1_14, EntityDataCodecs.SetEntityDataV1_14)
+            .From(JavaProtocols.V1_17, EntityDataCodecs.SetEntityDataV1_17)
             .From(JavaProtocols.V1_19, EntityDataCodecs.SetEntityDataV1_19)
             .From(JavaProtocols.V1_19_3, EntityDataCodecs.SetEntityDataV1_19_3)
             .From(JavaProtocols.V1_19_4, EntityDataCodecs.SetEntityDataV1_19_4)

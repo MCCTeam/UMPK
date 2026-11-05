@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 16 of 179 implemented bindings (corpus 6, synth 10)
+# witnessed 16 of 182 implemented bindings (corpus 6, synth 10)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -71,10 +71,10 @@ Play Clientbound 0x10 minecraft:command_suggestions CommandSuggestionCodecs.Comm
 Play Clientbound 0x11 minecraft:commands CommandTreeCodecs.V1_20_3 src:corpus@765 w:255 ok Commands{Tree=CommandTreeData{Nodes=[25:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0, h=281F3B3A
     reject:P762(+58C50AC2) reject:P766(+F12A7DB2)
 Play Clientbound 0x12 minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
-Play Clientbound 0x13 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_20_2 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=3,CustomName=null,Dama h=A3368B0B
+Play Clientbound 0x13 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_20_2 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=3,CustomName=null,Dama h=5A226F0B
     reject:P756(Id=6A2EE463) reject:P766(ProtocolViolationException)
 Play Clientbound 0x14 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
-Play Clientbound 0x15 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_20_2 src:synth w:9 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=67D65F3C
+Play Clientbound 0x15 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_20_2 src:synth w:9 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=54EA623A
     reject:P756(Path='fishing_rod') reject:P766(ProtocolViolationException)
 Play Clientbound 0x16 minecraft:cooldown UiMiscCodecs.CooldownV1_9 src:none
 Play Clientbound 0x17 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 src:none
@@ -165,11 +165,14 @@ Play Clientbound 0x69 minecraft:system_chat ChatDisplayCodecs.SystemChatV1_20_3 
 Play Clientbound 0x6A minecraft:tab_list PlayerListCodecs.TabListV1_20_3 src:none
 Play Clientbound 0x6C minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x6D minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
+Play Clientbound 0x6E minecraft:ticking_state WorldStateCodecs.TickingStateV1_20_3 src:none
+Play Clientbound 0x6F minecraft:ticking_step WorldStateCodecs.TickingStepV1_20_3 src:none
 Play Clientbound 0x70 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20_3 src:synth w:337 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P764(ComponentFormatException) reject:P766(FormatException)
 Play Clientbound 0x71 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_17 src:none
 Play Clientbound 0x72 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_19 src:none
 Play Clientbound 0x73 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Clientbound 0x74 minecraft:update_tags WorldTagCodecs.TagsV1_17 src:none
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
 Play Serverbound 0x03 minecraft:chat_ack ChatCodecs.ChatAckV1_19_3 src:none
 Play Serverbound 0x04 minecraft:chat_command ChatCommandCodecs.SignedV1_19_3 src:none
@@ -208,7 +211,7 @@ Play Serverbound 0x29 minecraft:seen_advancements AdvancementCodecs.SeenAdvancem
 Play Serverbound 0x2A minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
 Play Serverbound 0x2C minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x2D minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
-Play Serverbound 0x2F minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_20_2 src:synth w:7 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=380ECCFB
+Play Serverbound 0x2F minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_20_2 src:synth w:7 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=E4669F9B
     reject:P477(Path='name_tag') reject:P766(ProtocolViolationException)
 Play Serverbound 0x32 minecraft:sign_update UiMiscCodecs.SignUpdateV1_20 src:none
 Play Serverbound 0x33 minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none

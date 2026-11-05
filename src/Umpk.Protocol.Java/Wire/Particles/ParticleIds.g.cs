@@ -595,7 +595,7 @@ internal static class ParticleIds
         "minecraft:firefly",
     ];
 
-    /// <summary>Protocol 775 (26.1) particle_type ordering (117 entries).</summary>
+    /// <summary>Protocol 775 (26.1.2) particle_type ordering (117 entries).</summary>
     public static string[] V26_1 { get; } =
     [
         "minecraft:angry_villager",

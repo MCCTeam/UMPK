@@ -14,6 +14,10 @@ public sealed class BundleAccumulator
 
     private List<InboundFrame>? _currentFrames;
 
+    private List<InboundDecodeLoss>? _currentLosses;
+
+    private int _currentFrameCount;
+
     /// <summary>Creates an accumulator keyed on the bundle-delimiter identity for the version.</summary>
     public BundleAccumulator(Identifier delimiterId)
     {
@@ -60,24 +64,43 @@ public sealed class BundleAccumulator
             {
                 _current = [];
                 _currentFrames = [];
+                _currentLosses = null;
+                _currentFrameCount = 0;
                 return BundleFeed.Opened;
             }
 
-            bundle = new PacketBundle(_current, _currentFrames!);
+            bundle = new PacketBundle(_current, _currentFrames!)
+            {
+                DecodeLosses = _currentLosses ?? [],
+            };
             _current = null;
             _currentFrames = null;
+            _currentLosses = null;
+            _currentFrameCount = 0;
             return BundleFeed.Closed;
         }
 
         if (_current is null)
             return BundleFeed.PassThrough;
 
-        if (_current.Count >= BundleSizeLimit)
+        if (_currentFrameCount >= BundleSizeLimit)
             throw new ProtocolViolationException($"Bundle exceeded the {BundleSizeLimit}-packet limit.");
 
         _current.Add(packet);
         _currentFrames!.Add(frame);
+        _currentFrameCount++;
         return BundleFeed.Buffered;
+    }
+
+    internal void OfferLoss(InboundDecodeLoss loss)
+    {
+        if (_current is null)
+            throw new InvalidOperationException("A decode loss can only be buffered inside an open bundle.");
+        if (_currentFrameCount >= BundleSizeLimit)
+            throw new ProtocolViolationException($"Bundle exceeded the {BundleSizeLimit}-packet limit.");
+
+        (_currentLosses ??= []).Add(loss with { BeforePacketIndex = _current.Count });
+        _currentFrameCount++;
     }
 }
 

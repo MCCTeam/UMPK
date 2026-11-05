@@ -1,0 +1,23 @@
+# Nested component hash availability
+
+Outgoing hashed inventory stacks now omit an entire component when a nested value's native DATA hash is unavailable. The previous nested-patch loop silently removed unknown fields and advertised a hash for the resulting different value. The existing top-level sender remains the owner of omission and preserves independently known sibling hashes. This change adds no Adventure codec or permission support.
+
+## Behavior and caller
+
+`ItemStackCodecs.HashComponentPatch` now propagates a specific internal `ComponentHashUnavailableException` for an unsupported era key or an `UnmodeledComponent` nested inside another component. `ToHashedStack`, used by the existing hashed container-click sender, catches only that exception and omits that outer component. Other failures still propagate. Existing top-level omission, item identity, count, removals and known sibling hashes keep their meanings. No public signature, dataset, dependency, package version or DI lifetime changes.
+
+Three focused public-model tests retain a known MapId sibling while exercising an unmodeled nested Weapon value, an absent-era nested key and the existing top-level omission control. The absent-era input is deliberately a model boundary test, not claimed valid 770 wire. The published Game model `fe0c9334` and old Protocol `ede2c3bd` reproduce exactly two causal `DoesNotContain` failures and one passing control. The same Test pair passes all three after the Protocol repair; the private Adventure model and its 32 additive API entries are excluded from this change.
+
+## Executed acceptance
+
+The repaired Protocol DLL SHA-256 is `90d2c257b06ab901ed90e9f4ba47e75e50143a030ae80173f65493f387ecc205`; its PDB is `71977ffa75b46627f2e03251941218639815167862dc1625a1cb54cac1fc7b55`. Its 650 authored and three generated sources match all 653 PDB documents, with 174 compiler references. The first wrapper fails after this successful compilation because a local argument-list variable shadows parsed launch arguments. That failure remains recorded; the successful continuation reuses the exact producer without another Protocol build.
+
+The continuation first executes the three passing focused cases, then verifies formatting of the two production files and new Test file with zero changes. One full Test compilation uses 184 authored sources, one SDK source, three generated sources, 188 matching PDB documents, 198 references and the single existing embedded resource. The unfiltered Protocol suite executes all 6,508 tests with zero failures or skips and 6,508 distinct display identities, including the three new cases exactly once and ten retained hash/container cases. All fixture and runtime inputs remain unchanged. The job takes 44.01 seconds, peaks at 711,147,520 bytes, records no OOM event and leaves all sixteen owned PIDs absent. It performs no Game, Protocol, dependency or helper rebuild, restore or native-server run.
+
+The deliberate Protocol baseline is 6,508, three above 6,505; the expected seventeen-suite total is 49,660. This is an executed full Protocol result, not a new complete seventeen-suite, Client, AOT, consumer or native acceptance result for the later producer. Modern Adventure permissions remain unfinished.
+
+## Evidence index
+
+Exact commands, raw TRX, source/PDB/reference/resource proofs, counters, protected fixture snapshots and cleanup remain under `/home/anon/Projects/MinecraftOfficial/runs/adventure770-hash-full6508-runtime-20261030-v1/`. Root launch `.scratch/adventure770-hash-full6508-root-launch-20261030-v1.json` has SHA-256 `6194926da216934b21b179bd8e41fc300995b74474d90776fe3c1c1b1373d871`. Actual binding `.scratch/adventure770-hash-full6508-actual-binding-20261030-v1.json` has SHA-256 `d4faa89dc9e703c9555e4e0a396ffa44a5c843e5d915caa0bb8b567fbf6db6f1`; independent root audit `.scratch/adventure770-hash-full6508-actual-root-audit-20261030-v1.json` has SHA-256 `7196c61f91c9dd1122d70a82207b4b4357492653fe2d9a8062e7afc79a4010dd` and rechecks 3,612 pins, both source/PDB/reference closures, causal red/green results, the complete literal counter, formatter results, runtimes and process absence.
+
+The first retained RED3 binding is `.scratch/adventure770-hash-red3-actual-binding-20261030-v1.json` (`d7d8a9cf08e1b000955b17b38c0ddbc26fc3afcda4da024c536e97d4dd4b13d8`). The later published-Game baseline and failed post-compilation wrapper are retained by `.scratch/adventure770-hash-green3-protocol-prefix-actual-binding-20261030-v1.json` (`38dc920b3d586dba590bf84dfb06f25d13bdb82dcd6675973fbe2c99a3ba12ee`). Neither failed wrapper nor the unexecuted private Adventure codec is relabeled as passed.

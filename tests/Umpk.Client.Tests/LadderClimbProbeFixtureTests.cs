@@ -189,7 +189,7 @@ public sealed class LadderClimbProbeFixtureTests
                 MayFly = true,
             };
 
-            var engine = new PlayerPhysics(new WorldPhysicsView(world, shapes), PhysicsProfile.ForProtocol(protocol));
+            var engine = new PlayerPhysics(new WorldPhysicsView(world, shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(protocol)), PhysicsProfile.ForProtocol(protocol));
             engine.SetConditions(conditions);
             engine.Reset(new Vec3d(0.5, Ay, 0.5), 0f, 0f);
             engine.Step(MovementInput.None);

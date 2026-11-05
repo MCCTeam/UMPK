@@ -2,9 +2,9 @@
   "_provenance": {
     "kind": "extracted",
     "tool": "tools/extraction/extract_lang.py",
-    "source": "META-INF/versions/26.1/server-26.1.jar!assets/minecraft/lang/en_us.json",
-    "version": "26.1",
-    "jarSha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994"
+    "source": "META-INF/versions/26.1.2/server-26.1.2.jar!assets/minecraft/lang/en_us.json",
+    "version": "26.1.2",
+    "jarSha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42"
   },
   "entries": {
     "accessibility.onboarding.accessibility.button": "Accessibility Settings...",

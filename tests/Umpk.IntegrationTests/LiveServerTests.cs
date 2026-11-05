@@ -1,3 +1,10 @@
+using System.Buffers;
+using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Umpk;
 using Umpk.Client;
 using Umpk.Client.Events;
@@ -5,6 +12,8 @@ using Umpk.Data.Java;
 using Umpk.Game.World;
 using Umpk.Geometry;
 using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
+using Umpk.Protocol.Java.Packets;
 using Umpk.Protocol.Java.Transport;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,7 +45,18 @@ public sealed class LiveServerTests
         for (int attempt = 0; ; attempt++)
             try
             {
-                await RunLegAsync(versionName, protocol, version!);
+                using GeneralMovementDiagnostics? diagnostics = protocol == 777
+                    ? new GeneralMovementDiagnostics(version!, attempt)
+                    : null;
+                try
+                {
+                    await RunLegAsync(versionName, protocol, version!, diagnostics);
+                }
+                catch (Exception error)
+                {
+                    diagnostics?.RecordFailure(error);
+                    throw;
+                }
                 return;
             }
             catch (Exception ex) when (attempt == 0 && ex is not Xunit.Sdk.XunitException)
@@ -48,7 +68,7 @@ public sealed class LiveServerTests
 
     }
 
-    private async Task RunLegAsync(string versionName, int protocol, JavaVersion version)
+    private async Task RunLegAsync(string versionName, int protocol, JavaVersion version, GeneralMovementDiagnostics? diagnostics)
     {
         string serverDir = IntegrationConfig.ServerDir(versionName);
         string jre = JavaRuntimes.ForProtocol(protocol);
@@ -60,7 +80,7 @@ public sealed class LiveServerTests
 
         var signals = new LegSignals();
         var logs = new CapturingLoggerFactory();
-        await using UmpkClient client = await ConnectWithRetryAsync(version, protocol, signals, logs, ct.Token);
+        await using UmpkClient client = await ConnectWithRetryAsync(version, protocol, signals, logs, diagnostics, ct.Token);
 
         try
         {
@@ -80,12 +100,20 @@ public sealed class LiveServerTests
 
             // provision the account for privileged/creative actions. All provisioning runs through the server CONSOLE, which is always op, so the account itself does not need to be op: creative, give, summon, effect, setblock and time all apply to the player regardless of its permission level. We deliberately do NOT `op` the account: opping raises the player's permission level, which makes the server RE-SEND the full (expanded) command tree, and that larger tree trips a pre-existing receive-path decode limitation on the mid-modern eras (1.16-1.20.1 fall back to the 1.21.5 argument-type registry, whose parser-id table misaligns on some older argument nodes - see the WALL note). The initial (non-op) command tree still decodes and validates the commands feature; the expanded-tree decode is a separate receive-path issue outside this run's send-side mandate.
             await server.SendConsoleAsync($"gamemode creative {Username}", ct.Token);
-            // Disable mob/tile drops so the client attack-kill and block dig do not spawn item entities: a dropped item's metadata carries an ItemStack (pre-1.13 that decode throws and drops the session, documented), and cow loot landing in the hotbar would displace the given block the held-slot selection targets. Stabilize time so the command-effect assert is deterministic. 1.21.11 (protocol 774) renamed the whole gamerule space to snake_case (verified vs 1.21.10 doMobLoot vs 1.21.11 entity_drops/block_drops/advance_time).
+            // Disable mob/tile drops so the client attack-kill and block dig do not spawn item entities: a dropped item's metadata carries an ItemStack (pre-1.13 that decode throws and drops the session, documented), and cow loot landing in the hotbar would displace the given block the held-slot selection targets. Stabilize time so the command-effect assert is deterministic. 1.21.11 (protocol 774) renamed the whole gamerule space to snake_case (verified vs 1.21.10 doMobLoot vs 1.21.11 mob_drops/block_drops/advance_time).
             if (protocol >= 774)
             {
-                await server.SendConsoleAsync("gamerule entity_drops false", ct.Token);
+                await server.SendConsoleAsync("gamerule mob_drops false", ct.Token);
                 await server.SendConsoleAsync("gamerule block_drops false", ct.Token);
                 await server.SendConsoleAsync("gamerule advance_time false", ct.Token);
+                int mobDropsLogStart = server.LogText.Length;
+                await server.SendConsoleAsync("gamerule mob_drops", ct.Token);
+                string mobDropsResponse = protocol == 777
+                    ? "Game rule mob_drops is currently set to false"
+                    : "Gamerule mob_drops is currently set to: false";
+                Assert.True(await WaitUntilAsync(
+                    () => server.LogText[mobDropsLogStart..].Contains(mobDropsResponse, StringComparison.Ordinal),
+                    TimeSpan.FromSeconds(10), ct.Token), $"{versionName}: native mob-drops rule did not report false.");
             }
             else
             {
@@ -125,7 +153,11 @@ public sealed class LiveServerTests
             if (canMove)
                 try
                 {
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-initial-rotation", ct.Token);
                     await client.Actions.Movement.SetRotationAsync(90f, 0f, ct.Token);
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-initial-position-echo", ct.Token);
                     await client.Actions.Movement.SendPositionAsync(ct.Token);
                     report.Movement = !spawnPos.Equals(default(Vec3d)) && client.Status == ClientStatus.Playing;
                 }
@@ -201,7 +233,11 @@ public sealed class LiveServerTests
                         for (int echo = 0; echo < 8; echo++)
                         {
                             if (canMove)
+                            {
+                                if (diagnostics is not null)
+                                    await diagnostics.SnapshotSelfAsync(client, $"before-attack-{hit}-echo-{echo}", ct.Token);
                                 await client.Actions.Movement.SendPositionAsync(ct.Token);
+                            }
 
                             await Task.Delay(75, ct.Token);
                         }
@@ -375,7 +411,11 @@ public sealed class LiveServerTests
                 // Look at the target so the interaction hits the intended block/face.
                 if (canMove)
                 {
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-block-look", ct.Token);
                     await client.Actions.Movement.LookAtAsync(new Vec3d(target.X + 0.5, target.Y + 0.5, target.Z + 0.5), ct.Token);
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-block-position-echo", ct.Token);
                     await client.Actions.Movement.SendPositionAsync(ct.Token);
                 }
 
@@ -527,16 +567,32 @@ public sealed class LiveServerTests
                         client, c => (c.State.HasWorld ? c.State.World.GetBlockStateId(chestPos) : 0) != 0, TimeSpan.FromSeconds(6), ct.Token);
                 }
 
-                // Fill chest slot 0 with stone from the console. 1.17 replaced `replaceitem` with `item replace`; the chest leg's drivable band starts at 1.14, so only those two forms apply (the pre-1.13 setblock-with-Items-NBT form never runs here).
+                // Native replaceitem uses slot.container.N through1.12.2;1.13 removes slot. and1.17 replaces the command with item replace.
+                string containerSlot = protocol < 393 ? "slot.container.0" : "container.0";
                 string fill = protocol >= 755
                     ? $"item replace block {chestPos.X} {chestPos.Y} {chestPos.Z} container.0 with minecraft:stone 5"
-                    : $"replaceitem block {chestPos.X} {chestPos.Y} {chestPos.Z} container.0 minecraft:stone 5";
+                    : $"replaceitem block {chestPos.X} {chestPos.Y} {chestPos.Z} {containerSlot} minecraft:stone 5";
                 await server.SendConsoleAsync(fill, ct.Token);
+                string legacyChestFound = protocol < 210
+                    ? $"Successfully found the block at {chestPos.X},{chestPos.Y},{chestPos.Z}."
+                    : $"Successfully found the block at {chestPos.X}, {chestPos.Y}, {chestPos.Z}";
+                if (protocol < 393)
+                {
+                    int fillLogStart = server.LogText.Length;
+                    await server.SendConsoleAsync($"testforblock {chestPos.X} {chestPos.Y} {chestPos.Z} minecraft:chest -1 {{Items:[{{Slot:0b,id:\"minecraft:stone\",Count:5b}}]}}", ct.Token);
+                    Assert.True(await WaitUntilAsync(
+                        () => server.LogText[Math.Min(fillLogStart, server.LogText.Length)..].Contains(legacyChestFound, StringComparison.Ordinal),
+                        TimeSpan.FromSeconds(8), ct.Token), $"{versionName}: native chest slot0 did not report minecraft:stone count5 before client opening.");
+                }
 
                 // Look at the chest so the use_item_on hit lands on the intended block, then right-click.
                 if (canMove)
                 {
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-chest-look", ct.Token);
                     await client.Actions.Movement.LookAtAsync(new Vec3d(chestPos.X + 0.5, chestPos.Y + 0.5, chestPos.Z + 0.5), ct.Token);
+                    if (diagnostics is not null)
+                        await diagnostics.SnapshotSelfAsync(client, "before-chest-position-echo", ct.Token);
                     await client.Actions.Movement.SendPositionAsync(ct.Token);
                 }
 
@@ -570,7 +626,9 @@ public sealed class LiveServerTests
                             client,
                             c => c.State.Inventory.HasOpenContainer
                                 && c.State.Inventory.ContainerSlots is { Count: > 0 } slots
-                                && !slots[0].IsEmpty,
+                                && !slots[0].IsEmpty
+                                && slots[0].Item.Id == Identifier.Minecraft("stone")
+                                && slots[0].Count == 5,
                             TimeSpan.FromSeconds(8), ct.Token);
 
                         // Click: quick-move the stone out of chest slot 0, then prove the round-trip on BOTH sides. Client side: the moved slot must stay empty after reconciliation (a rejected click is resynced by the server, refilling it). Server side: the chest block entity must actually have lost the stone, probed authoritatively through the console (`data get block ... Items`) since an exactly-correct prediction produces zero container traffic on the 1.17.1+ state-id protocol (the click's changed-slots map already matches the server result, so nothing is broadcast).
@@ -589,12 +647,16 @@ public sealed class LiveServerTests
                             bool serverEmptied = false;
                             for (int attempt = 0; attempt < 3 && !serverEmptied; attempt++)
                             {
-                                await server.SendConsoleAsync(
-                                    $"data get block {chestPos.X} {chestPos.Y} {chestPos.Z} Items", ct.Token);
+                                string emptyProbe = protocol < 393
+                                    ? $"testforblock {chestPos.X} {chestPos.Y} {chestPos.Z} minecraft:chest -1 {{Items:[]}}"
+                                    : $"data get block {chestPos.X} {chestPos.Y} {chestPos.Z} Items";
+                                await server.SendConsoleAsync(emptyProbe, ct.Token);
                                 serverEmptied = await WaitUntilAsync(
                                     () =>
                                     {
                                         string tail = server.LogText[Math.Min(logStart, server.LogText.Length)..];
+                                        if (protocol < 393)
+                                            return tail.Contains(legacyChestFound, StringComparison.Ordinal);
                                         return tail.Contains("block data: []", StringComparison.Ordinal)
                                             || (tail.Contains("block data:", StringComparison.Ordinal)
                                                 && !tail.Contains("stone", StringComparison.Ordinal));
@@ -825,9 +887,241 @@ public sealed class LiveServerTests
         LegResultLog.Append(report);
     }
 
+    private sealed class GeneralMovementDiagnostics(JavaVersion version, int attemptIndex, [CallerFilePath] string sourcePath = "") : IDisposable
+    {
+        private const int MaximumEntries = 2048;
+        private const int MaximumBytes = 20 * 1024 * 1024;
+        private readonly object _gate = new();
+        private readonly List<MovementFrame> _frames = [];
+        private readonly List<object> _snapshots = [];
+        private readonly List<(UmpkClient Client, Action<PacketObservation> Handler)> _subscriptions = [];
+        private readonly JsonSerializerOptions _json = new()
+        {
+            IncludeFields = true,
+            NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
+            WriteIndented = true
+        };
+        private long _ordinal;
+        private long _reservedBytes;
+        private int _observedFrames;
+        private bool _overflowed;
+        private bool _closed;
+        private string? _captureError;
+        private string? _legFailure;
+
+        public void Attach(UmpkClient client, int connectionAttempt)
+        {
+            Action<PacketObservation> handler = observation => Observe(observation, connectionAttempt);
+            _subscriptions.Add((client, handler));
+            client.PacketFrameObserved += handler;
+        }
+
+        public void RecordFailure(Exception error) => _legFailure = error.ToString();
+
+        public async Task SnapshotSelfAsync(UmpkClient client, string reason, CancellationToken ct)
+        {
+            object snapshot = await client.InvokeAsync(c =>
+            {
+                var self = c.State.Self;
+                return new
+                {
+                    Reason = reason,
+                    StopwatchTicks = Stopwatch.GetTimestamp(),
+                    Status = c.Status.ToString(),
+                    self.EntityId,
+                    self.HasSpawned,
+                    Position = Vector(self.Position),
+                    Velocity = Vector(self.Velocity),
+                    Yaw = Number(self.Yaw),
+                    Pitch = Number(self.Pitch),
+                    self.OnGround,
+                    GameMode = self.GameMode.ToString()
+                };
+            }, ct);
+            lock (_gate)
+            {
+                if (_frames.Count + _snapshots.Count >= MaximumEntries || _reservedBytes + 4096 > MaximumBytes)
+                {
+                    _overflowed = true;
+                    return;
+                }
+                _reservedBytes += 4096;
+                _snapshots.Add(new { Ordinal = ++_ordinal, Self = snapshot });
+            }
+        }
+
+        private void Observe(PacketObservation observation, int connectionAttempt)
+        {
+            try
+            {
+                if (observation.Phase != ProtocolPhase.Play ||
+                    !version.Protocol.GetRegistry(observation.Phase, observation.Flow).TryGetInbound(observation.WireId, out BoundPacketCodec codec))
+                    return;
+                string name = codec.Type.Id.ToString();
+                bool selected = observation.Flow == PacketFlow.Serverbound
+                    ? name is "minecraft:move_player_pos_rot" or "minecraft:move_player_pos" or "minecraft:move_player_rot"
+                    : name is "minecraft:player_position" or "minecraft:teleport_entity" or "minecraft:entity_position_sync";
+                if (!selected)
+                    return;
+                lock (_gate)
+                {
+                    if (_closed)
+                        return;
+                    _observedFrames++;
+                    long reservation = 4096L + observation.PayloadLength * 16L;
+                    if (_frames.Count + _snapshots.Count >= MaximumEntries || _reservedBytes + reservation > MaximumBytes)
+                    {
+                        _overflowed = true;
+                        return;
+                    }
+                    _reservedBytes += reservation;
+                    _frames.Add(new MovementFrame(++_ordinal, Stopwatch.GetTimestamp(), connectionAttempt, observation.Phase,
+                        observation.Flow, observation.WireId, codec, observation.CopyPayload(), observation.DecodedPacket));
+                }
+            }
+            catch (Exception error)
+            {
+                // The client contains observer exceptions, so retain this diagnostic fault and fail after the evidence flush.
+                lock (_gate)
+                    _captureError ??= error.ToString();
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach ((UmpkClient client, Action<PacketObservation> handler) in _subscriptions)
+                client.PacketFrameObserved -= handler;
+            MovementFrame[] frames;
+            object[] snapshots;
+            lock (_gate)
+            {
+                if (_closed)
+                    return;
+                _closed = true;
+                frames = _frames.ToArray();
+                snapshots = _snapshots.ToArray();
+            }
+            var errors = new List<string>();
+            if (_captureError is not null)
+                errors.Add(_captureError);
+            var decodedFrames = new List<object>();
+            foreach (MovementFrame frame in frames)
+            {
+                object? decoded = null;
+                object? observedValues = null;
+                object? decodedValues = null;
+                bool roundTrip = false;
+                string? decodeError = null;
+                try
+                {
+                    // These six movement codecs have no registry-holder or connection-state fields.
+                    decoded = frame.Codec.Decode(frame.Payload, PacketCodecContext.Registryless);
+                    decodedValues = Values(decoded);
+                    observedValues = frame.ObservedPacket is null ? null : Values(frame.ObservedPacket);
+                    var buffer = new ArrayBufferWriter<byte>();
+                    var writer = new PacketWriter(buffer);
+                    frame.Codec.Encode(ref writer, decoded, PacketCodecContext.Registryless);
+                    roundTrip = frame.Payload.AsSpan().SequenceEqual(buffer.WrittenSpan);
+                    if (!roundTrip)
+                        errors.Add($"Frame {frame.Ordinal}: bound-codec byte round trip differs.");
+                }
+                catch (Exception error)
+                {
+                    decodeError = error.ToString();
+                    errors.Add($"Frame {frame.Ordinal}: {decodeError}");
+                }
+                decodedFrames.Add(new
+                {
+                    frame.Ordinal,
+                    frame.StopwatchTicks,
+                    frame.ConnectionAttempt,
+                    Phase = frame.Phase.ToString(),
+                    Flow = frame.Flow.ToString(),
+                    frame.WireId,
+                    PacketName = frame.Codec.Type.Id.ToString(),
+                    frame.Codec.CodecIdentity,
+                    RawPayloadBase64 = Convert.ToBase64String(frame.Payload),
+                    RawPayloadSha256 = Convert.ToHexString(SHA256.HashData(frame.Payload)),
+                    ObservedDecodedType = frame.ObservedPacket?.GetType().FullName,
+                    ObservedValues = observedValues,
+                    BoundDecodedType = decoded?.GetType().FullName,
+                    CompleteModeledDecodedFields = decodedValues,
+                    BoundCodecByteRoundTrip = roundTrip,
+                    DecodeError = decodeError
+                });
+            }
+            string? resultLog = Environment.GetEnvironmentVariable("UMPK_LIVE_RESULTS");
+            string root = string.IsNullOrEmpty(resultLog) ? Path.GetTempPath() : Path.GetDirectoryName(Path.GetFullPath(resultLog))!;
+            string path = Path.Combine(root, $"movement777-attempt-{attemptIndex}-{Guid.NewGuid():N}.json");
+            object[] binaries = [FilePin(typeof(LiveServerTests).Assembly.Location), FilePin(Path.ChangeExtension(typeof(LiveServerTests).Assembly.Location, ".pdb")),
+                FilePin(typeof(UmpkClient).Assembly.Location), FilePin(typeof(JavaGameData).Assembly.Location), FilePin(typeof(PacketObservation).Assembly.Location)];
+            var evidence = new
+            {
+                Scope = "General777 diagnostic only; actual payloads and state are never changed or filtered from transport.",
+                Protocol = 777,
+                AttemptIndex = attemptIndex,
+                ProducerIdentity = Environment.GetEnvironmentVariable("UMPK_INTERACTION_PRODUCER"),
+                Source = FilePin(sourcePath),
+                Binaries = binaries,
+                MaximumEntries,
+                MaximumBytes,
+                ReservedBytes = _reservedBytes,
+                ObservedSelectedFrames = _observedFrames,
+                RetainedSelectedFrames = frames.Length,
+                Overflowed = _overflowed,
+                LegFailure = _legFailure,
+                DiagnosticErrors = errors,
+                Snapshots = snapshots,
+                Frames = decodedFrames
+            };
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(evidence, _json);
+            if (json.Length > MaximumBytes)
+            {
+                File.WriteAllText(path, JsonSerializer.Serialize(new { Overflowed = true, SerializedBytes = json.Length, MaximumBytes, AttemptIndex = attemptIndex, LegFailure = _legFailure }, _json));
+                Assert.Fail($"General777 diagnostic serialized capture exceeds its strict byte cap; overflow receipt: {path}");
+            }
+            File.WriteAllBytes(path, json);
+            Assert.False(_overflowed, $"General777 diagnostic capture exceeded its fixed entry/byte cap: {path}");
+            Assert.True(errors.Count == 0, $"General777 diagnostic capture/round-trip failure: {path}");
+        }
+
+        private static object FilePin(string path)
+        {
+            using FileStream input = File.OpenRead(path);
+            return new { Path = path, Bytes = input.Length, Sha256 = Convert.ToHexString(SHA256.HashData(input)) };
+        }
+
+        private static object Number(double value) => new { Text = value.ToString("R", CultureInfo.InvariantCulture), Bits = $"0x{BitConverter.DoubleToInt64Bits(value):X16}", Finite = double.IsFinite(value), IsNaN = double.IsNaN(value) };
+        private static object Number(float value) => new { Text = value.ToString("R", CultureInfo.InvariantCulture), Bits = $"0x{BitConverter.SingleToInt32Bits(value):X8}", Finite = float.IsFinite(value), IsNaN = float.IsNaN(value) };
+        private static object Vector(Vec3d value) => new { X = Number(value.X), Y = Number(value.Y), Z = Number(value.Z) };
+        private static object? Modern(PositionMoveRotation? value) => value is null ? null : new { Position = Vector(value.Position), DeltaMovement = Vector(value.DeltaMovement), Yaw = Number(value.YRot), Pitch = Number(value.XRot) };
+
+        private static object Values(object packet) => packet switch
+        {
+            ServerboundMovePlayerPosRotPacket p => new { Position = Vector(new Vec3d(p.X, p.Y, p.Z)), Yaw = Number(p.Yaw), Pitch = Number(p.Pitch), p.OnGround, p.HorizontalCollision, NativeInvalidMoveFields = double.IsNaN(p.X) || double.IsNaN(p.Y) || double.IsNaN(p.Z) || !float.IsFinite(p.Yaw) || !float.IsFinite(p.Pitch) },
+            ServerboundMovePlayerPosPacket p => new { Position = Vector(new Vec3d(p.X, p.Y, p.Z)), p.OnGround, p.HorizontalCollision },
+            ServerboundMovePlayerRotPacket p => new { Yaw = Number(p.Yaw), Pitch = Number(p.Pitch), p.OnGround, p.HorizontalCollision },
+            ClientboundPlayerPositionPacket p => new { Position = Vector(new Vec3d(p.X, p.Y, p.Z)), Yaw = Number(p.Yaw), Pitch = Number(p.Pitch), p.RelativeFlags, p.TeleportId, Modern = Modern(p.ModernValues) },
+            ClientboundTeleportEntityPacket p => new { p.EntityId, Position = Vector(new Vec3d(p.X, p.Y, p.Z)), Yaw = Number(p.Yaw), Pitch = Number(p.Pitch), p.OnGround, p.Relatives, Modern = Modern(p.ModernValues) },
+            ClientboundEntityPositionSyncPacket p => new { p.EntityId, p.OnGround, Modern = Modern(p.Values), Path = PathValues(p.Path) },
+            _ => throw new InvalidOperationException($"Unexpected selected movement packet {packet.GetType().FullName}.")
+        };
+
+        private static object? PathValues(EntityPositionPath? path) => path switch
+        {
+            null => null,
+            EntityPositionPath.Linear line => new { Kind = "Linear", Position = Vector(line.Position) },
+            EntityPositionPath.Stepped steps => new { Kind = "Stepped", Steps = steps.Steps.Select(step => new { Position = Vector(step.Position), step.TickOffset }).ToArray() },
+            _ => throw new InvalidOperationException($"Unexpected movement path {path.GetType().FullName}.")
+        };
+
+        private sealed record MovementFrame(long Ordinal, long StopwatchTicks, int ConnectionAttempt, ProtocolPhase Phase,
+            PacketFlow Flow, int WireId, BoundPacketCodec Codec, byte[] Payload, object? ObservedPacket);
+    }
+
     /// <summary>Builds a client, wires the event signals, and connects with bounded retries.</summary>
     private async Task<UmpkClient> ConnectWithRetryAsync(
-        JavaVersion version, int protocol, LegSignals signals, CapturingLoggerFactory logs, CancellationToken ct)
+        JavaVersion version, int protocol, LegSignals signals, CapturingLoggerFactory logs, GeneralMovementDiagnostics? diagnostics, CancellationToken ct)
     {
         var endpoint = new ServerEndpoint("127.0.0.1", (ushort)LocalServer.Port);
         Exception? last = null;
@@ -845,6 +1139,7 @@ public sealed class LiveServerTests
                 .Build();
 
             signals.Attach(client);
+            diagnostics?.Attach(client, attempt);
             try
             {
                 await client.ConnectAsync(endpoint, ct).ConfigureAwait(false);

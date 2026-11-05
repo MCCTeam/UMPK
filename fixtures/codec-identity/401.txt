@@ -72,7 +72,7 @@ Play Clientbound 0x37 minecraft:resource_pack ResourcePackCodecs.LegacyResourceP
 Play Clientbound 0x38 minecraft:respawn WorldStateCodecs.RespawnV1_8 read:7 shape:opaque
 Play Clientbound 0x39 minecraft:rotate_head EntityMoveCodecs.RotateHead read:2 shape:opaque
 Play Clientbound 0x3A minecraft:select_advancements_tab AdvancementCodecs.SelectAdvancementsTabV1_12 read:1 shape:opaque
-Play Clientbound 0x3B minecraft:set_border marker n/a shape:opaque
+Play Clientbound 0x3B minecraft:set_border WorldBorderCodecs.SetBorderV1_9 read:9 shape:opaque
 Play Clientbound 0x3C minecraft:set_camera EntityStateCodecs.SetCamera read:1 shape:opaque
 Play Clientbound 0x3D minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 read:1 via:minecraft:set_carried_item shape:opaque
 Play Clientbound 0x3E minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 read:2 shape:opaque
@@ -98,7 +98,7 @@ Play Clientbound 0x51 minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x52 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_8 read:5 shape:opaque
 Play Clientbound 0x53 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_8 read:5 shape:opaque
 Play Clientbound 0x54 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern read:256 shape:opaque
-Play Clientbound 0x55 minecraft:update_tags marker n/a shape:opaque
+Play Clientbound 0x55 minecraft:update_tags WorldTagCodecs.TagsV1_13 read:3 shape:tags(block),tags(item),tags(fluid)
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation read:1 shape:opaque
 Play Serverbound 0x01 minecraft:block_entity_tag_query marker n/a shape:opaque
 Play Serverbound 0x02 minecraft:chat ChatCodecs.ServerLegacyV1_8 read:1 shape:opaque

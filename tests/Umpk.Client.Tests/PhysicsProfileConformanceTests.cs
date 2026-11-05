@@ -48,7 +48,8 @@ public sealed class PhysicsProfileConformanceTests
         Assert.Equal(features.CrawlPose, actual.CrawlPoseAvailable);
 
         // These two fields follow the documented derivation rather than direct dataset values.
-        PoseDimensionsEra expectedPose = features.CrawlPose ? PoseDimensionsEra.ModernCrawl : PoseDimensionsEra.PreCrawl;
+        PoseDimensionsEra expectedPose = protocol <= 47 ? PoseDimensionsEra.LegacyStanding
+            : features.CrawlPose ? PoseDimensionsEra.ModernCrawl : PoseDimensionsEra.PreCrawl;
         Assert.Equal(expectedPose, actual.PoseDimensions);
 
         PositionSendCadence expectedCadence = protocol <= 47 ? PositionSendCadence.Legacy : PositionSendCadence.DirtyChecked;

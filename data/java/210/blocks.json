@@ -7,7 +7,36 @@
    "minecraft-data pc/1.10/blocks.json (meta-0 base table; ids need not be gapless)"
   ],
   "kind": "extracted",
-  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one)."
+  "note": "legacy pre-flattening blocks: state = (block_id << 4) | meta, and the name is the version's OWN registry key (wool, log, stone_slab), not a 1.13 flattened identifier. Only meta-0 rows are carried, and that is sufficient: JavaGameData.BuildBlocks widens each block's state range to the whole nibble ((id<<4) .. (id<<4)|15) because the identity formula above already determines which block owns a state. Per-meta variant NAMING is deliberately not attempted; the nibble is exposed through BlockState.LegacyMeta. shared/legacy-block-meta.json is a curated sample of per-meta flattened names that nothing reads (there is no DataGen merge; an earlier revision of this note claimed one).",
+  "vanilla_corrections": {
+   "version": "1.10",
+   "server_sha256": "dd44a72e920a01dedf57507b73642f4a9dd8c6052e1f42ff6cc0635008014201",
+   "source": "1.10-decompiled/akf.java",
+   "source_sha256": "30f99e2756a51f15598946369420b4cec3652c66f0c2737e7b8880061dc98b8b",
+   "rows": [
+    {
+     "id": 213,
+     "name": "magma"
+    },
+    {
+     "id": 214,
+     "name": "nether_wart_block"
+    },
+    {
+     "id": 215,
+     "name": "red_nether_brick"
+    },
+    {
+     "id": 216,
+     "name": "bone_block"
+    },
+    {
+     "id": 217,
+     "name": "structure_void"
+    }
+   ],
+   "note": "Native registration IDs and names verified against this release; preserves existing provenance for the remaining rows."
+  }
  },
  "identity": "legacy",
  "identity_formula": "(block_id << 4) | meta",
@@ -1501,6 +1530,41 @@
    "meta": 0,
    "state_id": 3392,
    "material": "frosted_ice",
+   "curated": false
+  },
+  {
+   "block_id": 213,
+   "meta": 0,
+   "state_id": 3408,
+   "material": "magma",
+   "curated": false
+  },
+  {
+   "block_id": 214,
+   "meta": 0,
+   "state_id": 3424,
+   "material": "nether_wart_block",
+   "curated": false
+  },
+  {
+   "block_id": 215,
+   "meta": 0,
+   "state_id": 3440,
+   "material": "red_nether_brick",
+   "curated": false
+  },
+  {
+   "block_id": 216,
+   "meta": 0,
+   "state_id": 3456,
+   "material": "bone_block",
+   "curated": false
+  },
+  {
+   "block_id": 217,
+   "meta": 0,
+   "state_id": 3472,
+   "material": "structure_void",
    "curated": false
   },
   {

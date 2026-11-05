@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Runtime.CompilerServices;
 using Umpk.Game.Items;
 using Umpk.Game.Items.Components;
 using Umpk.Game.Registries;
@@ -204,7 +206,10 @@ internal static partial class ItemComponentCodecs
     public static ItemComponentCodec Trim { get; } = new TrimCodecImpl();
 
     /// <summary><c>minecraft:tool</c> (rules opaque, mining speed, damage-per-block, creative flag).</summary>
-    public static ItemComponentCodec Tool { get; } = new ToolCodecImpl();
+    public static ItemComponentCodec Tool { get; } = new ToolCodecImpl(hasCreativeFlag: true);
+
+    /// <summary><c>minecraft:tool</c> on 766-769: rules, mining speed and damage-per-block, with no creative flag.</summary>
+    public static ItemComponentCodec ToolLegacy { get; } = new ToolCodecImpl(hasCreativeFlag: false);
 
     /// <summary><c>minecraft:attribute_modifiers</c> for the 1.21.5 shape (no display field).</summary>
     public static ItemComponentCodec AttributeModifiersV1_21_5 { get; } = new AttributeModifiersCodecImpl(hasDisplay: false);
@@ -334,7 +339,7 @@ internal static partial class ItemComponentCodecs
     /// <summary><c>minecraft:dye</c> (776 only): a VarInt dye-color id.</summary>
     public static ItemComponentCodec Dye { get; } = MakeDyeColor(DataComponents.Dye);
 
-    /// <summary><c>minecraft:minimum_attack_charge</c> (776): one float.</summary>
+    /// <summary><c>minecraft:minimum_attack_charge</c> (774+): one float.</summary>
     public static ItemComponentCodec MinimumAttackCharge { get; } = new FloatCodec(
         DataComponents.MinimumAttackCharge,
         static f => new MinimumAttackChargeComponent(f),
@@ -493,30 +498,128 @@ internal static partial class ItemComponentCodecs
             ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(unwrap(value), era));
     }
 
+    /// <summary>Whether received lore retains every native value kind needed for semantic equality.</summary>
+    internal static bool IsLoreIdentityComplete(LoreComponent lore)
+        => ((LoreCodecImpl)Lore).IsIdentityComplete(lore) && ((LoreCodecImpl)LoreLegacy).IsIdentityComplete(lore);
+
     private sealed class LoreCodecImpl(ComponentWireEra era) : ItemComponentCodec(DataComponents.Lore)
     {
+        private readonly ConditionalWeakTable<Component, ReceivedLoreLine> _received = new();
+
         public override object Decode(ref PacketReader reader, PacketCodecContext context)
+            => new LoreComponent(reader.ReadList(ReadLine));
+
+        private Component ReadLine(ref PacketReader reader)
         {
-            ComponentWireEra e = era;
-            Component[] lines = reader.ReadList((ref PacketReader r) => ItemCodecPrimitives.ReadNetworkComponent(ref r, e));
-            return new LoreComponent(lines);
+            PacketReader original = reader;
+            NbtTag tag = reader.ReadNbt(ItemCodecPrimitives.NetworkNbt);
+            Component line = ComponentNbt.From(tag, era);
+            if (tag is NbtString)
+                return line;
+
+            ReadOnlySpan<byte> raw = original.ReadBytes(reader.Position - original.Position);
+            var canonical = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(canonical);
+            ItemCodecPrimitives.WriteNetworkComponent(ref writer, line, era);
+            bool complete = HasCompleteComponentValue(tag);
+            if (!complete || !raw.SequenceEqual(canonical.WrittenSpan))
+                _received.Add(line, new(raw.ToArray(), canonical.WrittenSpan.ToArray(), complete));
+            return line;
         }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
+            => writer.WriteList(((LoreComponent)value).Lines, WriteLine);
+
+        private void WriteLine(ref PacketWriter writer, Component line)
         {
-            var lore = (LoreComponent)value;
-            ComponentWireEra e = era;
-            writer.WriteList(lore.Lines, (ref PacketWriter w, Component c) => ItemCodecPrimitives.WriteNetworkComponent(ref w, c, e));
+            if (!_received.TryGetValue(line, out ReceivedLoreLine? received))
+            {
+                ItemCodecPrimitives.WriteNetworkComponent(ref writer, line, era);
+                return;
+            }
+            // Opaque style NBT can change without replacing its Component. Compare an immutable encoded snapshot before replaying received bytes.
+            var canonical = new ArrayBufferWriter<byte>(received.Canonical.Length);
+            var current = new PacketWriter(canonical);
+            ItemCodecPrimitives.WriteNetworkComponent(ref current, line, era);
+            if (canonical.WrittenSpan.SequenceEqual(received.Canonical))
+                writer.WriteBytes(received.Raw);
+            else
+                writer.WriteBytes(canonical.WrittenSpan);
+        }
+
+        public bool IsIdentityComplete(LoreComponent lore)
+        {
+            foreach (Component line in lore.Lines)
+                if (_received.TryGetValue(line, out ReceivedLoreLine? received) && !received.Complete)
+                    return false;
+            return true;
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
             var lore = (LoreComponent)value;
+            if (!IsLoreIdentityComplete(lore))
+                throw new ComponentHashUnavailableException("Lore contains a received native value kind that its text model cannot represent.");
             var hashes = new int[lore.Lines.Count];
             for (int i = 0; i < hashes.Length; i++)
                 hashes[i] = ItemCodecPrimitives.HashNbt(ops, ComponentNbt.To(lore.Lines[i], era));
-
             return ops.List(hashes);
+        }
+
+        private static bool HasCompleteComponentValue(NbtTag tag)
+        {
+            if (tag is NbtNumeric)
+                return false;
+            if (tag is NbtList list)
+            {
+                foreach (NbtTag item in list)
+                    if (!HasCompleteComponentValue(item))
+                        return false;
+                return true;
+            }
+            if (tag is not NbtCompound compound)
+                return true;
+            if (compound.TryGet("text", out NbtTag? text) && text is not NbtString)
+                return false;
+            if (!compound.ContainsKey("text") && compound.TryGet("translate", out NbtString? _) && compound.TryGet("with", out NbtTag? arguments))
+            {
+                // Legacy NbtOps compresses homogeneous numeric arguments into array tags; the text model does not read those arguments.
+                if (arguments is NbtByteArray bytes && bytes.Value.Length != 0
+                    || arguments is NbtIntArray integers && integers.Value.Length != 0
+                    || arguments is NbtLongArray longs && longs.Value.Length != 0)
+                    return false;
+                if (arguments is NbtList values)
+                    foreach (NbtTag argument in values)
+                        if (!HasCompleteComponentValue(argument))
+                            return false;
+            }
+            if (compound.GetList("extra") is { } children)
+                foreach (NbtTag child in children)
+                    if (!HasCompleteComponentValue(child))
+                        return false;
+            if (compound.TryGet("separator", out NbtTag? separator) && !HasCompleteComponentValue(separator))
+                return false;
+            NbtCompound? hover = compound.GetCompound("hover_event") ?? compound.GetCompound("hoverEvent");
+            if (hover?.GetString("action") == "show_text")
+            {
+                NbtTag? content = hover.TryGet("value", out NbtTag? modern) ? modern : hover.TryGet("contents", out NbtTag? legacy) ? legacy : null;
+                if (content is not null && !HasCompleteComponentValue(content))
+                    return false;
+            }
+            else if (hover is not null && hover.GetString("action") == "show_entity")
+            {
+                NbtCompound content = hover.GetCompound("contents") ?? hover;
+                if (content.TryGet("name", out NbtTag? name) && !HasCompleteComponentValue(name))
+                    return false;
+            }
+            return true;
+        }
+
+        private sealed class ReceivedLoreLine(byte[] raw, byte[] canonical, bool complete)
+        {
+            public byte[] Raw { get; } = raw;
+            public byte[] Canonical { get; } = canonical;
+            public bool Complete { get; } = complete;
         }
     }
 
@@ -568,14 +671,22 @@ internal static partial class ItemComponentCodecs
                     $"Enchantment map length {count} is implausible for {reader.Remaining} remaining bytes.");
 
             var list = new List<EnchantmentInstance>(count);
+            HashSet<int>? invalidLevels = null;
             for (int i = 0; i < count; i++)
             {
                 int enchId = ItemCodecPrimitives.ReadHolderId(ref reader);
                 int level = reader.ReadVarInt();
                 list.Add(new EnchantmentInstance(ItemCodecPrimitives.ResolveEnchantment(context, enchId), level));
+                // The native map keeps the last value for each raw holder id before its constructor checks levels. Preserve the wire list while a later valid duplicate clears an earlier invalid value.
+                if (level is < 0 or > 255)
+                    (invalidLevels ??= []).Add(enchId);
+                else
+                    invalidLevels?.Remove(enchId);
             }
 
             bool showInTooltip = !hasShowInTooltip || reader.ReadBool();
+            if (invalidLevels is { Count: > 0 })
+                throw new ProtocolViolationException("Enchantment map contains a final level outside 0..255.");
             return stored
                 ? new StoredEnchantmentsComponent(list, showInTooltip)
                 : new EnchantmentsComponent(list, showInTooltip);
@@ -600,8 +711,28 @@ internal static partial class ItemComponentCodecs
         {
             IReadOnlyList<EnchantmentInstance> enchantments = Enchantments(value);
             var entries = new List<(int, int)>(enchantments.Count);
-            foreach (EnchantmentInstance instance in enchantments)
-                entries.Add((ops.String(instance.Enchantment.Id.ToString()), ops.Int(instance.Level)));
+            if (!hasShowInTooltip)
+            {
+                var finalLevels = new Dictionary<RegistryEntry<EnchantmentDefinition>, int>(enchantments.Count);
+                foreach (EnchantmentInstance instance in enchantments)
+                {
+                    if (instance.Enchantment.IsDefault)
+                        throw new ComponentHashUnavailableException("An enchantment holder is unavailable in the current registry.");
+                    finalLevels[instance.Enchantment] = instance.Level;
+                }
+                foreach ((RegistryEntry<EnchantmentDefinition> enchantment, int level) in finalLevels)
+                {
+                    // Native wire values allow zero, but the DATA codec used before a container click requires final map values in 1..255.
+                    if (level is < 1 or > 255)
+                        throw new ArgumentException("Enchantment DATA cannot hash a final level outside 1..255.", nameof(value));
+                    entries.Add((ops.String(enchantment.Id.ToString()), ops.Int(level)));
+                }
+            }
+            else
+            {
+                foreach (EnchantmentInstance instance in enchantments)
+                    entries.Add((ops.String(instance.Enchantment.Id.ToString()), ops.Int(instance.Level)));
+            }
 
             int levels = ops.Map(entries);
             if (!hasShowInTooltip)
@@ -1466,7 +1597,7 @@ internal static partial class ItemComponentCodecs
                 : 0;
     }
 
-    private sealed class ToolCodecImpl() : ItemComponentCodec(DataComponents.Tool)
+    private sealed class ToolCodecImpl(bool hasCreativeFlag) : ItemComponentCodec(DataComponents.Tool)
     {
         public override object Decode(ref PacketReader reader, PacketCodecContext context)
         {
@@ -1477,8 +1608,8 @@ internal static partial class ItemComponentCodecs
 
             float defaultMiningSpeed = reader.ReadFloat();
             int damagePerBlock = reader.ReadVarInt();
-            _ = reader.ReadBool(); // canDestroyBlocksInCreative; not modeled, consumed to stay frame-exact.
-            return new ToolComponent(defaultMiningSpeed, damagePerBlock, rules);
+            bool canDestroy = !hasCreativeFlag || reader.ReadBool();
+            return new ToolComponent(defaultMiningSpeed, damagePerBlock, rules) { CanDestroyBlocksInCreative = canDestroy };
         }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
@@ -1490,20 +1621,55 @@ internal static partial class ItemComponentCodecs
 
             writer.WriteFloat(tool.DefaultMiningSpeed);
             writer.WriteVarInt(tool.DamagePerBlock);
-            writer.WriteBool(true); // canDestroyBlocksInCreative default (vanilla true); round-trips a fixed value.
+            if (hasCreativeFlag)
+                writer.WriteBool(tool.CanDestroyBlocksInCreative);
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
             var tool = (ToolComponent)value;
-            var entries = new List<(int, int)>();
+            int[] rules = new int[tool.Rules.Count];
+            for (int index = 0; index < rules.Length; index++)
+                rules[index] = HashRule(ops, tool.Rules[index], context);
+            // Tool.CODEC requires the rules field even for an empty list. Optional defaults are omitted independently.
+            var entries = new List<(int, int)> { (ops.String("rules"), ops.List(rules)) };
             if (tool.DefaultMiningSpeed != 1.0f)
                 entries.Add((ops.String("default_mining_speed"), ops.Float(tool.DefaultMiningSpeed)));
 
             if (tool.DamagePerBlock != 1)
                 entries.Add((ops.String("damage_per_block"), ops.Int(tool.DamagePerBlock)));
 
+            if (hasCreativeFlag && !tool.CanDestroyBlocksInCreative)
+                entries.Add((ops.String("can_destroy_blocks_in_creative"), ops.Boolean(false)));
+
             return ops.Map(entries);
+        }
+
+        private static int HashRule(in HashOps ops, NbtCompound rule, PacketCodecContext context)
+        {
+            var entries = new List<(int, int)> { (ops.String("blocks"), HashBlocks(ops, rule.GetList("blocks"), context)) };
+            if (rule.TryGet("speed", out NbtFloat? speed))
+                entries.Add((ops.String("speed"), ops.Float(speed.Value)));
+            if (rule.TryGet("correct_for_drops", out NbtByte? correct))
+                entries.Add((ops.String("correct_for_drops"), ops.Boolean(correct.Value != 0)));
+            return ops.Map(entries);
+        }
+
+        private static int HashBlocks(in HashOps ops, NbtList? blocks, PacketCodecContext context)
+        {
+            if (blocks is { ElementType: NbtTagType.String, Count: > 0 })
+                return ops.String("#" + ((NbtString)blocks[0]).Value);
+            int count = blocks?.Count ?? 0;
+            int[] values = new int[count];
+            for (int index = 0; index < count; index++)
+            {
+                int networkId = ((NbtInt)blocks![index]).Value;
+                if (!context.Registries.Blocks.TryGetKey(networkId, out Identifier id))
+                    throw new ProtocolViolationException("Tool rule refers to an unknown block holder.");
+                values[index] = ops.String(id.ToString());
+            }
+            // RegistryCodecs.homogeneousList uses the compact single-element form in Tool.Rule.CODEC.
+            return count == 1 ? values[0] : ops.List(values);
         }
 
         // A rule is a holder-set of blocks (VarInt tag-or-count form), an optional float speed, and an optional bool correctForDrops. It is retained opaquely as an NBT compound with those members so the wire round-trips without a block registry dependency.
@@ -1921,21 +2087,77 @@ internal static partial class ItemComponentCodecs
     }
 
     /// <summary>The pre-1.21.4 single-VarInt form, carried in the shared record's float list.</summary>
+    /// <summary>Gets a known native integer from the legacy projection without guessing a rounded original value.</summary>
+    internal static bool TryGetLegacyCustomModelDataInteger(CustomModelDataComponent value, out int integer)
+        => ((LegacyCustomModelDataCodecImpl)CustomModelDataV1_20_5).TryGetKnownInteger(value, out integer);
+
     private sealed class LegacyCustomModelDataCodecImpl() : ItemComponentCodec(DataComponents.CustomModelData)
     {
-        public override object Decode(ref PacketReader reader, PacketCodecContext context) =>
-            new CustomModelDataComponent([reader.ReadVarInt()], [], [], []);
+        private readonly ConditionalWeakTable<object, ReceivedLegacyInteger> _received = new();
+
+        public override object Decode(ref PacketReader reader, PacketCodecContext context)
+        {
+            int integer = reader.ReadVarInt();
+            float[] projection = [integer];
+            // Small integral projections have one possible native source; retain provenance only where the public float can lose it.
+            if (integer is <= -16_777_216 or >= 16_777_216)
+                _received.Add(projection, new(integer, BitConverter.SingleToInt32Bits(projection[0])));
+            return new CustomModelDataComponent(projection, [], [], []);
+        }
 
         public override void Encode(ref PacketWriter writer, object value, PacketCodecContext context)
         {
-            IReadOnlyList<float> floats = ((CustomModelDataComponent)value).Floats;
-            writer.WriteVarInt(floats.Count > 0 ? (int)floats[0] : 0);
+            var data = (CustomModelDataComponent)value;
+            // New or edited models retain their existing legacy projection encoding; unchanged received values retain their exact original integer.
+            int integer = TryGetReceivedInteger(data, out int received) ? received : ProjectForWire(data);
+            writer.WriteVarInt(integer);
         }
 
         public override int Hash(in HashOps ops, object value, PacketCodecContext context)
         {
-            IReadOnlyList<float> floats = ((CustomModelDataComponent)value).Floats;
-            return ops.Int(floats.Count > 0 ? (int)floats[0] : 0);
+            if (!TryGetKnownInteger((CustomModelDataComponent)value, out int integer))
+                throw new ComponentHashUnavailableException("The original legacy custom model integer is unavailable.");
+            return ops.Int(integer);
+        }
+
+        public bool TryGetKnownInteger(CustomModelDataComponent value, out int integer)
+        {
+            if (TryGetReceivedInteger(value, out integer))
+                return true;
+            if (value.Floats.Count == 0)
+            {
+                integer = 0;
+                return true;
+            }
+            float projected = value.Floats[0];
+            if (float.IsFinite(projected) && projected > -16_777_216.0F && projected < 16_777_216.0F && projected == MathF.Truncate(projected))
+            {
+                integer = (int)projected;
+                return true;
+            }
+            integer = default;
+            return false;
+        }
+
+        private bool TryGetReceivedInteger(CustomModelDataComponent value, out int integer)
+        {
+            if (_received.TryGetValue(value.Floats, out ReceivedLegacyInteger? received)
+                && value.Floats.Count == 1 && BitConverter.SingleToInt32Bits(value.Floats[0]) == received.ProjectionBits)
+            {
+                integer = received.Integer;
+                return true;
+            }
+            integer = default;
+            return false;
+        }
+
+        private static int ProjectForWire(CustomModelDataComponent value)
+            => value.Floats.Count > 0 ? (int)value.Floats[0] : 0;
+
+        private sealed class ReceivedLegacyInteger(int integer, int projectionBits)
+        {
+            public int Integer { get; } = integer;
+            public int ProjectionBits { get; } = projectionBits;
         }
     }
 

@@ -6,6 +6,7 @@
     <PackageReference Include="coverlet.collector" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/PiercingWeapon.native.json" />
     <ProjectReference Include="../../src/Umpk.Protocol.Java/Umpk.Protocol.Java.csproj" />
     <ProjectReference Include="../Umpk.TestKit/Umpk.TestKit.csproj" />
   </ItemGroup>

@@ -17,5 +17,11 @@ public static partial class LoginFamilyPackets
 public sealed record ClientboundConfigUpdateEnabledFeaturesPacket(IReadOnlyList<Identifier> Features) : IPacket
 {
     /// <inheritdoc />
-    public PacketType Type => LoginFamilyPackets.Config.UpdateEnabledFeatures;
+    public PacketType Type => IsPlay ? PlayType : LoginFamilyPackets.Config.UpdateEnabledFeatures;
+
+    // The native packet moves from play to configuration in 1.20.2. Existing construction retains its configuration identity.
+    internal bool IsPlay { get; init; }
+
+    internal static readonly PacketType<ClientboundConfigUpdateEnabledFeaturesPacket> PlayType =
+        new(ProtocolPhase.Play, PacketFlow.Clientbound, Identifier.Minecraft("update_enabled_features"));
 }

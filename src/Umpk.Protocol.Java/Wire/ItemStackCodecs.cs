@@ -210,7 +210,7 @@ internal static partial class ItemStackCodecs
         if (!context.Registries.Items.TryGet(itemId, out RegistryEntry<ItemDefinition> item))
             throw new ProtocolViolationException($"Item id {itemId} is not in the item registry.");
 
-        DataComponentMap components = ReadPatch(ref reader, context, table, trust);
+        DataComponentMap components = ReadPatch(ref reader, context, table, trust, item.Value.DefaultComponents);
         return new ItemStack(item, count, components);
     }
 
@@ -227,16 +227,16 @@ internal static partial class ItemStackCodecs
         WritePatch(ref writer, stack.Components, context, table, trust);
     }
 
-    private static DataComponentMap ReadPatch(ref PacketReader reader, PacketCodecContext context, ItemComponentTable table, StackTrust trust)
+    private static DataComponentMap ReadPatch(ref PacketReader reader, PacketCodecContext context, ItemComponentTable table, StackTrust trust, IReadOnlyDictionary<DataComponentType, object> prototype)
     {
         int added = reader.ReadVarInt();
         int removed = reader.ReadVarInt();
         if (added == 0 && removed == 0)
-            return DataComponentMap.Empty;
+            return prototype.Count == 0 ? DataComponentMap.Empty : DataComponentMap.FromPrototype(prototype);
 
         var patch = new List<DataComponentEntry>(added + removed);
 
-        // A removal patch entry only survives DataComponentMap.Patch when the map's prototype carries the component (a removal against nothing is meaningless). To keep decode->encode frame-exact we seed the reconstructed map's prototype with each removed key so the re-encode re-emits the removal.
+        // Measured defaults supply the effective stack state. Removed unmodeled defaults still need a marker so their wire removal survives a byte-identical round trip.
         Dictionary<DataComponentType, object>? removalPrototype = null;
         for (int i = 0; i < added; i++)
         {
@@ -276,10 +276,11 @@ internal static partial class ItemStackCodecs
             // A removal carries only the wire id, no payload, so there is nothing to skip and nothing can desync here. An unmodeled id resolves to the era's stable placeholder key, which re-encodes to the same wire id, so the removal round-trips exactly instead of faulting. Out-of-range still throws from UnmodeledKeyByWireId (a framing fault).
             DataComponentType removedType = table.UnmodeledKeyByWireId(componentId);
             patch.Add(DataComponentEntry.Remove(removedType));
-            (removalPrototype ??= [])[removedType] = RemovalPrototypeMarker;
+            if (!prototype.ContainsKey(removedType))
+                (removalPrototype ??= new Dictionary<DataComponentType, object>(prototype))[removedType] = RemovalPrototypeMarker;
         }
 
-        return DataComponentMap.Create(removalPrototype ?? NoPrototype, patch);
+        return DataComponentMap.Create(removalPrototype ?? prototype, patch);
     }
 
     // A stable placeholder value seeded into a decoded stack's prototype for each removed component, so DataComponentMap.Patch re-emits the removal on re-encode. Never itself serialized.
@@ -342,9 +343,6 @@ internal static partial class ItemStackCodecs
     // The LegacyNbt escape hatch is a model-only carrier (umpk:legacy_nbt); it never goes on the modern wire and is not part of the component table.
     private static bool IsWireComponent(DataComponentType type, ItemComponentTable table) => table.Contains(type);
 
-    private static readonly System.Collections.Generic.IReadOnlyDictionary<DataComponentType, object> NoPrototype =
-        new System.Collections.Generic.Dictionary<DataComponentType, object>();
-
     // Nested item-stack template for 26.1+
 
     /// <summary>Reads a 26.1+ nested item-stack template: the item HOLDER id first, then a VarInt count, then the component patch. There is no empty sentinel, so this form can never represent an absent stack; where the protocol needs one it adds a leading presence boolean (<see cref="ReadOptionalTemplateStack"/>).</summary>
@@ -359,7 +357,7 @@ internal static partial class ItemStackCodecs
         if (!context.Registries.Items.TryGet(itemId, out RegistryEntry<ItemDefinition> item))
             throw new ProtocolViolationException($"Item id {itemId} is not in the item registry.");
 
-        DataComponentMap components = ReadPatch(ref reader, context, table, StackTrust.Trusted);
+        DataComponentMap components = ReadPatch(ref reader, context, table, StackTrust.Trusted, item.Value.DefaultComponents);
         return new ItemStack(item, count, components);
     }
 
@@ -512,8 +510,15 @@ internal static partial class ItemStackCodecs
             }
             else
             {
-                int hash = table.ByKey(entry.Type).Hash(ops, entry.Value!, context);
-                added.Add((table.WireId(entry.Type), hash));
+                try
+                {
+                    int hash = table.ByKey(entry.Type).Hash(ops, entry.Value!, context);
+                    added.Add((table.WireId(entry.Type), hash));
+                }
+                catch (ComponentHashUnavailableException)
+                {
+                    // A nested DATA value is unavailable. Omit this entire outer component so the server can resynchronize it.
+                }
             }
         }
 
@@ -548,7 +553,7 @@ internal static partial class ItemStackCodecs
         foreach (DataComponentEntry entry in stack.Components.Patch)
         {
             if (!table.Contains(entry.Type))
-                continue;
+                throw new ComponentHashUnavailableException("A nested component has no DATA form in the current era.");
 
             string keyId = entry.Type.Id.ToString();
             if (entry.IsRemoval)
@@ -556,8 +561,8 @@ internal static partial class ItemStackCodecs
 
             else if (entry.Value is UnmodeledComponent)
             {
-                // Same reason as ToHashedStack: no DATA form to hash, so omit and let the server resync.
-                continue;
+                // Wire bytes do not supply the native DATA value. The outer sender must omit the entire containing component.
+                throw new ComponentHashUnavailableException("A nested component's native DATA value is unavailable.");
             }
             else
             {

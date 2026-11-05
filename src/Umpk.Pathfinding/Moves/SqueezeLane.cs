@@ -26,7 +26,7 @@ public enum LateralQuantum : sbyte
 /// <summary>The per-edge squeeze-lane predicate: whether a cardinal traverse can be aimed at an off-centre point that clears the collision boxes a centred body could not.</summary>
 /// <remarks>
 /// <para>This remains a separate predicate because most consumers of <see cref="BlockState.BlocksMotion"/> are about water and all nine break in the permissive direction if the flag or <see cref="MoveHelper.CanWalkThrough"/> is widened - a waterlogged fence would readmit swims through solids, a waterlogged wall would be read as a splash and price a real fall at zero. So the cell gate is left exactly as it was and the squeeze is asked as a separate question, per EDGE, only where the cell gate has already said no.</para>
-/// <para>The offset model is required because the shape table is keyed on state rather than position. <see cref="BlockShapeOffset"/> supplies the position-dependent bamboo box.</para>
+/// <para>The exact grid source supplies original coordinate delegates and their measured position-offset model. Sources without grids retain the <see cref="BlockShapeOffset"/> fallback.</para>
 /// </remarks>
 public static class SqueezeLane
 {
@@ -149,12 +149,12 @@ public static class SqueezeLane
         CalculationContext ctx, BlockState state, int x, int cellY, int z, bool alongX,
         double lo, double hi, int level)
     {
-        ReadOnlySpan<Aabb> boxes = ctx.World.GetCollisionShapes(state);
+        BlockCollisionGrid? grid = ctx.World.GetCollisionGrid(state);
+        ReadOnlySpan<Aabb> boxes = grid is null ? ctx.World.GetCollisionShapes(state) : grid.Boxes;
         if (boxes.Length == 0)
             return true;
 
-        // The one line the whole feature rests on: the box is where VANILLA puts it, not where a position-blind shape table put it. See BlockShapeOffset.
-        Vec3d shift = BlockShapeOffset.For(state, new BlockPos(x, cellY, z));
+        Vec3d shift = grid is null ? BlockShapeOffset.For(state, new BlockPos(x, cellY, z)) : grid.OffsetAt(new BlockPos(x, cellY, z));
         double lateralShift = alongX ? shift.Z : shift.X;
 
         // The band the body's own height occupies inside THIS cell. Feet cell: all of it from 0 up. Head cell: only up to 0.8, because the body is 1.8 tall.

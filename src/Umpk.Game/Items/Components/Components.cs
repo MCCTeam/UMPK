@@ -80,7 +80,34 @@ public sealed record FoodComponent(int Nutrition, float Saturation, bool CanAlwa
 /// <param name="DefaultMiningSpeed">The mining speed used when no rule matches.</param>
 /// <param name="DamagePerBlock">Durability lost per block mined.</param>
 /// <param name="Rules">The raw mining-rule payloads, retained opaquely for round-trip.</param>
-public sealed record ToolComponent(float DefaultMiningSpeed, int DamagePerBlock, IReadOnlyList<NbtCompound> Rules);
+public sealed record ToolComponent(float DefaultMiningSpeed, int DamagePerBlock, IReadOnlyList<NbtCompound> Rules)
+{
+    /// <summary>Whether this tool allows destroying blocks in creative mode. The wire carries this flag from 1.21.5; older tool payloads use the default.</summary>
+    public bool CanDestroyBlocksInCreative { get; init; } = true;
+
+    /// <inheritdoc/>
+    public bool Equals(ToolComponent? other) =>
+        other is not null
+        && SpeedBits(DefaultMiningSpeed) == SpeedBits(other.DefaultMiningSpeed)
+        && DamagePerBlock == other.DamagePerBlock
+        && CanDestroyBlocksInCreative == other.CanDestroyBlocksInCreative
+        && Rules.SequenceEqual(other.Rules);
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        hash.Add(SpeedBits(DefaultMiningSpeed));
+        hash.Add(DamagePerBlock);
+        hash.Add(CanDestroyBlocksInCreative);
+        foreach (NbtCompound rule in Rules)
+            hash.Add(rule);
+        return hash.ToHashCode();
+    }
+
+    // Java record float equality distinguishes signed zero and canonicalizes NaNs.
+    private static int SpeedBits(float value) => float.IsNaN(value) ? 0x7FC00000 : BitConverter.SingleToInt32Bits(value);
+}
 
 /// <summary>Potion contents (<c>minecraft:potion_contents</c>).</summary>
 /// <param name="PotionId">The base potion id, when present.</param>
@@ -270,9 +297,19 @@ public sealed record UnitMarkerComponent
 /// <param name="Color">The vanilla dye-color name (white .. black).</param>
 public sealed record DyeColorValueComponent(string Color);
 
-/// <summary>The charge fraction an attack needs before it counts as fully charged (<c>minecraft:minimum_attack_charge</c>, 26.2).</summary>
+/// <summary>The charge fraction an attack needs before it counts as fully charged (<c>minecraft:minimum_attack_charge</c>, 1.21.11+).</summary>
 /// <param name="Value">The minimum charge.</param>
-public sealed record MinimumAttackChargeComponent(float Value);
+public sealed record MinimumAttackChargeComponent(float Value)
+{
+    /// <inheritdoc/>
+    public bool Equals(MinimumAttackChargeComponent? other) => other is not null && ValueBits(Value) == ValueBits(other.Value);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => ValueBits(Value);
+
+    // The native Float component distinguishes signed zero and treats every NaN payload as equal.
+    private static int ValueBits(float value) => float.IsNaN(value) ? 0x7FC00000 : BitConverter.SingleToInt32Bits(value);
+}
 
 /// <summary>An extra cost added to a villager trade (<c>minecraft:additional_trade_cost</c>, 26.2).</summary>
 /// <param name="Value">The added cost.</param>

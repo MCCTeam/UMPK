@@ -8,6 +8,12 @@ namespace Umpk.Protocol.Java.Conformance;
 /// </remarks>
 public sealed class VanillaCitationTests
 {
+    private static readonly Lazy<IReadOnlyList<VanillaCitations.Citation>> RepositoryCitations = new(() => VanillaCitations.Scan(TestKit.FixturePaths.RepoRoot()));
+
+    [Fact]
+    public void RepositoryScanIncludesKnownReferencesInEveryLibrary()
+        => Assert.Empty(VanillaCitations.MissingSourceAnchors(RepositoryCitations.Value));
+
     [Fact]
     public void Resolve_UsesAPathOnlyInsideTheNamedTree()
     {
@@ -114,12 +120,73 @@ public sealed class VanillaCitationTests
         }
     }
 
+    [Fact]
+    public void Scan_VisitsEveryFileInALargeSourceTree()
+    {
+        const int count = 401;
+        string root = Directory.CreateTempSubdirectory("umpk-citation-volume").FullName;
+        try
+        {
+            string directory = Path.Combine(root, "src");
+            Directory.CreateDirectory(directory);
+            for (int index = 0; index < count; index++)
+                File.WriteAllText(Path.Combine(directory, $"Evidence{index}.cs"), $"// 1.99-decompiled Fixture{index}.java\n");
+
+            IReadOnlyList<VanillaCitations.Citation> citations = VanillaCitations.Scan(root);
+
+            Assert.Equal(count, citations.Count);
+            Assert.Equal(Enumerable.Range(0, count).Select(index => $"Fixture{index}.java").Order(StringComparer.Ordinal), citations.Select(citation => citation.File!).Order(StringComparer.Ordinal));
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData("src/Umpk.Client/Internal/ClientTickClock.cs")]
+    [InlineData("src/Umpk.Game/Blocks/BlockCollisionGrid.cs")]
+    [InlineData("src/Umpk.Physics/PhysicsProfile.cs")]
+    [InlineData("src/Umpk.Protocol.Java/Families/Entity/MoveEntityRot/MoveEntityRot.Wire.cs")]
+    public void SourceCoverageDetectsAnOmittedLibraryDespiteManyOtherReferences(string omitted)
+    {
+        string root = Directory.CreateTempSubdirectory("umpk-citation-coverage").FullName;
+        try
+        {
+            var anchors = new Dictionary<string, string>
+            {
+                ["src/Umpk.Client/Internal/ClientTickClock.cs"] = "// 1.20.4-client-decompiled net/minecraft/client/Timer.java\n",
+                ["src/Umpk.Game/Blocks/BlockCollisionGrid.cs"] = "// 26.3-client-decompiled net/minecraft/world/level/block/state/BlockBehaviour.java\n",
+                ["src/Umpk.Physics/PhysicsProfile.cs"] = "// 1.8-client-decompiled ahd.java\n",
+                ["src/Umpk.Protocol.Java/Families/Entity/MoveEntityRot/MoveEntityRot.Wire.cs"] = "// 26.3-client-decompiled ClientboundMoveEntityPacket.java\n",
+            };
+            foreach ((string relative, string contents) in anchors)
+            {
+                string path = Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                File.WriteAllText(path, contents);
+            }
+            string noise = Path.Combine(root, "src", "Other.cs");
+            File.WriteAllLines(noise, Enumerable.Range(0, 401).Select(index => $"// 1.99-decompiled Other{index}.java"));
+            Assert.Empty(VanillaCitations.MissingSourceAnchors(VanillaCitations.Scan(root)));
+
+            File.Delete(Path.Combine(root, omitted.Replace('/', Path.DirectorySeparatorChar)));
+            IReadOnlyList<VanillaCitations.Citation> citations = VanillaCitations.Scan(root);
+
+            Assert.True(citations.Count > 400);
+            Assert.Equal(omitted, Assert.Single(VanillaCitations.MissingSourceAnchors(citations)).Source);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
     [OracleFact]
     public void EveryCitation_ResolvesInTheDecompiledTrees()
     {
         string oracleRoot = VanillaCitations.OracleRoot!;
-        string repoRoot = TestKit.FixturePaths.RepoRoot();
-        IReadOnlyList<VanillaCitations.Citation> citations = VanillaCitations.Scan(repoRoot);
+        IReadOnlyList<VanillaCitations.Citation> citations = RepositoryCitations.Value;
 
         Dictionary<string, ILookup<string, string>> index = [];
         List<string> unresolved = [.. citations
@@ -134,8 +201,8 @@ public sealed class VanillaCitationTests
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, unresolved.Take(40)));
 
-        // The count guard catches a scanner that returns no results and passes the resolution check vacuously.
-        Assert.True(citations.Count(static citation => citation.File is not null) > 400);
+        // Require known references across library boundaries so an empty or partial repository scan cannot pass resolution vacuously.
+        Assert.Empty(VanillaCitations.MissingSourceAnchors(citations));
     }
 
     private static void CreateDirectorySymlink(string link, string target)

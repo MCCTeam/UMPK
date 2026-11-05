@@ -60,7 +60,7 @@ Treat these files as irreplaceable. They came off live servers and they are not 
 
 ### Codec identity pins
 
-`fixtures/codec-identity/` has one text file per protocol, 49 in total. Each line records which codec class is bound to which wire id, and how many bytes it consumes from a canonical probe payload:
+`fixtures/codec-identity/` has one text file per protocol, 50 in total. Each line records which codec class is bound to which wire id, and how many bytes it consumes from a canonical probe payload:
 
 ```text
 Play Clientbound 0x00 minecraft:keep_alive PlayKeepAliveCodecs.ClientV1_8 read:1

@@ -14,6 +14,8 @@ namespace Umpk.IntegrationTests;
 /// </summary>
 public class ServerClientLoginTests
 {
+    private const int ProbeWireId = int.MaxValue;
+
     private static JavaConnectionOptions FrameMode() => new()
     {
         UnknownPacketPolicy = UnknownPacketPolicy.Preserve,
@@ -78,12 +80,13 @@ public class ServerClientLoginTests
             Assert.True(client.CompressionEnabled);
             Assert.True(server.CompressionEnabled);
 
-            // A post-login frame larger than the threshold crosses the compressed channel intact.
+            // A post-login unknown frame larger than the threshold crosses the compressed channel intact.
+            Assert.False(version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound).TryGetInbound(ProbeWireId, out _));
             byte[] probe = new byte[300];
             Random.Shared.NextBytes(probe);
-            await server.SendFrameAsync(0x7F, probe, cts.Token);
+            await server.SendFrameAsync(ProbeWireId, probe, cts.Token);
             InboundItem item = await client.ReceiveAsync(cts.Token);
-            Assert.Equal(0x7F, item.Frame.WireId);
+            Assert.Equal(ProbeWireId, item.Frame.WireId);
             Assert.Equal(probe, item.Frame.Payload.ToArray());
 
             serverOptions.KeyPair.Dispose();
@@ -145,12 +148,13 @@ public class ServerClientLoginTests
             Assert.True(client.CompressionEnabled);
             Assert.True(server.CompressionEnabled);
 
-            // Post-login traffic crosses the now-encrypted, compressed channel intact.
+            // Unknown post-login traffic crosses the now-encrypted, compressed channel intact.
+            Assert.False(version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound).TryGetInbound(ProbeWireId, out _));
             byte[] probe = new byte[300];
             Random.Shared.NextBytes(probe);
-            await server.SendFrameAsync(0x7F, probe, cts.Token);
+            await server.SendFrameAsync(ProbeWireId, probe, cts.Token);
             InboundItem item = await client.ReceiveAsync(cts.Token);
-            Assert.Equal(0x7F, item.Frame.WireId);
+            Assert.Equal(ProbeWireId, item.Frame.WireId);
             Assert.Equal(probe, item.Frame.Payload.ToArray());
         }
     }

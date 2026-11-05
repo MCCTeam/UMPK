@@ -12,7 +12,7 @@ Use the repository's `Umpk.IntegrationTests` live harness. It boots one isolated
 ## Read first
 
 - Read `references/minecraft-official.md` before provisioning or decompiling game artifacts.
-- Read `tests/Umpk.IntegrationTests/LiveMatrix.cs` for the 49 protocol representatives.
+- Read `tests/Umpk.IntegrationTests/LiveMatrix.cs` for the current protocol representatives.
 - Read the affected live test before running it. Its assertions define the claimed coverage.
 
 ## Workflow
@@ -23,10 +23,10 @@ Use the repository's `Umpk.IntegrationTests` live harness. It boots one isolated
 4. Build UMPK in Release mode.
 5. Run the focused live leg with fresh output under `/tmp`.
 6. Run the adjacent era boundary when the behavior is version-sensitive.
-7. Run `scripts/run_live_matrix.sh` only after all 49 representatives are provisioned.
+7. Run `scripts/run_live_matrix.sh` only after all representatives in `LiveMatrix` are provisioned.
 8. Confirm no server process or listener owned by the run remains.
 
-Never use another checkout's binaries, server directory, Java source tree, or logs. Set `UMPK_SERVER_ROOT` and `UMPK_ORACLE_ROOT` explicitly when the repository-local defaults are not used.
+Use the shared verified artifact seeds. Do not reuse another run's binaries, mutable server directory, or logs. Set `UMPK_SERVER_ROOT` and `UMPK_ORACLE_ROOT` explicitly for the shared artifact root.
 
 ## Location overrides
 
@@ -39,7 +39,7 @@ python3 .skills/umpk-integration-testing/scripts/provision_servers.py \
   --root "$UMPK_ORACLE_ROOT" --accept-eula 26.2
 ```
 
-`UMPK_ORACLE_ROOT` owns downloads, mappings, and `<version>-decompiled` source trees. `UMPK_SERVER_ROOT` owns the per-version directories consumed by the live Harness; omit it when those directories are at `$UMPK_ORACLE_ROOT/downloads`. `--root` overrides the provisioner's destination. Use absolute paths and keep both roots outside tracked repository content.
+`UMPK_ORACLE_ROOT` owns downloads, mappings, and `<version>-decompiled` source trees. `UMPK_SERVER_ROOT` owns the per-version directories consumed by the live Harness; omit it when those directories are at `$UMPK_ORACLE_ROOT/downloads`. `--root` overrides the provisioner's destination. Use absolute paths and keep both roots outside tracked repository content. On this workstation, use `/home/anon/Projects/MinecraftOfficial` and its `downloads` directory.
 
 ## Provisioning
 
@@ -48,14 +48,14 @@ python3 .skills/umpk-integration-testing/scripts/provision_servers.py \
   --accept-eula 1.8 1.12.2 1.16.5 1.20.4 1.21.11 26.2
 ```
 
-The script downloads official artifacts, verifies Mojang's SHA-1, and writes them below the ignored `MinecraftOfficial/downloads/<version>/` tree. It never places artifacts in tracked paths.
+The script downloads official artifacts and verifies Mojang's SHA-1. It writes to the shared `MinecraftOfficial/downloads/<version>/` tree by default. `--root` selects another external directory.
 
 ## Running
 
 ```bash
 dotnet build UMPK.sln -c Release
 UMPK_NIGHTLY=1 \
-UMPK_SERVER_ROOT="$PWD/MinecraftOfficial/downloads" \
+UMPK_SERVER_ROOT="$HOME/Projects/MinecraftOfficial/downloads" \
 dotnet test tests/Umpk.IntegrationTests/Umpk.IntegrationTests.csproj \
   -c Release --no-build --filter 'Category=Nightly'
 ```
@@ -86,3 +86,5 @@ A result is valid only when its assertion is caused by a fresh action in that le
 ## When not to use
 
 Do not use this skill for build-only checks, static source comparison, documentation-only changes, or public-server testing. Public servers and authenticated accounts require explicit authorization.
+
+Read `.skills/umpk-version-adaptation/SKILL.md` for protocol-version work. The adapted `tools/decompile.sh` and `tools/start-server.sh` use the shared artifact root. Server infrastructure smoke checks do not replace this live feature harness.

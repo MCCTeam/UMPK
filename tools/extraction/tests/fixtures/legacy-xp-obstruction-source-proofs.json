@@ -1,0 +1,1211 @@
+{
+  "schema": 2,
+  "bindings": [
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8",
+      "entity": "minecraft:experience_orb",
+      "class": "xk",
+      "field_owner": "wv",
+      "field_name": "k",
+      "direct_superclass": "wv",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+      "writer_audit_sha256": "4c1c596d16608b9219b86346eafe49b4dff6280d6716290c6496e2b9918ba910",
+      "classes_preserved": 2497,
+      "source_sha256": {
+        "xk.java": "c8c704f858c2c7207549124913444fbbc9728a07a58b29f3ab60343e70535ba7",
+        "wv.java": "496bee70c9e6447b730c1032c64ee44dd9ca9ef78b1c57f4a6aadb42d981d86b",
+        "aqu.java": "12ab0bceb24aae14c6b863cc6f8de0d0663aa74d698f671e81612012535a77c2",
+        "xb.java": "6df3ebbb417121dfcb66fba72f96a07693befb88a9a06a14709970b6360efd0b"
+      },
+      "placement_predicate": {
+        "owner": "aqu",
+        "signature": "public boolean a(brt var1, wv var2)",
+        "body_sha256": "96add68e164e8e9c4091c21fd386eabba757a332aa41793356fbbf5f0442cd68",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "ada",
+        "adu",
+        "adv",
+        "adx",
+        "aek",
+        "xm"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.1",
+      "entity": "minecraft:experience_orb",
+      "class": "xm",
+      "field_owner": "wx",
+      "field_name": "k",
+      "direct_superclass": "wx",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+      "writer_audit_sha256": "004a7738f7fc14b722b88b3acdd75d51994e1c0f3e78bb231913ac91904bbc1a",
+      "classes_preserved": 2500,
+      "source_sha256": {
+        "xm.java": "d77129d84dcd23c5a87df86ca3088c9a4d3ff384119c7672d7a7cc880c180fae",
+        "wx.java": "9a7db92484d3a96b01f723099f004237cfe4e2c39f0397d24cec7d4d94085166",
+        "aqr.java": "ae790e7e2d8e82ec421cb120d0ebf2ae3a0d10e2296c4712dcba2886e6b03c49",
+        "xd.java": "264bbb42e06ff5023a72d7d536ec70a75b54de13233161b9d89c097075e59604"
+      },
+      "placement_predicate": {
+        "owner": "aqr",
+        "signature": "public boolean a(brr var1, wx var2)",
+        "body_sha256": "de974cee8285152c9d9d8edf097ff91fbea05507d7ae3fd47d7fb8bca904b8ab",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "adb",
+        "adv",
+        "adw",
+        "ady",
+        "ael",
+        "xo"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.2",
+      "entity": "minecraft:experience_orb",
+      "class": "pq",
+      "field_owner": "pl",
+      "field_name": "k",
+      "direct_superclass": "pl",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+      "writer_audit_sha256": "76481d5b32a1a12e2bf6519cfbaba59dc1fce5383d7839477aade824eb60bd75",
+      "classes_preserved": 2508,
+      "source_sha256": {
+        "pq.java": "b8022e03819b8882a09bff01f6d846d2e76a72b6f6498ae5d819fdc3424eb671",
+        "pl.java": "335eb33f67c5bbdd40dae243246054f12f2c56f6ac35038809176c3b50bb46fe",
+        "adn.java": "655056a7d4c7cf19497f04880a2e10d1af2550fc231e1a63dbf2830fe9a96385",
+        "pn.java": "52c6570fb90a0a0fb1023f6336ff791012b4b462883e44a83f90e388c4c996bd"
+      },
+      "placement_predicate": {
+        "owner": "adn",
+        "signature": "public boolean a(auh var1, pl var2)",
+        "body_sha256": "720f52d5c64e828941b81a5239ac77e52b8e5abb3b57c5a5548d97ed0da14673",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "ps",
+        "ug",
+        "uy",
+        "uz",
+        "vb",
+        "vk"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.3",
+      "entity": "minecraft:experience_orb",
+      "class": "pq",
+      "field_owner": "pl",
+      "field_name": "k",
+      "direct_superclass": "pl",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+      "writer_audit_sha256": "1c34e56a5cf65a047598b6ac53f8d2e4463636e0ade4cbccf337845341d0363a",
+      "classes_preserved": 2508,
+      "source_sha256": {
+        "pq.java": "b8022e03819b8882a09bff01f6d846d2e76a72b6f6498ae5d819fdc3424eb671",
+        "pl.java": "335eb33f67c5bbdd40dae243246054f12f2c56f6ac35038809176c3b50bb46fe",
+        "adn.java": "655056a7d4c7cf19497f04880a2e10d1af2550fc231e1a63dbf2830fe9a96385",
+        "pn.java": "52c6570fb90a0a0fb1023f6336ff791012b4b462883e44a83f90e388c4c996bd"
+      },
+      "placement_predicate": {
+        "owner": "adn",
+        "signature": "public boolean a(auh var1, pl var2)",
+        "body_sha256": "720f52d5c64e828941b81a5239ac77e52b8e5abb3b57c5a5548d97ed0da14673",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "ps",
+        "ug",
+        "uy",
+        "uz",
+        "vb",
+        "vk"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.4",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+      "writer_audit_sha256": "a6da0283a553b49f486923f3ed935a18d3755c148ac7054a9633f3188b87148a",
+      "classes_preserved": 2507,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.5",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+      "writer_audit_sha256": "e1cd6419037e626b0bdd6c0ac0ba8b0e1f962a07faa0710a49027ab9e4cdddab",
+      "classes_preserved": 2507,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.6",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+      "writer_audit_sha256": "58d3f9f85b92ce70e6f5db17988c3ec2cc531bf3cad7f4b66d0695f86b6abee6",
+      "classes_preserved": 2506,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.7",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+      "writer_audit_sha256": "707087250442e9c53bab276f8bfdad406fc0effd79cdb7c6b81babbd5160bf72",
+      "classes_preserved": 2506,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.8",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+      "writer_audit_sha256": "cc8992cc02b2623c90500577291c6a233aee645cac402c523a71de1cbf53d49d",
+      "classes_preserved": 2507,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 47,
+      "version": "1.8.9",
+      "entity": "minecraft:experience_orb",
+      "class": "pp",
+      "field_owner": "pk",
+      "field_name": "k",
+      "direct_superclass": "pk",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+      "writer_audit_sha256": "1df5f7f0ad97dac308d7cef72972d93ec468b1934252479403a9ba0852035371",
+      "classes_preserved": 2507,
+      "source_sha256": {
+        "pp.java": "3639ffd199609ef641e7029a0b044600388e70976d8823f3e0baf8c296af5f99",
+        "pk.java": "640b5c433615a38d7536f914164c9a06caa80fb86ead5421cd09382d09e0cba6",
+        "adm.java": "0cf0c17ea0aaf95baac059a54c6969332255edfa61196445096e0146ebc7d830",
+        "pm.java": "d7e53505ade58f10405d67c3a1990e76e4ea8b59098fddba0002d5951b4030f0"
+      },
+      "placement_predicate": {
+        "owner": "adm",
+        "signature": "public boolean a(aug var1, pk var2)",
+        "body_sha256": "e177ae25084f87f9179bc90e9b8e3cafe682b5563c2a8b95ee6feaacddd035af",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "pr",
+        "uf",
+        "ux",
+        "uy",
+        "va",
+        "vj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 107,
+      "version": "1.9",
+      "entity": "minecraft:xp_orb",
+      "class": "rx",
+      "field_owner": "rr",
+      "field_name": "i",
+      "direct_superclass": "rr",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "0273b5c79d6b96799c6480ae61366d6b1d042655970de87f77f1a3f1ebea9307",
+      "writer_audit_sha256": "5db4e855184e2273fc11ecd8bd1aff05be4ccd63d3b775ac03652491070d36a1",
+      "classes_preserved": 2905,
+      "source_sha256": {
+        "rx.java": "406efa4a22577c90353872540e73577888d21e37defc91fb85e17eff349e0793",
+        "rr.java": "be6db2ad8aa48501201268ae934716d046bc014510fd1f4b23bb4e3ff70f7220",
+        "aht.java": "76b8f62a90adceac27822309a7329dce5953658d24f95bc3360ecf961e80bba7",
+        "rt.java": "bd208ca4be12f7ce6bbfd9b04e0cda5f4ef00e7bcf02b13d7bbd383f563b836d"
+      },
+      "placement_predicate": {
+        "owner": "aht",
+        "signature": "public boolean a(bbh var1, rr var2)",
+        "body_sha256": "e5bbc2937270e7acead17116456c533fe92e618686a3daf8b502777dc48a2179",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aag",
+        "aah",
+        "sa",
+        "wt",
+        "xq",
+        "xq",
+        "yc",
+        "ye"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 108,
+      "version": "1.9.1",
+      "entity": "minecraft:xp_orb",
+      "class": "rx",
+      "field_owner": "rr",
+      "field_name": "i",
+      "direct_superclass": "rr",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "56ad7e53f6f4ad393844e274aa2190692b61d2ad9f6b3d12b33a8b7332fd51f9",
+      "writer_audit_sha256": "ba8b66917c7ed26666ec66a542c04e53535316137193a7a0bc68d494f9e422b9",
+      "classes_preserved": 2905,
+      "source_sha256": {
+        "rx.java": "0d62c7e3ba482f364ac22049f052a2ed5f1b725d357d127d17a95a7a6d305498",
+        "rr.java": "b87f372f6b608f4dd90b53da7f761796974649068838f51fab908ea06189fb40",
+        "aht.java": "f1aca75c1e00df270d34b7ac3308e7e2e03837ba103cd0dfadac029b8f89b375",
+        "rt.java": "bd208ca4be12f7ce6bbfd9b04e0cda5f4ef00e7bcf02b13d7bbd383f563b836d"
+      },
+      "placement_predicate": {
+        "owner": "aht",
+        "signature": "public boolean a(bbe var1, rr var2)",
+        "body_sha256": "6d5da76f2f3840f06f8196319b088098cc00a00849b6f7cea20bdbbfb8e4dd54",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aag",
+        "aah",
+        "sa",
+        "wt",
+        "xq",
+        "xq",
+        "yc",
+        "ye"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 109,
+      "version": "1.9.2",
+      "entity": "minecraft:xp_orb",
+      "class": "rx",
+      "field_owner": "rr",
+      "field_name": "i",
+      "direct_superclass": "rr",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "ef87eb71250df1b871deab8d3ef10aac3290b9e78667ad548fde4d0e14af0d65",
+      "writer_audit_sha256": "8fc39f8b1d003c93e7f21525c97da0bacab45cd6b5baa3a01815598188bc3432",
+      "classes_preserved": 2905,
+      "source_sha256": {
+        "rx.java": "0d62c7e3ba482f364ac22049f052a2ed5f1b725d357d127d17a95a7a6d305498",
+        "rr.java": "b87f372f6b608f4dd90b53da7f761796974649068838f51fab908ea06189fb40",
+        "aht.java": "f1aca75c1e00df270d34b7ac3308e7e2e03837ba103cd0dfadac029b8f89b375",
+        "rt.java": "bd208ca4be12f7ce6bbfd9b04e0cda5f4ef00e7bcf02b13d7bbd383f563b836d"
+      },
+      "placement_predicate": {
+        "owner": "aht",
+        "signature": "public boolean a(bbe var1, rr var2)",
+        "body_sha256": "6d5da76f2f3840f06f8196319b088098cc00a00849b6f7cea20bdbbfb8e4dd54",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aag",
+        "aah",
+        "sa",
+        "wt",
+        "xq",
+        "xq",
+        "yc",
+        "ye"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 110,
+      "version": "1.9.3",
+      "entity": "minecraft:xp_orb",
+      "class": "rx",
+      "field_owner": "rr",
+      "field_name": "i",
+      "direct_superclass": "rr",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "ab8fdde789c5b4614ffc98249e04fdcce7dfce320b55215bfe5418608af6a63b",
+      "writer_audit_sha256": "b204cd250f744fd7ef43f94fb3a9dc39d18b22fa2d61a5ea52abba0504f68743",
+      "classes_preserved": 2905,
+      "source_sha256": {
+        "rx.java": "14ffc8727d0f36852aadd37b8de165a7de7e36b1270dfdc93dd58316dc0f9010",
+        "rr.java": "14c9c243c054938a853a0e23f13acda742bda00e4c14b2bf81d5cb58b18f3914",
+        "aht.java": "35bbcc3906c6b0a5b4e0e2bb3124a485f1945a7e960295d68544e98b7bab0871",
+        "rt.java": "641e5d593e6b34cce5296afd84120f4bbbf80c19f4a34142e52f8c4e5441f7b0"
+      },
+      "placement_predicate": {
+        "owner": "aht",
+        "signature": "public boolean a(bbf var1, @Nullable rr var2)",
+        "body_sha256": "f4817298ce2f4b5a324de3e2734f7617dc40876a9516b22f080d447862c24469",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aag",
+        "aah",
+        "sa",
+        "wt",
+        "xq",
+        "xq",
+        "yc",
+        "ye"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 110,
+      "version": "1.9.4",
+      "entity": "minecraft:xp_orb",
+      "class": "rx",
+      "field_owner": "rr",
+      "field_name": "i",
+      "direct_superclass": "rr",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "23e90103a1ca2ac71100004c6d5846de09f85695f579843ef8da41571e60c908",
+      "writer_audit_sha256": "b024d3b1dca88df0173b999b9c486d8dc371028b7694793dead33caf1043752e",
+      "classes_preserved": 2905,
+      "source_sha256": {
+        "rx.java": "14ffc8727d0f36852aadd37b8de165a7de7e36b1270dfdc93dd58316dc0f9010",
+        "rr.java": "14c9c243c054938a853a0e23f13acda742bda00e4c14b2bf81d5cb58b18f3914",
+        "aht.java": "35bbcc3906c6b0a5b4e0e2bb3124a485f1945a7e960295d68544e98b7bab0871",
+        "rt.java": "641e5d593e6b34cce5296afd84120f4bbbf80c19f4a34142e52f8c4e5441f7b0"
+      },
+      "placement_predicate": {
+        "owner": "aht",
+        "signature": "public boolean a(bbf var1, @Nullable rr var2)",
+        "body_sha256": "f4817298ce2f4b5a324de3e2734f7617dc40876a9516b22f080d447862c24469",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aag",
+        "aah",
+        "sa",
+        "wt",
+        "xq",
+        "xq",
+        "yc",
+        "ye"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 210,
+      "version": "1.10",
+      "entity": "minecraft:xp_orb",
+      "class": "sc",
+      "field_owner": "rw",
+      "field_name": "i",
+      "direct_superclass": "rw",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "c00f8170ebf4fd834f552246743a64885a6dffb3dd1e3a3f3dba9676b7a0af35",
+      "writer_audit_sha256": "0f7b4af36ca4750d520117d6c8520f3d92e2d3059817c7366f84c3d7dcf92efd",
+      "classes_preserved": 2946,
+      "source_sha256": {
+        "sc.java": "9da81c8a2b2af0196ff19224fa1443ae5071c25c3d124756612db18e81d1c4fb",
+        "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+        "aid.java": "7fa47a6413db4ff5ee0774842b9eaab25b30cd6e553ba4b2ff95c8a494af4c29",
+        "ry.java": "5da66a650baf9b7048c340e5cd029b5554369a55d38e34957a1109fac47ed7db"
+      },
+      "placement_predicate": {
+        "owner": "aid",
+        "signature": "public boolean a(bby var1, @Nullable rw var2)",
+        "body_sha256": "3782da67eae4bd41749744f74e537eab8a19f4029ba98a1c51c13520eb722cc0",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aap",
+        "aaq",
+        "sf",
+        "xa",
+        "xx",
+        "xx",
+        "yj",
+        "yl"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 210,
+      "version": "1.10.1",
+      "entity": "minecraft:xp_orb",
+      "class": "sc",
+      "field_owner": "rw",
+      "field_name": "i",
+      "direct_superclass": "rw",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "338b205f20c22b9c676d9d3227a5e6c5e190f30ad84d7caad035150b3e05ba72",
+      "writer_audit_sha256": "c66ccde04885132178a808f0604a1338e50e03f8542fecc8b0a182cacf5edb3a",
+      "classes_preserved": 2946,
+      "source_sha256": {
+        "sc.java": "9da81c8a2b2af0196ff19224fa1443ae5071c25c3d124756612db18e81d1c4fb",
+        "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+        "aid.java": "1599fde722b5876d16274fc57e034e7261a5cc08ab61bb5a1fbef4d95f6a3850",
+        "ry.java": "5da66a650baf9b7048c340e5cd029b5554369a55d38e34957a1109fac47ed7db"
+      },
+      "placement_predicate": {
+        "owner": "aid",
+        "signature": "public boolean a(bby var1, @Nullable rw var2)",
+        "body_sha256": "3782da67eae4bd41749744f74e537eab8a19f4029ba98a1c51c13520eb722cc0",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aap",
+        "aaq",
+        "sf",
+        "xa",
+        "xx",
+        "xx",
+        "yj",
+        "yl"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 210,
+      "version": "1.10.2",
+      "entity": "minecraft:xp_orb",
+      "class": "sc",
+      "field_owner": "rw",
+      "field_name": "i",
+      "direct_superclass": "rw",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
+      "writer_audit_sha256": "5432eef0fbe321c02a41182ceb25f5982776ec8281d196f19694488ff16b2950",
+      "classes_preserved": 2946,
+      "source_sha256": {
+        "sc.java": "9da81c8a2b2af0196ff19224fa1443ae5071c25c3d124756612db18e81d1c4fb",
+        "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+        "aid.java": "8c48e680d70d2a94d9d8ba1e3a0463ef6bdc15daa670c3498ab8f8106e932363",
+        "ry.java": "5da66a650baf9b7048c340e5cd029b5554369a55d38e34957a1109fac47ed7db"
+      },
+      "placement_predicate": {
+        "owner": "aid",
+        "signature": "public boolean a(bby var1, @Nullable rw var2)",
+        "body_sha256": "3782da67eae4bd41749744f74e537eab8a19f4029ba98a1c51c13520eb722cc0",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aap",
+        "aaq",
+        "sf",
+        "xa",
+        "xx",
+        "xx",
+        "yj",
+        "yl"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 316,
+      "version": "1.11.1",
+      "entity": "minecraft:xp_orb",
+      "class": "st",
+      "field_owner": "sn",
+      "field_name": "i",
+      "direct_superclass": "sn",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "eff72a31339cd9a96a61092eed2d95b95e4cc91516bea4e9105c3d73574147f6",
+      "writer_audit_sha256": "e859e9181411773a1fd1f497435ad601554f215c79e6da3119d93808374083cd",
+      "classes_preserved": 3088,
+      "source_sha256": {
+        "st.java": "3ab27174304540636f474cc890d88a1f4f7eedc3801518cba23d42de11740832",
+        "sn.java": "a0aac70f7f1edea76b09bebc9533697e4b6015bb88937734036df58c05abd069",
+        "ajs.java": "978bd486dbd27c18060b688dd5bb20dba1b73b43989540a25abd3b2a5a499b00",
+        "sp.java": "c99d00eac23c4d34a53336481242f02de17750a3cdb4ddca704d0586b20520f8"
+      },
+      "placement_predicate": {
+        "owner": "ajs",
+        "signature": "public boolean a(bdt var1, @Nullable sn var2)",
+        "body_sha256": "66006b737ed82ed5a9a16ed73ed502f4a6c4859f61f92d4c550364a15defd507",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "abx",
+        "aby",
+        "sw",
+        "ya",
+        "yx",
+        "zi",
+        "zk"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 316,
+      "version": "1.11.2",
+      "entity": "minecraft:xp_orb",
+      "class": "st",
+      "field_owner": "sn",
+      "field_name": "i",
+      "direct_superclass": "sn",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "be3fff4f2cc005a1310a96389efdeb983d2bcb4b8e747c402acd616ae73d0ba2",
+      "writer_audit_sha256": "7f9a9abb83d2bef440eacf865d09321b4789b36e374f10f156f8f8473521456f",
+      "classes_preserved": 3088,
+      "source_sha256": {
+        "st.java": "3ab27174304540636f474cc890d88a1f4f7eedc3801518cba23d42de11740832",
+        "sn.java": "5b967ed806ad3d43b0314a87836f9b668cc252c7180fc9cb14e3bcd72a014746",
+        "ajs.java": "978bd486dbd27c18060b688dd5bb20dba1b73b43989540a25abd3b2a5a499b00",
+        "sp.java": "c99d00eac23c4d34a53336481242f02de17750a3cdb4ddca704d0586b20520f8"
+      },
+      "placement_predicate": {
+        "owner": "ajs",
+        "signature": "public boolean a(bdt var1, @Nullable sn var2)",
+        "body_sha256": "66006b737ed82ed5a9a16ed73ed502f4a6c4859f61f92d4c550364a15defd507",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "abx",
+        "aby",
+        "sw",
+        "ya",
+        "yx",
+        "zi",
+        "zk"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 335,
+      "version": "1.12",
+      "entity": "minecraft:xp_orb",
+      "class": "vk",
+      "field_owner": "ve",
+      "field_name": "i",
+      "direct_superclass": "ve",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "59e84cf6acc3912e1705ab05c722485afb3ec33343eef4756d8c16edfe6411ca",
+      "writer_audit_sha256": "6be722c520799d18a86a32a06b9c5672a142d8f302c204ce4110504f2434b3e5",
+      "classes_preserved": 3309,
+      "source_sha256": {
+        "vk.java": "038ea6b3252ae0f8932cf228000e7b7bfc1b354d203ca32b06406b6b1f9125cb",
+        "ve.java": "b8f530acd0c0eb12fb411daef9fc52f2675457a36b79d9d4855cdd352a7ef782",
+        "ams.java": "8fb88b6a5ab5e75f8040d3bf764297dad0339d822f624887ca8bf929f6e66a82",
+        "vg.java": "72f105e5387fdb62c638aff32858474ac51ec8a3f29aa6a6cc79641af46957e0"
+      },
+      "placement_predicate": {
+        "owner": "ams",
+        "signature": "public boolean a(bgz var1, @Nullable ve var2)",
+        "body_sha256": "7bb389dcac00b5f5eab9af73908b717d08b38bd81031d71e3c77ce7e64ccd9d9",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aba",
+        "abx",
+        "aci",
+        "ack",
+        "afb",
+        "afc",
+        "vn"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 338,
+      "version": "1.12.1",
+      "entity": "minecraft:xp_orb",
+      "class": "vm",
+      "field_owner": "vg",
+      "field_name": "i",
+      "direct_superclass": "vg",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "19331fb29bf8b8d5ed764677c94cca9d66481e10104f660eb555894a4300cf22",
+      "writer_audit_sha256": "800f83675b2fbcb4f2d95b0a093ba26b2728f404a3c152dd2facb4b65fb41031",
+      "classes_preserved": 3310,
+      "source_sha256": {
+        "vm.java": "75bc2d789ae20aaf70dc3039070f300583ea8a2966c59d9083b24dd250059c7c",
+        "vg.java": "7921cab59a65f621212098e6a93cdd903420d585ffdd7845d9ee3ac326311cf3",
+        "amu.java": "e871ca32379c181663cf982c952d6ea2ce7fd2f5078100c20ca6eb9fb5fb1657",
+        "vi.java": "d008379aac0406510c90a5e4196b062924d92a60bda6c495e4954d5605cf5f8d"
+      },
+      "placement_predicate": {
+        "owner": "amu",
+        "signature": "public boolean a(bhb var1, @Nullable vg var2)",
+        "body_sha256": "bfd2526406e72afe83ab9d54b5d4bc2a6176bb6b24729f92370e4e9c439822ae",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "abc",
+        "abz",
+        "ack",
+        "acm",
+        "afd",
+        "afe",
+        "vp"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 340,
+      "version": "1.12.2",
+      "entity": "minecraft:xp_orb",
+      "class": "vm",
+      "field_owner": "vg",
+      "field_name": "i",
+      "direct_superclass": "vg",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f",
+      "writer_audit_sha256": "84153507fc20cbb50b981b8c1d17a38bccada761a08988dffe9329614ba15fd5",
+      "classes_preserved": 3310,
+      "source_sha256": {
+        "vm.java": "75bc2d789ae20aaf70dc3039070f300583ea8a2966c59d9083b24dd250059c7c",
+        "vg.java": "7921cab59a65f621212098e6a93cdd903420d585ffdd7845d9ee3ac326311cf3",
+        "amu.java": "c9ce01dfdda3da0e234665aec796e7c475e973e2409547b094a65f1a90c4e204",
+        "vi.java": "d008379aac0406510c90a5e4196b062924d92a60bda6c495e4954d5605cf5f8d"
+      },
+      "placement_predicate": {
+        "owner": "amu",
+        "signature": "public boolean a(bhb var1, @Nullable vg var2)",
+        "body_sha256": "bfd2526406e72afe83ab9d54b5d4bc2a6176bb6b24729f92370e4e9c439822ae",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "abc",
+        "abz",
+        "ack",
+        "acm",
+        "afd",
+        "afe",
+        "vp"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 393,
+      "version": "1.13",
+      "entity": "minecraft:experience_orb",
+      "class": "aeu",
+      "field_owner": "aeo",
+      "field_name": "j",
+      "direct_superclass": "aeo",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "d807a5ed9428b6c16b64888fd2b7fa76dcf5c55d06f96f7c0c47762c3fc3e26e",
+      "writer_audit_sha256": "9ceecd909613f0a455ac4db727d1bb4fce13484120546fcffb2c70d3ffab3fcc",
+      "classes_preserved": 4020,
+      "source_sha256": {
+        "aeu.java": "8f631988ff125732d4b9976fc51aa9aaa82f0fdc5faccd464c335343be5dd802",
+        "aeo.java": "5e8f90a028280103d4fa00b0cdd965f7fc5eb4ce70247a3a59c32210040cf487",
+        "axs.java": "bc2743d8841f3864b9dcc862d684b1dcba59a410fb4e6d4036288ee03d54ae0b",
+        "aes.java": "78a2a7fe38f59eef3c59a7a5f0c4608aed7c5da600435bde26c28f9bbf238d78"
+      },
+      "placement_predicate": {
+        "owner": "axs",
+        "signature": "public boolean a(@Nullable aeo var1, cel var2)",
+        "body_sha256": "c69a2ff1418ef5b892261cbbf70857ab8a00b45462da64c5f072259b0d16c9dd",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aex",
+        "aky",
+        "alv",
+        "amh",
+        "amj",
+        "apd",
+        "apf"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 401,
+      "version": "1.13.1",
+      "entity": "minecraft:experience_orb",
+      "class": "aex",
+      "field_owner": "aer",
+      "field_name": "j",
+      "direct_superclass": "aer",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "f0b4cf6d1a87ae150f87a535651138ca7b82bdad8853f76e7ddbff1dd610ac87",
+      "writer_audit_sha256": "11bfc8086efb010013ab6a231d6db31eb35058c320f7f2354139e4790df13776",
+      "classes_preserved": 4025,
+      "source_sha256": {
+        "aex.java": "46ed0fbf131a9ebcaa7a899616843e67b2732c63136d7d43ec5d27cbec64923c",
+        "aer.java": "7f7c08543da130cd39e3e40551eb4b999c56b13729c911f5609d52f875e8bd1c",
+        "axx.java": "b43c282442056277e67036e7a66124381970689ee1675d5e5b422f38797e972e",
+        "aev.java": "00a212484cd5546cf09a45cac3d0c9427678cf39f15ccd97d6cff778bae5535c"
+      },
+      "placement_predicate": {
+        "owner": "axx",
+        "signature": "public boolean a(@Nullable aer var1, cev var2)",
+        "body_sha256": "4cc15c03413a07c187cde6840b648c5a115c020db1e599288ffdf07fac31a4dd",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "afa",
+        "alb",
+        "aly",
+        "amk",
+        "amm",
+        "apg",
+        "api"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 404,
+      "version": "1.13.2",
+      "entity": "minecraft:experience_orb",
+      "class": "aex",
+      "field_owner": "aer",
+      "field_name": "j",
+      "direct_superclass": "aer",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "3410887ba652f25792c7675bfaf9140e73b60e93cfbf113a803f8a98cb05c0f9",
+      "writer_audit_sha256": "aab57a432a827611b7e6553167d9e71c7c35f2c201689e9f577d56156f30734a",
+      "classes_preserved": 4027,
+      "source_sha256": {
+        "aex.java": "2aa853fea396c50e2a0d4fed6319e9c0309a238c9f76985f0c8f87f553ea7f7d",
+        "aer.java": "f8476bca0649e7bdd712042949087b218ba5cc7c844434e4d85430f8d44b1ed9",
+        "axy.java": "19326d6789d3dca300b1fba4c15f6eaad2ee8d9386259ad5c7e2ef85c6ac3a30",
+        "aev.java": "2e06db7eaa4d861c1450a750bfa355973255cdfe568fc448cd2a56875635e222"
+      },
+      "placement_predicate": {
+        "owner": "axy",
+        "signature": "public boolean a(@Nullable aer var1, cew var2)",
+        "body_sha256": "144663cb1b29395d2a57f0135ac74f6df5066848e58209afd0fe30086ac21271",
+        "inherited_interface": false
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "afa",
+        "alc",
+        "alz",
+        "aml",
+        "amn",
+        "aph",
+        "apj"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 477,
+      "version": "1.14",
+      "entity": "minecraft:experience_orb",
+      "class": "ail",
+      "field_owner": "aif",
+      "field_name": "i",
+      "direct_superclass": "aif",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "93907cbf0655aa5f10d049efa4d745f4250eecc5d0d5d1268046eec3144f323a",
+      "writer_audit_sha256": "ba73184578d55949aa42e7ae9c1c190d5048d946e12166ed51e36c5122e5d50e",
+      "classes_preserved": 4680,
+      "source_sha256": {
+        "ail.java": "80104e1c226331a95f5d58e488ab7216bbaba341ba967d9b300ba6111040ff54",
+        "aif.java": "b3fe2ee0039cbe517d781a14c5862f77bbeb274226b31d681904399b3122a070",
+        "bgz.java": "e183ebdc097f65fc59939ee64a40508de4eb8f86fd98b3d33705e35268bdc3c8",
+        "aij.java": "f5cf106d7608842f8526873ff8c24e353d2c3601ddaf3c6d2b5a999abdf88c17",
+        "bhh.java": "9e322ec934d847daab6cd2d899d2d66a9fad03d2d6ce7b90da24762e97ed842c",
+        "bhi.java": "f27be2a078dd7214c1fb00a75f45e2224000fe1cd1cb706f2c9bb76b9619f596"
+      },
+      "placement_predicate": {
+        "owner": "bgz",
+        "signature": "default boolean a(@Nullable aif var1, csp var2)",
+        "body_sha256": "ddc002f1b9ed9e5794d18868cbffaea3487e1cc6c79e44ad216d2c7dd9c1026f",
+        "inherited_interface": true
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aio",
+        "asf",
+        "atc",
+        "atn",
+        "atp",
+        "axl",
+        "axn"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 480,
+      "version": "1.14.1",
+      "entity": "minecraft:experience_orb",
+      "class": "aio",
+      "field_owner": "aii",
+      "field_name": "i",
+      "direct_superclass": "aii",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "7194d1326cf796f62ac55f3cb56f851c232895639ae27510f3207d5a73f91814",
+      "writer_audit_sha256": "7ba4de70fa0d57089f4746c382721915b37cd50bf0200b5c420a03d1af358acd",
+      "classes_preserved": 4687,
+      "source_sha256": {
+        "aio.java": "c46878b88db43754be9571c8a8f297e6f1529632b6f83d9a00c645446a139088",
+        "aii.java": "b5f8436c413f499ae96de43e66d94796a3b9c08ef6addc4b8389976cd7501a38",
+        "bha.java": "fc9ee44cc209e6024ce1a1a77f0b439435ce20ac6843047cf0ba838c9d1a9b8c",
+        "aim.java": "1f5785cc7ff72ad19b8d424ebe8bb5591667963e45c29619ad0a31960978fabc",
+        "bhi.java": "1a1797665abe8abbc5c35b9a1ce00986f667e68963ac43d574ded15264a76084",
+        "bhj.java": "3e37aac531cf63c90acb39d5da0c179586ac16de7d56573c63a29d7c06f901fa"
+      },
+      "placement_predicate": {
+        "owner": "bha",
+        "signature": "default boolean a(@Nullable aii var1, csr var2)",
+        "body_sha256": "4cb90e2be9aabc5f610ef2d2a3d746b4caeb4a7ffd3863b57f13e199bfd584da",
+        "inherited_interface": true
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "air",
+        "asg",
+        "atd",
+        "ato",
+        "atq",
+        "axm",
+        "axo"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 485,
+      "version": "1.14.2",
+      "entity": "minecraft:experience_orb",
+      "class": "aio",
+      "field_owner": "aii",
+      "field_name": "i",
+      "direct_superclass": "aii",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "9b740c9fd4955981125ebd3cd086baa8b4392963d043a3480b5b942a96637c25",
+      "writer_audit_sha256": "dbf12694aa4d5db0b0dcaa17711a64702c38dbd00641429028b47d03ba9177d0",
+      "classes_preserved": 4688,
+      "source_sha256": {
+        "aio.java": "a1c39e24757d38f2c6599d97ac93bebc7831947fd302f150669d4da6514ee8f4",
+        "aii.java": "e61a7f5a06a37598044ef101b8fe2dfd89c55286d3ffb6be50e54cfacb41fc60",
+        "bha.java": "fc9ee44cc209e6024ce1a1a77f0b439435ce20ac6843047cf0ba838c9d1a9b8c",
+        "aim.java": "1f5785cc7ff72ad19b8d424ebe8bb5591667963e45c29619ad0a31960978fabc",
+        "bhi.java": "a0190aa4fb72263374096f611314ed612440a18990403e288a538900197cbf32",
+        "bhj.java": "3e37aac531cf63c90acb39d5da0c179586ac16de7d56573c63a29d7c06f901fa"
+      },
+      "placement_predicate": {
+        "owner": "bha",
+        "signature": "default boolean a(@Nullable aii var1, csr var2)",
+        "body_sha256": "4cb90e2be9aabc5f610ef2d2a3d746b4caeb4a7ffd3863b57f13e199bfd584da",
+        "inherited_interface": true
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "air",
+        "asg",
+        "atd",
+        "ato",
+        "atq",
+        "axm",
+        "axo"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    },
+    {
+      "schema": 1,
+      "protocol": 490,
+      "version": "1.14.3",
+      "entity": "minecraft:experience_orb",
+      "class": "air",
+      "field_owner": "ail",
+      "field_name": "i",
+      "direct_superclass": "ail",
+      "initial_building_flag": false,
+      "permanently_nonblocking": true,
+      "source_proof_sha256": "e1ac82c915ebe17f61df6acdb78a0bbc981ac926a69efe9b800d448ee77836cf",
+      "client_sha256": "4063062677433988e012fba53e42e4c21adb6919ac7f061f19f3c6e75b334e07",
+      "writer_audit_sha256": "f6ff184069c57db152cdf1950bffaeb9a29f342ba1515ef613ca9e189bcbed61",
+      "classes_preserved": 4696,
+      "source_sha256": {
+        "air.java": "9e81c13df9c9ac2bb901a63ae3730b217d94d846bd876735fae2d4e59ff5920e",
+        "ail.java": "8c468a13e61858718928fd68312507a2e505a4f3289c317648a69b73beddb25d",
+        "bhe.java": "37f9ebae74f803947b3ae3f582dcd21dae0feae599640282cad657a2cdb19bde",
+        "aip.java": "6eff69157cd7da7ace8303517969f526353d49d4615a0c3712bd9452970ba035",
+        "bhm.java": "b0e45398ec7ecef7e4154c7b1a4bd3ce4ad59124648ef4c582c2263c7b1a7002",
+        "bhn.java": "e07652c79d2837bd7affb9316367d46dafa442d51938095bc148d4d0d0e5826b"
+      },
+      "placement_predicate": {
+        "owner": "bhe",
+        "signature": "default boolean a(@Nullable ail var1, csv var2)",
+        "body_sha256": "3f301861fc4b3330160c6aaf2f7e6bb0f0650883654d62c31064ba47fa3eec03",
+        "inherited_interface": true
+      },
+      "root_or_xp_flag_writes": 0,
+      "unrelated_writer_receivers": [
+        "aiu",
+        "asj",
+        "atg",
+        "atr",
+        "att",
+        "axp",
+        "axr"
+      ],
+      "native_xp_constructor_executed": false,
+      "native_world_query_executed": false
+    }
+  ]
+}

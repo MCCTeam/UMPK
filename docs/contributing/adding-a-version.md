@@ -102,7 +102,7 @@ Use more than one pin. Each pin has a different blind spot.
    python3 engineering/refactor/add-protocol-rows.py --check <protocol>
    ```
 
-5. Regenerate each mechanical pin, then review every line it moves. The corpus now has captures for all 49 protocols. Witness renderings are per protocol, but authored witnesses cover only 20 packet families.
+5. Regenerate each mechanical pin, then review every line it moves. The corpus has captures for 49 of the 50 protocols; protocol 777 does not yet have a committed corpus directory. Witness renderings are per protocol, but authored witnesses cover only 20 packet families.
 
    ```bash
    UMPK_UPDATE_CODEC_IDENTITY_PINS=1 dotnet test tests/Umpk.Protocol.Java.Conformance

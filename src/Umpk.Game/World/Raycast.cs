@@ -5,12 +5,23 @@ using Umpk.Geometry;
 namespace Umpk.Game.World;
 
 /// <summary>DDA voxel raycasting over the world. It honors block shapes when an <see cref="IBlockShapeSource"/> is supplied. Without a shape source, non-air blocks are treated as full cubes. Entity raycasts use an AABB slab test against candidate boxes ordered by distance.</summary>
-public static class Raycast
+public static partial class Raycast
 {
     private const double Epsilon = 1.0E-7;
 
     /// <summary>Casts a ray from <paramref name="start"/> to <paramref name="end"/> through the world, stopping at the first block that the ray enters. When <paramref name="shapes"/> is null a non-air block is a full cube; otherwise the ray is clipped against the block's outline AABBs. Fluids are treated as non-solid unless <paramref name="includeFluids"/> is set.</summary>
     public static BlockHitResult CastBlock(World world, Vec3d start, Vec3d end, bool includeFluids = false, IBlockShapeSource? shapes = null)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, Identifier.Minecraft("air"));
+
+    /// <summary>Casts a ray with the held-item and coordinate context needed by measured outline and interaction shapes.</summary>
+    public static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, heldItem, readBlock: null);
+
+    // The client native-current view supplies only state changes whose static outline is source-bound. Public casts continue to read received world state and contextual outlines.
+    internal static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock)
+        => CastBlockWithContext(world, start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel: null);
+
+    internal static BlockHitResult CastBlockWithContext(World world, Vec3d start, Vec3d end, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock, BlockRayClipModel? projectedClipModel)
     {
         ArgumentNullException.ThrowIfNull(world);
         if (start.Equals(end))
@@ -26,7 +37,7 @@ public static class Raycast
 
         int cx = FloorInt(sx), cy = FloorInt(sy), cz = FloorInt(sz);
 
-        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, out BlockHitResult first))
+        if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel, out BlockHitResult first))
             return first;
 
         double dx = ex - sx, dy = ey - sy, dz = ez - sz;
@@ -63,7 +74,7 @@ public static class Raycast
                 tZ += invZ;
             }
 
-            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, out BlockHitResult hit))
+            if (TryHit(world, new BlockPos(cx, cy, cz), start, end, includeFluids, shapes, heldItem, readBlock, projectedClipModel, out BlockHitResult hit))
                 return hit;
 
         }
@@ -93,10 +104,10 @@ public static class Raycast
         return EntityHitResult.FromHit(bestIndex, point, distance);
     }
 
-    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, out BlockHitResult result)
+    private static bool TryHit(World world, BlockPos pos, Vec3d rayStart, Vec3d rayEnd, bool includeFluids, IBlockShapeSource? shapes, Identifier heldItem, Func<BlockPos, BlockState>? readBlock, BlockRayClipModel? projectedClipModel, out BlockHitResult result)
     {
         result = BlockHitResult.Miss;
-        BlockState state = world.GetBlock(pos);
+        BlockState state = readBlock?.Invoke(pos) ?? world.GetBlock(pos);
         if (state.IsAir)
             return false;
 
@@ -119,9 +130,20 @@ public static class Raycast
             return false;
         }
 
+        if ((readBlock is null || state.StateId == world.GetBlock(pos).StateId) && shapes is IBlockTargetingSource targeting && targeting.TryGetTargetingShape(world, pos, heldItem, out BlockTargetingShape geometry))
+            return TryHitTargeting(pos, rayStart, dir, geometry, out result);
         ReadOnlySpan<Aabb> outline = shapes.GetOutlineShapes(state);
         if (outline.IsEmpty)
             return false;
+
+        // Projected jukebox and button states have source-bound static outlines with no offsets or interaction shape. Reuse the native clipping model instead of losing its inside flag, point and face in the generic box fallback.
+        if (projectedClipModel is { } clipModel && readBlock is not null && state.StateId != world.GetBlock(pos).StateId)
+        {
+            if (!ClipTargetingShape(outline, Vec3d.Zero, clipModel, pos, rayStart, dir, out Vec3d point, out Direction face, out bool inside))
+                return false;
+            result = BlockHitResult.FromHit(pos, face, point, point.Subtract(rayStart).Length(), inside);
+            return true;
+        }
 
         double bestT = double.PositiveInfinity;
         Vec3d bestPoint = Vec3d.Zero;

@@ -4,4 +4,8 @@
     <ProjectReference Include="../../src/Umpk.Game/Umpk.Game.csproj" />
     <ProjectReference Include="../../src/Umpk.Client/Umpk.Client.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fixtures/PlayerDimensions.native.json" />
+    <EmbeddedResource Include="Fixtures/PlayerCorrections.native.json" />
+  </ItemGroup>
 </Project>

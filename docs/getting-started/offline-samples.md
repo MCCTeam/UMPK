@@ -91,7 +91,7 @@ JavaVersions.TryGetByProtocol(protocol, out JavaVersion byNumber);
 JavaVersions.TryGetByName("1.21.8", out JavaVersion byName);
 ```
 
-`All` holds 49 entries, one per protocol, while the named properties number 72, since several releases share one protocol. All ten 1.8.x releases share 47. `Version.Name` reports one representative name per protocol, the last release in the band, so 47 reports "1.8.9". `TryGetByName` accepts every alias.
+`All` holds 50 entries, one per protocol, while the named properties cover 75 releases, since several releases share one protocol. All ten 1.8.x releases share 47. `Version.Name` reports one representative name per protocol, the last release in the band, so 47 reports "1.8.9". `TryGetByName` accepts every alias.
 
 Start here if you need to pin a version, list what is supported, or load registries for a protocol without connecting.
 

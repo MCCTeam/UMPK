@@ -40,6 +40,10 @@ public sealed class SelfState
     /// <remarks>The defaults are a healthy, fed player, so a consumer cannot tell "20 health" from "nobody has told us yet" by value. That matters to anything that spends health as a budget: assuming full health is exactly the direction that plans a fall the bot cannot survive. Written once, by <c>SelfApplier</c> on the first <c>set_health</c>, and never cleared.</remarks>
     public bool HealthObserved { get; internal set; }
 
+    // Observed packet state belongs to the player instance, even when the public snapshot retains its last values across replacement.
+    internal long NutritionObservationLifetime { get; set; } = -1;
+    internal long AbilitiesObservationLifetime { get; set; } = -1;
+
     /// <summary>Food level.</summary>
     public int Food { get; internal set; } = 20;
 
@@ -111,20 +115,16 @@ public sealed class SelfState
     /// <summary>The camera entity id when the server has set the camera to a non-self entity.</summary>
     public int? CameraEntityId { get; internal set; }
 
-    /// <summary>Per-item cooldown expiry (item id to remaining ticks at set time).</summary>
-    public IReadOnlyDictionary<int, int> ItemCooldowns => _itemCooldowns;
+    /// <summary>Applied cooldown durations projected onto known item IDs. Entries retire on the native player tick; custom identifier groups without an item ID are not represented.</summary>
+    public IReadOnlyDictionary<int, int> ItemCooldowns => _cooldowns.ItemProjection;
 
-    private readonly Dictionary<int, int> _itemCooldowns = [];
+    private readonly Internal.ItemCooldownState _cooldowns = new();
 
-    internal void SetItemCooldown(int itemId, int ticks)
-    {
-        if (ticks <= 0)
-            _itemCooldowns.Remove(itemId);
-
-        else
-            _itemCooldowns[itemId] = ticks;
-
-    }
+    internal void SetItemCooldown(int itemId, int ticks) => _cooldowns.SetItem(itemId, ticks);
+    internal void SetGroupCooldown(Identifier group, int ticks, int? itemProjection) => _cooldowns.SetGroup(group, ticks, itemProjection);
+    internal bool IsItemOnCooldown(Game.Items.ItemStack stack, int protocol) => _cooldowns.IsOnCooldown(stack, protocol);
+    internal void TickItemCooldowns() => _cooldowns.Tick();
+    internal void ClearItemCooldowns() => _cooldowns.Clear();
 
     /// <summary>The local player's active status effects, keyed by effect network id. The server sends <c>update_mob_effect</c> / <c>remove_mob_effect</c> for the player itself (vanilla only broadcasts a mob's effect packet to the entity and its player passengers), so unlike other entities the self effects are not in the shared entity store; they are tracked here as a queryable snapshot.</summary>
     public IReadOnlyDictionary<int, ActiveEffect> ActiveEffects => _effects;

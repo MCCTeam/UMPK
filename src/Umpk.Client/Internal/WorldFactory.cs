@@ -15,12 +15,30 @@ internal static class WorldFactory
     /// <summary>1.16 is the first supported era with datapack-defined dimensions. From this point an unknown world cannot be sized honestly without the server's dimension-type definition.</summary>
     private const int FirstCustomDimensionProtocol = 735;
 
+    /// <summary>Installs a new level lifetime or retains a respawn's existing dimension. Entity ownership applies even when terrain tracking is disabled.</summary>
+    public static bool InstallWorld(ClientState state, CommonWorldSetup setup, int protocol)
+    {
+        // Resolve required dimension facts before changing any state, including when a respawn retains the existing level.
+        DimensionState? dimension = state.Features.Terrain ? CreateDimension(setup, state.Registries, protocol) : null;
+        Identifier name = WorldName(setup.DimensionName);
+        if (setup.IsRespawn && state.WorldDimension == name)
+            return false;
+
+        World? world = null;
+        if (dimension is not null)
+        {
+            Registry<BlockDefinition> blocks = state.Registries?.Blocks ?? EmptyBlocks();
+            var blockData = new RegistryBlockDataSource(blocks, isLegacy: protocol < 393);
+            world = new World(dimension, blockData, EmptyBiomes());
+        }
+        state.InstallWorld(name, world);
+        return true;
+    }
+
     /// <summary>Resolves the dimension for a join/respawn. Preference order, most authoritative first: the current type's own inline compound, then the server's registry by resource key, then the server's registry by network id, then the vanilla built-in table keyed on the world name.</summary>
     public static DimensionState CreateDimension(CommonWorldSetup setup, RegistryAccess? registries, int protocol)
     {
-        Identifier worldName = Identifier.TryParse(setup.DimensionName, out Identifier parsed)
-            ? parsed
-            : Identifier.Minecraft("overworld");
+        Identifier worldName = WorldName(setup.DimensionName);
 
         Registry<DimensionTypeDefinition>? types = registries?.DimensionTypes;
 
@@ -78,6 +96,9 @@ internal static class WorldFactory
         => new RegistryBuilder<BlockDefinition>(RegistryIds.Block)
             .Add(0, Identifier.Minecraft("air"), new BlockDefinition(0, 0, 0))
             .Build();
+
+    private static Identifier WorldName(string name)
+        => Identifier.TryParse(name, out Identifier parsed) ? parsed : Identifier.Minecraft("overworld");
 
     /// <summary>Wraps a resolved definition in a single-entry registry so it has a registry entry to bind to.</summary>
     private static DimensionState Bind(DimensionTypeDefinition definition, Identifier worldName)

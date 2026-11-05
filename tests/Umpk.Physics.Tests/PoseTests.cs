@@ -82,15 +82,15 @@ public sealed class PoseTests
     }
 
     [Fact]
-    public void LegacyProfile_UsesTallerCrouchBox()
+    public void Version18_SneakingKeepsTheStandingBox()
     {
-        // Pre-1.14 crouch height is 1.65, not 1.5.
+        // Original 1.8 player dimensions retain standing height when the sneak flag changes.
         var world = new FixtureWorld().Floor(-5, 5, -5, 5, 63, BlockKind.Stone);
         var legacy = PhysicsProfile.ForProtocol(47);
         var engine = NewEngine(world, new Vec3d(0.5, 64, 0.5), profile: legacy);
 
         StepResult r = engine.Step(new MovementInput { Sneak = true });
         Assert.Equal(EntityPose.Crouching, r.State.Pose);
-        Assert.Equal(PhysicsConstants.PlayerCrouchHeightLegacy, r.State.BoundingBox.YSize, 6);
+        Assert.Equal(PhysicsConstants.PlayerStandingHeight, r.State.BoundingBox.YSize, 6);
     }
 }

@@ -66,7 +66,7 @@ Play Clientbound 0x33 minecraft:resource_pack codec
 Play Clientbound 0x34 minecraft:respawn codec
 Play Clientbound 0x35 minecraft:rotate_head codec
 Play Clientbound 0x36 minecraft:select_advancements_tab codec
-Play Clientbound 0x37 minecraft:set_border marker
+Play Clientbound 0x37 minecraft:set_border codec
 Play Clientbound 0x38 minecraft:set_camera codec
 Play Clientbound 0x39 minecraft:set_held_slot codec
 Play Clientbound 0x3A minecraft:set_display_objective codec

@@ -194,6 +194,8 @@ public sealed class WaterMovementEfficiencyPushTests
         harness.State.Registries = JavaGameData.Registries(protocol);
         harness.State.Self.EntityId = SelfEntityId;
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Inventory.SetSlot(InventoryState.PlayerWindowId, BootsMenuSlot, boots);
         harness.State.Self.Position = new Vec3d(0.5, 60.0, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;

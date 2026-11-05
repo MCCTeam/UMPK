@@ -1,0 +1,181 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "scope": "Original bed registry objects and facing properties; all raw legacy metadata inputs or original flattened global state-registry values; legacy output uses the canonical block-id shifted four bits plus input metadata, while preserving the original native packed decoded-state id separately; no actor or world callbacks",
+    "measurement": "pre-pose-bed-facing-all-20261018-v1",
+    "probe_sha256": "953d76f47df129d8e71025bebe7fb2d431c615be72dc2e6774813f94113ffac3",
+    "releases": [
+      {
+        "version": "1.10",
+        "client_sha256": "c00f8170ebf4fd834f552246743a64885a6dffb3dd1e3a3f3dba9676b7a0af35",
+        "server_sha256": "dd44a72e920a01dedf57507b73642f4a9dd8c6052e1f42ff6cc0635008014201",
+        "measurement_sha256": "793f6770081b06f20927dadb325b4c63a0c242a1e4325b076998c5752975dcf8",
+        "sources_sha256": {
+          "aid.java": "7fa47a6413db4ff5ee0774842b9eaab25b30cd6e553ba4b2ff95c8a494af4c29",
+          "akf.java": "021317cfa46723cc399f2445685262b12fd86de0ac3a4660a470774017625420",
+          "akg.java": "9f7014c6d844f7b012d5eddb70bc9f93082813b2b0e0589d45103dd47e1dfc83",
+          "ars.java": "be0c8c5c6bf0da6d18f415409fe5761ddf5dca10389958df8255d7f0ae6672c9",
+          "bby.java": "68b75b6d8d93ebbb7c6cbce49b50e5a641784ee126461e861b3b99090dcfbe7a",
+          "bln.java": "40ab95d4e86038653b6ef86c32b2b1c489384ac9e04998449d01b77d6ea3483a",
+          "cm.java": "c4d5694a8eca03ec27c6bb4b6dd890675847bbc9453a6f36b220e6defdaad110",
+          "bno.java": "5ff3e56953e3be2d90ad7722cc9ef9a4f81560f8c7452cfb861caa523ede12ae",
+          "bnk.java": "f4eabff92a108a9a3dab9d0157800ec25333e15018729b52011fbfe5e8b58273",
+          "zs.java": "c950f4b8144c1aa6b548dba305901f548601067a231d8898068e56a6aa5dc18b",
+          "sf.java": "daa610bfa13a67b698427e822c698d20ee710800244c89856763abbc04a60ccf",
+          "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+          "ct.java": "8b6455675384f1d8bfa7b54c9b12417a7e348de3643fda6302d2dad4c033616a",
+          "amt.java": "7cffa44afb7047325eeb8653623d48ed42894713989950541b9093e580ac0a04",
+          "aia.java": "a279e6ff18854d6d1b693747f3f5f8d18f505c55dc0b138a343aea8c54c1316e",
+          "ni.java": "939aefc81863f7035bf7849c9eddd1a33e89887904f2af727c203ce6fd12feaf",
+          "bll.java": "20f2054a23d2735e2c57d6f240818dcc590465013ae6eba20ceed9ab094387a9",
+          "hf.java": "e18240f1e5c10d56dc56b422966e0d8174ced6e50c56123988b2be09ed0feabd",
+          "ft.java": "8a73609b8389045571bd714dcfcfeec511feb0fffedb2d8f1d76ecbe4b1b6c85",
+          "akd.java": "7a6e31a5796e145dc5c6dead474bd5bba75278ee866d873153482429b3a5b9a9"
+        },
+        "method_owners": {
+          "block_id": "akf",
+          "decode_metadata": "akd",
+          "facing_reader": "ars",
+          "state_id": "akf"
+        }
+      },
+      {
+        "version": "1.10.1",
+        "client_sha256": "338b205f20c22b9c676d9d3227a5e6c5e190f30ad84d7caad035150b3e05ba72",
+        "server_sha256": "623c8d67e7357c7078f30cee450562c52a05a42c394f064474c7f2d45b4a7d3f",
+        "measurement_sha256": "afb1de101848ce726d85a6a1255ec81bed6d86aa08460684dbcf84cebe2673bd",
+        "sources_sha256": {
+          "aid.java": "1599fde722b5876d16274fc57e034e7261a5cc08ab61bb5a1fbef4d95f6a3850",
+          "akf.java": "021317cfa46723cc399f2445685262b12fd86de0ac3a4660a470774017625420",
+          "akg.java": "9f7014c6d844f7b012d5eddb70bc9f93082813b2b0e0589d45103dd47e1dfc83",
+          "ars.java": "be0c8c5c6bf0da6d18f415409fe5761ddf5dca10389958df8255d7f0ae6672c9",
+          "bby.java": "68b75b6d8d93ebbb7c6cbce49b50e5a641784ee126461e861b3b99090dcfbe7a",
+          "bln.java": "40ab95d4e86038653b6ef86c32b2b1c489384ac9e04998449d01b77d6ea3483a",
+          "cm.java": "c4d5694a8eca03ec27c6bb4b6dd890675847bbc9453a6f36b220e6defdaad110",
+          "bno.java": "5ff3e56953e3be2d90ad7722cc9ef9a4f81560f8c7452cfb861caa523ede12ae",
+          "bnk.java": "f4eabff92a108a9a3dab9d0157800ec25333e15018729b52011fbfe5e8b58273",
+          "zs.java": "dad8a057c8470f8210a66ef898a49d400b7333761b65e95c1d0b5cb360645836",
+          "sf.java": "daa610bfa13a67b698427e822c698d20ee710800244c89856763abbc04a60ccf",
+          "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+          "ct.java": "8b6455675384f1d8bfa7b54c9b12417a7e348de3643fda6302d2dad4c033616a",
+          "amt.java": "7cffa44afb7047325eeb8653623d48ed42894713989950541b9093e580ac0a04",
+          "aia.java": "a279e6ff18854d6d1b693747f3f5f8d18f505c55dc0b138a343aea8c54c1316e",
+          "ni.java": "939aefc81863f7035bf7849c9eddd1a33e89887904f2af727c203ce6fd12feaf",
+          "bll.java": "20f2054a23d2735e2c57d6f240818dcc590465013ae6eba20ceed9ab094387a9",
+          "hf.java": "e18240f1e5c10d56dc56b422966e0d8174ced6e50c56123988b2be09ed0feabd",
+          "ft.java": "8a73609b8389045571bd714dcfcfeec511feb0fffedb2d8f1d76ecbe4b1b6c85",
+          "akd.java": "7a6e31a5796e145dc5c6dead474bd5bba75278ee866d873153482429b3a5b9a9"
+        },
+        "method_owners": {
+          "block_id": "akf",
+          "decode_metadata": "akd",
+          "facing_reader": "ars",
+          "state_id": "akf"
+        }
+      },
+      {
+        "version": "1.10.2",
+        "client_sha256": "7cdf7fcdc1c92584a233bf3c42bd7f0df1bdad3007d306831fe50410692be1e9",
+        "server_sha256": "195f468227c5f9218f3919538b9b16ba34adced67fc7d7b652c508a5e8d07a21",
+        "measurement_sha256": "323a964e550319f580f96c5b84dc2fcd266d1076b0bbfa200d279ec005c09bf8",
+        "sources_sha256": {
+          "aid.java": "8c48e680d70d2a94d9d8ba1e3a0463ef6bdc15daa670c3498ab8f8106e932363",
+          "akf.java": "021317cfa46723cc399f2445685262b12fd86de0ac3a4660a470774017625420",
+          "akg.java": "9f7014c6d844f7b012d5eddb70bc9f93082813b2b0e0589d45103dd47e1dfc83",
+          "ars.java": "be0c8c5c6bf0da6d18f415409fe5761ddf5dca10389958df8255d7f0ae6672c9",
+          "bby.java": "68b75b6d8d93ebbb7c6cbce49b50e5a641784ee126461e861b3b99090dcfbe7a",
+          "bln.java": "40ab95d4e86038653b6ef86c32b2b1c489384ac9e04998449d01b77d6ea3483a",
+          "cm.java": "c4d5694a8eca03ec27c6bb4b6dd890675847bbc9453a6f36b220e6defdaad110",
+          "bno.java": "5ff3e56953e3be2d90ad7722cc9ef9a4f81560f8c7452cfb861caa523ede12ae",
+          "bnk.java": "f4eabff92a108a9a3dab9d0157800ec25333e15018729b52011fbfe5e8b58273",
+          "zs.java": "a52c58e36a5af9f38e736c49bd9f6e3796cca38d29acf361d9234a816eb07f4a",
+          "sf.java": "daa610bfa13a67b698427e822c698d20ee710800244c89856763abbc04a60ccf",
+          "rw.java": "d56b8e1341ca8a188f78a7950670bf5c8d35a8e0c0afee8bfd30138da5775932",
+          "ct.java": "8b6455675384f1d8bfa7b54c9b12417a7e348de3643fda6302d2dad4c033616a",
+          "amt.java": "7cffa44afb7047325eeb8653623d48ed42894713989950541b9093e580ac0a04",
+          "aia.java": "a279e6ff18854d6d1b693747f3f5f8d18f505c55dc0b138a343aea8c54c1316e",
+          "ni.java": "939aefc81863f7035bf7849c9eddd1a33e89887904f2af727c203ce6fd12feaf",
+          "bll.java": "20f2054a23d2735e2c57d6f240818dcc590465013ae6eba20ceed9ab094387a9",
+          "hf.java": "e18240f1e5c10d56dc56b422966e0d8174ced6e50c56123988b2be09ed0feabd",
+          "ft.java": "8a73609b8389045571bd714dcfcfeec511feb0fffedb2d8f1d76ecbe4b1b6c85",
+          "akd.java": "7a6e31a5796e145dc5c6dead474bd5bba75278ee866d873153482429b3a5b9a9"
+        },
+        "method_owners": {
+          "block_id": "akf",
+          "decode_metadata": "akd",
+          "facing_reader": "ars",
+          "state_id": "akf"
+        }
+      }
+    ]
+  },
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 16,
+  "states": [
+    [
+      416,
+      3
+    ],
+    [
+      417,
+      4
+    ],
+    [
+      418,
+      2
+    ],
+    [
+      419,
+      5
+    ],
+    [
+      420,
+      3
+    ],
+    [
+      421,
+      4
+    ],
+    [
+      422,
+      2
+    ],
+    [
+      423,
+      5
+    ],
+    [
+      424,
+      3
+    ],
+    [
+      425,
+      4
+    ],
+    [
+      426,
+      2
+    ],
+    [
+      427,
+      5
+    ],
+    [
+      428,
+      3
+    ],
+    [
+      429,
+      4
+    ],
+    [
+      430,
+      2
+    ],
+    [
+      431,
+      5
+    ]
+  ]
+}

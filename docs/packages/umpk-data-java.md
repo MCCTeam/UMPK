@@ -19,7 +19,7 @@ You rarely use this package for its own sake. You use it to get two things: a `J
 
 The whole public surface is three types.
 
-`JavaVersions` is the catalog. `JavaVersions.All` lists every supported version, `TryGetByProtocol` looks one up by wire protocol number, and `TryGetByName` looks one up by version string. There are also 72 named properties, from `JavaVersions.V1_8` through `JavaVersions.V26_2`.
+`JavaVersions` is the catalog. `JavaVersions.All` lists every supported protocol representative, `TryGetByProtocol` looks one up by wire protocol number, and `TryGetByName` looks one up by version string. There are also 75 named properties, from `JavaVersions.V1_8` through `JavaVersions.V26_3`, including `V26_1_1` and `V26_1_2`.
 
 `JavaGameData` is the per-protocol accessor. `Registries(protocol)` builds the static `RegistryAccess` (items, blocks, entity types, menu types, and some of the rest). `BlockShapes(protocol)` gives the version's real collision geometry for slabs, stairs, fences, walls, panes and carpets. `BlockPushData(protocol)` gives piston push reactions. `EntityMetadataKeys(protocol)` gives the metadata index layout. `LegacyItemBridgeSource` and the `LegacyItemBridgeEra` constant cover pre-1.13 item NBT and numeric enchantment ids.
 
@@ -63,7 +63,7 @@ IBlockPushSource push = JavaGameData.BlockPushData(protocol: 770);
 
 ## Things that catch people out
 
-There are 73 version properties but only 50 protocols, and `JavaVersions.All` has 50 entries. `JavaVersions.V1_8_9` and `JavaVersions.V1_8` return the same object, because all ten 1.8.x releases are protocol 47. `TryGetByProtocol` returns the first version in `All` with that protocol number, so `TryGetByProtocol(47, out var v)` gives you a version whose `Version.Name` is `"1.8.9"`, the representative release stored by that descriptor. If you need to report the exact version a server named, keep the server's own string.
+There are 75 version properties but only 50 protocols, and `JavaVersions.All` has 50 entries. `JavaVersions.V1_8_9` and `JavaVersions.V1_8` return the same object, because all ten 1.8.x releases are protocol 47. `TryGetByProtocol` returns the first version in `All` with that protocol number, so `TryGetByProtocol(47, out var v)` gives you a version whose `Version.Name` is `"1.8.9"`, the representative release stored by that descriptor. If you need to report the exact version a server named, keep the server's own string.
 
 `JavaGameData.Registries` does not populate everything. `Attributes` is empty on purpose. `Biomes` and `DimensionTypes` are empty because those are dynamic registries that arrive during the configuration phase at runtime. `Enchantments` is empty on protocols 47 through 404 (no vanilla registries report existed yet) and on 767 and later (vanilla moved enchantments onto the config-phase sync). An empty registry means "cannot be resolved statically", never "no such thing exists".
 

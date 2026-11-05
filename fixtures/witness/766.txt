@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 16 of 193 implemented bindings (corpus 5, synth 11)
+# witnessed 16 of 196 implemented bindings (corpus 5, synth 11)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -80,11 +80,11 @@ Play Clientbound 0x10 minecraft:command_suggestions CommandSuggestionCodecs.Comm
 Play Clientbound 0x11 minecraft:commands CommandTreeCodecs.V1_20_5 src:synth w:59 ok Commands{Tree=CommandTreeData{Nodes=[6:CommandNodeData{Argument=null,Children=F4D3C6B4,Flags=0,H h=86247555
     reject:P765(ProtocolViolationException) reject:P770(Argument=B338F731)
 Play Clientbound 0x12 minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
-Play Clientbound 0x13 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_20_5 src:synth w:143 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=f h=0DF4FC8F
+Play Clientbound 0x13 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_20_5 src:synth w:143 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[1:DataComponentEntry{IsRemoval=f h=C6DEA075
     reject:P764(NbtFormatException) reject:P767(Type=6458E61B)
 Play Clientbound 0x14 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
-Play Clientbound 0x15 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_20_5 src:synth w:51 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataCompon h=FD70CDCE
-    reject:P764(read:9) reject:P767(Type=6458E61B)
+Play Clientbound 0x15 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_20_5 src:synth w:51 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[2:DataCompon h=EFD4EDE8
+    reject:P764(read:9) reject:P767(Value=969330D8)
 Play Clientbound 0x16 minecraft:cookie_request PlayCommonCodecs.CookieRequest src:none
 Play Clientbound 0x17 minecraft:cooldown UiMiscCodecs.CooldownV1_9 src:none
 Play Clientbound 0x18 minecraft:custom_chat_completions ChatDisplayCodecs.CustomChatCompletionsV1_19_1 src:none
@@ -176,12 +176,15 @@ Play Clientbound 0x6C minecraft:system_chat ChatDisplayCodecs.SystemChatV1_20_3 
 Play Clientbound 0x6D minecraft:tab_list PlayerListCodecs.TabListV1_20_3 src:none
 Play Clientbound 0x6F minecraft:take_item_entity EntityStateCodecs.TakeItemEntityV1_11 src:none
 Play Clientbound 0x70 minecraft:teleport_entity EntityMoveCodecs.TeleportEntityV1_9 src:none
+Play Clientbound 0x71 minecraft:ticking_state WorldStateCodecs.TickingStateV1_20_3 src:none
+Play Clientbound 0x72 minecraft:ticking_step WorldStateCodecs.TickingStepV1_20_3 src:none
 Play Clientbound 0x73 minecraft:transfer PlayCommonCodecs.Transfer src:none
 Play Clientbound 0x74 minecraft:update_advancements AdvancementCodecs.UpdateAdvancementsV1_20_5 src:synth w:379 ok UpdateAdvancements{Added=[1:AdvancementEntry{Id=Identifier{IsMinecraft=true,Namespace='minecraft h=6515AC1A
     reject:P765(ProtocolViolationException) reject:P767(Display=BAB08DBD)
 Play Clientbound 0x75 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_20_5 src:none
 Play Clientbound 0x76 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_20_5 src:none
 Play Clientbound 0x77 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Clientbound 0x78 minecraft:update_tags WorldTagCodecs.TagsV1_17 src:none
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
 Play Serverbound 0x03 minecraft:chat_ack ChatCodecs.ChatAckV1_19_3 src:none
 Play Serverbound 0x04 minecraft:chat_command ChatCommandCodecs.UnsignedV1_20_5 src:none
@@ -222,8 +225,8 @@ Play Serverbound 0x2C minecraft:seen_advancements AdvancementCodecs.SeenAdvancem
 Play Serverbound 0x2D minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
 Play Serverbound 0x2F minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x30 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_14 src:none
-Play Serverbound 0x32 minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_20_5 src:synth w:49 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[1:DataComponentEntry{IsR h=17DC8C2B
-    reject:P764(read:7) reject:P767(Type=6458E61B)
+Play Serverbound 0x32 minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_20_5 src:synth w:49 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[2:DataComponentEntry{IsR h=9FDA3BC9
+    reject:P764(read:7) reject:P767(Value=969330D8)
 Play Serverbound 0x35 minecraft:sign_update UiMiscCodecs.SignUpdateV1_20 src:none
 Play Serverbound 0x36 minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none
 Play Serverbound 0x37 minecraft:teleport_to_entity EntityServerboundCodecs.TeleportToEntity src:none

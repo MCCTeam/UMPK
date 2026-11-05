@@ -152,7 +152,16 @@ public sealed class UmpkClientBuilder
     }
 
     /// <summary>Builds the client.</summary>
-    public UmpkClient Build()
+    public UmpkClient Build() => BuildCore(null, null);
+
+    internal UmpkClient BuildWithNativeFrames(TimeProvider nativeFrameTime, ITickSource nativeFrames)
+    {
+        ArgumentNullException.ThrowIfNull(nativeFrameTime);
+        ArgumentNullException.ThrowIfNull(nativeFrames);
+        return BuildCore(nativeFrameTime, nativeFrames);
+    }
+
+    private UmpkClient BuildCore(TimeProvider? nativeFrameTime, ITickSource? nativeFrames)
     {
         JavaVersion version = _version
             ?? throw new InvalidOperationException("A version is required; call UseVersion.");
@@ -179,7 +188,7 @@ public sealed class UmpkClientBuilder
             Plugins = [.. _plugins],
         };
 
-        return new UmpkClient(settings);
+        return new UmpkClient(settings, nativeFrameTime, nativeFrames);
     }
 
     /// <summary>Builds the client, auto-detecting the protocol version from a status ping when <see cref="UseVersion"/> was never called. With an explicit version already set this does no I/O at all and is exactly <see cref="Build"/>.</summary>

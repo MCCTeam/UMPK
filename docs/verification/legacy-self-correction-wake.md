@@ -1,0 +1,27 @@
+# Preserve the corrected mining origin after legacy wake
+
+A server position correction received while the local player sleeps now updates the existing legacy geometry owner when optional physics is disabled. If the bed has been removed, the following wake animation retains the corrected position, and public view mining uses the corrected eye origin. This applies to the fourteen legacy datasets 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401 and 404.
+
+`UmpkClient` forwards corrections through the existing physics owner when present and through the current legacy self geometry owner otherwise. `PhysicsEngineHolder` synchronizes the current state owner before checking engine readiness, including direct callers. The later duplicate synchronization is removed. The change adds no clock, synthetic self entity, public API, dependency or lifetime.
+
+## Connected runtime acceptance
+
+The focused baseline produced sixteen passes and fourteen causal failures. Every Physics=false correction/wake case failed the exact public mining-packet count; the fourteen Physics=true cases and two existing protocol-477 controls passed. Applying the `UmpkClient` change produced thirty passes. Applying the `PhysicsEngineHolder` change produced another thirty passes. All 848 adjacent cases passed, including 186 correction cases covering all fifty datasets. The one unfiltered Client run passed 39,737 cases with zero skips.
+
+The test adds 28 cases to the existing legacy self fixture and preserves its prior 85 cases. It sends bound column, bed, correction, wake, inventory and game-mode frames through a real session, then calls `DigBlockInViewAsync`. Assertions cover corrected position, exact target/face/hand, protocol-47 swing-before-START versus later legacy START-before-swing, task completion, one session tick, cancellation cleanup and peer EOF. Protocol 477 remains an unchanged adjacent control; no synthetic UseBed packet is introduced for it.
+
+The full test multiset is the prior 39,709 cases plus the new 28. Existing multiplicities are preserved with three declared literal fixture-display migrations affecting 121, three and three occurrences. There are no semantic expectation migrations or general name normalization. The deliberate Client baseline is now 39,737; the seventeen-suite total is 54,430. The [022c934 compatibility checkpoint](interaction-checkpoint-022c934.md) subsequently passed its fresh full-repository run.
+
+## Native source and execution limits
+
+Native grounding reuses local constructor/listener pilots for 1.8.9, 1.9, 1.11 and 1.13.2 and the original 27-release primitive/source inheritance closure. Independent review physically verifies twenty pilot method bodies and 532 original source-file pins. The correction-before-removed-bed-wake sequence is inferred from those original methods and exercised through framed sessions here. This change has no new original-client JVM, live vanilla, graphics-loop or mixed outer-tick observation. Full local-player outer-tick/network/live behavior, modern poses/riders and other unresolved contexts remain open in the [completion ledger](interaction-completion.md).
+
+## Exact evidence and retained failure
+
+Evidence stays outside Git under `/home/anon/Projects/MinecraftOfficial/runs/legacy-self-correction-wake-managed30-20261105-v1` and `legacy-self-correction-wake-managed30-20261105-v2`. Source review is `.scratch/ROOT-LEGACY-SELF-CORRECTION-WAKE-SOURCE-REVIEW-20261105-v1.json` (`997923d2`). The actual receipt is `.scratch/legacy-self30-actual-audit-preparation-20261105-v1/ACTUAL-LEGACY-SELF30.json` (`db5dc62c`). Independent Root admission is `.scratch/ROOT-LEGACY-SELF30-RUNTIME-ADMISSION-20261105-v1.json` (`830329ab85560642f1a5743a5d651033c01aea8de37f532296403347c0ee881a`). These receipts retain exact command arrays, source/binary hashes, stage snapshots, raw results, budgets and observed process identities.
+
+The first managed attempt compiled the test assembly and stopped before any test because an inherited TestKit PDB pin identified an older binary. Its completion `cd414f62`, actual wait `81f145dc` and cleanup `ed55aadb` remain failed evidence. After direct verification of the current TestKit DLL/PDB and `FixturePaths` source, a separately granted continuation reused the compiled test assembly and its 388 PDB documents. It performed two Client compilations, with no Test recompilation or restore. This corrects an orchestration prerequisite; it does not discard or relabel a gameplay failure.
+
+The continuation used configuration `3d6ef0b3`, runner `e862645b` and grant `339d6c6a`. Its whole duration was 370.681 seconds; the full test command took 316.063 seconds. Peak cgroup memory was 3,852,738,560 bytes with zero memory events. Cleanup `2c5c503e` verifies all twenty observed process identities absent and the cgroup removed. The frozen producer inputs remained unchanged.
+
+The accepted Client DLL is `8ad7ea6f82ce724cfd0d4c31a79aca49f320bf30d36f6c12567d7dbb651d520b`, its PDB is `6dbcf50f35c5eb3322c44e5256529525b1605ff0c4adff00e4bbe9a1c2dd9852`, and its unchanged XML is `28f7ff90723a3743eab2db1da0ff34d3ba707057e5639085f595802498628011`. The tested production and fixture postimages are promoted byte for byte. The [022c934 checkpoint](interaction-checkpoint-022c934.md) records completed producer freezing, full repository, consumer, Native AOT, local package and published-source CI checks. The [6730 checkpoint results](interaction-checkpoint-6730.md) retain their original producer.

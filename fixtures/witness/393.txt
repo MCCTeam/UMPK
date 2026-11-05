@@ -18,7 +18,7 @@
 #
 # A witness describes a BAND, so every protocol in one renders the same three columns. Payloads
 # are authored (WitnessCatalog); this file is rendered. Regenerate with UMPK_UPDATE_WITNESS_PINS=1.
-# witnessed 16 of 123 implemented bindings (corpus 6, synth 10)
+# witnessed 16 of 125 implemented bindings (corpus 6, synth 10)
 witnesses:
 Handshake Serverbound 0x00 minecraft:intention HandshakeCodecs.Intention src:none
 Status Clientbound 0x00 minecraft:status_response StatusCodecs.Response src:none
@@ -57,10 +57,10 @@ Play Clientbound 0x11 minecraft:commands CommandTreeCodecs.V1_13 src:corpus@393 
 Play Clientbound 0x12 minecraft:transaction ContainerCodecs.TransactionClientV1_8 src:none
 Play Clientbound 0x13 minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
 Play Clientbound 0x14 minecraft:open_screen ContainerCodecs.OpenScreenV1_8 src:none
-Play Clientbound 0x15 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_13 src:synth w:13 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=0,CustomName=null,Dama h=D458A2A0
+Play Clientbound 0x15 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_13 src:synth w:13 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=0,CustomName=null,Dama h=9D915168
     reject:P47(NbtFormatException) reject:P404(NbtFormatException)
 Play Clientbound 0x16 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
-Play Clientbound 0x17 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_13 src:synth w:7 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=46DC9270
+Play Clientbound 0x17 minecraft:container_set_slot ContainerCodecs.ContainerSetSlotV1_13 src:synth w:7 ok ContainerSetSlot{ContainerId=15,IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=1, h=762C644E
     reject:P107(ProtocolViolationException) reject:P404(NbtFormatException)
 Play Clientbound 0x18 minecraft:cooldown UiMiscCodecs.CooldownV1_9 src:none
 Play Clientbound 0x1A minecraft:custom_sound WorldEffectCodecs.CustomSoundV1_10 src:none
@@ -94,6 +94,7 @@ Play Clientbound 0x38 minecraft:respawn WorldStateCodecs.RespawnV1_8 src:synth w
     reject:P477(read:7)
 Play Clientbound 0x39 minecraft:rotate_head EntityMoveCodecs.RotateHead src:none
 Play Clientbound 0x3A minecraft:select_advancements_tab AdvancementCodecs.SelectAdvancementsTabV1_12 src:none
+Play Clientbound 0x3B minecraft:set_border WorldBorderCodecs.SetBorderV1_9 src:none
 Play Clientbound 0x3C minecraft:set_camera EntityStateCodecs.SetCamera src:none
 Play Clientbound 0x3D minecraft:set_held_slot EntityStateCodecs.SetHeldSlotV1_8 src:none
 Play Clientbound 0x3E minecraft:set_display_objective ScoreboardCodecs.SetDisplayObjectiveV1_9 src:none
@@ -123,6 +124,7 @@ Play Clientbound 0x51 minecraft:update_advancements AdvancementCodecs.UpdateAdva
 Play Clientbound 0x52 minecraft:update_attributes EntityEquipmentCodecs.UpdateAttributesV1_8 src:none
 Play Clientbound 0x53 minecraft:update_mob_effect EntityEffectCodecs.UpdateMobEffectV1_8 src:none
 Play Clientbound 0x54 minecraft:update_recipes RecipeCodecs.UpdateRecipesModern src:none
+Play Clientbound 0x55 minecraft:update_tags WorldTagCodecs.TagsV1_13 src:none
 Play Serverbound 0x00 minecraft:accept_teleportation EntityServerboundCodecs.AcceptTeleportation src:none
 Play Serverbound 0x02 minecraft:chat ChatCodecs.ServerLegacyV1_8 src:none
 Play Serverbound 0x03 minecraft:client_command PlayCommonCodecs.ClientCommand src:none
@@ -152,7 +154,7 @@ Play Serverbound 0x1E minecraft:seen_advancements AdvancementCodecs.SeenAdvancem
 Play Serverbound 0x1F minecraft:select_trade MerchantCodecs.SelectTradeModern src:none
 Play Serverbound 0x21 minecraft:set_carried_item EntityServerboundCodecs.SetCarriedItem src:none
 Play Serverbound 0x22 minecraft:set_command_block WorldBlockCodecs.SetCommandBlockV1_13 src:none
-Play Serverbound 0x24 minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_13 src:synth w:6 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=B8607846
+Play Serverbound 0x24 minecraft:set_creative_mode_slot ContainerCodecs.CreativeSlotV1_13 src:synth w:6 ok SetCreativeModeSlot{IsLegacy=false,Item=ItemStack{Book=null,Components=[0:],Count=2,CustomName=n h=4ECB221D
     reject:P107(ProtocolViolationException) reject:P404(NbtFormatException)
 Play Serverbound 0x26 minecraft:sign_update UiMiscCodecs.SignUpdateV1_9 src:none
 Play Serverbound 0x27 minecraft:swing EntityServerboundCodecs.SwingV1_9 src:none

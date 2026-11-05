@@ -21,6 +21,8 @@ public sealed class InventoryActions
     private readonly IPacketSink _sink;
     private readonly ClientSessionServices _services;
     private short _actionNumber;
+    private long? _carriedItemLifetime;
+    private int _sentHeldSlot;
 
     internal InventoryActions(IPacketSink sink, ClientSessionServices services)
     {
@@ -36,8 +38,43 @@ public sealed class InventoryActions
         if (slot is < 0 or > 8)
             throw new ArgumentOutOfRangeException(nameof(slot), "The hotbar slot must be 0-8.");
 
-        await _sink.SendAsync(new ServerboundSetCarriedItemPacket((short)slot), ct).ConfigureAwait(false);
+        CancellationToken session = _services.CurrentSessionCancellation()
+            ?? throw new InvalidOperationException("The client is not connected.");
+        using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(ct, session);
+        if (_services.Scheduler.IsCurrent)
+            await SelectHeldSlotOnLoopAsync(slot, lifetime.Token, session).ConfigureAwait(false);
+        else
+            await _services.Scheduler.InvokeAsync(() => SelectHeldSlotOnLoopAsync(slot, lifetime.Token, session), lifetime.Token).ConfigureAwait(false);
+    }
+
+    private async ValueTask SelectHeldSlotOnLoopAsync(int slot, CancellationToken ct, CancellationToken session)
+    {
+        ct.ThrowIfCancellationRequested();
+        SynchronizeCarriedItemLifetime();
+        // After admission, finish this single-packet write in its captured session before updating the selection/cache.
+        await _sink.SendAsync(new ServerboundSetCarriedItemPacket((short)slot), session).ConfigureAwait(false);
         _services.State.Self.HeldSlot = slot;
+        _sentHeldSlot = slot;
+    }
+
+    /// <summary>Runs the game-mode carried-index phase before held input, independently of local-player tick eligibility.</summary>
+    internal async ValueTask TickCarriedItemOnLoopAsync(IPacketSink sink, CancellationToken ct)
+    {
+        SynchronizeCarriedItemLifetime();
+        int slot = _services.Self.HeldSlot;
+        if (slot is < 0 or > 8 || slot == _sentHeldSlot)
+            return;
+        await sink.SendAsync(new ServerboundSetCarriedItemPacket((short)slot), ct).ConfigureAwait(false);
+        _sentHeldSlot = slot;
+    }
+
+    private void SynchronizeCarriedItemLifetime()
+    {
+        // Join creates the native controller; Respawn replaces the player while retaining this cache.
+        if (_carriedItemLifetime == _services.State.InteractionLifetime)
+            return;
+        _carriedItemLifetime = _services.State.InteractionLifetime;
+        _sentHeldSlot = 0;
     }
 
     /// <summary>Performs a container click through the prediction pipeline.</summary>

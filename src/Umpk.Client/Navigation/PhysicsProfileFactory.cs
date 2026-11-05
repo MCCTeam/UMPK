@@ -3,20 +3,11 @@ using Umpk.Protocol.Java;
 
 namespace Umpk.Client.Navigation;
 
-/// <summary>Builds the production <see cref="PhysicsProfile"/> from a session's <see cref="JavaVersion"/>. This is the field-by-field mapping from the dataset's generated <see cref="ProtocolFeatures"/> (built by <c>Umpk.Data.Java</c> from <c>features.json</c>) onto <see cref="PhysicsProfile.FromFeatures"/>'s six raw flags. The mapping lives here - in <c>Umpk.Client</c>, which already references both <c>Umpk.Physics</c> and <c>Umpk.Protocol.Java</c> - rather than in either of those two projects, so neither takes a dependency on the other (<see cref="PhysicsProfile.FromFeatures"/>'s own remarks: "the engine never reads JSON... directly"). <see cref="PhysicsEngineHolder"/> is the sole production caller; <c>Umpk.Client.Tests.PhysicsProfileConformanceTests</c> exercises this for every protocol in <c>JavaVersions.All</c> and pins it against the dataset.</summary>
+/// <summary>Builds the session physics profile from generated movement features and the native pose and cadence selectors owned by <see cref="PhysicsProfile"/>.</summary>
 internal static class PhysicsProfileFactory
 {
-    /// <summary>
-    /// Maps <paramref name="version"/>'s <see cref="ProtocolFeatures"/> onto a <see cref="PhysicsProfile"/>. Four of <see cref="PhysicsProfile.FromFeatures"/>'s six flags have a direct <c>features.json</c> source and are passed straight through (fluidMovement, elytra, swimPose, crawlPose). The other two have NO direct dataset field; this is where that gap is closed, and the reasoning is stated here rather than left implicit:
-    /// <list type="bullet">
-    /// <item><description>
-    /// <c>modernCrouchHeight</c> is derived from <see cref="ProtocolFeatures.CrawlPose"/>. The 1.14 hitbox rewrite introduced the pose-keyed dimension table that carries both the crawl pose and the 1.5-block crouch height together; no shipped version has one of those without the other, and <see cref="PhysicsProfile.ForProtocol"/>'s own pre-existing switch already treats them as a single boundary (protocol 477). The dataset's <c>physics.poseBoundingBoxEra</c> field is NOT a substitute: it cuts at 1.9 (pre1.9/modern), a different boundary entirely, and nothing in the codebase reads it.
-    /// </description></item>
-    /// <item><description>
-    /// <c>dirtyCheckedPositionCadence</c> is derived from <see cref="PhysicsProfile.PositionSendCadenceForProtocol"/>. The position-send cadence is a client send-loop behavior, not a wire/world fact the dataset captures at all, so it is computed straight from the protocol number - mirroring <see cref="PhysicsProfile.ForProtocol"/>'s own pre-existing boundary rather than a new one.
-    /// </description></item>
-    /// </list>
-    /// </summary>
+    /// <summary>Maps the descriptor's movement flags and selects its player dimensions and position cadence.</summary>
+    /// <remarks>Pose dimensions are independent of crawl availability: 1.8 sneaking retains the standing box, 1.9 shortens it and 1.14 introduces the pose table. The explicit profile selector keeps that boundary separate from bootstrap defaults.</remarks>
     public static PhysicsProfile FromJavaVersion(JavaVersion version)
     {
         ProtocolFeatures features = version.Features;
@@ -36,6 +27,9 @@ internal static class PhysicsProfileFactory
             crawlPoseAvailable: features.CrawlPose,
             modernCrouchHeight: features.CrawlPose,
             dirtyCheckedPositionCadence: PhysicsProfile.PositionSendCadenceForProtocol(version.Version.Protocol)
-                == PositionSendCadence.DirtyChecked);
+                == PositionSendCadence.DirtyChecked) with
+        {
+            PoseDimensions = PhysicsProfile.PoseDimensionsForProtocol(version.Version.Protocol),
+        };
     }
 }

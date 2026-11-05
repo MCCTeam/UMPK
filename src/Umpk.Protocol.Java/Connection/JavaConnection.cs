@@ -519,6 +519,7 @@ public sealed class JavaConnection : IAsyncDisposable
         object? decoded = null;
         bool known = false;
         bool skip = false;
+        UnmodeledItemComponentException? unmodeledLoss = null;
         bool resolved = false;
         ResolvedFrame resolvedFrame = default;
 
@@ -539,13 +540,14 @@ public sealed class JavaConnection : IAsyncDisposable
             }
             catch (UnmodeledItemComponentException ex)
             {
-                // The ONE decode fault that costs a packet instead of the session, and the only catch of this type anywhere. An item component patch named a component this era's table knows but UMPK does not model; compact component payloads carry no length prefix, so the rest of this frame is unreadable. The frame is length-delimited at the transport, though, so the packet is the right recovery boundary: drop it and keep the session.
+                // The one decode fault recovered at the packet boundary. An item component patch named a component this era's table knows but UMPK does not model; compact component payloads carry no length prefix, so the rest of this frame is unreadable. Inventory codec catches only attach already-read header context before this recovery owner abandons the packet.
                 //
                 // This deliberately ignores DecodeFailurePolicy. That policy governs FRAMING strictness, and this case is provably not a framing fault: the offending id came out of the era's own component table. An id outside that table never reaches here (it raises ProtocolViolationException) and still kills the connection, so a real desync cannot hide behind this branch.
                 ConnectionDiagnostics.UnmodeledComponents.Add(1);
                 ReportUnmodeledComponent(ex, wireId);
                 known = true;
                 skip = true;
+                unmodeledLoss = ex;
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
@@ -592,9 +594,35 @@ public sealed class JavaConnection : IAsyncDisposable
             }
         }
 
-        // SkipFrameAndReport: the frame was observed and counted; drop it without delivery.
+        // Preserve default drop and frame-mode behavior. An opted-in item-mode play consumer receives this non-packet disposition through the same ordered channel as decoded packets.
         if (skip)
+        {
+            if (unmodeledLoss is null || !_options.DeliverUnmodeledPacketLosses || _decodeFilter is not null || Phase != ProtocolPhase.Play)
+                return;
+
+            var loss = new InboundDecodeLoss(Phase, InboundFlow, frame, unmodeledLoss.ComponentWireId, unmodeledLoss.ComponentId, unmodeledLoss.InventoryScope);
+            if (_bundleAccumulator is { IsAccumulating: true })
+            {
+                FrameDispatchSequence.ReadBundleIdentity(
+                    _binding!, resolved, in resolvedFrame, Phase, InboundFlow, wireId, live.AsSpan(0, bodyLen),
+                    out bool isDelimiter, out bool isTerminal);
+                if (!isDelimiter && isTerminal)
+                {
+                    throw new ProtocolViolationException(
+                        $"Terminal packet (wire id 0x{wireId:X2}) received inside a bundle.")
+                    {
+                        WireId = wireId,
+                    };
+                }
+
+                _bundleAccumulator.OfferLoss(loss);
+            }
+            else
+            {
+                await _inbound.Writer.WriteAsync(new InboundItem(loss), ct).ConfigureAwait(false);
+            }
             return;
+        }
 
         // Bundle accumulation (1.19.4+): between two bundle_delimiter frames, buffer the packets and deliver them atomically as one PacketBundle. Item mode only; a proxy relays frames verbatim and never assembles bundles. Delimiters are never terminal/compression/encryption points, so bundle frames bypass the pause gates below.
         //

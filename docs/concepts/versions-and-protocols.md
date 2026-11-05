@@ -24,7 +24,7 @@ So the number is the real unit. Everything in UMPK is keyed on it.
 }
 ```
 
-72 entries, 49 distinct protocol numbers, running from 47 (1.8) to 776 (26.2). The file's own provenance block says it plainly: "ordered catalog; names map N:1 onto protocols". The `dataset` field names the directory under `data/java/` that holds the extracted data for the protocol, and there are 49 of those directories, one per number. The `identity` field records which block and item id scheme the version uses, `legacy` before the 1.13 flattening and `flat` after it.
+The catalog has 75 entries and 50 distinct protocol numbers, from 47 (1.8) to 777 (26.3), including 26.1.1 and 26.1.2 on protocol 775. The file's own provenance block describes the mapping: "ordered catalog; names map N:1 onto protocols". The `dataset` field names the directory under `data/java/` that holds the extracted data for the protocol, and there are 50 of those directories, one per number. The `identity` field records which block and item id scheme the version uses, `legacy` before the 1.13 flattening and `flat` after it.
 
 There is no directory named `1.20.4`. There is no per-release anything. If you go looking for a file that belongs to a release rather than a protocol, you will not find one, and that is the design working rather than something missing.
 
@@ -32,7 +32,7 @@ The full mapping is in [supported versions](../reference/supported-versions.md).
 
 ## What this buys
 
-The alternative most protocol libraries land on is a class or a module per release, and it collapses as soon as you count the releases. 72 names is 72 forks to keep in sync, when 23 of them are byte-for-byte identical to a neighbour on every packet they send.
+The 75 release names share 50 generated profiles, so 25 additional names reuse an existing profile. A shared protocol number does not prove that every native client behavior is identical across its named releases. UMPK retains one profile per protocol; protocol 47 uses the 1.8.9 client profile, and measurements from other 1.8 releases remain separate evidence.
 
 Keying on the number does the deduplication for you at the level where it is actually true. One protocol means one dataset directory, one generated descriptor, one packet table, one set of codec bindings. 1.21.7 and 1.21.8 are both protocol 772, so supporting the second once you have the first is a catalog entry and a regeneration, with no new data and no new codecs.
 
@@ -47,7 +47,7 @@ private static JavaVersion? s_v47;
 public static JavaVersion V1_8_1 => s_v47 ??= global::Umpk.Data.Java.V47.Descriptor.Build();
 ```
 
-Ten 1.8.x properties, one descriptor, one object. `JavaVersions.All` has 49 entries, not 72, because there are only 49 different things to be.
+Ten 1.8.x properties share one descriptor and one object. `JavaVersions.All` contains 50 entries, one per protocol, while the named properties cover all 75 releases.
 
 ## Looking one up
 
@@ -58,7 +58,7 @@ JavaVersions.TryGetByProtocol(765, out JavaVersion byNumber);
 JavaVersions.TryGetByName("1.20.3", out JavaVersion byName);
 ```
 
-`TryGetByName` resolves all 72 names through a generated name table, aliases included. It exists because name lookup is what a config file or a command-line flag hands you, and the alternative is making every caller learn the mapping.
+`TryGetByName` resolves all 75 names through a generated name table, aliases included. It exists because name lookup is what a config file or a command-line flag hands you, and the alternative is making every caller learn the mapping.
 
 Here is the wrinkle that catches people. `JavaVersion.Version.Name` is a single representative name for the protocol, and it is the last release in the band. Protocol 47 reports `1.8.9`. Protocol 765 reports `1.20.4`. Feed it `1.20.3` and you will get an object back that calls itself `1.20.4`, which is correct and still surprising the first time. If you need to echo the user's version string back at them, keep their string; do not round-trip it through the catalog.
 

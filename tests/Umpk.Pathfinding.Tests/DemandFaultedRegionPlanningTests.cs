@@ -2,6 +2,7 @@ using Umpk.Geometry;
 using Umpk.Pathfinding.Core;
 using Umpk.Pathfinding.Goals;
 using Umpk.Pathfinding.Tests.Fixtures;
+using Umpk.TestKit.Time;
 using Xunit;
 
 namespace Umpk.Pathfinding.Tests;
@@ -22,14 +23,16 @@ public sealed class DemandFaultedRegionPlanningTests
         Assert.Equal(eagerView.Region.Min, lazyView.Region.Min);
         Assert.Equal(eagerView.Region.CellCount, lazyView.Region.CellCount);
 
-        PathResult eager = PathPlanner.FindPath(eagerView, options, start, new GoalBlock(goal));
-        PathResult lazy = PathPlanner.FindPath(lazyView, options, start, new GoalBlock(goal));
+        var clock = new VirtualTimeProvider(DateTimeOffset.UnixEpoch);
+        PathResult eager = PathPlanner.FindPath(eagerView, options, start, new GoalBlock(goal), clock);
+        PathResult lazy = PathPlanner.FindPath(lazyView, options, start, new GoalBlock(goal), clock);
 
         Assert.Equal(eager.Status, lazy.Status);
         Assert.Equal(eager.Cost, lazy.Cost);
         Assert.Equal(eager.Diagnostics.NodesExplored, lazy.Diagnostics.NodesExplored);
         Assert.Equal(eager.Diagnostics.UnloadedChunkHits, lazy.Diagnostics.UnloadedChunkHits);
         Assert.Equal(eager.Diagnostics.TimedOut, lazy.Diagnostics.TimedOut);
+        Assert.False(eager.Diagnostics.TimedOut);
         Assert.Equal(eager.Diagnostics.NodeBudgetExhausted, lazy.Diagnostics.NodeBudgetExhausted);
         Assert.Equal(eager.Path.Count, lazy.Path.Count);
 
@@ -122,14 +125,17 @@ public sealed class DemandFaultedRegionPlanningTests
 
         var start = new BlockPos(0, FloorY + 1, 0);
         var goal = new GoalBlock(new BlockPos(70, FloorY + 1, 14));
-        PathResult eager = PathPlanner.FindPath(eagerView, PathfinderOptions.Default, start, goal);
-        PathResult lazy = PathPlanner.FindPath(lazyView, PathfinderOptions.Default, start, goal);
+        var clock = new VirtualTimeProvider(DateTimeOffset.UnixEpoch);
+        PathResult eager = PathPlanner.FindPath(eagerView, PathfinderOptions.Default, start, goal, clock);
+        PathResult lazy = PathPlanner.FindPath(lazyView, PathfinderOptions.Default, start, goal, clock);
 
         Assert.NotEqual(PathStatus.Success, eager.Status);
         Assert.Equal(eager.Status, lazy.Status);
         Assert.Equal(eager.Cost, lazy.Cost);
         Assert.Equal(eager.Path.Count, lazy.Path.Count);
         Assert.Equal(eager.Diagnostics.NodesExplored, lazy.Diagnostics.NodesExplored);
+        Assert.False(eager.Diagnostics.TimedOut);
+        Assert.False(lazy.Diagnostics.TimedOut);
         Assert.True(eager.Diagnostics.NodesExplored > 1000, $"the sealed shape only explored {eager.Diagnostics.NodesExplored} nodes");
     }
 

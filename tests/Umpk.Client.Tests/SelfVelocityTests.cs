@@ -254,6 +254,9 @@ public sealed class SelfVelocityTests
             for (int z = -8; z <= 8; z++)
                 harness.State.World.SetBlockStateId(new BlockPos(x, 64, z), SolidStateId);
 
+        foreach (var column in harness.State.World.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
+
         harness.State.Self.Position = new Vec3d(0.5, 65.0, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.ResyncPosition();

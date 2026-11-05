@@ -188,7 +188,7 @@ public sealed class SurfacingDrainTests
             world.SetBlockStateId(new BlockPos(ColumnX, y, 0), 0);
 
         IBlockShapeSource shapes = JavaGameData.BlockShapes(Protocol);
-        var engine = new PlayerPhysics(new WorldPhysicsView(world, shapes), PhysicsProfile.ForProtocol(Protocol));
+        var engine = new PlayerPhysics(new WorldPhysicsView(world, shapes, Umpk.Game.World.WorldBorderState.ContainmentEraForProtocol(Protocol)), PhysicsProfile.ForProtocol(Protocol));
         engine.SetConditions(PhysicsConditions.Default);
 
         // The body arrives already swimming, which is what a surfacing body always is: the supervisor only fires on a route that is under water, and the executor's swim template holds Sprint. Started THREE CELLS DOWN and settled with Sprint held, because the swim pose can only BEGIN with the eye already wet (swimming-state update's asymmetry); a body reset at the surface never enters it at all, and would make this fixture measure the wrong thing.

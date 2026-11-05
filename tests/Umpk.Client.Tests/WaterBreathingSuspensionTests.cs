@@ -526,6 +526,8 @@ public sealed class WaterBreathingSuspensionTests
 
         harness.State.Registries = JavaGameData.Registries(Protocol);
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, FloorY, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();

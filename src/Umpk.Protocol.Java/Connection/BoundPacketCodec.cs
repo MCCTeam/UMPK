@@ -95,6 +95,7 @@ public sealed class BoundPacketCodec
                 ex)
             {
                 WireId = WireId,
+                InventoryScope = ex.InventoryScope,
             };
         }
         catch (ProtocolViolationException ex) when (ex.WireId is null)

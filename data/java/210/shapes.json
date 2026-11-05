@@ -8,7 +8,26 @@
   ],
   "kind": "extracted",
   "note": "legacy shape refs keyed by numeric block id; unlisted ids default to full cube in DataGen",
-  "meta_supplement": "collision_by_block_state lists only the (id << 4 | meta) states whose collision differs from their block's meta-0 shape in collision_by_block_id; every other state inherits it. Derived by tools/extraction/add_legacy_meta_shapes.py from vanilla's own getStateFromMeta and bounding-box code, using each band's own meta-0 box so per-band geometry is preserved."
+  "meta_supplement": "collision_by_block_state lists only the (id << 4 | meta) states whose collision differs from their block's meta-0 shape in collision_by_block_id; every other state inherits it. Derived by tools/extraction/add_legacy_meta_shapes.py from vanilla's own getStateFromMeta and bounding-box code, using each band's own meta-0 box so per-band geometry is preserved.",
+  "vanilla_corrections": {
+   "version": "1.10",
+   "source": "1.10-decompiled/apq.java",
+   "source_sha256": "58207ca3b17b60cd3e9327978a5b231459d9cb640954574d7c3f9e1daa7ff1fd",
+   "note": "Structure void collision override returns akf.k (null); its separate outline is the centered 0.3..0.7 cube. Magma, nether wart block, red nether brick and bone block inherit the base full-unit-cube collision; their explicit references complete coverage for the newly corrected registrations.",
+   "full_cube_ids": [
+    213,
+    214,
+    215,
+    216
+   ],
+   "full_cube_sources": {
+    "akf": "30f99e2756a51f15598946369420b4cec3652c66f0c2737e7b8880061dc98b8b",
+    "and": "3a67dc3584d89474ee4a199115718494478b65291718318f2b1cda86f58b1373",
+    "ank": "a283c91b59382664ad785700e8d76c3c1dea903aac45a8f417b319f65519c95d",
+    "akh": "4886a5c26b925019bdb4416b5810c75124496f65fdf2386a2b9806d665abb448",
+    "aor": "9be50c152599c38edee6a9e1fede57e946d477c4f2f12a75f132295c554fe448"
+   }
+  }
  },
  "shapes": [
   [],
@@ -1239,6 +1258,11 @@
   "210": 1,
   "211": 1,
   "212": 1,
+  "213": 1,
+  "214": 1,
+  "215": 1,
+  "216": 1,
+  "217": 0,
   "255": 1
  },
  "collision_by_block_state": {

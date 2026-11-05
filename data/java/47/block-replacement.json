@@ -1,0 +1,2366 @@
+{
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 1394,
+  "ranges": [
+    [
+      0,
+      0,
+      3
+    ],
+    [
+      16,
+      22,
+      0
+    ],
+    [
+      32,
+      32,
+      0
+    ],
+    [
+      48,
+      50,
+      0
+    ],
+    [
+      64,
+      64,
+      0
+    ],
+    [
+      80,
+      85,
+      0
+    ],
+    [
+      96,
+      101,
+      0
+    ],
+    [
+      104,
+      109,
+      0
+    ],
+    [
+      112,
+      112,
+      0
+    ],
+    [
+      128,
+      191,
+      2
+    ],
+    [
+      192,
+      193,
+      0
+    ],
+    [
+      208,
+      208,
+      0
+    ],
+    [
+      224,
+      224,
+      0
+    ],
+    [
+      240,
+      240,
+      0
+    ],
+    [
+      256,
+      256,
+      0
+    ],
+    [
+      272,
+      305,
+      0
+    ],
+    [
+      320,
+      320,
+      0
+    ],
+    [
+      336,
+      336,
+      0
+    ],
+    [
+      352,
+      352,
+      0
+    ],
+    [
+      368,
+      373,
+      0
+    ],
+    [
+      376,
+      381,
+      0
+    ],
+    [
+      384,
+      386,
+      0
+    ],
+    [
+      400,
+      400,
+      0
+    ],
+    [
+      416,
+      419,
+      0
+    ],
+    [
+      424,
+      437,
+      0
+    ],
+    [
+      440,
+      445,
+      0
+    ],
+    [
+      448,
+      453,
+      0
+    ],
+    [
+      456,
+      461,
+      0
+    ],
+    [
+      464,
+      469,
+      0
+    ],
+    [
+      472,
+      477,
+      0
+    ],
+    [
+      480,
+      480,
+      0
+    ],
+    [
+      496,
+      498,
+      3
+    ],
+    [
+      512,
+      512,
+      3
+    ],
+    [
+      528,
+      533,
+      0
+    ],
+    [
+      536,
+      541,
+      0
+    ],
+    [
+      544,
+      549,
+      0
+    ],
+    [
+      552,
+      557,
+      0
+    ],
+    [
+      560,
+      581,
+      0
+    ],
+    [
+      584,
+      589,
+      0
+    ],
+    [
+      592,
+      592,
+      0
+    ],
+    [
+      608,
+      616,
+      0
+    ],
+    [
+      624,
+      624,
+      0
+    ],
+    [
+      640,
+      640,
+      0
+    ],
+    [
+      656,
+      656,
+      0
+    ],
+    [
+      672,
+      672,
+      0
+    ],
+    [
+      688,
+      720,
+      0
+    ],
+    [
+      736,
+      737,
+      0
+    ],
+    [
+      752,
+      752,
+      0
+    ],
+    [
+      768,
+      768,
+      0
+    ],
+    [
+      784,
+      784,
+      0
+    ],
+    [
+      801,
+      805,
+      0
+    ],
+    [
+      816,
+      831,
+      2
+    ],
+    [
+      832,
+      832,
+      0
+    ],
+    [
+      848,
+      855,
+      0
+    ],
+    [
+      866,
+      869,
+      0
+    ],
+    [
+      880,
+      896,
+      0
+    ],
+    [
+      912,
+      912,
+      0
+    ],
+    [
+      928,
+      928,
+      0
+    ],
+    [
+      944,
+      951,
+      0
+    ],
+    [
+      960,
+      967,
+      0
+    ],
+    [
+      978,
+      981,
+      0
+    ],
+    [
+      994,
+      997,
+      0
+    ],
+    [
+      1008,
+      1035,
+      0
+    ],
+    [
+      1042,
+      1045,
+      0
+    ],
+    [
+      1056,
+      1065,
+      0
+    ],
+    [
+      1072,
+      1079,
+      0
+    ],
+    [
+      1090,
+      1093,
+      0
+    ],
+    [
+      1104,
+      1121,
+      0
+    ],
+    [
+      1136,
+      1147,
+      0
+    ],
+    [
+      1152,
+      1153,
+      0
+    ],
+    [
+      1168,
+      1168,
+      0
+    ],
+    [
+      1184,
+      1184,
+      0
+    ],
+    [
+      1201,
+      1205,
+      0
+    ],
+    [
+      1217,
+      1221,
+      0
+    ],
+    [
+      1232,
+      1237,
+      0
+    ],
+    [
+      1240,
+      1245,
+      0
+    ],
+    [
+      1248,
+      1248,
+      3
+    ],
+    [
+      1249,
+      1255,
+      2
+    ],
+    [
+      1264,
+      1264,
+      0
+    ],
+    [
+      1280,
+      1280,
+      0
+    ],
+    [
+      1296,
+      1312,
+      0
+    ],
+    [
+      1328,
+      1345,
+      0
+    ],
+    [
+      1360,
+      1360,
+      0
+    ],
+    [
+      1376,
+      1379,
+      0
+    ],
+    [
+      1392,
+      1392,
+      0
+    ],
+    [
+      1408,
+      1408,
+      0
+    ],
+    [
+      1424,
+      1424,
+      0
+    ],
+    [
+      1441,
+      1442,
+      0
+    ],
+    [
+      1456,
+      1459,
+      0
+    ],
+    [
+      1472,
+      1478,
+      0
+    ],
+    [
+      1488,
+      1557,
+      0
+    ],
+    [
+      1568,
+      1571,
+      0
+    ],
+    [
+      1584,
+      1594,
+      0
+    ],
+    [
+      1598,
+      1610,
+      0
+    ],
+    [
+      1614,
+      1616,
+      0
+    ],
+    [
+      1632,
+      1632,
+      0
+    ],
+    [
+      1648,
+      1648,
+      0
+    ],
+    [
+      1664,
+      1671,
+      0
+    ],
+    [
+      1680,
+      1687,
+      0
+    ],
+    [
+      1696,
+      1711,
+      3
+    ],
+    [
+      1712,
+      1735,
+      0
+    ],
+    [
+      1744,
+      1751,
+      0
+    ],
+    [
+      1760,
+      1760,
+      0
+    ],
+    [
+      1776,
+      1776,
+      0
+    ],
+    [
+      1792,
+      1792,
+      0
+    ],
+    [
+      1808,
+      1808,
+      0
+    ],
+    [
+      1824,
+      1831,
+      0
+    ],
+    [
+      1840,
+      1843,
+      0
+    ],
+    [
+      1856,
+      1856,
+      0
+    ],
+    [
+      1872,
+      1879,
+      0
+    ],
+    [
+      1888,
+      1891,
+      0
+    ],
+    [
+      1904,
+      1904,
+      0
+    ],
+    [
+      1920,
+      1927,
+      0
+    ],
+    [
+      1936,
+      1936,
+      0
+    ],
+    [
+      1952,
+      1952,
+      0
+    ],
+    [
+      1968,
+      1968,
+      0
+    ],
+    [
+      1984,
+      1984,
+      0
+    ],
+    [
+      2000,
+      2005,
+      0
+    ],
+    [
+      2016,
+      2021,
+      0
+    ],
+    [
+      2024,
+      2029,
+      0
+    ],
+    [
+      2032,
+      2043,
+      0
+    ],
+    [
+      2048,
+      2055,
+      0
+    ],
+    [
+      2064,
+      2064,
+      0
+    ],
+    [
+      2082,
+      2085,
+      0
+    ],
+    [
+      2096,
+      2128,
+      0
+    ],
+    [
+      2144,
+      2151,
+      0
+    ],
+    [
+      2160,
+      2167,
+      0
+    ],
+    [
+      2176,
+      2183,
+      0
+    ],
+    [
+      2192,
+      2193,
+      0
+    ],
+    [
+      2208,
+      2208,
+      0
+    ],
+    [
+      2224,
+      2225,
+      0
+    ],
+    [
+      2240,
+      2263,
+      0
+    ],
+    [
+      2272,
+      2279,
+      0
+    ],
+    [
+      2288,
+      2293,
+      0
+    ],
+    [
+      2296,
+      2301,
+      0
+    ],
+    [
+      2304,
+      2309,
+      0
+    ],
+    [
+      2312,
+      2317,
+      0
+    ],
+    [
+      2320,
+      2331,
+      0
+    ],
+    [
+      2338,
+      2341,
+      0
+    ],
+    [
+      2352,
+      2432,
+      0
+    ],
+    [
+      2448,
+      2448,
+      0
+    ],
+    [
+      2464,
+      2464,
+      0
+    ],
+    [
+      2466,
+      2469,
+      0
+    ],
+    [
+      2472,
+      2472,
+      0
+    ],
+    [
+      2474,
+      2477,
+      0
+    ],
+    [
+      2480,
+      2484,
+      0
+    ],
+    [
+      2496,
+      2503,
+      0
+    ],
+    [
+      2512,
+      2517,
+      0
+    ],
+    [
+      2520,
+      2525,
+      0
+    ],
+    [
+      2528,
+      2533,
+      0
+    ],
+    [
+      2536,
+      2541,
+      0
+    ],
+    [
+      2544,
+      2577,
+      0
+    ],
+    [
+      2580,
+      2581,
+      0
+    ],
+    [
+      2584,
+      2585,
+      0
+    ],
+    [
+      2588,
+      2589,
+      0
+    ],
+    [
+      2592,
+      2593,
+      0
+    ],
+    [
+      2596,
+      2597,
+      0
+    ],
+    [
+      2600,
+      2601,
+      0
+    ],
+    [
+      2604,
+      2605,
+      0
+    ],
+    [
+      2608,
+      2615,
+      0
+    ],
+    [
+      2624,
+      2631,
+      0
+    ],
+    [
+      2640,
+      2640,
+      0
+    ],
+    [
+      2656,
+      2656,
+      0
+    ],
+    [
+      2672,
+      2690,
+      0
+    ],
+    [
+      2704,
+      2704,
+      0
+    ],
+    [
+      2720,
+      2720,
+      0
+    ],
+    [
+      2724,
+      2724,
+      0
+    ],
+    [
+      2728,
+      2728,
+      0
+    ],
+    [
+      2736,
+      2752,
+      0
+    ],
+    [
+      2768,
+      2768,
+      0
+    ],
+    [
+      2784,
+      2784,
+      0
+    ],
+    [
+      2800,
+      2801,
+      2
+    ],
+    [
+      2802,
+      2803,
+      3
+    ],
+    [
+      2804,
+      2805,
+      2
+    ],
+    [
+      2808,
+      2811,
+      2
+    ],
+    [
+      2816,
+      2831,
+      0
+    ],
+    [
+      2834,
+      2837,
+      0
+    ],
+    [
+      2848,
+      2866,
+      0
+    ],
+    [
+      2880,
+      2887,
+      0
+    ],
+    [
+      2896,
+      2896,
+      0
+    ],
+    [
+      2904,
+      2904,
+      0
+    ],
+    [
+      2912,
+      2912,
+      0
+    ],
+    [
+      2920,
+      2920,
+      0
+    ],
+    [
+      2928,
+      3008,
+      0
+    ],
+    [
+      3024,
+      3024,
+      0
+    ],
+    [
+      3040,
+      3040,
+      0
+    ],
+    [
+      3056,
+      3056,
+      0
+    ],
+    [
+      3072,
+      3072,
+      0
+    ],
+    [
+      3088,
+      3099,
+      0
+    ],
+    [
+      3104,
+      3115,
+      0
+    ],
+    [
+      3120,
+      3131,
+      0
+    ],
+    [
+      3136,
+      3147,
+      0
+    ],
+    [
+      3152,
+      3163,
+      0
+    ]
+  ],
+  "below_overrides": {
+    "2808": [
+      [
+        2802,
+        2803,
+        3
+      ]
+    ],
+    "2809": [
+      [
+        2802,
+        2803,
+        3
+      ]
+    ],
+    "2810": [
+      [
+        2802,
+        2803,
+        3
+      ]
+    ],
+    "2811": [
+      [
+        2802,
+        2803,
+        3
+      ]
+    ]
+  },
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_block_replacement.py",
+    "tool_sha256": "bfdd41e8676d91164a2c9745fcbcb778f8daa23459499233f327b057c12fd1c8",
+    "client_profile": "1.8.9",
+    "different_earlier_client_profiles": [
+      {
+        "version": "1.8",
+        "profile": {
+          "schema": 1,
+          "identity": "legacy",
+          "state_count": 1391,
+          "ranges": [
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              16,
+              22,
+              0
+            ],
+            [
+              32,
+              32,
+              0
+            ],
+            [
+              48,
+              50,
+              0
+            ],
+            [
+              64,
+              64,
+              0
+            ],
+            [
+              80,
+              85,
+              0
+            ],
+            [
+              96,
+              101,
+              0
+            ],
+            [
+              104,
+              109,
+              0
+            ],
+            [
+              112,
+              112,
+              0
+            ],
+            [
+              128,
+              191,
+              2
+            ],
+            [
+              192,
+              193,
+              0
+            ],
+            [
+              208,
+              208,
+              0
+            ],
+            [
+              224,
+              224,
+              0
+            ],
+            [
+              240,
+              240,
+              0
+            ],
+            [
+              256,
+              256,
+              0
+            ],
+            [
+              272,
+              305,
+              0
+            ],
+            [
+              320,
+              320,
+              0
+            ],
+            [
+              336,
+              336,
+              0
+            ],
+            [
+              352,
+              352,
+              0
+            ],
+            [
+              368,
+              373,
+              0
+            ],
+            [
+              376,
+              381,
+              0
+            ],
+            [
+              384,
+              386,
+              0
+            ],
+            [
+              400,
+              400,
+              0
+            ],
+            [
+              416,
+              419,
+              0
+            ],
+            [
+              424,
+              437,
+              0
+            ],
+            [
+              440,
+              445,
+              0
+            ],
+            [
+              448,
+              453,
+              0
+            ],
+            [
+              456,
+              461,
+              0
+            ],
+            [
+              464,
+              469,
+              0
+            ],
+            [
+              472,
+              477,
+              0
+            ],
+            [
+              480,
+              480,
+              0
+            ],
+            [
+              496,
+              498,
+              3
+            ],
+            [
+              512,
+              512,
+              3
+            ],
+            [
+              528,
+              533,
+              0
+            ],
+            [
+              536,
+              541,
+              0
+            ],
+            [
+              544,
+              549,
+              0
+            ],
+            [
+              552,
+              557,
+              0
+            ],
+            [
+              560,
+              581,
+              0
+            ],
+            [
+              584,
+              589,
+              0
+            ],
+            [
+              592,
+              592,
+              0
+            ],
+            [
+              608,
+              616,
+              0
+            ],
+            [
+              624,
+              624,
+              0
+            ],
+            [
+              640,
+              640,
+              0
+            ],
+            [
+              656,
+              656,
+              0
+            ],
+            [
+              672,
+              672,
+              0
+            ],
+            [
+              688,
+              720,
+              0
+            ],
+            [
+              736,
+              737,
+              0
+            ],
+            [
+              752,
+              752,
+              0
+            ],
+            [
+              768,
+              768,
+              0
+            ],
+            [
+              784,
+              784,
+              0
+            ],
+            [
+              801,
+              805,
+              0
+            ],
+            [
+              816,
+              831,
+              2
+            ],
+            [
+              832,
+              832,
+              0
+            ],
+            [
+              848,
+              855,
+              0
+            ],
+            [
+              866,
+              869,
+              0
+            ],
+            [
+              880,
+              896,
+              0
+            ],
+            [
+              912,
+              912,
+              0
+            ],
+            [
+              928,
+              928,
+              0
+            ],
+            [
+              944,
+              951,
+              0
+            ],
+            [
+              960,
+              967,
+              0
+            ],
+            [
+              978,
+              981,
+              0
+            ],
+            [
+              994,
+              997,
+              0
+            ],
+            [
+              1008,
+              1035,
+              0
+            ],
+            [
+              1042,
+              1045,
+              0
+            ],
+            [
+              1056,
+              1065,
+              0
+            ],
+            [
+              1072,
+              1079,
+              0
+            ],
+            [
+              1090,
+              1093,
+              0
+            ],
+            [
+              1104,
+              1121,
+              0
+            ],
+            [
+              1136,
+              1147,
+              0
+            ],
+            [
+              1152,
+              1153,
+              0
+            ],
+            [
+              1168,
+              1168,
+              0
+            ],
+            [
+              1184,
+              1184,
+              0
+            ],
+            [
+              1201,
+              1205,
+              0
+            ],
+            [
+              1217,
+              1221,
+              0
+            ],
+            [
+              1232,
+              1237,
+              0
+            ],
+            [
+              1240,
+              1245,
+              0
+            ],
+            [
+              1248,
+              1248,
+              3
+            ],
+            [
+              1249,
+              1255,
+              2
+            ],
+            [
+              1264,
+              1264,
+              0
+            ],
+            [
+              1280,
+              1280,
+              0
+            ],
+            [
+              1296,
+              1312,
+              0
+            ],
+            [
+              1328,
+              1345,
+              0
+            ],
+            [
+              1360,
+              1360,
+              0
+            ],
+            [
+              1376,
+              1379,
+              0
+            ],
+            [
+              1392,
+              1392,
+              0
+            ],
+            [
+              1408,
+              1408,
+              0
+            ],
+            [
+              1424,
+              1424,
+              0
+            ],
+            [
+              1441,
+              1442,
+              0
+            ],
+            [
+              1456,
+              1459,
+              0
+            ],
+            [
+              1472,
+              1478,
+              0
+            ],
+            [
+              1488,
+              1557,
+              0
+            ],
+            [
+              1568,
+              1571,
+              0
+            ],
+            [
+              1584,
+              1594,
+              0
+            ],
+            [
+              1598,
+              1610,
+              0
+            ],
+            [
+              1614,
+              1616,
+              0
+            ],
+            [
+              1632,
+              1632,
+              0
+            ],
+            [
+              1648,
+              1648,
+              0
+            ],
+            [
+              1664,
+              1671,
+              0
+            ],
+            [
+              1680,
+              1687,
+              0
+            ],
+            [
+              1696,
+              1711,
+              3
+            ],
+            [
+              1712,
+              1735,
+              0
+            ],
+            [
+              1744,
+              1751,
+              0
+            ],
+            [
+              1760,
+              1760,
+              0
+            ],
+            [
+              1776,
+              1776,
+              0
+            ],
+            [
+              1792,
+              1792,
+              0
+            ],
+            [
+              1808,
+              1808,
+              0
+            ],
+            [
+              1824,
+              1831,
+              0
+            ],
+            [
+              1840,
+              1843,
+              0
+            ],
+            [
+              1856,
+              1856,
+              0
+            ],
+            [
+              1872,
+              1879,
+              0
+            ],
+            [
+              1888,
+              1891,
+              0
+            ],
+            [
+              1904,
+              1904,
+              0
+            ],
+            [
+              1920,
+              1927,
+              0
+            ],
+            [
+              1936,
+              1936,
+              0
+            ],
+            [
+              1952,
+              1952,
+              0
+            ],
+            [
+              1968,
+              1968,
+              0
+            ],
+            [
+              1984,
+              1984,
+              0
+            ],
+            [
+              2000,
+              2005,
+              0
+            ],
+            [
+              2016,
+              2021,
+              0
+            ],
+            [
+              2024,
+              2029,
+              0
+            ],
+            [
+              2032,
+              2043,
+              0
+            ],
+            [
+              2048,
+              2055,
+              0
+            ],
+            [
+              2064,
+              2064,
+              0
+            ],
+            [
+              2082,
+              2085,
+              0
+            ],
+            [
+              2096,
+              2128,
+              0
+            ],
+            [
+              2144,
+              2151,
+              0
+            ],
+            [
+              2160,
+              2167,
+              0
+            ],
+            [
+              2176,
+              2183,
+              0
+            ],
+            [
+              2192,
+              2193,
+              0
+            ],
+            [
+              2208,
+              2208,
+              0
+            ],
+            [
+              2224,
+              2225,
+              0
+            ],
+            [
+              2240,
+              2263,
+              0
+            ],
+            [
+              2272,
+              2279,
+              0
+            ],
+            [
+              2288,
+              2293,
+              0
+            ],
+            [
+              2296,
+              2301,
+              0
+            ],
+            [
+              2304,
+              2309,
+              0
+            ],
+            [
+              2312,
+              2317,
+              0
+            ],
+            [
+              2320,
+              2331,
+              0
+            ],
+            [
+              2338,
+              2341,
+              0
+            ],
+            [
+              2352,
+              2432,
+              0
+            ],
+            [
+              2448,
+              2448,
+              0
+            ],
+            [
+              2464,
+              2464,
+              0
+            ],
+            [
+              2466,
+              2469,
+              0
+            ],
+            [
+              2472,
+              2472,
+              0
+            ],
+            [
+              2474,
+              2477,
+              0
+            ],
+            [
+              2480,
+              2484,
+              0
+            ],
+            [
+              2496,
+              2503,
+              0
+            ],
+            [
+              2512,
+              2517,
+              0
+            ],
+            [
+              2520,
+              2525,
+              0
+            ],
+            [
+              2528,
+              2533,
+              0
+            ],
+            [
+              2536,
+              2541,
+              0
+            ],
+            [
+              2544,
+              2577,
+              0
+            ],
+            [
+              2580,
+              2581,
+              0
+            ],
+            [
+              2584,
+              2585,
+              0
+            ],
+            [
+              2588,
+              2589,
+              0
+            ],
+            [
+              2592,
+              2593,
+              0
+            ],
+            [
+              2596,
+              2597,
+              0
+            ],
+            [
+              2600,
+              2601,
+              0
+            ],
+            [
+              2604,
+              2605,
+              0
+            ],
+            [
+              2608,
+              2615,
+              0
+            ],
+            [
+              2624,
+              2631,
+              0
+            ],
+            [
+              2640,
+              2640,
+              0
+            ],
+            [
+              2656,
+              2656,
+              0
+            ],
+            [
+              2672,
+              2690,
+              0
+            ],
+            [
+              2704,
+              2704,
+              0
+            ],
+            [
+              2720,
+              2720,
+              0
+            ],
+            [
+              2724,
+              2724,
+              0
+            ],
+            [
+              2728,
+              2728,
+              0
+            ],
+            [
+              2736,
+              2752,
+              0
+            ],
+            [
+              2768,
+              2768,
+              0
+            ],
+            [
+              2784,
+              2784,
+              0
+            ],
+            [
+              2800,
+              2801,
+              2
+            ],
+            [
+              2802,
+              2803,
+              3
+            ],
+            [
+              2804,
+              2805,
+              2
+            ],
+            [
+              2808,
+              2808,
+              2
+            ],
+            [
+              2816,
+              2831,
+              0
+            ],
+            [
+              2834,
+              2837,
+              0
+            ],
+            [
+              2848,
+              2866,
+              0
+            ],
+            [
+              2880,
+              2887,
+              0
+            ],
+            [
+              2896,
+              2896,
+              0
+            ],
+            [
+              2904,
+              2904,
+              0
+            ],
+            [
+              2912,
+              2912,
+              0
+            ],
+            [
+              2920,
+              2920,
+              0
+            ],
+            [
+              2928,
+              3008,
+              0
+            ],
+            [
+              3024,
+              3024,
+              0
+            ],
+            [
+              3040,
+              3040,
+              0
+            ],
+            [
+              3056,
+              3056,
+              0
+            ],
+            [
+              3072,
+              3072,
+              0
+            ],
+            [
+              3088,
+              3099,
+              0
+            ],
+            [
+              3104,
+              3115,
+              0
+            ],
+            [
+              3120,
+              3131,
+              0
+            ],
+            [
+              3136,
+              3147,
+              0
+            ],
+            [
+              3152,
+              3163,
+              0
+            ]
+          ],
+          "below_overrides": {
+            "2808": [
+              [
+                2802,
+                2803,
+                3
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "measurements": [
+      {
+        "version": "1.8",
+        "measurement_sha256": "747fe8c3d084cb961ed16612c63308f1a311008cf7f1ed43fd88fb4706473562",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2497,
+          "unsigned_jar_sha256": "80de82b489b9c8d3099826f27a3c9acdea307a41da94ec8e7bf0451c7e0ce3d4",
+          "classes_sha256": "a8bb983bbe6952d410e1380ad2228cbbaaf8082121b59f9b0a1a1be6fcdd7800"
+        },
+        "artifacts_sha256": {
+          "client.jar": "ccccd0a92f76fbb24279691daad9b67f85d80471a37e59e0da76d7754982dfe8",
+          "server.jar": "40e23f3823d6f0e3cbadc491cedb55b8ba53f8ab516b68182ddd1536babeb291"
+        },
+        "completion_sha256": "7dc9a6a651cd30fde906936ebde176b644ea63631bdbf98fe980abee71230764",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "atr.java": "59f90b21d92b81ff8c5715dbbcfece9c599f10ddd44384a85c1a6c398ef944ae",
+          "auw.java": "3a2c0a53dd55b61efb9c358e6e77564a5a2f74d6d7807d56634eb7e025ea1ea6",
+          "avi.java": "1158693b3cffb7199e2d3d22d15d85b7e0aabfca11f2bcaa3088c516d0c8a3ac",
+          "bao.java": "c02ed3f74d4ce4fa633080a59130835644f6503d25530c0b7c4e3fff007c95e9",
+          "bbh.java": "12394b51004f2c1f442dd5d6878d94540e5785bea4ad1eb6a6fe9f71f54fbef6",
+          "bbv.java": "092754ccee3d232e31fe6f0693a111d694ba5e5594003e5bd47cc6a48bf46f8f"
+        },
+        "predicate_calls": 5564,
+        "state_count": 1391,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.1",
+        "measurement_sha256": "ca90473c4e3825c2d5cd1d3c582884d7322c73468de0d90bd84f4f0d78bb5fdb",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2500,
+          "unsigned_jar_sha256": "93b7b24c46bd6f9ee6bb9dcd327d03fa67711618cbc82baa24dc0df80d655529",
+          "classes_sha256": "033947c56dc5ae03d152176ed9b89ee81142ec4980bc1138e3e3ace997a6a433"
+        },
+        "artifacts_sha256": {
+          "client.jar": "66a749ad95adcb929439155c0341309e89e437444867e108dcb36fd16493b0bd",
+          "server.jar": "ef5f5a1a1a78087859b18153acf97efc6ecb12540ac08d82b9c95024249b9845"
+        },
+        "completion_sha256": "e07428ac70ea0811b6cd5e76fb1e5e1e10fc8203d7f94b20987498bff28f0886",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "asv.java": "de87652361818e6f6514acc967bc2622c35e8e7349edff2f6d57f105929894d9",
+          "ato.java": "94b9a23fffd847a487eb3ffe6aef9b7c0377e7477d8a13d7acbe44d6aba5b927",
+          "aut.java": "42da9a975ab2a2d7d3dec8f837a15d549da67d81408cdde19589bbcfecea40e8",
+          "avf.java": "16897a1be441b9d19f1604f4afe0e0eefbdd17fef1fbe0a10d340103e2764932",
+          "bam.java": "d0d85e1dbd4e6814d9aacfb0bdedec223ca3ec60e63ebf17c64302d53ebab4fc",
+          "bbf.java": "d2a891b39a61ae30beffc33087c7b0b030de27d9d0ac8c18c31c92639e56edd7",
+          "bbt.java": "8578cb58aaca37f6f041f238c3f5eaa2a6075a951231451ba427ce4754306670"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.2",
+        "measurement_sha256": "5a69dd40cc63544d39b663b1f03392425d442d42ec7772fdb97665d3ba9e26f1",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2508,
+          "unsigned_jar_sha256": "43422ed0b1a7fbf7735d903231c3acffdd44d8336125a43adeff9c5bad53e12a",
+          "classes_sha256": "dcf55b1bd05336536cd7e71c3ec12167268918d82ff2f1586291928110ede06d"
+        },
+        "artifacts_sha256": {
+          "client.jar": "5cc5b24312f3d182bf06e7f1a4da3a05ce94be6c861d5c9995c86e6d8811fbe9",
+          "server.jar": "d99f3b3478018cb454fbee36fd60e3c4acbe1132f1cb26b3657f9ad291e7035c"
+        },
+        "completion_sha256": "ab1a5094096bf7aea2fe363064604b1f0f2b439a3613f3589b12f03f75c7692b",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aez.java": "ead4bfe788fa06a07e5584c89d092220883cc80aa4ba401a4093649feecbbbe1",
+          "afi.java": "812e608f07df2d14db36b698edfc0cbd2499a6514e54470ddac35f5fee6f1322",
+          "agc.java": "910f6f52798cca560d21def2b5ecf5b1baec8763164a21357fe2feb5e0bf6585",
+          "agj.java": "6a8207455e57f43338ad3532b4c586fd530f9940400fab89f98e0165041fb2b1",
+          "ajq.java": "64f05600f7a1245b37f6f4259d20e981b5f94f582ec8587e06ade9b572851c10",
+          "akd.java": "6a1180d81e84befdd29fef801e5af3fa23a558a73d5108bbf1a028d758311af4",
+          "akl.java": "55bf1165fd9662ceb38615cadf57f74420062a1e575ebaf96034a1ddab027c65"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.3",
+        "measurement_sha256": "73dff54e516f15eb9e0375ecb78d0f35833982a6b5b830aa9584d50dbf252f27",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2508,
+          "unsigned_jar_sha256": "1f543a1999d138fe3ca34772a89bfda1702288935562e6d21d18e7c261f69fce",
+          "classes_sha256": "bcc399b20f8febcf865a30e03823dc04066717caf7c0519daa8a9487bc0eb3a5"
+        },
+        "artifacts_sha256": {
+          "client.jar": "4da43d06c8c1605a9a3ba1bf22893245cf1b108eb5c8fed859012252370c2c06",
+          "server.jar": "a26751b18ccc80ceef488da645c3b785aa528e2ae20a6a6dbd46f6dc754e62bd"
+        },
+        "completion_sha256": "dd639324f9dc3954d53d1fc74f18841b6b26468b2d1f692d71c0fa5312a010f8",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aez.java": "ead4bfe788fa06a07e5584c89d092220883cc80aa4ba401a4093649feecbbbe1",
+          "afi.java": "812e608f07df2d14db36b698edfc0cbd2499a6514e54470ddac35f5fee6f1322",
+          "agc.java": "910f6f52798cca560d21def2b5ecf5b1baec8763164a21357fe2feb5e0bf6585",
+          "agj.java": "6a8207455e57f43338ad3532b4c586fd530f9940400fab89f98e0165041fb2b1",
+          "ajq.java": "64f05600f7a1245b37f6f4259d20e981b5f94f582ec8587e06ade9b572851c10",
+          "akd.java": "6a1180d81e84befdd29fef801e5af3fa23a558a73d5108bbf1a028d758311af4",
+          "akl.java": "55bf1165fd9662ceb38615cadf57f74420062a1e575ebaf96034a1ddab027c65"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.4",
+        "measurement_sha256": "005bed081d0062795eb8b939e336d0eccdc15df3f4016d930fbe1bf3c77482c7",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "eb024b072cc84407c14f1604abd761d8d8bc87c26458a0abae57080ecc493fd0",
+          "classes_sha256": "cde42449de8b98feb10b22fe38723f73448cace478e74b38da8d25a39e3a26c7"
+        },
+        "artifacts_sha256": {
+          "client.jar": "d68a3aa5271abece4ce2b7048f6caf4f58071476344d9a52fe9ab1410c5d458b",
+          "server.jar": "394a9d0d5bcd03272a58f036b8736a47d26d63b45a4e7c820629114876e72107"
+        },
+        "completion_sha256": "fe7bf4dc535d2ffdea60117a9cc26b09e50c00d0c84103e9e38f308834ed7d9e",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.5",
+        "measurement_sha256": "b85f88d8de964e6a1f4010a5b0d1f11ba3a94c76aaf01c96541ff441bf65bb8d",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "654b5628474d8e40000acc9c46663a513f3392e7ce4803ec726ccbc459a45701",
+          "classes_sha256": "2bbf5d90e8c759aa6681ca1a69cebe4d6b74891e5a510cb9d87fd1fef9ea146d"
+        },
+        "artifacts_sha256": {
+          "client.jar": "2d825073de0da4383c0525e81d181ec81f92d17daa2f0b81faff3850492e461d",
+          "server.jar": "6a412e89009acfcd5c56084ddab4f9676c5561bb58a3f22d5ea4ba4ac5d3503e"
+        },
+        "completion_sha256": "feff235dedb400e4f31fb82a949d59ff6aad73958e2b6f26aa7cb52b0d037a15",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.6",
+        "measurement_sha256": "35ea3804d31f513d5762953f609d4dc9ef88e5a91c70876cdb681104bc4b4faa",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2506,
+          "unsigned_jar_sha256": "bc0d89bb7cb6ebc386e92a228cf8c1102ff6e2dcdee96db309b27e610c0eb8ab",
+          "classes_sha256": "08f6f28539e74213aab33596acfdc165f57f02b28cccdec5e72c5123d0b5e593"
+        },
+        "artifacts_sha256": {
+          "client.jar": "e597384cf964950b02650a39f73c2cbf5ce9e51d934cdfa1291530896e7cf100",
+          "server.jar": "7fc66b2b54f0f4d65fdd6d6484a50f432c144ef02072d3435d5660f120f58e0d"
+        },
+        "completion_sha256": "6431de958f57cd2987b71203479052071ec46a3df03772d9d64428cb6a83b6b9",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.7",
+        "measurement_sha256": "aa34623b41db396340755d1a6d6862d9fdd6fb477edb87e2a938ac9175287ff5",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2506,
+          "unsigned_jar_sha256": "50d27a6eca9ddee9e733b938e46daf084ca0298bbd06ce3f46f428cd78ca542e",
+          "classes_sha256": "d5ed4fc9220f264452a65f44d8a9c212d64c794737593a6289e7807183e2d93e"
+        },
+        "artifacts_sha256": {
+          "client.jar": "2e45066ec194c6daec5f7dbb27822ef0b5855d5829f62392906620145689a3e0",
+          "server.jar": "5cf4a49762c996c94f6b8b119f1c80b4de3c12b2f5c53268801905bb7daa0644"
+        },
+        "completion_sha256": "4fbc7e6a8bced28159a1d7b6d0208446f8587864d429c1d8e3e8ad67add41fee",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.8",
+        "measurement_sha256": "a109c0270ba0cb7e78468f2a60d755912a36858259214715c7eaeb4b91933a52",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "ca80c2977653d80a81882231033e2ae37da65708f1dd980cb30276edd847319a",
+          "classes_sha256": "08181268b276e6589803dfeeeacded495342db7ac0e9e654a89d40d55c7f98b1"
+        },
+        "artifacts_sha256": {
+          "client.jar": "9481ed51d7fc4be54ec38c509f84124fbac5d9fea238bbde5b2e6c4f753b1ac8",
+          "server.jar": "39aef720dc5309476f56f2e96a516f3dd3041bbbf442cbfd47d63acbd06af31e"
+        },
+        "completion_sha256": "ed455fac06891c748bb0837e5f20c321c242d9be252e272459ea7072e95356d6",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      },
+      {
+        "version": "1.8.9",
+        "measurement_sha256": "c92d1a3f3142ce139ead89bd397f724337617f9fbb2f0f705faab34c8e71d309",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 2507,
+          "unsigned_jar_sha256": "de6f21e9548af2dcd77e4158355f02908e6bc65e370e10a8bc021d2713e15480",
+          "classes_sha256": "25e6298ea893dae01583fd24745239e970d811f5410f8dc3e66b926c37290e96"
+        },
+        "artifacts_sha256": {
+          "client.jar": "14f0d96d1a56fb4f5c3b2233d00699525893fe5ce3dcf181e7de59120595d298",
+          "server.jar": "c18e4245073aaff580eb7359902f0251436568b1647a9e443a924cdb73fa8312"
+        },
+        "completion_sha256": "09594798033d8446b6386697a27240c919a0e48eb0ca7949df0045c7cb38ccd2",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "aey.java": "2542b21b79252cb661324edaae80f1e47c4ce3de30bce354b00afe4202930329",
+          "afh.java": "b5bf05d2b78250d166d403831f7c235d20e3206d347ae6d4c20c5c721bcd6b89",
+          "agb.java": "e7c910122ed84063371a4cc74220e89b700b528c3f9717e9269c97e18241e8e6",
+          "agi.java": "813bf64d60ccda87a6299165696229d5c90da8549dcba1ed22fb2b9bc1510d1e",
+          "ajp.java": "54a2851b8e55959bc64a98fc79792e82da14c947898c563964e9a3a1354b6162",
+          "akc.java": "7c5bf984b6675ee8f813d55c2cf6a4a35a9da1a85836d6d20ea0db942b0104c2",
+          "akk.java": "43eb3f33c7f9aa3fa37c667e58d86974d94e0ea05d3a7159b2696bc00478a928"
+        },
+        "predicate_calls": 13940,
+        "state_count": 1394,
+        "cube_item_count": 60,
+        "full_use_samples": 22,
+        "scope": "Original legacy Block.isReplaceable and inherited simple-cube canPlaceBlockAt material predicate, with controlled target and measured below-state reads. Item and direction independence follow their native signatures and measured inheritance. No world or client tick."
+      }
+    ],
+    "note": "Ordinary cube items only. Flags 1=replace clicked block, 2=allow placement into the resolved destination. Ranges contain native wire state identifiers; absent identifiers remain unknown. Below-state overrides preserve measured legacy dependencies. Protocol aliases use the latest measured vanilla client profile. Stack, player, world, obstruction and use-result rules remain runtime conditions."
+  }
+}

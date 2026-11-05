@@ -1005,7 +1005,7 @@ Umpk.Pathfinding.Moves.LateralQuantum.NearFace = -1 -> Umpk.Pathfinding.Moves.La
 Umpk.Pathfinding.Moves.LateralQuantum.Centre = 0 -> Umpk.Pathfinding.Moves.LateralQuantum
 Umpk.Pathfinding.Moves.LateralQuantum.FarFace = 1 -> Umpk.Pathfinding.Moves.LateralQuantum
 Umpk.Pathfinding.Moves.SqueezeLane
-const Umpk.Pathfinding.Moves.SqueezeLane.LateralOffset = 0.2 -> double
+const Umpk.Pathfinding.Moves.SqueezeLane.LateralOffset = 0.19999998807907104 -> double
 static Umpk.Pathfinding.Moves.SqueezeLane.IsClear(Umpk.Pathfinding.Core.CalculationContext! ctx, int x, int y, int z, int dx, int dz, Umpk.Pathfinding.Moves.LateralQuantum source, Umpk.Pathfinding.Moves.LateralQuantum destination) -> bool
 static Umpk.Pathfinding.Moves.SqueezeLane.Offset(Umpk.Pathfinding.Moves.LateralQuantum quantum) -> double
 Umpk.Pathfinding.PlanningWorldView.MayContainShapeOffset.get -> bool
@@ -1017,3 +1017,6 @@ Umpk.Pathfinding.Core.PathfinderCapabilities.DepthStriderLevel.get -> int
 static Umpk.Pathfinding.Core.ActionCosts.WadeCurrentCostMultiplier(Umpk.Geometry.Vec3d flow, Umpk.Geometry.Vec3d moveDirection, int depthStriderLevel) -> double
 Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.get -> int
 Umpk.Pathfinding.Core.PathDiagnostics.FloatingTakeoffsRefused.init -> void
+Umpk.Pathfinding.PlanningWorldView.CollisionQueryEra.get -> Umpk.Physics.BlockCollisionQueryEra
+Umpk.Pathfinding.PlanningWorldView.GetCollisionGrid(Umpk.Game.Blocks.BlockState state) -> Umpk.Game.Blocks.BlockCollisionGrid?
+Umpk.Pathfinding.PlanningWorldView.WithCollisionQueryEra(Umpk.Physics.BlockCollisionQueryEra collisionEra) -> Umpk.Pathfinding.PlanningWorldView!

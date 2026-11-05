@@ -1,0 +1,253 @@
+using Umpk.Client.Actions;
+using Umpk.Game.Blocks;
+using Umpk.Game.Entities;
+using Umpk.Game.Registries;
+using Umpk.Game.World;
+using Umpk.Geometry;
+
+namespace Umpk.Client.Internal;
+
+/// <summary>Owns the legacy player's cached box and explicit lifecycle callbacks on the session loop.</summary>
+internal sealed class TrackedLegacyPlayerGeometry
+{
+    private readonly int _protocol;
+    private readonly VanillaLegacyPlayerGeometry _geometry;
+    private readonly LegacyPlayerGeometryProfile _profile;
+
+    public TrackedLegacyPlayerGeometry(Entity entity, int protocol) : this(protocol, entity.Position) { }
+
+    public TrackedLegacyPlayerGeometry(int protocol, Vec3d position)
+    {
+        _protocol = protocol;
+        _geometry = new(protocol, position);
+        _profile = LegacyPlayerGeometryProfile.ForProtocol(protocol);
+    }
+
+    public VanillaLegacyPlayerGeometry Geometry => _geometry;
+    private BlockPos? _bed;
+    private bool _positionKnown = true;
+    private bool _dimensionsKnown = true;
+    private bool _metadataKnown = true;
+    private bool _lifecycleKnown = true;
+    private bool _queryKnown;
+    private LegacyPlayerResizeClearance? _clearance;
+    private Func<Aabb, bool>? _noCollision;
+
+    public bool IsPositionKnown => _positionKnown;
+
+    public void InvalidatePosition() => _positionKnown = false;
+
+    public bool TryGet(out Aabb bounds)
+    {
+        bounds = _geometry.Bounds;
+        return _positionKnown && _dimensionsKnown && _metadataKnown;
+    }
+
+    public void ObserveFlags(byte flags, bool spinAttack) => _geometry.ObserveFlags(flags, spinAttack);
+
+    public void InvalidateMetadata()
+    {
+        _metadataKnown = _dimensionsKnown = _lifecycleKnown = false;
+    }
+
+    public void ObservePosition(Vec3d position)
+    {
+        _geometry.SetPosition(position);
+        _positionKnown = true;
+    }
+
+    public void ObserveMovement(Vec3d position, Aabb bounds) => _geometry.ObserveMovement(position, bounds);
+
+    public void Tick(LegacyPlayerResizeClearance? clearance)
+    {
+        if (!_lifecycleKnown || !_metadataKnown)
+        {
+            _dimensionsKnown = false;
+            return;
+        }
+        _clearance = _positionKnown ? clearance : null;
+        _queryKnown = true;
+        _dimensionsKnown = _geometry.TryApplySizePhase(_noCollision ??= QueryResize, _dimensionsKnown) && _queryKnown;
+    }
+
+    private bool QueryResize(Aabb candidate)
+    {
+        if (_clearance is not null)
+            return _clearance.NoCollision(candidate);
+        _queryKnown = false;
+        return false;
+    }
+
+    public bool TryGet(Entity entity, out Aabb bounds)
+    {
+        if (_positionKnown && _geometry.Position != entity.Position)
+            _geometry.SetPosition(entity.Position);
+        bounds = _geometry.Bounds;
+        return _positionKnown && _dimensionsKnown && _metadataKnown;
+    }
+
+    public void ObserveMetadata(Entity entity, int index)
+    {
+        if (index != 0 && !(_profile.SwimmingAndSpin && index == 6))
+            return;
+        bool sharedKnown = !entity.Metadata.TryGet(0, out MetadataValue shared) || shared.Kind == MetadataValueKind.Byte;
+        bool spinKnown = !_profile.SwimmingAndSpin || !entity.Metadata.TryGet(6, out MetadataValue spin) || spin.Kind == MetadataValueKind.Byte;
+        _metadataKnown = sharedKnown && spinKnown;
+        if (!_metadataKnown)
+        {
+            _dimensionsKnown = _lifecycleKnown = false;
+            return;
+        }
+        byte flags = entity.Metadata.TryGet(0, out shared) ? unchecked((byte)shared.AsByte()) : (byte)0;
+        // 1.13.2-client-decompiled afa.java: the synchronized living flags use bit 4 for spin attack.
+        bool spinAttack = _profile.SwimmingAndSpin && entity.Metadata.TryGet(6, out spin) && (spin.AsByte() & 4) != 0;
+        _geometry.ObserveFlags(flags, spinAttack);
+    }
+
+    public void ObservePosition(Entity entity)
+    {
+        ObservePosition(entity.Position);
+    }
+
+    public bool BeginSleep(Entity entity, World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        bool applied = BeginSleep(world, source, bed, membership, emptyChunk);
+        if (applied)
+            entity.Position = _geometry.Position;
+        return applied;
+    }
+
+    public bool BeginSleep(World? world, IBlockInteractionSource source, BlockPos bed, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        _bed = bed;
+        if (world is null)
+        {
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+            return false;
+        }
+        if (_profile.SkipsBedRead(bed))
+            _geometry.BeginSleepWithoutBedRead(bed);
+        else
+        {
+            int state = ReadState(world, bed, membership, emptyChunk);
+            if (state < 0 || !source.TryGetBedFacing(state, out Direction facing))
+            {
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+                return false;
+            }
+            _geometry.BeginSleep(bed, facing);
+        }
+        _positionKnown = _dimensionsKnown = _lifecycleKnown = true;
+        return true;
+    }
+
+    public void Wake(Entity entity, World? world, IBlockInteractionSource source, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        Wake(world, source, membership, emptyChunk);
+        if (_positionKnown)
+            entity.Position = _geometry.Position;
+    }
+
+    public void Wake(World? world, IBlockInteractionSource source, EntityMembershipState? membership = null, LegacyEmptyChunkState? emptyChunk = null)
+    {
+        if (_bed is not { } bed || world is null)
+        {
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+            return;
+        }
+        if (_profile.SkipsBedRead(bed))
+        {
+            _geometry.WakeAfterBedRemoval();
+            _dimensionsKnown = _lifecycleKnown = true;
+            _bed = null;
+            return;
+        }
+        int state = ReadState(world, bed, membership, emptyChunk);
+        if (state < 0)
+        {
+            _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+            return;
+        }
+        if (source.TryGetBedFacing(state, out Direction facing))
+        {
+            if (!TryClearOccupied(world.BlockData.GetState(state), out int unoccupied))
+            {
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+                return;
+            }
+            if (UsesEmptyChunk(bed, membership, emptyChunk))
+                emptyChunk!.ObserveWrite(membership!, bed, unoccupied);
+            else
+                world.SetBlockStateId(bed, unoccupied);
+            var query = new LegacyBedExitQuery(_protocol, source, cell => ReadState(world, cell, membership, emptyChunk));
+            _positionKnown = _geometry.TryWakeFromIntactBed(bed, facing, query.TryCanStand, out _);
+            _dimensionsKnown = _lifecycleKnown = true;
+            if (!_positionKnown)
+                _geometry.WakeAfterBedRemoval();
+        }
+        else
+        {
+            var current = world.BlockData.GetState(state);
+            if (!current.IsValid || current.Block.Id.Path is "bed" || current.Block.Id.Path.EndsWith("_bed", StringComparison.Ordinal))
+            {
+                _positionKnown = _dimensionsKnown = _lifecycleKnown = false;
+                return;
+            }
+            _geometry.WakeAfterBedRemoval();
+            _dimensionsKnown = _lifecycleKnown = true;
+        }
+        _bed = null;
+    }
+
+    private bool MissingBlockColumn(BlockPos cell, EntityMembershipState? membership)
+        => !_profile.RetainsEmptyChunkWrites && membership is not null && !membership.HasColumn(cell);
+
+    private bool UsesEmptyChunk(BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
+        => _profile.RetainsEmptyChunkWrites && emptyChunk is not null && membership is not null && !membership.HasColumn(cell);
+
+    public int ReadState(World world, BlockPos cell, EntityMembershipState? membership, LegacyEmptyChunkState? emptyChunk)
+        => UsesEmptyChunk(cell, membership, emptyChunk) ? emptyChunk!.Read(cell)
+            : MissingBlockColumn(cell, membership) || world.GetColumn(cell) is null ? -1 : world.GetBlockStateId(cell);
+
+    private static bool TryClearOccupied(BlockState state, out int result)
+    {
+        result = 0;
+        if (state.LegacyMeta >= 0)
+        {
+            // Original world writes across all 27 releases preserve facing/part and normalize raw head aliases when clearing occupancy.
+            result = state.StateId & ~4;
+            return true;
+        }
+        BlockDefinition block = state.Block.Value;
+        for (int candidate = block.MinStateId; candidate <= block.MaxStateId; candidate++)
+        {
+            if (!block.TryGetPropertyValue(candidate, "occupied", out string occupied) || occupied != "false")
+                continue;
+            bool matches = true;
+            foreach (BlockPropertyDefinition property in block.Properties)
+            {
+                if (property.Name == "occupied")
+                    continue;
+                if (!block.TryGetPropertyValue(state.StateId, property.Name, out string before)
+                    || !block.TryGetPropertyValue(candidate, property.Name, out string after)
+                    || !string.Equals(before, after, StringComparison.Ordinal))
+                {
+                    matches = false;
+                    break;
+                }
+            }
+            if (matches)
+            {
+                result = candidate;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void HandleDeath()
+    {
+        _geometry.HandleDeath();
+        _dimensionsKnown = true;
+    }
+}

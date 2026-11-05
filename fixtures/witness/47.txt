@@ -89,7 +89,7 @@ Play Clientbound 0x2C minecraft:spawn_weather_entity EntitySpawnCodecs.AddGlobal
 Play Clientbound 0x2D minecraft:open_screen ContainerCodecs.OpenScreenV1_8 src:none
 Play Clientbound 0x2E minecraft:container_close ContainerCodecs.ContainerCloseClientV1_8 src:none
 Play Clientbound 0x2F minecraft:set_slot ContainerCodecs.SetSlotV1_8 src:none
-Play Clientbound 0x30 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_8 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=0,CustomName=null,Dama h=D7F0BE95
+Play Clientbound 0x30 minecraft:container_set_content ContainerCodecs.ContainerSetContentV1_8 src:synth w:17 ok ContainerSetContent{CarriedItem=ItemStack{Book=null,Components=[0:],Count=0,CustomName=null,Dama h=FDB1134E
     reject:P393(NbtFormatException)
 Play Clientbound 0x31 minecraft:container_set_data ContainerCodecs.ContainerSetDataV1_8 src:none
 Play Clientbound 0x32 minecraft:transaction ContainerCodecs.TransactionClientV1_8 src:none

@@ -1,0 +1,5341 @@
+{
+  "schema": 1,
+  "identity": "flat",
+  "state_count": 20342,
+  "blocks": {
+    "minecraft:acacia_button": 2,
+    "minecraft:acacia_door": 2,
+    "minecraft:acacia_fence": 2,
+    "minecraft:acacia_fence_gate": 2,
+    "minecraft:acacia_leaves": 3,
+    "minecraft:acacia_log": 3,
+    "minecraft:acacia_planks": 3,
+    "minecraft:acacia_pressure_plate": 3,
+    "minecraft:acacia_sapling": 3,
+    "minecraft:acacia_sign": 2,
+    "minecraft:acacia_slab": 1,
+    "minecraft:acacia_stairs": 2,
+    "minecraft:acacia_trapdoor": 2,
+    "minecraft:acacia_wall_sign": 2,
+    "minecraft:acacia_wood": 3,
+    "minecraft:activator_rail": 3,
+    "minecraft:air": 1,
+    "minecraft:allium": 3,
+    "minecraft:amethyst_block": 3,
+    "minecraft:amethyst_cluster": 3,
+    "minecraft:ancient_debris": 3,
+    "minecraft:andesite": 3,
+    "minecraft:andesite_slab": 1,
+    "minecraft:andesite_stairs": 2,
+    "minecraft:andesite_wall": 3,
+    "minecraft:anvil": 2,
+    "minecraft:attached_melon_stem": 3,
+    "minecraft:attached_pumpkin_stem": 3,
+    "minecraft:azalea": 3,
+    "minecraft:azalea_leaves": 3,
+    "minecraft:azure_bluet": 3,
+    "minecraft:bamboo": 3,
+    "minecraft:bamboo_sapling": 3,
+    "minecraft:barrel": 2,
+    "minecraft:barrier": 3,
+    "minecraft:basalt": 3,
+    "minecraft:beacon": 2,
+    "minecraft:bedrock": 3,
+    "minecraft:bee_nest": 2,
+    "minecraft:beehive": 2,
+    "minecraft:beetroots": 3,
+    "minecraft:bell": 2,
+    "minecraft:big_dripleaf": 3,
+    "minecraft:big_dripleaf_stem": 3,
+    "minecraft:birch_button": 2,
+    "minecraft:birch_door": 2,
+    "minecraft:birch_fence": 2,
+    "minecraft:birch_fence_gate": 2,
+    "minecraft:birch_leaves": 3,
+    "minecraft:birch_log": 3,
+    "minecraft:birch_planks": 3,
+    "minecraft:birch_pressure_plate": 3,
+    "minecraft:birch_sapling": 3,
+    "minecraft:birch_sign": 2,
+    "minecraft:birch_slab": 1,
+    "minecraft:birch_stairs": 2,
+    "minecraft:birch_trapdoor": 2,
+    "minecraft:birch_wall_sign": 2,
+    "minecraft:birch_wood": 3,
+    "minecraft:black_banner": 3,
+    "minecraft:black_bed": 2,
+    "minecraft:black_candle": 0,
+    "minecraft:black_candle_cake": 2,
+    "minecraft:black_carpet": 3,
+    "minecraft:black_concrete": 3,
+    "minecraft:black_concrete_powder": 3,
+    "minecraft:black_glazed_terracotta": 3,
+    "minecraft:black_shulker_box": 2,
+    "minecraft:black_stained_glass": 3,
+    "minecraft:black_stained_glass_pane": 3,
+    "minecraft:black_terracotta": 3,
+    "minecraft:black_wall_banner": 3,
+    "minecraft:black_wool": 3,
+    "minecraft:blackstone": 3,
+    "minecraft:blackstone_slab": 1,
+    "minecraft:blackstone_stairs": 2,
+    "minecraft:blackstone_wall": 3,
+    "minecraft:blast_furnace": 2,
+    "minecraft:blue_banner": 3,
+    "minecraft:blue_bed": 2,
+    "minecraft:blue_candle": 0,
+    "minecraft:blue_candle_cake": 2,
+    "minecraft:blue_carpet": 3,
+    "minecraft:blue_concrete": 3,
+    "minecraft:blue_concrete_powder": 3,
+    "minecraft:blue_glazed_terracotta": 3,
+    "minecraft:blue_ice": 3,
+    "minecraft:blue_orchid": 3,
+    "minecraft:blue_shulker_box": 2,
+    "minecraft:blue_stained_glass": 3,
+    "minecraft:blue_stained_glass_pane": 3,
+    "minecraft:blue_terracotta": 3,
+    "minecraft:blue_wall_banner": 3,
+    "minecraft:blue_wool": 3,
+    "minecraft:bone_block": 3,
+    "minecraft:bookshelf": 3,
+    "minecraft:brain_coral": 3,
+    "minecraft:brain_coral_block": 3,
+    "minecraft:brain_coral_fan": 3,
+    "minecraft:brain_coral_wall_fan": 3,
+    "minecraft:brewing_stand": 2,
+    "minecraft:brick_slab": 1,
+    "minecraft:brick_stairs": 2,
+    "minecraft:brick_wall": 3,
+    "minecraft:bricks": 3,
+    "minecraft:brown_banner": 3,
+    "minecraft:brown_bed": 2,
+    "minecraft:brown_candle": 0,
+    "minecraft:brown_candle_cake": 2,
+    "minecraft:brown_carpet": 3,
+    "minecraft:brown_concrete": 3,
+    "minecraft:brown_concrete_powder": 3,
+    "minecraft:brown_glazed_terracotta": 3,
+    "minecraft:brown_mushroom": 3,
+    "minecraft:brown_mushroom_block": 3,
+    "minecraft:brown_shulker_box": 2,
+    "minecraft:brown_stained_glass": 3,
+    "minecraft:brown_stained_glass_pane": 3,
+    "minecraft:brown_terracotta": 3,
+    "minecraft:brown_wall_banner": 3,
+    "minecraft:brown_wool": 3,
+    "minecraft:bubble_column": 1,
+    "minecraft:bubble_coral": 3,
+    "minecraft:bubble_coral_block": 3,
+    "minecraft:bubble_coral_fan": 3,
+    "minecraft:bubble_coral_wall_fan": 3,
+    "minecraft:budding_amethyst": 3,
+    "minecraft:cactus": 3,
+    "minecraft:cake": 2,
+    "minecraft:calcite": 3,
+    "minecraft:campfire": 2,
+    "minecraft:candle": 0,
+    "minecraft:candle_cake": 2,
+    "minecraft:carrots": 3,
+    "minecraft:cartography_table": 2,
+    "minecraft:carved_pumpkin": 3,
+    "minecraft:cauldron": 2,
+    "minecraft:cave_air": 1,
+    "minecraft:cave_vines": 2,
+    "minecraft:cave_vines_plant": 0,
+    "minecraft:chain": 3,
+    "minecraft:chain_command_block": 2,
+    "minecraft:chest": 2,
+    "minecraft:chipped_anvil": 2,
+    "minecraft:chiseled_deepslate": 3,
+    "minecraft:chiseled_nether_bricks": 3,
+    "minecraft:chiseled_polished_blackstone": 3,
+    "minecraft:chiseled_quartz_block": 3,
+    "minecraft:chiseled_red_sandstone": 3,
+    "minecraft:chiseled_sandstone": 3,
+    "minecraft:chiseled_stone_bricks": 3,
+    "minecraft:chorus_flower": 3,
+    "minecraft:chorus_plant": 3,
+    "minecraft:clay": 3,
+    "minecraft:coal_block": 3,
+    "minecraft:coal_ore": 3,
+    "minecraft:coarse_dirt": 3,
+    "minecraft:cobbled_deepslate": 3,
+    "minecraft:cobbled_deepslate_slab": 1,
+    "minecraft:cobbled_deepslate_stairs": 2,
+    "minecraft:cobbled_deepslate_wall": 3,
+    "minecraft:cobblestone": 3,
+    "minecraft:cobblestone_slab": 1,
+    "minecraft:cobblestone_stairs": 2,
+    "minecraft:cobblestone_wall": 3,
+    "minecraft:cobweb": 3,
+    "minecraft:cocoa": 3,
+    "minecraft:command_block": 2,
+    "minecraft:comparator": 2,
+    "minecraft:composter": 2,
+    "minecraft:conduit": 3,
+    "minecraft:copper_block": 3,
+    "minecraft:copper_ore": 3,
+    "minecraft:cornflower": 3,
+    "minecraft:cracked_deepslate_bricks": 3,
+    "minecraft:cracked_deepslate_tiles": 3,
+    "minecraft:cracked_nether_bricks": 3,
+    "minecraft:cracked_polished_blackstone_bricks": 3,
+    "minecraft:cracked_stone_bricks": 3,
+    "minecraft:crafting_table": 2,
+    "minecraft:creeper_head": 3,
+    "minecraft:creeper_wall_head": 3,
+    "minecraft:crimson_button": 2,
+    "minecraft:crimson_door": 2,
+    "minecraft:crimson_fence": 2,
+    "minecraft:crimson_fence_gate": 2,
+    "minecraft:crimson_fungus": 3,
+    "minecraft:crimson_hyphae": 3,
+    "minecraft:crimson_nylium": 3,
+    "minecraft:crimson_planks": 3,
+    "minecraft:crimson_pressure_plate": 3,
+    "minecraft:crimson_roots": 1,
+    "minecraft:crimson_sign": 2,
+    "minecraft:crimson_slab": 1,
+    "minecraft:crimson_stairs": 2,
+    "minecraft:crimson_stem": 3,
+    "minecraft:crimson_trapdoor": 2,
+    "minecraft:crimson_wall_sign": 2,
+    "minecraft:crying_obsidian": 3,
+    "minecraft:cut_copper": 3,
+    "minecraft:cut_copper_slab": 1,
+    "minecraft:cut_copper_stairs": 2,
+    "minecraft:cut_red_sandstone": 3,
+    "minecraft:cut_red_sandstone_slab": 1,
+    "minecraft:cut_sandstone": 3,
+    "minecraft:cut_sandstone_slab": 1,
+    "minecraft:cyan_banner": 3,
+    "minecraft:cyan_bed": 2,
+    "minecraft:cyan_candle": 0,
+    "minecraft:cyan_candle_cake": 2,
+    "minecraft:cyan_carpet": 3,
+    "minecraft:cyan_concrete": 3,
+    "minecraft:cyan_concrete_powder": 3,
+    "minecraft:cyan_glazed_terracotta": 3,
+    "minecraft:cyan_shulker_box": 2,
+    "minecraft:cyan_stained_glass": 3,
+    "minecraft:cyan_stained_glass_pane": 3,
+    "minecraft:cyan_terracotta": 3,
+    "minecraft:cyan_wall_banner": 3,
+    "minecraft:cyan_wool": 3,
+    "minecraft:damaged_anvil": 2,
+    "minecraft:dandelion": 3,
+    "minecraft:dark_oak_button": 2,
+    "minecraft:dark_oak_door": 2,
+    "minecraft:dark_oak_fence": 2,
+    "minecraft:dark_oak_fence_gate": 2,
+    "minecraft:dark_oak_leaves": 3,
+    "minecraft:dark_oak_log": 3,
+    "minecraft:dark_oak_planks": 3,
+    "minecraft:dark_oak_pressure_plate": 3,
+    "minecraft:dark_oak_sapling": 3,
+    "minecraft:dark_oak_sign": 2,
+    "minecraft:dark_oak_slab": 1,
+    "minecraft:dark_oak_stairs": 2,
+    "minecraft:dark_oak_trapdoor": 2,
+    "minecraft:dark_oak_wall_sign": 2,
+    "minecraft:dark_oak_wood": 3,
+    "minecraft:dark_prismarine": 3,
+    "minecraft:dark_prismarine_slab": 1,
+    "minecraft:dark_prismarine_stairs": 2,
+    "minecraft:daylight_detector": 2,
+    "minecraft:dead_brain_coral": 3,
+    "minecraft:dead_brain_coral_block": 3,
+    "minecraft:dead_brain_coral_fan": 3,
+    "minecraft:dead_brain_coral_wall_fan": 3,
+    "minecraft:dead_bubble_coral": 3,
+    "minecraft:dead_bubble_coral_block": 3,
+    "minecraft:dead_bubble_coral_fan": 3,
+    "minecraft:dead_bubble_coral_wall_fan": 3,
+    "minecraft:dead_bush": 1,
+    "minecraft:dead_fire_coral": 3,
+    "minecraft:dead_fire_coral_block": 3,
+    "minecraft:dead_fire_coral_fan": 3,
+    "minecraft:dead_fire_coral_wall_fan": 3,
+    "minecraft:dead_horn_coral": 3,
+    "minecraft:dead_horn_coral_block": 3,
+    "minecraft:dead_horn_coral_fan": 3,
+    "minecraft:dead_horn_coral_wall_fan": 3,
+    "minecraft:dead_tube_coral": 3,
+    "minecraft:dead_tube_coral_block": 3,
+    "minecraft:dead_tube_coral_fan": 3,
+    "minecraft:dead_tube_coral_wall_fan": 3,
+    "minecraft:deepslate": 3,
+    "minecraft:deepslate_brick_slab": 1,
+    "minecraft:deepslate_brick_stairs": 2,
+    "minecraft:deepslate_brick_wall": 3,
+    "minecraft:deepslate_bricks": 3,
+    "minecraft:deepslate_coal_ore": 3,
+    "minecraft:deepslate_copper_ore": 3,
+    "minecraft:deepslate_diamond_ore": 3,
+    "minecraft:deepslate_emerald_ore": 3,
+    "minecraft:deepslate_gold_ore": 3,
+    "minecraft:deepslate_iron_ore": 3,
+    "minecraft:deepslate_lapis_ore": 3,
+    "minecraft:deepslate_redstone_ore": 2,
+    "minecraft:deepslate_tile_slab": 1,
+    "minecraft:deepslate_tile_stairs": 2,
+    "minecraft:deepslate_tile_wall": 3,
+    "minecraft:deepslate_tiles": 3,
+    "minecraft:detector_rail": 3,
+    "minecraft:diamond_block": 3,
+    "minecraft:diamond_ore": 3,
+    "minecraft:diorite": 3,
+    "minecraft:diorite_slab": 1,
+    "minecraft:diorite_stairs": 2,
+    "minecraft:diorite_wall": 3,
+    "minecraft:dirt": 3,
+    "minecraft:dirt_path": 3,
+    "minecraft:dispenser": 2,
+    "minecraft:dragon_egg": 2,
+    "minecraft:dragon_head": 3,
+    "minecraft:dragon_wall_head": 3,
+    "minecraft:dried_kelp_block": 3,
+    "minecraft:dripstone_block": 3,
+    "minecraft:dropper": 2,
+    "minecraft:emerald_block": 3,
+    "minecraft:emerald_ore": 3,
+    "minecraft:enchanting_table": 2,
+    "minecraft:end_gateway": 3,
+    "minecraft:end_portal": 3,
+    "minecraft:end_portal_frame": 3,
+    "minecraft:end_rod": 3,
+    "minecraft:end_stone": 3,
+    "minecraft:end_stone_brick_slab": 1,
+    "minecraft:end_stone_brick_stairs": 2,
+    "minecraft:end_stone_brick_wall": 3,
+    "minecraft:end_stone_bricks": 3,
+    "minecraft:ender_chest": 2,
+    "minecraft:exposed_copper": 3,
+    "minecraft:exposed_cut_copper": 3,
+    "minecraft:exposed_cut_copper_slab": 1,
+    "minecraft:exposed_cut_copper_stairs": 2,
+    "minecraft:farmland": 3,
+    "minecraft:fern": 1,
+    "minecraft:fire": 1,
+    "minecraft:fire_coral": 3,
+    "minecraft:fire_coral_block": 3,
+    "minecraft:fire_coral_fan": 3,
+    "minecraft:fire_coral_wall_fan": 3,
+    "minecraft:fletching_table": 2,
+    "minecraft:flower_pot": 2,
+    "minecraft:flowering_azalea": 3,
+    "minecraft:flowering_azalea_leaves": 3,
+    "minecraft:frosted_ice": 3,
+    "minecraft:furnace": 2,
+    "minecraft:gilded_blackstone": 3,
+    "minecraft:glass": 3,
+    "minecraft:glass_pane": 3,
+    "minecraft:glow_lichen": 1,
+    "minecraft:glowstone": 3,
+    "minecraft:gold_block": 3,
+    "minecraft:gold_ore": 3,
+    "minecraft:granite": 3,
+    "minecraft:granite_slab": 1,
+    "minecraft:granite_stairs": 2,
+    "minecraft:granite_wall": 3,
+    "minecraft:grass": 1,
+    "minecraft:grass_block": 3,
+    "minecraft:gravel": 3,
+    "minecraft:gray_banner": 3,
+    "minecraft:gray_bed": 2,
+    "minecraft:gray_candle": 0,
+    "minecraft:gray_candle_cake": 2,
+    "minecraft:gray_carpet": 3,
+    "minecraft:gray_concrete": 3,
+    "minecraft:gray_concrete_powder": 3,
+    "minecraft:gray_glazed_terracotta": 3,
+    "minecraft:gray_shulker_box": 2,
+    "minecraft:gray_stained_glass": 3,
+    "minecraft:gray_stained_glass_pane": 3,
+    "minecraft:gray_terracotta": 3,
+    "minecraft:gray_wall_banner": 3,
+    "minecraft:gray_wool": 3,
+    "minecraft:green_banner": 3,
+    "minecraft:green_bed": 2,
+    "minecraft:green_candle": 0,
+    "minecraft:green_candle_cake": 2,
+    "minecraft:green_carpet": 3,
+    "minecraft:green_concrete": 3,
+    "minecraft:green_concrete_powder": 3,
+    "minecraft:green_glazed_terracotta": 3,
+    "minecraft:green_shulker_box": 2,
+    "minecraft:green_stained_glass": 3,
+    "minecraft:green_stained_glass_pane": 3,
+    "minecraft:green_terracotta": 3,
+    "minecraft:green_wall_banner": 3,
+    "minecraft:green_wool": 3,
+    "minecraft:grindstone": 2,
+    "minecraft:hanging_roots": 1,
+    "minecraft:hay_block": 3,
+    "minecraft:heavy_weighted_pressure_plate": 3,
+    "minecraft:honey_block": 3,
+    "minecraft:honeycomb_block": 3,
+    "minecraft:hopper": 2,
+    "minecraft:horn_coral": 3,
+    "minecraft:horn_coral_block": 3,
+    "minecraft:horn_coral_fan": 3,
+    "minecraft:horn_coral_wall_fan": 3,
+    "minecraft:ice": 3,
+    "minecraft:infested_chiseled_stone_bricks": 3,
+    "minecraft:infested_cobblestone": 3,
+    "minecraft:infested_cracked_stone_bricks": 3,
+    "minecraft:infested_deepslate": 3,
+    "minecraft:infested_mossy_stone_bricks": 3,
+    "minecraft:infested_stone": 3,
+    "minecraft:infested_stone_bricks": 3,
+    "minecraft:iron_bars": 3,
+    "minecraft:iron_block": 3,
+    "minecraft:iron_door": 2,
+    "minecraft:iron_ore": 3,
+    "minecraft:iron_trapdoor": 2,
+    "minecraft:jack_o_lantern": 3,
+    "minecraft:jigsaw": 2,
+    "minecraft:jukebox": 2,
+    "minecraft:jungle_button": 2,
+    "minecraft:jungle_door": 2,
+    "minecraft:jungle_fence": 2,
+    "minecraft:jungle_fence_gate": 2,
+    "minecraft:jungle_leaves": 3,
+    "minecraft:jungle_log": 3,
+    "minecraft:jungle_planks": 3,
+    "minecraft:jungle_pressure_plate": 3,
+    "minecraft:jungle_sapling": 3,
+    "minecraft:jungle_sign": 2,
+    "minecraft:jungle_slab": 1,
+    "minecraft:jungle_stairs": 2,
+    "minecraft:jungle_trapdoor": 2,
+    "minecraft:jungle_wall_sign": 2,
+    "minecraft:jungle_wood": 3,
+    "minecraft:kelp": 3,
+    "minecraft:kelp_plant": 1,
+    "minecraft:ladder": 3,
+    "minecraft:lantern": 3,
+    "minecraft:lapis_block": 3,
+    "minecraft:lapis_ore": 3,
+    "minecraft:large_amethyst_bud": 3,
+    "minecraft:large_fern": 1,
+    "minecraft:lava": 1,
+    "minecraft:lava_cauldron": 2,
+    "minecraft:lectern": 2,
+    "minecraft:lever": 2,
+    "minecraft:light": 0,
+    "minecraft:light_blue_banner": 3,
+    "minecraft:light_blue_bed": 2,
+    "minecraft:light_blue_candle": 0,
+    "minecraft:light_blue_candle_cake": 2,
+    "minecraft:light_blue_carpet": 3,
+    "minecraft:light_blue_concrete": 3,
+    "minecraft:light_blue_concrete_powder": 3,
+    "minecraft:light_blue_glazed_terracotta": 3,
+    "minecraft:light_blue_shulker_box": 2,
+    "minecraft:light_blue_stained_glass": 3,
+    "minecraft:light_blue_stained_glass_pane": 3,
+    "minecraft:light_blue_terracotta": 3,
+    "minecraft:light_blue_wall_banner": 3,
+    "minecraft:light_blue_wool": 3,
+    "minecraft:light_gray_banner": 3,
+    "minecraft:light_gray_bed": 2,
+    "minecraft:light_gray_candle": 0,
+    "minecraft:light_gray_candle_cake": 2,
+    "minecraft:light_gray_carpet": 3,
+    "minecraft:light_gray_concrete": 3,
+    "minecraft:light_gray_concrete_powder": 3,
+    "minecraft:light_gray_glazed_terracotta": 3,
+    "minecraft:light_gray_shulker_box": 2,
+    "minecraft:light_gray_stained_glass": 3,
+    "minecraft:light_gray_stained_glass_pane": 3,
+    "minecraft:light_gray_terracotta": 3,
+    "minecraft:light_gray_wall_banner": 3,
+    "minecraft:light_gray_wool": 3,
+    "minecraft:light_weighted_pressure_plate": 3,
+    "minecraft:lightning_rod": 3,
+    "minecraft:lilac": 1,
+    "minecraft:lily_of_the_valley": 3,
+    "minecraft:lily_pad": 3,
+    "minecraft:lime_banner": 3,
+    "minecraft:lime_bed": 2,
+    "minecraft:lime_candle": 0,
+    "minecraft:lime_candle_cake": 2,
+    "minecraft:lime_carpet": 3,
+    "minecraft:lime_concrete": 3,
+    "minecraft:lime_concrete_powder": 3,
+    "minecraft:lime_glazed_terracotta": 3,
+    "minecraft:lime_shulker_box": 2,
+    "minecraft:lime_stained_glass": 3,
+    "minecraft:lime_stained_glass_pane": 3,
+    "minecraft:lime_terracotta": 3,
+    "minecraft:lime_wall_banner": 3,
+    "minecraft:lime_wool": 3,
+    "minecraft:lodestone": 3,
+    "minecraft:loom": 2,
+    "minecraft:magenta_banner": 3,
+    "minecraft:magenta_bed": 2,
+    "minecraft:magenta_candle": 0,
+    "minecraft:magenta_candle_cake": 2,
+    "minecraft:magenta_carpet": 3,
+    "minecraft:magenta_concrete": 3,
+    "minecraft:magenta_concrete_powder": 3,
+    "minecraft:magenta_glazed_terracotta": 3,
+    "minecraft:magenta_shulker_box": 2,
+    "minecraft:magenta_stained_glass": 3,
+    "minecraft:magenta_stained_glass_pane": 3,
+    "minecraft:magenta_terracotta": 3,
+    "minecraft:magenta_wall_banner": 3,
+    "minecraft:magenta_wool": 3,
+    "minecraft:magma_block": 3,
+    "minecraft:medium_amethyst_bud": 3,
+    "minecraft:melon": 3,
+    "minecraft:melon_stem": 3,
+    "minecraft:moss_block": 3,
+    "minecraft:moss_carpet": 3,
+    "minecraft:mossy_cobblestone": 3,
+    "minecraft:mossy_cobblestone_slab": 1,
+    "minecraft:mossy_cobblestone_stairs": 2,
+    "minecraft:mossy_cobblestone_wall": 3,
+    "minecraft:mossy_stone_brick_slab": 1,
+    "minecraft:mossy_stone_brick_stairs": 2,
+    "minecraft:mossy_stone_brick_wall": 3,
+    "minecraft:mossy_stone_bricks": 3,
+    "minecraft:moving_piston": 2,
+    "minecraft:mushroom_stem": 3,
+    "minecraft:mycelium": 3,
+    "minecraft:nether_brick_fence": 2,
+    "minecraft:nether_brick_slab": 1,
+    "minecraft:nether_brick_stairs": 2,
+    "minecraft:nether_brick_wall": 3,
+    "minecraft:nether_bricks": 3,
+    "minecraft:nether_gold_ore": 3,
+    "minecraft:nether_portal": 3,
+    "minecraft:nether_quartz_ore": 3,
+    "minecraft:nether_sprouts": 1,
+    "minecraft:nether_wart": 3,
+    "minecraft:nether_wart_block": 3,
+    "minecraft:netherite_block": 3,
+    "minecraft:netherrack": 3,
+    "minecraft:note_block": 2,
+    "minecraft:oak_button": 2,
+    "minecraft:oak_door": 2,
+    "minecraft:oak_fence": 2,
+    "minecraft:oak_fence_gate": 2,
+    "minecraft:oak_leaves": 3,
+    "minecraft:oak_log": 3,
+    "minecraft:oak_planks": 3,
+    "minecraft:oak_pressure_plate": 3,
+    "minecraft:oak_sapling": 3,
+    "minecraft:oak_sign": 2,
+    "minecraft:oak_slab": 1,
+    "minecraft:oak_stairs": 2,
+    "minecraft:oak_trapdoor": 2,
+    "minecraft:oak_wall_sign": 2,
+    "minecraft:oak_wood": 3,
+    "minecraft:observer": 3,
+    "minecraft:obsidian": 3,
+    "minecraft:orange_banner": 3,
+    "minecraft:orange_bed": 2,
+    "minecraft:orange_candle": 0,
+    "minecraft:orange_candle_cake": 2,
+    "minecraft:orange_carpet": 3,
+    "minecraft:orange_concrete": 3,
+    "minecraft:orange_concrete_powder": 3,
+    "minecraft:orange_glazed_terracotta": 3,
+    "minecraft:orange_shulker_box": 2,
+    "minecraft:orange_stained_glass": 3,
+    "minecraft:orange_stained_glass_pane": 3,
+    "minecraft:orange_terracotta": 3,
+    "minecraft:orange_tulip": 3,
+    "minecraft:orange_wall_banner": 3,
+    "minecraft:orange_wool": 3,
+    "minecraft:oxeye_daisy": 3,
+    "minecraft:oxidized_copper": 3,
+    "minecraft:oxidized_cut_copper": 3,
+    "minecraft:oxidized_cut_copper_slab": 1,
+    "minecraft:oxidized_cut_copper_stairs": 2,
+    "minecraft:packed_ice": 3,
+    "minecraft:peony": 1,
+    "minecraft:petrified_oak_slab": 1,
+    "minecraft:pink_banner": 3,
+    "minecraft:pink_bed": 2,
+    "minecraft:pink_candle": 0,
+    "minecraft:pink_candle_cake": 2,
+    "minecraft:pink_carpet": 3,
+    "minecraft:pink_concrete": 3,
+    "minecraft:pink_concrete_powder": 3,
+    "minecraft:pink_glazed_terracotta": 3,
+    "minecraft:pink_shulker_box": 2,
+    "minecraft:pink_stained_glass": 3,
+    "minecraft:pink_stained_glass_pane": 3,
+    "minecraft:pink_terracotta": 3,
+    "minecraft:pink_tulip": 3,
+    "minecraft:pink_wall_banner": 3,
+    "minecraft:pink_wool": 3,
+    "minecraft:piston": 3,
+    "minecraft:piston_head": 3,
+    "minecraft:player_head": 3,
+    "minecraft:player_wall_head": 3,
+    "minecraft:podzol": 3,
+    "minecraft:pointed_dripstone": 3,
+    "minecraft:polished_andesite": 3,
+    "minecraft:polished_andesite_slab": 1,
+    "minecraft:polished_andesite_stairs": 2,
+    "minecraft:polished_basalt": 3,
+    "minecraft:polished_blackstone": 3,
+    "minecraft:polished_blackstone_brick_slab": 1,
+    "minecraft:polished_blackstone_brick_stairs": 2,
+    "minecraft:polished_blackstone_brick_wall": 3,
+    "minecraft:polished_blackstone_bricks": 3,
+    "minecraft:polished_blackstone_button": 2,
+    "minecraft:polished_blackstone_pressure_plate": 3,
+    "minecraft:polished_blackstone_slab": 1,
+    "minecraft:polished_blackstone_stairs": 2,
+    "minecraft:polished_blackstone_wall": 3,
+    "minecraft:polished_deepslate": 3,
+    "minecraft:polished_deepslate_slab": 1,
+    "minecraft:polished_deepslate_stairs": 2,
+    "minecraft:polished_deepslate_wall": 3,
+    "minecraft:polished_diorite": 3,
+    "minecraft:polished_diorite_slab": 1,
+    "minecraft:polished_diorite_stairs": 2,
+    "minecraft:polished_granite": 3,
+    "minecraft:polished_granite_slab": 1,
+    "minecraft:polished_granite_stairs": 2,
+    "minecraft:poppy": 3,
+    "minecraft:potatoes": 3,
+    "minecraft:potted_acacia_sapling": 2,
+    "minecraft:potted_allium": 2,
+    "minecraft:potted_azalea_bush": 2,
+    "minecraft:potted_azure_bluet": 2,
+    "minecraft:potted_bamboo": 2,
+    "minecraft:potted_birch_sapling": 2,
+    "minecraft:potted_blue_orchid": 2,
+    "minecraft:potted_brown_mushroom": 2,
+    "minecraft:potted_cactus": 2,
+    "minecraft:potted_cornflower": 2,
+    "minecraft:potted_crimson_fungus": 2,
+    "minecraft:potted_crimson_roots": 2,
+    "minecraft:potted_dandelion": 2,
+    "minecraft:potted_dark_oak_sapling": 2,
+    "minecraft:potted_dead_bush": 2,
+    "minecraft:potted_fern": 2,
+    "minecraft:potted_flowering_azalea_bush": 2,
+    "minecraft:potted_jungle_sapling": 2,
+    "minecraft:potted_lily_of_the_valley": 2,
+    "minecraft:potted_oak_sapling": 2,
+    "minecraft:potted_orange_tulip": 2,
+    "minecraft:potted_oxeye_daisy": 2,
+    "minecraft:potted_pink_tulip": 2,
+    "minecraft:potted_poppy": 2,
+    "minecraft:potted_red_mushroom": 2,
+    "minecraft:potted_red_tulip": 2,
+    "minecraft:potted_spruce_sapling": 2,
+    "minecraft:potted_warped_fungus": 2,
+    "minecraft:potted_warped_roots": 2,
+    "minecraft:potted_white_tulip": 2,
+    "minecraft:potted_wither_rose": 2,
+    "minecraft:powder_snow": 3,
+    "minecraft:powder_snow_cauldron": 2,
+    "minecraft:powered_rail": 3,
+    "minecraft:prismarine": 3,
+    "minecraft:prismarine_brick_slab": 1,
+    "minecraft:prismarine_brick_stairs": 2,
+    "minecraft:prismarine_bricks": 3,
+    "minecraft:prismarine_slab": 1,
+    "minecraft:prismarine_stairs": 2,
+    "minecraft:prismarine_wall": 3,
+    "minecraft:pumpkin": 2,
+    "minecraft:pumpkin_stem": 3,
+    "minecraft:purple_banner": 3,
+    "minecraft:purple_bed": 2,
+    "minecraft:purple_candle": 0,
+    "minecraft:purple_candle_cake": 2,
+    "minecraft:purple_carpet": 3,
+    "minecraft:purple_concrete": 3,
+    "minecraft:purple_concrete_powder": 3,
+    "minecraft:purple_glazed_terracotta": 3,
+    "minecraft:purple_shulker_box": 2,
+    "minecraft:purple_stained_glass": 3,
+    "minecraft:purple_stained_glass_pane": 3,
+    "minecraft:purple_terracotta": 3,
+    "minecraft:purple_wall_banner": 3,
+    "minecraft:purple_wool": 3,
+    "minecraft:purpur_block": 3,
+    "minecraft:purpur_pillar": 3,
+    "minecraft:purpur_slab": 1,
+    "minecraft:purpur_stairs": 2,
+    "minecraft:quartz_block": 3,
+    "minecraft:quartz_bricks": 3,
+    "minecraft:quartz_pillar": 3,
+    "minecraft:quartz_slab": 1,
+    "minecraft:quartz_stairs": 2,
+    "minecraft:rail": 3,
+    "minecraft:raw_copper_block": 3,
+    "minecraft:raw_gold_block": 3,
+    "minecraft:raw_iron_block": 3,
+    "minecraft:red_banner": 3,
+    "minecraft:red_bed": 2,
+    "minecraft:red_candle": 0,
+    "minecraft:red_candle_cake": 2,
+    "minecraft:red_carpet": 3,
+    "minecraft:red_concrete": 3,
+    "minecraft:red_concrete_powder": 3,
+    "minecraft:red_glazed_terracotta": 3,
+    "minecraft:red_mushroom": 3,
+    "minecraft:red_mushroom_block": 3,
+    "minecraft:red_nether_brick_slab": 1,
+    "minecraft:red_nether_brick_stairs": 2,
+    "minecraft:red_nether_brick_wall": 3,
+    "minecraft:red_nether_bricks": 3,
+    "minecraft:red_sand": 3,
+    "minecraft:red_sandstone": 3,
+    "minecraft:red_sandstone_slab": 1,
+    "minecraft:red_sandstone_stairs": 2,
+    "minecraft:red_sandstone_wall": 3,
+    "minecraft:red_shulker_box": 2,
+    "minecraft:red_stained_glass": 3,
+    "minecraft:red_stained_glass_pane": 3,
+    "minecraft:red_terracotta": 3,
+    "minecraft:red_tulip": 3,
+    "minecraft:red_wall_banner": 3,
+    "minecraft:red_wool": 3,
+    "minecraft:redstone_block": 3,
+    "minecraft:redstone_lamp": 3,
+    "minecraft:redstone_ore": 2,
+    "minecraft:redstone_torch": 3,
+    "minecraft:redstone_wall_torch": 3,
+    "minecraft:redstone_wire": 2,
+    "minecraft:repeater": 2,
+    "minecraft:repeating_command_block": 2,
+    "minecraft:respawn_anchor": 2,
+    "minecraft:rooted_dirt": 3,
+    "minecraft:rose_bush": 1,
+    "minecraft:sand": 3,
+    "minecraft:sandstone": 3,
+    "minecraft:sandstone_slab": 1,
+    "minecraft:sandstone_stairs": 2,
+    "minecraft:sandstone_wall": 3,
+    "minecraft:scaffolding": 1,
+    "minecraft:sculk_sensor": 3,
+    "minecraft:sea_lantern": 3,
+    "minecraft:sea_pickle": 1,
+    "minecraft:seagrass": 1,
+    "minecraft:shroomlight": 3,
+    "minecraft:shulker_box": 2,
+    "minecraft:skeleton_skull": 3,
+    "minecraft:skeleton_wall_skull": 3,
+    "minecraft:slime_block": 3,
+    "minecraft:small_amethyst_bud": 3,
+    "minecraft:small_dripleaf": 3,
+    "minecraft:smithing_table": 2,
+    "minecraft:smoker": 2,
+    "minecraft:smooth_basalt": 3,
+    "minecraft:smooth_quartz": 3,
+    "minecraft:smooth_quartz_slab": 1,
+    "minecraft:smooth_quartz_stairs": 2,
+    "minecraft:smooth_red_sandstone": 3,
+    "minecraft:smooth_red_sandstone_slab": 1,
+    "minecraft:smooth_red_sandstone_stairs": 2,
+    "minecraft:smooth_sandstone": 3,
+    "minecraft:smooth_sandstone_slab": 1,
+    "minecraft:smooth_sandstone_stairs": 2,
+    "minecraft:smooth_stone": 3,
+    "minecraft:smooth_stone_slab": 1,
+    "minecraft:snow": 1,
+    "minecraft:snow_block": 3,
+    "minecraft:soul_campfire": 2,
+    "minecraft:soul_fire": 1,
+    "minecraft:soul_lantern": 3,
+    "minecraft:soul_sand": 3,
+    "minecraft:soul_soil": 3,
+    "minecraft:soul_torch": 3,
+    "minecraft:soul_wall_torch": 3,
+    "minecraft:spawner": 3,
+    "minecraft:sponge": 3,
+    "minecraft:spore_blossom": 3,
+    "minecraft:spruce_button": 2,
+    "minecraft:spruce_door": 2,
+    "minecraft:spruce_fence": 2,
+    "minecraft:spruce_fence_gate": 2,
+    "minecraft:spruce_leaves": 3,
+    "minecraft:spruce_log": 3,
+    "minecraft:spruce_planks": 3,
+    "minecraft:spruce_pressure_plate": 3,
+    "minecraft:spruce_sapling": 3,
+    "minecraft:spruce_sign": 2,
+    "minecraft:spruce_slab": 1,
+    "minecraft:spruce_stairs": 2,
+    "minecraft:spruce_trapdoor": 2,
+    "minecraft:spruce_wall_sign": 2,
+    "minecraft:spruce_wood": 3,
+    "minecraft:sticky_piston": 3,
+    "minecraft:stone": 3,
+    "minecraft:stone_brick_slab": 1,
+    "minecraft:stone_brick_stairs": 2,
+    "minecraft:stone_brick_wall": 3,
+    "minecraft:stone_bricks": 3,
+    "minecraft:stone_button": 2,
+    "minecraft:stone_pressure_plate": 3,
+    "minecraft:stone_slab": 1,
+    "minecraft:stone_stairs": 2,
+    "minecraft:stonecutter": 2,
+    "minecraft:stripped_acacia_log": 3,
+    "minecraft:stripped_acacia_wood": 3,
+    "minecraft:stripped_birch_log": 3,
+    "minecraft:stripped_birch_wood": 3,
+    "minecraft:stripped_crimson_hyphae": 3,
+    "minecraft:stripped_crimson_stem": 3,
+    "minecraft:stripped_dark_oak_log": 3,
+    "minecraft:stripped_dark_oak_wood": 3,
+    "minecraft:stripped_jungle_log": 3,
+    "minecraft:stripped_jungle_wood": 3,
+    "minecraft:stripped_oak_log": 3,
+    "minecraft:stripped_oak_wood": 3,
+    "minecraft:stripped_spruce_log": 3,
+    "minecraft:stripped_spruce_wood": 3,
+    "minecraft:stripped_warped_hyphae": 3,
+    "minecraft:stripped_warped_stem": 3,
+    "minecraft:structure_block": 2,
+    "minecraft:structure_void": 1,
+    "minecraft:sugar_cane": 3,
+    "minecraft:sunflower": 1,
+    "minecraft:sweet_berry_bush": 2,
+    "minecraft:tall_grass": 1,
+    "minecraft:tall_seagrass": 1,
+    "minecraft:target": 3,
+    "minecraft:terracotta": 3,
+    "minecraft:tinted_glass": 3,
+    "minecraft:tnt": 2,
+    "minecraft:torch": 3,
+    "minecraft:trapped_chest": 2,
+    "minecraft:tripwire": 3,
+    "minecraft:tripwire_hook": 3,
+    "minecraft:tube_coral": 3,
+    "minecraft:tube_coral_block": 3,
+    "minecraft:tube_coral_fan": 3,
+    "minecraft:tube_coral_wall_fan": 3,
+    "minecraft:tuff": 3,
+    "minecraft:turtle_egg": 1,
+    "minecraft:twisting_vines": 3,
+    "minecraft:twisting_vines_plant": 1,
+    "minecraft:vine": 1,
+    "minecraft:void_air": 1,
+    "minecraft:wall_torch": 3,
+    "minecraft:warped_button": 2,
+    "minecraft:warped_door": 2,
+    "minecraft:warped_fence": 2,
+    "minecraft:warped_fence_gate": 2,
+    "minecraft:warped_fungus": 3,
+    "minecraft:warped_hyphae": 3,
+    "minecraft:warped_nylium": 3,
+    "minecraft:warped_planks": 3,
+    "minecraft:warped_pressure_plate": 3,
+    "minecraft:warped_roots": 1,
+    "minecraft:warped_sign": 2,
+    "minecraft:warped_slab": 1,
+    "minecraft:warped_stairs": 2,
+    "minecraft:warped_stem": 3,
+    "minecraft:warped_trapdoor": 2,
+    "minecraft:warped_wall_sign": 2,
+    "minecraft:warped_wart_block": 3,
+    "minecraft:water": 1,
+    "minecraft:water_cauldron": 2,
+    "minecraft:waxed_copper_block": 3,
+    "minecraft:waxed_cut_copper": 3,
+    "minecraft:waxed_cut_copper_slab": 1,
+    "minecraft:waxed_cut_copper_stairs": 2,
+    "minecraft:waxed_exposed_copper": 3,
+    "minecraft:waxed_exposed_cut_copper": 3,
+    "minecraft:waxed_exposed_cut_copper_slab": 1,
+    "minecraft:waxed_exposed_cut_copper_stairs": 2,
+    "minecraft:waxed_oxidized_copper": 3,
+    "minecraft:waxed_oxidized_cut_copper": 3,
+    "minecraft:waxed_oxidized_cut_copper_slab": 1,
+    "minecraft:waxed_oxidized_cut_copper_stairs": 2,
+    "minecraft:waxed_weathered_copper": 3,
+    "minecraft:waxed_weathered_cut_copper": 3,
+    "minecraft:waxed_weathered_cut_copper_slab": 1,
+    "minecraft:waxed_weathered_cut_copper_stairs": 2,
+    "minecraft:weathered_copper": 3,
+    "minecraft:weathered_cut_copper": 3,
+    "minecraft:weathered_cut_copper_slab": 1,
+    "minecraft:weathered_cut_copper_stairs": 2,
+    "minecraft:weeping_vines": 3,
+    "minecraft:weeping_vines_plant": 1,
+    "minecraft:wet_sponge": 3,
+    "minecraft:wheat": 3,
+    "minecraft:white_banner": 3,
+    "minecraft:white_bed": 2,
+    "minecraft:white_candle": 0,
+    "minecraft:white_candle_cake": 2,
+    "minecraft:white_carpet": 3,
+    "minecraft:white_concrete": 3,
+    "minecraft:white_concrete_powder": 3,
+    "minecraft:white_glazed_terracotta": 3,
+    "minecraft:white_shulker_box": 2,
+    "minecraft:white_stained_glass": 3,
+    "minecraft:white_stained_glass_pane": 3,
+    "minecraft:white_terracotta": 3,
+    "minecraft:white_tulip": 3,
+    "minecraft:white_wall_banner": 3,
+    "minecraft:white_wool": 3,
+    "minecraft:wither_rose": 3,
+    "minecraft:wither_skeleton_skull": 3,
+    "minecraft:wither_skeleton_wall_skull": 3,
+    "minecraft:yellow_banner": 3,
+    "minecraft:yellow_bed": 2,
+    "minecraft:yellow_candle": 0,
+    "minecraft:yellow_candle_cake": 2,
+    "minecraft:yellow_carpet": 3,
+    "minecraft:yellow_concrete": 3,
+    "minecraft:yellow_concrete_powder": 3,
+    "minecraft:yellow_glazed_terracotta": 3,
+    "minecraft:yellow_shulker_box": 2,
+    "minecraft:yellow_stained_glass": 3,
+    "minecraft:yellow_stained_glass_pane": 3,
+    "minecraft:yellow_terracotta": 3,
+    "minecraft:yellow_wall_banner": 3,
+    "minecraft:yellow_wool": 3,
+    "minecraft:zombie_head": 3,
+    "minecraft:zombie_wall_head": 3
+  },
+  "items": {
+    "minecraft:acacia_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:acacia_button": [
+      "unknown",
+      "minecraft:acacia_button"
+    ],
+    "minecraft:acacia_door": [
+      "unknown",
+      "minecraft:acacia_door"
+    ],
+    "minecraft:acacia_fence": [
+      "unknown",
+      "minecraft:acacia_fence"
+    ],
+    "minecraft:acacia_fence_gate": [
+      "unknown",
+      "minecraft:acacia_fence_gate"
+    ],
+    "minecraft:acacia_leaves": [
+      "unknown",
+      "minecraft:acacia_leaves"
+    ],
+    "minecraft:acacia_log": [
+      "unknown",
+      "minecraft:acacia_log"
+    ],
+    "minecraft:acacia_planks": [
+      "simple_cube",
+      "minecraft:acacia_planks"
+    ],
+    "minecraft:acacia_pressure_plate": [
+      "unknown",
+      "minecraft:acacia_pressure_plate"
+    ],
+    "minecraft:acacia_sapling": [
+      "unknown",
+      "minecraft:acacia_sapling"
+    ],
+    "minecraft:acacia_sign": [
+      "unknown",
+      "minecraft:acacia_sign"
+    ],
+    "minecraft:acacia_slab": [
+      "unknown",
+      "minecraft:acacia_slab"
+    ],
+    "minecraft:acacia_stairs": [
+      "unknown",
+      "minecraft:acacia_stairs"
+    ],
+    "minecraft:acacia_trapdoor": [
+      "unknown",
+      "minecraft:acacia_trapdoor"
+    ],
+    "minecraft:acacia_wood": [
+      "unknown",
+      "minecraft:acacia_wood"
+    ],
+    "minecraft:activator_rail": [
+      "unknown",
+      "minecraft:activator_rail"
+    ],
+    "minecraft:air": [
+      "pass",
+      ""
+    ],
+    "minecraft:allium": [
+      "unknown",
+      "minecraft:allium"
+    ],
+    "minecraft:amethyst_block": [
+      "simple_cube",
+      "minecraft:amethyst_block"
+    ],
+    "minecraft:amethyst_cluster": [
+      "unknown",
+      "minecraft:amethyst_cluster"
+    ],
+    "minecraft:amethyst_shard": [
+      "pass",
+      ""
+    ],
+    "minecraft:ancient_debris": [
+      "simple_cube",
+      "minecraft:ancient_debris"
+    ],
+    "minecraft:andesite": [
+      "simple_cube",
+      "minecraft:andesite"
+    ],
+    "minecraft:andesite_slab": [
+      "unknown",
+      "minecraft:andesite_slab"
+    ],
+    "minecraft:andesite_stairs": [
+      "unknown",
+      "minecraft:andesite_stairs"
+    ],
+    "minecraft:andesite_wall": [
+      "unknown",
+      "minecraft:andesite_wall"
+    ],
+    "minecraft:anvil": [
+      "unknown",
+      "minecraft:anvil"
+    ],
+    "minecraft:apple": [
+      "pass",
+      ""
+    ],
+    "minecraft:armor_stand": [
+      "unknown",
+      ""
+    ],
+    "minecraft:arrow": [
+      "pass",
+      ""
+    ],
+    "minecraft:axolotl_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:axolotl_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:azalea": [
+      "unknown",
+      "minecraft:azalea"
+    ],
+    "minecraft:azalea_leaves": [
+      "unknown",
+      "minecraft:azalea_leaves"
+    ],
+    "minecraft:azure_bluet": [
+      "unknown",
+      "minecraft:azure_bluet"
+    ],
+    "minecraft:baked_potato": [
+      "pass",
+      ""
+    ],
+    "minecraft:bamboo": [
+      "unknown",
+      "minecraft:bamboo"
+    ],
+    "minecraft:barrel": [
+      "unknown",
+      "minecraft:barrel"
+    ],
+    "minecraft:barrier": [
+      "simple_cube",
+      "minecraft:barrier"
+    ],
+    "minecraft:basalt": [
+      "unknown",
+      "minecraft:basalt"
+    ],
+    "minecraft:bat_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:beacon": [
+      "simple_cube",
+      "minecraft:beacon"
+    ],
+    "minecraft:bedrock": [
+      "simple_cube",
+      "minecraft:bedrock"
+    ],
+    "minecraft:bee_nest": [
+      "unknown",
+      "minecraft:bee_nest"
+    ],
+    "minecraft:bee_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:beef": [
+      "pass",
+      ""
+    ],
+    "minecraft:beehive": [
+      "unknown",
+      "minecraft:beehive"
+    ],
+    "minecraft:beetroot": [
+      "pass",
+      ""
+    ],
+    "minecraft:beetroot_seeds": [
+      "unknown",
+      "minecraft:beetroots"
+    ],
+    "minecraft:beetroot_soup": [
+      "pass",
+      ""
+    ],
+    "minecraft:bell": [
+      "unknown",
+      "minecraft:bell"
+    ],
+    "minecraft:big_dripleaf": [
+      "unknown",
+      "minecraft:big_dripleaf"
+    ],
+    "minecraft:birch_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:birch_button": [
+      "unknown",
+      "minecraft:birch_button"
+    ],
+    "minecraft:birch_door": [
+      "unknown",
+      "minecraft:birch_door"
+    ],
+    "minecraft:birch_fence": [
+      "unknown",
+      "minecraft:birch_fence"
+    ],
+    "minecraft:birch_fence_gate": [
+      "unknown",
+      "minecraft:birch_fence_gate"
+    ],
+    "minecraft:birch_leaves": [
+      "unknown",
+      "minecraft:birch_leaves"
+    ],
+    "minecraft:birch_log": [
+      "unknown",
+      "minecraft:birch_log"
+    ],
+    "minecraft:birch_planks": [
+      "simple_cube",
+      "minecraft:birch_planks"
+    ],
+    "minecraft:birch_pressure_plate": [
+      "unknown",
+      "minecraft:birch_pressure_plate"
+    ],
+    "minecraft:birch_sapling": [
+      "unknown",
+      "minecraft:birch_sapling"
+    ],
+    "minecraft:birch_sign": [
+      "unknown",
+      "minecraft:birch_sign"
+    ],
+    "minecraft:birch_slab": [
+      "unknown",
+      "minecraft:birch_slab"
+    ],
+    "minecraft:birch_stairs": [
+      "unknown",
+      "minecraft:birch_stairs"
+    ],
+    "minecraft:birch_trapdoor": [
+      "unknown",
+      "minecraft:birch_trapdoor"
+    ],
+    "minecraft:birch_wood": [
+      "unknown",
+      "minecraft:birch_wood"
+    ],
+    "minecraft:black_banner": [
+      "unknown",
+      "minecraft:black_banner"
+    ],
+    "minecraft:black_bed": [
+      "unknown",
+      "minecraft:black_bed"
+    ],
+    "minecraft:black_candle": [
+      "unknown",
+      "minecraft:black_candle"
+    ],
+    "minecraft:black_carpet": [
+      "unknown",
+      "minecraft:black_carpet"
+    ],
+    "minecraft:black_concrete": [
+      "simple_cube",
+      "minecraft:black_concrete"
+    ],
+    "minecraft:black_concrete_powder": [
+      "unknown",
+      "minecraft:black_concrete_powder"
+    ],
+    "minecraft:black_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:black_glazed_terracotta": [
+      "unknown",
+      "minecraft:black_glazed_terracotta"
+    ],
+    "minecraft:black_shulker_box": [
+      "unknown",
+      "minecraft:black_shulker_box"
+    ],
+    "minecraft:black_stained_glass": [
+      "simple_cube",
+      "minecraft:black_stained_glass"
+    ],
+    "minecraft:black_stained_glass_pane": [
+      "unknown",
+      "minecraft:black_stained_glass_pane"
+    ],
+    "minecraft:black_terracotta": [
+      "simple_cube",
+      "minecraft:black_terracotta"
+    ],
+    "minecraft:black_wool": [
+      "simple_cube",
+      "minecraft:black_wool"
+    ],
+    "minecraft:blackstone": [
+      "simple_cube",
+      "minecraft:blackstone"
+    ],
+    "minecraft:blackstone_slab": [
+      "unknown",
+      "minecraft:blackstone_slab"
+    ],
+    "minecraft:blackstone_stairs": [
+      "unknown",
+      "minecraft:blackstone_stairs"
+    ],
+    "minecraft:blackstone_wall": [
+      "unknown",
+      "minecraft:blackstone_wall"
+    ],
+    "minecraft:blast_furnace": [
+      "unknown",
+      "minecraft:blast_furnace"
+    ],
+    "minecraft:blaze_powder": [
+      "pass",
+      ""
+    ],
+    "minecraft:blaze_rod": [
+      "pass",
+      ""
+    ],
+    "minecraft:blaze_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:blue_banner": [
+      "unknown",
+      "minecraft:blue_banner"
+    ],
+    "minecraft:blue_bed": [
+      "unknown",
+      "minecraft:blue_bed"
+    ],
+    "minecraft:blue_candle": [
+      "unknown",
+      "minecraft:blue_candle"
+    ],
+    "minecraft:blue_carpet": [
+      "unknown",
+      "minecraft:blue_carpet"
+    ],
+    "minecraft:blue_concrete": [
+      "simple_cube",
+      "minecraft:blue_concrete"
+    ],
+    "minecraft:blue_concrete_powder": [
+      "unknown",
+      "minecraft:blue_concrete_powder"
+    ],
+    "minecraft:blue_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:blue_glazed_terracotta": [
+      "unknown",
+      "minecraft:blue_glazed_terracotta"
+    ],
+    "minecraft:blue_ice": [
+      "simple_cube",
+      "minecraft:blue_ice"
+    ],
+    "minecraft:blue_orchid": [
+      "unknown",
+      "minecraft:blue_orchid"
+    ],
+    "minecraft:blue_shulker_box": [
+      "unknown",
+      "minecraft:blue_shulker_box"
+    ],
+    "minecraft:blue_stained_glass": [
+      "simple_cube",
+      "minecraft:blue_stained_glass"
+    ],
+    "minecraft:blue_stained_glass_pane": [
+      "unknown",
+      "minecraft:blue_stained_glass_pane"
+    ],
+    "minecraft:blue_terracotta": [
+      "simple_cube",
+      "minecraft:blue_terracotta"
+    ],
+    "minecraft:blue_wool": [
+      "simple_cube",
+      "minecraft:blue_wool"
+    ],
+    "minecraft:bone": [
+      "pass",
+      ""
+    ],
+    "minecraft:bone_block": [
+      "unknown",
+      "minecraft:bone_block"
+    ],
+    "minecraft:bone_meal": [
+      "unknown",
+      ""
+    ],
+    "minecraft:book": [
+      "pass",
+      ""
+    ],
+    "minecraft:bookshelf": [
+      "simple_cube",
+      "minecraft:bookshelf"
+    ],
+    "minecraft:bow": [
+      "pass",
+      ""
+    ],
+    "minecraft:bowl": [
+      "pass",
+      ""
+    ],
+    "minecraft:brain_coral": [
+      "unknown",
+      "minecraft:brain_coral"
+    ],
+    "minecraft:brain_coral_block": [
+      "unknown",
+      "minecraft:brain_coral_block"
+    ],
+    "minecraft:brain_coral_fan": [
+      "unknown",
+      "minecraft:brain_coral_fan"
+    ],
+    "minecraft:bread": [
+      "pass",
+      ""
+    ],
+    "minecraft:brewing_stand": [
+      "unknown",
+      "minecraft:brewing_stand"
+    ],
+    "minecraft:brick": [
+      "pass",
+      ""
+    ],
+    "minecraft:brick_slab": [
+      "unknown",
+      "minecraft:brick_slab"
+    ],
+    "minecraft:brick_stairs": [
+      "unknown",
+      "minecraft:brick_stairs"
+    ],
+    "minecraft:brick_wall": [
+      "unknown",
+      "minecraft:brick_wall"
+    ],
+    "minecraft:bricks": [
+      "simple_cube",
+      "minecraft:bricks"
+    ],
+    "minecraft:brown_banner": [
+      "unknown",
+      "minecraft:brown_banner"
+    ],
+    "minecraft:brown_bed": [
+      "unknown",
+      "minecraft:brown_bed"
+    ],
+    "minecraft:brown_candle": [
+      "unknown",
+      "minecraft:brown_candle"
+    ],
+    "minecraft:brown_carpet": [
+      "unknown",
+      "minecraft:brown_carpet"
+    ],
+    "minecraft:brown_concrete": [
+      "simple_cube",
+      "minecraft:brown_concrete"
+    ],
+    "minecraft:brown_concrete_powder": [
+      "unknown",
+      "minecraft:brown_concrete_powder"
+    ],
+    "minecraft:brown_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:brown_glazed_terracotta": [
+      "unknown",
+      "minecraft:brown_glazed_terracotta"
+    ],
+    "minecraft:brown_mushroom": [
+      "unknown",
+      "minecraft:brown_mushroom"
+    ],
+    "minecraft:brown_mushroom_block": [
+      "unknown",
+      "minecraft:brown_mushroom_block"
+    ],
+    "minecraft:brown_shulker_box": [
+      "unknown",
+      "minecraft:brown_shulker_box"
+    ],
+    "minecraft:brown_stained_glass": [
+      "simple_cube",
+      "minecraft:brown_stained_glass"
+    ],
+    "minecraft:brown_stained_glass_pane": [
+      "unknown",
+      "minecraft:brown_stained_glass_pane"
+    ],
+    "minecraft:brown_terracotta": [
+      "simple_cube",
+      "minecraft:brown_terracotta"
+    ],
+    "minecraft:brown_wool": [
+      "simple_cube",
+      "minecraft:brown_wool"
+    ],
+    "minecraft:bubble_coral": [
+      "unknown",
+      "minecraft:bubble_coral"
+    ],
+    "minecraft:bubble_coral_block": [
+      "unknown",
+      "minecraft:bubble_coral_block"
+    ],
+    "minecraft:bubble_coral_fan": [
+      "unknown",
+      "minecraft:bubble_coral_fan"
+    ],
+    "minecraft:bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:budding_amethyst": [
+      "simple_cube",
+      "minecraft:budding_amethyst"
+    ],
+    "minecraft:bundle": [
+      "pass",
+      ""
+    ],
+    "minecraft:cactus": [
+      "unknown",
+      "minecraft:cactus"
+    ],
+    "minecraft:cake": [
+      "unknown",
+      "minecraft:cake"
+    ],
+    "minecraft:calcite": [
+      "simple_cube",
+      "minecraft:calcite"
+    ],
+    "minecraft:campfire": [
+      "unknown",
+      "minecraft:campfire"
+    ],
+    "minecraft:candle": [
+      "unknown",
+      "minecraft:candle"
+    ],
+    "minecraft:carrot": [
+      "unknown",
+      "minecraft:carrots"
+    ],
+    "minecraft:carrot_on_a_stick": [
+      "pass",
+      ""
+    ],
+    "minecraft:cartography_table": [
+      "simple_cube",
+      "minecraft:cartography_table"
+    ],
+    "minecraft:carved_pumpkin": [
+      "unknown",
+      "minecraft:carved_pumpkin"
+    ],
+    "minecraft:cat_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:cauldron": [
+      "unknown",
+      "minecraft:cauldron"
+    ],
+    "minecraft:cave_spider_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:chain": [
+      "unknown",
+      "minecraft:chain"
+    ],
+    "minecraft:chain_command_block": [
+      "unknown",
+      "minecraft:chain_command_block"
+    ],
+    "minecraft:chainmail_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:chainmail_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:chainmail_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:chainmail_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:charcoal": [
+      "pass",
+      ""
+    ],
+    "minecraft:chest": [
+      "unknown",
+      "minecraft:chest"
+    ],
+    "minecraft:chest_minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:chicken": [
+      "pass",
+      ""
+    ],
+    "minecraft:chicken_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:chipped_anvil": [
+      "unknown",
+      "minecraft:chipped_anvil"
+    ],
+    "minecraft:chiseled_deepslate": [
+      "simple_cube",
+      "minecraft:chiseled_deepslate"
+    ],
+    "minecraft:chiseled_nether_bricks": [
+      "simple_cube",
+      "minecraft:chiseled_nether_bricks"
+    ],
+    "minecraft:chiseled_polished_blackstone": [
+      "simple_cube",
+      "minecraft:chiseled_polished_blackstone"
+    ],
+    "minecraft:chiseled_quartz_block": [
+      "simple_cube",
+      "minecraft:chiseled_quartz_block"
+    ],
+    "minecraft:chiseled_red_sandstone": [
+      "simple_cube",
+      "minecraft:chiseled_red_sandstone"
+    ],
+    "minecraft:chiseled_sandstone": [
+      "simple_cube",
+      "minecraft:chiseled_sandstone"
+    ],
+    "minecraft:chiseled_stone_bricks": [
+      "simple_cube",
+      "minecraft:chiseled_stone_bricks"
+    ],
+    "minecraft:chorus_flower": [
+      "unknown",
+      "minecraft:chorus_flower"
+    ],
+    "minecraft:chorus_fruit": [
+      "pass",
+      ""
+    ],
+    "minecraft:chorus_plant": [
+      "unknown",
+      "minecraft:chorus_plant"
+    ],
+    "minecraft:clay": [
+      "simple_cube",
+      "minecraft:clay"
+    ],
+    "minecraft:clay_ball": [
+      "pass",
+      ""
+    ],
+    "minecraft:clock": [
+      "pass",
+      ""
+    ],
+    "minecraft:coal": [
+      "pass",
+      ""
+    ],
+    "minecraft:coal_block": [
+      "simple_cube",
+      "minecraft:coal_block"
+    ],
+    "minecraft:coal_ore": [
+      "simple_cube",
+      "minecraft:coal_ore"
+    ],
+    "minecraft:coarse_dirt": [
+      "simple_cube",
+      "minecraft:coarse_dirt"
+    ],
+    "minecraft:cobbled_deepslate": [
+      "simple_cube",
+      "minecraft:cobbled_deepslate"
+    ],
+    "minecraft:cobbled_deepslate_slab": [
+      "unknown",
+      "minecraft:cobbled_deepslate_slab"
+    ],
+    "minecraft:cobbled_deepslate_stairs": [
+      "unknown",
+      "minecraft:cobbled_deepslate_stairs"
+    ],
+    "minecraft:cobbled_deepslate_wall": [
+      "unknown",
+      "minecraft:cobbled_deepslate_wall"
+    ],
+    "minecraft:cobblestone": [
+      "simple_cube",
+      "minecraft:cobblestone"
+    ],
+    "minecraft:cobblestone_slab": [
+      "unknown",
+      "minecraft:cobblestone_slab"
+    ],
+    "minecraft:cobblestone_stairs": [
+      "unknown",
+      "minecraft:cobblestone_stairs"
+    ],
+    "minecraft:cobblestone_wall": [
+      "unknown",
+      "minecraft:cobblestone_wall"
+    ],
+    "minecraft:cobweb": [
+      "unknown",
+      "minecraft:cobweb"
+    ],
+    "minecraft:cocoa_beans": [
+      "unknown",
+      "minecraft:cocoa"
+    ],
+    "minecraft:cod": [
+      "pass",
+      ""
+    ],
+    "minecraft:cod_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:cod_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:command_block": [
+      "unknown",
+      "minecraft:command_block"
+    ],
+    "minecraft:command_block_minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:comparator": [
+      "unknown",
+      "minecraft:comparator"
+    ],
+    "minecraft:compass": [
+      "unknown",
+      ""
+    ],
+    "minecraft:composter": [
+      "unknown",
+      "minecraft:composter"
+    ],
+    "minecraft:conduit": [
+      "unknown",
+      "minecraft:conduit"
+    ],
+    "minecraft:cooked_beef": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_chicken": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_cod": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_mutton": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_porkchop": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_rabbit": [
+      "pass",
+      ""
+    ],
+    "minecraft:cooked_salmon": [
+      "pass",
+      ""
+    ],
+    "minecraft:cookie": [
+      "pass",
+      ""
+    ],
+    "minecraft:copper_block": [
+      "simple_cube",
+      "minecraft:copper_block"
+    ],
+    "minecraft:copper_ingot": [
+      "pass",
+      ""
+    ],
+    "minecraft:copper_ore": [
+      "simple_cube",
+      "minecraft:copper_ore"
+    ],
+    "minecraft:cornflower": [
+      "unknown",
+      "minecraft:cornflower"
+    ],
+    "minecraft:cow_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:cracked_deepslate_bricks": [
+      "simple_cube",
+      "minecraft:cracked_deepslate_bricks"
+    ],
+    "minecraft:cracked_deepslate_tiles": [
+      "simple_cube",
+      "minecraft:cracked_deepslate_tiles"
+    ],
+    "minecraft:cracked_nether_bricks": [
+      "simple_cube",
+      "minecraft:cracked_nether_bricks"
+    ],
+    "minecraft:cracked_polished_blackstone_bricks": [
+      "simple_cube",
+      "minecraft:cracked_polished_blackstone_bricks"
+    ],
+    "minecraft:cracked_stone_bricks": [
+      "simple_cube",
+      "minecraft:cracked_stone_bricks"
+    ],
+    "minecraft:crafting_table": [
+      "simple_cube",
+      "minecraft:crafting_table"
+    ],
+    "minecraft:creeper_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:creeper_head": [
+      "unknown",
+      "minecraft:creeper_head"
+    ],
+    "minecraft:creeper_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:crimson_button": [
+      "unknown",
+      "minecraft:crimson_button"
+    ],
+    "minecraft:crimson_door": [
+      "unknown",
+      "minecraft:crimson_door"
+    ],
+    "minecraft:crimson_fence": [
+      "unknown",
+      "minecraft:crimson_fence"
+    ],
+    "minecraft:crimson_fence_gate": [
+      "unknown",
+      "minecraft:crimson_fence_gate"
+    ],
+    "minecraft:crimson_fungus": [
+      "unknown",
+      "minecraft:crimson_fungus"
+    ],
+    "minecraft:crimson_hyphae": [
+      "unknown",
+      "minecraft:crimson_hyphae"
+    ],
+    "minecraft:crimson_nylium": [
+      "simple_cube",
+      "minecraft:crimson_nylium"
+    ],
+    "minecraft:crimson_planks": [
+      "simple_cube",
+      "minecraft:crimson_planks"
+    ],
+    "minecraft:crimson_pressure_plate": [
+      "unknown",
+      "minecraft:crimson_pressure_plate"
+    ],
+    "minecraft:crimson_roots": [
+      "unknown",
+      "minecraft:crimson_roots"
+    ],
+    "minecraft:crimson_sign": [
+      "unknown",
+      "minecraft:crimson_sign"
+    ],
+    "minecraft:crimson_slab": [
+      "unknown",
+      "minecraft:crimson_slab"
+    ],
+    "minecraft:crimson_stairs": [
+      "unknown",
+      "minecraft:crimson_stairs"
+    ],
+    "minecraft:crimson_stem": [
+      "unknown",
+      "minecraft:crimson_stem"
+    ],
+    "minecraft:crimson_trapdoor": [
+      "unknown",
+      "minecraft:crimson_trapdoor"
+    ],
+    "minecraft:crossbow": [
+      "pass",
+      ""
+    ],
+    "minecraft:crying_obsidian": [
+      "simple_cube",
+      "minecraft:crying_obsidian"
+    ],
+    "minecraft:cut_copper": [
+      "simple_cube",
+      "minecraft:cut_copper"
+    ],
+    "minecraft:cut_copper_slab": [
+      "unknown",
+      "minecraft:cut_copper_slab"
+    ],
+    "minecraft:cut_copper_stairs": [
+      "unknown",
+      "minecraft:cut_copper_stairs"
+    ],
+    "minecraft:cut_red_sandstone": [
+      "simple_cube",
+      "minecraft:cut_red_sandstone"
+    ],
+    "minecraft:cut_red_sandstone_slab": [
+      "unknown",
+      "minecraft:cut_red_sandstone_slab"
+    ],
+    "minecraft:cut_sandstone": [
+      "simple_cube",
+      "minecraft:cut_sandstone"
+    ],
+    "minecraft:cut_sandstone_slab": [
+      "unknown",
+      "minecraft:cut_sandstone_slab"
+    ],
+    "minecraft:cyan_banner": [
+      "unknown",
+      "minecraft:cyan_banner"
+    ],
+    "minecraft:cyan_bed": [
+      "unknown",
+      "minecraft:cyan_bed"
+    ],
+    "minecraft:cyan_candle": [
+      "unknown",
+      "minecraft:cyan_candle"
+    ],
+    "minecraft:cyan_carpet": [
+      "unknown",
+      "minecraft:cyan_carpet"
+    ],
+    "minecraft:cyan_concrete": [
+      "simple_cube",
+      "minecraft:cyan_concrete"
+    ],
+    "minecraft:cyan_concrete_powder": [
+      "unknown",
+      "minecraft:cyan_concrete_powder"
+    ],
+    "minecraft:cyan_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:cyan_glazed_terracotta": [
+      "unknown",
+      "minecraft:cyan_glazed_terracotta"
+    ],
+    "minecraft:cyan_shulker_box": [
+      "unknown",
+      "minecraft:cyan_shulker_box"
+    ],
+    "minecraft:cyan_stained_glass": [
+      "simple_cube",
+      "minecraft:cyan_stained_glass"
+    ],
+    "minecraft:cyan_stained_glass_pane": [
+      "unknown",
+      "minecraft:cyan_stained_glass_pane"
+    ],
+    "minecraft:cyan_terracotta": [
+      "simple_cube",
+      "minecraft:cyan_terracotta"
+    ],
+    "minecraft:cyan_wool": [
+      "simple_cube",
+      "minecraft:cyan_wool"
+    ],
+    "minecraft:damaged_anvil": [
+      "unknown",
+      "minecraft:damaged_anvil"
+    ],
+    "minecraft:dandelion": [
+      "unknown",
+      "minecraft:dandelion"
+    ],
+    "minecraft:dark_oak_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:dark_oak_button": [
+      "unknown",
+      "minecraft:dark_oak_button"
+    ],
+    "minecraft:dark_oak_door": [
+      "unknown",
+      "minecraft:dark_oak_door"
+    ],
+    "minecraft:dark_oak_fence": [
+      "unknown",
+      "minecraft:dark_oak_fence"
+    ],
+    "minecraft:dark_oak_fence_gate": [
+      "unknown",
+      "minecraft:dark_oak_fence_gate"
+    ],
+    "minecraft:dark_oak_leaves": [
+      "unknown",
+      "minecraft:dark_oak_leaves"
+    ],
+    "minecraft:dark_oak_log": [
+      "unknown",
+      "minecraft:dark_oak_log"
+    ],
+    "minecraft:dark_oak_planks": [
+      "simple_cube",
+      "minecraft:dark_oak_planks"
+    ],
+    "minecraft:dark_oak_pressure_plate": [
+      "unknown",
+      "minecraft:dark_oak_pressure_plate"
+    ],
+    "minecraft:dark_oak_sapling": [
+      "unknown",
+      "minecraft:dark_oak_sapling"
+    ],
+    "minecraft:dark_oak_sign": [
+      "unknown",
+      "minecraft:dark_oak_sign"
+    ],
+    "minecraft:dark_oak_slab": [
+      "unknown",
+      "minecraft:dark_oak_slab"
+    ],
+    "minecraft:dark_oak_stairs": [
+      "unknown",
+      "minecraft:dark_oak_stairs"
+    ],
+    "minecraft:dark_oak_trapdoor": [
+      "unknown",
+      "minecraft:dark_oak_trapdoor"
+    ],
+    "minecraft:dark_oak_wood": [
+      "unknown",
+      "minecraft:dark_oak_wood"
+    ],
+    "minecraft:dark_prismarine": [
+      "simple_cube",
+      "minecraft:dark_prismarine"
+    ],
+    "minecraft:dark_prismarine_slab": [
+      "unknown",
+      "minecraft:dark_prismarine_slab"
+    ],
+    "minecraft:dark_prismarine_stairs": [
+      "unknown",
+      "minecraft:dark_prismarine_stairs"
+    ],
+    "minecraft:daylight_detector": [
+      "unknown",
+      "minecraft:daylight_detector"
+    ],
+    "minecraft:dead_brain_coral": [
+      "unknown",
+      "minecraft:dead_brain_coral"
+    ],
+    "minecraft:dead_brain_coral_block": [
+      "simple_cube",
+      "minecraft:dead_brain_coral_block"
+    ],
+    "minecraft:dead_brain_coral_fan": [
+      "unknown",
+      "minecraft:dead_brain_coral_fan"
+    ],
+    "minecraft:dead_bubble_coral": [
+      "unknown",
+      "minecraft:dead_bubble_coral"
+    ],
+    "minecraft:dead_bubble_coral_block": [
+      "simple_cube",
+      "minecraft:dead_bubble_coral_block"
+    ],
+    "minecraft:dead_bubble_coral_fan": [
+      "unknown",
+      "minecraft:dead_bubble_coral_fan"
+    ],
+    "minecraft:dead_bush": [
+      "unknown",
+      "minecraft:dead_bush"
+    ],
+    "minecraft:dead_fire_coral": [
+      "unknown",
+      "minecraft:dead_fire_coral"
+    ],
+    "minecraft:dead_fire_coral_block": [
+      "simple_cube",
+      "minecraft:dead_fire_coral_block"
+    ],
+    "minecraft:dead_fire_coral_fan": [
+      "unknown",
+      "minecraft:dead_fire_coral_fan"
+    ],
+    "minecraft:dead_horn_coral": [
+      "unknown",
+      "minecraft:dead_horn_coral"
+    ],
+    "minecraft:dead_horn_coral_block": [
+      "simple_cube",
+      "minecraft:dead_horn_coral_block"
+    ],
+    "minecraft:dead_horn_coral_fan": [
+      "unknown",
+      "minecraft:dead_horn_coral_fan"
+    ],
+    "minecraft:dead_tube_coral": [
+      "unknown",
+      "minecraft:dead_tube_coral"
+    ],
+    "minecraft:dead_tube_coral_block": [
+      "simple_cube",
+      "minecraft:dead_tube_coral_block"
+    ],
+    "minecraft:dead_tube_coral_fan": [
+      "unknown",
+      "minecraft:dead_tube_coral_fan"
+    ],
+    "minecraft:debug_stick": [
+      "unknown",
+      ""
+    ],
+    "minecraft:deepslate": [
+      "unknown",
+      "minecraft:deepslate"
+    ],
+    "minecraft:deepslate_brick_slab": [
+      "unknown",
+      "minecraft:deepslate_brick_slab"
+    ],
+    "minecraft:deepslate_brick_stairs": [
+      "unknown",
+      "minecraft:deepslate_brick_stairs"
+    ],
+    "minecraft:deepslate_brick_wall": [
+      "unknown",
+      "minecraft:deepslate_brick_wall"
+    ],
+    "minecraft:deepslate_bricks": [
+      "simple_cube",
+      "minecraft:deepslate_bricks"
+    ],
+    "minecraft:deepslate_coal_ore": [
+      "simple_cube",
+      "minecraft:deepslate_coal_ore"
+    ],
+    "minecraft:deepslate_copper_ore": [
+      "simple_cube",
+      "minecraft:deepslate_copper_ore"
+    ],
+    "minecraft:deepslate_diamond_ore": [
+      "simple_cube",
+      "minecraft:deepslate_diamond_ore"
+    ],
+    "minecraft:deepslate_emerald_ore": [
+      "simple_cube",
+      "minecraft:deepslate_emerald_ore"
+    ],
+    "minecraft:deepslate_gold_ore": [
+      "simple_cube",
+      "minecraft:deepslate_gold_ore"
+    ],
+    "minecraft:deepslate_iron_ore": [
+      "simple_cube",
+      "minecraft:deepslate_iron_ore"
+    ],
+    "minecraft:deepslate_lapis_ore": [
+      "simple_cube",
+      "minecraft:deepslate_lapis_ore"
+    ],
+    "minecraft:deepslate_redstone_ore": [
+      "simple_cube",
+      "minecraft:deepslate_redstone_ore"
+    ],
+    "minecraft:deepslate_tile_slab": [
+      "unknown",
+      "minecraft:deepslate_tile_slab"
+    ],
+    "minecraft:deepslate_tile_stairs": [
+      "unknown",
+      "minecraft:deepslate_tile_stairs"
+    ],
+    "minecraft:deepslate_tile_wall": [
+      "unknown",
+      "minecraft:deepslate_tile_wall"
+    ],
+    "minecraft:deepslate_tiles": [
+      "simple_cube",
+      "minecraft:deepslate_tiles"
+    ],
+    "minecraft:detector_rail": [
+      "unknown",
+      "minecraft:detector_rail"
+    ],
+    "minecraft:diamond": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:diamond_block": [
+      "simple_cube",
+      "minecraft:diamond_block"
+    ],
+    "minecraft:diamond_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:diamond_horse_armor": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_ore": [
+      "simple_cube",
+      "minecraft:diamond_ore"
+    ],
+    "minecraft:diamond_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:diamond_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:diamond_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:diorite": [
+      "simple_cube",
+      "minecraft:diorite"
+    ],
+    "minecraft:diorite_slab": [
+      "unknown",
+      "minecraft:diorite_slab"
+    ],
+    "minecraft:diorite_stairs": [
+      "unknown",
+      "minecraft:diorite_stairs"
+    ],
+    "minecraft:diorite_wall": [
+      "unknown",
+      "minecraft:diorite_wall"
+    ],
+    "minecraft:dirt": [
+      "simple_cube",
+      "minecraft:dirt"
+    ],
+    "minecraft:dirt_path": [
+      "unknown",
+      "minecraft:dirt_path"
+    ],
+    "minecraft:dispenser": [
+      "unknown",
+      "minecraft:dispenser"
+    ],
+    "minecraft:dolphin_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:donkey_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:dragon_breath": [
+      "pass",
+      ""
+    ],
+    "minecraft:dragon_egg": [
+      "unknown",
+      "minecraft:dragon_egg"
+    ],
+    "minecraft:dragon_head": [
+      "unknown",
+      "minecraft:dragon_head"
+    ],
+    "minecraft:dried_kelp": [
+      "pass",
+      ""
+    ],
+    "minecraft:dried_kelp_block": [
+      "simple_cube",
+      "minecraft:dried_kelp_block"
+    ],
+    "minecraft:dripstone_block": [
+      "simple_cube",
+      "minecraft:dripstone_block"
+    ],
+    "minecraft:dropper": [
+      "unknown",
+      "minecraft:dropper"
+    ],
+    "minecraft:drowned_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:egg": [
+      "pass",
+      ""
+    ],
+    "minecraft:elder_guardian_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:elytra": [
+      "pass",
+      ""
+    ],
+    "minecraft:emerald": [
+      "pass",
+      ""
+    ],
+    "minecraft:emerald_block": [
+      "simple_cube",
+      "minecraft:emerald_block"
+    ],
+    "minecraft:emerald_ore": [
+      "simple_cube",
+      "minecraft:emerald_ore"
+    ],
+    "minecraft:enchanted_book": [
+      "pass",
+      ""
+    ],
+    "minecraft:enchanted_golden_apple": [
+      "pass",
+      ""
+    ],
+    "minecraft:enchanting_table": [
+      "unknown",
+      "minecraft:enchanting_table"
+    ],
+    "minecraft:end_crystal": [
+      "unknown",
+      ""
+    ],
+    "minecraft:end_portal_frame": [
+      "unknown",
+      "minecraft:end_portal_frame"
+    ],
+    "minecraft:end_rod": [
+      "unknown",
+      "minecraft:end_rod"
+    ],
+    "minecraft:end_stone": [
+      "simple_cube",
+      "minecraft:end_stone"
+    ],
+    "minecraft:end_stone_brick_slab": [
+      "unknown",
+      "minecraft:end_stone_brick_slab"
+    ],
+    "minecraft:end_stone_brick_stairs": [
+      "unknown",
+      "minecraft:end_stone_brick_stairs"
+    ],
+    "minecraft:end_stone_brick_wall": [
+      "unknown",
+      "minecraft:end_stone_brick_wall"
+    ],
+    "minecraft:end_stone_bricks": [
+      "simple_cube",
+      "minecraft:end_stone_bricks"
+    ],
+    "minecraft:ender_chest": [
+      "unknown",
+      "minecraft:ender_chest"
+    ],
+    "minecraft:ender_eye": [
+      "unknown",
+      ""
+    ],
+    "minecraft:ender_pearl": [
+      "pass",
+      ""
+    ],
+    "minecraft:enderman_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:endermite_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:evoker_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:experience_bottle": [
+      "pass",
+      ""
+    ],
+    "minecraft:exposed_copper": [
+      "simple_cube",
+      "minecraft:exposed_copper"
+    ],
+    "minecraft:exposed_cut_copper": [
+      "simple_cube",
+      "minecraft:exposed_cut_copper"
+    ],
+    "minecraft:exposed_cut_copper_slab": [
+      "unknown",
+      "minecraft:exposed_cut_copper_slab"
+    ],
+    "minecraft:exposed_cut_copper_stairs": [
+      "unknown",
+      "minecraft:exposed_cut_copper_stairs"
+    ],
+    "minecraft:farmland": [
+      "unknown",
+      "minecraft:farmland"
+    ],
+    "minecraft:feather": [
+      "pass",
+      ""
+    ],
+    "minecraft:fermented_spider_eye": [
+      "pass",
+      ""
+    ],
+    "minecraft:fern": [
+      "unknown",
+      "minecraft:fern"
+    ],
+    "minecraft:filled_map": [
+      "unknown",
+      ""
+    ],
+    "minecraft:fire_charge": [
+      "unknown",
+      ""
+    ],
+    "minecraft:fire_coral": [
+      "unknown",
+      "minecraft:fire_coral"
+    ],
+    "minecraft:fire_coral_block": [
+      "unknown",
+      "minecraft:fire_coral_block"
+    ],
+    "minecraft:fire_coral_fan": [
+      "unknown",
+      "minecraft:fire_coral_fan"
+    ],
+    "minecraft:firework_rocket": [
+      "unknown",
+      ""
+    ],
+    "minecraft:firework_star": [
+      "pass",
+      ""
+    ],
+    "minecraft:fishing_rod": [
+      "pass",
+      ""
+    ],
+    "minecraft:fletching_table": [
+      "simple_cube",
+      "minecraft:fletching_table"
+    ],
+    "minecraft:flint": [
+      "pass",
+      ""
+    ],
+    "minecraft:flint_and_steel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:flower_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:flower_pot": [
+      "unknown",
+      "minecraft:flower_pot"
+    ],
+    "minecraft:flowering_azalea": [
+      "unknown",
+      "minecraft:flowering_azalea"
+    ],
+    "minecraft:flowering_azalea_leaves": [
+      "unknown",
+      "minecraft:flowering_azalea_leaves"
+    ],
+    "minecraft:fox_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:furnace": [
+      "unknown",
+      "minecraft:furnace"
+    ],
+    "minecraft:furnace_minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:ghast_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:ghast_tear": [
+      "pass",
+      ""
+    ],
+    "minecraft:gilded_blackstone": [
+      "simple_cube",
+      "minecraft:gilded_blackstone"
+    ],
+    "minecraft:glass": [
+      "simple_cube",
+      "minecraft:glass"
+    ],
+    "minecraft:glass_bottle": [
+      "pass",
+      ""
+    ],
+    "minecraft:glass_pane": [
+      "unknown",
+      "minecraft:glass_pane"
+    ],
+    "minecraft:glistering_melon_slice": [
+      "pass",
+      ""
+    ],
+    "minecraft:globe_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:glow_berries": [
+      "unknown",
+      "minecraft:cave_vines"
+    ],
+    "minecraft:glow_ink_sac": [
+      "pass",
+      ""
+    ],
+    "minecraft:glow_item_frame": [
+      "unknown",
+      ""
+    ],
+    "minecraft:glow_lichen": [
+      "unknown",
+      "minecraft:glow_lichen"
+    ],
+    "minecraft:glow_squid_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:glowstone": [
+      "simple_cube",
+      "minecraft:glowstone"
+    ],
+    "minecraft:glowstone_dust": [
+      "pass",
+      ""
+    ],
+    "minecraft:goat_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:gold_block": [
+      "simple_cube",
+      "minecraft:gold_block"
+    ],
+    "minecraft:gold_ingot": [
+      "pass",
+      ""
+    ],
+    "minecraft:gold_nugget": [
+      "pass",
+      ""
+    ],
+    "minecraft:gold_ore": [
+      "simple_cube",
+      "minecraft:gold_ore"
+    ],
+    "minecraft:golden_apple": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:golden_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_carrot": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:golden_horse_armor": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:golden_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:golden_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:granite": [
+      "simple_cube",
+      "minecraft:granite"
+    ],
+    "minecraft:granite_slab": [
+      "unknown",
+      "minecraft:granite_slab"
+    ],
+    "minecraft:granite_stairs": [
+      "unknown",
+      "minecraft:granite_stairs"
+    ],
+    "minecraft:granite_wall": [
+      "unknown",
+      "minecraft:granite_wall"
+    ],
+    "minecraft:grass": [
+      "unknown",
+      "minecraft:grass"
+    ],
+    "minecraft:grass_block": [
+      "unknown",
+      "minecraft:grass_block"
+    ],
+    "minecraft:gravel": [
+      "simple_cube",
+      "minecraft:gravel"
+    ],
+    "minecraft:gray_banner": [
+      "unknown",
+      "minecraft:gray_banner"
+    ],
+    "minecraft:gray_bed": [
+      "unknown",
+      "minecraft:gray_bed"
+    ],
+    "minecraft:gray_candle": [
+      "unknown",
+      "minecraft:gray_candle"
+    ],
+    "minecraft:gray_carpet": [
+      "unknown",
+      "minecraft:gray_carpet"
+    ],
+    "minecraft:gray_concrete": [
+      "simple_cube",
+      "minecraft:gray_concrete"
+    ],
+    "minecraft:gray_concrete_powder": [
+      "unknown",
+      "minecraft:gray_concrete_powder"
+    ],
+    "minecraft:gray_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:gray_glazed_terracotta": [
+      "unknown",
+      "minecraft:gray_glazed_terracotta"
+    ],
+    "minecraft:gray_shulker_box": [
+      "unknown",
+      "minecraft:gray_shulker_box"
+    ],
+    "minecraft:gray_stained_glass": [
+      "simple_cube",
+      "minecraft:gray_stained_glass"
+    ],
+    "minecraft:gray_stained_glass_pane": [
+      "unknown",
+      "minecraft:gray_stained_glass_pane"
+    ],
+    "minecraft:gray_terracotta": [
+      "simple_cube",
+      "minecraft:gray_terracotta"
+    ],
+    "minecraft:gray_wool": [
+      "simple_cube",
+      "minecraft:gray_wool"
+    ],
+    "minecraft:green_banner": [
+      "unknown",
+      "minecraft:green_banner"
+    ],
+    "minecraft:green_bed": [
+      "unknown",
+      "minecraft:green_bed"
+    ],
+    "minecraft:green_candle": [
+      "unknown",
+      "minecraft:green_candle"
+    ],
+    "minecraft:green_carpet": [
+      "unknown",
+      "minecraft:green_carpet"
+    ],
+    "minecraft:green_concrete": [
+      "simple_cube",
+      "minecraft:green_concrete"
+    ],
+    "minecraft:green_concrete_powder": [
+      "unknown",
+      "minecraft:green_concrete_powder"
+    ],
+    "minecraft:green_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:green_glazed_terracotta": [
+      "unknown",
+      "minecraft:green_glazed_terracotta"
+    ],
+    "minecraft:green_shulker_box": [
+      "unknown",
+      "minecraft:green_shulker_box"
+    ],
+    "minecraft:green_stained_glass": [
+      "simple_cube",
+      "minecraft:green_stained_glass"
+    ],
+    "minecraft:green_stained_glass_pane": [
+      "unknown",
+      "minecraft:green_stained_glass_pane"
+    ],
+    "minecraft:green_terracotta": [
+      "simple_cube",
+      "minecraft:green_terracotta"
+    ],
+    "minecraft:green_wool": [
+      "simple_cube",
+      "minecraft:green_wool"
+    ],
+    "minecraft:grindstone": [
+      "unknown",
+      "minecraft:grindstone"
+    ],
+    "minecraft:guardian_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:gunpowder": [
+      "pass",
+      ""
+    ],
+    "minecraft:hanging_roots": [
+      "unknown",
+      "minecraft:hanging_roots"
+    ],
+    "minecraft:hay_block": [
+      "unknown",
+      "minecraft:hay_block"
+    ],
+    "minecraft:heart_of_the_sea": [
+      "pass",
+      ""
+    ],
+    "minecraft:heavy_weighted_pressure_plate": [
+      "unknown",
+      "minecraft:heavy_weighted_pressure_plate"
+    ],
+    "minecraft:hoglin_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:honey_block": [
+      "unknown",
+      "minecraft:honey_block"
+    ],
+    "minecraft:honey_bottle": [
+      "pass",
+      ""
+    ],
+    "minecraft:honeycomb": [
+      "unknown",
+      ""
+    ],
+    "minecraft:honeycomb_block": [
+      "simple_cube",
+      "minecraft:honeycomb_block"
+    ],
+    "minecraft:hopper": [
+      "unknown",
+      "minecraft:hopper"
+    ],
+    "minecraft:hopper_minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:horn_coral": [
+      "unknown",
+      "minecraft:horn_coral"
+    ],
+    "minecraft:horn_coral_block": [
+      "unknown",
+      "minecraft:horn_coral_block"
+    ],
+    "minecraft:horn_coral_fan": [
+      "unknown",
+      "minecraft:horn_coral_fan"
+    ],
+    "minecraft:horse_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:husk_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:ice": [
+      "simple_cube",
+      "minecraft:ice"
+    ],
+    "minecraft:infested_chiseled_stone_bricks": [
+      "simple_cube",
+      "minecraft:infested_chiseled_stone_bricks"
+    ],
+    "minecraft:infested_cobblestone": [
+      "simple_cube",
+      "minecraft:infested_cobblestone"
+    ],
+    "minecraft:infested_cracked_stone_bricks": [
+      "simple_cube",
+      "minecraft:infested_cracked_stone_bricks"
+    ],
+    "minecraft:infested_deepslate": [
+      "unknown",
+      "minecraft:infested_deepslate"
+    ],
+    "minecraft:infested_mossy_stone_bricks": [
+      "simple_cube",
+      "minecraft:infested_mossy_stone_bricks"
+    ],
+    "minecraft:infested_stone": [
+      "simple_cube",
+      "minecraft:infested_stone"
+    ],
+    "minecraft:infested_stone_bricks": [
+      "simple_cube",
+      "minecraft:infested_stone_bricks"
+    ],
+    "minecraft:ink_sac": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:iron_bars": [
+      "unknown",
+      "minecraft:iron_bars"
+    ],
+    "minecraft:iron_block": [
+      "simple_cube",
+      "minecraft:iron_block"
+    ],
+    "minecraft:iron_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_door": [
+      "unknown",
+      "minecraft:iron_door"
+    ],
+    "minecraft:iron_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:iron_horse_armor": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_ingot": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_nugget": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_ore": [
+      "simple_cube",
+      "minecraft:iron_ore"
+    ],
+    "minecraft:iron_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:iron_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:iron_trapdoor": [
+      "unknown",
+      "minecraft:iron_trapdoor"
+    ],
+    "minecraft:item_frame": [
+      "unknown",
+      ""
+    ],
+    "minecraft:jack_o_lantern": [
+      "unknown",
+      "minecraft:jack_o_lantern"
+    ],
+    "minecraft:jigsaw": [
+      "unknown",
+      "minecraft:jigsaw"
+    ],
+    "minecraft:jukebox": [
+      "simple_cube",
+      "minecraft:jukebox"
+    ],
+    "minecraft:jungle_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:jungle_button": [
+      "unknown",
+      "minecraft:jungle_button"
+    ],
+    "minecraft:jungle_door": [
+      "unknown",
+      "minecraft:jungle_door"
+    ],
+    "minecraft:jungle_fence": [
+      "unknown",
+      "minecraft:jungle_fence"
+    ],
+    "minecraft:jungle_fence_gate": [
+      "unknown",
+      "minecraft:jungle_fence_gate"
+    ],
+    "minecraft:jungle_leaves": [
+      "unknown",
+      "minecraft:jungle_leaves"
+    ],
+    "minecraft:jungle_log": [
+      "unknown",
+      "minecraft:jungle_log"
+    ],
+    "minecraft:jungle_planks": [
+      "simple_cube",
+      "minecraft:jungle_planks"
+    ],
+    "minecraft:jungle_pressure_plate": [
+      "unknown",
+      "minecraft:jungle_pressure_plate"
+    ],
+    "minecraft:jungle_sapling": [
+      "unknown",
+      "minecraft:jungle_sapling"
+    ],
+    "minecraft:jungle_sign": [
+      "unknown",
+      "minecraft:jungle_sign"
+    ],
+    "minecraft:jungle_slab": [
+      "unknown",
+      "minecraft:jungle_slab"
+    ],
+    "minecraft:jungle_stairs": [
+      "unknown",
+      "minecraft:jungle_stairs"
+    ],
+    "minecraft:jungle_trapdoor": [
+      "unknown",
+      "minecraft:jungle_trapdoor"
+    ],
+    "minecraft:jungle_wood": [
+      "unknown",
+      "minecraft:jungle_wood"
+    ],
+    "minecraft:kelp": [
+      "unknown",
+      "minecraft:kelp"
+    ],
+    "minecraft:knowledge_book": [
+      "pass",
+      ""
+    ],
+    "minecraft:ladder": [
+      "unknown",
+      "minecraft:ladder"
+    ],
+    "minecraft:lantern": [
+      "unknown",
+      "minecraft:lantern"
+    ],
+    "minecraft:lapis_block": [
+      "simple_cube",
+      "minecraft:lapis_block"
+    ],
+    "minecraft:lapis_lazuli": [
+      "pass",
+      ""
+    ],
+    "minecraft:lapis_ore": [
+      "simple_cube",
+      "minecraft:lapis_ore"
+    ],
+    "minecraft:large_amethyst_bud": [
+      "unknown",
+      "minecraft:large_amethyst_bud"
+    ],
+    "minecraft:large_fern": [
+      "unknown",
+      "minecraft:large_fern"
+    ],
+    "minecraft:lava_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:lead": [
+      "unknown",
+      ""
+    ],
+    "minecraft:leather": [
+      "pass",
+      ""
+    ],
+    "minecraft:leather_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:leather_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:leather_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:leather_horse_armor": [
+      "pass",
+      ""
+    ],
+    "minecraft:leather_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:lectern": [
+      "unknown",
+      "minecraft:lectern"
+    ],
+    "minecraft:lever": [
+      "unknown",
+      "minecraft:lever"
+    ],
+    "minecraft:light": [
+      "unknown",
+      "minecraft:light"
+    ],
+    "minecraft:light_blue_banner": [
+      "unknown",
+      "minecraft:light_blue_banner"
+    ],
+    "minecraft:light_blue_bed": [
+      "unknown",
+      "minecraft:light_blue_bed"
+    ],
+    "minecraft:light_blue_candle": [
+      "unknown",
+      "minecraft:light_blue_candle"
+    ],
+    "minecraft:light_blue_carpet": [
+      "unknown",
+      "minecraft:light_blue_carpet"
+    ],
+    "minecraft:light_blue_concrete": [
+      "simple_cube",
+      "minecraft:light_blue_concrete"
+    ],
+    "minecraft:light_blue_concrete_powder": [
+      "unknown",
+      "minecraft:light_blue_concrete_powder"
+    ],
+    "minecraft:light_blue_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:light_blue_glazed_terracotta": [
+      "unknown",
+      "minecraft:light_blue_glazed_terracotta"
+    ],
+    "minecraft:light_blue_shulker_box": [
+      "unknown",
+      "minecraft:light_blue_shulker_box"
+    ],
+    "minecraft:light_blue_stained_glass": [
+      "simple_cube",
+      "minecraft:light_blue_stained_glass"
+    ],
+    "minecraft:light_blue_stained_glass_pane": [
+      "unknown",
+      "minecraft:light_blue_stained_glass_pane"
+    ],
+    "minecraft:light_blue_terracotta": [
+      "simple_cube",
+      "minecraft:light_blue_terracotta"
+    ],
+    "minecraft:light_blue_wool": [
+      "simple_cube",
+      "minecraft:light_blue_wool"
+    ],
+    "minecraft:light_gray_banner": [
+      "unknown",
+      "minecraft:light_gray_banner"
+    ],
+    "minecraft:light_gray_bed": [
+      "unknown",
+      "minecraft:light_gray_bed"
+    ],
+    "minecraft:light_gray_candle": [
+      "unknown",
+      "minecraft:light_gray_candle"
+    ],
+    "minecraft:light_gray_carpet": [
+      "unknown",
+      "minecraft:light_gray_carpet"
+    ],
+    "minecraft:light_gray_concrete": [
+      "simple_cube",
+      "minecraft:light_gray_concrete"
+    ],
+    "minecraft:light_gray_concrete_powder": [
+      "unknown",
+      "minecraft:light_gray_concrete_powder"
+    ],
+    "minecraft:light_gray_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:light_gray_glazed_terracotta": [
+      "unknown",
+      "minecraft:light_gray_glazed_terracotta"
+    ],
+    "minecraft:light_gray_shulker_box": [
+      "unknown",
+      "minecraft:light_gray_shulker_box"
+    ],
+    "minecraft:light_gray_stained_glass": [
+      "simple_cube",
+      "minecraft:light_gray_stained_glass"
+    ],
+    "minecraft:light_gray_stained_glass_pane": [
+      "unknown",
+      "minecraft:light_gray_stained_glass_pane"
+    ],
+    "minecraft:light_gray_terracotta": [
+      "simple_cube",
+      "minecraft:light_gray_terracotta"
+    ],
+    "minecraft:light_gray_wool": [
+      "simple_cube",
+      "minecraft:light_gray_wool"
+    ],
+    "minecraft:light_weighted_pressure_plate": [
+      "unknown",
+      "minecraft:light_weighted_pressure_plate"
+    ],
+    "minecraft:lightning_rod": [
+      "unknown",
+      "minecraft:lightning_rod"
+    ],
+    "minecraft:lilac": [
+      "unknown",
+      "minecraft:lilac"
+    ],
+    "minecraft:lily_of_the_valley": [
+      "unknown",
+      "minecraft:lily_of_the_valley"
+    ],
+    "minecraft:lily_pad": [
+      "unknown",
+      "minecraft:lily_pad"
+    ],
+    "minecraft:lime_banner": [
+      "unknown",
+      "minecraft:lime_banner"
+    ],
+    "minecraft:lime_bed": [
+      "unknown",
+      "minecraft:lime_bed"
+    ],
+    "minecraft:lime_candle": [
+      "unknown",
+      "minecraft:lime_candle"
+    ],
+    "minecraft:lime_carpet": [
+      "unknown",
+      "minecraft:lime_carpet"
+    ],
+    "minecraft:lime_concrete": [
+      "simple_cube",
+      "minecraft:lime_concrete"
+    ],
+    "minecraft:lime_concrete_powder": [
+      "unknown",
+      "minecraft:lime_concrete_powder"
+    ],
+    "minecraft:lime_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:lime_glazed_terracotta": [
+      "unknown",
+      "minecraft:lime_glazed_terracotta"
+    ],
+    "minecraft:lime_shulker_box": [
+      "unknown",
+      "minecraft:lime_shulker_box"
+    ],
+    "minecraft:lime_stained_glass": [
+      "simple_cube",
+      "minecraft:lime_stained_glass"
+    ],
+    "minecraft:lime_stained_glass_pane": [
+      "unknown",
+      "minecraft:lime_stained_glass_pane"
+    ],
+    "minecraft:lime_terracotta": [
+      "simple_cube",
+      "minecraft:lime_terracotta"
+    ],
+    "minecraft:lime_wool": [
+      "simple_cube",
+      "minecraft:lime_wool"
+    ],
+    "minecraft:lingering_potion": [
+      "pass",
+      ""
+    ],
+    "minecraft:llama_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:lodestone": [
+      "simple_cube",
+      "minecraft:lodestone"
+    ],
+    "minecraft:loom": [
+      "unknown",
+      "minecraft:loom"
+    ],
+    "minecraft:magenta_banner": [
+      "unknown",
+      "minecraft:magenta_banner"
+    ],
+    "minecraft:magenta_bed": [
+      "unknown",
+      "minecraft:magenta_bed"
+    ],
+    "minecraft:magenta_candle": [
+      "unknown",
+      "minecraft:magenta_candle"
+    ],
+    "minecraft:magenta_carpet": [
+      "unknown",
+      "minecraft:magenta_carpet"
+    ],
+    "minecraft:magenta_concrete": [
+      "simple_cube",
+      "minecraft:magenta_concrete"
+    ],
+    "minecraft:magenta_concrete_powder": [
+      "unknown",
+      "minecraft:magenta_concrete_powder"
+    ],
+    "minecraft:magenta_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:magenta_glazed_terracotta": [
+      "unknown",
+      "minecraft:magenta_glazed_terracotta"
+    ],
+    "minecraft:magenta_shulker_box": [
+      "unknown",
+      "minecraft:magenta_shulker_box"
+    ],
+    "minecraft:magenta_stained_glass": [
+      "simple_cube",
+      "minecraft:magenta_stained_glass"
+    ],
+    "minecraft:magenta_stained_glass_pane": [
+      "unknown",
+      "minecraft:magenta_stained_glass_pane"
+    ],
+    "minecraft:magenta_terracotta": [
+      "simple_cube",
+      "minecraft:magenta_terracotta"
+    ],
+    "minecraft:magenta_wool": [
+      "simple_cube",
+      "minecraft:magenta_wool"
+    ],
+    "minecraft:magma_block": [
+      "simple_cube",
+      "minecraft:magma_block"
+    ],
+    "minecraft:magma_cream": [
+      "pass",
+      ""
+    ],
+    "minecraft:magma_cube_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:map": [
+      "pass",
+      ""
+    ],
+    "minecraft:medium_amethyst_bud": [
+      "unknown",
+      "minecraft:medium_amethyst_bud"
+    ],
+    "minecraft:melon": [
+      "simple_cube",
+      "minecraft:melon"
+    ],
+    "minecraft:melon_seeds": [
+      "unknown",
+      "minecraft:melon_stem"
+    ],
+    "minecraft:melon_slice": [
+      "pass",
+      ""
+    ],
+    "minecraft:milk_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:mojang_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:mooshroom_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:moss_block": [
+      "simple_cube",
+      "minecraft:moss_block"
+    ],
+    "minecraft:moss_carpet": [
+      "unknown",
+      "minecraft:moss_carpet"
+    ],
+    "minecraft:mossy_cobblestone": [
+      "simple_cube",
+      "minecraft:mossy_cobblestone"
+    ],
+    "minecraft:mossy_cobblestone_slab": [
+      "unknown",
+      "minecraft:mossy_cobblestone_slab"
+    ],
+    "minecraft:mossy_cobblestone_stairs": [
+      "unknown",
+      "minecraft:mossy_cobblestone_stairs"
+    ],
+    "minecraft:mossy_cobblestone_wall": [
+      "unknown",
+      "minecraft:mossy_cobblestone_wall"
+    ],
+    "minecraft:mossy_stone_brick_slab": [
+      "unknown",
+      "minecraft:mossy_stone_brick_slab"
+    ],
+    "minecraft:mossy_stone_brick_stairs": [
+      "unknown",
+      "minecraft:mossy_stone_brick_stairs"
+    ],
+    "minecraft:mossy_stone_brick_wall": [
+      "unknown",
+      "minecraft:mossy_stone_brick_wall"
+    ],
+    "minecraft:mossy_stone_bricks": [
+      "simple_cube",
+      "minecraft:mossy_stone_bricks"
+    ],
+    "minecraft:mule_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:mushroom_stem": [
+      "unknown",
+      "minecraft:mushroom_stem"
+    ],
+    "minecraft:mushroom_stew": [
+      "pass",
+      ""
+    ],
+    "minecraft:music_disc_11": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_13": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_blocks": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_cat": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_chirp": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_far": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_mall": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_mellohi": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_otherside": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_pigstep": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_stal": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_strad": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_wait": [
+      "unknown",
+      ""
+    ],
+    "minecraft:music_disc_ward": [
+      "unknown",
+      ""
+    ],
+    "minecraft:mutton": [
+      "pass",
+      ""
+    ],
+    "minecraft:mycelium": [
+      "unknown",
+      "minecraft:mycelium"
+    ],
+    "minecraft:name_tag": [
+      "pass",
+      ""
+    ],
+    "minecraft:nautilus_shell": [
+      "pass",
+      ""
+    ],
+    "minecraft:nether_brick": [
+      "pass",
+      ""
+    ],
+    "minecraft:nether_brick_fence": [
+      "unknown",
+      "minecraft:nether_brick_fence"
+    ],
+    "minecraft:nether_brick_slab": [
+      "unknown",
+      "minecraft:nether_brick_slab"
+    ],
+    "minecraft:nether_brick_stairs": [
+      "unknown",
+      "minecraft:nether_brick_stairs"
+    ],
+    "minecraft:nether_brick_wall": [
+      "unknown",
+      "minecraft:nether_brick_wall"
+    ],
+    "minecraft:nether_bricks": [
+      "simple_cube",
+      "minecraft:nether_bricks"
+    ],
+    "minecraft:nether_gold_ore": [
+      "simple_cube",
+      "minecraft:nether_gold_ore"
+    ],
+    "minecraft:nether_quartz_ore": [
+      "simple_cube",
+      "minecraft:nether_quartz_ore"
+    ],
+    "minecraft:nether_sprouts": [
+      "unknown",
+      "minecraft:nether_sprouts"
+    ],
+    "minecraft:nether_star": [
+      "pass",
+      ""
+    ],
+    "minecraft:nether_wart": [
+      "unknown",
+      "minecraft:nether_wart"
+    ],
+    "minecraft:nether_wart_block": [
+      "simple_cube",
+      "minecraft:nether_wart_block"
+    ],
+    "minecraft:netherite_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:netherite_block": [
+      "simple_cube",
+      "minecraft:netherite_block"
+    ],
+    "minecraft:netherite_boots": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_chestplate": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:netherite_ingot": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_leggings": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_scrap": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherite_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:netherite_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:netherrack": [
+      "simple_cube",
+      "minecraft:netherrack"
+    ],
+    "minecraft:note_block": [
+      "unknown",
+      "minecraft:note_block"
+    ],
+    "minecraft:oak_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:oak_button": [
+      "unknown",
+      "minecraft:oak_button"
+    ],
+    "minecraft:oak_door": [
+      "unknown",
+      "minecraft:oak_door"
+    ],
+    "minecraft:oak_fence": [
+      "unknown",
+      "minecraft:oak_fence"
+    ],
+    "minecraft:oak_fence_gate": [
+      "unknown",
+      "minecraft:oak_fence_gate"
+    ],
+    "minecraft:oak_leaves": [
+      "unknown",
+      "minecraft:oak_leaves"
+    ],
+    "minecraft:oak_log": [
+      "unknown",
+      "minecraft:oak_log"
+    ],
+    "minecraft:oak_planks": [
+      "simple_cube",
+      "minecraft:oak_planks"
+    ],
+    "minecraft:oak_pressure_plate": [
+      "unknown",
+      "minecraft:oak_pressure_plate"
+    ],
+    "minecraft:oak_sapling": [
+      "unknown",
+      "minecraft:oak_sapling"
+    ],
+    "minecraft:oak_sign": [
+      "unknown",
+      "minecraft:oak_sign"
+    ],
+    "minecraft:oak_slab": [
+      "unknown",
+      "minecraft:oak_slab"
+    ],
+    "minecraft:oak_stairs": [
+      "unknown",
+      "minecraft:oak_stairs"
+    ],
+    "minecraft:oak_trapdoor": [
+      "unknown",
+      "minecraft:oak_trapdoor"
+    ],
+    "minecraft:oak_wood": [
+      "unknown",
+      "minecraft:oak_wood"
+    ],
+    "minecraft:observer": [
+      "unknown",
+      "minecraft:observer"
+    ],
+    "minecraft:obsidian": [
+      "simple_cube",
+      "minecraft:obsidian"
+    ],
+    "minecraft:ocelot_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:orange_banner": [
+      "unknown",
+      "minecraft:orange_banner"
+    ],
+    "minecraft:orange_bed": [
+      "unknown",
+      "minecraft:orange_bed"
+    ],
+    "minecraft:orange_candle": [
+      "unknown",
+      "minecraft:orange_candle"
+    ],
+    "minecraft:orange_carpet": [
+      "unknown",
+      "minecraft:orange_carpet"
+    ],
+    "minecraft:orange_concrete": [
+      "simple_cube",
+      "minecraft:orange_concrete"
+    ],
+    "minecraft:orange_concrete_powder": [
+      "unknown",
+      "minecraft:orange_concrete_powder"
+    ],
+    "minecraft:orange_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:orange_glazed_terracotta": [
+      "unknown",
+      "minecraft:orange_glazed_terracotta"
+    ],
+    "minecraft:orange_shulker_box": [
+      "unknown",
+      "minecraft:orange_shulker_box"
+    ],
+    "minecraft:orange_stained_glass": [
+      "simple_cube",
+      "minecraft:orange_stained_glass"
+    ],
+    "minecraft:orange_stained_glass_pane": [
+      "unknown",
+      "minecraft:orange_stained_glass_pane"
+    ],
+    "minecraft:orange_terracotta": [
+      "simple_cube",
+      "minecraft:orange_terracotta"
+    ],
+    "minecraft:orange_tulip": [
+      "unknown",
+      "minecraft:orange_tulip"
+    ],
+    "minecraft:orange_wool": [
+      "simple_cube",
+      "minecraft:orange_wool"
+    ],
+    "minecraft:oxeye_daisy": [
+      "unknown",
+      "minecraft:oxeye_daisy"
+    ],
+    "minecraft:oxidized_copper": [
+      "simple_cube",
+      "minecraft:oxidized_copper"
+    ],
+    "minecraft:oxidized_cut_copper": [
+      "simple_cube",
+      "minecraft:oxidized_cut_copper"
+    ],
+    "minecraft:oxidized_cut_copper_slab": [
+      "unknown",
+      "minecraft:oxidized_cut_copper_slab"
+    ],
+    "minecraft:oxidized_cut_copper_stairs": [
+      "unknown",
+      "minecraft:oxidized_cut_copper_stairs"
+    ],
+    "minecraft:packed_ice": [
+      "simple_cube",
+      "minecraft:packed_ice"
+    ],
+    "minecraft:painting": [
+      "unknown",
+      ""
+    ],
+    "minecraft:panda_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:paper": [
+      "pass",
+      ""
+    ],
+    "minecraft:parrot_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:peony": [
+      "unknown",
+      "minecraft:peony"
+    ],
+    "minecraft:petrified_oak_slab": [
+      "unknown",
+      "minecraft:petrified_oak_slab"
+    ],
+    "minecraft:phantom_membrane": [
+      "pass",
+      ""
+    ],
+    "minecraft:phantom_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:pig_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:piglin_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:piglin_brute_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:piglin_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:pillager_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:pink_banner": [
+      "unknown",
+      "minecraft:pink_banner"
+    ],
+    "minecraft:pink_bed": [
+      "unknown",
+      "minecraft:pink_bed"
+    ],
+    "minecraft:pink_candle": [
+      "unknown",
+      "minecraft:pink_candle"
+    ],
+    "minecraft:pink_carpet": [
+      "unknown",
+      "minecraft:pink_carpet"
+    ],
+    "minecraft:pink_concrete": [
+      "simple_cube",
+      "minecraft:pink_concrete"
+    ],
+    "minecraft:pink_concrete_powder": [
+      "unknown",
+      "minecraft:pink_concrete_powder"
+    ],
+    "minecraft:pink_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:pink_glazed_terracotta": [
+      "unknown",
+      "minecraft:pink_glazed_terracotta"
+    ],
+    "minecraft:pink_shulker_box": [
+      "unknown",
+      "minecraft:pink_shulker_box"
+    ],
+    "minecraft:pink_stained_glass": [
+      "simple_cube",
+      "minecraft:pink_stained_glass"
+    ],
+    "minecraft:pink_stained_glass_pane": [
+      "unknown",
+      "minecraft:pink_stained_glass_pane"
+    ],
+    "minecraft:pink_terracotta": [
+      "simple_cube",
+      "minecraft:pink_terracotta"
+    ],
+    "minecraft:pink_tulip": [
+      "unknown",
+      "minecraft:pink_tulip"
+    ],
+    "minecraft:pink_wool": [
+      "simple_cube",
+      "minecraft:pink_wool"
+    ],
+    "minecraft:piston": [
+      "unknown",
+      "minecraft:piston"
+    ],
+    "minecraft:player_head": [
+      "unknown",
+      "minecraft:player_head"
+    ],
+    "minecraft:podzol": [
+      "unknown",
+      "minecraft:podzol"
+    ],
+    "minecraft:pointed_dripstone": [
+      "unknown",
+      "minecraft:pointed_dripstone"
+    ],
+    "minecraft:poisonous_potato": [
+      "pass",
+      ""
+    ],
+    "minecraft:polar_bear_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:polished_andesite": [
+      "simple_cube",
+      "minecraft:polished_andesite"
+    ],
+    "minecraft:polished_andesite_slab": [
+      "unknown",
+      "minecraft:polished_andesite_slab"
+    ],
+    "minecraft:polished_andesite_stairs": [
+      "unknown",
+      "minecraft:polished_andesite_stairs"
+    ],
+    "minecraft:polished_basalt": [
+      "unknown",
+      "minecraft:polished_basalt"
+    ],
+    "minecraft:polished_blackstone": [
+      "simple_cube",
+      "minecraft:polished_blackstone"
+    ],
+    "minecraft:polished_blackstone_brick_slab": [
+      "unknown",
+      "minecraft:polished_blackstone_brick_slab"
+    ],
+    "minecraft:polished_blackstone_brick_stairs": [
+      "unknown",
+      "minecraft:polished_blackstone_brick_stairs"
+    ],
+    "minecraft:polished_blackstone_brick_wall": [
+      "unknown",
+      "minecraft:polished_blackstone_brick_wall"
+    ],
+    "minecraft:polished_blackstone_bricks": [
+      "simple_cube",
+      "minecraft:polished_blackstone_bricks"
+    ],
+    "minecraft:polished_blackstone_button": [
+      "unknown",
+      "minecraft:polished_blackstone_button"
+    ],
+    "minecraft:polished_blackstone_pressure_plate": [
+      "unknown",
+      "minecraft:polished_blackstone_pressure_plate"
+    ],
+    "minecraft:polished_blackstone_slab": [
+      "unknown",
+      "minecraft:polished_blackstone_slab"
+    ],
+    "minecraft:polished_blackstone_stairs": [
+      "unknown",
+      "minecraft:polished_blackstone_stairs"
+    ],
+    "minecraft:polished_blackstone_wall": [
+      "unknown",
+      "minecraft:polished_blackstone_wall"
+    ],
+    "minecraft:polished_deepslate": [
+      "simple_cube",
+      "minecraft:polished_deepslate"
+    ],
+    "minecraft:polished_deepslate_slab": [
+      "unknown",
+      "minecraft:polished_deepslate_slab"
+    ],
+    "minecraft:polished_deepslate_stairs": [
+      "unknown",
+      "minecraft:polished_deepslate_stairs"
+    ],
+    "minecraft:polished_deepslate_wall": [
+      "unknown",
+      "minecraft:polished_deepslate_wall"
+    ],
+    "minecraft:polished_diorite": [
+      "simple_cube",
+      "minecraft:polished_diorite"
+    ],
+    "minecraft:polished_diorite_slab": [
+      "unknown",
+      "minecraft:polished_diorite_slab"
+    ],
+    "minecraft:polished_diorite_stairs": [
+      "unknown",
+      "minecraft:polished_diorite_stairs"
+    ],
+    "minecraft:polished_granite": [
+      "simple_cube",
+      "minecraft:polished_granite"
+    ],
+    "minecraft:polished_granite_slab": [
+      "unknown",
+      "minecraft:polished_granite_slab"
+    ],
+    "minecraft:polished_granite_stairs": [
+      "unknown",
+      "minecraft:polished_granite_stairs"
+    ],
+    "minecraft:popped_chorus_fruit": [
+      "pass",
+      ""
+    ],
+    "minecraft:poppy": [
+      "unknown",
+      "minecraft:poppy"
+    ],
+    "minecraft:porkchop": [
+      "pass",
+      ""
+    ],
+    "minecraft:potato": [
+      "unknown",
+      "minecraft:potatoes"
+    ],
+    "minecraft:potion": [
+      "pass",
+      ""
+    ],
+    "minecraft:powder_snow_bucket": [
+      "unknown",
+      "minecraft:powder_snow"
+    ],
+    "minecraft:powered_rail": [
+      "unknown",
+      "minecraft:powered_rail"
+    ],
+    "minecraft:prismarine": [
+      "simple_cube",
+      "minecraft:prismarine"
+    ],
+    "minecraft:prismarine_brick_slab": [
+      "unknown",
+      "minecraft:prismarine_brick_slab"
+    ],
+    "minecraft:prismarine_brick_stairs": [
+      "unknown",
+      "minecraft:prismarine_brick_stairs"
+    ],
+    "minecraft:prismarine_bricks": [
+      "simple_cube",
+      "minecraft:prismarine_bricks"
+    ],
+    "minecraft:prismarine_crystals": [
+      "pass",
+      ""
+    ],
+    "minecraft:prismarine_shard": [
+      "pass",
+      ""
+    ],
+    "minecraft:prismarine_slab": [
+      "unknown",
+      "minecraft:prismarine_slab"
+    ],
+    "minecraft:prismarine_stairs": [
+      "unknown",
+      "minecraft:prismarine_stairs"
+    ],
+    "minecraft:prismarine_wall": [
+      "unknown",
+      "minecraft:prismarine_wall"
+    ],
+    "minecraft:pufferfish": [
+      "pass",
+      ""
+    ],
+    "minecraft:pufferfish_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:pufferfish_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:pumpkin": [
+      "simple_cube",
+      "minecraft:pumpkin"
+    ],
+    "minecraft:pumpkin_pie": [
+      "pass",
+      ""
+    ],
+    "minecraft:pumpkin_seeds": [
+      "unknown",
+      "minecraft:pumpkin_stem"
+    ],
+    "minecraft:purple_banner": [
+      "unknown",
+      "minecraft:purple_banner"
+    ],
+    "minecraft:purple_bed": [
+      "unknown",
+      "minecraft:purple_bed"
+    ],
+    "minecraft:purple_candle": [
+      "unknown",
+      "minecraft:purple_candle"
+    ],
+    "minecraft:purple_carpet": [
+      "unknown",
+      "minecraft:purple_carpet"
+    ],
+    "minecraft:purple_concrete": [
+      "simple_cube",
+      "minecraft:purple_concrete"
+    ],
+    "minecraft:purple_concrete_powder": [
+      "unknown",
+      "minecraft:purple_concrete_powder"
+    ],
+    "minecraft:purple_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:purple_glazed_terracotta": [
+      "unknown",
+      "minecraft:purple_glazed_terracotta"
+    ],
+    "minecraft:purple_shulker_box": [
+      "unknown",
+      "minecraft:purple_shulker_box"
+    ],
+    "minecraft:purple_stained_glass": [
+      "simple_cube",
+      "minecraft:purple_stained_glass"
+    ],
+    "minecraft:purple_stained_glass_pane": [
+      "unknown",
+      "minecraft:purple_stained_glass_pane"
+    ],
+    "minecraft:purple_terracotta": [
+      "simple_cube",
+      "minecraft:purple_terracotta"
+    ],
+    "minecraft:purple_wool": [
+      "simple_cube",
+      "minecraft:purple_wool"
+    ],
+    "minecraft:purpur_block": [
+      "simple_cube",
+      "minecraft:purpur_block"
+    ],
+    "minecraft:purpur_pillar": [
+      "unknown",
+      "minecraft:purpur_pillar"
+    ],
+    "minecraft:purpur_slab": [
+      "unknown",
+      "minecraft:purpur_slab"
+    ],
+    "minecraft:purpur_stairs": [
+      "unknown",
+      "minecraft:purpur_stairs"
+    ],
+    "minecraft:quartz": [
+      "pass",
+      ""
+    ],
+    "minecraft:quartz_block": [
+      "simple_cube",
+      "minecraft:quartz_block"
+    ],
+    "minecraft:quartz_bricks": [
+      "simple_cube",
+      "minecraft:quartz_bricks"
+    ],
+    "minecraft:quartz_pillar": [
+      "unknown",
+      "minecraft:quartz_pillar"
+    ],
+    "minecraft:quartz_slab": [
+      "unknown",
+      "minecraft:quartz_slab"
+    ],
+    "minecraft:quartz_stairs": [
+      "unknown",
+      "minecraft:quartz_stairs"
+    ],
+    "minecraft:rabbit": [
+      "pass",
+      ""
+    ],
+    "minecraft:rabbit_foot": [
+      "pass",
+      ""
+    ],
+    "minecraft:rabbit_hide": [
+      "pass",
+      ""
+    ],
+    "minecraft:rabbit_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:rabbit_stew": [
+      "pass",
+      ""
+    ],
+    "minecraft:rail": [
+      "unknown",
+      "minecraft:rail"
+    ],
+    "minecraft:ravager_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:raw_copper": [
+      "pass",
+      ""
+    ],
+    "minecraft:raw_copper_block": [
+      "simple_cube",
+      "minecraft:raw_copper_block"
+    ],
+    "minecraft:raw_gold": [
+      "pass",
+      ""
+    ],
+    "minecraft:raw_gold_block": [
+      "simple_cube",
+      "minecraft:raw_gold_block"
+    ],
+    "minecraft:raw_iron": [
+      "pass",
+      ""
+    ],
+    "minecraft:raw_iron_block": [
+      "simple_cube",
+      "minecraft:raw_iron_block"
+    ],
+    "minecraft:red_banner": [
+      "unknown",
+      "minecraft:red_banner"
+    ],
+    "minecraft:red_bed": [
+      "unknown",
+      "minecraft:red_bed"
+    ],
+    "minecraft:red_candle": [
+      "unknown",
+      "minecraft:red_candle"
+    ],
+    "minecraft:red_carpet": [
+      "unknown",
+      "minecraft:red_carpet"
+    ],
+    "minecraft:red_concrete": [
+      "simple_cube",
+      "minecraft:red_concrete"
+    ],
+    "minecraft:red_concrete_powder": [
+      "unknown",
+      "minecraft:red_concrete_powder"
+    ],
+    "minecraft:red_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:red_glazed_terracotta": [
+      "unknown",
+      "minecraft:red_glazed_terracotta"
+    ],
+    "minecraft:red_mushroom": [
+      "unknown",
+      "minecraft:red_mushroom"
+    ],
+    "minecraft:red_mushroom_block": [
+      "unknown",
+      "minecraft:red_mushroom_block"
+    ],
+    "minecraft:red_nether_brick_slab": [
+      "unknown",
+      "minecraft:red_nether_brick_slab"
+    ],
+    "minecraft:red_nether_brick_stairs": [
+      "unknown",
+      "minecraft:red_nether_brick_stairs"
+    ],
+    "minecraft:red_nether_brick_wall": [
+      "unknown",
+      "minecraft:red_nether_brick_wall"
+    ],
+    "minecraft:red_nether_bricks": [
+      "simple_cube",
+      "minecraft:red_nether_bricks"
+    ],
+    "minecraft:red_sand": [
+      "simple_cube",
+      "minecraft:red_sand"
+    ],
+    "minecraft:red_sandstone": [
+      "simple_cube",
+      "minecraft:red_sandstone"
+    ],
+    "minecraft:red_sandstone_slab": [
+      "unknown",
+      "minecraft:red_sandstone_slab"
+    ],
+    "minecraft:red_sandstone_stairs": [
+      "unknown",
+      "minecraft:red_sandstone_stairs"
+    ],
+    "minecraft:red_sandstone_wall": [
+      "unknown",
+      "minecraft:red_sandstone_wall"
+    ],
+    "minecraft:red_shulker_box": [
+      "unknown",
+      "minecraft:red_shulker_box"
+    ],
+    "minecraft:red_stained_glass": [
+      "simple_cube",
+      "minecraft:red_stained_glass"
+    ],
+    "minecraft:red_stained_glass_pane": [
+      "unknown",
+      "minecraft:red_stained_glass_pane"
+    ],
+    "minecraft:red_terracotta": [
+      "simple_cube",
+      "minecraft:red_terracotta"
+    ],
+    "minecraft:red_tulip": [
+      "unknown",
+      "minecraft:red_tulip"
+    ],
+    "minecraft:red_wool": [
+      "simple_cube",
+      "minecraft:red_wool"
+    ],
+    "minecraft:redstone": [
+      "unknown",
+      "minecraft:redstone_wire"
+    ],
+    "minecraft:redstone_block": [
+      "simple_cube",
+      "minecraft:redstone_block"
+    ],
+    "minecraft:redstone_lamp": [
+      "unknown",
+      "minecraft:redstone_lamp"
+    ],
+    "minecraft:redstone_ore": [
+      "simple_cube",
+      "minecraft:redstone_ore"
+    ],
+    "minecraft:redstone_torch": [
+      "unknown",
+      "minecraft:redstone_torch"
+    ],
+    "minecraft:repeater": [
+      "unknown",
+      "minecraft:repeater"
+    ],
+    "minecraft:repeating_command_block": [
+      "unknown",
+      "minecraft:repeating_command_block"
+    ],
+    "minecraft:respawn_anchor": [
+      "simple_cube",
+      "minecraft:respawn_anchor"
+    ],
+    "minecraft:rooted_dirt": [
+      "simple_cube",
+      "minecraft:rooted_dirt"
+    ],
+    "minecraft:rose_bush": [
+      "unknown",
+      "minecraft:rose_bush"
+    ],
+    "minecraft:rotten_flesh": [
+      "pass",
+      ""
+    ],
+    "minecraft:saddle": [
+      "pass",
+      ""
+    ],
+    "minecraft:salmon": [
+      "pass",
+      ""
+    ],
+    "minecraft:salmon_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:salmon_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:sand": [
+      "simple_cube",
+      "minecraft:sand"
+    ],
+    "minecraft:sandstone": [
+      "simple_cube",
+      "minecraft:sandstone"
+    ],
+    "minecraft:sandstone_slab": [
+      "unknown",
+      "minecraft:sandstone_slab"
+    ],
+    "minecraft:sandstone_stairs": [
+      "unknown",
+      "minecraft:sandstone_stairs"
+    ],
+    "minecraft:sandstone_wall": [
+      "unknown",
+      "minecraft:sandstone_wall"
+    ],
+    "minecraft:scaffolding": [
+      "unknown",
+      "minecraft:scaffolding"
+    ],
+    "minecraft:sculk_sensor": [
+      "unknown",
+      "minecraft:sculk_sensor"
+    ],
+    "minecraft:scute": [
+      "pass",
+      ""
+    ],
+    "minecraft:sea_lantern": [
+      "simple_cube",
+      "minecraft:sea_lantern"
+    ],
+    "minecraft:sea_pickle": [
+      "unknown",
+      "minecraft:sea_pickle"
+    ],
+    "minecraft:seagrass": [
+      "unknown",
+      "minecraft:seagrass"
+    ],
+    "minecraft:shears": [
+      "unknown",
+      ""
+    ],
+    "minecraft:sheep_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:shield": [
+      "pass",
+      ""
+    ],
+    "minecraft:shroomlight": [
+      "simple_cube",
+      "minecraft:shroomlight"
+    ],
+    "minecraft:shulker_box": [
+      "unknown",
+      "minecraft:shulker_box"
+    ],
+    "minecraft:shulker_shell": [
+      "pass",
+      ""
+    ],
+    "minecraft:shulker_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:silverfish_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:skeleton_horse_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:skeleton_skull": [
+      "unknown",
+      "minecraft:skeleton_skull"
+    ],
+    "minecraft:skeleton_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:skull_banner_pattern": [
+      "pass",
+      ""
+    ],
+    "minecraft:slime_ball": [
+      "pass",
+      ""
+    ],
+    "minecraft:slime_block": [
+      "simple_cube",
+      "minecraft:slime_block"
+    ],
+    "minecraft:slime_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:small_amethyst_bud": [
+      "unknown",
+      "minecraft:small_amethyst_bud"
+    ],
+    "minecraft:small_dripleaf": [
+      "unknown",
+      "minecraft:small_dripleaf"
+    ],
+    "minecraft:smithing_table": [
+      "simple_cube",
+      "minecraft:smithing_table"
+    ],
+    "minecraft:smoker": [
+      "unknown",
+      "minecraft:smoker"
+    ],
+    "minecraft:smooth_basalt": [
+      "simple_cube",
+      "minecraft:smooth_basalt"
+    ],
+    "minecraft:smooth_quartz": [
+      "simple_cube",
+      "minecraft:smooth_quartz"
+    ],
+    "minecraft:smooth_quartz_slab": [
+      "unknown",
+      "minecraft:smooth_quartz_slab"
+    ],
+    "minecraft:smooth_quartz_stairs": [
+      "unknown",
+      "minecraft:smooth_quartz_stairs"
+    ],
+    "minecraft:smooth_red_sandstone": [
+      "simple_cube",
+      "minecraft:smooth_red_sandstone"
+    ],
+    "minecraft:smooth_red_sandstone_slab": [
+      "unknown",
+      "minecraft:smooth_red_sandstone_slab"
+    ],
+    "minecraft:smooth_red_sandstone_stairs": [
+      "unknown",
+      "minecraft:smooth_red_sandstone_stairs"
+    ],
+    "minecraft:smooth_sandstone": [
+      "simple_cube",
+      "minecraft:smooth_sandstone"
+    ],
+    "minecraft:smooth_sandstone_slab": [
+      "unknown",
+      "minecraft:smooth_sandstone_slab"
+    ],
+    "minecraft:smooth_sandstone_stairs": [
+      "unknown",
+      "minecraft:smooth_sandstone_stairs"
+    ],
+    "minecraft:smooth_stone": [
+      "simple_cube",
+      "minecraft:smooth_stone"
+    ],
+    "minecraft:smooth_stone_slab": [
+      "unknown",
+      "minecraft:smooth_stone_slab"
+    ],
+    "minecraft:snow": [
+      "unknown",
+      "minecraft:snow"
+    ],
+    "minecraft:snow_block": [
+      "simple_cube",
+      "minecraft:snow_block"
+    ],
+    "minecraft:snowball": [
+      "pass",
+      ""
+    ],
+    "minecraft:soul_campfire": [
+      "unknown",
+      "minecraft:soul_campfire"
+    ],
+    "minecraft:soul_lantern": [
+      "unknown",
+      "minecraft:soul_lantern"
+    ],
+    "minecraft:soul_sand": [
+      "unknown",
+      "minecraft:soul_sand"
+    ],
+    "minecraft:soul_soil": [
+      "simple_cube",
+      "minecraft:soul_soil"
+    ],
+    "minecraft:soul_torch": [
+      "unknown",
+      "minecraft:soul_torch"
+    ],
+    "minecraft:spawner": [
+      "simple_cube",
+      "minecraft:spawner"
+    ],
+    "minecraft:spectral_arrow": [
+      "pass",
+      ""
+    ],
+    "minecraft:spider_eye": [
+      "pass",
+      ""
+    ],
+    "minecraft:spider_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:splash_potion": [
+      "pass",
+      ""
+    ],
+    "minecraft:sponge": [
+      "simple_cube",
+      "minecraft:sponge"
+    ],
+    "minecraft:spore_blossom": [
+      "unknown",
+      "minecraft:spore_blossom"
+    ],
+    "minecraft:spruce_boat": [
+      "pass",
+      ""
+    ],
+    "minecraft:spruce_button": [
+      "unknown",
+      "minecraft:spruce_button"
+    ],
+    "minecraft:spruce_door": [
+      "unknown",
+      "minecraft:spruce_door"
+    ],
+    "minecraft:spruce_fence": [
+      "unknown",
+      "minecraft:spruce_fence"
+    ],
+    "minecraft:spruce_fence_gate": [
+      "unknown",
+      "minecraft:spruce_fence_gate"
+    ],
+    "minecraft:spruce_leaves": [
+      "unknown",
+      "minecraft:spruce_leaves"
+    ],
+    "minecraft:spruce_log": [
+      "unknown",
+      "minecraft:spruce_log"
+    ],
+    "minecraft:spruce_planks": [
+      "simple_cube",
+      "minecraft:spruce_planks"
+    ],
+    "minecraft:spruce_pressure_plate": [
+      "unknown",
+      "minecraft:spruce_pressure_plate"
+    ],
+    "minecraft:spruce_sapling": [
+      "unknown",
+      "minecraft:spruce_sapling"
+    ],
+    "minecraft:spruce_sign": [
+      "unknown",
+      "minecraft:spruce_sign"
+    ],
+    "minecraft:spruce_slab": [
+      "unknown",
+      "minecraft:spruce_slab"
+    ],
+    "minecraft:spruce_stairs": [
+      "unknown",
+      "minecraft:spruce_stairs"
+    ],
+    "minecraft:spruce_trapdoor": [
+      "unknown",
+      "minecraft:spruce_trapdoor"
+    ],
+    "minecraft:spruce_wood": [
+      "unknown",
+      "minecraft:spruce_wood"
+    ],
+    "minecraft:spyglass": [
+      "pass",
+      ""
+    ],
+    "minecraft:squid_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:stick": [
+      "pass",
+      ""
+    ],
+    "minecraft:sticky_piston": [
+      "unknown",
+      "minecraft:sticky_piston"
+    ],
+    "minecraft:stone": [
+      "simple_cube",
+      "minecraft:stone"
+    ],
+    "minecraft:stone_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:stone_brick_slab": [
+      "unknown",
+      "minecraft:stone_brick_slab"
+    ],
+    "minecraft:stone_brick_stairs": [
+      "unknown",
+      "minecraft:stone_brick_stairs"
+    ],
+    "minecraft:stone_brick_wall": [
+      "unknown",
+      "minecraft:stone_brick_wall"
+    ],
+    "minecraft:stone_bricks": [
+      "simple_cube",
+      "minecraft:stone_bricks"
+    ],
+    "minecraft:stone_button": [
+      "unknown",
+      "minecraft:stone_button"
+    ],
+    "minecraft:stone_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:stone_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:stone_pressure_plate": [
+      "unknown",
+      "minecraft:stone_pressure_plate"
+    ],
+    "minecraft:stone_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:stone_slab": [
+      "unknown",
+      "minecraft:stone_slab"
+    ],
+    "minecraft:stone_stairs": [
+      "unknown",
+      "minecraft:stone_stairs"
+    ],
+    "minecraft:stone_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:stonecutter": [
+      "unknown",
+      "minecraft:stonecutter"
+    ],
+    "minecraft:stray_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:strider_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:string": [
+      "unknown",
+      "minecraft:tripwire"
+    ],
+    "minecraft:stripped_acacia_log": [
+      "unknown",
+      "minecraft:stripped_acacia_log"
+    ],
+    "minecraft:stripped_acacia_wood": [
+      "unknown",
+      "minecraft:stripped_acacia_wood"
+    ],
+    "minecraft:stripped_birch_log": [
+      "unknown",
+      "minecraft:stripped_birch_log"
+    ],
+    "minecraft:stripped_birch_wood": [
+      "unknown",
+      "minecraft:stripped_birch_wood"
+    ],
+    "minecraft:stripped_crimson_hyphae": [
+      "unknown",
+      "minecraft:stripped_crimson_hyphae"
+    ],
+    "minecraft:stripped_crimson_stem": [
+      "unknown",
+      "minecraft:stripped_crimson_stem"
+    ],
+    "minecraft:stripped_dark_oak_log": [
+      "unknown",
+      "minecraft:stripped_dark_oak_log"
+    ],
+    "minecraft:stripped_dark_oak_wood": [
+      "unknown",
+      "minecraft:stripped_dark_oak_wood"
+    ],
+    "minecraft:stripped_jungle_log": [
+      "unknown",
+      "minecraft:stripped_jungle_log"
+    ],
+    "minecraft:stripped_jungle_wood": [
+      "unknown",
+      "minecraft:stripped_jungle_wood"
+    ],
+    "minecraft:stripped_oak_log": [
+      "unknown",
+      "minecraft:stripped_oak_log"
+    ],
+    "minecraft:stripped_oak_wood": [
+      "unknown",
+      "minecraft:stripped_oak_wood"
+    ],
+    "minecraft:stripped_spruce_log": [
+      "unknown",
+      "minecraft:stripped_spruce_log"
+    ],
+    "minecraft:stripped_spruce_wood": [
+      "unknown",
+      "minecraft:stripped_spruce_wood"
+    ],
+    "minecraft:stripped_warped_hyphae": [
+      "unknown",
+      "minecraft:stripped_warped_hyphae"
+    ],
+    "minecraft:stripped_warped_stem": [
+      "unknown",
+      "minecraft:stripped_warped_stem"
+    ],
+    "minecraft:structure_block": [
+      "unknown",
+      "minecraft:structure_block"
+    ],
+    "minecraft:structure_void": [
+      "unknown",
+      "minecraft:structure_void"
+    ],
+    "minecraft:sugar": [
+      "pass",
+      ""
+    ],
+    "minecraft:sugar_cane": [
+      "unknown",
+      "minecraft:sugar_cane"
+    ],
+    "minecraft:sunflower": [
+      "unknown",
+      "minecraft:sunflower"
+    ],
+    "minecraft:suspicious_stew": [
+      "pass",
+      ""
+    ],
+    "minecraft:sweet_berries": [
+      "unknown",
+      "minecraft:sweet_berry_bush"
+    ],
+    "minecraft:tall_grass": [
+      "unknown",
+      "minecraft:tall_grass"
+    ],
+    "minecraft:target": [
+      "simple_cube",
+      "minecraft:target"
+    ],
+    "minecraft:terracotta": [
+      "simple_cube",
+      "minecraft:terracotta"
+    ],
+    "minecraft:tinted_glass": [
+      "simple_cube",
+      "minecraft:tinted_glass"
+    ],
+    "minecraft:tipped_arrow": [
+      "pass",
+      ""
+    ],
+    "minecraft:tnt": [
+      "simple_cube",
+      "minecraft:tnt"
+    ],
+    "minecraft:tnt_minecart": [
+      "unknown",
+      ""
+    ],
+    "minecraft:torch": [
+      "unknown",
+      "minecraft:torch"
+    ],
+    "minecraft:totem_of_undying": [
+      "pass",
+      ""
+    ],
+    "minecraft:trader_llama_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:trapped_chest": [
+      "unknown",
+      "minecraft:trapped_chest"
+    ],
+    "minecraft:trident": [
+      "pass",
+      ""
+    ],
+    "minecraft:tripwire_hook": [
+      "unknown",
+      "minecraft:tripwire_hook"
+    ],
+    "minecraft:tropical_fish": [
+      "pass",
+      ""
+    ],
+    "minecraft:tropical_fish_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:tropical_fish_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:tube_coral": [
+      "unknown",
+      "minecraft:tube_coral"
+    ],
+    "minecraft:tube_coral_block": [
+      "unknown",
+      "minecraft:tube_coral_block"
+    ],
+    "minecraft:tube_coral_fan": [
+      "unknown",
+      "minecraft:tube_coral_fan"
+    ],
+    "minecraft:tuff": [
+      "simple_cube",
+      "minecraft:tuff"
+    ],
+    "minecraft:turtle_egg": [
+      "unknown",
+      "minecraft:turtle_egg"
+    ],
+    "minecraft:turtle_helmet": [
+      "pass",
+      ""
+    ],
+    "minecraft:turtle_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:twisting_vines": [
+      "unknown",
+      "minecraft:twisting_vines"
+    ],
+    "minecraft:vex_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:villager_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:vindicator_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:vine": [
+      "unknown",
+      "minecraft:vine"
+    ],
+    "minecraft:wandering_trader_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:warped_button": [
+      "unknown",
+      "minecraft:warped_button"
+    ],
+    "minecraft:warped_door": [
+      "unknown",
+      "minecraft:warped_door"
+    ],
+    "minecraft:warped_fence": [
+      "unknown",
+      "minecraft:warped_fence"
+    ],
+    "minecraft:warped_fence_gate": [
+      "unknown",
+      "minecraft:warped_fence_gate"
+    ],
+    "minecraft:warped_fungus": [
+      "unknown",
+      "minecraft:warped_fungus"
+    ],
+    "minecraft:warped_fungus_on_a_stick": [
+      "pass",
+      ""
+    ],
+    "minecraft:warped_hyphae": [
+      "unknown",
+      "minecraft:warped_hyphae"
+    ],
+    "minecraft:warped_nylium": [
+      "simple_cube",
+      "minecraft:warped_nylium"
+    ],
+    "minecraft:warped_planks": [
+      "simple_cube",
+      "minecraft:warped_planks"
+    ],
+    "minecraft:warped_pressure_plate": [
+      "unknown",
+      "minecraft:warped_pressure_plate"
+    ],
+    "minecraft:warped_roots": [
+      "unknown",
+      "minecraft:warped_roots"
+    ],
+    "minecraft:warped_sign": [
+      "unknown",
+      "minecraft:warped_sign"
+    ],
+    "minecraft:warped_slab": [
+      "unknown",
+      "minecraft:warped_slab"
+    ],
+    "minecraft:warped_stairs": [
+      "unknown",
+      "minecraft:warped_stairs"
+    ],
+    "minecraft:warped_stem": [
+      "unknown",
+      "minecraft:warped_stem"
+    ],
+    "minecraft:warped_trapdoor": [
+      "unknown",
+      "minecraft:warped_trapdoor"
+    ],
+    "minecraft:warped_wart_block": [
+      "simple_cube",
+      "minecraft:warped_wart_block"
+    ],
+    "minecraft:water_bucket": [
+      "pass",
+      ""
+    ],
+    "minecraft:waxed_copper_block": [
+      "simple_cube",
+      "minecraft:waxed_copper_block"
+    ],
+    "minecraft:waxed_cut_copper": [
+      "simple_cube",
+      "minecraft:waxed_cut_copper"
+    ],
+    "minecraft:waxed_cut_copper_slab": [
+      "unknown",
+      "minecraft:waxed_cut_copper_slab"
+    ],
+    "minecraft:waxed_cut_copper_stairs": [
+      "unknown",
+      "minecraft:waxed_cut_copper_stairs"
+    ],
+    "minecraft:waxed_exposed_copper": [
+      "simple_cube",
+      "minecraft:waxed_exposed_copper"
+    ],
+    "minecraft:waxed_exposed_cut_copper": [
+      "simple_cube",
+      "minecraft:waxed_exposed_cut_copper"
+    ],
+    "minecraft:waxed_exposed_cut_copper_slab": [
+      "unknown",
+      "minecraft:waxed_exposed_cut_copper_slab"
+    ],
+    "minecraft:waxed_exposed_cut_copper_stairs": [
+      "unknown",
+      "minecraft:waxed_exposed_cut_copper_stairs"
+    ],
+    "minecraft:waxed_oxidized_copper": [
+      "simple_cube",
+      "minecraft:waxed_oxidized_copper"
+    ],
+    "minecraft:waxed_oxidized_cut_copper": [
+      "simple_cube",
+      "minecraft:waxed_oxidized_cut_copper"
+    ],
+    "minecraft:waxed_oxidized_cut_copper_slab": [
+      "unknown",
+      "minecraft:waxed_oxidized_cut_copper_slab"
+    ],
+    "minecraft:waxed_oxidized_cut_copper_stairs": [
+      "unknown",
+      "minecraft:waxed_oxidized_cut_copper_stairs"
+    ],
+    "minecraft:waxed_weathered_copper": [
+      "simple_cube",
+      "minecraft:waxed_weathered_copper"
+    ],
+    "minecraft:waxed_weathered_cut_copper": [
+      "simple_cube",
+      "minecraft:waxed_weathered_cut_copper"
+    ],
+    "minecraft:waxed_weathered_cut_copper_slab": [
+      "unknown",
+      "minecraft:waxed_weathered_cut_copper_slab"
+    ],
+    "minecraft:waxed_weathered_cut_copper_stairs": [
+      "unknown",
+      "minecraft:waxed_weathered_cut_copper_stairs"
+    ],
+    "minecraft:weathered_copper": [
+      "simple_cube",
+      "minecraft:weathered_copper"
+    ],
+    "minecraft:weathered_cut_copper": [
+      "simple_cube",
+      "minecraft:weathered_cut_copper"
+    ],
+    "minecraft:weathered_cut_copper_slab": [
+      "unknown",
+      "minecraft:weathered_cut_copper_slab"
+    ],
+    "minecraft:weathered_cut_copper_stairs": [
+      "unknown",
+      "minecraft:weathered_cut_copper_stairs"
+    ],
+    "minecraft:weeping_vines": [
+      "unknown",
+      "minecraft:weeping_vines"
+    ],
+    "minecraft:wet_sponge": [
+      "simple_cube",
+      "minecraft:wet_sponge"
+    ],
+    "minecraft:wheat": [
+      "pass",
+      ""
+    ],
+    "minecraft:wheat_seeds": [
+      "unknown",
+      "minecraft:wheat"
+    ],
+    "minecraft:white_banner": [
+      "unknown",
+      "minecraft:white_banner"
+    ],
+    "minecraft:white_bed": [
+      "unknown",
+      "minecraft:white_bed"
+    ],
+    "minecraft:white_candle": [
+      "unknown",
+      "minecraft:white_candle"
+    ],
+    "minecraft:white_carpet": [
+      "unknown",
+      "minecraft:white_carpet"
+    ],
+    "minecraft:white_concrete": [
+      "simple_cube",
+      "minecraft:white_concrete"
+    ],
+    "minecraft:white_concrete_powder": [
+      "unknown",
+      "minecraft:white_concrete_powder"
+    ],
+    "minecraft:white_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:white_glazed_terracotta": [
+      "unknown",
+      "minecraft:white_glazed_terracotta"
+    ],
+    "minecraft:white_shulker_box": [
+      "unknown",
+      "minecraft:white_shulker_box"
+    ],
+    "minecraft:white_stained_glass": [
+      "simple_cube",
+      "minecraft:white_stained_glass"
+    ],
+    "minecraft:white_stained_glass_pane": [
+      "unknown",
+      "minecraft:white_stained_glass_pane"
+    ],
+    "minecraft:white_terracotta": [
+      "simple_cube",
+      "minecraft:white_terracotta"
+    ],
+    "minecraft:white_tulip": [
+      "unknown",
+      "minecraft:white_tulip"
+    ],
+    "minecraft:white_wool": [
+      "simple_cube",
+      "minecraft:white_wool"
+    ],
+    "minecraft:witch_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wither_rose": [
+      "unknown",
+      "minecraft:wither_rose"
+    ],
+    "minecraft:wither_skeleton_skull": [
+      "unknown",
+      "minecraft:wither_skeleton_skull"
+    ],
+    "minecraft:wither_skeleton_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wolf_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wooden_axe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wooden_hoe": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wooden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "minecraft:wooden_shovel": [
+      "unknown",
+      ""
+    ],
+    "minecraft:wooden_sword": [
+      "pass",
+      ""
+    ],
+    "minecraft:writable_book": [
+      "unknown",
+      ""
+    ],
+    "minecraft:written_book": [
+      "unknown",
+      ""
+    ],
+    "minecraft:yellow_banner": [
+      "unknown",
+      "minecraft:yellow_banner"
+    ],
+    "minecraft:yellow_bed": [
+      "unknown",
+      "minecraft:yellow_bed"
+    ],
+    "minecraft:yellow_candle": [
+      "unknown",
+      "minecraft:yellow_candle"
+    ],
+    "minecraft:yellow_carpet": [
+      "unknown",
+      "minecraft:yellow_carpet"
+    ],
+    "minecraft:yellow_concrete": [
+      "simple_cube",
+      "minecraft:yellow_concrete"
+    ],
+    "minecraft:yellow_concrete_powder": [
+      "unknown",
+      "minecraft:yellow_concrete_powder"
+    ],
+    "minecraft:yellow_dye": [
+      "pass",
+      ""
+    ],
+    "minecraft:yellow_glazed_terracotta": [
+      "unknown",
+      "minecraft:yellow_glazed_terracotta"
+    ],
+    "minecraft:yellow_shulker_box": [
+      "unknown",
+      "minecraft:yellow_shulker_box"
+    ],
+    "minecraft:yellow_stained_glass": [
+      "simple_cube",
+      "minecraft:yellow_stained_glass"
+    ],
+    "minecraft:yellow_stained_glass_pane": [
+      "unknown",
+      "minecraft:yellow_stained_glass_pane"
+    ],
+    "minecraft:yellow_terracotta": [
+      "simple_cube",
+      "minecraft:yellow_terracotta"
+    ],
+    "minecraft:yellow_wool": [
+      "simple_cube",
+      "minecraft:yellow_wool"
+    ],
+    "minecraft:zoglin_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:zombie_head": [
+      "unknown",
+      "minecraft:zombie_head"
+    ],
+    "minecraft:zombie_horse_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:zombie_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:zombie_villager_spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "minecraft:zombified_piglin_spawn_egg": [
+      "unknown",
+      ""
+    ]
+  },
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/shape-extractor/BlockInteractionDump.java",
+    "tool_sha256": "4684f11336ca888251013bfa876e93e4b6c9da2a276da13606dbadda7375644e",
+    "measurements": [
+      {
+        "version": "1.18.2",
+        "measurement_sha256": "18bc13039ea6eaa0318741055c01c25b941f3da35962b362f2b2e4f5920c222b",
+        "client_measurement_sha256": "18bc13039ea6eaa0318741055c01c25b941f3da35962b362f2b2e4f5920c222b",
+        "artifacts_sha256": {
+          "server.jar": "57be9d1e35aa91cfdfa246adb63a0ea11a946081e0464d08bc3d36651718a343",
+          "server_mappings.txt": "2a674d9721824beb424337dab39a2ec3553babf0fa4c75fde66706c73c17539a",
+          "client.jar": "1d09e3639644b6b2254499469d0765cc005a286d19f3fa595b0ed8fb07971ec7",
+          "client_mappings.txt": "a2aa6ee1030bfef79e9b2e08e79de1637fdd7ecb5bf8891cf2e9a4b186042543"
+        },
+        "native_client_classes": {
+          "net.minecraft.world.item.BlockItem": "bta",
+          "net.minecraft.world.item.Item": "bus",
+          "net.minecraft.world.level.block.Block": "cdq",
+          "net.minecraft.world.level.block.state.BlockState": "cov"
+        },
+        "client_class_preservation": {
+          "unchanged_class_files": 6399,
+          "unsigned_jar_sha256": "df9bead81a033f3c30816ffe171aa03a1f972c0eecd4ee06d69724d2e50ee297",
+          "classes_sha256": "2b5d86ca5c90e7933361eafa386d8a4808541657bd7c89f267be66354695c679"
+        }
+      }
+    ],
+    "note": "Flags 1=base passive block use, 2=base nonreplaceable block. Item contracts retain explicit unknown subclasses. simple_cube requires inherited placement, survival and full-cube collision methods and the ordinary feature set; runtime world, player and stack preconditions still apply."
+  }
+}

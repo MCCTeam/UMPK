@@ -1,0 +1,1925 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "measurement": "pre-pose-bed-exit-cells-all-20261018-v1",
+    "scope": "Original bed exit eligibility predicate, candidate (0,64,0), native target state in support/feet/head slots with native stone/air in other slots; owned native-client-world block lookup preserves original validity guard; world constructor, actors, ticks and block entities excluded; no graphics/configuration or neighbor-dependent sweep",
+    "predicate": "support && feet_material_clear && head_material_clear; rejected metadata remains unknown",
+    "probe_sha256": "48aa92ea422e0f80b9e827ac0a0ef4873894c6badb94b149cdfd49422a6ed784",
+    "releases": [
+      {
+        "version": "1.9",
+        "client_sha256": "0273b5c79d6b96799c6480ae61366d6b1d042655970de87f77f1a3f1ebea9307",
+        "server_sha256": "38a797f50c71f55202e2135a30302cf3a5c8cb494c6d225b88599542957d3a7d",
+        "measurement_sha256": "e0ad3e900eb6e865eec982af658a399d0334e562050a0d68c43522dcf92ff640",
+        "sources_sha256": {
+          "aht.java": "76b8f62a90adceac27822309a7329dce5953658d24f95bc3360ecf961e80bba7",
+          "ajt.java": "50b7105ef295ab7136feac263644f29656c6b9c847a021fd3202fc37db606d5b",
+          "aju.java": "0e6c664817a60cb57cd933ee9973aa8b45bbfdff786a2f5ec051e97e82698ef2",
+          "arc.java": "e64e321e42e4714f8b3d732106f6e2be21d6339909c66e1efe96d40adfeec8ba",
+          "bbh.java": "df46b9ef60530da0d1c1a91d70d65590d37d03aa889753ab97605745c7e5f526",
+          "bku.java": "4a18b5cb6f0c89c94c9a40163d910ef0162e26acd09c7b19549f875a607e7604",
+          "cj.java": "d5799420f9f5b1990b383928c554ad4d0b1321a4c55004e3113ccde424df6d85",
+          "bmu.java": "5d88787b3f14ae3f4168817b60271ac41824126f554500bab3e100193d9f0f9d",
+          "bmq.java": "1840a087a885083344f2b13a2c0ea5b5fd64ad6e755514d7b7ef06c7a7030316",
+          "zj.java": "1e5ea2df8835ebbf01efcf1c8a1bf40d7de60e487eee25ad43a51391b1b6a446",
+          "sa.java": "7956baebcb6418ebda223a98b859f18cf0c2109319311a5ac7a39a4e75662a85",
+          "rr.java": "be6db2ad8aa48501201268ae934716d046bc014510fd1f4b23bb4e3ff70f7220",
+          "cq.java": "c3754fed23f6ea078c3760f9e739924f879892c5b431a4aa6201da2e8425f246",
+          "amg.java": "87e5968f4e63f6f75f2e6370ce1bcf9682d0d5b8e3d5712d7c176ae493bb2107",
+          "ahr.java": "7b98fdcf8bc69f631920ffe9898a9ea7dd2fc84b7da42d6448afd130e63bd644",
+          "nf.java": "1010ab0207c898e2eb67f583c5286010016c821c449e6f1d5382e3873c3539c5",
+          "bks.java": "3a7858163144d77f96db79ac0d99bff290292d82b43a54f82d654e68b9bda79e",
+          "hb.java": "d4908e82cfd877391ea4eaaba78bb4a1d5478cc6f5f20b06c4813b51f8aa2be5",
+          "fp.java": "9160c32a7154973048e8bd9faa01a94cf0448322d2051b397051b2023d3d43db",
+          "ajr.java": "bdb1c0d02969eb66487fb80733ae2287f4e50de369dc4ed343ef0c11e4f24f68"
+        },
+        "predicate_owner": "ajr",
+        "rejected_metadata": [
+          [
+            438,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:golden_rail, it is not an allowed value"
+          ],
+          [
+            439,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:golden_rail, it is not an allowed value"
+          ],
+          [
+            446,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:golden_rail, it is not an allowed value"
+          ],
+          [
+            447,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:golden_rail, it is not an allowed value"
+          ],
+          [
+            454,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:detector_rail, it is not an allowed value"
+          ],
+          [
+            455,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:detector_rail, it is not an allowed value"
+          ],
+          [
+            462,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:detector_rail, it is not an allowed value"
+          ],
+          [
+            463,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:detector_rail, it is not an allowed value"
+          ],
+          [
+            470,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:sticky_piston, it is not an allowed value"
+          ],
+          [
+            471,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:sticky_piston, it is not an allowed value"
+          ],
+          [
+            478,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:sticky_piston, it is not an allowed value"
+          ],
+          [
+            479,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:sticky_piston, it is not an allowed value"
+          ],
+          [
+            534,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston, it is not an allowed value"
+          ],
+          [
+            535,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston, it is not an allowed value"
+          ],
+          [
+            542,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston, it is not an allowed value"
+          ],
+          [
+            543,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston, it is not an allowed value"
+          ],
+          [
+            550,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_head, it is not an allowed value"
+          ],
+          [
+            551,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_head, it is not an allowed value"
+          ],
+          [
+            558,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_head, it is not an allowed value"
+          ],
+          [
+            559,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_head, it is not an allowed value"
+          ],
+          [
+            582,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_extension, it is not an allowed value"
+          ],
+          [
+            583,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_extension, it is not an allowed value"
+          ],
+          [
+            590,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_extension, it is not an allowed value"
+          ],
+          [
+            591,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, up, north, south, west, east]} to null on block minecraft:piston_extension, it is not an allowed value"
+          ],
+          [
+            952,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 8 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            953,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 9 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            954,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 10 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            955,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 11 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            956,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 12 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            957,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 13 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            958,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 14 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            959,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 15 on block minecraft:wheat, it is not an allowed value"
+          ],
+          [
+            1479,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 7 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1480,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 8 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1481,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 9 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1482,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 10 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1483,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 11 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1484,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 12 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1485,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 13 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1486,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 14 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1487,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=bites, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6]} to 15 on block minecraft:cake, it is not an allowed value"
+          ],
+          [
+            1672,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 8 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1673,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 9 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1674,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 10 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1675,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 11 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1676,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 12 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1677,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 13 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1678,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 14 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1679,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 15 on block minecraft:pumpkin_stem, it is not an allowed value"
+          ],
+          [
+            1688,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 8 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1689,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 9 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1690,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 10 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1691,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 11 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1692,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 12 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1693,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 13 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1694,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 14 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1695,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 15 on block minecraft:melon_stem, it is not an allowed value"
+          ],
+          [
+            1844,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 4 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1845,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 5 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1846,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 6 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1847,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 7 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1848,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 8 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1849,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 9 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1850,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 10 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1851,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 11 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1852,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 12 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1853,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 13 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1854,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 14 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1855,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 15 on block minecraft:nether_wart, it is not an allowed value"
+          ],
+          [
+            1892,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 4 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1893,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 5 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1894,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 6 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1895,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 7 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1896,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 8 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1897,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 9 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1898,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 10 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1899,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 11 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1900,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 12 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1901,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 13 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1902,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 14 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            1903,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=level, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 15 on block minecraft:cauldron, it is not an allowed value"
+          ],
+          [
+            2044,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:cocoa, it is not an allowed value"
+          ],
+          [
+            2045,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:cocoa, it is not an allowed value"
+          ],
+          [
+            2046,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:cocoa, it is not an allowed value"
+          ],
+          [
+            2047,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:cocoa, it is not an allowed value"
+          ],
+          [
+            2264,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 8 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2265,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 9 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2266,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 10 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2267,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 11 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2268,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 12 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2269,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 13 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2270,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 14 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2271,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 15 on block minecraft:carrots, it is not an allowed value"
+          ],
+          [
+            2280,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 8 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2281,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 9 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2282,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 10 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2283,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 11 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2284,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 12 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2285,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 13 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2286,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 14 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2287,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5, 6, 7]} to 15 on block minecraft:potatoes, it is not an allowed value"
+          ],
+          [
+            2332,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=damage, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:anvil, it is not an allowed value"
+          ],
+          [
+            2333,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=damage, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:anvil, it is not an allowed value"
+          ],
+          [
+            2334,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=damage, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:anvil, it is not an allowed value"
+          ],
+          [
+            2335,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=damage, clazz=class java.lang.Integer, values=[0, 1, 2]} to 3 on block minecraft:anvil, it is not an allowed value"
+          ],
+          [
+            2465,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, north, south, west, east]} to up on block minecraft:hopper, it is not an allowed value"
+          ],
+          [
+            2471,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, north, south, west, east]} to up on block minecraft:hopper, it is not an allowed value"
+          ],
+          [
+            2473,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, north, south, west, east]} to up on block minecraft:hopper, it is not an allowed value"
+          ],
+          [
+            2479,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property aro{name=facing, clazz=class cq, values=[down, north, south, west, east]} to up on block minecraft:hopper, it is not an allowed value"
+          ],
+          [
+            2518,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:activator_rail, it is not an allowed value"
+          ],
+          [
+            2519,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:activator_rail, it is not an allowed value"
+          ],
+          [
+            2526,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_east on block minecraft:activator_rail, it is not an allowed value"
+          ],
+          [
+            2527,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=shape, clazz=class ajp$b, values=[north_south, east_west, ascending_east, ascending_west, ascending_north, ascending_south]} to south_west on block minecraft:activator_rail, it is not an allowed value"
+          ],
+          [
+            2578,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2579,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2582,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2583,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2586,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2587,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2590,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2591,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:leaves2, it is not an allowed value"
+          ],
+          [
+            2594,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2595,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2598,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2599,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2602,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2603,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2606,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            2607,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arp{name=variant, clazz=class anj$a, values=[acacia, dark_oak]} to oak on block minecraft:log2, it is not an allowed value"
+          ],
+          [
+            3206,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 6 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3207,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 7 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3208,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 8 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3209,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 9 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3210,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 10 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3211,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 11 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3212,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 12 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3213,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 13 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3214,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 14 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3215,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3, 4, 5]} to 15 on block minecraft:chorus_flower, it is not an allowed value"
+          ],
+          [
+            3316,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 4 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3317,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 5 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3318,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 6 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3319,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 7 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3320,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 8 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3321,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 9 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3322,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 10 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3323,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 11 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3324,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 12 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3325,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 13 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3326,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 14 on block minecraft:beetroots, it is not an allowed value"
+          ],
+          [
+            3327,
+            "java.lang.IllegalArgumentException",
+            "Cannot set property arq{name=age, clazz=class java.lang.Integer, values=[0, 1, 2, 3]} to 15 on block minecraft:beetroots, it is not an allowed value"
+          ]
+        ]
+      }
+    ]
+  },
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 3273,
+  "ranges": [
+    [
+      0,
+      15,
+      2
+    ],
+    [
+      16,
+      95,
+      1
+    ],
+    [
+      96,
+      111,
+      2
+    ],
+    [
+      112,
+      127,
+      1
+    ],
+    [
+      128,
+      191,
+      2
+    ],
+    [
+      192,
+      287,
+      1
+    ],
+    [
+      288,
+      303,
+      0
+    ],
+    [
+      304,
+      319,
+      1
+    ],
+    [
+      320,
+      335,
+      0
+    ],
+    [
+      336,
+      415,
+      1
+    ],
+    [
+      416,
+      431,
+      0
+    ],
+    [
+      432,
+      437,
+      2
+    ],
+    [
+      440,
+      445,
+      2
+    ],
+    [
+      448,
+      453,
+      2
+    ],
+    [
+      456,
+      461,
+      2
+    ],
+    [
+      464,
+      469,
+      1
+    ],
+    [
+      472,
+      472,
+      1
+    ],
+    [
+      473,
+      477,
+      0
+    ],
+    [
+      480,
+      495,
+      0
+    ],
+    [
+      496,
+      527,
+      2
+    ],
+    [
+      528,
+      533,
+      1
+    ],
+    [
+      536,
+      536,
+      1
+    ],
+    [
+      537,
+      541,
+      0
+    ],
+    [
+      544,
+      544,
+      0
+    ],
+    [
+      545,
+      545,
+      1
+    ],
+    [
+      546,
+      549,
+      0
+    ],
+    [
+      552,
+      552,
+      0
+    ],
+    [
+      553,
+      553,
+      1
+    ],
+    [
+      554,
+      557,
+      0
+    ],
+    [
+      560,
+      575,
+      1
+    ],
+    [
+      576,
+      581,
+      0
+    ],
+    [
+      584,
+      589,
+      0
+    ],
+    [
+      592,
+      655,
+      2
+    ],
+    [
+      656,
+      703,
+      1
+    ],
+    [
+      704,
+      711,
+      0
+    ],
+    [
+      712,
+      735,
+      1
+    ],
+    [
+      736,
+      751,
+      0
+    ],
+    [
+      752,
+      799,
+      1
+    ],
+    [
+      800,
+      831,
+      2
+    ],
+    [
+      832,
+      847,
+      1
+    ],
+    [
+      848,
+      851,
+      0
+    ],
+    [
+      852,
+      855,
+      1
+    ],
+    [
+      856,
+      859,
+      0
+    ],
+    [
+      860,
+      863,
+      1
+    ],
+    [
+      864,
+      879,
+      0
+    ],
+    [
+      880,
+      895,
+      2
+    ],
+    [
+      896,
+      943,
+      1
+    ],
+    [
+      944,
+      951,
+      2
+    ],
+    [
+      960,
+      975,
+      0
+    ],
+    [
+      976,
+      1007,
+      1
+    ],
+    [
+      1008,
+      1039,
+      0
+    ],
+    [
+      1040,
+      1071,
+      2
+    ],
+    [
+      1072,
+      1075,
+      0
+    ],
+    [
+      1076,
+      1079,
+      1
+    ],
+    [
+      1080,
+      1083,
+      0
+    ],
+    [
+      1084,
+      1087,
+      1
+    ],
+    [
+      1088,
+      1103,
+      0
+    ],
+    [
+      1104,
+      1119,
+      2
+    ],
+    [
+      1120,
+      1167,
+      0
+    ],
+    [
+      1168,
+      1199,
+      1
+    ],
+    [
+      1200,
+      1253,
+      2
+    ],
+    [
+      1254,
+      1254,
+      3
+    ],
+    [
+      1255,
+      1261,
+      2
+    ],
+    [
+      1262,
+      1262,
+      3
+    ],
+    [
+      1263,
+      1263,
+      2
+    ],
+    [
+      1264,
+      1279,
+      0
+    ],
+    [
+      1280,
+      1295,
+      1
+    ],
+    [
+      1296,
+      1311,
+      0
+    ],
+    [
+      1312,
+      1327,
+      1
+    ],
+    [
+      1328,
+      1343,
+      2
+    ],
+    [
+      1344,
+      1359,
+      1
+    ],
+    [
+      1360,
+      1375,
+      0
+    ],
+    [
+      1376,
+      1423,
+      1
+    ],
+    [
+      1424,
+      1439,
+      0
+    ],
+    [
+      1440,
+      1455,
+      2
+    ],
+    [
+      1456,
+      1471,
+      1
+    ],
+    [
+      1472,
+      1478,
+      0
+    ],
+    [
+      1488,
+      1519,
+      2
+    ],
+    [
+      1520,
+      1551,
+      0
+    ],
+    [
+      1552,
+      1615,
+      1
+    ],
+    [
+      1616,
+      1647,
+      0
+    ],
+    [
+      1648,
+      1663,
+      1
+    ],
+    [
+      1664,
+      1671,
+      2
+    ],
+    [
+      1680,
+      1687,
+      2
+    ],
+    [
+      1696,
+      1711,
+      2
+    ],
+    [
+      1712,
+      1731,
+      0
+    ],
+    [
+      1732,
+      1735,
+      1
+    ],
+    [
+      1736,
+      1739,
+      0
+    ],
+    [
+      1740,
+      1743,
+      1
+    ],
+    [
+      1744,
+      1747,
+      0
+    ],
+    [
+      1748,
+      1751,
+      1
+    ],
+    [
+      1752,
+      1755,
+      0
+    ],
+    [
+      1756,
+      1775,
+      1
+    ],
+    [
+      1776,
+      1791,
+      2
+    ],
+    [
+      1792,
+      1807,
+      1
+    ],
+    [
+      1808,
+      1827,
+      0
+    ],
+    [
+      1828,
+      1831,
+      1
+    ],
+    [
+      1832,
+      1835,
+      0
+    ],
+    [
+      1836,
+      1839,
+      1
+    ],
+    [
+      1840,
+      1843,
+      2
+    ],
+    [
+      1856,
+      1891,
+      0
+    ],
+    [
+      1904,
+      1919,
+      2
+    ],
+    [
+      1920,
+      1935,
+      0
+    ],
+    [
+      1936,
+      1951,
+      1
+    ],
+    [
+      1952,
+      1967,
+      0
+    ],
+    [
+      1968,
+      2015,
+      1
+    ],
+    [
+      2016,
+      2023,
+      0
+    ],
+    [
+      2024,
+      2031,
+      1
+    ],
+    [
+      2032,
+      2043,
+      2
+    ],
+    [
+      2048,
+      2051,
+      0
+    ],
+    [
+      2052,
+      2055,
+      1
+    ],
+    [
+      2056,
+      2059,
+      0
+    ],
+    [
+      2060,
+      2079,
+      1
+    ],
+    [
+      2080,
+      2095,
+      0
+    ],
+    [
+      2096,
+      2127,
+      2
+    ],
+    [
+      2128,
+      2143,
+      1
+    ],
+    [
+      2144,
+      2147,
+      0
+    ],
+    [
+      2148,
+      2151,
+      1
+    ],
+    [
+      2152,
+      2155,
+      0
+    ],
+    [
+      2156,
+      2159,
+      1
+    ],
+    [
+      2160,
+      2163,
+      0
+    ],
+    [
+      2164,
+      2167,
+      1
+    ],
+    [
+      2168,
+      2171,
+      0
+    ],
+    [
+      2172,
+      2175,
+      1
+    ],
+    [
+      2176,
+      2179,
+      0
+    ],
+    [
+      2180,
+      2183,
+      1
+    ],
+    [
+      2184,
+      2187,
+      0
+    ],
+    [
+      2188,
+      2207,
+      1
+    ],
+    [
+      2208,
+      2239,
+      0
+    ],
+    [
+      2240,
+      2263,
+      2
+    ],
+    [
+      2272,
+      2279,
+      2
+    ],
+    [
+      2288,
+      2319,
+      2
+    ],
+    [
+      2320,
+      2331,
+      0
+    ],
+    [
+      2336,
+      2383,
+      0
+    ],
+    [
+      2384,
+      2415,
+      2
+    ],
+    [
+      2416,
+      2431,
+      0
+    ],
+    [
+      2432,
+      2464,
+      1
+    ],
+    [
+      2466,
+      2470,
+      1
+    ],
+    [
+      2472,
+      2472,
+      1
+    ],
+    [
+      2474,
+      2478,
+      1
+    ],
+    [
+      2480,
+      2495,
+      1
+    ],
+    [
+      2496,
+      2499,
+      0
+    ],
+    [
+      2500,
+      2503,
+      1
+    ],
+    [
+      2504,
+      2507,
+      0
+    ],
+    [
+      2508,
+      2511,
+      1
+    ],
+    [
+      2512,
+      2517,
+      2
+    ],
+    [
+      2520,
+      2525,
+      2
+    ],
+    [
+      2528,
+      2559,
+      1
+    ],
+    [
+      2560,
+      2577,
+      0
+    ],
+    [
+      2580,
+      2581,
+      0
+    ],
+    [
+      2584,
+      2585,
+      0
+    ],
+    [
+      2588,
+      2589,
+      0
+    ],
+    [
+      2592,
+      2593,
+      1
+    ],
+    [
+      2596,
+      2597,
+      1
+    ],
+    [
+      2600,
+      2601,
+      1
+    ],
+    [
+      2604,
+      2605,
+      1
+    ],
+    [
+      2608,
+      2611,
+      0
+    ],
+    [
+      2612,
+      2615,
+      1
+    ],
+    [
+      2616,
+      2619,
+      0
+    ],
+    [
+      2620,
+      2623,
+      1
+    ],
+    [
+      2624,
+      2627,
+      0
+    ],
+    [
+      2628,
+      2631,
+      1
+    ],
+    [
+      2632,
+      2635,
+      0
+    ],
+    [
+      2636,
+      2671,
+      1
+    ],
+    [
+      2672,
+      2687,
+      0
+    ],
+    [
+      2688,
+      2703,
+      1
+    ],
+    [
+      2704,
+      2719,
+      0
+    ],
+    [
+      2720,
+      2735,
+      1
+    ],
+    [
+      2736,
+      2751,
+      2
+    ],
+    [
+      2752,
+      2799,
+      1
+    ],
+    [
+      2800,
+      2815,
+      2
+    ],
+    [
+      2816,
+      2863,
+      0
+    ],
+    [
+      2864,
+      2879,
+      1
+    ],
+    [
+      2880,
+      2883,
+      0
+    ],
+    [
+      2884,
+      2887,
+      1
+    ],
+    [
+      2888,
+      2891,
+      0
+    ],
+    [
+      2892,
+      2911,
+      1
+    ],
+    [
+      2912,
+      2919,
+      0
+    ],
+    [
+      2920,
+      2927,
+      1
+    ],
+    [
+      2928,
+      3167,
+      0
+    ],
+    [
+      3168,
+      3205,
+      2
+    ],
+    [
+      3216,
+      3247,
+      1
+    ],
+    [
+      3248,
+      3251,
+      0
+    ],
+    [
+      3252,
+      3255,
+      1
+    ],
+    [
+      3256,
+      3259,
+      0
+    ],
+    [
+      3260,
+      3279,
+      1
+    ],
+    [
+      3280,
+      3287,
+      0
+    ],
+    [
+      3288,
+      3311,
+      1
+    ],
+    [
+      3312,
+      3315,
+      2
+    ],
+    [
+      3328,
+      3343,
+      0
+    ],
+    [
+      3344,
+      3359,
+      2
+    ],
+    [
+      3360,
+      3391,
+      1
+    ],
+    [
+      3392,
+      3407,
+      0
+    ],
+    [
+      4080,
+      4095,
+      1
+    ]
+  ],
+  "rejected_states": [
+    438,
+    439,
+    446,
+    447,
+    454,
+    455,
+    462,
+    463,
+    470,
+    471,
+    478,
+    479,
+    534,
+    535,
+    542,
+    543,
+    550,
+    551,
+    558,
+    559,
+    582,
+    583,
+    590,
+    591,
+    952,
+    953,
+    954,
+    955,
+    956,
+    957,
+    958,
+    959,
+    1479,
+    1480,
+    1481,
+    1482,
+    1483,
+    1484,
+    1485,
+    1486,
+    1487,
+    1672,
+    1673,
+    1674,
+    1675,
+    1676,
+    1677,
+    1678,
+    1679,
+    1688,
+    1689,
+    1690,
+    1691,
+    1692,
+    1693,
+    1694,
+    1695,
+    1844,
+    1845,
+    1846,
+    1847,
+    1848,
+    1849,
+    1850,
+    1851,
+    1852,
+    1853,
+    1854,
+    1855,
+    1892,
+    1893,
+    1894,
+    1895,
+    1896,
+    1897,
+    1898,
+    1899,
+    1900,
+    1901,
+    1902,
+    1903,
+    2044,
+    2045,
+    2046,
+    2047,
+    2264,
+    2265,
+    2266,
+    2267,
+    2268,
+    2269,
+    2270,
+    2271,
+    2280,
+    2281,
+    2282,
+    2283,
+    2284,
+    2285,
+    2286,
+    2287,
+    2332,
+    2333,
+    2334,
+    2335,
+    2465,
+    2471,
+    2473,
+    2479,
+    2518,
+    2519,
+    2526,
+    2527,
+    2578,
+    2579,
+    2582,
+    2583,
+    2586,
+    2587,
+    2590,
+    2591,
+    2594,
+    2595,
+    2598,
+    2599,
+    2602,
+    2603,
+    2606,
+    2607,
+    3206,
+    3207,
+    3208,
+    3209,
+    3210,
+    3211,
+    3212,
+    3213,
+    3214,
+    3215,
+    3316,
+    3317,
+    3318,
+    3319,
+    3320,
+    3321,
+    3322,
+    3323,
+    3324,
+    3325,
+    3326,
+    3327
+  ]
+}

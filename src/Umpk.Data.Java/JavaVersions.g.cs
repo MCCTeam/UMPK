@@ -273,6 +273,12 @@ public static class JavaVersions
     public static JavaVersion V26_1 => s_v775 ??= global::Umpk.Data.Java.V775.Descriptor.Build();
     private static JavaVersion? s_v775;
 
+    /// <summary>26.1.1 (protocol 775).</summary>
+    public static JavaVersion V26_1_1 => s_v775 ??= global::Umpk.Data.Java.V775.Descriptor.Build();
+
+    /// <summary>26.1.2 (protocol 775).</summary>
+    public static JavaVersion V26_1_2 => s_v775 ??= global::Umpk.Data.Java.V775.Descriptor.Build();
+
     /// <summary>26.2 (protocol 776).</summary>
     public static JavaVersion V26_2 => s_v776 ??= global::Umpk.Data.Java.V776.Descriptor.Build();
     private static JavaVersion? s_v776;
@@ -424,6 +430,8 @@ public static class JavaVersions
             "1.21.10" => 773,
             "1.21.11" => 774,
             "26.1" => 775,
+            "26.1.1" => 775,
+            "26.1.2" => 775,
             "26.2" => 776,
             "26.3" => 777,
             _ => -1,

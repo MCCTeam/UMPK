@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Umpk.Client.Events;
+using Umpk.Geometry;
 using Umpk.Protocol.Java;
 
 namespace Umpk.Client.Internal;
@@ -43,6 +44,12 @@ internal sealed class ApplierContext
 
     /// <summary>Invoked after a server-applied VELOCITY has been written to self state (<c>set_entity_motion</c> addressed at the local player's own entity id), so the physics engine picks it up on the next tick. Distinct from <see cref="PhysicsPositionDirty"/> on purpose: that one resets the engine the way a spawn or a teleport does, clearing fall distance, ground state, pose and collision flags, while a server velocity update changes only delta movement. Without this seam the velocity lives in a field the engine never reads and the next tick overwrites it, which is why a knockback moved the client not at all.</summary>
     public required Action PhysicsVelocityDirty { get; init; }
+
+    /// <summary>Stops the live client's game-mode block destruction after a teleport when the native profile requires it. State-only applier harnesses have no active interaction owner.</summary>
+    public Func<CancellationToken, ValueTask> StopBlockDestruction { get; init; } = static _ => ValueTask.CompletedTask;
+
+    /// <summary>Applies a native block prediction's captured-position restoration through the existing local body owner. It sends no network response.</summary>
+    public Action<BlockPos, Umpk.Game.Blocks.BlockState, Vec3d> RestorePredictedPosition { get; init; } = static (_, _, _) => { };
 
     /// <summary>The server tab-complete correlator; resolves pending completion requests.</summary>
     public required Umpk.Client.Commands.CommandCompletionService CommandCompletions { get; init; }
@@ -91,7 +98,10 @@ internal sealed class ApplierContext
     /// <summary>Publishes an event on the loop (fire-and-await inline).</summary>
     public ValueTask PublishAsync<TEvent>(TEvent evt)
         where TEvent : IClientEvent
-        => Events.PublishAsync(evt);
+    {
+        State.EntityGeometry.RefreshFixedPositions(State.EntitiesOrNull);
+        return Events.PublishAsync(evt);
+    }
 }
 
 /// <summary>The dimension facts an applier hands to the world builder when creating/replacing the world.</summary>
@@ -106,6 +116,9 @@ internal sealed class ApplierContext
 /// </remarks>
 internal readonly record struct CommonWorldSetup(string DimensionName, int DimensionTypeId)
 {
+    /// <summary>A respawn can retain its existing world when the dimension is unchanged; a join always starts a new world lifetime.</summary>
+    public bool IsRespawn { get; init; }
+
     /// <summary>The dimension-type resource key, when the era sends one (735/736, 759-765).</summary>
     public string? DimensionTypeName { get; init; }
 

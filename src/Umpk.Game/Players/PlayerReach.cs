@@ -20,7 +20,7 @@ namespace Umpk.Game.Players;
 public static class PlayerReach
 {
     /// <summary>The default standing eye height added to a feet position.</summary>
-    public const double StandingEyeHeight = 1.62;
+    public const double StandingEyeHeight = 1.62f;
 
     /// <summary>Survival/adventure block-interaction reach, in blocks, measured to the target's box.</summary>
     public const double SurvivalBlockReach = 4.5;

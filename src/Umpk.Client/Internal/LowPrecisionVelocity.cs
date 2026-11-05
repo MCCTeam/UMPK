@@ -1,5 +1,5 @@
-using System.Buffers.Binary;
 using Umpk.Geometry;
+using Umpk.Protocol.Java.Codecs;
 
 namespace Umpk.Client.Internal;
 
@@ -10,53 +10,6 @@ namespace Umpk.Client.Internal;
 /// </remarks>
 internal static class LowPrecisionVelocity
 {
-    /// <summary>The unit magnitude below which vanilla writes the single zero byte.</summary>
-    private const long DataBitsMask = 32767L;
-
-    private const double MaxQuantizedValue = 32766.0;
-
-    /// <summary>Decodes a captured block. A block that is empty, zero-flagged, or too short to hold its own header decodes to <see cref="Vec3d.Zero"/>: the zero vector is what vanilla writes for "no motion", and a truncated block has no honest value to invent.</summary>
-    public static Vec3d Decode(ReadOnlySpan<byte> block)
-    {
-        if (block.Length == 0)
-            return Vec3d.Zero;
-
-        byte lowest = block[0];
-        if (lowest == 0 || block.Length < 6)
-            return Vec3d.Zero;
-
-        byte middle = block[1];
-        uint highest = BinaryPrimitives.ReadUInt32BigEndian(block[2..6]);
-
-        long magnitude = lowest & 3;
-        if ((lowest & 0x04) != 0 && TryReadVarInt(block[6..], out uint continuation))
-            magnitude |= (long)continuation << 2;
-
-        long packed = ((long)highest << 16) | ((long)middle << 8) | lowest;
-        return new Vec3d(
-            Unpack(packed >> 3) * magnitude,
-            Unpack(packed >> 18) * magnitude,
-            Unpack(packed >> 33) * magnitude);
-    }
-
-    private static double Unpack(long field)
-        => (Math.Min(field & DataBitsMask, (long)MaxQuantizedValue) * 2.0 / MaxQuantizedValue) - 1.0;
-
-    private static bool TryReadVarInt(ReadOnlySpan<byte> span, out uint value)
-    {
-        value = 0;
-        int shift = 0;
-        for (int i = 0; i < span.Length && shift <= 28; i++)
-        {
-            byte b = span[i];
-            value |= (uint)(b & 0x7F) << shift;
-            if ((b & 0x80) == 0)
-                return true;
-
-            shift += 7;
-        }
-
-        value = 0;
-        return false;
-    }
+    /// <summary>Decodes the existing captured velocity representation through its shared protocol owner.</summary>
+    public static Vec3d Decode(ReadOnlySpan<byte> block) => LowPrecisionVec3.Decode(block);
 }

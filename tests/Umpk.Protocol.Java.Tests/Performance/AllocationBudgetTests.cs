@@ -78,6 +78,7 @@ public sealed class AllocationBudgetTests
 
         if (Environment.GetEnvironmentVariable(AllocationBudgets.UpdateVariable) == "1")
         {
+            bool preserveExisting = Environment.GetEnvironmentVariable("UMPK_PRESERVE_EXISTING_ALLOCATION_BUDGETS") == "1";
             var file = new AllocationBudgetFile
             {
                 ImplementedBindings = implemented,
@@ -88,6 +89,14 @@ public sealed class AllocationBudgetTests
             foreach (CorpusFrameRef reference in covered)
             {
                 long measured = MeasureBytesPerDecode(reference);
+                string key = AllocationBudget.Format(reference.Protocol, reference.Phase.ToString(), reference.Flow.ToString(), reference.Packet);
+                if (preserveExisting && AllocationBudgets.Get(key) is { } existing)
+                {
+                    Assert.True(measured <= existing.BudgetBytesPerFrame, $"{key} allocated {measured} B/frame, above its existing {existing.BudgetBytesPerFrame} B budget. Preserve the limit and fix the regression before adding new rows.");
+                    file.Budgets.Add(existing);
+                    continue;
+                }
+
                 file.Budgets.Add(new AllocationBudget
                 {
                     Protocol = reference.Protocol,

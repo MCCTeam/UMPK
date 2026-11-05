@@ -15,6 +15,26 @@ namespace Umpk.Client.Tests;
 /// <remarks>These drive the real chain end to end: the frame is encoded and decoded through the codec the bound version catalog binds for the era, dispatched into the real applier catalog, and then stepped with a real <see cref="PhysicsEngineHolder"/> wired to the same seam <c>UmpkClient</c> wires live. A test that only asserted self state right after the apply would pass against the broken build, because the overwrite happens on the following tick.</remarks>
 public sealed class PositionResyncTests
 {
+    [Theory]
+    [InlineData(0, 3.0, 8.0, -2.0, 45.0F, 30.0F)]
+    [InlineData(31, 103.0, 78.0, 48.0, 55.0F, 35.0F)]
+    public async Task On1_8TeleportEchoesTheResolvedDestinationWithoutAnAcceptId(byte flags, double x, double y, double z, float yaw, float pitch)
+    {
+        (ApplierHarness harness, PhysicsEngineHolder _, IAsyncDisposable loop) = await StartAsync(47);
+        await using (loop)
+        {
+            harness.State.Self.Position = new Vec3d(100, 70, 50);
+            harness.State.Self.Yaw = 10;
+            harness.State.Self.Pitch = 5;
+
+            await harness.ApplyAsync(BoundDescriptorCodec.RoundTrip(
+                47, "player_position", Teleport(47, 3, 8, -2, 45, 30, flags)));
+
+            var echo = Assert.IsType<ServerboundMovePlayerPosRotPacket>(Assert.Single(harness.Recorder.Packets));
+            Assert.Equal(new ServerboundMovePlayerPosRotPacket(x, y, z, yaw, pitch, false, false), echo);
+        }
+    }
+
     // One protocol per clientbound player_position wire form: 47 is the 1.8 flag-byte form, 340 and 477 the 1.9 form with a teleport id, 578 the same across the 1.15 spawn rework, 755 the 1.17 form with the trailing dismount bool, 762 after that bool was removed, and 772 the 1.21.2 teleport-id-first PositionMoveRotation form.
     public static TheoryData<int> Protocols => [47, 340, 477, 578, 755, 762, 772];
 

@@ -1,6 +1,6 @@
 namespace Umpk.Game.Entities;
 
-/// <summary>The animation pose an entity is in. On the wire a pose arrives as a metadata VarInt whose value is this enum's numeric member; the semantic key <see cref="EntityMetadataKeys.Pose"/> resolves the raw value to this type. The set grows over versions, so unknown numeric values map to <see cref="Unknown"/> rather than throwing.</summary>
+/// <summary>The canonical animation pose an entity is in. Java metadata codecs translate each version's wire identifiers and invalid-id policy into this stable enum; its numeric values are not a version-independent wire format. The semantic key <see cref="EntityMetadataKeys.Pose"/> resolves the decoded value to this type.</summary>
 public enum EntityPose
 {
     /// <summary>An unrecognized pose value (forward-compatibility fallback).</summary>

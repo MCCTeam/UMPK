@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "identity": "flat",
+  "state_count": 8599,
+  "ranges": [
+    [
+      0,
+      0,
+      3
+    ],
+    [
+      1,
+      33,
+      0
+    ],
+    [
+      34,
+      65,
+      3
+    ],
+    [
+      66,
+      1040,
+      0
+    ],
+    [
+      1041,
+      1046,
+      3
+    ],
+    [
+      1047,
+      1135,
+      0
+    ],
+    [
+      1136,
+      1647,
+      3
+    ],
+    [
+      1648,
+      3415,
+      0
+    ],
+    [
+      3416,
+      3416,
+      3
+    ],
+    [
+      3417,
+      4269,
+      0
+    ],
+    [
+      4270,
+      4300,
+      3
+    ],
+    [
+      4301,
+      6850,
+      0
+    ],
+    [
+      6851,
+      6854,
+      3
+    ],
+    [
+      6855,
+      8198,
+      0
+    ],
+    [
+      8199,
+      8199,
+      3
+    ],
+    [
+      8200,
+      8590,
+      0
+    ],
+    [
+      8591,
+      8594,
+      3
+    ],
+    [
+      8595,
+      8598,
+      0
+    ]
+  ],
+  "below_overrides": {},
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_block_replacement.py",
+    "tool_sha256": "bfdd41e8676d91164a2c9745fcbcb778f8daa23459499233f327b057c12fd1c8",
+    "client_profile": "1.13.1",
+    "different_earlier_client_profiles": [],
+    "measurements": [
+      {
+        "version": "1.13.1",
+        "measurement_sha256": "4da27d4c8e7de6fe9f5cb484e37d650682386fc72c0df1a63eb0ccd1ea7934ff",
+        "measurement_receipt_sha256": "05211110e4e18461ac48d000cde26710b40b19fd89778cd487c6db93ce1ed6da",
+        "client_class_preservation": {
+          "unchanged_class_files": 4025,
+          "unsigned_jar_sha256": "3dc902e8f02d2bfc3ddeec0a0eaf0faebffcd91eda49ff7ffbf8b89107c9fba9",
+          "classes_sha256": "2124ab70f2fec5dd602a89ec7c05f81392307d9c4d77450e324a8e711f49389a"
+        },
+        "artifacts_sha256": {
+          "client.jar": "f0b4cf6d1a87ae150f87a535651138ca7b82bdad8853f76e7ddbff1dd610ac87",
+          "server.jar": "2ea6047e7651c429228340acd7d1e35f4f6c7af42f59f92b0b1cd476561253d1"
+        },
+        "completion_sha256": "5baa4dd40bda6d78c52cbfc9d6ab72d62a7d1b75e92b3353156a29506f33b5e6",
+        "measurement_tools_sha256": "1971b856e4bdbed40cb5f626d1f111fb92e39da53ada8d718be3f7b92243ed37",
+        "measurement_sources_sha256": {
+          "LegacyReplacementDump.java": "eed6e0e0798a65e8ac8f12ef4669606d03122dd1fe18adc754b93238ffa4f20f",
+          "measurement-driver.py": "75cc5bb5568047f25c45e0665cc44aa2eb5a2849c8321cdc908281554799721a",
+          "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+          "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+          "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b"
+        },
+        "predicate_sources_sha256": {
+          "bcr.java": "9bd06704762f34228ab3b7b0db66a5e5f7438a8b0c67065e8b604182067864c1",
+          "bhe.java": "ce4bf6a3f005756579d95f28925f197e1f6998ed2c1fd14edaafd91f0e6b79f3",
+          "bhg.java": "079d26d2d95340ef4e5647e912aad25092d5d010275d0611a4ccb5c9e563132c",
+          "bhk.java": "86c1d5bae727b4ac871cc602e63c7204e524776223c365b71b75a865a43fcdf5",
+          "bhn.java": "5df1d9a48e9309602f17549f6e543a5f171aa4500fcf265fae3d5dc5631c8b74",
+          "bif.java": "288e8c7c54240b2fb51a62d4a8041c3bf9d57c1bf1ce829c41271e22385485e7",
+          "bio.java": "0f2c9c5cbc5f4ed832c0ca71b1bd5d71adc37fd6b241135c17f1b3c33234d896",
+          "bip.java": "261d937987d6b3556a663752f063f29b49e950a519a28f72d899f349e659a447"
+        },
+        "predicate_calls": 463077,
+        "state_count": 8599,
+        "cube_item_count": 162,
+        "full_use_samples": 14,
+        "scope": "Original legacy placement-context replacement predicate with original cached constructor-query and adjacent-destination contexts. Inherited material/item guards are source-backed; overrides execute every measured cube item, six directions and both phases. No world or client tick."
+      }
+    ],
+    "note": "Ordinary cube items only. Flags 1=replace clicked block, 2=allow placement into the resolved destination. Ranges contain native wire state identifiers; absent identifiers remain unknown. Below-state overrides preserve measured legacy dependencies. Protocol aliases use the latest measured vanilla client profile. Stack, player, world, obstruction and use-result rules remain runtime conditions."
+  }
+}

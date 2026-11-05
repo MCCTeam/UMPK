@@ -20,9 +20,9 @@ public static partial class ItemPackets
 /// <param name="Position">The clicked block position.</param>
 /// <param name="Face">The clicked face (255 = item use).</param>
 /// <param name="HeldItem">The held item slot.</param>
-/// <param name="CursorX">The in-block cursor X (0..15).</param>
-/// <param name="CursorY">The in-block cursor Y (0..15).</param>
-/// <param name="CursorZ">The in-block cursor Z (0..15).</param>
+/// <param name="CursorX">The byte-quantized cursor X; vanilla's 0..1 hit coordinates use 0..16.</param>
+/// <param name="CursorY">The byte-quantized cursor Y; vanilla's 0..1 hit coordinates use 0..16.</param>
+/// <param name="CursorZ">The byte-quantized cursor Z; vanilla's 0..1 hit coordinates use 0..16.</param>
 public sealed record ServerboundLegacyBlockPlacePacket(
     BlockPos Position,
     int Face,

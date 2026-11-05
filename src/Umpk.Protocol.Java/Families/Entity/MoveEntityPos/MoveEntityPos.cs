@@ -15,7 +15,7 @@ public static partial class EntityPackets
     }
 }
 
-/// <summary>Relative move. 1.8 encodes deltas as bytes (block/128 fixed point); modern encodes them as shorts (block*4096). The record holds the raw wire deltas so the era codec applies the correct scale.</summary>
+/// <summary>Relative move. 1.8 sends signed-byte deltas in 1/32-block units; 1.9+ sends signed shorts in 1/4096-block units. The record holds raw wire deltas; the entity applier selects the native coordinate scale and quantization.</summary>
 public sealed record ClientboundMoveEntityPosPacket(int EntityId, short DeltaX, short DeltaY, short DeltaZ, bool OnGround) : IPacket
 {
     /// <inheritdoc />

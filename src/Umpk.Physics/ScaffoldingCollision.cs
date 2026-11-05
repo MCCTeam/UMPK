@@ -13,7 +13,7 @@ namespace Umpk.Physics;
 internal static class ScaffoldingCollision
 {
     /// <summary>The from-above tolerance, <c>1.0E-5F</c> widened to a double.</summary>
-    private const double IsAboveEpsilon = 1.0E-5;
+    private const double IsAboveEpsilon = 1.0E-5F;
 
     /// <summary>The unstable-bottom shape: a full-width slab from 0 to 2/16.</summary>
     private static readonly Aabb[] UnstableBottom = [new(0.0, 0.0, 0.0, 1.0, 0.125, 1.0)];

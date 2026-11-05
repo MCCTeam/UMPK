@@ -5,7 +5,7 @@ sidebar:
   order: 7
 ---
 
-`Umpk.Data.Lang` supplies the vanilla `en_us` translation table for each of UMPK's 49 supported protocols. It depends only on [Umpk.Text](umpk-text.md). You can use it without the network, game model, or protocol packages.
+`Umpk.Data.Lang` supplies the vanilla `en_us` translation table for each of UMPK's 50 supported protocols. It depends only on [Umpk.Text](umpk-text.md). You can use it without the network, game model, or protocol packages.
 
 Use the table for the protocol that produced the component. Translation templates change between releases, including their argument counts, so the newest table is not a safe replacement for an older one.
 

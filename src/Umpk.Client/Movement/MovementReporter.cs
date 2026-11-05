@@ -12,6 +12,7 @@ internal sealed class MovementReporter(ClientSessionServices services)
     private const int InputFlagsMinProtocol = 768;
     private const int NoShiftPlayerCommandMinProtocol = 771;
     private const int LegacyMovementCadenceMaxProtocol = 47;
+    private const int BlockEntityPublicationMinProtocol = 777;
     private const int PositionReminderTicks = 20;
 
     private Vec3d _lastPosition;
@@ -23,6 +24,9 @@ internal sealed class MovementReporter(ClientSessionServices services)
     private bool _inputPrimed;
     private bool _legacyShift;
     private int _positionReminder;
+
+    // 26.2 LocalPlayer.tick sends position during the entity phase; 26.3 Minecraft.tick calls LocalPlayer.sendChanges after tickBlockEntities.
+    internal bool ReportsAfterBlockEntities => services.Version.Version.Protocol >= BlockEntityPublicationMinProtocol;
 
     internal void Reset()
     {

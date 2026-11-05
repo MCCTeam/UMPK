@@ -29,28 +29,35 @@ internal static class ScriptedServer
         .Build();
 
     /// <summary>Drives handshake, login and configuration through to the start of play.</summary>
-    public static async Task DriveToPlayAsync(FakeJavaServer server, CancellationToken ct)
+    public static Task DriveToPlayAsync(FakeJavaServer server, CancellationToken ct) => DriveToPlayAsync(server, Version, ct);
+
+    public static async Task DriveToPlayAsync(FakeJavaServer server, JavaVersion version, CancellationToken ct)
     {
-        ProtocolDescriptor descriptor = Version.Protocol;
+        ProtocolDescriptor descriptor = version.Protocol;
         await server.NextFrameAsync(ct); // handshake
         server.ServerConnection.SetPhase(ProtocolPhase.Login);
         await server.NextFrameAsync(ct); // hello
         await SendAsync(server, descriptor, ProtocolPhase.Login,
             new ClientboundLoginFinishedPacket(Guid.NewGuid(), "Tester", [], null), ct);
-        await server.NextFrameAsync(ct); // login_acknowledged
-        server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
-        await server.NextFrameAsync(ct); // client_information
-        await SendAsync(server, descriptor, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct);
-        await server.NextFrameAsync(ct); // finish_configuration
+        if (version.Features.ConfigurationPhase)
+        {
+            await server.NextFrameAsync(ct); // login_acknowledged
+            server.ServerConnection.SetPhase(ProtocolPhase.Configuration);
+            await server.NextFrameAsync(ct); // client_information
+            await SendAsync(server, descriptor, ProtocolPhase.Configuration, new ClientboundFinishConfigurationPacket(), ct);
+            await server.NextFrameAsync(ct); // finish_configuration
+        }
         server.ServerConnection.SetPhase(ProtocolPhase.Play);
         await SendPlayReadinessFrameAsync(server, descriptor, ct);
     }
 
     /// <summary>Drives one play-to-configuration-to-play re-entry on an already-playing session: the hop a proxy makes a client take when it moves the player to a different backend server.</summary>
     /// <remarks>The wire script is deliberately minimal: no registry data, no tags, no known-pack negotiation and no brand come back, because those belong to the login-only the start-configuration transition. No frames are skipped and none need to be: <c>client_tick_end</c> is gated on <c>Self.HasSpawned</c>, and the callers of this helper have driven a join-less <see cref="DriveToPlayAsync"/>, so the session generates no background traffic to race with.</remarks>
-    public static async Task DriveThroughConfigurationReentryAsync(FakeJavaServer server, CancellationToken ct)
+    public static Task DriveThroughConfigurationReentryAsync(FakeJavaServer server, CancellationToken ct) => DriveThroughConfigurationReentryAsync(server, Version, ct);
+
+    public static async Task DriveThroughConfigurationReentryAsync(FakeJavaServer server, JavaVersion version, CancellationToken ct)
     {
-        ProtocolDescriptor descriptor = Version.Protocol;
+        ProtocolDescriptor descriptor = version.Protocol;
         await SendAsync(server, descriptor, ProtocolPhase.Play, new ClientboundStartConfigurationPacket(), ct);
         await server.NextFrameAsync(ct); // configuration_acknowledged
         server.ServerConnection.SetPhase(ProtocolPhase.Configuration);

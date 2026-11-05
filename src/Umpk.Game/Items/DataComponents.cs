@@ -53,6 +53,9 @@ public static class DataComponents
     /// <summary><c>minecraft:tool</c>.</summary>
     public static DataComponentType<ToolComponent> Tool { get; } = Make<ToolComponent>("tool");
 
+    /// <summary><c>minecraft:piercing_weapon</c> (1.21.11+).</summary>
+    public static DataComponentType<PiercingWeaponComponent> PiercingWeapon { get; } = Make<PiercingWeaponComponent>("piercing_weapon");
+
     /// <summary><c>minecraft:potion_contents</c>.</summary>
     public static DataComponentType<PotionContentsComponent> PotionContents { get; } = Make<PotionContentsComponent>("potion_contents");
 
@@ -206,7 +209,7 @@ public static class DataComponents
     /// <summary><c>minecraft:dye</c> (26.2).</summary>
     public static DataComponentType<DyeColorValueComponent> Dye { get; } = Make<DyeColorValueComponent>("dye");
 
-    /// <summary><c>minecraft:minimum_attack_charge</c> (26.2).</summary>
+    /// <summary><c>minecraft:minimum_attack_charge</c> (1.21.11+).</summary>
     public static DataComponentType<MinimumAttackChargeComponent> MinimumAttackCharge { get; } = Make<MinimumAttackChargeComponent>("minimum_attack_charge");
 
     /// <summary><c>minecraft:additional_trade_cost</c> (26.2).</summary>
@@ -267,7 +270,7 @@ public static class DataComponents
         Damage, MaxDamage, MaxStackSize, RepairCost,
         Enchantments, StoredEnchantments,
         CustomName, ItemName, Lore, Unbreakable, Rarity, CustomModelData,
-        AttributeModifiers, Food, Tool,
+        AttributeModifiers, Food, Tool, PiercingWeapon,
         PotionContents, SuspiciousStewEffects, Trim, DyedColor, BaseColor, MapColor,
         BannerPatterns, Container, BundleContents, ChargedProjectiles, PotDecorations, Profile,
         UseRemainder, SulfurCubeContent,

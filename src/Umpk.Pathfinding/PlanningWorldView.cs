@@ -27,11 +27,17 @@ public sealed class PlanningWorldView : IPhysicsWorldView
     /// <summary>Wraps a captured region and its per-version block-shape source.</summary>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     public PlanningWorldView(RegionSnapshot snapshot, IBlockShapeSource shapes)
+        : this(snapshot, shapes, BlockCollisionQueryEra.BoundingBoxes)
+    {
+    }
+
+    private PlanningWorldView(RegionSnapshot snapshot, IBlockShapeSource shapes, BlockCollisionQueryEra collisionEra)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
         ArgumentNullException.ThrowIfNull(shapes);
         _snapshot = snapshot;
         _shapes = shapes;
+        CollisionQueryEra = collisionEra;
     }
 
     /// <summary>The captured region.</summary>
@@ -39,6 +45,19 @@ public sealed class PlanningWorldView : IPhysicsWorldView
 
     /// <summary>The per-version block-shape source, for callers (<see cref="Moves.MoveHelper.CanWalkOn"/> under <see cref="PathfinderOptions.AllowPartialHeightSupport"/>) that need a state's own collision boxes rather than just its <see cref="Umpk.Game.Blocks.BlockFlags.Solid"/> flag.</summary>
     public IBlockShapeSource Shapes => _shapes;
+
+    /// <inheritdoc/>
+    public BlockCollisionQueryEra CollisionQueryEra { get; }
+
+    /// <summary>Returns a view using the selected collision-query era over the same captured terrain and immutable shape source.</summary>
+    /// <remarks>This does not read terrain. A demand-faulted region retains its single-owner contract; the returned view shares that region.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The collision era is not defined.</exception>
+    public PlanningWorldView WithCollisionQueryEra(BlockCollisionQueryEra collisionEra)
+    {
+        if (!Enum.IsDefined(collisionEra))
+            throw new ArgumentOutOfRangeException(nameof(collisionEra));
+        return collisionEra == CollisionQueryEra ? this : new PlanningWorldView(_snapshot, _shapes, collisionEra);
+    }
 
     /// <summary>Captures the start-to-goal bounding volume (plus a margin) from a live world into an immutable planning view. Capture cost is bounded and paid once per plan or replan, never per block update.</summary>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
@@ -118,10 +137,10 @@ public sealed class PlanningWorldView : IPhysicsWorldView
         }
     }
 
-    /// <summary>Whether the region may hold a block whose collision box is moved by its own position, which is the only family a lateral squeeze lane can ever open past.</summary>
+    /// <summary>Whether the region may hold a block with a measured position-offset grid or a bounding-box fallback offset.</summary>
     /// <remarks>
     /// <para>The same palette question <see cref="MayContainWater"/> and <see cref="MayContainBarrier"/> ask, and FALSE is exact in the same way: no section overlapping the box can produce such a state, so no read of this view can return one.</para>
-    /// <para><b>This is what makes the feature free everywhere it does not apply.</b> A body offset to a cell face needs 0.6 of clear run on one side of a box, and a CENTRED box of width <c>w</c> offers <c>(1 - w) / 2</c>, which reaches 0.6 only at a negative width. So no block outside this family can open a lane at any position, and a region with none of them in it can skip the question outright rather than measuring boxes that cannot answer it. See <c>Umpk.Physics.BlockShapeOffset.HasOffset</c>.</para>
+    /// <para>The optional grid source supplies the measured family inventory and horizontal limits. Sources without grids retain <see cref="BlockShapeOffset.HasOffset"/>.</para>
     /// </remarks>
     public bool MayContainShapeOffset
     {
@@ -130,7 +149,7 @@ public sealed class PlanningWorldView : IPhysicsWorldView
             if (!_shapeOffsetChecked)
             {
                 _mayContainShapeOffset = _snapshot.MayContainBlockState(
-                    static state => Umpk.Physics.BlockShapeOffset.HasOffset(state));
+                    state => GetCollisionGrid(state) is { MaxHorizontalOffset: > 0 } || BlockShapeOffset.HasOffset(state));
                 _shapeOffsetChecked = true;
             }
 
@@ -143,6 +162,9 @@ public sealed class PlanningWorldView : IPhysicsWorldView
 
     /// <inheritdoc/>
     public ReadOnlySpan<Aabb> GetCollisionShapes(BlockState state) => _shapes.GetCollisionShapes(state);
+
+    /// <inheritdoc/>
+    public BlockCollisionGrid? GetCollisionGrid(BlockState state) => (_shapes as IBlockCollisionGridSource)?.GetCollisionGrid(state);
 
     /// <inheritdoc/>
     public bool IsChunkLoaded(BlockPos pos) => _snapshot.Contains(pos);

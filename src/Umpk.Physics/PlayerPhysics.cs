@@ -33,6 +33,9 @@ public sealed class PlayerPhysics : IPistonPushTarget
     private Vec3d _stuckSpeedMultiplier = Vec3d.Zero;
 
     private EntityPose _pose = EntityPose.Standing;
+    private float? _dimensionsScale;
+    private PhysicsBodyDimensions? _bodyDimensions;
+    private Aabb _bodyBounds;
 
     // Environment flags refreshed each tick.
     private bool _inWater;
@@ -74,13 +77,15 @@ public sealed class PlayerPhysics : IPistonPushTarget
         {
             ArgumentNullException.ThrowIfNull(value);
             _profile = value;
+            _bodyDimensions = null;
+            _bodyBounds = default;
         }
     }
 
     /// <summary>The conditions last pushed by the host.</summary>
     public PhysicsConditions Conditions => _conditions;
 
-    /// <summary>Full reset to a spawn or teleport position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
+    /// <summary>Starts fresh player physics at a spawn position. Clears velocity, pose, fall distance, and all collision and environment flags.</summary>
     public void Reset(Vec3d position, float yaw, float pitch)
     {
         _position = position;
@@ -94,6 +99,11 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _fallDistance = 0;
         _stuckSpeedMultiplier = Vec3d.Zero;
         _pose = EntityPose.Standing;
+        _bodyDimensions = null;
+        _bodyBounds = default;
+        _dimensionsScale = _conditions.Scale is not null ? 1F : null;
+        if (_conditions.Scale is not null)
+            _conditions = _conditions with { RefreshScaleDimensions = true };
         _inWater = false;
         _isUnderWater = false;
         _inLava = false;
@@ -114,8 +124,37 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _lastLandingFallDistance = 0;
     }
 
+    /// <summary>Applies a server-resolved position, rotation, and velocity while preserving the existing player's pose, fall, contact, environment, and input state.</summary>
+    public void ApplyPositionCorrection(Vec3d position, float yaw, float pitch, Vec3d velocity)
+    {
+        _position = position;
+        _yaw = yaw;
+        _pitch = pitch;
+        _velocity = velocity;
+        if (_bodyDimensions is { } body)
+            _bodyBounds = Aabb.OfSize(position.X, position.Y, position.Z, body.Width, body.Height);
+    }
+
+    /// <summary>Installs the host's exact cached body and float dimensions without changing observed position, velocity, pose or contact state. Null dimensions restore the existing pose-derived body.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">The supplied dimensions or bounds contain a non-finite value, or body dimensions are not positive.</exception>
+    public void ApplyBodyGeometry(Aabb bounds, PhysicsBodyDimensions? dimensions)
+    {
+        if (dimensions is { } body && (!float.IsFinite(body.Width) || body.Width <= 0F || !float.IsFinite(body.Height) || body.Height <= 0F || !float.IsFinite(body.EyeHeight)
+            || !double.IsFinite(bounds.MinX) || !double.IsFinite(bounds.MinY) || !double.IsFinite(bounds.MinZ) || !double.IsFinite(bounds.MaxX) || !double.IsFinite(bounds.MaxY) || !double.IsFinite(bounds.MaxZ)))
+            throw new ArgumentOutOfRangeException(nameof(dimensions));
+        _bodyDimensions = dimensions;
+        _bodyBounds = dimensions is null ? default : bounds;
+    }
+
     /// <summary>Pushes host-computed game conditions (abilities, effects, resolved attributes, equipment). Call whenever they change; the engine never pulls them.</summary>
-    public void SetConditions(in PhysicsConditions conditions) => _conditions = conditions;
+    public void SetConditions(in PhysicsConditions conditions)
+    {
+        if (conditions.Scale is { } scale && (!float.IsFinite(scale) || scale <= 0F))
+            throw new ArgumentOutOfRangeException(nameof(conditions));
+        bool pending = conditions.Scale is not null && (_conditions.RefreshScaleDimensions || conditions.RefreshScaleDimensions);
+        _conditions = conditions with { RefreshScaleDimensions = pending };
+        _dimensionsScale = conditions.Scale is not null ? _dimensionsScale ?? 1F : null;
+    }
 
     /// <summary>Installs a full snapshot into the working state (used by <see cref="PhysicsSimulator"/> for forward prediction). Restores every field a <see cref="PhysicsState"/> carries; fields the snapshot does not carry (stuck multiplier, jump delay) reset to their neutral values.</summary>
     internal void LoadState(in PhysicsState state)
@@ -130,6 +169,9 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _verticalCollisionBelow = state.VerticalCollision && state.Velocity.Y < 0.0;
         _fallDistance = state.FallDistance;
         _pose = state.Pose;
+        _bodyDimensions = state.BodyDimensions;
+        _bodyBounds = state.BodyDimensions is null ? default : state.BoundingBox;
+        _dimensionsScale = state.DimensionsScale ?? (_conditions.Scale is not null ? 1F : null);
         _inWater = state.InWater;
         _isUnderWater = state.IsUnderWater;
         _inLava = state.InLava;
@@ -152,7 +194,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _pitch = pitch;
     }
 
-    /// <summary>Overwrites the current velocity. The host calls this after a server teleport that carries momentum the player is to keep. <see cref="Reset(Vec3d, float, float)"/> zeroes the velocity because it models a spawn; a teleport that hands the client momentum re-seeds it here.</summary>
+    /// <summary>Overwrites the current velocity without changing position or other player state.</summary>
     public void SetVelocity(Vec3d velocity) => _velocity = velocity;
 
     // Piston push
@@ -223,7 +265,11 @@ public sealed class PlayerPhysics : IPistonPushTarget
 
         UpdateEnvironment();
         MapInput(input);
-        UpdatePlayerPose();
+        if (_bodyDimensions is not null)
+            // Input still owns the public pose report; the host's exact body remains authoritative and needs no modern prospective-fit query.
+            _pose = GetDesiredPose();
+        else if (_conditions.Scale is null)
+            UpdatePlayerPose();
 
         ZeroTinyVelocity();
 
@@ -233,6 +279,15 @@ public sealed class PlayerPhysics : IPistonPushTarget
         Travel(travelInput);
 
         ApplyEffectsFromBlocks();
+
+        if (_bodyDimensions is null && _conditions.Scale is { } scale)
+        {
+            if (_conditions.RefreshScaleDimensions)
+                _dimensionsScale = scale;
+            _conditions = _conditions with { RefreshScaleDimensions = false };
+            // Player's pose phase follows the inherited living scale phase. Prospective fit already reads the current attribute while travel and eye sensing above use cached dimensions.
+            UpdatePlayerPose();
+        }
 
         if (_noJumpDelay > 0)
             _noJumpDelay--;
@@ -647,6 +702,8 @@ public sealed class PlayerPhysics : IPistonPushTarget
         else
             actual = EntityPose.Swimming;
 
+        if (_pose != actual && _conditions.Scale is { } scale)
+            _dimensionsScale = scale;
         _pose = actual;
     }
 
@@ -669,8 +726,8 @@ public sealed class PlayerPhysics : IPistonPushTarget
 
     private bool CanFitWithPose(EntityPose pose)
     {
-        double height = HeightForPose(pose);
-        Aabb box = Aabb.OfSize(_position.X, _position.Y, _position.Z, _profile.Width, height);
+        double height = ScaledHeight(pose, _conditions.Scale);
+        Aabb box = Aabb.OfSize(_position.X, _position.Y, _position.Z, ScaledWidth(pose, _conditions.Scale), height);
         Aabb deflated = box.Deflate(PhysicsConstants.CollisionEpsilon, PhysicsConstants.CollisionEpsilon, PhysicsConstants.CollisionEpsilon);
         return CollisionResolver.NoCollision(_world, deflated, _position.Y, Body, _scratch);
     }
@@ -678,7 +735,7 @@ public sealed class PlayerPhysics : IPistonPushTarget
     /// <summary>The entity half of vanilla's <c>collision-context construction</c>, rebuilt per query because every field of it changes within a tick: the sneak flag is written by the travel input, the fall distance by the previous move's resolution.</summary>
     /// <remarks><c>PowderSnowWalkable</c> comes off the pushed conditions rather than being derived here, because "leather boots in the feet slot" is an inventory read and the engine reads no game state of its own. See <see cref="PhysicsConditions.PowderSnowWalkable"/>.</remarks>
     private BodyCollisionContext Body =>
-        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable);
+        new(_sneaking, _fallDistance, _conditions.PowderSnowWalkable, _position);
 
     private double HeightForPose(EntityPose pose) => pose switch
     {
@@ -687,19 +744,28 @@ public sealed class PlayerPhysics : IPistonPushTarget
         _ => _profile.StandingHeight,
     };
 
-    // Vanilla Avatar.POSES eye heights per pose (standing 1.62, crouching 1.27, swim/glide 0.4).
-    private double EyeHeightForPose(EntityPose pose) => pose switch
-    {
-        EntityPose.Crouching => PhysicsConstants.PlayerCrouchEyeHeight,
-        EntityPose.Swimming or EntityPose.FallFlying or EntityPose.SpinAttack => PhysicsConstants.PlayerSwimEyeHeight,
-        _ => PhysicsConstants.PlayerStandingEyeHeight,
-    };
+    private double EyeHeightForPose(EntityPose pose) => PhysicsProfile.EyeHeightForPose(pose, _profile.PoseDimensions);
 
-    private double Height => HeightForPose(_pose);
+    private double ScaledWidth(EntityPose pose, float? scale) => scale is { } value
+        ? pose is EntityPose.Sleeping or EntityPose.Dying ? .2F : (float)_profile.Width * value
+        : _profile.Width;
 
-    private double EyeHeight => EyeHeightForPose(_pose);
+    private double ScaledHeight(EntityPose pose, float? scale) => scale is { } value
+        ? pose is EntityPose.Sleeping or EntityPose.Dying ? .2F : (float)HeightForPose(pose) * value
+        : HeightForPose(pose);
 
-    private Aabb BoundingBox => Aabb.OfSize(_position.X, _position.Y, _position.Z, _profile.Width, Height);
+    private double Height => _bodyDimensions is { } body ? body.Height : ScaledHeight(_pose, _dimensionsScale);
+
+    private double EyeHeight => _bodyDimensions is { } body ? body.EyeHeight : _dimensionsScale is { } scale
+        ? _pose switch
+        {
+            EntityPose.Sleeping => .2F,
+            EntityPose.Dying => 1.62F,
+            _ => (float)EyeHeightForPose(_pose) * scale,
+        }
+        : EyeHeightForPose(_pose);
+
+    private Aabb BoundingBox => _bodyDimensions is not null ? _bodyBounds : Aabb.OfSize(_position.X, _position.Y, _position.Z, ScaledWidth(_pose, _dimensionsScale), Height);
 
     // Velocity zeroing
 
@@ -1215,7 +1281,12 @@ public sealed class PlayerPhysics : IPistonPushTarget
             _world, box, movement, _onGround, Body, PhysicsConstants.StepHeight, _colliders, _stepColliders);
 
         double resolvedLenSqr = resolved.LengthSqr();
-        if (resolvedLenSqr > 1.0E-7 || movement.LengthSqr() - resolvedLenSqr < 1.0E-7)
+        if (_bodyDimensions is not null)
+        {
+            _bodyBounds = box.Move(resolved.X, resolved.Y, resolved.Z);
+            _position = new Vec3d((_bodyBounds.MinX + _bodyBounds.MaxX) / 2D, _bodyBounds.MinY, (_bodyBounds.MinZ + _bodyBounds.MaxZ) / 2D);
+        }
+        else if (resolvedLenSqr > 1.0E-7 || movement.LengthSqr() - resolvedLenSqr < 1.0E-7)
             _position = _position.Add(resolved);
 
         bool blockedX = !MthEqual(movement.X, resolved.X);
@@ -1561,7 +1632,10 @@ public sealed class PlayerPhysics : IPistonPushTarget
         VerticalCollision = _verticalCollision,
         FallDistance = _fallDistance,
         Pose = _pose,
+        PoseDimensions = _profile.PoseDimensions == PoseDimensionsEra.ModernCrawl ? null : _profile.PoseDimensions,
         BoundingBox = BoundingBox,
+        BodyDimensions = _bodyDimensions,
+        DimensionsScale = _dimensionsScale,
         InWater = _inWater,
         IsUnderWater = _isUnderWater,
         InLava = _inLava,

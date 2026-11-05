@@ -59,8 +59,8 @@ public sealed class SqueezeLaneGeometryTests
         double offsetNeededLow = PhysicsConstants.PlayerWidth - BoxMin;
         double offsetNeededHigh = BoxMax - (1.0 - PhysicsConstants.PlayerWidth);
 
-        Assert.Equal(0.2875, offsetNeededLow, 12);
-        Assert.Equal(0.2875, offsetNeededHigh, 12);
+        Assert.Equal(0.2875000238418579, offsetNeededLow, 12);
+        Assert.Equal(0.2875000238418579, offsetNeededHigh, 12);
         Assert.True(
             Math.Min(offsetNeededLow, offsetNeededHigh) > MaxOffset,
             $"a dripstone would need |offset| {offsetNeededLow} to leave a flush lane, and vanilla "
@@ -157,7 +157,7 @@ public sealed class SqueezeLaneGeometryTests
         FixtureWorld world = Lane(5, FixtureWorld.Bamboo);
 
         // The flanks are already solid stone. Assert the body really is flush against them: at the NearFace lateral its low face is at exactly the cell boundary the wall starts on.
-        Assert.Equal(-0.2, SqueezeLane.Offset(LateralQuantum.NearFace), 12);
+        Assert.Equal(-0.19999998807907104, SqueezeLane.Offset(LateralQuantum.NearFace), 12);
         Assert.Equal(0.5 - (PhysicsConstants.PlayerWidth / 2.0), SqueezeLane.LateralOffset, 12);
 
         Assert.Equal(PathStatus.Success, Cross(world));

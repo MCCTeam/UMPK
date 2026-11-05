@@ -19,9 +19,18 @@ public static partial class ConfigurationCodecs
             static (ref PacketReader r, PacketCodecContext _) =>
                 new ClientboundConfigUpdateEnabledFeaturesPacket(r.ReadList(ReadId)));
 
+    private static readonly PacketCodec<ClientboundConfigUpdateEnabledFeaturesPacket> PlayUpdateEnabledFeatures =
+        PacketCodec<ClientboundConfigUpdateEnabledFeaturesPacket>.Of(
+            static (ref PacketWriter w, ClientboundConfigUpdateEnabledFeaturesPacket p, PacketCodecContext _) =>
+                w.WriteList(p.Features, WriteId),
+            static (ref PacketReader r, PacketCodecContext _) =>
+                new ClientboundConfigUpdateEnabledFeaturesPacket(r.ReadList(ReadId)) { IsPlay = true });
+
     /// <summary>Adds this packet's timelines to the binding table.</summary>
     internal static void DeclareUpdateEnabledFeatures(PacketBindings bindings)
     {
+        bindings.Packet(ClientboundConfigUpdateEnabledFeaturesPacket.PlayType)
+            .From(761, PlayUpdateEnabledFeatures);
         bindings.Packet(LoginFamilyPackets.Config.UpdateEnabledFeatures)
             .From(JavaEras.ConfigurationPhase, ConfigurationCodecs.UpdateEnabledFeatures);
     }

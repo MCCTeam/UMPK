@@ -17,6 +17,8 @@ The split matters. Planning is pure and can run off the session loop against a f
 
 `PlanningWorldView.Capture(world, shapes, a, b, margin)` copies a box of blocks out of a live [Umpk.Game](umpk-game.md) `World` into a `RegionSnapshot` and wraps it. That snapshot is what the planner reads, and it does not change under you while the search runs.
 
+When the shape source supplies exact collision grids, select the connected protocol's query era with `view.WithCollisionQueryEra(PhysicsProfile.BlockCollisionQueryForProtocol(protocol))`. The returned view shares the captured region and reads no terrain while configuring it; demand-faulted regions retain their single-owner contract. Sources without grids keep their bounding-box fallback. The client navigation service selects this era automatically for both plan captures and standability checks.
+
 `PathPlanner.FindPath` and `FindPathAsync` are the front door: a world view, a `PathfinderOptions`, a start `BlockPos` and an `IGoal`, returning a `PathResult`.
 
 `PathResult` carries `Status` (`Success`, `Partial`, `Failed`), `Path` as a list of `PathNode`, `Moves` as the parallel list of `MoveType`, `Cost`, and a `PathDiagnostics` with `NodesExplored`, `ElapsedMilliseconds`, `UnloadedChunkHits`, `TimedOut` and `NodeBudgetExhausted`.
@@ -38,12 +40,14 @@ using Umpk.Geometry;
 using Umpk.Pathfinding;
 using Umpk.Pathfinding.Core;
 using Umpk.Pathfinding.Goals;
+using Umpk.Physics;
 
 var start = new BlockPos(0, 65, 0);
 var target = new BlockPos(40, 68, -12);
 
 // Freeze a region big enough to contain both ends plus room to route around obstacles.
-PlanningWorldView view = PlanningWorldView.Capture(world, shapes, start, target, margin: 16);
+PlanningWorldView view = PlanningWorldView.Capture(world, shapes, start, target, margin: 16)
+    .WithCollisionQueryEra(PhysicsProfile.BlockCollisionQueryForProtocol(protocol));
 
 PathResult result = PathPlanner.FindPath(view, PathfinderOptions.Default, start, new GoalBlock(target));
 

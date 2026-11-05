@@ -5,13 +5,14 @@ namespace Umpk.Game.World;
 /// <summary>The outcome of a block raycast: whether a block was hit, and if so the block position, the face entered, the exact hit point, and the distance from the ray origin.</summary>
 public readonly struct BlockHitResult : IEquatable<BlockHitResult>
 {
-    private BlockHitResult(bool hit, BlockPos blockPos, Direction face, Vec3d point, double distance)
+    private BlockHitResult(bool hit, BlockPos blockPos, Direction face, Vec3d point, double distance, bool insideBlock = false)
     {
         Hit = hit;
         BlockPos = blockPos;
         Face = face;
         Point = point;
         Distance = distance;
+        InsideBlock = insideBlock;
     }
 
     /// <summary>A miss result.</summary>
@@ -20,6 +21,13 @@ public readonly struct BlockHitResult : IEquatable<BlockHitResult>
     /// <summary>Builds a hit result.</summary>
     public static BlockHitResult FromHit(BlockPos blockPos, Direction face, Vec3d point, double distance) =>
         new(true, blockPos, face, point, distance);
+
+    /// <summary>Builds a hit result with the voxel shape's origin-inside flag.</summary>
+    public static BlockHitResult FromHit(BlockPos blockPos, Direction face, Vec3d point, double distance, bool insideBlock) =>
+        new(true, blockPos, face, point, distance, insideBlock);
+
+    /// <summary>Whether vanilla's voxel-shape probe began inside the targeted shape.</summary>
+    public bool InsideBlock { get; }
 
     /// <summary>True when the ray hit a block.</summary>
     public bool Hit { get; }
@@ -39,13 +47,13 @@ public readonly struct BlockHitResult : IEquatable<BlockHitResult>
     /// <inheritdoc/>
     public bool Equals(BlockHitResult other) =>
         Hit == other.Hit && BlockPos.Equals(other.BlockPos) && Face == other.Face &&
-        Point.Equals(other.Point) && Distance.Equals(other.Distance);
+        Point.Equals(other.Point) && Distance.Equals(other.Distance) && InsideBlock == other.InsideBlock;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is BlockHitResult other && Equals(other);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => HashCode.Combine(Hit, BlockPos, Face, Point, Distance);
+    public override int GetHashCode() => HashCode.Combine(Hit, BlockPos, Face, Point, Distance, InsideBlock);
 
     /// <summary>Value equality.</summary>
     public static bool operator ==(BlockHitResult left, BlockHitResult right) => left.Equals(right);

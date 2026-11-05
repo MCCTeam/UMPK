@@ -5,6 +5,7 @@ using Umpk.Client.Plugins;
 using Umpk.Data.Java;
 using Umpk.Protocol.Java;
 using Umpk.Protocol.Java.Transport;
+using Umpk.TestKit.Time;
 using Xunit;
 
 namespace Umpk.IntegrationTests;
@@ -83,9 +84,11 @@ public sealed class ExtensionReconnectTests
         using var cts = new CancellationTokenSource(Budget);
         CancellationToken ct = cts.Token;
 
-        // Long enough that the disconnected gap is reliably observable against a cron firing every 50ms.
+        // One virtual clock drives both the 50ms cron and the 500ms reconnect backoff.
         var policy = new ReconnectPolicy { MaxAttempts = 1, InitialDelay = TimeSpan.FromMilliseconds(500), BackoffFactor = 1.0 };
-        var options = new ClientSupervisorOptions { ReconnectPolicy = new FixedReconnectPolicyProvider(policy) };
+        var clock = new VirtualTimeProvider(DateTimeOffset.UnixEpoch);
+        var time = new BackoffRegistrationTimeProvider(clock, policy.InitialDelay);
+        var options = new ClientSupervisorOptions { ReconnectPolicy = new FixedReconnectPolicyProvider(policy), TimeProvider = time };
         var factory = new ReconnectingSessionFactory(version);
         await using var supervisor = new UmpkClientSupervisor(factory, options);
 
@@ -97,15 +100,25 @@ public sealed class ExtensionReconnectTests
         await supervisor.Extensions.AddAsync(extension, ct);
 
         TaskCompletionSource secondPlaying = PlayingCounter(supervisor, atLeast: 2);
+        var reconnecting = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        supervisor.StatusChanged += (_, e) =>
+        {
+            if (e.Current == ClientStatus.Reconnecting)
+                reconnecting.TrySetResult();
+        };
 
         await supervisor.StartAsync(Endpoint, ct);
         await factory.AcceptTasks[0].WaitAsync(Budget, ct);
 
+        clock.Advance(TimeSpan.FromMilliseconds(50));
         int beforeDrop = Volatile.Read(ref fireCount);
         await factory.ServerConnections[0].DisposeAsync();
+        await reconnecting.Task.WaitAsync(Budget, ct);
+        await time.BackoffRegistered.WaitAsync(Budget, ct);
 
-        // Give the cron a real chance to fire several times purely within the backoff gap, well before the second attempt could plausibly reach Play.
-        await Task.Delay(300, ct);
+        // The dropped pipe has entered reconnecting and registered its timer before virtual time moves inside the gap.
+        Assert.Equal(ClientStatus.Reconnecting, supervisor.Status);
+        clock.Advance(TimeSpan.FromMilliseconds(300));
         int duringGap = Volatile.Read(ref fireCount);
 
         Assert.NotEqual(ClientStatus.Playing, supervisor.Status);
@@ -113,7 +126,10 @@ public sealed class ExtensionReconnectTests
             duringGap > beforeDrop,
             $"Expected the extension's cron to keep firing while no session was live; before={beforeDrop}, during={duringGap}.");
 
+        clock.Advance(TimeSpan.FromMilliseconds(250));
         await secondPlaying.Task.WaitAsync(Budget, ct);
+        await factory.AcceptTasks[1].WaitAsync(Budget, ct);
+        Assert.Equal(ClientStatus.Playing, supervisor.Status);
         await supervisor.StopAsync(ct);
     }
 
@@ -189,6 +205,30 @@ public sealed class ExtensionReconnectTests
 
         };
         return tcs;
+    }
+
+    private sealed class BackoffRegistrationTimeProvider(TimeProvider clock, TimeSpan backoff) : TimeProvider
+    {
+        private readonly TaskCompletionSource _backoffRegistered = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public Task BackoffRegistered => _backoffRegistered.Task;
+
+        public override DateTimeOffset GetUtcNow() => clock.GetUtcNow();
+
+        public override TimeZoneInfo LocalTimeZone => clock.LocalTimeZone;
+
+        public override long GetTimestamp() => clock.GetTimestamp();
+
+        public override long TimestampFrequency => clock.TimestampFrequency;
+
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
+        {
+            ITimer timer = clock.CreateTimer(callback, state, dueTime, period);
+            if (dueTime == backoff && period == Timeout.InfiniteTimeSpan)
+                _backoffRegistered.TrySetResult();
+
+            return timer;
+        }
     }
 
     private sealed class Counter

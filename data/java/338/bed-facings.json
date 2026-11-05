@@ -1,0 +1,113 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "scope": "Original bed registry objects and facing properties; all raw legacy metadata inputs or original flattened global state-registry values; legacy output uses the canonical block-id shifted four bits plus input metadata, while preserving the original native packed decoded-state id separately; no actor or world callbacks",
+    "measurement": "pre-pose-bed-facing-all-20261018-v1",
+    "probe_sha256": "953d76f47df129d8e71025bebe7fb2d431c615be72dc2e6774813f94113ffac3",
+    "releases": [
+      {
+        "version": "1.12.1",
+        "client_sha256": "19331fb29bf8b8d5ed764677c94cca9d66481e10104f660eb555894a4300cf22",
+        "server_sha256": "848912640bccfa7ea34a2cc1c76cb2b35f8467c4216d9603917c991660f91a8b",
+        "measurement_sha256": "102e41bd428c2b7befcce47713985b69db9776e6818a16fce6ddb3a02090b3ed",
+        "sources_sha256": {
+          "amu.java": "e871ca32379c181663cf982c952d6ea2ce7fd2f5078100c20ca6eb9fb5fb1657",
+          "aow.java": "cccd5b1065830d31c255ddb9c043ea03681dbddec8da71e3942753678770480a",
+          "aox.java": "7b64423f7e39ba059092be18e62dae0f4be52aeed2c85ec1e716ac12e2d31744",
+          "awt.java": "c0eaaf1ba21bb62ad42c7da9b59ce5cf37c2125792ba9050c3b119bc63679e02",
+          "bhb.java": "73c02ad69c5df445671b59913f3c2129dd9a44e1629d19b4447f1c8563d78c2f",
+          "bsb.java": "5ed56bce8be85f4c54e926721be53833c948fd96a19cf94012403e69d9f5711d",
+          "et.java": "e56f4bd5c2e0fc12a00be469eda7a452b746edead1b5a27660a5e861523c2fd3",
+          "bue.java": "9c8823e7d55abe5117d11493beb044bd582828e7aef54b665189f19e97a332c2",
+          "bua.java": "d4757babc4e7ebc6d19460347685cf5d87bdd4223c8b956cd49636beab8cba98",
+          "aed.java": "89c4431e9a0dd623cb06229691129e02c8ad6c3e7ce750c8fc739a74a9946d10",
+          "vp.java": "ad1ec2fb70a9f7ebed5f89493e6ef3b65f07bab9925ddb8b2e3a0fcb8d57fc77",
+          "vg.java": "7921cab59a65f621212098e6a93cdd903420d585ffdd7845d9ee3ac326311cf3",
+          "fa.java": "cd18e30569aa43c88240cb409a2ce1fc5fa8238c16b7f99bc17b56eaa3698a76",
+          "arm.java": "27ad06a0334d3c847a3e603c0d53acc15a25f4eca54a49c7aaaee421eab242f5",
+          "amr.java": "341b6dbde798296e43d4379b5f63f5dc82eee77dbc052d17e22c6e7bf913f0b8",
+          "qe.java": "e52b0d37597962a70416b6e032400a97117fe2f02d918b55bc1fdb384638b99a",
+          "brz.java": "2ca9391534065bfafcf4aea1cd5e9ecfa53f2d29e8dadbd60cd5a51caf1a54d3",
+          "jr.java": "de159528996fbb56264aa964d64ca1c1fae382eb1c9e728a02765c39bf5ebab4",
+          "id.java": "931ad3425e123c31ca30774e8b7af6a79e7edd6696465c78272e0fa00ca1611a",
+          "aou.java": "af4401792531ce85e66e1f70a391ac2f743bfa5ac009013f92f52ec58ceb292b"
+        },
+        "method_owners": {
+          "block_id": "aow",
+          "decode_metadata": "aou",
+          "facing_reader": "awt",
+          "state_id": "aow"
+        }
+      }
+    ]
+  },
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 16,
+  "states": [
+    [
+      416,
+      3
+    ],
+    [
+      417,
+      4
+    ],
+    [
+      418,
+      2
+    ],
+    [
+      419,
+      5
+    ],
+    [
+      420,
+      3
+    ],
+    [
+      421,
+      4
+    ],
+    [
+      422,
+      2
+    ],
+    [
+      423,
+      5
+    ],
+    [
+      424,
+      3
+    ],
+    [
+      425,
+      4
+    ],
+    [
+      426,
+      2
+    ],
+    [
+      427,
+      5
+    ],
+    [
+      428,
+      3
+    ],
+    [
+      429,
+      4
+    ],
+    [
+      430,
+      2
+    ],
+    [
+      431,
+      5
+    ]
+  ]
+}

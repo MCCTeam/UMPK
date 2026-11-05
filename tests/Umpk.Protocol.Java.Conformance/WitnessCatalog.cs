@@ -99,7 +99,7 @@ internal static partial class WitnessCatalog
             "A spawn with a uuid, a velocity triple and a metadata list. The uuid arrives at 1.9, the " +
             "trailing metadata list leaves the packet at 1.15, and the type id widens; the metadata " +
             "carries its own era on top.",
-            [AddMob, AddMobWithNbt, AddMobLegacy], PreferCorpus: true),
+            [AddMobWithWideType, AddMob, AddMobWithNbt, AddMobLegacy], PreferCorpus: true),
         new WitnessedPacket(
             ProtocolPhase.Play, PacketFlow.Clientbound, "minecraft:add_player",
             "A player spawn with a held-item id and a metadata list, both of which the packet lost on " +

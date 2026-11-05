@@ -19,6 +19,11 @@ public sealed class InventoryState
     private ItemStack[]? _containerSlots;
     private PendingClickPrediction? _pending;
     private readonly Dictionary<int, int> _properties = [];
+    private HashSet<int>? _unavailablePlayerSlots;
+    private HashSet<int>? _unavailableContainerSlots;
+    private bool _unavailableCursor;
+    private bool _containerShapeObserved;
+    private bool _unavailableContainerShape;
 
     /// <summary>The id of the currently open container, or 0 for the player inventory.</summary>
     public int OpenWindowId { get; internal set; }
@@ -62,6 +67,22 @@ public sealed class InventoryState
     /// <summary>Whether an optimistic click prediction is awaiting authoritative reconciliation.</summary>
     internal bool HasPendingPrediction => _pending is not null;
 
+    // These masks record a known decode loss. They do not change the existing initial empty-inventory or cached-read contracts.
+    internal bool IsPlayerSlotAvailable(int index) => IsSlotAvailable(PlayerWindowId, index);
+
+    internal bool IsCursorAvailable => !_unavailableCursor;
+
+    internal bool IsActiveSnapshotAvailable => !_unavailableCursor &&
+        (!HasOpenContainer || !_unavailableContainerShape) &&
+        (HasOpenContainer ? _unavailableContainerSlots : _unavailablePlayerSlots) is not { Count: > 0 };
+
+    internal bool IsSlotAvailable(int windowId, int index)
+    {
+        ItemStack[]? slots = SlotsFor(windowId);
+        return slots is not null && index >= 0 && index < slots.Length &&
+            (windowId == PlayerWindowId ? _unavailablePlayerSlots : _unavailableContainerSlots)?.Contains(index) is not true;
+    }
+
     /// <summary>Reads a slot from the active window.</summary>
     public ItemStack GetSlot(int index)
     {
@@ -85,10 +106,121 @@ public sealed class InventoryState
         if (target is not null && index >= 0 && index < target.Length)
         {
             target[index] = item;
-            if (windowId == OpenWindowId)
-                SyncPlayerSlotsFromOpenContainer();
+            if (windowId == PlayerWindowId)
+                SyncOpenContainerSlotsFromPlayer(index);
+            else if (windowId == OpenWindowId)
+                SyncPlayerSlotsFromOpenContainer(index);
 
         }
+    }
+
+    internal void SetAuthoritativeSlot(int windowId, int index, ItemStack item)
+    {
+        if (SlotsFor(windowId) is not { } slots || index < 0 || index >= slots.Length)
+            return;
+        SetSlot(windowId, index, item);
+        RebaseAuthoritativePlayerAlias(windowId, index, item);
+        MarkSlotAvailable(windowId, index);
+    }
+
+    internal void MarkSlotUnavailable(int windowId, int index)
+    {
+        if (SlotsFor(windowId) is not { } slots)
+            return;
+        if (windowId == OpenWindowId && windowId != PlayerWindowId &&
+            (!_containerShapeObserved || index < 0 || index >= slots.Length))
+        {
+            // OpenScreen has provisional storage until a content snapshot arrives. An unresolved menu slot can belong to any of its player-tail aliases.
+            _unavailableContainerShape = true;
+            MarkPlayerTailUnavailable();
+            _pending = null;
+        }
+        if (index < 0 || index >= slots.Length)
+            return;
+        bool affectsActive = windowId == OpenWindowId;
+        if (windowId == PlayerWindowId)
+        {
+            (_unavailablePlayerSlots ??= []).Add(index);
+            if (TryContainerAlias(index, out int containerSlot))
+            {
+                (_unavailableContainerSlots ??= []).Add(containerSlot);
+                affectsActive = true;
+            }
+            else if (HasOpenContainer && !_containerShapeObserved && index is >= 9 and <= 44)
+            {
+                _unavailableContainerShape = true;
+                affectsActive = true;
+            }
+        }
+        else
+        {
+            (_unavailableContainerSlots ??= []).Add(index);
+            if (TryPlayerAlias(index, out int playerSlot))
+                (_unavailablePlayerSlots ??= []).Add(playerSlot);
+        }
+        if (affectsActive)
+            _pending = null;
+    }
+
+    internal void MarkContentsUnavailable(int windowId, int? itemCount = null)
+    {
+        if (SlotsFor(windowId) is not { } slots)
+            return;
+        if (windowId == OpenWindowId && windowId != PlayerWindowId &&
+            (!_containerShapeObserved || itemCount is int count && count != slots.Length))
+        {
+            _unavailableContainerShape = true;
+            MarkPlayerTailUnavailable();
+            _pending = null;
+        }
+        for (int index = 0; index < slots.Length; index++)
+            MarkSlotUnavailable(windowId, index);
+        if (windowId == OpenWindowId)
+            MarkCursorUnavailable();
+    }
+
+    private void MarkPlayerTailUnavailable()
+    {
+        for (int index = 9; index < 45 && index < _playerSlots.Length; index++)
+            (_unavailablePlayerSlots ??= []).Add(index);
+    }
+
+    internal void MarkCursorUnavailable()
+    {
+        _unavailableCursor = true;
+        _pending = null;
+    }
+
+    private void MarkSlotAvailable(int windowId, int index)
+    {
+        if (SlotsFor(windowId) is not { } slots || index < 0 || index >= slots.Length)
+            return;
+        if (windowId == PlayerWindowId)
+        {
+            _unavailablePlayerSlots?.Remove(index);
+            if (TryContainerAlias(index, out int containerSlot))
+                _unavailableContainerSlots?.Remove(containerSlot);
+        }
+        else
+        {
+            _unavailableContainerSlots?.Remove(index);
+            if (TryPlayerAlias(index, out int playerSlot))
+                _unavailablePlayerSlots?.Remove(playerSlot);
+        }
+    }
+
+    private void MarkContentsAvailable(int windowId, int count)
+    {
+        if (windowId == PlayerWindowId)
+            _unavailablePlayerSlots?.Clear();
+        else if (windowId == OpenWindowId)
+        {
+            _unavailableContainerSlots?.Clear();
+            _containerShapeObserved = true;
+            _unavailableContainerShape = false;
+        }
+        for (int index = 0; index < count; index++)
+            MarkSlotAvailable(windowId, index);
     }
 
     /// <summary>Replaces a window's full contents addressed by window id (the id-routed model).</summary>
@@ -99,8 +231,10 @@ public sealed class InventoryState
             next[i] = items[i];
 
         if (windowId == PlayerWindowId)
+        {
             _playerSlots = next;
-
+            SyncOpenContainerSlotsFromPlayer();
+        }
         else if (windowId == OpenWindowId && _containerSlots is not null)
         {
             _containerSlots = next;
@@ -125,6 +259,20 @@ public sealed class InventoryState
         OpenContainerMenuType = menuType;
         OpenContainerTitle = title;
         _containerSlots = CreateEmpty(slotCount);
+        _unavailableContainerSlots = null;
+        _containerShapeObserved = false;
+        _unavailableContainerShape = false;
+        SyncOpenContainerSlotsFromPlayer();
+        if (_unavailablePlayerSlots is { } unavailable)
+        {
+            foreach (int playerSlot in unavailable)
+            {
+                if (TryContainerAlias(playerSlot, out int containerSlot))
+                    (_unavailableContainerSlots ??= []).Add(containerSlot);
+                else if (playerSlot is >= 9 and <= 44)
+                    _unavailableContainerShape = true;
+            }
+        }
         _pending = null;
         _properties.Clear();
         Trades = null;
@@ -138,6 +286,9 @@ public sealed class InventoryState
         OpenContainerMenuType = null;
         OpenContainerTitle = null;
         _containerSlots = null;
+        _unavailableContainerSlots = null;
+        _containerShapeObserved = false;
+        _unavailableContainerShape = false;
         Cursor = ItemStack.Empty;
         _pending = null;
         _properties.Clear();
@@ -149,12 +300,16 @@ public sealed class InventoryState
     {
         CloseContainer();
         _playerSlots = CreateEmpty(46);
+        _unavailablePlayerSlots = null;
+        _unavailableCursor = false;
         StateId = 0;
     }
 
     /// <summary>Builds a snapshot of the active window for the click simulator.</summary>
     internal ContainerSnapshot CaptureActiveSnapshot()
     {
+        if (!IsActiveSnapshotAvailable)
+            throw new InvalidOperationException("The active inventory contains an undecodable update. Wait for authoritative slot and cursor data before clicking.");
         ItemStack[] target = HasOpenContainer ? _containerSlots! : _playerSlots;
         return new ContainerSnapshot([.. target], Cursor, StateId);
     }
@@ -204,7 +359,7 @@ public sealed class InventoryState
     {
         if (_pending is not { } pending || pending.WindowId != windowId)
         {
-            SetSlot(windowId, slotIndex, item);
+            SetAuthoritativeSlot(windowId, slotIndex, item);
             if (windowId == OpenWindowId)
                 StateId = authoritativeStateId;
             return false;
@@ -215,8 +370,8 @@ public sealed class InventoryState
             // Apply a pre-click field only when the click did not change it. The packet remains useful as a rebase, but it cannot reject the later local action or move the click-facing revision back.
             if (!SlotChangedByPrediction(pending, slotIndex))
             {
-                SetSlot(windowId, slotIndex, item);
-                _pending = RebaseUnchangedSlot(pending, slotIndex, item);
+                SetAuthoritativeSlot(windowId, slotIndex, item);
+                _pending = RebaseSlot(pending, slotIndex, item);
             }
             return false;
         }
@@ -225,7 +380,7 @@ public sealed class InventoryState
         bool contentMismatch = !predicted.Equals(item);
 
         _pending = null;
-        SetSlot(windowId, slotIndex, item);
+        SetAuthoritativeSlot(windowId, slotIndex, item);
         if (windowId == OpenWindowId)
             StateId = authoritativeStateId;
         return contentMismatch;
@@ -241,9 +396,12 @@ public sealed class InventoryState
         if (_pending is not { } pending || pending.WindowId != windowId)
         {
             ReplaceContents(windowId, items);
+            RebaseAuthoritativePlayerContents(windowId);
+            MarkContentsAvailable(windowId, items.Count);
             if (windowId == OpenWindowId)
             {
                 Cursor = carriedItem;
+                _unavailableCursor = false;
                 StateId = authoritativeStateId;
             }
             return false;
@@ -258,11 +416,23 @@ public sealed class InventoryState
                     : items[i];
 
             ReplaceContents(windowId, rebased);
+            if (windowId != PlayerWindowId)
+            {
+                _containerShapeObserved = true;
+                _unavailableContainerShape = false;
+            }
+            for (int index = 0; index < items.Count; index++)
+                if (!SlotChangedByPrediction(pending, index))
+                    MarkSlotAvailable(windowId, index);
             ItemStack rebasedCursor = pending.Before.Cursor.Equals(pending.Predicted.Cursor)
                 ? carriedItem
                 : pending.Predicted.Cursor;
             if (windowId == OpenWindowId)
+            {
                 Cursor = rebasedCursor;
+                if (pending.Before.Cursor.Equals(pending.Predicted.Cursor))
+                    _unavailableCursor = false;
+            }
 
             _pending = pending with
             {
@@ -276,9 +446,11 @@ public sealed class InventoryState
         bool contradiction = !SnapshotMatches(pending.Predicted, items, carriedItem);
 
         ReplaceContents(windowId, items);
+        MarkContentsAvailable(windowId, items.Count);
         if (windowId == OpenWindowId)
         {
             Cursor = carriedItem;
+            _unavailableCursor = false;
             StateId = authoritativeStateId;
         }
         return contradiction;
@@ -293,6 +465,7 @@ public sealed class InventoryState
             return;
 
         Cursor = item;
+        _unavailableCursor = false;
     }
 
     private static bool SnapshotMatches(
@@ -320,7 +493,7 @@ public sealed class InventoryState
         return !pending.Before.GetSlot(slotIndex).Equals(pending.Predicted.GetSlot(slotIndex));
     }
 
-    private static PendingClickPrediction RebaseUnchangedSlot(
+    private static PendingClickPrediction RebaseSlot(
         PendingClickPrediction pending,
         int slotIndex,
         ItemStack item)
@@ -335,6 +508,44 @@ public sealed class InventoryState
             Before = SnapshotWithSlot(pending.Before, slotIndex, item),
             Predicted = SnapshotWithSlot(pending.Predicted, slotIndex, item),
         };
+    }
+
+    private void RebaseAuthoritativePlayerAlias(int windowId, int playerSlot, ItemStack item)
+    {
+        if (windowId == PlayerWindowId && _pending is { } pending && pending.WindowId == OpenWindowId &&
+            pending.WindowId != PlayerWindowId && TryContainerAlias(playerSlot, out int containerSlot))
+            _pending = RebaseSlot(pending, containerSlot, item);
+    }
+
+    private void RebaseAuthoritativePlayerContents(int windowId)
+    {
+        if (windowId != PlayerWindowId || _pending is not { } pending || pending.WindowId != OpenWindowId ||
+            pending.WindowId == PlayerWindowId || !HasOpenContainer || _containerSlots is not { Length: >= 36 })
+            return;
+        ItemStack[] before = CopySlots(pending.Before);
+        ItemStack[] predicted = CopySlots(pending.Predicted);
+        for (int playerSlot = 9; playerSlot < 45 && playerSlot < _playerSlots.Length; playerSlot++)
+        {
+            if (!TryContainerAlias(playerSlot, out int containerSlot))
+                continue;
+            if (containerSlot < before.Length)
+                before[containerSlot] = _playerSlots[playerSlot];
+            if (containerSlot < predicted.Length)
+                predicted[containerSlot] = _playerSlots[playerSlot];
+        }
+        _pending = pending with
+        {
+            Before = new ContainerSnapshot(before, pending.Before.Cursor, pending.Before.StateId),
+            Predicted = new ContainerSnapshot(predicted, pending.Predicted.Cursor, pending.Predicted.StateId),
+        };
+    }
+
+    private static ItemStack[] CopySlots(ContainerSnapshot snapshot)
+    {
+        var items = new ItemStack[snapshot.SlotCount];
+        for (int index = 0; index < items.Length; index++)
+            items[index] = snapshot.GetSlot(index);
+        return items;
     }
 
     private static ContainerSnapshot SnapshotWithSlot(ContainerSnapshot source, int slotIndex, ItemStack item)
@@ -352,15 +563,52 @@ public sealed class InventoryState
     }
 
     /// <summary>Mirrors the 36 player-inventory slots at the end of a generic open-container snapshot into the player window. The server sends those slots in the container's content and slot updates while a chest is open; without this mirror, consumers observe a stale player inventory until the container closes and can incorrectly treat a successful quick-move as a rejected one.</summary>
-    private void SyncPlayerSlotsFromOpenContainer()
+    private void SyncPlayerSlotsFromOpenContainer(int? updatedSlot = null)
     {
         if (!HasOpenContainer || _containerSlots is not { Length: >= 36 } container)
             return;
 
         int playerStart = container.Length - 36;
-        for (int i = 0; i < 36; i++)
+        int first = updatedSlot is int slot ? slot - playerStart : 0;
+        if ((uint)first >= 36)
+            return;
+        int end = updatedSlot.HasValue ? first + 1 : 36;
+        for (int i = first; i < end; i++)
             _playerSlots[9 + i] = container[playerStart + i];
 
+    }
+
+    private bool TryContainerAlias(int playerSlot, out int containerSlot)
+    {
+        containerSlot = 0;
+        if (!HasOpenContainer || _containerSlots is not { Length: >= 36 } container || playerSlot is < 9 or > 44)
+            return false;
+        containerSlot = container.Length - 36 + playerSlot - 9;
+        return true;
+    }
+
+    private bool TryPlayerAlias(int containerSlot, out int playerSlot)
+    {
+        playerSlot = 0;
+        if (!HasOpenContainer || _containerSlots is not { Length: >= 36 } container)
+            return false;
+        int offset = containerSlot - (container.Length - 36);
+        if ((uint)offset >= 36)
+            return false;
+        playerSlot = 9 + offset;
+        return playerSlot < _playerSlots.Length;
+    }
+
+    private void SyncOpenContainerSlotsFromPlayer(int? updatedSlot = null)
+    {
+        if (!HasOpenContainer || _containerSlots is not { Length: >= 36 } container)
+            return;
+        int first = updatedSlot is int slot ? slot - 9 : 0;
+        if ((uint)first >= 36)
+            return;
+        int end = updatedSlot.HasValue ? first + 1 : 36;
+        for (int offset = first; offset < end && 9 + offset < _playerSlots.Length; offset++)
+            container[container.Length - 36 + offset] = _playerSlots[9 + offset];
     }
 
     private static ItemStack[] CreateEmpty(int count)

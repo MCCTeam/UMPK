@@ -31,8 +31,8 @@ public sealed class MovementReadinessTests
     {
         var readiness = new MovementReadiness();
 
-        Assert.Equal(new ReadinessTick(true, false), readiness.Advance(768, placed: true, localColumnLoaded: true));
-        Assert.Equal(new ReadinessTick(false, false), readiness.Advance(768, placed: true, localColumnLoaded: false));
+        Assert.Equal(new ReadinessTick(true, false), readiness.Advance(767, placed: true, localColumnLoaded: true));
+        Assert.Equal(new ReadinessTick(false, false), readiness.Advance(767, placed: true, localColumnLoaded: false));
     }
 
     [Fact]

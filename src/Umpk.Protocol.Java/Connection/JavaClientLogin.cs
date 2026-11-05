@@ -300,6 +300,12 @@ public static class JavaClientLogin
         int storeCookieId = WireIdOf(configIn, Identifier.Minecraft("store_cookie"));
         int transferId = WireIdOf(configIn, Identifier.Minecraft("transfer"));
         int resourcePackPushId = WireIdOf(configIn, Identifier.Minecraft("resource_pack_push"));
+        int enabledFeaturesId = options.PacketObserver is null
+            ? -1
+            : WireIdOf(configIn, Identifier.Minecraft("update_enabled_features"));
+        int updateTagsId = options.PacketObserver is null
+            ? -1
+            : WireIdOf(configIn, Identifier.Minecraft("update_tags"));
 
         // A server may show a dialog during configuration and wait on the answer before finishing, so the pair is decoded and surfaced to the host here rather than dropped with the rest of the configuration traffic. Both are markers before 1.21.6, where WireIdOf returns -1.
         int showDialogId = options.PacketObserver is null
@@ -383,6 +389,8 @@ public static class JavaClientLogin
                 || (frame.WireId == clearDialogId && clearDialogId >= 0)
                 || (frame.WireId == customPayloadId && customPayloadId >= 0)
                 || (frame.WireId == registryDataId && registryDataId >= 0)
+                || (frame.WireId == updateTagsId && updateTagsId >= 0)
+                || (frame.WireId == enabledFeaturesId && enabledFeaturesId >= 0)
                 || (frame.WireId == transferId && transferId >= 0)
                 || (frame.WireId == resourcePackPushId && resourcePackPushId >= 0))
             {
@@ -413,7 +421,7 @@ public static class JavaClientLogin
             else if (frame.WireId == disconnectId && disconnectId >= 0)
                 throw await ConfigurationKickAsync(connection, configIn, options, frame, ct).ConfigureAwait(false);
 
-            // update_tags, resource-pack pushes, etc. are consumed and ignored; the offline reach-play driver only needs to stay in sync. registry_data is no longer in that list: it is surfaced above so Umpk.Client can keep the registries it needs.
+            // Other optional configuration packets are consumed here. Registry and tag updates are surfaced above, before the terminal play gate releases decoding.
         }
 
         throw new ConnectionClosedException(CloseReason.SocketEof, "Server closed during configuration.");

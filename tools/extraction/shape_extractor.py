@@ -158,3 +158,154 @@ def extract_modern(reports: Path, version: str, protocol: int) -> tuple[dict, di
         "collision": refs,
     }
     return shapes_payload, refs_payload
+
+
+# Finite extraction cohort: these 26.3 additions inherit the original SlabBlock shape rule. The runtime consumes ordinary generated references and has no release-specific repair list.
+_NATIVE_SLAB_COLORS = ('white', 'orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink', 'gray', 'light_gray', 'cyan', 'purple', 'blue', 'brown', 'green', 'red', 'black')
+_NATIVE_SLAB_REFS = tuple('minecraft:' + color + '_' + material + '_slab' for material in ('wool', 'concrete') for color in _NATIVE_SLAB_COLORS) + ('minecraft:poplar_slab',)
+_NATIVE_SLAB_MEASUREMENT_SHA256 = '0a3a3a697422b36c8d06d02a7815798d4baadb5b6cc8dcf746dea59d272aec62'
+_NATIVE_SLAB_SOURCES = {
+    'net/minecraft/world/level/block/SlabBlock.java': '3b4b4adf4792ab6417aedf151387abc9946dbe42c50dfacb8ddf4836e48a0d7e',
+    'net/minecraft/world/level/block/Blocks.java': '9c0112d10541541760227ab0dd22f96cef49540de6ade2a4b9c74b02ef8ffb8b',
+}
+
+
+def _fold_native_slab_refs(pool_document: dict, refs_document: dict, blocks_document: dict, native: dict, selected: tuple[str, ...] | list[str]) -> dict:
+    """Reuse the existing pool for verified native slab states without changing any other reference."""
+    from copy import deepcopy
+    from verify_collision_grids import verify
+
+    verify(native)
+    if not selected or len(selected) != len(set(selected)):
+        raise ValueError('Expected unique slab identities')
+    definitions = {block['name']: block for block in blocks_document['blocks']}
+    if len(definitions) != len(blocks_document['blocks']):
+        raise ValueError('Duplicate canonical block identity')
+    pool = ShapePool()
+    for boxes in pool_document['shapes']:
+        pool.intern(boxes)
+    if pool.as_list() != pool_document['shapes']:
+        raise ValueError('The existing shape pool must retain its exact order and values')
+    result = deepcopy(refs_document)
+    for name in selected:
+        block = definitions.get(name)
+        if block is None:
+            raise ValueError('Missing slab identity: ' + name)
+        first = block.get('min_state')
+        if (type(first) is not int or block.get('max_state') != first + 5 or block.get('num_states') != 6
+                or block.get('default_state') != first + 3 or block.get('properties') != ['type', 'waterlogged']):
+            raise ValueError('Unexpected native slab state schema: ' + name)
+        indices = []
+        for offset in range(6):
+            key = str(first + offset)
+            if key not in native['states']:
+                raise ValueError('Native slab state ids are incomplete: ' + name)
+            group = native['groups'][native['states'][key]]
+            expected_box = [0, .5, 0, 1, 1, 1] if offset < 2 else [0, 0, 0, 1, .5, 1] if offset < 4 else [0, 0, 0, 1, 1, 1]
+            expected_planes = [[0, 1], [0, .5, 1], [0, 1]] if offset < 4 else [[0, 1], [0, 1], [0, 1]]
+            if (group['boxes'] != [expected_box] or group['planes'] != expected_planes
+                    or group['cells'] != ([1] if offset < 2 else [0]) or group['canonical_full_block'] != (offset >= 4)):
+                raise ValueError('Unexpected native slab geometry: ' + name + '/' + str(offset))
+            index = pool.intern(group['boxes'])
+            if index >= len(pool_document['shapes']):
+                raise ValueError('Native slab must reuse the existing shape pool')
+            indices.append(index)
+        if name in result['collision'] and result['collision'][name] != indices:
+            raise ValueError('A changed existing slab reference cannot be overwritten: ' + name)
+        result['collision'][name] = indices
+    selected_short = {name.removeprefix('minecraft:') for name in selected}
+    result['_provenance']['unmatched_blocks'] = [name for name in refs_document['_provenance']['unmatched_blocks'] if name not in selected_short]
+    return result
+
+
+def supplement_native_slab_refs(data: Path, official: Path, measurements: Path, *, check: bool) -> None:
+    """Fold the retained 26.3 original collision grids into only the 33 missing slab reference rows."""
+    import hashlib
+
+    from verify_collision_grids import verify
+
+    def sha(path: Path, algorithm: str = 'sha256') -> str:
+        with path.open('rb') as stream:
+            return hashlib.file_digest(stream, algorithm).hexdigest()
+
+    version, protocol = '26.3', 777
+    catalog = json.loads((data / 'versions.json').read_text(encoding='utf-8'))['versions']
+    if not any(row['name'] == version and row['protocol'] == protocol for row in catalog):
+        raise ValueError('The native slab reference version binding differs')
+    root = data / str(protocol)
+    raw_path = measurements / version / 'collision-grids.json'
+    if sha(raw_path) != _NATIVE_SLAB_MEASUREMENT_SHA256:
+        raise ValueError('The original native slab collision measurement changed')
+    rows = [row for row in json.loads((measurements / 'results.json').read_text(encoding='utf-8')) if row.get('version') == version]
+    if len(rows) != 1 or rows[0].get('status') != 'complete' or rows[0].get('protocol') != protocol or rows[0].get('measurement_sha256') != sha(raw_path):
+        raise ValueError('The original native slab collision receipt is missing or mismatched')
+    receipt = rows[0]
+    raw = json.loads(raw_path.read_text(encoding='utf-8'))
+    verify(raw)
+    if receipt.get('states') != len(raw['states']) or receipt.get('groups') != len(raw['groups']):
+        raise ValueError('The original native slab collision counts differ')
+    for name in ('CollisionGridDump.java', 'MiningDump.java', 'PushDump.java'):
+        if sha(measurements / 'harness' / name) != sha(Path(__file__).parent / 'shape-extractor' / name):
+            raise ValueError('The original native collision probe source changed: ' + name)
+    downloads = official / 'downloads' / version
+    metadata = json.loads((downloads / 'version.json').read_text(encoding='utf-8'))
+    for side in ('client', 'server'):
+        artifact = downloads / (side + '.jar')
+        if sha(artifact, 'sha1') != metadata['downloads'][side]['sha1'] or sha(artifact) != receipt[side + '_sha256']:
+            raise ValueError('The original native slab artifact changed: ' + side)
+    tree = official / (version + '-client-decompiled')
+    complete = json.loads((tree / '.complete.json').read_text(encoding='utf-8'))
+    if complete.get('version') != version or complete.get('side') != 'client' or complete.get('artifact_sha1') != metadata['downloads']['client']['sha1']:
+        raise ValueError('The completed native slab source identity differs')
+    for name, digest in _NATIVE_SLAB_SOURCES.items():
+        if sha(tree / name) != digest:
+            raise ValueError('The native slab registration or shape source changed: ' + name)
+    grid_document = json.loads((root / 'block-collision-grids.json').read_text(encoding='utf-8'))
+    provenance = grid_document['_provenance']
+    if (provenance.get('version') != version or provenance.get('protocol') != protocol
+            or provenance.get('measurement_sha256') != sha(raw_path) or provenance.get('client_sha256') != receipt['client_sha256']
+            or grid_document.get('state_count') != len(raw['states'])
+            or any(grid_document.get(key) != raw[key] for key in ('schema', 'cell_order', 'states', 'groups'))):
+        raise ValueError('Canonical native collision-grid provenance or content differs')
+    blocks = json.loads((root / 'blocks.json').read_text(encoding='utf-8'))
+    if max(block['max_state'] for block in blocks['blocks']) + 1 != len(raw['states']):
+        raise ValueError('Canonical block-state registry does not match native slab measurement')
+    pool = json.loads((root / 'shapes.json').read_text(encoding='utf-8'))
+    path = root / 'block-shape-refs.json'
+    refs = json.loads(path.read_text(encoding='utf-8'))
+    if refs['_provenance'].get('version') != version or refs['_provenance'].get('protocol') != protocol or refs['_provenance'].get('kind') != 'curated-shape-bootstrap':
+        raise ValueError('The base collision-reference provenance differs')
+    result = _fold_native_slab_refs(pool, refs, blocks, raw, _NATIVE_SLAB_REFS)
+    supplement = {'version': version, 'protocol': protocol, 'families': len(_NATIVE_SLAB_REFS), 'states': len(_NATIVE_SLAB_REFS) * 6,
+                  'measurement_sha256': sha(raw_path), 'client_sha256': receipt['client_sha256'], 'server_sha256': receipt['server_sha256'],
+                  'tool': 'tools/extraction/shape_extractor.py --native-slab-refs', 'native_tool': 'tools/extraction/shape-extractor/CollisionGridDump.java',
+                  'native_sources_sha256': _NATIVE_SLAB_SOURCES,
+                  'note': 'Original empty-context collision grids; only the 33 missing 26.3 SlabBlock families. Existing shape-pool indices and all other reference rows are preserved.'}
+    old = refs['_provenance'].get('native_slab_refs')
+    if old is not None and old != supplement:
+        raise ValueError('The existing native slab reference provenance differs')
+    result['_provenance']['native_slab_refs'] = supplement
+    contents = (json.dumps(result, indent=2) + '\n').encode()
+    if check:
+        if path.read_bytes() != contents:
+            raise ValueError('Generated native slab collision references differ: ' + str(path))
+    else:
+        path.write_bytes(contents)
+    print(('Checked' if check else 'Extracted'), len(_NATIVE_SLAB_REFS), 'native slab collision-reference families and', len(_NATIVE_SLAB_REFS) * 6, 'states')
+
+
+def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Maintain canonical collision references from retained original native measurements')
+    parser.add_argument('--native-slab-refs', action='store_true', required=True, help='fold the finite 26.3 native slab reference supplement')
+    parser.add_argument('--data', type=Path, required=True)
+    parser.add_argument('--official', type=Path, required=True)
+    parser.add_argument('--measurements', type=Path, required=True)
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    supplement_native_slab_refs(args.data, args.official, args.measurements, check=args.check)
+
+
+if __name__ == '__main__':
+    main()

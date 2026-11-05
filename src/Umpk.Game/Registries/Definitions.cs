@@ -1,3 +1,6 @@
+using System.Collections.Frozen;
+using Umpk.Game.Items;
+
 namespace Umpk.Game.Registries;
 
 // Definition types for registry-backed content. These are the immutable value objects a Registry<T> holds. Every registry entry pairs one of these with a numeric network id and an Identifier key (see RegistryEntry<T>). The types are records so that value equality and with-expressions are available to consumers that build synthetic snapshots.
@@ -85,7 +88,11 @@ public sealed record BlockPropertyDefinition(string Name, IReadOnlyList<string> 
 
 /// <summary>An item registry entry.</summary>
 /// <param name="MaxStackSize">The maximum stack size vanilla assigns this item (1 when unknown).</param>
-public sealed record ItemDefinition(int MaxStackSize = 64);
+public sealed record ItemDefinition(int MaxStackSize = 64)
+{
+    /// <summary>Known vanilla default components. An absent key can be unmodeled; stack patches can override or remove a measured default.</summary>
+    public IReadOnlyDictionary<DataComponentType, object> DefaultComponents { get; init; } = FrozenDictionary<DataComponentType, object>.Empty;
+}
 
 /// <summary>An entity-type registry entry, carrying the standing bounding-box size.</summary>
 /// <param name="Width">Bounding-box width in blocks.</param>

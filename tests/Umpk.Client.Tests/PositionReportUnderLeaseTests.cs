@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Umpk.Client.Events;
 using Umpk.Client.Movement;
@@ -38,7 +39,11 @@ public sealed class PositionReportUnderLeaseTests
         var frames = new ConcurrentQueue<int>();
 
         await JoinAsync(client, server, frames, ct);
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         await TeleportAsync(client, server, frames, new Vec3d(8.5, 200.0, 8.5), ct);
 
         IMovementLease lease = plugin.Context!.TryAcquireMovement("test")
@@ -51,10 +56,9 @@ public sealed class PositionReportUnderLeaseTests
         {
             await client.PostAsync(c => c.State.Self.Position = c.State.Self.Position.Add(0.2, 0.0, 0.0), ct);
             await ticks.FireAsync(ct);
-
-            // ManualTickSource.FireAsync only enqueues the tick; it does not wait for TickLoopAsync to dequeue it and dispatch OnTickOnLoopAsync onto the session loop. Without a beat here every nudge in this loop lands before the tick loop's background task gets scheduled even once, so all 10 nudges land, THEN all 10 ticks fire back to back against the one final position: the first observes a real move (from wherever it was primed) and the remaining nine compare an unchanged position to itself and correctly report nothing. This settle keeps each tick paired with the position as of ITS OWN nudge, the way a real 20 TPS loop would see it.
-            await DrainAsync(ct);
         }
+
+        await DrainAsync(server, frames, ct);
 
         lease.Dispose();
 
@@ -78,7 +82,11 @@ public sealed class PositionReportUnderLeaseTests
         var frames = new ConcurrentQueue<int>();
 
         await JoinAsync(client, server, frames, ct);
-        await client.InvokeAsync(c => c.State.World.LoadColumn(new ChunkPos(0, 0)), ct);
+        await client.InvokeAsync(c =>
+        {
+            c.State.EntityMembership.LoadColumn(new ChunkPos(0, 0));
+            return c.State.World.LoadColumn(new ChunkPos(0, 0));
+        }, ct);
         await TeleportAsync(client, server, frames, new Vec3d(8.5, 200.0, 8.5), ct);
 
         IMovementLease lease = plugin.Context!.TryAcquireMovement("test")
@@ -90,7 +98,7 @@ public sealed class PositionReportUnderLeaseTests
         for (int i = 0; i < 20; i++)
             await ticks.FireAsync(ct);
 
-        await DrainAsync(ct);
+        await DrainAsync(server, frames, ct);
         lease.Dispose();
 
         Assert.Equal(1, frames.Count(w => w == movePosWire || w == movePosRotWire));
@@ -117,8 +125,14 @@ public sealed class PositionReportUnderLeaseTests
 
     private static int ServerboundWire(PacketType type) => new Internal.WireIndex(Version).ServerboundPlay(type.Id);
 
-    /// <summary>Lets every frame the client has already written reach the collector before asserting.</summary>
-    private static Task DrainAsync(CancellationToken ct) => Task.Delay(200, ct);
+    /// <summary>The pong follows completed tick writes on the client transport, so observing it also drains those frames.</summary>
+    private static async Task DrainAsync(FakeJavaServer server, ConcurrentQueue<int> frames, CancellationToken ct)
+    {
+        int pongWire = ServerboundWire(UiPackets.Serverbound.Pong);
+        int before = frames.Count(wire => wire == pongWire);
+        await SendAsync(server, new ClientboundPlayPingPacket(12345), ct);
+        await WaitForAsync(() => frames.Count(wire => wire == pongWire) > before, ct);
+    }
 
     private static async Task JoinAsync(
         UmpkClient client, FakeJavaServer server, ConcurrentQueue<int> frames, CancellationToken ct)
@@ -269,15 +283,25 @@ public sealed class PositionReportUnderLeaseTests
     /// <summary>A tick source the test advances by hand, so a tick lands exactly where it is wanted.</summary>
     private sealed class ManualTickSource : ITickSource
     {
-        private readonly Channel<long> _ticks = Channel.CreateUnbounded<long>();
-        private long _next;
+        private readonly Channel<TaskCompletionSource> _ticks = Channel.CreateUnbounded<TaskCompletionSource>();
 
         public TimeSpan TickInterval => TimeSpan.FromMilliseconds(50);
 
-        public IAsyncEnumerable<long> Ticks(CancellationToken cancellationToken = default) =>
-            _ticks.Reader.ReadAllAsync(cancellationToken);
+        public async IAsyncEnumerable<long> Ticks([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            long sequence = 0;
+            await foreach (TaskCompletionSource completed in _ticks.Reader.ReadAllAsync(cancellationToken))
+            {
+                yield return ++sequence;
+                completed.TrySetResult();
+            }
+        }
 
-        public ValueTask FireAsync(CancellationToken ct) =>
-            _ticks.Writer.WriteAsync(Interlocked.Increment(ref _next), ct);
+        public async Task FireAsync(CancellationToken ct)
+        {
+            var completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            await _ticks.Writer.WriteAsync(completed, ct);
+            await completed.Task.WaitAsync(ct);
+        }
     }
 }

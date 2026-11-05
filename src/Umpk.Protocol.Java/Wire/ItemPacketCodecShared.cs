@@ -103,11 +103,19 @@ internal static class ItemPacketCodecShared
                 int state = r.ReadVarInt();
                 int count = r.ReadVarInt();
                 var items = new ItemStack[count];
-                for (int i = 0; i < count; i++)
-                    items[i] = ItemStackCodecs.ReadModernStack(ref r, c, table);
+                try
+                {
+                    for (int i = 0; i < count; i++)
+                        items[i] = ItemStackCodecs.ReadModernStack(ref r, c, table);
 
-                ItemStack carried = ItemStackCodecs.ReadModernStack(ref r, c, table);
-                return new ClientboundContainerSetContentPacket(id, state, items, carried);
+                    ItemStack carried = ItemStackCodecs.ReadModernStack(ref r, c, table);
+                    return new ClientboundContainerSetContentPacket(id, state, items, carried);
+                }
+                catch (UnmodeledItemComponentException ex)
+                {
+                    ex.InventoryScope = new(InventoryUpdateLossKind.ContainerContents, id, state, null, count);
+                    throw;
+                }
             },
             WireShape.Of("varint,varint,varint*stack,stack", table.ShapeToken));
 
@@ -116,7 +124,17 @@ internal static class ItemPacketCodecShared
             (ref PacketWriter w, ClientboundSetCursorItemPacket p, PacketCodecContext c) =>
                 ItemStackCodecs.WriteModernStack(ref w, p.Item, c, table),
             (ref PacketReader r, PacketCodecContext c) =>
-                new ClientboundSetCursorItemPacket(ItemStackCodecs.ReadModernStack(ref r, c, table)),
+            {
+                try
+                {
+                    return new ClientboundSetCursorItemPacket(ItemStackCodecs.ReadModernStack(ref r, c, table));
+                }
+                catch (UnmodeledItemComponentException ex)
+                {
+                    ex.InventoryScope = new(InventoryUpdateLossKind.Cursor, null, null, null, null);
+                    throw;
+                }
+            },
             WireShape.Of("stack", table.ShapeToken));
 
     internal static PacketCodec<ClientboundSetPlayerInventoryPacket> MakeSetPlayerInventory(ItemComponentTable table) =>
@@ -129,8 +147,16 @@ internal static class ItemPacketCodecShared
             (ref PacketReader r, PacketCodecContext c) =>
             {
                 int slot = r.ReadVarInt();
-                ItemStack item = ItemStackCodecs.ReadModernStack(ref r, c, table);
-                return new ClientboundSetPlayerInventoryPacket(slot, item);
+                try
+                {
+                    ItemStack item = ItemStackCodecs.ReadModernStack(ref r, c, table);
+                    return new ClientboundSetPlayerInventoryPacket(slot, item);
+                }
+                catch (UnmodeledItemComponentException ex)
+                {
+                    ex.InventoryScope = new(InventoryUpdateLossKind.PlayerInventorySlot, null, null, slot, null);
+                    throw;
+                }
             },
             WireShape.Of("varint,stack", table.ShapeToken));
 
@@ -539,8 +565,16 @@ internal static class ItemPacketCodecShared
         int id = containerIdIsVarInt ? r.ReadVarInt() : r.ReadSByte();
         int state = withStateId ? r.ReadVarInt() : 0;
         short slot = r.ReadShort();
-        ItemStack item = stacks.Read(ref r, c);
-        return new ClientboundContainerSetSlotPacket(id, state, slot, item, isLegacy);
+        try
+        {
+            ItemStack item = stacks.Read(ref r, c);
+            return new ClientboundContainerSetSlotPacket(id, state, slot, item, isLegacy);
+        }
+        catch (UnmodeledItemComponentException ex)
+        {
+            ex.InventoryScope = new(InventoryUpdateLossKind.ContainerSlot, id, withStateId ? state : null, slot, null);
+            throw;
+        }
     }
 
     internal static PacketCodec<ClientboundContainerSetSlotPacket> MakeSetSlot(StackWire stacks) =>
@@ -569,11 +603,19 @@ internal static class ItemPacketCodecShared
                 int state = r.ReadVarInt();
                 int count = r.ReadVarInt();
                 var items = new ItemStack[count];
-                for (int i = 0; i < count; i++)
-                    items[i] = stacks.Read(ref r, c);
+                try
+                {
+                    for (int i = 0; i < count; i++)
+                        items[i] = stacks.Read(ref r, c);
 
-                ItemStack carried = stacks.Read(ref r, c);
-                return new ClientboundContainerSetContentPacket(id, state, items, carried);
+                    ItemStack carried = stacks.Read(ref r, c);
+                    return new ClientboundContainerSetContentPacket(id, state, items, carried);
+                }
+                catch (UnmodeledItemComponentException ex)
+                {
+                    ex.InventoryScope = new(InventoryUpdateLossKind.ContainerContents, id, state, null, count);
+                    throw;
+                }
             },
             WireShape.Of("byte,varint,varint*stack,stack", stacks.Form));
 

@@ -1,9 +1,23 @@
+using Umpk.Game.Registries;
 using Xunit;
 
 namespace Umpk.Data.Java.Tests;
 
 public sealed class SoundNameTests
 {
+    [Theory]
+    [InlineData(774, 1245)]
+    [InlineData(775, 1302)]
+    [InlineData(776, 1306)]
+    [InlineData(777, 1310)]
+    public void ComponentContextsResolveTheNativeSoundHolderName(int protocol, int networkId)
+    {
+        RegistryAccess registries = JavaGameData.Registries(protocol);
+        Assert.True(registries.TryGetRegistry(Identifier.Minecraft("sound_event"), out IRegistry sounds));
+        Assert.True(sounds.TryGetKey(networkId, out Identifier name));
+        Assert.Equal(Identifier.Minecraft("entity.player.attack.sweep"), name);
+    }
+
     [Theory]
     [InlineData(477, 120, "minecraft:entity.cow.ambient")]
     [InlineData(477, 794, "minecraft:entity.zombie_villager.step")]

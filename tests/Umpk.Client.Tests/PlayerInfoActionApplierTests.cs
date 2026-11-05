@@ -40,7 +40,8 @@ public sealed class PlayerInfoActionApplierTests
                 Component.Text("StevePvP"))]));
         await modern.ApplyAsync(new ClientboundPlayerInfoUpdatePacket(
             PlayerInfoActions.AddPlayer | PlayerInfoActions.UpdateGameMode
-                | PlayerInfoActions.UpdateLatency | PlayerInfoActions.UpdateDisplayName,
+                | PlayerInfoActions.UpdateLatency | PlayerInfoActions.UpdateDisplayName
+                | PlayerInfoActions.UpdateListed,
             [new PlayerInfoEntry(
                 PlayerId,
                 "Steve",

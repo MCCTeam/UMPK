@@ -1,0 +1,6076 @@
+{
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/shape-extractor/PiercingComponentDump.java",
+    "tool_sha256": "ac9c97546fe8f6d7433d2c69442772abb85451a0411e6eba22c3b34379ba619d",
+    "measurements": [
+      {
+        "version": "26.1",
+        "client_sha256": "bc6194c61566b587f196090d730698f2191170f7580adb143e4ff839939d3840",
+        "server_sha256": "98ab064389a8b34d48ac3d4c5ed858dd9433d0dfd1a12e1cbbda916448d92994",
+        "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+      },
+      {
+        "version": "26.1.1",
+        "client_sha256": "8c109be6177f40d10d0afd820b06542f9609597874242b96e16c5b0dc9e1fef3",
+        "server_sha256": "d792784979722dc35144acffb953554e707445c62450550044c4281e632cbbcc",
+        "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+      },
+      {
+        "version": "26.1.2",
+        "client_sha256": "b1b3158572666445eff01e82fad8c7de2e4953db6d354f311730d77a8359d0b0",
+        "server_sha256": "cd47e7c38328f64768fd17af8fcd8b22496b40b63d4ffee81e71ae059fedcb42",
+        "measurement_sha256": "8d8f2badba19480af51709bfb52f729523e435c29f1bf537e0cf2f98a44fb0a1"
+      }
+    ],
+    "note": "Native default item components read from every registered item. Missing native values are explicit nulls. PiercingWeapon.CODEC uses RegistryOps<JsonOps>; all protocol aliases must match."
+  },
+  "schema": 1,
+  "items": {
+    "minecraft:acacia_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:acacia_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:activator_rail": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:air": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:allay_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:allium": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:amethyst_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:amethyst_cluster": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:amethyst_shard": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ancient_debris": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:andesite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:andesite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:andesite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:andesite_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:angler_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:anvil": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:apple": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:archer_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:armadillo_scute": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:armadillo_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:armor_stand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:arms_up_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:arrow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:axolotl_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:axolotl_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:azalea": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:azalea_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:azure_bluet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:baked_potato": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_chest_raft": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_mosaic": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_mosaic_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_mosaic_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_raft": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bamboo_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:barrel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:barrier": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:basalt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bat_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beacon": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bedrock": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bee_nest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bee_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beef": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beehive": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beetroot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beetroot_seeds": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:beetroot_soup": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bell": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:big_dripleaf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:birch_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:black_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blackstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blackstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blackstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blackstone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blade_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blast_furnace": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blaze_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blaze_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blaze_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_ice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_orchid": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:blue_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bogged_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bolt_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bone_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bone_meal": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:book": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bookshelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bordure_indented_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bowl": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brain_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brain_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brain_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bread": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:breeze_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:breeze_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brewer_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brewing_stand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_mushroom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_mushroom_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brown_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:brush": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bubble_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bubble_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bubble_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:budding_amethyst": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:burn_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:bush": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cactus": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cactus_flower": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cake": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:calcite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:calibrated_sculk_sensor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:camel_husk_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:camel_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:campfire": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:carrot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:carrot_on_a_stick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cartography_table": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:carved_pumpkin": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cat_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cauldron": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cave_spider_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chain_command_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chainmail_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chainmail_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chainmail_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chainmail_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:charcoal": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cherry_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chest_minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chicken": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chicken_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chipped_anvil": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_bookshelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_nether_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_polished_blackstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_quartz_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_red_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_resin_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_tuff": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chiseled_tuff_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chorus_flower": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chorus_fruit": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:chorus_plant": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:clay": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:clay_ball": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:clock": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:closed_eyeblossom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:coal": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:coal_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:coal_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:coarse_dirt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:coast_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobbled_deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobbled_deepslate_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobbled_deepslate_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobbled_deepslate_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobblestone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobblestone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobblestone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobblestone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cobweb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cocoa_beans": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cod_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cod_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:command_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:command_block_minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:comparator": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:compass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:composter": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:conduit": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_beef": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_chicken": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_cod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_mutton": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_porkchop": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_rabbit": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cooked_salmon": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cookie": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_golem_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_ingot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_nautilus_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_nugget": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:copper_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_torch": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cornflower": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cow_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cracked_deepslate_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cracked_deepslate_tiles": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cracked_nether_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cracked_polished_blackstone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cracked_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crafter": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crafting_table": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:creaking_heart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:creaking_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:creeper_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:creeper_head": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:creeper_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_fungus": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_hyphae": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_nylium": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_roots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_stem": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crimson_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crossbow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:crying_obsidian": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_red_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_red_sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cut_sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:cyan_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:damaged_anvil": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dandelion": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:danger_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_prismarine": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_prismarine_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dark_prismarine_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:daylight_detector": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_brain_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_brain_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_brain_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_bubble_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_bubble_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_bubble_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_bush": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_fire_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_fire_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_fire_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_horn_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_horn_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_horn_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_tube_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_tube_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dead_tube_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:debug_stick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:decorated_pot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_coal_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_copper_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_diamond_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_emerald_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_gold_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_iron_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_lapis_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_redstone_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_tile_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_tile_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_tile_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:deepslate_tiles": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:detector_rail": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_nautilus_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diamond_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:diamond_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diorite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diorite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diorite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:diorite_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dirt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dirt_path": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:disc_fragment_5": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dispenser": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dolphin_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:donkey_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dragon_breath": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dragon_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dragon_head": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dried_ghast": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dried_kelp": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dried_kelp_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dripstone_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dropper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:drowned_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:dune_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:echo_shard": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:elder_guardian_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:elytra": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:emerald": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:emerald_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:emerald_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:enchanted_book": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:enchanted_golden_apple": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:enchanting_table": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_crystal": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_portal_frame": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_stone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_stone_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_stone_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_stone_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:end_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ender_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ender_dragon_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ender_eye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ender_pearl": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:enderman_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:endermite_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:evoker_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:experience_bottle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:explorer_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:exposed_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:eye_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:farmland": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:feather": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fermented_spider_eye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:field_masoned_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:filled_map": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fire_charge": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fire_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fire_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fire_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:firefly_bush": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:firework_rocket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:firework_star": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fishing_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fletching_table": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flint": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flint_and_steel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flow_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flow_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flow_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flower_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flower_pot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flowering_azalea": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:flowering_azalea_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:fox_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:friend_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:frog_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:frogspawn": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:furnace": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:furnace_minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ghast_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ghast_tear": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gilded_blackstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glass_bottle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glistering_melon_slice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:globe_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glow_berries": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glow_ink_sac": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glow_item_frame": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glow_lichen": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glow_squid_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glowstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:glowstone_dust": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:goat_horn": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:goat_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gold_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gold_ingot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gold_nugget": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gold_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_apple": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_carrot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_dandelion": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_nautilus_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:golden_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:golden_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:granite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:granite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:granite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:granite_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:grass_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gravel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gray_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:green_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:grindstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:guardian_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:gunpowder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:guster_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:guster_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:hanging_roots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:happy_ghast_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:hay_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:heart_of_the_sea": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:heart_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:heartbreak_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:heavy_core": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:heavy_weighted_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:hoglin_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:honey_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:honey_bottle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:honeycomb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:honeycomb_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:hopper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:hopper_minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:horn_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:horn_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:horn_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:horse_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:host_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:howl_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:husk_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_chiseled_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_cobblestone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_cracked_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_mossy_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_stone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:infested_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ink_sac": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_golem_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_ingot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_nautilus_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_nugget": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:iron_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:iron_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:item_frame": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jack_o_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jigsaw": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jukebox": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:jungle_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:kelp": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:knowledge_book": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ladder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lapis_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lapis_lazuli": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lapis_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:large_amethyst_bud": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:large_fern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lava_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lead": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leaf_litter": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:leather_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lectern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lever": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_blue_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_gray_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:light_weighted_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lilac": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lily_of_the_valley": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lily_pad": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lime_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lingering_potion": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:llama_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:lodestone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:loom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mace": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magenta_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magma_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magma_cream": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:magma_cube_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_propagule": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_roots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mangrove_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:map": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:medium_amethyst_bud": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:melon": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:melon_seeds": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:melon_slice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:milk_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:miner_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mojang_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mooshroom_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:moss_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:moss_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_cobblestone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_cobblestone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_cobblestone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_cobblestone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_stone_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_stone_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_stone_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mossy_stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mourner_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mud": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mud_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mud_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mud_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mud_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:muddy_mangrove_roots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mule_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mushroom_stem": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mushroom_stew": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_11": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_13": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_5": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_blocks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_cat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_chirp": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_creator": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_creator_music_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_far": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_lava_chicken": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_mall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_mellohi": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_otherside": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_pigstep": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_precipice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_relic": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_stal": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_strad": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_tears": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_wait": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:music_disc_ward": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mutton": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:mycelium": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:name_tag": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nautilus_shell": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nautilus_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_brick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_brick_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_gold_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_quartz_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_sprouts": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_star": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_wart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:nether_wart_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_boots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_chestplate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_horse_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_ingot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_leggings": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_nautilus_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_scrap": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:netherite_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherite_upgrade_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:netherrack": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:note_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:observer": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:obsidian": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ocelot_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ochre_froglight": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ominous_bottle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ominous_trial_key": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:open_eyeblossom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_tulip": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:orange_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxeye_daisy": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:oxidized_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:packed_ice": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:packed_mud": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:painting": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_hanging_moss": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_moss_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_moss_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pale_oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:panda_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:paper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:parched_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:parrot_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pearlescent_froglight": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:peony": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:petrified_oak_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:phantom_membrane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:phantom_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pig_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:piglin_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:piglin_brute_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:piglin_head": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:piglin_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pillager_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_petals": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_tulip": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pink_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:piston": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pitcher_plant": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pitcher_pod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:player_head": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:plenty_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:podzol": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pointed_dripstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:poisonous_potato": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polar_bear_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_andesite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_andesite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_andesite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_basalt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_blackstone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_deepslate_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_deepslate_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_deepslate_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_diorite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_diorite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_diorite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_granite": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_granite_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_granite_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_tuff": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_tuff_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_tuff_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:polished_tuff_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:popped_chorus_fruit": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:poppy": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:porkchop": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:potato": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:potion": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:powder_snow_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:powered_rail": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_crystals": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_shard": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prismarine_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:prize_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pufferfish": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pufferfish_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pufferfish_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pumpkin": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pumpkin_pie": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:pumpkin_seeds": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purple_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purpur_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purpur_pillar": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purpur_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:purpur_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz_pillar": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:quartz_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rabbit": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rabbit_foot": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rabbit_hide": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rabbit_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rabbit_stew": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rail": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raiser_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ravager_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_copper_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_gold": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_gold_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_iron": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:raw_iron_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:recovery_compass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_mushroom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_mushroom_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_nether_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_nether_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_nether_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_nether_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_sand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_sandstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_sandstone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_tulip": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:red_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:redstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:redstone_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:redstone_lamp": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:redstone_ore": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:redstone_torch": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:reinforced_deepslate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:repeater": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:repeating_command_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_brick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:resin_clump": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:respawn_anchor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rib_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rooted_dirt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rose_bush": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:rotten_flesh": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:saddle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:salmon": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:salmon_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:salmon_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sandstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sandstone_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:scaffolding": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:scrape_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sculk": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sculk_catalyst": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sculk_sensor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sculk_shrieker": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sculk_vein": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sea_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sea_pickle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:seagrass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sentry_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shaper_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sheaf_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shears": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sheep_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shelter_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shield": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:short_dry_grass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:short_grass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shroomlight": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shulker_shell": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:shulker_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:silence_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:silverfish_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:skeleton_horse_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:skeleton_skull": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:skeleton_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:skull_banner_pattern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:skull_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:slime_ball": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:slime_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:slime_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:small_amethyst_bud": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:small_dripleaf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smithing_table": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smoker": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_basalt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_quartz": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_quartz_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_quartz_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_red_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_red_sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_red_sandstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_sandstone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_sandstone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_sandstone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_stone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:smooth_stone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sniffer_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sniffer_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snort_pottery_sherd": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snout_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snow_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snow_golem_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:snowball": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:soul_campfire": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:soul_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:soul_sand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:soul_soil": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:soul_torch": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spawner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spectral_arrow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spider_eye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spider_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spire_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:splash_potion": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sponge": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spore_blossom": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_chest_boat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_leaves": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_sapling": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spruce_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:spyglass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:squid_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sticky_piston": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear.attack",
+        "hit_sound": "minecraft:item.spear.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:stone_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stone_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stonecutter": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stray_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:strider_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:string": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_acacia_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_acacia_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_bamboo_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_birch_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_birch_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_cherry_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_cherry_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_crimson_hyphae": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_crimson_stem": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_dark_oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_dark_oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_jungle_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_jungle_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_mangrove_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_mangrove_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_pale_oak_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_pale_oak_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_spruce_log": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_spruce_wood": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_warped_hyphae": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:stripped_warped_stem": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:structure_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:structure_void": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sugar": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sugar_cane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sunflower": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:suspicious_gravel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:suspicious_sand": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:suspicious_stew": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:sweet_berries": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tadpole_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tadpole_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tall_dry_grass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tall_grass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:target": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:test_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:test_instance_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tide_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tinted_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tipped_arrow": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tnt": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tnt_minecart": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:torch": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:torchflower": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:torchflower_seeds": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:totem_of_undying": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:trader_llama_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:trapped_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:trial_key": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:trial_spawner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:trident": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tripwire_hook": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tropical_fish": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tropical_fish_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tropical_fish_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tube_coral": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tube_coral_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tube_coral_fan": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_brick_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_brick_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_brick_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_bricks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:tuff_wall": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:turtle_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:turtle_helmet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:turtle_scute": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:turtle_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:twisting_vines": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:vault": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:verdant_froglight": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:vex_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:vex_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:villager_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:vindicator_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:vine": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wandering_trader_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:ward_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warden_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_button": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_fence": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_fence_gate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_fungus": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_fungus_on_a_stick": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_hanging_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_hyphae": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_nylium": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_planks": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_pressure_plate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_roots": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_shelf": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_sign": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_stem": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:warped_wart_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:water_bucket": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_block": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_exposed_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_oxidized_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:waxed_weathered_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wayfinder_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_chiseled_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_bars": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_bulb": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_chain": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_chest": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_door": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_golem_statue": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_grate": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_lantern": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_copper_trapdoor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_cut_copper": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_cut_copper_slab": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_cut_copper_stairs": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weathered_lightning_rod": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:weeping_vines": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wet_sponge": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wheat": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wheat_seeds": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_tulip": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:white_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wild_armor_trim_smithing_template": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wildflowers": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wind_charge": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:witch_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wither_rose": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wither_skeleton_skull": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wither_skeleton_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wither_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wolf_armor": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wolf_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wooden_axe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wooden_hoe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wooden_pickaxe": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wooden_shovel": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:wooden_spear": {
+      "piercing_weapon": {
+        "sound": "minecraft:item.spear_wood.attack",
+        "hit_sound": "minecraft:item.spear_wood.hit"
+      },
+      "minimum_attack_charge": 1.0
+    },
+    "minecraft:wooden_sword": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:writable_book": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:written_book": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_banner": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_bed": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_bundle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_candle": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_carpet": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_concrete": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_concrete_powder": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_dye": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_glazed_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_harness": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_shulker_box": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_stained_glass": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_stained_glass_pane": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_terracotta": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:yellow_wool": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zoglin_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombie_head": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombie_horse_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombie_nautilus_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombie_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombie_villager_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    },
+    "minecraft:zombified_piglin_spawn_egg": {
+      "piercing_weapon": null,
+      "minimum_attack_charge": null
+    }
+  }
+}

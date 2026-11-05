@@ -42,7 +42,7 @@ public class PublishedVersionNameTests
         ("1.21", 767), ("1.21.1", 767), ("1.21.2", 768), ("1.21.3", 768), ("1.21.4", 769),
         ("1.21.5", 770), ("1.21.6", 771), ("1.21.7", 772), ("1.21.8", 772),
         ("1.21.9", 773), ("1.21.10", 773), ("1.21.11", 774),
-        ("26.1", 775), ("26.2", 776), ("26.3", 777),
+        ("26.1", 775), ("26.1.1", 775), ("26.1.2", 775), ("26.2", 776), ("26.3", 777),
     ];
 
     [Theory]
@@ -86,5 +86,11 @@ public class PublishedVersionNameTests
         Assert.True(JavaVersions.TryGetByName("1.10", out JavaVersion v110));
         Assert.True(JavaVersions.TryGetByName("1.10.2", out JavaVersion v1102));
         Assert.Same(v110, v1102);
+
+        Assert.True(JavaVersions.TryGetByName("26.1", out JavaVersion v261));
+        Assert.True(JavaVersions.TryGetByName("26.1.1", out JavaVersion v2611));
+        Assert.True(JavaVersions.TryGetByName("26.1.2", out JavaVersion v2612));
+        Assert.Same(v261, v2611);
+        Assert.Same(v261, v2612);
     }
 }

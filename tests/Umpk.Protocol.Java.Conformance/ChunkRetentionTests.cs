@@ -26,13 +26,16 @@ public sealed class ChunkRetentionTests
     }
 
     /// <summary>The same question asked of a real frame: rebuild the model, drop the only strong reference, and it goes away while the packet it came from is still alive.</summary>
-    [Fact]
-    public async Task ARebuiltModel_DiesWhileItsPacketLives()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ARebuiltModel_DiesWhileItsPacketLives(bool promoteBeforeReleasing)
     {
         ClientboundLevelChunkPacket packet = await FirstModernChunkAsync();
 
-        WeakReference model = BuildAndForget(packet);
-        GC.Collect(0, GCCollectionMode.Forced, blocking: true);
+        WeakReference model = BuildAndForget(packet, promoteBeforeReleasing);
+        // Decoding or parallel tests can promote the model before its last strong reference is released.
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
         GC.WaitForPendingFinalizers();
 
         Assert.False(model.IsAlive, "the decoded packet still reaches a structural chunk body.");
@@ -41,8 +44,16 @@ public sealed class ChunkRetentionTests
 
     // Separated so the rebuilt body has no live local slot left in the caller's frame when the collect runs.
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static WeakReference BuildAndForget(ClientboundLevelChunkPacket packet) =>
-        new(ChunkCodecs.DecodeStructure(packet));
+    private static WeakReference BuildAndForget(ClientboundLevelChunkPacket packet, bool promoteBeforeReleasing)
+    {
+        ChunkWireBody body = ChunkCodecs.DecodeStructure(packet);
+        if (promoteBeforeReleasing)
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            Assert.True(GC.GetGeneration(body) > 0);
+        }
+        return new WeakReference(body);
+    }
 
     private static async Task<ClientboundLevelChunkPacket> FirstModernChunkAsync()
     {

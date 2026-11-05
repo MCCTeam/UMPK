@@ -1,0 +1,1962 @@
+{
+  "schema": 1,
+  "identity": "legacy",
+  "state_count": 254,
+  "measured_state_count": 1674,
+  "blocks": {
+    "acacia_door": 2,
+    "acacia_fence": 2,
+    "acacia_fence_gate": 2,
+    "acacia_stairs": 2,
+    "activator_rail": 3,
+    "air": 1,
+    "anvil": 2,
+    "barrier": 3,
+    "beacon": 2,
+    "bed": 2,
+    "bedrock": 3,
+    "beetroots": 3,
+    "birch_door": 2,
+    "birch_fence": 2,
+    "birch_fence_gate": 2,
+    "birch_stairs": 2,
+    "black_glazed_terracotta": 3,
+    "black_shulker_box": 2,
+    "blue_glazed_terracotta": 3,
+    "blue_shulker_box": 2,
+    "bone_block": 3,
+    "bookshelf": 3,
+    "brewing_stand": 2,
+    "brick_block": 3,
+    "brick_stairs": 2,
+    "brown_glazed_terracotta": 3,
+    "brown_mushroom": 3,
+    "brown_mushroom_block": 3,
+    "brown_shulker_box": 2,
+    "cactus": 3,
+    "cake": 2,
+    "carpet": 3,
+    "carrots": 3,
+    "cauldron": 2,
+    "chain_command_block": 2,
+    "chest": 2,
+    "chorus_flower": 3,
+    "chorus_plant": 3,
+    "clay": 3,
+    "coal_block": 3,
+    "coal_ore": 3,
+    "cobblestone": 3,
+    "cobblestone_wall": 3,
+    "cocoa": 3,
+    "command_block": 2,
+    "concrete": 3,
+    "concrete_powder": 3,
+    "crafting_table": 2,
+    "cyan_glazed_terracotta": 3,
+    "cyan_shulker_box": 2,
+    "dark_oak_door": 2,
+    "dark_oak_fence": 2,
+    "dark_oak_fence_gate": 2,
+    "dark_oak_stairs": 2,
+    "daylight_detector": 2,
+    "daylight_detector_inverted": 2,
+    "deadbush": 1,
+    "detector_rail": 3,
+    "diamond_block": 3,
+    "diamond_ore": 3,
+    "dirt": 3,
+    "dispenser": 2,
+    "double_plant": 1,
+    "double_stone_slab": 3,
+    "double_stone_slab2": 3,
+    "double_wooden_slab": 3,
+    "dragon_egg": 2,
+    "dropper": 2,
+    "emerald_block": 3,
+    "emerald_ore": 3,
+    "enchanting_table": 2,
+    "end_bricks": 3,
+    "end_gateway": 3,
+    "end_portal": 3,
+    "end_portal_frame": 3,
+    "end_rod": 3,
+    "end_stone": 3,
+    "ender_chest": 2,
+    "farmland": 3,
+    "fence": 2,
+    "fence_gate": 2,
+    "fire": 3,
+    "flower_pot": 2,
+    "flowing_lava": 3,
+    "flowing_water": 3,
+    "frosted_ice": 3,
+    "furnace": 2,
+    "glass": 3,
+    "glass_pane": 3,
+    "glowstone": 3,
+    "gold_block": 3,
+    "gold_ore": 3,
+    "golden_rail": 3,
+    "grass": 3,
+    "grass_path": 3,
+    "gravel": 3,
+    "gray_glazed_terracotta": 3,
+    "gray_shulker_box": 2,
+    "green_glazed_terracotta": 3,
+    "green_shulker_box": 2,
+    "hardened_clay": 3,
+    "hay_block": 3,
+    "heavy_weighted_pressure_plate": 3,
+    "hopper": 2,
+    "ice": 3,
+    "iron_bars": 3,
+    "iron_block": 3,
+    "iron_door": 2,
+    "iron_ore": 3,
+    "iron_trapdoor": 2,
+    "jukebox": 2,
+    "jungle_door": 2,
+    "jungle_fence": 2,
+    "jungle_fence_gate": 2,
+    "jungle_stairs": 2,
+    "ladder": 3,
+    "lapis_block": 3,
+    "lapis_ore": 3,
+    "lava": 3,
+    "leaves": 3,
+    "leaves2": 3,
+    "lever": 2,
+    "light_blue_glazed_terracotta": 3,
+    "light_blue_shulker_box": 2,
+    "light_weighted_pressure_plate": 3,
+    "lime_glazed_terracotta": 3,
+    "lime_shulker_box": 2,
+    "lit_furnace": 2,
+    "lit_pumpkin": 3,
+    "lit_redstone_lamp": 3,
+    "lit_redstone_ore": 2,
+    "log": 3,
+    "log2": 3,
+    "magenta_glazed_terracotta": 3,
+    "magenta_shulker_box": 2,
+    "magma": 3,
+    "melon_block": 3,
+    "melon_stem": 3,
+    "mob_spawner": 3,
+    "monster_egg": 3,
+    "mossy_cobblestone": 3,
+    "mycelium": 3,
+    "nether_brick": 3,
+    "nether_brick_fence": 2,
+    "nether_brick_stairs": 2,
+    "nether_wart": 3,
+    "nether_wart_block": 3,
+    "netherrack": 3,
+    "noteblock": 2,
+    "oak_stairs": 2,
+    "observer": 3,
+    "obsidian": 3,
+    "orange_glazed_terracotta": 3,
+    "orange_shulker_box": 2,
+    "packed_ice": 3,
+    "pink_glazed_terracotta": 3,
+    "pink_shulker_box": 2,
+    "piston": 3,
+    "piston_extension": 2,
+    "piston_head": 3,
+    "planks": 3,
+    "portal": 3,
+    "potatoes": 3,
+    "powered_comparator": 2,
+    "powered_repeater": 2,
+    "prismarine": 3,
+    "pumpkin": 3,
+    "pumpkin_stem": 3,
+    "purple_glazed_terracotta": 3,
+    "purple_shulker_box": 2,
+    "purpur_block": 3,
+    "purpur_double_slab": 3,
+    "purpur_pillar": 3,
+    "purpur_slab": 3,
+    "purpur_stairs": 2,
+    "quartz_block": 3,
+    "quartz_ore": 3,
+    "quartz_stairs": 2,
+    "rail": 3,
+    "red_flower": 3,
+    "red_glazed_terracotta": 3,
+    "red_mushroom": 3,
+    "red_mushroom_block": 3,
+    "red_nether_brick": 3,
+    "red_sandstone": 3,
+    "red_sandstone_stairs": 2,
+    "red_shulker_box": 2,
+    "redstone_block": 3,
+    "redstone_lamp": 3,
+    "redstone_ore": 2,
+    "redstone_torch": 3,
+    "redstone_wire": 3,
+    "reeds": 3,
+    "repeating_command_block": 2,
+    "sand": 3,
+    "sandstone": 3,
+    "sandstone_stairs": 2,
+    "sapling": 3,
+    "sea_lantern": 3,
+    "silver_glazed_terracotta": 3,
+    "silver_shulker_box": 2,
+    "skull": 3,
+    "slime": 3,
+    "snow": 3,
+    "snow_layer": 1,
+    "soul_sand": 3,
+    "sponge": 3,
+    "spruce_door": 2,
+    "spruce_fence": 2,
+    "spruce_fence_gate": 2,
+    "spruce_stairs": 2,
+    "stained_glass": 3,
+    "stained_glass_pane": 3,
+    "stained_hardened_clay": 3,
+    "standing_banner": 3,
+    "standing_sign": 2,
+    "sticky_piston": 3,
+    "stone": 3,
+    "stone_brick_stairs": 2,
+    "stone_button": 2,
+    "stone_pressure_plate": 3,
+    "stone_slab": 3,
+    "stone_slab2": 3,
+    "stone_stairs": 2,
+    "stonebrick": 3,
+    "structure_block": 2,
+    "structure_void": 3,
+    "tallgrass": 1,
+    "tnt": 2,
+    "torch": 3,
+    "trapdoor": 2,
+    "trapped_chest": 2,
+    "tripwire": 3,
+    "tripwire_hook": 3,
+    "unlit_redstone_torch": 3,
+    "unpowered_comparator": 2,
+    "unpowered_repeater": 2,
+    "vine": 1,
+    "wall_banner": 3,
+    "wall_sign": 2,
+    "water": 3,
+    "waterlily": 3,
+    "web": 3,
+    "wheat": 3,
+    "white_glazed_terracotta": 3,
+    "white_shulker_box": 2,
+    "wooden_button": 2,
+    "wooden_door": 2,
+    "wooden_pressure_plate": 3,
+    "wooden_slab": 3,
+    "wool": 3,
+    "yellow_flower": 3,
+    "yellow_glazed_terracotta": 3,
+    "yellow_shulker_box": 2
+  },
+  "items": {
+    "acacia_boat": [
+      "pass",
+      ""
+    ],
+    "acacia_door": [
+      "unknown",
+      ""
+    ],
+    "acacia_fence": [
+      "unknown",
+      "acacia_fence"
+    ],
+    "acacia_fence_gate": [
+      "unknown",
+      "acacia_fence_gate"
+    ],
+    "acacia_stairs": [
+      "unknown",
+      "acacia_stairs"
+    ],
+    "activator_rail": [
+      "unknown",
+      "activator_rail"
+    ],
+    "air": [
+      "pass",
+      ""
+    ],
+    "anvil": [
+      "unknown",
+      "anvil"
+    ],
+    "apple": [
+      "pass",
+      ""
+    ],
+    "armor_stand": [
+      "unknown",
+      ""
+    ],
+    "arrow": [
+      "pass",
+      ""
+    ],
+    "baked_potato": [
+      "pass",
+      ""
+    ],
+    "banner": [
+      "unknown",
+      "standing_banner"
+    ],
+    "barrier": [
+      "simple_cube",
+      "barrier"
+    ],
+    "beacon": [
+      "simple_cube",
+      "beacon"
+    ],
+    "bed": [
+      "unknown",
+      ""
+    ],
+    "bedrock": [
+      "simple_cube",
+      "bedrock"
+    ],
+    "beef": [
+      "pass",
+      ""
+    ],
+    "beetroot": [
+      "pass",
+      ""
+    ],
+    "beetroot_seeds": [
+      "unknown",
+      ""
+    ],
+    "beetroot_soup": [
+      "pass",
+      ""
+    ],
+    "birch_boat": [
+      "pass",
+      ""
+    ],
+    "birch_door": [
+      "unknown",
+      ""
+    ],
+    "birch_fence": [
+      "unknown",
+      "birch_fence"
+    ],
+    "birch_fence_gate": [
+      "unknown",
+      "birch_fence_gate"
+    ],
+    "birch_stairs": [
+      "unknown",
+      "birch_stairs"
+    ],
+    "black_glazed_terracotta": [
+      "unknown",
+      "black_glazed_terracotta"
+    ],
+    "black_shulker_box": [
+      "unknown",
+      "black_shulker_box"
+    ],
+    "blaze_powder": [
+      "pass",
+      ""
+    ],
+    "blaze_rod": [
+      "pass",
+      ""
+    ],
+    "blue_glazed_terracotta": [
+      "unknown",
+      "blue_glazed_terracotta"
+    ],
+    "blue_shulker_box": [
+      "unknown",
+      "blue_shulker_box"
+    ],
+    "boat": [
+      "pass",
+      ""
+    ],
+    "bone": [
+      "pass",
+      ""
+    ],
+    "bone_block": [
+      "unknown",
+      "bone_block"
+    ],
+    "book": [
+      "pass",
+      ""
+    ],
+    "bookshelf": [
+      "simple_cube",
+      "bookshelf"
+    ],
+    "bow": [
+      "pass",
+      ""
+    ],
+    "bowl": [
+      "pass",
+      ""
+    ],
+    "bread": [
+      "pass",
+      ""
+    ],
+    "brewing_stand": [
+      "unknown",
+      ""
+    ],
+    "brick": [
+      "pass",
+      ""
+    ],
+    "brick_block": [
+      "simple_cube",
+      "brick_block"
+    ],
+    "brick_stairs": [
+      "unknown",
+      "brick_stairs"
+    ],
+    "brown_glazed_terracotta": [
+      "unknown",
+      "brown_glazed_terracotta"
+    ],
+    "brown_mushroom": [
+      "unknown",
+      "brown_mushroom"
+    ],
+    "brown_mushroom_block": [
+      "unknown",
+      "brown_mushroom_block"
+    ],
+    "brown_shulker_box": [
+      "unknown",
+      "brown_shulker_box"
+    ],
+    "bucket": [
+      "pass",
+      ""
+    ],
+    "cactus": [
+      "unknown",
+      "cactus"
+    ],
+    "cake": [
+      "unknown",
+      ""
+    ],
+    "carpet": [
+      "unknown",
+      "carpet"
+    ],
+    "carrot": [
+      "unknown",
+      ""
+    ],
+    "carrot_on_a_stick": [
+      "pass",
+      ""
+    ],
+    "cauldron": [
+      "unknown",
+      ""
+    ],
+    "chain_command_block": [
+      "unknown",
+      "chain_command_block"
+    ],
+    "chainmail_boots": [
+      "pass",
+      ""
+    ],
+    "chainmail_chestplate": [
+      "pass",
+      ""
+    ],
+    "chainmail_helmet": [
+      "pass",
+      ""
+    ],
+    "chainmail_leggings": [
+      "pass",
+      ""
+    ],
+    "chest": [
+      "unknown",
+      "chest"
+    ],
+    "chest_minecart": [
+      "unknown",
+      ""
+    ],
+    "chicken": [
+      "pass",
+      ""
+    ],
+    "chorus_flower": [
+      "unknown",
+      "chorus_flower"
+    ],
+    "chorus_fruit": [
+      "pass",
+      ""
+    ],
+    "chorus_fruit_popped": [
+      "pass",
+      ""
+    ],
+    "chorus_plant": [
+      "unknown",
+      "chorus_plant"
+    ],
+    "clay": [
+      "simple_cube",
+      "clay"
+    ],
+    "clay_ball": [
+      "pass",
+      ""
+    ],
+    "clock": [
+      "pass",
+      ""
+    ],
+    "coal": [
+      "pass",
+      ""
+    ],
+    "coal_block": [
+      "simple_cube",
+      "coal_block"
+    ],
+    "coal_ore": [
+      "simple_cube",
+      "coal_ore"
+    ],
+    "cobblestone": [
+      "simple_cube",
+      "cobblestone"
+    ],
+    "cobblestone_wall": [
+      "unknown",
+      "cobblestone_wall"
+    ],
+    "command_block": [
+      "unknown",
+      "command_block"
+    ],
+    "command_block_minecart": [
+      "unknown",
+      ""
+    ],
+    "comparator": [
+      "unknown",
+      ""
+    ],
+    "compass": [
+      "pass",
+      ""
+    ],
+    "concrete": [
+      "simple_cube",
+      "concrete"
+    ],
+    "concrete_powder": [
+      "simple_cube",
+      "concrete_powder"
+    ],
+    "cooked_beef": [
+      "pass",
+      ""
+    ],
+    "cooked_chicken": [
+      "pass",
+      ""
+    ],
+    "cooked_fish": [
+      "pass",
+      ""
+    ],
+    "cooked_mutton": [
+      "pass",
+      ""
+    ],
+    "cooked_porkchop": [
+      "pass",
+      ""
+    ],
+    "cooked_rabbit": [
+      "pass",
+      ""
+    ],
+    "cookie": [
+      "pass",
+      ""
+    ],
+    "crafting_table": [
+      "simple_cube",
+      "crafting_table"
+    ],
+    "cyan_glazed_terracotta": [
+      "unknown",
+      "cyan_glazed_terracotta"
+    ],
+    "cyan_shulker_box": [
+      "unknown",
+      "cyan_shulker_box"
+    ],
+    "dark_oak_boat": [
+      "pass",
+      ""
+    ],
+    "dark_oak_door": [
+      "unknown",
+      ""
+    ],
+    "dark_oak_fence": [
+      "unknown",
+      "dark_oak_fence"
+    ],
+    "dark_oak_fence_gate": [
+      "unknown",
+      "dark_oak_fence_gate"
+    ],
+    "dark_oak_stairs": [
+      "unknown",
+      "dark_oak_stairs"
+    ],
+    "daylight_detector": [
+      "unknown",
+      "daylight_detector"
+    ],
+    "deadbush": [
+      "unknown",
+      "deadbush"
+    ],
+    "detector_rail": [
+      "unknown",
+      "detector_rail"
+    ],
+    "diamond": [
+      "pass",
+      ""
+    ],
+    "diamond_axe": [
+      "pass",
+      ""
+    ],
+    "diamond_block": [
+      "simple_cube",
+      "diamond_block"
+    ],
+    "diamond_boots": [
+      "pass",
+      ""
+    ],
+    "diamond_chestplate": [
+      "pass",
+      ""
+    ],
+    "diamond_helmet": [
+      "pass",
+      ""
+    ],
+    "diamond_hoe": [
+      "unknown",
+      ""
+    ],
+    "diamond_horse_armor": [
+      "pass",
+      ""
+    ],
+    "diamond_leggings": [
+      "pass",
+      ""
+    ],
+    "diamond_ore": [
+      "simple_cube",
+      "diamond_ore"
+    ],
+    "diamond_pickaxe": [
+      "pass",
+      ""
+    ],
+    "diamond_shovel": [
+      "unknown",
+      ""
+    ],
+    "diamond_sword": [
+      "pass",
+      ""
+    ],
+    "dirt": [
+      "simple_cube",
+      "dirt"
+    ],
+    "dispenser": [
+      "unknown",
+      "dispenser"
+    ],
+    "double_plant": [
+      "unknown",
+      "double_plant"
+    ],
+    "dragon_breath": [
+      "pass",
+      ""
+    ],
+    "dragon_egg": [
+      "unknown",
+      "dragon_egg"
+    ],
+    "dropper": [
+      "unknown",
+      "dropper"
+    ],
+    "dye": [
+      "unknown",
+      ""
+    ],
+    "egg": [
+      "pass",
+      ""
+    ],
+    "elytra": [
+      "pass",
+      ""
+    ],
+    "emerald": [
+      "pass",
+      ""
+    ],
+    "emerald_block": [
+      "simple_cube",
+      "emerald_block"
+    ],
+    "emerald_ore": [
+      "simple_cube",
+      "emerald_ore"
+    ],
+    "enchanted_book": [
+      "pass",
+      ""
+    ],
+    "enchanting_table": [
+      "unknown",
+      "enchanting_table"
+    ],
+    "end_bricks": [
+      "simple_cube",
+      "end_bricks"
+    ],
+    "end_crystal": [
+      "unknown",
+      ""
+    ],
+    "end_portal_frame": [
+      "unknown",
+      "end_portal_frame"
+    ],
+    "end_rod": [
+      "unknown",
+      "end_rod"
+    ],
+    "end_stone": [
+      "simple_cube",
+      "end_stone"
+    ],
+    "ender_chest": [
+      "unknown",
+      "ender_chest"
+    ],
+    "ender_eye": [
+      "unknown",
+      ""
+    ],
+    "ender_pearl": [
+      "pass",
+      ""
+    ],
+    "experience_bottle": [
+      "pass",
+      ""
+    ],
+    "farmland": [
+      "unknown",
+      "farmland"
+    ],
+    "feather": [
+      "pass",
+      ""
+    ],
+    "fence": [
+      "unknown",
+      "fence"
+    ],
+    "fence_gate": [
+      "unknown",
+      "fence_gate"
+    ],
+    "fermented_spider_eye": [
+      "pass",
+      ""
+    ],
+    "filled_map": [
+      "pass",
+      ""
+    ],
+    "fire_charge": [
+      "unknown",
+      ""
+    ],
+    "firework_charge": [
+      "pass",
+      ""
+    ],
+    "fireworks": [
+      "unknown",
+      ""
+    ],
+    "fish": [
+      "pass",
+      ""
+    ],
+    "fishing_rod": [
+      "pass",
+      ""
+    ],
+    "flint": [
+      "pass",
+      ""
+    ],
+    "flint_and_steel": [
+      "unknown",
+      ""
+    ],
+    "flower_pot": [
+      "unknown",
+      ""
+    ],
+    "furnace": [
+      "unknown",
+      "furnace"
+    ],
+    "furnace_minecart": [
+      "unknown",
+      ""
+    ],
+    "ghast_tear": [
+      "pass",
+      ""
+    ],
+    "glass": [
+      "simple_cube",
+      "glass"
+    ],
+    "glass_bottle": [
+      "pass",
+      ""
+    ],
+    "glass_pane": [
+      "unknown",
+      "glass_pane"
+    ],
+    "glowstone": [
+      "simple_cube",
+      "glowstone"
+    ],
+    "glowstone_dust": [
+      "pass",
+      ""
+    ],
+    "gold_block": [
+      "simple_cube",
+      "gold_block"
+    ],
+    "gold_ingot": [
+      "pass",
+      ""
+    ],
+    "gold_nugget": [
+      "pass",
+      ""
+    ],
+    "gold_ore": [
+      "simple_cube",
+      "gold_ore"
+    ],
+    "golden_apple": [
+      "pass",
+      ""
+    ],
+    "golden_axe": [
+      "pass",
+      ""
+    ],
+    "golden_boots": [
+      "pass",
+      ""
+    ],
+    "golden_carrot": [
+      "pass",
+      ""
+    ],
+    "golden_chestplate": [
+      "pass",
+      ""
+    ],
+    "golden_helmet": [
+      "pass",
+      ""
+    ],
+    "golden_hoe": [
+      "unknown",
+      ""
+    ],
+    "golden_horse_armor": [
+      "pass",
+      ""
+    ],
+    "golden_leggings": [
+      "pass",
+      ""
+    ],
+    "golden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "golden_rail": [
+      "unknown",
+      "golden_rail"
+    ],
+    "golden_shovel": [
+      "unknown",
+      ""
+    ],
+    "golden_sword": [
+      "pass",
+      ""
+    ],
+    "grass": [
+      "simple_cube",
+      "grass"
+    ],
+    "grass_path": [
+      "unknown",
+      "grass_path"
+    ],
+    "gravel": [
+      "simple_cube",
+      "gravel"
+    ],
+    "gray_glazed_terracotta": [
+      "unknown",
+      "gray_glazed_terracotta"
+    ],
+    "gray_shulker_box": [
+      "unknown",
+      "gray_shulker_box"
+    ],
+    "green_glazed_terracotta": [
+      "unknown",
+      "green_glazed_terracotta"
+    ],
+    "green_shulker_box": [
+      "unknown",
+      "green_shulker_box"
+    ],
+    "gunpowder": [
+      "pass",
+      ""
+    ],
+    "hardened_clay": [
+      "simple_cube",
+      "hardened_clay"
+    ],
+    "hay_block": [
+      "unknown",
+      "hay_block"
+    ],
+    "heavy_weighted_pressure_plate": [
+      "unknown",
+      "heavy_weighted_pressure_plate"
+    ],
+    "hopper": [
+      "unknown",
+      "hopper"
+    ],
+    "hopper_minecart": [
+      "unknown",
+      ""
+    ],
+    "ice": [
+      "simple_cube",
+      "ice"
+    ],
+    "iron_axe": [
+      "pass",
+      ""
+    ],
+    "iron_bars": [
+      "unknown",
+      "iron_bars"
+    ],
+    "iron_block": [
+      "simple_cube",
+      "iron_block"
+    ],
+    "iron_boots": [
+      "pass",
+      ""
+    ],
+    "iron_chestplate": [
+      "pass",
+      ""
+    ],
+    "iron_door": [
+      "unknown",
+      ""
+    ],
+    "iron_helmet": [
+      "pass",
+      ""
+    ],
+    "iron_hoe": [
+      "unknown",
+      ""
+    ],
+    "iron_horse_armor": [
+      "pass",
+      ""
+    ],
+    "iron_ingot": [
+      "pass",
+      ""
+    ],
+    "iron_leggings": [
+      "pass",
+      ""
+    ],
+    "iron_nugget": [
+      "pass",
+      ""
+    ],
+    "iron_ore": [
+      "simple_cube",
+      "iron_ore"
+    ],
+    "iron_pickaxe": [
+      "pass",
+      ""
+    ],
+    "iron_shovel": [
+      "unknown",
+      ""
+    ],
+    "iron_sword": [
+      "pass",
+      ""
+    ],
+    "iron_trapdoor": [
+      "unknown",
+      "iron_trapdoor"
+    ],
+    "item_frame": [
+      "unknown",
+      ""
+    ],
+    "jukebox": [
+      "simple_cube",
+      "jukebox"
+    ],
+    "jungle_boat": [
+      "pass",
+      ""
+    ],
+    "jungle_door": [
+      "unknown",
+      ""
+    ],
+    "jungle_fence": [
+      "unknown",
+      "jungle_fence"
+    ],
+    "jungle_fence_gate": [
+      "unknown",
+      "jungle_fence_gate"
+    ],
+    "jungle_stairs": [
+      "unknown",
+      "jungle_stairs"
+    ],
+    "knowledge_book": [
+      "pass",
+      ""
+    ],
+    "ladder": [
+      "unknown",
+      "ladder"
+    ],
+    "lapis_block": [
+      "simple_cube",
+      "lapis_block"
+    ],
+    "lapis_ore": [
+      "simple_cube",
+      "lapis_ore"
+    ],
+    "lava_bucket": [
+      "pass",
+      ""
+    ],
+    "lead": [
+      "unknown",
+      ""
+    ],
+    "leather": [
+      "pass",
+      ""
+    ],
+    "leather_boots": [
+      "pass",
+      ""
+    ],
+    "leather_chestplate": [
+      "pass",
+      ""
+    ],
+    "leather_helmet": [
+      "pass",
+      ""
+    ],
+    "leather_leggings": [
+      "pass",
+      ""
+    ],
+    "leaves": [
+      "simple_cube",
+      "leaves"
+    ],
+    "leaves2": [
+      "simple_cube",
+      "leaves2"
+    ],
+    "lever": [
+      "unknown",
+      "lever"
+    ],
+    "light_blue_glazed_terracotta": [
+      "unknown",
+      "light_blue_glazed_terracotta"
+    ],
+    "light_blue_shulker_box": [
+      "unknown",
+      "light_blue_shulker_box"
+    ],
+    "light_weighted_pressure_plate": [
+      "unknown",
+      "light_weighted_pressure_plate"
+    ],
+    "lime_glazed_terracotta": [
+      "unknown",
+      "lime_glazed_terracotta"
+    ],
+    "lime_shulker_box": [
+      "unknown",
+      "lime_shulker_box"
+    ],
+    "lingering_potion": [
+      "pass",
+      ""
+    ],
+    "lit_pumpkin": [
+      "unknown",
+      "lit_pumpkin"
+    ],
+    "log": [
+      "unknown",
+      "log"
+    ],
+    "log2": [
+      "unknown",
+      "log2"
+    ],
+    "magenta_glazed_terracotta": [
+      "unknown",
+      "magenta_glazed_terracotta"
+    ],
+    "magenta_shulker_box": [
+      "unknown",
+      "magenta_shulker_box"
+    ],
+    "magma": [
+      "simple_cube",
+      "magma"
+    ],
+    "magma_cream": [
+      "pass",
+      ""
+    ],
+    "map": [
+      "pass",
+      ""
+    ],
+    "melon": [
+      "pass",
+      ""
+    ],
+    "melon_block": [
+      "simple_cube",
+      "melon_block"
+    ],
+    "melon_seeds": [
+      "unknown",
+      ""
+    ],
+    "milk_bucket": [
+      "pass",
+      ""
+    ],
+    "minecart": [
+      "unknown",
+      ""
+    ],
+    "mob_spawner": [
+      "simple_cube",
+      "mob_spawner"
+    ],
+    "monster_egg": [
+      "simple_cube",
+      "monster_egg"
+    ],
+    "mossy_cobblestone": [
+      "simple_cube",
+      "mossy_cobblestone"
+    ],
+    "mushroom_stew": [
+      "pass",
+      ""
+    ],
+    "mutton": [
+      "pass",
+      ""
+    ],
+    "mycelium": [
+      "simple_cube",
+      "mycelium"
+    ],
+    "name_tag": [
+      "pass",
+      ""
+    ],
+    "nether_brick": [
+      "simple_cube",
+      "nether_brick"
+    ],
+    "nether_brick_fence": [
+      "unknown",
+      "nether_brick_fence"
+    ],
+    "nether_brick_stairs": [
+      "unknown",
+      "nether_brick_stairs"
+    ],
+    "nether_star": [
+      "pass",
+      ""
+    ],
+    "nether_wart": [
+      "unknown",
+      ""
+    ],
+    "nether_wart_block": [
+      "simple_cube",
+      "nether_wart_block"
+    ],
+    "netherbrick": [
+      "pass",
+      ""
+    ],
+    "netherrack": [
+      "simple_cube",
+      "netherrack"
+    ],
+    "noteblock": [
+      "simple_cube",
+      "noteblock"
+    ],
+    "oak_stairs": [
+      "unknown",
+      "oak_stairs"
+    ],
+    "observer": [
+      "unknown",
+      "observer"
+    ],
+    "obsidian": [
+      "simple_cube",
+      "obsidian"
+    ],
+    "orange_glazed_terracotta": [
+      "unknown",
+      "orange_glazed_terracotta"
+    ],
+    "orange_shulker_box": [
+      "unknown",
+      "orange_shulker_box"
+    ],
+    "packed_ice": [
+      "simple_cube",
+      "packed_ice"
+    ],
+    "painting": [
+      "unknown",
+      ""
+    ],
+    "paper": [
+      "pass",
+      ""
+    ],
+    "pink_glazed_terracotta": [
+      "unknown",
+      "pink_glazed_terracotta"
+    ],
+    "pink_shulker_box": [
+      "unknown",
+      "pink_shulker_box"
+    ],
+    "piston": [
+      "unknown",
+      "piston"
+    ],
+    "planks": [
+      "simple_cube",
+      "planks"
+    ],
+    "poisonous_potato": [
+      "pass",
+      ""
+    ],
+    "porkchop": [
+      "pass",
+      ""
+    ],
+    "potato": [
+      "unknown",
+      ""
+    ],
+    "potion": [
+      "pass",
+      ""
+    ],
+    "prismarine": [
+      "simple_cube",
+      "prismarine"
+    ],
+    "prismarine_crystals": [
+      "pass",
+      ""
+    ],
+    "prismarine_shard": [
+      "pass",
+      ""
+    ],
+    "pumpkin": [
+      "unknown",
+      "pumpkin"
+    ],
+    "pumpkin_pie": [
+      "pass",
+      ""
+    ],
+    "pumpkin_seeds": [
+      "unknown",
+      ""
+    ],
+    "purple_glazed_terracotta": [
+      "unknown",
+      "purple_glazed_terracotta"
+    ],
+    "purple_shulker_box": [
+      "unknown",
+      "purple_shulker_box"
+    ],
+    "purpur_block": [
+      "simple_cube",
+      "purpur_block"
+    ],
+    "purpur_pillar": [
+      "unknown",
+      "purpur_pillar"
+    ],
+    "purpur_slab": [
+      "unknown",
+      "purpur_slab"
+    ],
+    "purpur_stairs": [
+      "unknown",
+      "purpur_stairs"
+    ],
+    "quartz": [
+      "pass",
+      ""
+    ],
+    "quartz_block": [
+      "unknown",
+      "quartz_block"
+    ],
+    "quartz_ore": [
+      "simple_cube",
+      "quartz_ore"
+    ],
+    "quartz_stairs": [
+      "unknown",
+      "quartz_stairs"
+    ],
+    "rabbit": [
+      "pass",
+      ""
+    ],
+    "rabbit_foot": [
+      "pass",
+      ""
+    ],
+    "rabbit_hide": [
+      "pass",
+      ""
+    ],
+    "rabbit_stew": [
+      "pass",
+      ""
+    ],
+    "rail": [
+      "unknown",
+      "rail"
+    ],
+    "record_11": [
+      "unknown",
+      ""
+    ],
+    "record_13": [
+      "unknown",
+      ""
+    ],
+    "record_blocks": [
+      "unknown",
+      ""
+    ],
+    "record_cat": [
+      "unknown",
+      ""
+    ],
+    "record_chirp": [
+      "unknown",
+      ""
+    ],
+    "record_far": [
+      "unknown",
+      ""
+    ],
+    "record_mall": [
+      "unknown",
+      ""
+    ],
+    "record_mellohi": [
+      "unknown",
+      ""
+    ],
+    "record_stal": [
+      "unknown",
+      ""
+    ],
+    "record_strad": [
+      "unknown",
+      ""
+    ],
+    "record_wait": [
+      "unknown",
+      ""
+    ],
+    "record_ward": [
+      "unknown",
+      ""
+    ],
+    "red_flower": [
+      "unknown",
+      "red_flower"
+    ],
+    "red_glazed_terracotta": [
+      "unknown",
+      "red_glazed_terracotta"
+    ],
+    "red_mushroom": [
+      "unknown",
+      "red_mushroom"
+    ],
+    "red_mushroom_block": [
+      "unknown",
+      "red_mushroom_block"
+    ],
+    "red_nether_brick": [
+      "simple_cube",
+      "red_nether_brick"
+    ],
+    "red_sandstone": [
+      "simple_cube",
+      "red_sandstone"
+    ],
+    "red_sandstone_stairs": [
+      "unknown",
+      "red_sandstone_stairs"
+    ],
+    "red_shulker_box": [
+      "unknown",
+      "red_shulker_box"
+    ],
+    "redstone": [
+      "unknown",
+      ""
+    ],
+    "redstone_block": [
+      "simple_cube",
+      "redstone_block"
+    ],
+    "redstone_lamp": [
+      "simple_cube",
+      "redstone_lamp"
+    ],
+    "redstone_ore": [
+      "simple_cube",
+      "redstone_ore"
+    ],
+    "redstone_torch": [
+      "unknown",
+      "redstone_torch"
+    ],
+    "reeds": [
+      "unknown",
+      ""
+    ],
+    "repeater": [
+      "unknown",
+      ""
+    ],
+    "repeating_command_block": [
+      "unknown",
+      "repeating_command_block"
+    ],
+    "rotten_flesh": [
+      "pass",
+      ""
+    ],
+    "saddle": [
+      "pass",
+      ""
+    ],
+    "sand": [
+      "simple_cube",
+      "sand"
+    ],
+    "sandstone": [
+      "simple_cube",
+      "sandstone"
+    ],
+    "sandstone_stairs": [
+      "unknown",
+      "sandstone_stairs"
+    ],
+    "sapling": [
+      "unknown",
+      "sapling"
+    ],
+    "sea_lantern": [
+      "simple_cube",
+      "sea_lantern"
+    ],
+    "shears": [
+      "pass",
+      ""
+    ],
+    "shield": [
+      "pass",
+      ""
+    ],
+    "shulker_shell": [
+      "pass",
+      ""
+    ],
+    "sign": [
+      "unknown",
+      ""
+    ],
+    "silver_glazed_terracotta": [
+      "unknown",
+      "silver_glazed_terracotta"
+    ],
+    "silver_shulker_box": [
+      "unknown",
+      "silver_shulker_box"
+    ],
+    "skull": [
+      "unknown",
+      ""
+    ],
+    "slime": [
+      "simple_cube",
+      "slime"
+    ],
+    "slime_ball": [
+      "pass",
+      ""
+    ],
+    "snow": [
+      "simple_cube",
+      "snow"
+    ],
+    "snow_layer": [
+      "unknown",
+      "snow_layer"
+    ],
+    "snowball": [
+      "pass",
+      ""
+    ],
+    "soul_sand": [
+      "unknown",
+      "soul_sand"
+    ],
+    "spawn_egg": [
+      "unknown",
+      ""
+    ],
+    "speckled_melon": [
+      "pass",
+      ""
+    ],
+    "spectral_arrow": [
+      "pass",
+      ""
+    ],
+    "spider_eye": [
+      "pass",
+      ""
+    ],
+    "splash_potion": [
+      "pass",
+      ""
+    ],
+    "sponge": [
+      "simple_cube",
+      "sponge"
+    ],
+    "spruce_boat": [
+      "pass",
+      ""
+    ],
+    "spruce_door": [
+      "unknown",
+      ""
+    ],
+    "spruce_fence": [
+      "unknown",
+      "spruce_fence"
+    ],
+    "spruce_fence_gate": [
+      "unknown",
+      "spruce_fence_gate"
+    ],
+    "spruce_stairs": [
+      "unknown",
+      "spruce_stairs"
+    ],
+    "stained_glass": [
+      "simple_cube",
+      "stained_glass"
+    ],
+    "stained_glass_pane": [
+      "unknown",
+      "stained_glass_pane"
+    ],
+    "stained_hardened_clay": [
+      "simple_cube",
+      "stained_hardened_clay"
+    ],
+    "stick": [
+      "pass",
+      ""
+    ],
+    "sticky_piston": [
+      "unknown",
+      "sticky_piston"
+    ],
+    "stone": [
+      "simple_cube",
+      "stone"
+    ],
+    "stone_axe": [
+      "pass",
+      ""
+    ],
+    "stone_brick_stairs": [
+      "unknown",
+      "stone_brick_stairs"
+    ],
+    "stone_button": [
+      "unknown",
+      "stone_button"
+    ],
+    "stone_hoe": [
+      "unknown",
+      ""
+    ],
+    "stone_pickaxe": [
+      "pass",
+      ""
+    ],
+    "stone_pressure_plate": [
+      "unknown",
+      "stone_pressure_plate"
+    ],
+    "stone_shovel": [
+      "unknown",
+      ""
+    ],
+    "stone_slab": [
+      "unknown",
+      "stone_slab"
+    ],
+    "stone_slab2": [
+      "unknown",
+      "stone_slab2"
+    ],
+    "stone_stairs": [
+      "unknown",
+      "stone_stairs"
+    ],
+    "stone_sword": [
+      "pass",
+      ""
+    ],
+    "stonebrick": [
+      "simple_cube",
+      "stonebrick"
+    ],
+    "string": [
+      "unknown",
+      ""
+    ],
+    "structure_block": [
+      "unknown",
+      "structure_block"
+    ],
+    "structure_void": [
+      "unknown",
+      "structure_void"
+    ],
+    "sugar": [
+      "pass",
+      ""
+    ],
+    "tallgrass": [
+      "unknown",
+      "tallgrass"
+    ],
+    "tipped_arrow": [
+      "pass",
+      ""
+    ],
+    "tnt": [
+      "simple_cube",
+      "tnt"
+    ],
+    "tnt_minecart": [
+      "unknown",
+      ""
+    ],
+    "torch": [
+      "unknown",
+      "torch"
+    ],
+    "totem_of_undying": [
+      "pass",
+      ""
+    ],
+    "trapdoor": [
+      "unknown",
+      "trapdoor"
+    ],
+    "trapped_chest": [
+      "unknown",
+      "trapped_chest"
+    ],
+    "tripwire_hook": [
+      "unknown",
+      "tripwire_hook"
+    ],
+    "vine": [
+      "unknown",
+      "vine"
+    ],
+    "water_bucket": [
+      "pass",
+      ""
+    ],
+    "waterlily": [
+      "unknown",
+      "waterlily"
+    ],
+    "web": [
+      "unknown",
+      "web"
+    ],
+    "wheat": [
+      "pass",
+      ""
+    ],
+    "wheat_seeds": [
+      "unknown",
+      ""
+    ],
+    "white_glazed_terracotta": [
+      "unknown",
+      "white_glazed_terracotta"
+    ],
+    "white_shulker_box": [
+      "unknown",
+      "white_shulker_box"
+    ],
+    "wooden_axe": [
+      "pass",
+      ""
+    ],
+    "wooden_button": [
+      "unknown",
+      "wooden_button"
+    ],
+    "wooden_door": [
+      "unknown",
+      ""
+    ],
+    "wooden_hoe": [
+      "unknown",
+      ""
+    ],
+    "wooden_pickaxe": [
+      "pass",
+      ""
+    ],
+    "wooden_pressure_plate": [
+      "unknown",
+      "wooden_pressure_plate"
+    ],
+    "wooden_shovel": [
+      "unknown",
+      ""
+    ],
+    "wooden_slab": [
+      "unknown",
+      "wooden_slab"
+    ],
+    "wooden_sword": [
+      "pass",
+      ""
+    ],
+    "wool": [
+      "simple_cube",
+      "wool"
+    ],
+    "writable_book": [
+      "pass",
+      ""
+    ],
+    "written_book": [
+      "pass",
+      ""
+    ],
+    "yellow_flower": [
+      "unknown",
+      "yellow_flower"
+    ],
+    "yellow_glazed_terracotta": [
+      "unknown",
+      "yellow_glazed_terracotta"
+    ],
+    "yellow_shulker_box": [
+      "unknown",
+      "yellow_shulker_box"
+    ]
+  },
+  "_provenance": {
+    "kind": "extracted",
+    "tool": "tools/extraction/extract_legacy_interactions.py",
+    "tool_sha256": "37dab1c73037df0c71404d730305e4c422384cf9b9c97c2560187fefbad03074",
+    "tools_sha256": {
+      "LegacyMiningGeneric.java": "6995ea0338bee1de8ecee48a7242adee003f0afef9479738b20e93ae2e4bf940",
+      "LegacyTagBinding.java": "ca592077458f48c65862133fd6362222c444163f6340ab08787d3ff5f7b7270b",
+      "LegacyInteractionDump.java": "d5335f85ba4924ef4fbb5de0199efd690d8221157e03ac41ebdf952dff477f35",
+      "resolve_legacy_mining.py": "71f429a0cf7d8b7f81d8c021a9e879feecfe9cde04dd442e8b7ca51d7b7fb53d",
+      "resolve_legacy_outlines.py": "a8a3e6ce98046f9ee77c61348751702e93ce35ec11320daf646e89f7e91ebbee",
+      "resolve_legacy_interactions.py": "8db0b724e6e45844f1c1b5ca1fe99b3ac4fd0a2ee83a1367044a7839dc90bb33"
+    },
+    "measurements": [
+      {
+        "version": "1.12.2",
+        "measurement_sha256": "4feb375f948fa454720bbac793223a178d00409bd382a1b8418b3512dd74f693",
+        "geometry_sha256": "99f2e6eddba9b46c17afe0e25ec0eae2db83a5a60238d1c45d2e91580420efdc",
+        "bindings_sha256": "eccda64ef1ceeb362b9cb6ce9c335998ef28c0d5b02262e623f6e83368d66120",
+        "artifacts_sha256": {
+          "server.jar": "fe1f9274e6dad9191bf6e6e8e36ee6ebc737f373603df0946aafcded0d53167e",
+          "client.jar": "8ada07da5ee77dad3527bd7278fbd05ee1fc8a597813b216a871a2d7d64cc64f"
+        },
+        "client_source_sha256": {
+          "aed.java": "8f138041de91ebd084b8d0c68011647b99cee406c0040862aa7aab4ed2371171",
+          "ahb.java": "c65e967366a609b1e4075d05418e856177aadb69b877d17f4d3c55a6a02a5bc7",
+          "ain.java": "9ba322aa79d03e1c5de377ae6efa09f286628b9a9b3254dd5131b6e8710ad98d",
+          "aip.java": "9d22f29e17d5af2deb63f8091d293bbb57d25eced1e0a26f50b01a0810158d72",
+          "amu.java": "c9ce01dfdda3da0e234665aec796e7c475e973e2409547b094a65f1a90c4e204",
+          "amy.java": "6d0098d0b0bf0e6e94d58f8560de7d52c176ebff887c74474bf94fe777dea704",
+          "aow.java": "cccd5b1065830d31c255ddb9c043ea03681dbddec8da71e3942753678770480a",
+          "awt.java": "c0eaaf1ba21bb62ad42c7da9b59ce5cf37c2125792ba9050c3b119bc63679e02",
+          "bhb.java": "73c02ad69c5df445671b59913f3c2129dd9a44e1629d19b4447f1c8563d78c2f",
+          "et.java": "e56f4bd5c2e0fc12a00be469eda7a452b746edead1b5a27660a5e861523c2fd3"
+        },
+        "native_client_classes": [
+          "ahb",
+          "ain",
+          "aow",
+          "awt",
+          "bhb"
+        ],
+        "client_class_preservation": {
+          "unchanged_class_files": 3310,
+          "unsigned_jar_sha256": "9d78ebafca051a5e0911461696ca59561d28028f27590e51c81da8cb36493c7a",
+          "classes_sha256": "6f423ed1d82a5a7b678d7e3350f47b8d1d7742e3b31fbc3d1802efc35530566a"
+        },
+        "registered_states_visited": 1681,
+        "equal_wire_state_aliases": 7
+      }
+    ],
+    "client_profile": "1.12.2",
+    "different_earlier_client_profiles": [],
+    "note": "Native client inheritance contracts; every eligible state's actual collision box is measured before recognizing simple cubes. The server jar supplies libraries only because the placement precheck is client-only. Unknown subclasses remain explicit. Runtime player, world and stack conditions still apply. Protocol 47 follows the existing 1.8.9 client profile; the measured 1.8 air-replacement difference is retained separately and requires release-specific profile support."
+  }
+}

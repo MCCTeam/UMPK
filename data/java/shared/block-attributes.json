@@ -126,6 +126,7 @@
 
     "attachment": { "kind": "enum", "candidates": [["floor", "ceiling", "single_wall", "double_wall"]] },
     "axis": { "kind": "enum", "candidates": [["x", "y", "z"], ["x", "z"]] },
+    "copper_golem_pose": { "kind": "enum", "candidates": [["standing", "sitting", "running", "star"]] },
     "creaking_heart_state": { "kind": "enum", "candidates": [["uprooted", "dormant", "awake"]] },
     "east": { "kind": "enum", "candidates": [["true", "false"], ["none", "low", "tall"]] },
     "face": { "kind": "enum", "candidates": [["floor", "wall", "ceiling"]] },
@@ -215,7 +216,7 @@
       "values": ["top", "bottom", "double"]
     },
     {
-      "blocks": ["minecraft:chest", "minecraft:trapped_chest", "minecraft:ender_chest"],
+      "blocks": ["minecraft:chest", "minecraft:trapped_chest", "minecraft:ender_chest", "minecraft:copper_chest", "minecraft:exposed_copper_chest", "minecraft:weathered_copper_chest", "minecraft:oxidized_copper_chest", "minecraft:waxed_copper_chest", "minecraft:waxed_exposed_copper_chest", "minecraft:waxed_weathered_copper_chest", "minecraft:waxed_oxidized_copper_chest"],
       "property": "type",
       "values": ["single", "left", "right"]
     },

@@ -910,6 +910,8 @@ public sealed class LifeSafetySupervisorTests
         }
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, FloorY, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();
@@ -995,6 +997,8 @@ public sealed class LifeSafetySupervisorTests
         }
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, FloorY, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();
@@ -1063,6 +1067,8 @@ public sealed class LifeSafetySupervisorTests
         }
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(0.5, FloorY, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();
@@ -1141,6 +1147,8 @@ public sealed class LifeSafetySupervisorTests
             world.SetBlockStateId(new BlockPos(holeX, FloorY + 2, 0), 0);
 
         harness.State.InstallWorld(world);
+        foreach (var column in world.LoadedColumns)
+            harness.State.EntityMembership.LoadColumn(column.Position);
         harness.State.Self.Position = new Vec3d(startX + 0.5, FloorY, 0.5);
         harness.State.Self.Velocity = Vec3d.Zero;
         holder.EnsureEngine();

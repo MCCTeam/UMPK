@@ -312,9 +312,12 @@ internal sealed class UiApplier : IApplier
         TabList list = context.State.TabList;
         foreach (PlayerInfoEntry entry in packet.Entries)
         {
-            TabListEntry tabEntry = GetOrCreateEntry(
+            TabListEntry? tabEntry = GetOrCreateEntry(
                 list, entry.ProfileId, entry.Name, entry.Properties,
-                carriesProfile: (packet.Actions & PlayerInfoActions.AddPlayer) != 0);
+                carriesProfile: (packet.Actions & PlayerInfoActions.AddPlayer) != 0,
+                listedByDefault: false, retainExisting: true, out _);
+            if (tabEntry is null)
+                continue;
 
             // INITIALIZE_CHAT carries the peer's chat session: session id, key expiry, DER profile public key and Mojang's signature over it. Without this the decoded payload was dropped on the floor and inbound signature verification had no key source at all. A null payload is meaningful (vanilla's Optional is empty when the player has no chat session), so it is assigned rather than merged.
             if ((packet.Actions & PlayerInfoActions.InitializeChat) != 0)
@@ -350,6 +353,7 @@ internal sealed class UiApplier : IApplier
     private static void ApplyLegacyPlayerInfo(ClientboundLegacyPlayerListItemPacket packet, ApplierContext context)
     {
         TabList list = context.State.TabList;
+        PlayerInfoProfile profile = PlayerInfoProfile.ForProtocol(context.Version.Version.Protocol);
         foreach (LegacyPlayerListEntry entry in packet.Entries)
         {
             if (packet.Action == LegacyPlayerListAction.RemovePlayer)
@@ -358,9 +362,12 @@ internal sealed class UiApplier : IApplier
                 continue;
             }
 
-            TabListEntry tabEntry = GetOrCreateEntry(
+            TabListEntry? tabEntry = GetOrCreateEntry(
                 list, entry.ProfileId, entry.Name, entry.Properties,
-                carriesProfile: packet.Action == LegacyPlayerListAction.AddPlayer);
+                carriesProfile: packet.Action == LegacyPlayerListAction.AddPlayer,
+                listedByDefault: true, retainExisting: profile.RetainsOnAdd, out bool created);
+            if (tabEntry is null)
+                continue;
             switch (packet.Action)
             {
                 case LegacyPlayerListAction.AddPlayer:
@@ -369,7 +376,8 @@ internal sealed class UiApplier : IApplier
                     tabEntry.Latency = entry.Latency;
                     tabEntry.DisplayName = entry.DisplayName;
                     // On 759/760, add-player carries the peer's optional profile public key. It is the v1/v2 equivalent of INITIALIZE_CHAT and the only key source on those protocols.
-                    tabEntry.ChatSession = entry.ProfileKey;
+                    if (created)
+                        tabEntry.ChatSession = entry.ProfileKey;
                     RecordSelfLatency(context, entry.ProfileId, entry.Latency);
                     break;
                 case LegacyPlayerListAction.UpdateGameMode:
@@ -392,34 +400,34 @@ internal sealed class UiApplier : IApplier
         }
     }
 
-    /// <summary>Returns the tracked tab-list entry for a uuid, or builds one from the profile fields the packet carries. Shared by both player-info eras so the legacy path cannot drift into a parallel model. The profile properties (the signed <c>textures</c> skin/cape blob) are carried onto the profile; both eras encode them identically on the add action.</summary>
-    private static TabListEntry GetOrCreateEntry(
+    /// <summary>Applies the era's player-info object lifetime on repeated adds. Only an add can create an entry; updates for unknown players are ignored.</summary>
+    private static TabListEntry? GetOrCreateEntry(
         TabList list, Guid profileId, string? name, IReadOnlyList<GameProfileProperty>? properties,
-        bool carriesProfile)
+        bool carriesProfile, bool listedByDefault, bool retainExisting, out bool created)
     {
+        created = false;
+        if (list.TryGet(profileId, out TabListEntry? existing) && (!carriesProfile || retainExisting))
+            return existing;
+
+        if (!carriesProfile)
+            return null;
+
+        created = true;
         var profile = new GameProfile(profileId, name ?? string.Empty)
         {
             Properties = MapProfileProperties(properties),
         };
-
-        if (!list.TryGet(profileId, out TabListEntry? existing))
-            return new TabListEntry(profile);
-
-        // Only the add action carries a name and properties, and the server does not guarantee it arrives first: vanilla broadcasts the join-time game mode alongside the add, and either can land first. Whichever loses the race created a placeholder entry with an empty name, so the add has to install the real profile over it rather than keep the placeholder. Without this a player who lost the race stays nameless for the whole session, which also leaves every entity backfill keyed off that entry without a profile.
-        if (!carriesProfile || existing.Profile.Name == profile.Name)
-            return existing;
-
-        // TabListEntry.Profile is immutable by design, so replacing it means a new entry; carry the mutable fields across so an update that arrived before the add is not lost.
         return new TabListEntry(profile)
         {
-            GameMode = existing.GameMode,
-            Latency = existing.Latency,
-            DisplayName = existing.DisplayName,
-            Listed = existing.Listed,
-            ListOrder = existing.ListOrder,
-            ShowHat = existing.ShowHat,
-            ChatSession = existing.ChatSession,
+            GameMode = GameMode.Survival,
+            Listed = listedByDefault,
         };
+    }
+
+    private readonly record struct PlayerInfoProfile(bool RetainsOnAdd)
+    {
+        // 1.19.1 adds the missing-entry guard before constructing PlayerInfo; 1.19.3 retains it through putIfAbsent.
+        public static PlayerInfoProfile ForProtocol(int protocol) => new(protocol >= 760);
     }
 
     /// <summary>Copies a freshly learned tab-list profile onto the tracked entity with the same uuid, if one is already spawned. A player spawn carries the uuid but never the name, so which of the two packets arrives first would otherwise decide whether the entity ever resolves a name. Spawn-then-info is resolved here; info-then-spawn is resolved in <c>EntityApplier</c>. Runs only when the Entities feature is on, and matches by uuid, which is unique per player.</summary>

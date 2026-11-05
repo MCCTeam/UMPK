@@ -6,21 +6,21 @@ using Umpk.Game.Registries;
 namespace Umpk.Client.Actions;
 
 /// <summary>The source-bound default bone-meal result on canonical wheat; growth and consumption remain server-owned.</summary>
-internal readonly record struct VanillaBoneMealUse(bool HasWheatRules)
+internal readonly record struct VanillaBoneMealUse(int Protocol, bool HasWheatRules, bool PredictsCropSuccess)
 {
     private static readonly string[] Ages = ["0", "1", "2", "3", "4", "5", "6", "7"];
 
-    internal static VanillaBoneMealUse ForProtocol(int protocol) => new(protocol == 766);
+    internal static VanillaBoneMealUse ForProtocol(int protocol) => new(protocol, protocol is >= 766 and <= 777, protocol != 775);
 
     internal bool TryPredict(ItemStack item, BlockState clicked, bool adventure, bool localSwing, out BlockUsePrediction prediction)
     {
         prediction = BlockUsePrediction.Unknown;
         if (!HasWheatRules || item.IsEmpty || !item.Components.HasNoPatch || item.Item.IsDefault || item.Item.Id != Identifier.Minecraft("bone_meal")
-            || !JavaGameData.Registries(766).Items.TryGet(item.Item.NetworkId, out RegistryEntry<ItemDefinition> canonicalItem)
+            || !JavaGameData.Registries(Protocol).Items.TryGet(item.Item.NetworkId, out RegistryEntry<ItemDefinition> canonicalItem)
             || canonicalItem.Id != item.Item.Id || !ReferenceEquals(canonicalItem.Value, item.Item.Value)
             || item.Components.Get(DataComponents.CanPlaceOn) is not null
             || !clicked.IsValid || clicked.Block.Id != Identifier.Minecraft("wheat")
-            || !JavaGameData.Registries(766).Blocks.TryGet(clicked.Block.NetworkId, out RegistryEntry<BlockDefinition> canonicalBlock)
+            || !JavaGameData.Registries(Protocol).Blocks.TryGet(clicked.Block.NetworkId, out RegistryEntry<BlockDefinition> canonicalBlock)
             || canonicalBlock.Id != clicked.Block.Id || !ReferenceEquals(canonicalBlock.Value, clicked.Block.Value))
             return false;
 
@@ -34,8 +34,8 @@ internal readonly record struct VanillaBoneMealUse(bool HasWheatRules)
         if (adventure)
             prediction = BlockUsePrediction.Pass;
         else
-            // Native CropBlock checks only its age. At age7 its empty support shape rejects every face before the water-plant branch; no neighbor or growth outcome is inferred.
-            prediction = age == "7" ? BlockUsePrediction.Pass : BlockUsePrediction.Success(localSwing);
+            // Native CropBlock checks only its age. The protocol775 client passes even for a valid crop; other admitted clients succeed. Mature wheat has no sturdy support face, so its water-plant fallback passes without a neighbor read.
+            prediction = age == "7" || !PredictsCropSuccess ? BlockUsePrediction.Pass : BlockUsePrediction.Success(localSwing);
         return true;
     }
 }

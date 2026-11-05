@@ -4132,5 +4132,20 @@
     },
     "nativePreconditionCorrection": "One nativeitemkill aftercontainercargo spawned99items/55remain; all13originalentities removed; strictempty+nativechecks retained",
     "requiredLivePassed": false
+  },
+  "defaultBoneMealWheatComponentEra20261105": {
+    "scope": "Default canonical unpatched bone meal on canonical wheat, protocols766–777; unknown/custom/other crop contexts remain open.",
+    "sourceBindings": "a4ca98fa:19originalclients/76client-serverfactorypairs/defaultCAN_PLACE_ONabsence/eightage schema.",
+    "nativeClientResults": {
+      "766–774,776": "young Success/Packet",
+      "775": "young Pass/None",
+      "777": "young Success/Local",
+      "all12": "mature Pass;defaultAdventure Pass"
+    },
+    "productionOwner": "Existing VanillaBoneMealUse reached by unchanged InteractionActions placement caller; protocol-specific canonical registry identity guards.",
+    "actualManaged": "8db1b238 / Root34741632:270P154causalRED→424GREEN/4019adj/full39709P0skip;323newcases+8explicitsemantic migrations.",
+    "producer": "Client728189cf/PDBa04dea57/XML28f7;oneTest+oneClient compile from originalwholeFAILED, separatezeroCscfull-only308.292sPASS.",
+    "native96": "not run;6boundaries×16scenes sourceproposal;no nativeclient measurement claim.",
+    "remaining": "Other crops,custom/unavailable contexts,current13freeze/consumer/full17/AOT/packages/finalCI and broader family acceptance remain open."
   }
 }

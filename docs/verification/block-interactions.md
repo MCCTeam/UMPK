@@ -1,6 +1,16 @@
 # Vanilla block interaction audit
 
-## Current runtime and acceptance, 5 November 2026
+## Current bone-meal runtime checkpoint, 5 November 2026
+
+The [component-era wheat profile](bone-meal-wheat-component-era.md) now predicts native results and swings across all twelve datasets766–777: young wheat Success/Packet in766–774 and776, Pass/None in775, Success/Local in777; mature wheat Pass. It uses each protocol’s canonical definitions through the existing placement caller. Growth, inventory shrink and terrain changes remain server-owned; custom or unavailable context keeps conservative results.
+
+Actual framed-session validation establishes270passing controls/154causal failures on the old Client, then424focused and4,019adjacent passes with the fix. The exact unfiltered Client suite passes39,709cases with zero skips: old39,386 plus323deliberate additions and eight explicit semantic migrations. Root34741632 independently checks5,669pins,623PDBsource files and all39,709raw results. Candidate Client728189cf/PDBa04dea57/XML28f7ff90 retains its actual original private compilation.
+
+The original whole trial remains FAILED at its600sfull-command limit, with25owned identities gone. Its added3GiB memory-high threshold recorded271,361reclaim events. The fresh runtime-only continuation keeps the same4GiBhard limit, raises the soft threshold to that limit and passes in308.292s with all memory events zero and all4owned identities gone. It repeats no compiler, focused or adjacent phase. The three literal fixture display mappings121/3/3 remain exact; no generic normalization is used.
+
+All91original specialized scenes and50General/75Basic acceptance retain their recorded producer identities. The separate96-scene bone-meal native pack has not executed. The new thirteen-library freeze, current consumers, full17 local gates, AOT/packages and new-head CI remain pending. The pre-native-fixture all17forecast is54,396; six proposed NightlyFact additions will change it separately. The broader [completion ledger](interaction-completion.md) remains open.
+
+## Previous STONE runtime checkpoint, 5 November 2026
 
 Published `d0f39f0` extends [local STONE placement prediction](stone-local-placement-modern.md) through protocols766–777. Actual Client`6f6dc610`/PDB`64dbf0c7` passes218focused STONE,314combined STONE/membership and39,386 unfiltered Client cases with zero skips. The exact baseline change is net180, including one declared770 semantic migration and two same-name native count corrections. The original whole run with two failed old expectations remains failed; the fresh test-only successor provides the accepted full result. Root`4de3cba4` retains both origins.
 

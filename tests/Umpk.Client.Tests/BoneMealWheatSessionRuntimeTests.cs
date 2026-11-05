@@ -20,7 +20,13 @@ public sealed class BoneMealWheatSessionRuntimeTests
 
     public static IEnumerable<object[]> ContextCases() => new[] { 0, 7 }.SelectMany(age => new[] { Hand.Main, Hand.Off }.SelectMany(hand => new[] { "adventure", "cooldown", "cooldown-adventure", "secondary", "spectator", "missing-terrain", "unload", "respawn", "custom", "custom-adventure", "empty", "other-target", "other-hand-empty", "clone" }.Select(context => new object[] { age, hand, context })));
 
-    public static IEnumerable<object[]> BoundaryCases() => new[] { 765, 767, 777 }.SelectMany(protocol => new[] { 0, 7 }.SelectMany(age => new[] { Hand.Main, Hand.Off }.Select(hand => new object[] { protocol, age, hand })));
+    public static IEnumerable<object[]> BoundaryCases() => new[] { 765 }.SelectMany(protocol => new[] { 0, 7 }.SelectMany(age => new[] { Hand.Main, Hand.Off }.Select(hand => new object[] { protocol, age, hand })));
+
+    public static IEnumerable<object[]> AdmittedBoundaryCases() => new[] { 767, 777 }.SelectMany(protocol => new[] { 0, 7 }.SelectMany(age => new[] { Hand.Main, Hand.Off }.Select(hand => new object[] { protocol, age, hand })));
+
+    public static IEnumerable<object[]> ComponentWheatCases() => Enumerable.Range(767, 11).SelectMany(protocol => new[] { 0, 6, 7 }.SelectMany(age => new[] { Hand.Main, Hand.Off }.SelectMany(hand => new[] { GameMode.Survival, GameMode.Creative }.Where(mode => !(protocol is 767 or 777 && age is 0 or 7 && mode == GameMode.Survival)).Select(mode => new object[] { protocol, age, hand, mode }))));
+
+    public static IEnumerable<object[]> ComponentContextCases() => Enumerable.Range(767, 11).SelectMany(protocol => new[] { Hand.Main, Hand.Off }.SelectMany(hand => new[] { "adventure", "cooldown", "spectator", "custom", "custom-adventure", "clone", "missing-terrain", "unload", "respawn" }.Select(context => new object[] { protocol, hand, context })));
 
     [Fact]
     public async Task CanonicalWheatMatchesTheOriginalEightStateAgeAndEmptySupportSchema()
@@ -120,6 +126,99 @@ public sealed class BoneMealWheatSessionRuntimeTests
         await Use(session, hand, BlockUseResult.Unknown);
     }
 
+    [Theory]
+    [MemberData(nameof(AdmittedBoundaryCases))]
+    public async Task AdmittedComponentBoundaryProfilesFollowTheOriginalWheatResult(int protocol, int age, Hand hand)
+    {
+        await using Session session = await Ready(protocol, age);
+        await Use(session, hand, age == 7 ? BlockUseResult.Pass : BlockUseResult.Success);
+    }
+
+    [Theory]
+    [MemberData(nameof(ComponentWheatCases))]
+    public async Task ComponentWheatResultReachesTheFramedPublicCallerWithoutGrowthOrShrink(int protocol, int age, Hand hand, GameMode mode)
+    {
+        await using Session session = await Ready(protocol, age);
+        await session.Mode(mode, instantBuild: mode == GameMode.Creative);
+        BlockUseResult expected = age == 7 || protocol == 775 ? BlockUseResult.Pass : BlockUseResult.Success;
+        await Use(session, hand, expected, age == 6 ? Direction.West : Direction.Up);
+    }
+
+    [Theory]
+    [MemberData(nameof(ComponentContextCases))]
+    public async Task ComponentNativePrechecksAndUnownedContextsRemainBounded(int protocol, Hand hand, string context)
+    {
+        await using Session session = await Ready(protocol, 0, terrain: context != "missing-terrain");
+        if (context is "adventure" or "custom-adventure")
+            await session.Mode(GameMode.Adventure, instantBuild: false);
+        if (context == "spectator")
+            await session.Mode(GameMode.Spectator, instantBuild: false);
+        if (context == "cooldown")
+            await session.Cooldown();
+        if (context is "custom" or "custom-adventure")
+            await Stack(session, hand, Held(session, hand).With(DataComponents.Unbreakable, new UnbreakableComponent()));
+        if (context == "clone")
+        {
+            ItemStack original = Held(session, hand);
+            var builder = new RegistryBuilder<ItemDefinition>(RegistryIds.Item);
+            builder.Add(original.Item.NetworkId, original.Item.Id, original.Item.Value with { });
+            var modeled = new ItemStack(builder.Build()[original.Item.Id], original.Count);
+            await session.Client.InvokeAsync(client => { client.State.Inventory.SetSlot(0, Slot(hand), modeled); return true; }, session.Token);
+            Assert.NotSame(original.Item.Value, Held(session, hand).Item.Value);
+        }
+        if (context == "unload")
+        {
+            await session.Forget();
+            await Wheat(session, 0);
+        }
+        if (context == "respawn")
+        {
+            await session.Respawn();
+            await Wheat(session, 0);
+            await Stack(session, Hand.Main, DefaultStack(session));
+            await Stack(session, Hand.Off, DefaultStack(session));
+        }
+        Assert.Empty(await session.Barrier());
+        if (context is "missing-terrain" or "unload" or "respawn")
+        {
+            Assert.NotNull(session.Client.State.World.GetColumn(Session.Target));
+            Assert.False(session.Client.State.EntityMembership.HasColumn(Session.Target));
+            Assert.Equal(Identifier.Minecraft("wheat"), session.Client.State.World.GetBlock(Session.Target).Block.Id);
+        }
+        BlockUseResult expected = context switch
+        {
+            "adventure" or "cooldown" => BlockUseResult.Pass,
+            "spectator" => protocol < 768 ? BlockUseResult.Success : BlockUseResult.Consume,
+            _ => BlockUseResult.Unknown,
+        };
+        await Use(session, hand, expected);
+    }
+
+    [Fact]
+    public async Task ComponentWheatUsesEachCachedProtocolRegistryAndTheNativeEightAgeSchema()
+    {
+        foreach (int protocol in Enumerable.Range(766, 12))
+        {
+            await using Session session = await Ready(protocol, 0);
+            RegistryEntry<BlockDefinition> wheat = JavaGameData.Registries(protocol).Blocks[Identifier.Minecraft("wheat")];
+            Assert.Equal(8, wheat.Value.StateCount);
+            BlockPropertyDefinition property = Assert.Single(wheat.Value.Properties);
+            Assert.Equal("age", property.Name);
+            Assert.Equal(new[] { "0", "1", "2", "3", "4", "5", "6", "7" }, property.Values);
+            Assert.Same(wheat.Value, session.Client.State.World.GetBlock(Session.Target).Block.Value);
+            for (int age = 0; age < 8; age++)
+            {
+                await Wheat(session, age);
+                BlockState block = session.Client.State.World.GetBlock(Session.Target);
+                Assert.Empty(JavaGameData.BlockShapes(protocol).GetCollisionShapes(block).ToArray());
+            }
+            ItemStack held = Held(session, Hand.Main);
+            Assert.Same(JavaGameData.Registries(protocol).Items[Identifier.Minecraft("bone_meal")].Value, held.Item.Value);
+            Assert.True(held.Components.HasNoPatch);
+            Assert.Null(held.Components.Get(DataComponents.CanPlaceOn));
+        }
+    }
+
     private static async Task<Session> Ready(int protocol, int age, bool terrain = true)
     {
         Session session = await Session.Create(protocol, "wheat", terrain: terrain, observeWrites: true);
@@ -186,7 +285,9 @@ public sealed class BoneMealWheatSessionRuntimeTests
             Assert.True(use.Inside);
             Assert.False(use.WorldBorderHit);
             Assert.False(action.IsCompleted);
-            bool swing = expected == BlockUseResult.Success;
+            bool success = expected == BlockUseResult.Success;
+            BlockUseSwing expectedSwing = !success ? BlockUseSwing.None : session.Protocol == 777 ? BlockUseSwing.Local : BlockUseSwing.Packet;
+            bool swing = expectedSwing == BlockUseSwing.Packet;
             // These assertions run only after the real public caller has emitted and the fake peer has decoded/round-tripped its framed packet group.
             Assert.Equal(swing ? 2 : 1, packets.Count);
             if (swing)
@@ -194,7 +295,7 @@ public sealed class BoneMealWheatSessionRuntimeTests
             Assert.DoesNotContain(packets, packet => packet is ServerboundPunchPacket);
             Assert.True(preview.SendPacket);
             Assert.Equal(expected, preview.Result);
-            Assert.Equal(swing ? BlockUseSwing.Packet : BlockUseSwing.None, preview.Swing);
+            Assert.Equal(expectedSwing, preview.Swing);
             Assert.NotNull(atWrite);
             Assert.Equal((beforeState, before.Count, otherBefore.Count, false), atWrite.Value);
             acknowledged = true;

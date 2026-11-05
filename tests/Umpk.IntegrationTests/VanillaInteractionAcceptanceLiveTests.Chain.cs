@@ -444,7 +444,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
 
     private static ModernFlatBiomeWitness AssertReceivedModernFlatNativeBiomes(Capture capture, JavaVersion version, RegistryAccess registries, int protocol, int chunkX, int chunkZ)
     {
-        Assert.True(protocol is 766 or 773 or 777);
+        Assert.True(protocol is 766 or 769 or 773 or 774 or 775 or 776 or 777);
         Assert.False(capture.Overflowed);
         CapturedFrame[] frames = capture.Frames;
         CapturedFrame[] registryFrames = capture.BiomeRegistryFrames;
@@ -496,11 +496,17 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 Assert.Empty(modern.SectionPadding);
                 sections = modern.Sections;
             }
+            else if (protocol == 769)
+            {
+                var modern = Assert.IsType<NbtHeightmapChunkWireBody>(body);
+                Assert.Empty(modern.SectionPadding);
+                sections = modern.Sections;
+            }
             else
             {
                 var modern = Assert.IsType<ModernChunkWireBody>(body);
                 Assert.Empty(modern.SectionPadding);
-                Assert.Equal(protocol == 777, modern.HasFluidCount);
+                Assert.Equal(protocol >= 775, modern.HasFluidCount);
                 sections = modern.Sections;
             }
             Assert.Equal(sectionsPerChunk, sections.Count);

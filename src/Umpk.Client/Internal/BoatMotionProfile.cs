@@ -12,7 +12,7 @@ internal static class BoatMotionProfile
     public const float Width = 1.375F;
     public const float Height = .5625F;
 
-    public static bool Supports(int protocol) => protocol is 770 or 771;
+    public static bool Supports(int protocol) => protocol is 770 or 771 or 772 or 773;
 
     public static bool Supports(Entity entity, int protocol)
         => Supports(protocol) && IsFamily(entity.Type.Id)
@@ -29,7 +29,8 @@ internal static class BoatMotionProfile
     public static VanillaInterpolationProfile Interpolation(int protocol) => protocol switch
     {
         770 => VanillaInterpolationProfile.HandlerOffsetBox,
-        771 => VanillaInterpolationProfile.Handler,
+        771 or 772 => VanillaInterpolationProfile.Handler,
+        773 => VanillaInterpolationProfile.DeduplicatingHandler,
         _ => throw new ArgumentOutOfRangeException(nameof(protocol)),
     };
 

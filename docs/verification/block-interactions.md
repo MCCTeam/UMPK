@@ -1,6 +1,8 @@
 # Vanilla block interaction audit
 
-## New protocol-770 boat runtime, 5 November 2026
+## Boat runtime through protocol 773, 5 November 2026
+
+The [772/773 boat extension](boat-interactions-772-773.md) connects native current-component versus pending-component retargeting and duplicate-target handling to public placement and view mining. Client `69587b93` passes 277 focused, 11,304 adjacent and one full 40,014-case Client suite with zero skips. Root admission `3ad26d7e` verifies genuine staged failures, exact prior39,874−2+142 occurrences, direct compiler/PDB/source hashes and all thirty owned identities gone. Fresh final repository, consumer, AOT/package, live and published-head CI checks remain pending; 54,707 is the repository forecast.
 
 The [protocol-771 boat extension](boat-interactions-771.md) connects the measured 1.21.6 handler and existing local-context observers to the same placement/mining callers. Client d97ea2ce passes 137 focused, 11,164 adjacent and 39,874 full Client cases with zero skips; exact native evidence, staged failures, source/PDB hashes and cleanup are independently checked. Fresh producer-matched repository, consumer, AOT/package, live and published-head CI checks are pending; 54,567 is the new repository forecast.
 

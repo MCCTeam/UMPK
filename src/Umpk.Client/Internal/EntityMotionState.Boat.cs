@@ -41,8 +41,10 @@ internal sealed partial class EntityMotionState
             return false;
         if (!boat.Geometry.IsPositionKnown(entity))
             return true;
-        // The measured 770 listener supplies current values for omitted components.
-        boat.Position.SetTarget(target ?? boat.Position.Position, yaw ?? boat.Position.Yaw, pitch ?? boat.Position.Pitch);
+        // The 773 listener retains pending components; the measured 770-772 listeners supply current values.
+        bool pending = BoatMotionProfile.Interpolation(boat.Protocol) == VanillaInterpolationProfile.DeduplicatingHandler;
+        boat.Position.SetTarget(target ?? (pending ? boat.Position.TargetPosition : boat.Position.Position),
+            yaw ?? (pending ? boat.Position.TargetYaw : boat.Position.Yaw), pitch ?? (pending ? boat.Position.TargetPitch : boat.Position.Pitch));
         return true;
     }
 

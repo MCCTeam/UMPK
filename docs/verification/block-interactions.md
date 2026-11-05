@@ -1,6 +1,31 @@
 # Vanilla block interaction audit
 
-## Current runtime checkpoint, 5 November 2026
+## Current runtime and acceptance, 5 November 2026
+
+Published `d0f39f0` extends [local STONE placement prediction](stone-local-placement-modern.md) through protocols766–777. Actual Client`6f6dc610`/PDB`64dbf0c7` passes218focused STONE,314combined STONE/membership and39,386 unfiltered Client cases with zero skips. The exact baseline change is net180, including one declared770 semantic migration and two same-name native count corrections. The original whole run with two failed old expectations remains failed; the fresh test-only successor provides the accepted full result. Root`4de3cba4` retains both origins.
+
+The immutable thirteen-library freeze (`READY659eff71`, Root`f710ca82`) verifies1,286authored PDB sources/232Client,13project/API groups and39binary/documentation files against D0f source; all other twelve library triples remain unchanged. The freeze executes no SDK or tests. The [native evidence report](interaction-native-world-preconditions.md) records all91specialized scenes and ten fresh General runs, preserving each execution's actual producer. This fixture publication binds actual Entry18 Main/Chain/Ladder source bytes to their compiled PDB; it changes no production library or test-count baseline.
+
+| Check | Latest accepted result | Remaining scope |
+| --- | --- | --- |
+| Current Client |39,386P0skip on6f;218STONE/314combined; Root4de3cba4 | Full local17/current consumers/AOT/packages remain unexecuted on this tuple |
+| Native specialized |91/91 scenes, split452/e19/CA49/6f origins; last766 Rootbf04b445 | Broader behavior inventory and final-source applicability remain open |
+| Native General/Basic |50General representatives accepted, including10fresh6f;75Basic named releases retained with source applicability | No uniform-current-binary or native-client parity claim |
+| Current D0f CI |All7[remote jobs](https://github.com/MCCTeam/UMPK/actions/runs/41963827680) pass; raw54,045P+28declared skips=54,073; AOT24,894,520bytes/exactly1executedPASS0skip | Roota0af78b6; remote binaries remain separate; later published heads require their own CI |
+| Previous e19 local gates |53,749P+27normal opt-in skips; all17counts/format;1,999DMCBK/918MCC and14pose/17command;33dependency+26runtime DLL matches | Historical exactproducer evidence, sibling source/Git unchanged |
+| Data reconstruction |409Python passes,1,133unchanged source files,61identical generated files; four piercing outputs and84partial modern report outputs reproduced | Nine reconstruction groups remain open |
+
+The next source-reviewed runtime change completes default bone-meal/wheat result and swing prediction across the component era. Its19client bindings establish Success766–774/776, Pass775 and local-only Success777; its proposed323new cases have not executed. Dedicated native acceptance and fresh final producer-matched gates remain pending. Legacy lifecycle, entity geometry/motion, riders, mining permissions/context, targeting and further block-use families stay open in the [completion ledger](interaction-completion.md). No whole-goal completion is claimed.
+
+## Native server evidence and world preconditions, 5 November 2026
+
+[The current native evidence report](interaction-native-world-preconditions.md) records ten fresh General passes on final STONE Client `6f6dc610` / Entry17, each on its first original-server attempt, with Root admission `0d85d2f9` and canonical cleanup `2276f425`. General remains Creative and physics-disabled; local pre-USE behavior retains its separate managed/source proof. The other forty General rows and seventy-five BASIC rows retain their original binaries and applicability scope.
+
+All 91 specialized scenes now have accepted evidence: 26 retained scenes, 21 seeded CA49 scenes, 34 Entry17 scenes and the final ten Entry18 ladder766 scenes. Their original 452/e19/CA49/6f execution origins remain separate. Root admission `bf04b445` binds the final ten scenes, exact native block/stack observations, both hands, 19 action packets, unforced native exit and owned cleanup. The original failed whole44 and all prior failed setup attempts remain failed.
+
+Source-backed same-version world inputs and raw registry/chunk witnesses establish scenario preconditions. The logical-biome check permits an unused palette entry only when all 64 cells in every section decode to the expected native ID. It does not implement gameplay biome projection. Actual Entry18 Main `5511dec7`, Chain `8f87b837` and Ladder `f050d8fa` are bound to compiled DLL/PDB and normal76; their private-build origin remains explicit until publication. No whole-goal, all172, uniform-current75 or original native-client execution claim follows. Earlier results retain their original producer identities.
+
+## Previous CA49 runtime checkpoint, 5 November 2026
 
 Commits `b5b7003` and `980051e` add [default bone-meal results on wheat](bone-meal-wheat766.md) and [Creative STONE removal prediction before START](creative-stone-removal.md). Bone meal predicts Success and a packet swing for young wheat and Pass for mature wheat on protocol766; growth and shrink remain server-owned. Empty-hand Creative mining prepares an AIR shadow on766/769 through the existing prediction/sequence owner while the public world retains received terrain. Both changes preserve unavailable/custom contexts.
 

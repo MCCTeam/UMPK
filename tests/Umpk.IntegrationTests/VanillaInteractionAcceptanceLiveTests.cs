@@ -436,16 +436,18 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
         public ProtocolPhase Phase { get; init; } = ProtocolPhase.Play;
     }
 
-    private sealed class Capture(JavaVersion version, bool includeEnabledFeatures = false, bool includeRegistryTags = false)
+    private sealed class Capture(JavaVersion version, bool includeEnabledFeatures = false, bool includeRegistryTags = false, bool includeBiomeRegistry = false)
     {
         private const int Limit = 20 * 1024 * 1024;
         private readonly Lock _gate = new();
         private readonly Stopwatch _clock = Stopwatch.StartNew();
         private readonly List<CapturedFrame> _frames = [];
+        private readonly List<CapturedFrame> _biomeRegistryFrames = [];
         private bool _active;
         public long PayloadBytes { get; private set; }
         public bool Overflowed { get; private set; }
         public CapturedFrame[] Frames { get { lock (_gate) return [.. _frames]; } }
+        public CapturedFrame[] BiomeRegistryFrames { get { lock (_gate) return [.. _biomeRegistryFrames]; } }
         public void Start() { lock (_gate) _active = true; }
         public void Stop() { lock (_gate) _active = false; }
         public int Mark() { lock (_gate) return _frames.Count; }
@@ -453,7 +455,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
 
         public void Observe(PacketObservation observation)
         {
-            if (observation.Phase != ProtocolPhase.Play && !(observation.Phase == ProtocolPhase.Configuration && (includeEnabledFeatures && observation.DecodedPacket is ClientboundConfigUpdateEnabledFeaturesPacket || includeRegistryTags && observation.DecodedPacket is ClientboundConfigUpdateTagsPacket)))
+            if (observation.Phase != ProtocolPhase.Play && !(observation.Phase == ProtocolPhase.Configuration && (includeEnabledFeatures && observation.DecodedPacket is ClientboundConfigUpdateEnabledFeaturesPacket || includeRegistryTags && observation.DecodedPacket is ClientboundConfigUpdateTagsPacket || includeBiomeRegistry && observation.DecodedPacket is ClientboundConfigRegistryDataPacket observedBiomeRegistry && observedBiomeRegistry.Registry == Umpk.Game.Registries.RegistryIds.Biome)))
                 return;
             lock (_gate)
             {
@@ -465,7 +467,11 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests(ITestOutputHel
                     Overflowed = true;
                     return;
                 }
-                _frames.Add(new CapturedFrame(_clock.Elapsed.TotalMilliseconds, observation.Flow, observation.WireId, observation.CopyPayload()) { Packet = observation.DecodedPacket, Phase = observation.Phase });
+                var frame = new CapturedFrame(_clock.Elapsed.TotalMilliseconds, observation.Flow, observation.WireId, observation.CopyPayload()) { Packet = observation.DecodedPacket, Phase = observation.Phase };
+                if (includeBiomeRegistry && observation.Phase == ProtocolPhase.Configuration && observation.DecodedPacket is ClientboundConfigRegistryDataPacket configurationBiomes && configurationBiomes.Registry == Umpk.Game.Registries.RegistryIds.Biome)
+                    _biomeRegistryFrames.Add(frame);
+                else
+                    _frames.Add(frame);
             }
         }
 

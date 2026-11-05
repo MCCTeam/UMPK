@@ -1,3 +1,6 @@
+using System.Buffers;
+using System.Security.Cryptography;
+using System.Text.Json;
 using Umpk.Client;
 using Umpk.Client.Actions;
 using Umpk.Data.Java;
@@ -6,7 +9,9 @@ using Umpk.Game.Entities;
 using Umpk.Game.Players;
 using Umpk.Game.Registries;
 using Umpk.Geometry;
+using Umpk.Nbt;
 using Umpk.Protocol.Java;
+using Umpk.Protocol.Java.Codecs;
 using Umpk.Protocol.Java.Packets;
 using Xunit;
 
@@ -32,10 +37,14 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.Equal(protocol, version.Version.Protocol);
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct);
+        SpecializedFlatSeed? levelSeed = await ReadSpecializedFlatSeedAsync(release, protocol, ct);
+        string flatWorldSettings = protocol < 766
+            ? """{"structures":{"structures":{}},"layers":[{"height":100,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false}"""
+            : """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""";
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: levelSeed is null ? flatWorldSettings : null, levelDataSeed: levelSeed?.Path, levelDataSeedSha256: levelSeed?.Sha256);
         output.WriteLine($"Evidence: {server.DirectoryPath}");
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
-        var capture = new Capture(version);
+        var capture = new Capture(version, includeBiomeRegistry: protocol >= 766);
         client.PacketFrameObserved += capture.Observe;
         var observations = new List<object>();
         var markers = new List<string>();
@@ -52,6 +61,38 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             Vec3d spawn = await client.InvokeAsync(c => c.State.Self.Position, ct);
             int x = ((int)Math.Floor(spawn.X) >> 4) * 16 + 8;
             int z = ((int)Math.Floor(spawn.Z) >> 4) * 16 + 8;
+            {
+                string[] lines = await File.ReadAllLinesAsync(Path.Combine(server.DirectoryPath, "server.properties"), ct);
+                var properties = lines.Where(line => line.StartsWith("level-type=", StringComparison.Ordinal) || line.StartsWith("generator-settings=", StringComparison.Ordinal))
+                    .ToDictionary(line => line[..line.IndexOf('=')], line => line[(line.IndexOf('=') + 1)..].Replace("\\:", ":", StringComparison.Ordinal).Replace("\\=", "=", StringComparison.Ordinal).Replace("\\\\", "\\", StringComparison.Ordinal));
+                if (levelSeed is null)
+                {
+                    Assert.Equal("flat", properties["level-type"]);
+                    using JsonDocument expected = JsonDocument.Parse(flatWorldSettings);
+                    using JsonDocument actual = JsonDocument.Parse(properties["generator-settings"]);
+                    Assert.True(JsonElement.DeepEquals(expected.RootElement, actual.RootElement));
+                }
+                else
+                    await AssertSpecializedFlatSeedCopyAsync(server, levelSeed, release, ct);
+                int minY = protocol < 766 ? 0 : -64;
+                Assert.Equal(minY, await client.InvokeAsync(c => c.State.World.Dimension.MinY, ct));
+                Assert.Contains(capture.Frames, frame => frame.Packet is ClientboundLevelChunkPacket { FullChunk: true } chunk && chunk.ChunkX == (x >> 4) && chunk.ChunkZ == (z >> 4));
+                int nativeBiomeFrames;
+                ModernFlatBiomeWitness? modernNativeBiomes = null;
+                if (protocol < 766)
+                    nativeBiomeFrames = AssertPreservedFlatNativeBiomes(capture, version, client.State.Registries!, protocol, x >> 4, z >> 4);
+                else
+                {
+                    modernNativeBiomes = AssertReceivedModernFlatNativeBiomes(capture, version, client.State.Registries!, protocol, x >> 4, z >> 4);
+                    nativeBiomeFrames = modernNativeBiomes.ChunkFrames;
+                    Assert.Equal("Test passed", await server.CommandAsync($"execute if biome {x} 100 {z} minecraft:the_void", ct));
+                }
+                foreach (string condition in new[] { $"execute if block {x} {minY} {z} minecraft:stone", $"execute if block {x} 99 {z} minecraft:stone", $"execute if block {x} 100 {z} minecraft:air" })
+                    Assert.Equal("Test passed", await server.CommandAsync(condition, ct));
+                Assert.Empty(await client.InvokeAsync(c => c.State.Entities.All.ToArray(), ct));
+                Assert.Equal("Test passed", await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct));
+                await server.WriteAsync("chain-generator-preconditions.json", new { release, protocol, properties, levelSeed, worldInputKind = levelSeed is null ? "server-properties-json" : "same-version-level.dat", minY, floorY = 99, preScenarioFill = true, receivedVoidBiome = true, gameplayBiomeProjectionKnown = false, nativeBiomeFrames, modernNativeBiomes, receivedFullColumn = true, initialNativeAndClientEntitiesEmpty = true });
+            }
             Vec3d self = new(x + .5, 100, z + .5);
             var destination = new BlockPos(x + 2, 100, z + 1);
             await server.ConsoleAsync("difficulty peaceful", ct);
@@ -258,6 +299,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         finally
         {
             capture.Stop();
+            if (protocol >= 766)
+                await server.WriteAsync("chain-biome-registry-frames.json", capture.BiomeRegistryFrames);
             await server.WriteAsync("capture.json", capture.Frames);
             await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "chain native geometry and action results", completedCases = observations.Count, capture.PayloadBytes, capture.Overflowed });
             if (client.Status != ClientStatus.Disconnected)
@@ -291,6 +334,209 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
     private static bool ChainState(BlockState state, int protocol, string item, string axis, bool wet)
         => state.IsValid && state.Block.Id == Identifier.Minecraft(item) && state.TryGetProperty("waterlogged", out string water) && water == wet.ToString().ToLowerInvariant()
             && (protocol == 735 ? state.Block.Value.Properties.All(property => property.Name != "axis") : state.TryGetProperty("axis", out string actual) && actual == axis);
+
+    private sealed record SpecializedFlatSeed(string Path, string Sha256);
+
+    private static async Task<SpecializedFlatSeed?> ReadSpecializedFlatSeedAsync(string release, int protocol, CancellationToken ct)
+    {
+        if (protocol is not 751 and not 755)
+            return null;
+        string receiptPath = Environment.GetEnvironmentVariable("UMPK_SPECIALIZED_LEVEL_SEED_RECEIPT")
+            ?? throw new InvalidOperationException("Supply the reviewed same-version specialized level-data receipt before native execution.");
+        string receiptSha256 = Environment.GetEnvironmentVariable("UMPK_SPECIALIZED_LEVEL_SEED_RECEIPT_SHA256")
+            ?? throw new InvalidOperationException("Supply the reviewed specialized level-data receipt SHA256.");
+        Assert.True(Path.IsPathFullyQualified(receiptPath));
+        Assert.InRange(new FileInfo(receiptPath).Length, 1, 1024 * 1024);
+        byte[] bytes = await File.ReadAllBytesAsync(receiptPath, ct);
+        Assert.Equal(receiptSha256, Convert.ToHexStringLower(SHA256.HashData(bytes)));
+        using JsonDocument document = JsonDocument.Parse(bytes);
+        JsonElement row = document.RootElement.GetProperty("origins").EnumerateArray().Single(value => value.GetProperty("protocol").GetInt32() == protocol);
+        Assert.Equal(release, row.GetProperty("release").GetString());
+        Assert.Equal(protocol == 751 ? 2578 : 2724, row.GetProperty("typedDataVersion").GetInt32());
+        JsonElement jarVersion = row.GetProperty("jarVersionMetadata");
+        Assert.Equal(release, jarVersion.GetProperty("name").GetString());
+        Assert.Equal(protocol == 751 ? 2578 : 2724, jarVersion.GetProperty("world_version").GetInt32());
+        JsonElement settings = row.GetProperty("settings");
+        Assert.Equal("minecraft:the_void", settings.GetProperty("biome").GetString());
+        Assert.Equal(0, settings.GetProperty("features").GetInt32());
+        Assert.Equal(0, settings.GetProperty("lakes").GetInt32());
+        Assert.Empty(settings.GetProperty("structures").GetProperty("structures").EnumerateObject());
+        Assert.Single(settings.GetProperty("structures").EnumerateObject());
+        JsonElement layer = Assert.Single(settings.GetProperty("layers").EnumerateArray());
+        Assert.Equal("minecraft:stone", layer.GetProperty("block").GetString());
+        Assert.Equal(100, layer.GetProperty("height").GetInt32());
+        JsonElement seed = row.GetProperty("stagedLevelDat");
+        string path = seed.GetProperty("path").GetString()!;
+        string sha256 = seed.GetProperty("sha256").GetString()!;
+        Assert.True(Path.IsPathFullyQualified(path));
+        Assert.Equal("level.dat", Path.GetFileName(path));
+        Assert.InRange(new FileInfo(path).Length, 1, 1024 * 1024);
+        byte[] metadata = await File.ReadAllBytesAsync(path, ct);
+        Assert.Equal(seed.GetProperty("bytes").GetInt32(), metadata.Length);
+        Assert.Equal(sha256, Convert.ToHexStringLower(SHA256.HashData(metadata)));
+        return new(path, sha256);
+    }
+
+    private static async Task AssertSpecializedFlatSeedCopyAsync(VanillaInteractionAcceptanceHarness server, SpecializedFlatSeed seed, string release, CancellationToken ct)
+    {
+        using JsonDocument receipt = JsonDocument.Parse(await File.ReadAllBytesAsync(Path.Combine(server.DirectoryPath, "level-data-seed.json"), ct));
+        JsonElement root = receipt.RootElement;
+        Assert.Equal(release, root.GetProperty("version").GetString());
+        Assert.Equal(seed.Path, root.GetProperty("source").GetString());
+        Assert.Equal(seed.Sha256, root.GetProperty("sha256").GetString());
+        Assert.Equal(new FileInfo(seed.Path).Length, root.GetProperty("bytes").GetInt64());
+        Assert.Equal("world/level.dat", root.GetProperty("destination").GetString());
+    }
+
+    private static int AssertPreservedFlatNativeBiomes(Capture capture, JavaVersion version, RegistryAccess registries, int protocol, int chunkX, int chunkZ)
+    {
+        Assert.True(protocol is 735 or 751 or 755);
+        // Original735/751/755 Biomes bootstrap registers minecraft:the_void at127; the public legacy biome registry is intentionally empty.
+        const int nativeTheVoidBiomeId = 127;
+        CapturedFrame[] frames = capture.Frames.Where(frame => frame.Packet is ClientboundLevelChunkPacket { FullChunk: true } chunk && chunk.ChunkX == chunkX && chunk.ChunkZ == chunkZ).ToArray();
+        Assert.NotEmpty(frames);
+        var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
+        PhaseRegistry registry = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound);
+        foreach (CapturedFrame frame in frames)
+        {
+            Assert.True(registry.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            var chunk = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(frame.Payload, context));
+            Assert.True(chunk.FullChunk);
+            Assert.Equal((chunkX, chunkZ), (chunk.ChunkX, chunk.ChunkZ));
+            byte[] raw = Assert.IsType<byte[]>(chunk.RawBody);
+            Assert.Equal(frame.Payload, raw);
+            var bytes = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(bytes);
+            codec.Encode(ref writer, chunk, context);
+            Assert.Equal(frame.Payload, bytes.WrittenSpan.ToArray());
+            Assert.Equal(raw, ChunkCodecs.EncodeStructural(ChunkCodecs.DecodeStructure(chunk)));
+            Assert.Equal(protocol switch { 735 => ChunkWireEra.Bitmask1_16, 751 => ChunkWireEra.Bitmask1_16_2, _ => ChunkWireEra.Bitmask1_17 }, chunk.WireEra);
+            var reader = new PacketReader(raw);
+            Assert.Equal(chunkX, reader.ReadInt());
+            Assert.Equal(chunkZ, reader.ReadInt());
+            if (protocol < 755)
+                Assert.True(reader.ReadBool());
+            if (protocol == 735)
+                _ = reader.ReadBool();
+            if (protocol == 755)
+            {
+                int words = reader.ReadVarInt();
+                Assert.InRange(words, 0, reader.Remaining / sizeof(long));
+                for (int index = 0; index < words; index++)
+                    _ = reader.ReadLong();
+            }
+            else
+                _ = reader.ReadVarInt();
+            _ = Assert.IsType<NbtCompound>(reader.ReadNbt(NbtWireFormat.JavaNamedRoot));
+            int count = protocol == 735 ? 1024 : reader.ReadVarInt();
+            Assert.Equal(1024, count);
+            for (int index = 0; index < count; index++)
+            {
+                int biomeId = protocol == 735 ? reader.ReadInt() : reader.ReadVarInt();
+                Assert.Equal(nativeTheVoidBiomeId, biomeId);
+            }
+        }
+        return frames.Length;
+    }
+
+
+    private sealed record ModernFlatBiomeWitness(int RegistryFrames, int RegistryEntries, int NativeTheVoidId, int ChunkFrames, int SectionsPerChunk, int TargetSectionIndex);
+
+    private static ModernFlatBiomeWitness AssertReceivedModernFlatNativeBiomes(Capture capture, JavaVersion version, RegistryAccess registries, int protocol, int chunkX, int chunkZ)
+    {
+        Assert.True(protocol is 766 or 773 or 777);
+        Assert.False(capture.Overflowed);
+        CapturedFrame[] frames = capture.Frames;
+        CapturedFrame[] registryFrames = capture.BiomeRegistryFrames;
+        Assert.NotEmpty(registryFrames);
+        var context = new PacketCodecContext(registries, IConnectionCodecState.Empty);
+        PhaseRegistry configuration = version.Protocol.GetRegistry(ProtocolPhase.Configuration, PacketFlow.Clientbound);
+        var names = new List<Identifier>();
+        foreach (CapturedFrame frame in registryFrames)
+        {
+            Assert.Equal(ProtocolPhase.Configuration, frame.Phase);
+            Assert.Equal(PacketFlow.Clientbound, frame.Flow);
+            Assert.True(configuration.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            var data = Assert.IsType<ClientboundConfigRegistryDataPacket>(codec.Decode(frame.Payload, context));
+            Assert.Equal(RegistryIds.Biome, data.Registry);
+            Assert.Equal(Assert.IsType<ClientboundConfigRegistryDataPacket>(frame.Packet).Entries.Select(entry => entry.Id), data.Entries.Select(entry => entry.Id));
+            Assert.NotEmpty(data.Entries);
+            var bytes = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(bytes);
+            codec.Encode(ref writer, data, context);
+            Assert.Equal(frame.Payload, bytes.WrittenSpan.ToArray());
+            names.AddRange(data.Entries.Select(entry => entry.Id));
+        }
+        Assert.Equal(names.Count, names.Distinct().Count());
+        // Original registry synchronization and network loading retain list order; MappedRegistry assigns the next network id in that order.
+        int nativeTheVoidId = Assert.Single(names.Select((name, index) => (name, index)), entry => entry.name == Identifier.Minecraft("the_void")).index;
+        CapturedFrame[] chunks = frames.Where(frame => frame.Phase == ProtocolPhase.Play && frame.Flow == PacketFlow.Clientbound && frame.Packet is ClientboundLevelChunkPacket { FullChunk: true } chunk && chunk.ChunkX == chunkX && chunk.ChunkZ == chunkZ).ToArray();
+        Assert.NotEmpty(chunks);
+        Assert.True(registryFrames.Max(frame => frame.Milliseconds) < chunks.Min(frame => frame.Milliseconds));
+        PhaseRegistry play = version.Protocol.GetRegistry(ProtocolPhase.Play, PacketFlow.Clientbound);
+        const int sectionsPerChunk = 24;
+        const int targetSectionIndex = (100 - (-64)) >> 4;
+        foreach (CapturedFrame frame in chunks)
+        {
+            Assert.True(play.TryGetInbound(frame.WireId, out BoundPacketCodec codec));
+            var chunk = Assert.IsType<ClientboundLevelChunkPacket>(codec.Decode(frame.Payload, context));
+            Assert.True(chunk.FullChunk);
+            Assert.Equal((chunkX, chunkZ), (chunk.ChunkX, chunk.ChunkZ));
+            Assert.Equal(frame.Payload, Assert.IsType<byte[]>(chunk.RawBody));
+            var bytes = new ArrayBufferWriter<byte>();
+            var writer = new PacketWriter(bytes);
+            codec.Encode(ref writer, chunk, context);
+            Assert.Equal(frame.Payload, bytes.WrittenSpan.ToArray());
+            ChunkWireBody body = ChunkCodecs.DecodeStructure(chunk);
+            Assert.Equal(frame.Payload, ChunkCodecs.EncodeStructural(body));
+            IReadOnlyList<ChunkSectionWire> sections;
+            if (protocol == 766)
+            {
+                var modern = Assert.IsType<Protocol764To767ChunkWireBody>(body);
+                Assert.Empty(modern.SectionPadding);
+                sections = modern.Sections;
+            }
+            else
+            {
+                var modern = Assert.IsType<ModernChunkWireBody>(body);
+                Assert.Empty(modern.SectionPadding);
+                Assert.Equal(protocol == 777, modern.HasFluidCount);
+                sections = modern.Sections;
+            }
+            Assert.Equal(sectionsPerChunk, sections.Count);
+            Assert.InRange(targetSectionIndex, 0, sections.Count - 1);
+            Assert.Equal(sectionsPerChunk, chunk.Column.SectionCount);
+            for (int sectionIndex = 0; sectionIndex < sections.Count; sectionIndex++)
+            {
+                ChunkPalettedContainerWire biomes = sections[sectionIndex].Biomes;
+                if (biomes.IsSingleValue)
+                {
+                    Assert.Equal(0, biomes.BitsPerEntry);
+                    Assert.Equal(nativeTheVoidId, biomes.SingleValue);
+                    Assert.Null(biomes.Palette);
+                    Assert.Empty(biomes.Data);
+                }
+                else
+                {
+                    // The original766 writer retains the unused initial PLAINS palette entry; logical cells, not palette cardinality, determine the biome.
+                    Assert.True(biomes.IsIndirect);
+                    Assert.InRange(biomes.BitsPerEntry, 1, 3);
+                    int[] palette = Assert.IsType<int[]>(biomes.Palette);
+                    Assert.InRange(palette.Length, 1, 1 << biomes.BitsPerEntry);
+                    Assert.All(palette, id => Assert.InRange(id, 0, names.Count - 1));
+                    int valuesPerLong = 64 / biomes.BitsPerEntry;
+                    Assert.Equal((64 + valuesPerLong - 1) / valuesPerLong, biomes.Data.Length);
+                }
+                var decoded = Assert.IsType<Umpk.Game.World.ChunkSection>(chunk.Column.GetSection(sectionIndex));
+                for (int biomeY = 0; biomeY < 4; biomeY++)
+                    for (int biomeZ = 0; biomeZ < 4; biomeZ++)
+                        for (int biomeX = 0; biomeX < 4; biomeX++)
+                            Assert.Equal(nativeTheVoidId, decoded.GetBiomeId(biomeX, biomeY, biomeZ));
+            }
+            Assert.Equal(nativeTheVoidId, Assert.IsType<Umpk.Game.World.ChunkSection>(chunk.Column.GetSection(targetSectionIndex)).GetBiomeId(2, 1, 2));
+        }
+        return new(registryFrames.Length, names.Count, nativeTheVoidId, chunks.Length, sectionsPerChunk, targetSectionIndex);
+    }
 
     private sealed record ChainLiveScene(string Name, string Item, Direction Face, bool Water = false, string? Body = null, bool Adventure = false, bool Occupied = false);
 }

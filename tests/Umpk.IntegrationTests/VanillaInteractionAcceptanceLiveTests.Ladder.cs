@@ -34,11 +34,14 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         Assert.Equal(protocol, version.Version.Protocol);
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         CancellationToken ct = deadline.Token;
-        const string flatWorldSettings = """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""";
-        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: protocol == 777 ? flatWorldSettings : null);
+        SpecializedFlatSeed? levelSeed = await ReadSpecializedFlatSeedAsync(release, protocol, ct);
+        string flatWorldSettings = protocol < 766
+            ? """{"structures":{"structures":{}},"layers":[{"height":100,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false}"""
+            : """{"layers":[{"height":164,"block":"minecraft:stone"}],"biome":"minecraft:the_void","features":false,"lakes":false,"structure_overrides":[]}""";
+        await using var server = await VanillaInteractionAcceptanceHarness.StartAsync(release, protocol, ct, flatWorldSettings: levelSeed is null ? flatWorldSettings : null, levelDataSeed: levelSeed?.Path, levelDataSeedSha256: levelSeed?.Sha256);
         output.WriteLine($"Evidence: {server.DirectoryPath}");
         await using UmpkClient client = new UmpkClientBuilder().UseVersion(version).UseProfile(new GameProfile(Guid.NewGuid(), Username)).UseStaticRegistries(JavaGameData.Registries(protocol)).Build();
-        var capture = new Capture(version);
+        var capture = new Capture(version, includeBiomeRegistry: protocol >= 766);
         client.PacketFrameObserved += capture.Observe;
         var observations = new List<object>();
         var markers = new List<string>();
@@ -55,19 +58,37 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             Vec3d spawn = await client.InvokeAsync(c => c.State.Self.Position, ct);
             int x = ((int)Math.Floor(spawn.X) >> 4) * 16 + 8;
             int z = ((int)Math.Floor(spawn.Z) >> 4) * 16 + 8;
-            if (protocol == 777)
             {
                 string[] lines = await File.ReadAllLinesAsync(Path.Combine(server.DirectoryPath, "server.properties"), ct);
                 var properties = lines.Where(line => line.StartsWith("level-type=", StringComparison.Ordinal) || line.StartsWith("generator-settings=", StringComparison.Ordinal))
                     .ToDictionary(line => line[..line.IndexOf('=')], line => line[(line.IndexOf('=') + 1)..].Replace("\\:", ":", StringComparison.Ordinal).Replace("\\=", "=", StringComparison.Ordinal).Replace("\\\\", "\\", StringComparison.Ordinal));
-                Assert.Equal("flat", properties["level-type"]);
-                using JsonDocument expected = JsonDocument.Parse(flatWorldSettings);
-                using JsonDocument actual = JsonDocument.Parse(properties["generator-settings"]);
-                Assert.True(JsonElement.DeepEquals(expected.RootElement, actual.RootElement));
-                Assert.Equal(-64, await client.InvokeAsync(c => c.State.World.Dimension.MinY, ct));
-                foreach (string condition in new[] { $"execute if biome {x} 100 {z} minecraft:the_void", $"execute if block {x} -64 {z} minecraft:stone", $"execute if block {x} 99 {z} minecraft:stone", $"execute if block {x} 100 {z} minecraft:air" })
+                if (levelSeed is null)
+                {
+                    Assert.Equal("flat", properties["level-type"]);
+                    using JsonDocument expected = JsonDocument.Parse(flatWorldSettings);
+                    using JsonDocument actual = JsonDocument.Parse(properties["generator-settings"]);
+                    Assert.True(JsonElement.DeepEquals(expected.RootElement, actual.RootElement));
+                }
+                else
+                    await AssertSpecializedFlatSeedCopyAsync(server, levelSeed, release, ct);
+                int minY = protocol < 766 ? 0 : -64;
+                Assert.Equal(minY, await client.InvokeAsync(c => c.State.World.Dimension.MinY, ct));
+                Assert.Contains(capture.Frames, frame => frame.Packet is ClientboundLevelChunkPacket { FullChunk: true } chunk && chunk.ChunkX == (x >> 4) && chunk.ChunkZ == (z >> 4));
+                int nativeBiomeFrames;
+                ModernFlatBiomeWitness? modernNativeBiomes = null;
+                if (protocol < 766)
+                    nativeBiomeFrames = AssertPreservedFlatNativeBiomes(capture, version, client.State.Registries!, protocol, x >> 4, z >> 4);
+                else
+                {
+                    modernNativeBiomes = AssertReceivedModernFlatNativeBiomes(capture, version, client.State.Registries!, protocol, x >> 4, z >> 4);
+                    nativeBiomeFrames = modernNativeBiomes.ChunkFrames;
+                    Assert.Equal("Test passed", await server.CommandAsync($"execute if biome {x} 100 {z} minecraft:the_void", ct));
+                }
+                foreach (string condition in new[] { $"execute if block {x} {minY} {z} minecraft:stone", $"execute if block {x} 99 {z} minecraft:stone", $"execute if block {x} 100 {z} minecraft:air" })
                     Assert.Equal("Test passed", await server.CommandAsync(condition, ct));
-                await server.WriteAsync("ladder-generator-preconditions.json", new { properties, minY = -64, floorY = 99, preScenarioFill = true });
+                Assert.Empty(await client.InvokeAsync(c => c.State.Entities.All.ToArray(), ct));
+                Assert.Equal("Test passed", await server.CommandAsync("execute unless entity @e[type=!minecraft:player]", ct));
+                await server.WriteAsync("ladder-generator-preconditions.json", new { release, protocol, properties, levelSeed, worldInputKind = levelSeed is null ? "server-properties-json" : "same-version-level.dat", minY, floorY = 99, preScenarioFill = true, receivedVoidBiome = true, gameplayBiomeProjectionKnown = false, nativeBiomeFrames, modernNativeBiomes, receivedFullColumn = true, initialNativeAndClientEntitiesEmpty = true });
             }
             Vec3d self = new(x + .5, 100, z + .5);
             var destination = new BlockPos(x + 2, 100, z + 1);
@@ -236,6 +257,8 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
         finally
         {
             capture.Stop();
+            if (protocol >= 766)
+                await server.WriteAsync("ladder-biome-registry-frames.json", capture.BiomeRegistryFrames);
             await server.WriteAsync("capture.json", capture.Frames);
             await server.WriteAsync("result.json", new { passed, release, protocol, scenario = "horizontal STONE ladder placement and thin obstruction", completedCases = observations.Count, capture.PayloadBytes, capture.Overflowed });
             if (client.Status != ClientStatus.Disconnected)

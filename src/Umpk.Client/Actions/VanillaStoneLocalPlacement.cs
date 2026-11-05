@@ -12,7 +12,7 @@ internal readonly record struct StonePlacementMutation(BlockPos Position, int St
 /// <summary>Default stone placement into literal air with a finite, source-bound no-op neighbor set.</summary>
 internal readonly record struct VanillaStoneLocalPlacement(bool Supported, bool ControllerCreativeRestoresCount)
 {
-    internal static VanillaStoneLocalPlacement ForProtocol(int protocol) => new(protocol is 766 or 777, protocol == 766);
+    internal static VanillaStoneLocalPlacement ForProtocol(int protocol) => new(protocol is >= 766 and <= 777, protocol is >= 766 and <= 769);
 
     internal bool TryCreate(int protocol, ClientState state, BlockPos clickedPosition, Direction face, ItemStack item, out StonePlacementMutation mutation)
     {

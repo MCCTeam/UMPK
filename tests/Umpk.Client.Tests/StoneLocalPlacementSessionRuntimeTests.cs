@@ -13,7 +13,7 @@ using Session = Support.BlockUseSession;
 
 public sealed class StoneLocalPlacementSessionRuntimeTests
 {
-    private static readonly int[] Protocols = [766, 777];
+    private static readonly int[] Protocols = [766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777];
     private static readonly Direction[] Faces = [Direction.Down, Direction.Up, Direction.North, Direction.South, Direction.West, Direction.East];
     public static IEnumerable<object[]> LocalCases() => Protocols.SelectMany(protocol => new[] { "main", "offhand", "creative-no-ability", "survival-infinite", "repeat-same", "repeat-two", "server-air", "server-stone" }.Select(scene => new object[] { protocol, scene }));
     public static IEnumerable<object[]> SafetyCases() => Protocols.SelectMany(protocol => new[] { "other-neighbor", "void-destination", "missing-neighbor", "custom", "clone", "no-abilities" }.Select(scene => new object[] { protocol, scene }));
@@ -41,7 +41,7 @@ public sealed class StoneLocalPlacementSessionRuntimeTests
         if (hand == Hand.Off) { await session.Hold(null); await Stack(session, Hand.Off, 32); }
         BlockPos destination = Session.Target.Offset(Direction.East);
         int air = State(session, "air"), stone = State(session, "stone");
-        int consumed = scene == "survival-infinite" || scene == "creative-no-ability" && protocol == 766 ? 0 : 1;
+        int consumed = scene == "survival-infinite" || scene == "creative-no-ability" && protocol <= 769 ? 0 : 1;
         var pending = new List<Pending>();
         try
         {
@@ -182,7 +182,6 @@ public sealed class StoneLocalPlacementSessionRuntimeTests
 
     [Theory]
     [InlineData(765)]
-    [InlineData(770)]
     public async Task UnadmittedProfilesKeepTheExistingUnmutatedState(int protocol)
     {
         await using Session session = await Ready(protocol, abilities: true);
@@ -190,6 +189,17 @@ public sealed class StoneLocalPlacementSessionRuntimeTests
         try { await Start(session, pending, Session.Target, Direction.East, Hand.Main, State(session, "air"), 32, BlockUseResult.Success); }
         finally { await Finish(session, pending); }
         Assert.Equal(32, Held(session, Hand.Main).Count);
+    }
+
+    [Theory]
+    [InlineData(770)]
+    public async Task NewlyAdmittedProfileUsesTheExistingMutationOwner(int protocol)
+    {
+        await using Session session = await Ready(protocol, abilities: true);
+        var pending = new List<Pending>();
+        try { await Start(session, pending, Session.Target, Direction.East, Hand.Main, State(session, "stone"), 31, BlockUseResult.Success); }
+        finally { await Finish(session, pending); }
+        Assert.Equal(31, Held(session, Hand.Main).Count);
     }
 
     private static async Task<Session> Ready(int protocol, bool abilities)

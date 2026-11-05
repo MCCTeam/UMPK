@@ -1,10 +1,26 @@
 # Vanilla block interaction audit
 
-## Current published runtime, 5 November 2026
+## Current runtime checkpoint, 5 November 2026
 
-Published `d5911b0` fixes [view mining around mounted spectators](mounted-spectator-mining.md): an already-known spectator is excluded before unsupported rider bounds are requested, while unknown ordinary riders and native lazy-cache behavior remain intact. The 38 new mining cases retain all 38 original placement cases. Valid focused red66/10 becomes76 passing cases, followed by1,390 adjacent and39,089 full Client passes with zero skips. Root admission`caf6ad90` accepts exactly three literal fixture-path display migrations/127 occurrences, verified against unchanged compiled enumerators and242 capture/sidecar files; original failed wrappers remain failed.
+Commits `b5b7003` and `980051e` add [default bone-meal results on wheat](bone-meal-wheat766.md) and [Creative STONE removal prediction before START](creative-stone-removal.md). Bone meal predicts Success and a packet swing for young wheat and Pass for mature wheat on protocol766; growth and shrink remain server-owned. Empty-hand Creative mining prepares an AIR shadow on766/769 through the existing prediction/sequence owner while the public world retains received terrain. Both changes preserve unavailable/custom contexts.
 
-The new source-equivalent thirteen-library producer has Client`e19a3787`/PDB`853978d4`, unchanged other twelve library triples and Root admission`1702ce74`. Its 1,285 authored source/PDB mappings, thirteen project/API groups,39 physical files and immutable d591 archive are verified. This freeze ran no compiler or test and retains the actual private compiler/full-run origins. Fresh producer-matched seventeen-suite validation (expected53,776), consumers, AOT, packages, repaired live scenarios and current-head CI remain pending. Older84b1 proofs below retain their original identities; they are not relabelled as new-producer executions.
+The separate trials established real causal failures before integration: BoneMeal57controls/44failures, then unchanged unused-helper failures and101GREEN/4,019adj/full39,190; AIR6controls/10failures, unchanged profile-only failures and16GREEN/2,701adj/full39,105. The actual composed Client`ca49d465`/PDB`cb9d36a0` then passed117focused,6,720adjacent and39,206 unfiltered cases with zero skips. Root admission`ab52bde6` independently verifies exact39,089+101+16 occurrences with only three literal fixture display migrations/127 occurrences. Cleanup`3b784e78` proves all22owned identities gone and zero memory events. These are managed framed-session results plus original source facts; new native bone-meal/mining-controller execution remains unperformed.
+
+The primary checkout now contains those exact accepted six C# postimages and the deliberate Client baseline39,206. A new thirteen-library freeze, all17 repository suites (forecast53,893), consumers, local AOT/packages and current-head CI remain pending for this composed producer. Prior receipts retain their actual source/binary identities.
+
+| Check | Latest completed evidence | Scope |
+| --- | --- | --- |
+| Spectator runtime | Published`d5911b0`, Client`e19a3787`/PDB`853978d4`, Root`1702ce74`;38new mining plus38retained placement/1,390adj/full39,089P0skip | [Known spectators excluded before unresolved rider bounds](mounted-spectator-mining.md), native lazy cache preserved |
+| e19 repository/consumers | 53,749 passes+27named normal skips;17count/fullformat gates;14pose/17command/1,999DMCBK/918MCC;33dependency+26runtime DLL matches | `91ecd67f` and`7c7fa003`, frozen MCC145, sibling source/Git unchanged; not relabelled as composed CA49 execution |
+| Data/Python |409passes, all1,133files reconstructed,61fresh generated files identical; defaultTool19native server reports | [Tool reconstruction](tool-component-reports.md); ten other extraction groups remain under review |
+| Basic live |75named release rows under original Client452 | Original producer and separate source applicability retained |
+| General live |49prior84b1 rows plus fresh singleton26.3 under e19/Entry14 | Fresh`54aea53a` first-attempt pass,283movementframes and14snapshots; old invalid-movement disconnect cause remains unknown, no uniform-producer50 claim |
+| Specialized live |Ten retained Ladder777 scenes plus five current natural393 scenes | [Native falling proof](natural-falling-393-live.md);76scenes remain; failed Chain735 setup attempts remain failed |
+| Remote CI |All7jobs at published`a96cdc0`; raw53,748P/28declared CI-skips, total53,776; remote AOT24,886,328bytes and exactly1executedPASS0skip | Run41950740174, audit`2cd7bb49`; actual merge tree equals a96, separate remote binaries; later commits require new CI |
+
+Entry14 binds52authored/56PDB sources with one Integration compiler and normal49passes/27literal skips (`3771831d`). The legacy flat-world fixture establishes native Void terrain, but the pre-1.18 gameplay projection discards those biome arrays and the public legacy biome registry is empty. The successor test checks every preserved native biome ID against the exact native127 registration. It must pass its live placement assertions before receiving scene credit.
+
+The following checkpoint sections retain their original dates, counts, producers and unfinished checks. The [completion ledger](interaction-completion.md) remains authoritative for open behavior families; neither successful helpers nor skipped opt-in legs complete the goal. Protocol47 retains the1.8.9 client profile. The original local Shulker notes remain unstaged and unchanged.
 
 ## Accepted checkpoint 1fa6b7c, 5 November 2026
 

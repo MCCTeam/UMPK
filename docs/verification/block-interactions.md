@@ -1,14 +1,22 @@
 # Vanilla block interaction audit
 
-## Current bone-meal runtime checkpoint, 5 November 2026
+## Current verified checkpoint, 5 November 2026
 
-The [component-era wheat profile](bone-meal-wheat-component-era.md) now has accepted evidence for all96 native scenes across six behavior boundaries. The two completed Entry19 rows at766/769 retain their original32scenes; corrected Entry20 supplies64scenes at774–777. Root47ac098e/0b6d9983 admit the two native parts, and Root6a2f28dd verifies the exact one-predicate fixture delta and reuse of the old32. The original failed whole96 batch and incomplete774row remain preserved. All owned servers and ports are cleaned up.
+The [6730 checkpoint report](interaction-checkpoint-6730.md) records fresh local validation of the frozen Client `728189cf`: 54,369 .NET passes and 33 declared opt-in skips, all 17 count baselines and full format, current DMCBK/MCC tests, Native AOT and local packages. Independent Root admissions verify the exact producer, source/PDB checksums, raw results, compiler references, unchanged sibling state and owned cleanup. The producer retains all 39 admitted library files and their actual compile origins.
 
-Actual framed-session validation establishes270passing controls/154causal failures on the old Client, then424focused and4,019adjacent passes with the fix. The unfiltered Client suite passes39,709cases with zero skips; Root34741632 checks its exact multiset. The original600s whole trial remains failed, and the separate zero-compiler full-only continuation passes in308.292s. Young wheat predicts Success/Packet in766–774 and776, Pass/None in775, and Success/Local in777. Native server growth and inventory effects remain separate from local prediction.
+| Check | Accepted result |
+| --- | --- |
+| Current Client | 424 focused, 4,019 adjacent and 39,709 full passes, zero skips |
+| Current repository | 54,369 passes + 33 named normal skips = 54,402; all 17 totals and full format pass |
+| Current consumers | 14 pose, 17 command, 1,999 DMCBK and 918 MCC passes; 143 producer references, 33 dependency and 26 runtime DLL comparisons; frozen MCC manifest145 and sibling source/Git unchanged |
+| Current Native AOT | 24,894,576 bytes, strictly below 25,165,824; exactly one executed passing smoke and zero skips |
+| Current local packages | 14 primary + 13 symbols, 27 exact 6730 commits, thirteen DLL/XML/PDB triples, nine signed dependency hashes and isolated 47/777 construction/disposal; nothing published |
+| Bone-meal native acceptance | 96 scenes across six source-bound boundaries; exact retained 32 + corrected 64 composition, physics, native crop/stack observations, packet order, replay and cleanup |
+| CI | All seven [6730 source jobs](https://github.com/MCCTeam/UMPK/actions/runs/41985127786) pass with raw Ubuntu/AOT proof; all seven [f917 documentation jobs](https://github.com/MCCTeam/UMPK/actions/runs/41988054365) have successful terminal status |
 
-Published6730fcf preserves the accepted Client728189cf and all39producer files. Its immutable source alias READY9176b9cd/Root1cc347f6 verifies1,286authored library sources,13project/API groups and all53corrected Integration Git/PDB sources. Normal82 executes49passes plus33literal opt-in skips. The fresh full17 local run is in progress against that archive, with a deliberate54,402test baseline. Current consumer/AOT/package gates remain pending. All seven [CI jobs on6730](https://github.com/MCCTeam/UMPK/actions/runs/41985127786) have successful terminal status; their raw count/AOT audit remains separate.
+The [component-era wheat profile](bone-meal-wheat-component-era.md) predicts Success/Packet for young wheat in 766–774 and 776, Pass/None in 775, and Success/Local in 777. Native growth and item consumption remain server-owned. Root `264839d4` admits the 96-scene composition while retaining the original failed native batch and incomplete 774 row. The original managed 600-second timeout also stays failed; unchanged binaries pass the separate full-only continuation before the fresh repository run.
 
-All91original specialized scenes and50General/75Basic acceptance retain their recorded producer identities. Nine data-reconstruction groups and broader geometry, motion, mining permissions, targeting and block-use contexts remain open in the [completion ledger](interaction-completion.md). These bounded passes do not complete the whole objective.
+All 91 original specialized scenes and 50 General/75 Basic acceptance retain their recorded producer identities. Nine reconstruction groups and broader geometry, motion, mining permissions, targeting and block-use contexts remain open in the [completion ledger](interaction-completion.md). These checkpoint passes do not complete the whole objective. Both PRs remain open drafts.
 
 ## Previous STONE runtime checkpoint, 5 November 2026
 

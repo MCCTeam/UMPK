@@ -911,15 +911,15 @@ internal sealed class PhysicsEngineHolder
     /// <remarks>The existing player's pose, fall, contact, environment, and input state survive a correction. A new world or player lifetime starts fresh through <see cref="EnsureEngine"/>.</remarks>
     public void ResyncPosition()
     {
+        SelfState self = _services.State.Self;
+        _services.State.LegacySelfGeometry?.ObservePosition(self.Position);
         EnsureEngine();
         if (_engine is null)
             return;
 
-        SelfState self = _services.State.Self;
         // A server teleport ends any hold: the player is no longer where it was holding station.
         _holdClimbable = false;
         _holdAgainstCurrent = null;
-        _legacySelf?.ObservePosition(self.Position);
         _engine.ApplyPositionCorrection(self.Position, self.Yaw, self.Pitch, self.Velocity);
         PushConditions();
     }

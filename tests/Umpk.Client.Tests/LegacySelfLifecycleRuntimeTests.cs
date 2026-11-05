@@ -86,6 +86,66 @@ public sealed class LegacySelfLifecycleRuntimeTests
         await AssertNative(session, row.GetProperty("transitions").EnumerateArray().Single(state => state.GetProperty("operation").GetString() == "explicit_position"));
     }
 
+    public static IEnumerable<object[]> CorrectionWakeCases()
+    {
+        foreach (int protocol in new[] { 47, 107, 108, 109, 110, 210, 315, 316, 335, 338, 340, 393, 401, 404 })
+            foreach (bool physics in new[] { false, true })
+                yield return [protocol, physics];
+    }
+
+    [Theory]
+    [MemberData(nameof(CorrectionWakeCases))]
+    public async Task ServerCorrectionBeforeRemovedBedWakeKeepsThePublicMiningOrigin(int protocol, bool physics)
+    {
+        using JsonDocument beds = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Umpk.TestKit.FixturePaths.RepoRoot(), "data", "java", protocol.ToString(System.Globalization.CultureInfo.InvariantCulture), "bed-facings.json")));
+        int bedState = beds.RootElement.GetProperty("states").EnumerateArray().Select(entry => entry[0].GetInt32())
+            .First(state => JavaGameData.BedInteractionData(protocol).TryGetBedFacing(state, out Direction facing) && facing == Direction.East);
+        await using Session session = await Session.Create(protocol, true, 1, physics);
+        await session.Column();
+        await session.Correct(new Vec3d(1.5, 63.3125, 1.5));
+        BlockPos bed = new(1, 63, 1);
+        await session.Send(new ClientboundBlockUpdatePacket(bed, bedState));
+        await session.Send(new ClientboundUseBedPacket(1, bed));
+        await session.Send(new ClientboundBlockUpdatePacket(bed, 0));
+        Vec3d corrected = new(8.5, 63.3125, 8.5);
+        await session.Correct(corrected);
+        await session.Send(new ClientboundAnimatePacket(1, 2));
+        Vec3d afterWake = (await session.Client.Snapshots.SelfAsync(session.Token)).Position;
+        Assert.Equal(0, session.TickCount);
+        Assert.Null(session.Client.State.EntitiesOrNull?.Get(1));
+        Assert.False(session.Client.State.LegacySelfGeometry!.Sleeping);
+        BlockPos target = new(8, 64, 11);
+        await session.Send(new ClientboundBlockUpdatePacket(target, session.Client.State.Registries!.Blocks[Identifier.Minecraft("stone")].Value.DefaultStateId));
+        await session.Send(new ClientboundContainerSetSlotPacket(0, 0, 36, Umpk.Game.Items.ItemStack.Empty));
+        await session.Send(new ClientboundGameEventPacket(3, 1F));
+        await session.Client.Actions.Movement.LookAtLocalAsync(new Vec3d(8.5, 64.5, 11.5), session.Token);
+        using var miningLifetime = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        Task mining = session.Client.Actions.Interaction.DigBlockInViewAsync(target, ct: miningLifetime.Token);
+        try
+        {
+            await session.Client.InvokeAsync(_ => true, session.Token);
+            await session.Tick();
+            List<object> frames = await session.MiningBarrier();
+            Assert.Equal(2, frames.Count);
+            var start = Assert.IsType<ServerboundPlayerActionPacket>(frames[protocol == 47 ? 1 : 0]);
+            Assert.Equal(0, start.Action);
+            Assert.Equal(target, start.Position);
+            Assert.Equal((byte)Direction.North, start.Direction);
+            var swing = Assert.IsType<ServerboundSwingPacket>(frames[protocol == 47 ? 0 : 1]);
+            Assert.Equal(0, swing.Hand);
+            Assert.Equal(protocol != 47, swing.HasHand);
+            await mining.WaitAsync(session.Token);
+            Assert.Equal(corrected, afterWake);
+            Assert.Equal(1, session.TickCount);
+        }
+        finally
+        {
+            miningLifetime.Cancel();
+            try { await mining.WaitAsync(session.Token); }
+            catch (OperationCanceledException) when (miningLifetime.IsCancellationRequested) { }
+        }
+    }
+
     public static IEnumerable<object[]> HealthCases()
     {
         foreach (object[] row in LegacyCases())
@@ -508,7 +568,9 @@ public sealed class LegacySelfLifecycleRuntimeTests
             return await Barrier();
         }
 
-        private async Task<List<object>> Barrier()
+        public Task<List<object>> MiningBarrier() => Barrier(includeMining: true);
+
+        private async Task<List<object>> Barrier(bool includeMining = false)
         {
             List<object> observed = [];
             long nonce = ++_nonce;
@@ -524,7 +586,8 @@ public sealed class LegacySelfLifecycleRuntimeTests
                 var writer = new PacketWriter(output);
                 codec.Encode(ref writer, decoded, new PacketCodecContext(Client.State.Registries!, IConnectionCodecState.Empty));
                 Assert.Equal(frame.Payload.ToArray(), output.WrittenSpan.ToArray());
-                if (decoded is ServerboundUseItemOnPacket or ServerboundLegacyBlockPlacePacket or ServerboundSwingPacket)
+                if (decoded is ServerboundUseItemOnPacket or ServerboundLegacyBlockPlacePacket or ServerboundSwingPacket
+                    || includeMining && decoded is ServerboundPlayerActionPacket)
                     observed.Add(decoded);
                 if (decoded is ServerboundPlayKeepAlivePacket reply && reply.Id == nonce)
                     return observed;

@@ -164,7 +164,13 @@ public sealed class UmpkClient : IAsyncDisposable
         // These capabilities belong to this client. Keep their delegates stable while each packet's context still reads the current connection and signing state.
         _worldSetup = SetupWorld;
         _pushPhysicsConditions = () => _physics?.PushConditions();
-        _resyncPhysicsPosition = () => _physics?.ResyncPosition();
+        _resyncPhysicsPosition = () =>
+        {
+            if (_physics is not null)
+                _physics.ResyncPosition();
+            else
+                State.LegacySelfGeometry?.ObservePosition(State.Self.Position);
+        };
         _applyPhysicsVelocity = () => _physics?.ApplyVelocity();
         _dispatchConfigurationChannel = _channels.DispatchConfiguration;
         _recordDisconnect = RecordDisconnect;

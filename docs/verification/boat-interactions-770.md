@@ -2,7 +2,7 @@
 
 Protocol 770 now tracks the current bounds of canonical boats, chest boats, rafts and chest rafts through the existing entity motion, geometry and membership owners. Placement can distinguish a distant boat from occupied space. View mining uses the moving box and stops when a boat intervenes, without starting an entity attack. Twenty canonical type names have positive and obstruction controls.
 
-This is a bounded implementation for uncontrolled remote actors in proven dry AIR/STONE terrain. Missing terrain, relevant predictions, unsupported metadata, mounts, leash state or unresolved peer context stay unknown. Other protocol bands retain their previous unknown behavior. This report does not close the complete vehicle inventory or its required live acceptance.
+This is a bounded implementation for uncontrolled remote actors in proven dry AIR/STONE terrain. Missing terrain, relevant predictions, unsupported metadata, mounts, leash state or unresolved peer context stay unknown. The [protocol-771 extension](boat-interactions-771.md) has its own native/runtime evidence; other unimplemented bands retain their previous unknown behavior. This report does not close the complete vehicle inventory or its required live acceptance.
 
 | Check | Executed result |
 | --- | --- |

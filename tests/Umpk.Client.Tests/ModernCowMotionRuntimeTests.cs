@@ -26,20 +26,20 @@ public sealed class ModernCowMotionRuntimeTests
     public static IEnumerable<object[]> BoatFamilies()
     {
         string[] names = ["acacia_boat", "acacia_chest_boat", "bamboo_raft", "bamboo_chest_raft", "birch_boat", "birch_chest_boat", "cherry_boat", "cherry_chest_boat", "dark_oak_boat", "dark_oak_chest_boat", "jungle_boat", "jungle_chest_boat", "mangrove_boat", "mangrove_chest_boat", "oak_boat", "oak_chest_boat", "pale_oak_boat", "pale_oak_chest_boat", "spruce_boat", "spruce_chest_boat"];
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             foreach (string name in names)
                 yield return [protocol, name];
     }
 
     public static IEnumerable<object[]> BoatProtocols()
     {
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             yield return [protocol];
     }
 
     public static IEnumerable<object[]> BoatMovementCases()
     {
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             foreach (string name in new[] { "acacia_boat", "acacia_chest_boat", "bamboo_raft", "bamboo_chest_raft" })
                 foreach (bool physics in new[] { false, true })
                     yield return [protocol, name, physics];
@@ -47,14 +47,14 @@ public sealed class ModernCowMotionRuntimeTests
 
     public static IEnumerable<object[]> BoatMiningCases()
     {
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             foreach (bool held in new[] { false, true })
                 yield return [protocol, held];
     }
 
     public static IEnumerable<object[]> BoatUnknownContexts()
     {
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             foreach (string context in new[] { "vehicle", "passenger", "water", "unmodeled-block", "local-push", "pose", "no-gravity", "local-pose" })
                 yield return [protocol, context];
     }
@@ -212,7 +212,6 @@ public sealed class ModernCowMotionRuntimeTests
 
     [Theory]
     [InlineData(769)]
-    [InlineData(771)]
     [InlineData(772)]
     [InlineData(773)]
     [InlineData(774)]
@@ -230,7 +229,7 @@ public sealed class ModernCowMotionRuntimeTests
 
     public static IEnumerable<object[]> BoatModeledIdentityCases()
     {
-        foreach (int protocol in new[] { 770 })
+        foreach (int protocol in new[] { 770, 771 })
             foreach (bool cloneDefinition in new[] { false, true })
                 yield return [protocol, cloneDefinition];
     }
@@ -258,6 +257,7 @@ public sealed class ModernCowMotionRuntimeTests
 
     [Theory]
     [InlineData(770)]
+    [InlineData(771)]
     public async Task ReceivedBoatLinkInvalidatesContextUntilOriginalSpawnReplacement(int protocol)
     {
         await using Session session = await CreateBoatSession(protocol);
@@ -344,6 +344,117 @@ public sealed class ModernCowMotionRuntimeTests
             try { await action.WaitAsync(session.Token); }
             catch (OperationCanceledException) when (caller.IsCancellationRequested) { }
         }
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(771, false)]
+    [InlineData(771, true)]
+    public async Task Measured771TargetRootedHandlerChecksPendingLocalStoneBeforeAdvancing(int protocol, bool farPrediction)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Block(new BlockPos(1, 65, 1), "air");
+        await session.Move(-28672);
+        await session.Send(new ClientboundForgetLevelChunkPacket(new ChunkPos(0, 0)));
+        await session.Send(new ClientboundEntityPositionSyncPacket(42, new PositionMoveRotation(new Vec3d(8.75, 65, 1.5), Vec3d.Zero, 0, 0), false));
+        Assert.Equal(new Vec3d(8.75, 65, 1.5), await session.Position());
+        Assert.Equal(new Vec3d(8.75, 65, 1.5), await session.PacketBase());
+        await session.Terrain();
+        await session.Block(new BlockPos(1, 64, 1), "stone");
+        var clicked = farPrediction ? new BlockPos(10, 189, 3) : new BlockPos(1, 64, 1);
+        var destination = new BlockPos(clicked.X, clicked.Y + 1, clicked.Z);
+        await session.Block(clicked, "stone");
+        await session.Block(farPrediction ? new BlockPos(10, 188, 6) : new BlockPos(1, 63, 4), "stone");
+        await session.CorrectSelf(farPrediction ? new Vec3d(10.5, 189, 6.5) : new Vec3d(1.5, 64, 4.5));
+        await session.Send(new ClientboundPlayerAbilitiesPacket(0, .05F, .1F));
+        Assert.Equal(session.Client.State.PlayerLifetime, session.Client.State.Self.AbilitiesObservationLifetime);
+        Assert.Equal(Umpk.Game.Players.GameMode.Survival, session.Client.State.Self.GameMode);
+        Assert.Equal(32, session.Client.State.Inventory.PlayerSlots[36].Count);
+        using var caller = CancellationTokenSource.CreateLinkedTokenSource(session.Token);
+        long interactionLifetime = session.Client.State.InteractionLifetime;
+        long playerLifetime = session.Client.State.PlayerLifetime;
+        Task action = session.Client.Actions.Interaction.PlaceBlockAsync(clicked, Direction.Up, new Vec3d(.5, 1, .5), ct: caller.Token);
+        int? sequence = null;
+        try
+        {
+            await session.Queued();
+            List<IPacket> packets = await session.Barrier();
+            var use = Assert.IsType<ServerboundUseItemOnPacket>(packets[0]);
+            sequence = use.Sequence;
+            Assert.Equal(clicked, use.Position);
+            Assert.Equal((int)Direction.Up, use.Face);
+            Assert.Equal((int)Hand.Main, use.Hand);
+            Assert.Equal((.5F, 1F, .5F), (use.CursorX, use.CursorY, use.CursorZ));
+            Assert.Equal(2, packets.Count);
+            Assert.Equal((int)Hand.Main, Assert.IsType<ServerboundSwingPacket>(packets[1]).Hand);
+            Assert.False(action.IsCompleted);
+            await session.Client.InvokeAsync(client =>
+            {
+                Assert.Equal(Identifier.Minecraft("air"), client.State.World.GetBlock(destination).Block.Id);
+                Assert.Equal(Identifier.Minecraft("stone"), client.State.JukeboxPrediction.GetBlock(client.State.World, destination).Block.Id);
+                Assert.Equal(31, client.State.Inventory.PlayerSlots[36].Count);
+                return true;
+            }, session.Token);
+            Assert.Empty(await session.Tick());
+            Assert.Equal(farPrediction, await session.GeometryKnown());
+            Assert.Equal(new Vec3d(farPrediction ? 6.416666666666667 : 8.75, 65, 1.5), await session.Position());
+            await session.Send(new ClientboundBlockChangedAckPacket(sequence.Value));
+            await action.WaitAsync(session.Token);
+            Assert.Equal(farPrediction, await session.GeometryKnown());
+        }
+        finally
+        {
+            bool sameLifetime = session.Client.Status == ClientStatus.Playing
+                && session.Client.State.InteractionLifetime == interactionLifetime && session.Client.State.PlayerLifetime == playerLifetime;
+            if (!action.IsCompleted && sequence is int known && sameLifetime)
+                await session.Send(new ClientboundBlockChangedAckPacket(known));
+            if (!action.IsCompleted)
+                await caller.CancelAsync();
+            try { await action.WaitAsync(session.Token); }
+            catch (OperationCanceledException) when (caller.IsCancellationRequested) { }
+        }
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(771)]
+    public async Task Measured771SelfBedContextNeedsFreshCorrectionAndBoatReplacement(int protocol)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Send(new ClientboundSetEntityDataPacket(1, new EntityMetadataList([new(14, MetadataValue.OptionalPosition(new BlockPos(1, 64, 4)))], [])));
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        Assert.Equal(BlockUsePrediction.Unknown, await BoatPrediction(session));
+        Assert.Single(await session.Use());
+        await session.Send(new ClientboundSetEntityDataPacket(1, new EntityMetadataList([new(14, MetadataValue.OptionalPosition(null))], [])));
+        await session.CorrectSelf(new Vec3d(1.5, 64, 4.5));
+        Assert.Empty(await session.Tick());
+        Assert.False(await session.GeometryKnown());
+        Assert.Single(await session.Use());
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Close();
+    }
+
+    [Theory]
+    [InlineData(771)]
+    public async Task Measured771UncontrolledVelocityClearsAtOriginalEligibleBoatTick(int protocol)
+    {
+        await using Session session = await CreateBoatSession(protocol);
+        await session.SpawnActor(42, "acacia_boat", new Vec3d(8.5, 65, 1.5));
+        Assert.Equal(2, (await session.Use()).Count);
+        await session.Send(new ClientboundSetEntityMotionPacket(42, 2000, -1000, 4000));
+        Assert.Equal(new Vec3d(.25, -.125, .5), await session.Velocity());
+        Assert.Equal(new Vec3d(8.5, 65, 1.5), await session.Position());
+        Assert.Empty(await session.Tick());
+        Assert.Equal(Vec3d.Zero, await session.Velocity());
+        AssertBoatBounds(new Vec3d(8.5, 65, 1.5), await session.Bounds());
+        Assert.Equal(BlockUsePrediction.Success(localSwing: false), await BoatPrediction(session));
+        Assert.Equal(2, (await session.Use()).Count);
         await session.Close();
     }
 

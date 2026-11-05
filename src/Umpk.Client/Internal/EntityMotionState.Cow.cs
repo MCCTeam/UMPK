@@ -40,9 +40,9 @@ internal sealed partial class EntityMotionState
 
     public void ObserveLocalPushMetadata(int protocol, EntityMetadataList metadata)
     {
-        if (!CowMotionProfile.Supports(protocol))
+        if (!CowMotionProfile.Supports(protocol) && !BoatMotionProfile.Supports(protocol))
             return;
-        // Original Entity.DATA_POSE and LivingEntity.SLEEPING_POS_ID are 6 and 14 on both measured clients. Bed assignment can reapply position before the next tick.
+        // The measured Entity.DATA_POSE and LivingEntity.SLEEPING_POS_ID remain 6 and 14. Bed assignment can reapply position before the next tick.
         foreach (EntityDataEntry entry in metadata.Entries)
         {
             if (entry.Index == 6)
@@ -56,7 +56,7 @@ internal sealed partial class EntityMotionState
 
     public void ObserveLocalPushPosition(int protocol, Vec3d position, bool absolute)
     {
-        if (CowMotionProfile.Supports(protocol))
+        if (CowMotionProfile.Supports(protocol) || BoatMotionProfile.Supports(protocol))
             _localPushPositionKnown = !_localPushPoseUnsupported && !_localPushBedUnsupported && (absolute || _localPushPositionKnown)
                 && double.IsFinite(position.X) && double.IsFinite(position.Y) && double.IsFinite(position.Z);
     }

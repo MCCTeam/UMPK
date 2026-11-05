@@ -1,10 +1,12 @@
 # Vanilla block interaction audit
 
-## Latest runtime correction, 5 November 2026
-
-The [legacy self correction/wake fix](legacy-self-correction-wake.md) preserves the public mining origin after an absolute server correction followed by wake from a removed bed, including sessions with optional physics disabled. Across all fourteen legacy datasets 47–404, thirty focused cases produced sixteen baseline passes and fourteen causal failures, then thirty passes after each of the two owner changes. All 848 adjacent cases and the one 39,737-case Client run passed with zero skips. Independent Root admission `830329ab` verifies the exact tested postimages, source/PDB checksums, full case multiset and owned cleanup. The deliberate Client count increases by 28; the seventeen-suite total is now 54,430. New producer-matched repository, consumer, AOT, package and CI checks remain pending. The following completed checkpoint retains its original source and binaries.
-
 ## Current verified checkpoint, 5 November 2026
+
+The [022c934 checkpoint](interaction-checkpoint-022c934.md) verifies the legacy wake/mining correction on Client `8ad7ea6f`: 54,397 .NET passes and 33 declared Integration skips, all seventeen count baselines and full format, fresh DMCBK/MCC tests, strict Native AOT and local packages. All seven published-source CI jobs pass with independently checked raw counts, exact executed AOT smoke and matching source tree. Producer sources, actual compiler origins and earlier failures remain recorded.
+
+The [runtime fix](legacy-self-correction-wake.md) adds 28 cases and preserves the corrected mining origin after waking from a removed bed, including Physics=false. Current consumers pass 14/17/1,999/918 with 143 references and 33+26 DLL matches; sibling source/Git and frozen MCC145 remain unchanged. Local AOT is 24,894,576 bytes with exactly one passing smoke and zero skips. Fourteen primary and thirteen symbol packages, thirteen producer triples, nine signed SDK hashes and isolated 47/777 checks pass; nothing is published. Native BoneMeal96 retains its old `7281` execution origins and only finite source applicability to this producer. Broader interaction behavior and nine reconstruction groups remain open in the [completion ledger](interaction-completion.md).
+
+## Previous 6730 checkpoint, 5 November 2026
 
 The [6730 checkpoint report](interaction-checkpoint-6730.md) records fresh local validation of the frozen Client `728189cf`: 54,369 .NET passes and 33 declared opt-in skips, all 17 count baselines and full format, current DMCBK/MCC tests, Native AOT and local packages. Independent Root admissions verify the exact producer, source/PDB checksums, raw results, compiler references, unchanged sibling state and owned cleanup. The producer retains all 39 admitted library files and their actual compile origins.
 

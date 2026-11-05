@@ -1,6 +1,12 @@
 # Vanilla block interaction audit
 
-## Current accepted evidence, 5 November 2026
+## Current published runtime, 5 November 2026
+
+Published `d5911b0` fixes [view mining around mounted spectators](mounted-spectator-mining.md): an already-known spectator is excluded before unsupported rider bounds are requested, while unknown ordinary riders and native lazy-cache behavior remain intact. The 38 new mining cases retain all 38 original placement cases. Valid focused red66/10 becomes76 passing cases, followed by1,390 adjacent and39,089 full Client passes with zero skips. Root admission`caf6ad90` accepts exactly three literal fixture-path display migrations/127 occurrences, verified against unchanged compiled enumerators and242 capture/sidecar files; original failed wrappers remain failed.
+
+The new source-equivalent thirteen-library producer has Client`e19a3787`/PDB`853978d4`, unchanged other twelve library triples and Root admission`1702ce74`. Its 1,285 authored source/PDB mappings, thirteen project/API groups,39 physical files and immutable d591 archive are verified. This freeze ran no compiler or test and retains the actual private compiler/full-run origins. Fresh producer-matched seventeen-suite validation (expected53,776), consumers, AOT, packages, repaired live scenarios and current-head CI remain pending. Older84b1 proofs below retain their original identities; they are not relabelled as new-producer executions.
+
+## Accepted checkpoint 1fa6b7c, 5 November 2026
 
 Published `0704bb2` adds an explicit native-report input path for default Tool components and replaces their unavailable historical measurement provenance. The [Tool report](tool-component-reports.md) records nineteen native server report sets, 475 independently rehashed client/server source pairs, seven protocol-alias comparisons, 409 passing Python tests, exact reconstruction of all 1,133 data files and 61 unchanged generated files. The old raw payloads remain absent; the new reports have their own source and execution identities. This closes default-Tool reconstruction only. Ten other extraction groups and the broader behavior ledger remain open.
 

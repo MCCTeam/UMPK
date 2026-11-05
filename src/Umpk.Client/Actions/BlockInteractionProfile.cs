@@ -26,11 +26,14 @@ internal readonly record struct BlockInteractionProfile(bool InitialSwingBeforeS
 
     public bool AirUsePublishesPosition { get; init; }
 
+    public bool PredictCreativeStoneRemoval { get; init; }
+
     public MiningEnchantmentFormat MiningEnchantments { get; init; }
 
     public static BlockInteractionProfile ForProtocol(int protocol)
         => new(protocol < OffHandIntroduced, protocol >= InstantBuildCriterionIntroduced, protocol >= ExponentialMiningFatigueIntroduced, protocol >= DestroyDirectionActionIntroduced, protocol >= ItemToolComponentIntroduced, protocol >= LocalPredictedUseSwingIntroduced, protocol >= VoxelPlacementObstructionIntroduced, protocol >= EmptyThinShapesIntroduced, protocol < SpectatorConsumeResultIntroduced, protocol >= ChargedPiercingAttackIntroduced, protocol >= TeleportStopsDestroyingIntroduced, protocol < ItemBlockPlacementPrecheckRemoved)
         {
+            PredictCreativeStoneRemoval = protocol is 766 or 769,
             MiningEnchantments = protocol < NamedMiningEnchantmentsIntroduced ? MiningEnchantmentFormat.NumericShortNbt : protocol < NbtMiningEnchantmentLevelClampIntroduced ? MiningEnchantmentFormat.NamedIntNbt : protocol < ItemToolComponentIntroduced ? MiningEnchantmentFormat.ClampedNamedIntNbt : MiningEnchantmentFormat.Components,
             ProjectedOutlineClipModel = protocol < 393 ? BlockRayClipModel.LegacyBox : protocol < 477 ? BlockRayClipModel.VoxelForwardInside : BlockRayClipModel.VoxelOppositeInside,
             // Native useItem sends PosRot in 1.17–1.20.6; 1.21 carries look in UseItem instead. This explicit report does not advance ordinary movement cadence.

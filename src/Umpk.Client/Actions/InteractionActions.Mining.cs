@@ -304,6 +304,8 @@ public sealed partial class InteractionActions
             && _creativeMiningRestriction.PreventsLocalRemoval(item, _services.State, _services.Version.Version.Protocol) == true;
         bool initialItemEnabled = item.IsEmpty || _services.State.EnabledFeatures.IsItemEnabled(item.Item.Id, _services.Version.Version.Protocol) == true;
         int? sequence = NextSequence();
+        if (_blockProfile.PredictCreativeStoneRemoval && sequence is not null && TryCreateCreativeStoneRemoval(request.Position, item, out int air))
+            _services.State.JukeboxPrediction.Commit(request.World!, request.Position, air, sequence, _services.ReadPhysicsState()?.Position ?? _services.Self.Position);
         await _sink.SendAsync(new ServerboundPlayerActionPacket(0, request.Position, (byte)request.Face, sequence), ct).ConfigureAwait(false);
         if (instantBuild || progress >= 1.0F)
         {
@@ -321,6 +323,49 @@ public sealed partial class InteractionActions
         else
             _destroyTarget = new MiningTarget(request, item);
         return true;
+    }
+
+    private bool TryCreateCreativeStoneRemoval(BlockPos position, ItemStack item, out int air)
+    {
+        air = 0;
+        ClientState state = _services.State;
+        World world = state.World;
+        int protocol = _services.Version.Version.Protocol;
+        if (!item.IsEmpty || state.Self.GameMode != GameMode.Creative || !state.Self.InstantBuild
+            || state.Self.AbilitiesObservationLifetime != state.PlayerLifetime
+            || state.Inventory.HasOpenContainer || state.Inventory.HasPendingPrediction
+            || !world.Border.IsWithinBounds(position.X, position.Z, WorldBorderState.ContainmentEraForProtocol(protocol))
+            || !KnownCell(position) || !Canonical(state.JukeboxPrediction.GetBlock(world, position), "stone")
+            || world.GetBlockEntityNbt(position) is not null || state.EnabledFeatures.IsBlockEnabled(Identifier.Minecraft("stone"), protocol) != true)
+            return false;
+        // These original AIR/STONE classes have no state-changing shape callback; an arbitrary empty or full shape does not establish that fact.
+        ReadOnlySpan<Direction> neighbors = [Direction.Down, Direction.Up, Direction.North, Direction.South, Direction.West, Direction.East];
+        foreach (Direction direction in neighbors)
+        {
+            BlockPos neighbor = position.Offset(direction);
+            if (!KnownCell(neighbor))
+                return false;
+            BlockState current = state.JukeboxPrediction.GetBlock(world, neighbor);
+            if (!Canonical(current, "air") && !Canonical(current, "stone"))
+                return false;
+        }
+        RegistryEntry<BlockDefinition> empty = JavaGameData.Registries(protocol).Blocks[Identifier.Minecraft("air")];
+        if (empty.Value.Properties.Count != 0 || empty.Value.StateCount != 1)
+            return false;
+        air = empty.Value.DefaultStateId;
+        return true;
+
+        bool KnownCell(BlockPos cell) => cell.X is >= -30000000 and < 30000000 && cell.Z is >= -30000000 and < 30000000
+            && cell.Y >= world.Dimension.MinY && cell.Y < world.Dimension.MaxY
+            && world.GetColumn(cell) is not null && state.EntityMembership.HasColumn(cell);
+
+        bool Canonical(BlockState current, string name)
+        {
+            Identifier id = Identifier.Minecraft(name);
+            return current.IsValid && current.Block.Id == id && JavaGameData.Registries(protocol).Blocks.TryGet(id, out RegistryEntry<BlockDefinition> canonical)
+                && ReferenceEquals(current.Block.Value, canonical.Value) && canonical.Value.Properties.Count == 0 && canonical.Value.StateCount == 1
+                && current.StateId == canonical.Value.DefaultStateId;
+        }
     }
 
     private void CompleteMining(MiningRequest request, int? sequence)

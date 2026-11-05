@@ -541,7 +541,9 @@ public sealed class LiveServerTests
                     ? $"item replace block {chestPos.X} {chestPos.Y} {chestPos.Z} container.0 with minecraft:stone 5"
                     : $"replaceitem block {chestPos.X} {chestPos.Y} {chestPos.Z} {containerSlot} minecraft:stone 5";
                 await server.SendConsoleAsync(fill, ct.Token);
-                string legacyChestFound = $"Successfully found the block at {chestPos.X},{chestPos.Y},{chestPos.Z}.";
+                string legacyChestFound = protocol < 210
+                    ? $"Successfully found the block at {chestPos.X},{chestPos.Y},{chestPos.Z}."
+                    : $"Successfully found the block at {chestPos.X}, {chestPos.Y}, {chestPos.Z}";
                 if (protocol < 393)
                 {
                     int fillLogStart = server.LogText.Length;

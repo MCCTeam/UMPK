@@ -269,6 +269,9 @@ public sealed partial class InteractionActions
         VanillaEndCrystalUse crystal = VanillaEndCrystalUse.ForProtocol(_services.Version.Version.Protocol);
         if (crystal.Supports(item.Item.Id))
             return PredictEndCrystalUse(crystal, item, clicked, world, position, data);
+        if (VanillaBoneMealUse.ForProtocol(_services.Version.Version.Protocol).TryPredict(item, clicked,
+            _services.Self.GameMode == GameMode.Adventure, _blockProfile.UseSwingIsLocal, out BlockUsePrediction boneMealUse))
+            return boneMealUse;
         if (Vanilla777ToolUse.Supports(_services.Version.Version.Protocol, item.Item.Id, out Identifier transformer))
         {
             // ItemStack.useOn checks Adventure before resolving the effective transformer. A known denial still passes after USE, even when transformer contents are unavailable.

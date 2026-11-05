@@ -1,0 +1,29 @@
+# Default bone meal on wheat in protocol 766
+
+This slice predicts the client interaction result for a canonical default bone-meal stack on canonical wheat in protocol 766 (1.20.5 and 1.20.6). Young wheat returns Success with the existing packet swing; mature wheat returns Pass. Growth, item consumption and server world changes remain server-owned. Other protocols, custom component patches, cloned definitions and unavailable terrain retain their existing outcomes.
+
+## Source boundary
+
+The official 1.20.5 and 1.20.6 client sources are identical for the eleven participating item, block and controller classes. `BoneMealItem.growCrop` accepts young wheat on the client; growth and shrink occur only on the server branch. Mature wheat rejects the water-plant fallback because its support shape is empty on every face. The native report's wheat states 4278–4285 have ages 0–7; the current canonical registry exposes the same eight-state property and empty collision shapes. No dataset value or feature axis changed.
+
+`ItemStack.useOn` checks `!mayBuild` and absent `CAN_PLACE_ON` before calling BoneMealItem. Original GameType assigns `mayBuild = !isBlockPlacingRestricted()`, with Adventure and Spectator restricted; the existing controller handles Spectator before item use. The default bone-meal prototype has no `CAN_PLACE_ON`, so this bounded Adventure path returns Pass. This proof does not equate the wire's instant-build ability with mayBuild. Cooldown, block activation, secondary use, inventory knowledge, feature and terrain checks remain in their existing owner order.
+
+The new internal profile requires the cached canonical item and block definitions, an unpatched stack and the exact eight-age schema. Its caller participates through the existing placement action after the existing item prechecks. It predicts no local crop state, stack decrement or jukebox shadow.
+
+## Executed managed stages
+
+The private trial compiled one Test assembly against the admitted d591/e19 producer. All 101 cases exercised the public framed placement caller; both causal assertions occur after the peer decoded and byte-round-tripped the actual USE group. The baseline produced 57 passing controls and 44 causal failures: 32 missing swing packets and 12 Pass-versus-Unknown results. Adding the unused helper compiled once and reproduced the exact same names and outcomes. Adding the caller compiled once; all 101 cases then passed. All 4,019 adjacent tool, cooldown, permissions, features, pillar and heart cases passed with no skips.
+
+The fixture covers all eight ages, both hands, Survival and Creative, bounded Adventure/Spectator/cooldown/secondary-use cases, missing terrain and lifetime transitions, custom patches, cloned definitions, empty hands and protocols 765/767/777 as controls. Before USE and after ACK it checks unchanged received crop state and both hand stacks, absence of local projection, task completion and owned cancellation cleanup.
+
+The one unfiltered full run passed all 39,190 cases with zero skips. Its exact Counter is the accepted 39,089 baseline plus 101 cases. Only three literal capture-path display keys are permitted to migrate, with multiplicities 121/3/3 and unchanged compiled enumerator/PDB and 242-input proof; there is no general test-name normalization.
+
+## Evidence and limits
+
+The source proposal and native bindings are `SOURCE-POSTIMAGES.json` and `SOURCE-BINDINGS.json` in the neighboring `bone-meal-wheat766-preparation-20261105-v1` directory. `NATIVE-SUPPORT-AND-ABILITIES-ADDENDUM.json` closes the support hierarchy and native ability condition. The isolated run is `/home/anon/Projects/MinecraftOfficial/runs/bone-meal-wheat766-managed101-lane3-20261105-v1`; commands, raw TRX, compiler inputs, retained stage PDB/source snapshots and resource logs remain outside Git. The execution uses Root's explicit temporary lane3 lease under the three-lane policy; the delegated grant and actual controller capture identify their authorship.
+
+These are managed framed-session results plus original source/report facts. No new native client/controller or server interaction was executed for bone meal. A separate composed candidate with the AIR-shadow change passed 117 focused, 6,720 adjacent and 39,206 unfiltered Client cases with zero skips; its actual receipt is `ACTUAL-COMBINED117.json` (`d724150a`), independently admitted by Root (`ab52bde6`). The composed Client is `ca49d465`/PDB `cb9d36a0`; all 22 owned identities exited and cleanup `3b784e78` retained zero memory events. A new frozen producer and its consumer/AOT/live checkpoints remain separate work. The standalone result does not close the broader bone-meal family.
+
+The actual managed receipt is `ACTUAL-BONEMEAL101.json` (SHA-256 `80aeb8b4a4c62e3da27ce5e3ec34480453da978671411eab810691e347d79971`); cleanup is `TERMINAL-CLEANUP.json` (SHA-256 `3a18ea02d88a6dd6311bc53244e43ea211c8f075d24d8618df2d8c402d2c2720`). Cleanup proved all 30 observed HOST identities absent, the original cgroup gone, all 4,488 source files, 20 references, 39 frozen producer files and 136 runtime files intact under their declared phase rules, and all memory events zero. The controller captured its real completed wait result without `--pipe`, and the exact invocation journal contains the terminal success marker. One Test and two Client compilers were observed. Both retained Client stages and the final Test/Client PDB documents were verified; intermediate caller sources use their retained stage snapshots.
+
+Root independently verified the standalone full Counter and original 101-case additions in `ROOT-BONEMEAL101-ADMISSION-20261105-v1.json` (`a760162d`). The subsequent composition preserves the same 39,089 baseline plus the exact 101 bone-meal and 16 AIR cases, with the same three literal display migrations. No SDK or tests were rerun while copying the exact accepted postimages into the primary checkout.

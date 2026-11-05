@@ -52,7 +52,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                 await server.ConsoleAsync($"gamerule {rule} false", ct);
             Assert.Equal("Gamerule doEntityDrops is currently set to: false", await server.CommandAsync("gamerule doEntityDrops", ct));
             await server.ConsoleAsync($"fill {x - 4} 99 {z - 4} {x + 4} 99 {z + 4} minecraft:stone", ct);
-            await server.ConsoleAsync($"fill {x - 4} 100 {z - 4} {x + 4} 104 {z + 4} minecraft:air", ct);
+            await server.ConsoleAsync($"fill {x - 4} 100 {z - 4} {x + 4} 130 {z + 4} minecraft:air", ct);
             await server.ConsoleAsync(FormattableString.Invariant($"tp {Username} {self.X:R} {self.Y:R} {self.Z:R} 0 0"), ct);
             await server.ConsoleAsync("gamemode survival " + Username, ct);
             await client.Actions.Inventory.SelectHeldSlotAsync(0, ct);
@@ -93,16 +93,28 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
             async Task Spawn(Vec3d position)
             {
                 int mark = capture.Mark();
-                await server.ConsoleAsync(FormattableString.Invariant($"summon minecraft:falling_block {position.X:R} {position.Y:R} {position.Z:R} {{Tags:[\"{actorTag}\"],BlockState:{{Name:\"minecraft:sand\"}},Time:1,NoGravity:1b,Motion:[0d,0d,0d],DropItem:0b,Silent:1b}}"), ct);
-                await WaitAsync(client, c => c.State.Entities.All.Count() == 1 && c.State.Entities.All.Single().Type.Id == Identifier.Minecraft("falling_block"), "falling393 original native spawn", ct);
+                var sourceCell = new BlockPos(x - 2, 128, z - 2);
+                await AssertBlockAsync(server, protocol, sourceCell, "air", ct);
+                await AssertBlockAsync(server, protocol, sourceCell.Below(), "air", ct);
+                await server.ConsoleAsync($"setblock {sourceCell.X} {sourceCell.Y} {sourceCell.Z} minecraft:sand", ct);
+                await WaitAsync(client, c => c.State.Entities.All.Count() == 1 && c.State.Entities.All.Single().Type.Id == Identifier.Minecraft("falling_block"), "falling393 natural native spawn from unsupported sand", ct);
                 Entity current = await client.InvokeAsync(c => Assert.Single(c.State.Entities.All), ct);
                 actor = current;
-                await WaitAsync(() => capture.Since(mark).Any(frame => SlabMetadata(frame.Packet, current.Id, 5, true)), "falling393 received Boolean NoGravity5", ct);
                 CapturedFrame spawnFrame = Assert.Single(capture.Since(mark), frame => frame.Packet is ClientboundAddEntityPacket observedSpawn && observedSpawn.EntityId == current.Id);
                 var spawn = Assert.IsType<ClientboundAddEntityPacket>(spawnFrame.Packet);
-                Assert.Equal((position.X, position.Y, position.Z, 66), (spawn.X, spawn.Y, spawn.Z, spawn.Data));
+                double spawnY = (double)sourceCell.Y + (1.0F - .98F) / 2.0F;
+                Assert.Equal((sourceCell.X + .5, spawnY, sourceCell.Z + .5, 66), (spawn.X, spawn.Y, spawn.Z, spawn.Data));
                 Assert.Equal((0, 0, 0), ((int)spawn.VelocityX, (int)spawn.VelocityY, (int)spawn.VelocityZ));
-                await NativeActor(position);
+                await WaitAsync(() => capture.Since(mark).Any(frame => frame.Packet is ClientboundSetEntityMotionPacket motion && motion.EntityId == current.Id && motion.VelocityY < 0), "falling393 genuine native gravity velocity before freezing", ct);
+                string sourceSelector = $"@e[type=minecraft:falling_block,x={sourceCell.X},y=100,z={sourceCell.Z},dx=1,dy=30,dz=1]";
+                Assert.Equal("Test passed, count: 1", await server.CommandAsync("execute if entity " + sourceSelector, ct));
+                int freezeMark = capture.Mark();
+                await server.ConsoleAsync($"data merge entity {sourceSelector[..^1]},limit=1] {{Tags:[\"{actorTag}\"],Time:1,NoGravity:1b,Motion:[0d,0d,0d],DropItem:0b,Silent:1b}}", ct);
+                await WaitAsync(() => capture.Since(freezeMark).Any(frame => SlabMetadata(frame.Packet, current.Id, 5, true))
+                    && capture.Since(freezeMark).Any(frame => frame.Packet is ClientboundSetEntityMotionPacket motion && motion.EntityId == current.Id && motion.VelocityX == 0 && motion.VelocityY == 0 && motion.VelocityZ == 0), "falling393 native NoGravity5 and zero-velocity transition", ct);
+                await WaitAsync(client, c => c.State.Entities.Get(current.Id) is Entity observed && observed.Velocity == Vec3d.Zero, "falling393 native frozen velocity applied", ct);
+                await AssertBlockAsync(server, protocol, sourceCell, "air", ct);
+                await Move(position);
             }
 
             async Task Move(Vec3d position)

@@ -1,6 +1,29 @@
 # Vanilla block interaction audit
 
-## Current accepted evidence, 4 November 2026
+## Current accepted evidence, 5 November 2026
+
+Published `0704bb2` adds an explicit native-report input path for default Tool components and replaces their unavailable historical measurement provenance. The [Tool report](tool-component-reports.md) records nineteen native server report sets, 475 independently rehashed client/server source pairs, seven protocol-alias comparisons, 409 passing Python tests, exact reconstruction of all 1,133 data files and 61 unchanged generated files. The old raw payloads remain absent; the new reports have their own source and execution identities. This closes default-Tool reconstruction only. Ten other extraction groups and the broader behavior ledger remain open.
+
+The current thirteen-library producer remains source-equivalent to `c507c1f`: Client `84b113d8`/PDB `11767ded`, Root admission `8ad46367`, 1,285 authored PDB sources and 39 producer files. Its 48 focused, 895 adjacent and 39,051 full Client passes retain their actual compile origin. Neither the later test fixture nor report publication is described as a new producer build. Native button controller-phase execution remains unmeasured.
+
+| Check | Accepted result | Evidence |
+| --- | --- | --- |
+| Local seventeen-suite checkpoint | 53,711 passes and 27 named Integration opt-in skips; total53,738; count and full-format gates pass | `9384cf11`, with actual C507 test/PDB origins |
+| Current-producer DMCBK/MCC | 14 pose,17 command,1,999 DMCBK and918 MCC passes;143 references,33 dependency and26 runtime DLL comparisons; frozen MCC145; sibling source/Git and protected outputs unchanged | `379975ee` |
+| Local Native AOT | 24,890,480 bytes, strictly below25,165,824; exactly one executed passing smoke and zero skips | `788b235f` |
+| Local packages | 14 primary/13 symbol archives;13 matching DLL/PDB/XML triples;27 C507 commit fields; isolated47/777 consumer passes; no publication | `387bff56` |
+| Current live test entry | Entry12 has52 authored/56 PDB sources and normal49 passes/27 literal opt-in skips; corrected1.10 pilot passes | Entry`aedf7747`, normal`4f693414`, live`7c2ef8c2` |
+| Geometry reconstruction |32 modern obstruction files and all60 geometry outputs reproduce exactly; complete176-role recipe restored | `c7b3aa9a` and `02d4ee0a` |
+
+Consumer, AOT and package checks retain their C8D/Entry11/current1.9-pilot origins, complete owned cleanup and exact producer hashes. They are not relabelled as Entry12 builds. The modern obstruction repair changed44 provenance hashes and44 object-key orders; the geometry recipe changed no canonical output. Earlier resource and37-output recipe failures remain recorded. The obstruction terminal proof is explicitly Root's transcribed direct tool capture, separate from an independent journal witness.
+
+The earlier Client `45279381` retains all75 basic survival-mining/ordinary-placement rows and ten Ladder777 scenes under its original binaries. Root admission`b50c27f0` proves the changed C507 button branch is unreachable in those scenarios, without adding native execution. Current Client`84b113d8` separately has twenty accepted General compatibility rows; the remaining thirty are running serially on its exact producer. The earlier failed1.10 batch and queue remain failed, with only their independently admitted passing prefix reused.
+
+Specialized acceptance still requires81 scenes. Fresh falling393 and chain735 trials failed and were cleaned up: the first used a summoned server entity whose obstruction flag differs from natural falling sand; the second received late ambient falling entities after its empty-world check. Their valid prefixes remain observations, not whole-leg passes. Source-backed natural-spawn and stable-flat fixtures are being prepared without weakening geometry, unknown-state, packet, count or native outcome assertions. The bounded mounted-spectator mining correction has passed focused and adjacent checks; its full-suite name audit and publication remain separate work.
+
+Published`bcdd56b` CI completes all seven jobs. Raw audit`9cccce4a` verifies53,710 passes plus28 literal CI skips, total53,738, and remote AOT24,886,328 bytes with exactly one executed passing smoke; the actual checkout tree matches that head. Those remote results remain separate from local checks. The later`0704bb2` head requires its own CI result. The complete125-row/version pack,91-scene specialized pack and interaction goal are not declared finished.
+
+## Historical accepted evidence, 4 November 2026
 
 The [current checkpoint](interaction-checkpoint-20261104-current.md) retains the unchanged `d24824e` thirteen-library tuple, actual Client 630/3,837/full 39,003 and the prior d9 local 17 suites (53,663 passes/27 named skips, total 53,690). Current consumers14/17/1999/918, local AOT24890480bytes/exactly1smoke and14primary/13symbol packages/13triples/isolated47+777 pass with owned cleanup. Actual mixed build origins remain explicit; no build at the later fixture publication is claimed.
 

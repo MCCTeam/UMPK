@@ -2,6 +2,8 @@
 
 ## Current bone-meal runtime checkpoint, 5 November 2026
 
+Native bone-meal acceptance now retains32passed scenes at766/769 (Root47ac098e). The first96-scene wrapper failed at774offhand setup after eight main-hand observations; all113owned identities and ports are cleaned up. Source and savedNBT identify a fixture boundary error: equipment.offhand starts at770, not777. The single-predicate correction builds and passes normal82 with the same7281libraries. Remaining64scenes at774–777 and all final gates stay pending; the original failed wrapper remains failed.
+
 The dedicated six-boundary bone-meal fixture now builds with53authored/57PDB sources and passes normal discovery:49executed passes plus33named opt-in skips, SDKnotExecuted0. Root43e8dba3 admits actual Entry19 DLL42953875/PDBa6ce6d7a; its earlier import failure remains preserved. The Integration baseline deliberately becomes82, all17forecast54,402; native96 and fresh final gates remain unexecuted. Rootc684f9d6 now independently admits the current13-library24f4 source freeze (1286authored/13API groups/39files), with Client728189cf and unchanged other12triples.
 
 The [component-era wheat profile](bone-meal-wheat-component-era.md) now predicts native results and swings across all twelve datasets766–777: young wheat Success/Packet in766–774 and776, Pass/None in775, Success/Local in777; mature wheat Pass. It uses each protocol’s canonical definitions through the existing placement caller. Growth, inventory shrink and terrain changes remain server-owned; custom or unavailable context keeps conservative results.

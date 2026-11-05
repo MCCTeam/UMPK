@@ -157,7 +157,7 @@ public sealed partial class VanillaInteractionAcceptanceLiveTests
                     Assert.True(await client.InvokeAsync(c => c.State.World.GetBlock(air).IsAir, ct));
                 }
                 await NativeCount(32);
-                string handPredicate = scene.Hand == Hand.Main ? "SelectedItem:{id:\"minecraft:bone_meal\"}" : protocol == 777 ? "equipment:{offhand:{id:\"minecraft:bone_meal\"}}" : "Inventory:[{Slot:-106b,id:\"minecraft:bone_meal\"}]";
+                string handPredicate = scene.Hand == Hand.Main ? "SelectedItem:{id:\"minecraft:bone_meal\"}" : protocol >= 770 ? "equipment:{offhand:{id:\"minecraft:bone_meal\"}}" : "Inventory:[{Slot:-106b,id:\"minecraft:bone_meal\"}]";
                 string countOne = protocol >= 774 ? "Test passed. Count: 1" : "Test passed, count: 1";
                 Assert.Equal(countOne, await server.CommandAsync(FormattableString.Invariant($"execute if entity @a[name={Username},gamemode={nativeMode},nbt={{Pos:[{self.X:R}d,{self.Y:R}d,{self.Z:R}d],OnGround:1b,{handPredicate}}}]"), ct));
                 await Marker($"execute if block {target.X} {target.Y} {target.Z} minecraft:wheat[age={scene.Age}]", scene.Name + "-input");

@@ -2,7 +2,7 @@
 
 ## New protocol-770 boat runtime, 5 November 2026
 
-The [boat runtime report](boat-interactions-770.md) connects native current bounds to public placement and view mining on 1.21.5/protocol 770. Twenty canonical type names, 72 focused cases, 11,099 adjacent and 39,809 full Client passes verify Client ed120330, with original28-row native evidence and independent source/PDB/resource audits. Unknown contexts stay unknown, including the missing local self-body with physics disabled. Fresh repository/consumer/AOT/package/CI and dedicated live checks for this producer remain pending; the previous checkpoint below retains its own successful build.
+The [boat runtime report](boat-interactions-770.md) connects native current bounds to public placement and view mining on 1.21.5/protocol 770. Twenty canonical type names, 72 focused cases, 11,099 adjacent and 39,809 full Client passes verify Client ed120330, with original28-row native evidence and independent source/PDB/resource audits. Unknown contexts stay unknown, including the missing local self-body with physics disabled. Fresh local repository checks pass 54,469 cases with 33 named optional skips, all seventeen baselines and full formatting; all seven published-head CI jobs pass. Producer-matched DMCBK/MCC checks pass through an audited continuation that preserves an earlier script-throttling timeout; local AOT/package and dedicated boat live checks remain pending. The scoped report preserves that failure and the earlier checkpoint below retains its own successful build.
 
 ## Previous verified checkpoint, 5 November 2026
 

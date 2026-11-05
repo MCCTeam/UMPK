@@ -429,3 +429,15 @@ python3 tools/extraction/extract_legacy_bed_exit_cells.py \
   --measurements "$UMPK_ORACLE_ROOT/runs/pre-pose-bed-exit-cells-all-20261018-v1" \
   --official "$UMPK_ORACLE_ROOT" --data data/java --check
 ```
+
+## Native Tool component reports
+
+The default `extract_item_interactions.py --measurements` path reads retained `ItemInteractionDump` payloads and keeps their original provenance. Use `--native-reports` only for a reviewed recipe over complete output from the original vanilla server data generator. The recipe must bind matching client/server item initialization and Tool codec source, native execution receipts, exact report files, protocol aliases and official artifacts. Supply its reviewed SHA-256 explicitly.
+
+```bash
+python3 tools/extraction/extract_item_interactions.py --data data/java --official "$MINECRAFT_OFFICIAL_ROOT" --native-reports /path/to/reviewed/NATIVE-REPORTS-RECIPE.json --native-reports-sha256 "$REPORT_RECIPE_SHA256"
+```
+
+The report reader supports the complete component arrays in protocol 766, complete component objects in 767–774, and per-registry component files in 775–777. Missing item files in the last format establish an absent Tool component only after complete native production and an exact output manifest have been verified. Partial reports, missing receipts, changed files, mismatched registries or differing protocol aliases stop extraction. Rule order, selectors, optional values and numeric types remain intact.
+
+Report-mode provenance names the original server data generator, the recipe, source equivalence, native execution and report manifest hashes. It does not claim native client execution or recovery of old measurement payloads. These reports establish default Tool values; interaction controller behavior and complete mining acceptance require their own runtime evidence.

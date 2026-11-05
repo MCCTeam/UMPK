@@ -98,7 +98,8 @@ internal static class InteractionPicker
         bool insideSelected = false, unknown = false;
         foreach (Entity entity in state.Entities.All)
         {
-            if (entity.Id == state.Self.EntityId || profile.IsNativeNonparticipant(entity.Type.Id))
+            if (entity.Id == state.Self.EntityId || profile.IsNativeNonparticipant(entity.Type.Id)
+                || state.EntityMotion.IsKnownSpectator(entity, state.TabList))
                 continue;
             bool? member = state.EntityMembership.IsWorldQueryMember(entity);
             if (member is false)

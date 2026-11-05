@@ -14,19 +14,24 @@
     "tool": "tools/extraction/shape-extractor/MiningDump.java",
     "note": "Vanilla block tags are bound before measuring default item stacks. Every state is checked before collapsing facts by block name. Custom stack components and server data packs can override default tool behavior.",
     "default_components": {
-      "tool": "tools/extraction/shape-extractor/ItemInteractionDump.java",
-      "tool_sha256": "536639cdbc27297e1423fc019500963eb7b7f9c00a240a49dd2fdbfa83f85ff3",
+      "tool": "tools/extraction/extract_item_interactions.py --native-reports",
+      "tool_sha256": "1ac23c1931adf298f6fdcf28d537d2679fc55928e732dfccf4887f30b1315771",
+      "origin": "vanilla-server-data-generator",
+      "native_report_recipe_sha256": "24c2437f2ab62ed0f583b408e7f3c759fc24375c6f59e7a8c1e26a4290ee841e",
+      "source_equivalence_sha256": "1e77d47343dd93bebfe993c085380d941d40e97ea41b178b738a277dd76d04c4",
       "measurements": [
         {
           "version": "1.21.4",
-          "measurement_sha256": "05fabd49f1c5fcea47f009a53fb2882faaa457288d0725a00cf2e477c826c475",
+          "native_report_format": "component-object",
+          "native_execution_sha256": "a7f49c4e948714439400bc4ea6e95507856b5a41423db62bed3690c9c08ddacc",
+          "native_report_file_manifest_digest": "bd37781f380815cabeac805a1787bd94da33e9e9118e43052ddc4bb43dbbb9f1",
           "artifacts_sha256": {
             "server.jar": "1066970b09e9c671844572291c4a871cc1ac2b85838bf7004fa0e778e10f1358",
             "server_mappings.txt": "dae4a75ad2ca1d52d14e9c080e70e7fbb2888c3533c015ea2d970b2a15856639"
           }
         }
       ],
-      "note": "Native Tool.CODEC with RegistryOps<JsonOps>. Every registered item is measured; null means no Tool component. Rule order, tag names, direct block selectors and optional fields are retained."
+      "note": "Original server ItemListReport or RegistryComponentsReport output with Tool.CODEC values. Matching client and server item initialization and codec sources are bound by the reviewed recipe. Every native item registry entry is covered; null denotes proven absence after complete report production. Rule order, selectors, optional fields and value types are retained. These reports do not recover historical ItemInteractionDump payloads or establish complete mining behavior."
     }
   },
   "schema": 1,
@@ -26415,8 +26420,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 8.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 8.0
         }
       ]
     },
@@ -26432,8 +26437,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 8.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 8.0
         }
       ]
     },
@@ -26448,8 +26453,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 8.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 8.0
         }
       ]
     },
@@ -26461,24 +26466,24 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 8.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 8.0
         }
       ]
     },
     "minecraft:diamond_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:diorite": null,
     "minecraft:diorite_slab": null,
@@ -26595,8 +26600,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 12.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 12.0
         }
       ]
     },
@@ -26612,8 +26617,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 12.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 12.0
         }
       ]
     },
@@ -26627,8 +26632,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 12.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 12.0
         }
       ]
     },
@@ -26640,24 +26645,24 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 12.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 12.0
         }
       ]
     },
     "minecraft:golden_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:granite": null,
     "minecraft:granite_slab": null,
@@ -26736,8 +26741,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 6.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 6.0
         }
       ]
     },
@@ -26756,8 +26761,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 6.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 6.0
         }
       ]
     },
@@ -26774,8 +26779,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 6.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 6.0
         }
       ]
     },
@@ -26787,24 +26792,24 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 6.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 6.0
         }
       ]
     },
     "minecraft:iron_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:iron_trapdoor": null,
     "minecraft:item_frame": null,
@@ -26900,8 +26905,8 @@
     "minecraft:lodestone": null,
     "minecraft:loom": null,
     "minecraft:mace": {
-      "rules": [],
-      "damage_per_block": 2
+      "damage_per_block": 2,
+      "rules": []
     },
     "minecraft:magenta_banner": null,
     "minecraft:magenta_bed": null,
@@ -27011,8 +27016,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 9.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 9.0
         }
       ]
     },
@@ -27028,8 +27033,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 9.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 9.0
         }
       ]
     },
@@ -27043,8 +27048,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 9.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 9.0
         }
       ]
     },
@@ -27057,24 +27062,24 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 9.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 9.0
         }
       ]
     },
     "minecraft:netherite_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:netherite_upgrade_smithing_template": null,
     "minecraft:netherrack": null,
@@ -27352,8 +27357,8 @@
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:leaves",
@@ -27457,8 +27462,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 4.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 4.0
         }
       ]
     },
@@ -27475,8 +27480,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 4.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 4.0
         }
       ]
     },
@@ -27488,8 +27493,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 4.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 4.0
         }
       ]
     },
@@ -27502,26 +27507,26 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 4.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 4.0
         }
       ]
     },
     "minecraft:stone_slab": null,
     "minecraft:stone_stairs": null,
     "minecraft:stone_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:stonecutter": null,
     "minecraft:stray_spawn_egg": null,
@@ -27578,8 +27583,8 @@
     "minecraft:trial_key": null,
     "minecraft:trial_spawner": null,
     "minecraft:trident": {
-      "rules": [],
-      "damage_per_block": 2
+      "damage_per_block": 2,
+      "rules": []
     },
     "minecraft:tripwire_hook": null,
     "minecraft:tropical_fish": null,
@@ -27712,8 +27717,8 @@
         },
         {
           "blocks": "#minecraft:mineable/axe",
-          "speed": 2.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 2.0
         }
       ]
     },
@@ -27725,8 +27730,8 @@
         },
         {
           "blocks": "#minecraft:mineable/hoe",
-          "speed": 2.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 2.0
         }
       ]
     },
@@ -27738,8 +27743,8 @@
         },
         {
           "blocks": "#minecraft:mineable/pickaxe",
-          "speed": 2.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 2.0
         }
       ]
     },
@@ -27751,24 +27756,24 @@
         },
         {
           "blocks": "#minecraft:mineable/shovel",
-          "speed": 2.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 2.0
         }
       ]
     },
     "minecraft:wooden_sword": {
+      "damage_per_block": 2,
       "rules": [
         {
           "blocks": "minecraft:cobweb",
-          "speed": 15.0,
-          "correct_for_drops": true
+          "correct_for_drops": true,
+          "speed": 15.0
         },
         {
           "blocks": "#minecraft:sword_efficient",
           "speed": 1.5
         }
-      ],
-      "damage_per_block": 2
+      ]
     },
     "minecraft:writable_book": null,
     "minecraft:written_book": null,
